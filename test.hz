@@ -1,0 +1,10 @@
+.include "../common.hz"
+
+function byte main = ()
+{
+    {
+        byte foo = 1 * 2 + 3;
+    }
+
+    byte bar = 1 + 2 * 3;
+}

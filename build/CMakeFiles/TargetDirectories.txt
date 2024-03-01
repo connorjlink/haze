@@ -1,0 +1,3 @@
+/Users/connor/Desktop/haze/build/CMakeFiles/haze.dir
+/Users/connor/Desktop/haze/build/CMakeFiles/edit_cache.dir
+/Users/connor/Desktop/haze/build/CMakeFiles/rebuild_cache.dir
