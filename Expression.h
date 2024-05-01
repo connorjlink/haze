@@ -1,63 +1,37 @@
 #ifndef HAZE_EXPRESSION_H
 #define HAZE_EXPRESSION_H
 
+#include <string>
 #include <string_view>
+
+#include "Segment.h"
+#include "Allocator.h"
+#include "Node.h"
+
+#define AS_INTEGER_LITERAL(x) static_cast<IntegerLiteralExpression*>(x)
+#define AS_IDENTIFIER(x) static_cast<IdentifierExpression*>(x)
+#define AS_FUNCTION_CALL(x) static_cast<FunctionCallExpression*>(x)
+#define AS_BINARY(x) static_cast<BinaryExpression*>(x)
 
 namespace hz
 {
-    struct IntegerLiteral;
-    struct Identifier;
-    struct FunctionCall;
-    struct BinaryExpression;
-
-    enum class ExpressionType
+    class Expression : public Node
     {
-        INTEGER_LITERAL,
-        IDENTIFIER,
-        FUNCTION_CALL,
-        BINARY_EXPRESSION,
-    };
-    struct Expression
-    {
-        const ExpressionType type;
-
-        union
+    public:
+        enum class Type
         {
-            IntegerLiteral* integer_literal;
-            Identifier* identifier;
-            FunctionCall* function_call;
-            BinaryExpression* binary_expression;
-        } const as;
-    };
+            INTEGER_LITERAL,
+            IDENTIFIER,
+            FUNCTION_CALL,
+            BINARY,
+        };
 
-    struct IntegerLiteral
-    {
-        int value;
-    };
+        //TODO: implement virtual destructor for this class
+    public:
+        virtual Node::Type ntype() const final override;
+        virtual Expression::Type etype() const = 0;
+        virtual Expression* optimize() override; //return nullptr--default is to do nothing
 
-    struct Identifier
-    {
-        std::string_view name;
-        bool is_constexpr = false;
-    };
-
-    struct FunctionCall
-    {
-        std::string_view name;
-        std::vector<Expression*> arguments;
-    };
-
-    enum class BinaryExpressionType
-    {
-        PLUS,
-        MINUS,
-        MULTIPLY,
-    };
-    struct BinaryExpression
-    {
-        BinaryExpressionType type;
-        Expression* left;
-        Expression* right;
     };
 }
 

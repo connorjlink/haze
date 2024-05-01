@@ -30,6 +30,31 @@ add_executable(haze Main.cpp
         Reducer.h
         Instruction.cpp
         Instruction.h
+        Disassembler.cpp
+        Disassembler.h
+        Segment.h
+        Segment.cpp
+        Node.h
+        Statement.cpp
+        Function.cpp
+        IdentifierExpression.cpp
+        IdentifierExpression.h
+        IntegerLiteralExpression.cpp
+        IntegerLiteralExpression.h
+        FunctionCallExpression.cpp
+        FunctionCallExpression.h
+        Constants.h
+        Validator.h
+        InstructionValidator.cpp
+        InstructionValidator.h
+        Allocation.cpp
+        Allocation.h
+        StaticAllocation.cpp
+        StaticAllocation.h
+        DynamicAllocation.cpp
+        DynamicAllocation.h
+        BinaryExpression.cpp
+        BinaryExpression.h
 )
 
 find_package(fmt CONFIG REQUIRED)

@@ -2,6 +2,8 @@
 #define HAZE_INSTRUCTION_H
 
 #include <cstdint>
+#include <unordered_map>
+#include <string_view>
 
 namespace hz
 {
@@ -34,10 +36,35 @@ namespace hz
         R3 = 0b11,
     };
 
-    class Instruction
+    static const std::unordered_map<hz::Register, std::string_view> register_map =
+    {
+        { hz::R0, "x" },
+        { hz::R1, "y" },
+        { hz::R2, "z" },
+        { hz::R3, "w" },
+        { hz::DC, "D" },
+    };
+
+    static const auto unmap = [](hz::Register r)
+    {
+        return register_map.at(r);
+    };
+
+    struct Instruction
     {
     public:
-        static std::uint32_t build(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);
+        Opcode opcode;
+        Register op1, op2;
+        std::uint8_t imm;
+        std::uint16_t mem;
+
+    public:
+        Instruction() = delete;
+        Instruction(std::uint32_t);
+        std::uint32_t bytes() const;
+
+        //static std::uint32_t compose(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);
+        //static Instruction decompose(std::uint32_t);
     };
 }
 

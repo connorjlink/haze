@@ -1,4 +1,4 @@
-24-bit instruction format:
+23-bit instruction format:
 x x x x  x x x x  x x x x x x x x  x x x x x x x x   
 \_____/  \_/ \_/  \_____________/  \_____________/
    |      |   |          \________________/

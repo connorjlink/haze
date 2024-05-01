@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "Log.h"
+#include "IdentifierExpression.h"
 
 #include <iostream>
 #include <fmt/format.h>
@@ -112,6 +113,8 @@ namespace hz
     Expression* Parser::parse_identifier_expression()
     {
         const auto name = consume(Token{ TokenType::IDENTIFIER });
+        return new IdentifierExpression{ name };
+
         return new Expression{ ExpressionType::IDENTIFIER, .as.identifier = new Identifier{ name } };
     }
 
@@ -466,12 +469,12 @@ namespace hz
         std::cout << format_expression(expression);
     }
 
-    void Parser::print_statement(Statement* statement, int indent)
+    void Parser::print_statement(Statement const* statement, int indent)
     {
         ::ast_print("Statement: ", indent);
 
-        using enum StatementType;
-        switch (statement->type)
+        using enum Statement::Type;
+        switch (statement->stype())
         {
             case COMPOUND:
             {
@@ -513,7 +516,7 @@ namespace hz
 
         std::cout << fmt::format(" ({})\n", fmt::join(function->arguments, ", "));
 
-        print_statement(function->body, TL_STATEMENT);
+        print_statement(function->get_body(), TL_STATEMENT);
     }
 
     void Parser::print_program()

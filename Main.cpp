@@ -1,8 +1,3 @@
-#include <iostream>
-#include <optional>
-#include <string>
-#include <fstream>
-
 #include "Preprocessor.h"
 #include "Lexer.h"
 #include "Parser.h"
@@ -11,11 +6,15 @@
 #include "Allocator.h"
 #include "Simulator.h"
 
+#include <iostream>
+#include <optional>
+#include <string>
+#include <fstream>
+
 #include <fmt/format.h>
 
 int main(int argc, char** argv)
 {
-
     std::string filepath = argv[1];
 
     if (argc != 2 || (filepath.substr(filepath.length() - 2) != "hz"))

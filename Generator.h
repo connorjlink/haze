@@ -17,7 +17,10 @@ namespace hz
     class Generator
     {
     private:
+        //Imported from the parser in the constructor
         const std::vector<Function*>& program;
+
+    private:
         std::string code;
         std::vector<std::uint8_t> bytes;
 
@@ -78,6 +81,8 @@ namespace hz
     public:
         void generate();
     };
+
+    extern Generator* generator;
 }
 
 #endif //HAZE_GENERATOR_H

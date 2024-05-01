@@ -9,7 +9,10 @@ namespace hz
 
     bool Reducer::reduce_stack()
     {
-        for (auto address = 0; address < )
+        for (auto address = 0; address < bytes.size(); address++)
+        {
+
+        }
     }
 
     void Reducer::reduce()

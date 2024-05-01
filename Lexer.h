@@ -7,7 +7,6 @@
 
 #include "Token.h"
 
-
 namespace hz
 {
     class Lexer

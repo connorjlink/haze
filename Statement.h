@@ -5,46 +5,61 @@
 #include <string_view>
 
 #include "Expression.h"
+#include "Node.h"
 
 namespace hz
 {
-    struct Compound;
-    struct VariableDeclaration;
-    struct Return;
-
-    enum class StatementType
+    class Statement : public Node
     {
-        COMPOUND,
-        VARIABLE_DECLARATION,
-        RETURN,
-    };
-    struct Statement
-    {
-        StatementType type;
-
-        union
+    protected:
+        enum class Type
         {
-            Compound* compound_statement;
-            VariableDeclaration* variable_declaration;
-            Return* return_statement;
-        } as;
+            COMPOUND,
+            VARIABLE,
+            RETURN,
+        };
+
+    public:
+        virtual Statement::Type stype() const = 0;
+        virtual Node::Type ntype() const final override;
     };
 
-    struct Compound
+    class CompoundStatement : public Statement
     {
-        std::vector<Statement*> statements;
+    private:
+        std::vector<Statement*> substatements;
+
+    public:
+        virtual Statement::Type stype() const final override;
+        virtual Segment generate(Allocation*) final override;
+        virtual Statement* optimize() final override;
     };
 
-    struct VariableDeclaration
+    class VariableStatement : public Statement
     {
+    private:
         std::string_view name;
-        Expression* expression;
+        Expression* value;
+        Allocation* allocation;
+
+    public:
+        virtual Statement::Type stype() const final override;
+        virtual Segment generate(Allocation*) final override;
+        virtual Statement* optimize() final override;
     };
 
-    struct Return
+    class ReturnStatement : public Statement
     {
-        Expression* expression;
+    private:
+        Expression* value;
+        Allocation* allocation;
+
+    public:
+        virtual Statement::Type stype() const final override;
+        virtual Segment generate(Allocation*) final override;
+        virtual Statement* optimize() final override;
     };
+
 }
 
 #endif //HAZE_STATEMENT_H

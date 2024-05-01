@@ -2,6 +2,7 @@
 #include "Parser.h"
 #include "Log.h"
 #include "Allocator.h"
+#include "IntegerLiteralExpression.h"
 
 namespace hz
 {
@@ -12,8 +13,8 @@ namespace hz
 
     bool Optimizer::optimize_expression(Expression* expression)
     {
-        using enum ExpressionType;
-        switch (expression->type)
+        using enum Expression::Type;
+        switch (expression->etype())
         {
             case INTEGER_LITERAL:
             {
@@ -30,7 +31,7 @@ namespace hz
                     if (symbol->type == VariableSymbolType::CONSTANT)
                     {
                         delete expression;
-                        auto new_expression = new Expression{ ExpressionType::INTEGER_LITERAL, .as.integer_literal = new IntegerLiteral{ symbol->as.constant->value } };
+                        auto new_expression = new IntegerLiteralExpression{ static_cast<ConstantSymbol*>(symbol)->value };
                         expression = new_expression;
                         return true;
                     }
@@ -57,14 +58,14 @@ namespace hz
                 while (optimize_expression(left));
                 while (optimize_expression(right));
 
-                using enum ExpressionType;
-                using enum BinaryExpressionType;
+                using enum Expression::Type;
+                using enum BinaryExpression::Operator;
 
                 bool made_changes = false;
 
                 //Optimize useless math expressions
                 {
-                    if (binary_expression->type == MULTIPLY)
+                    if (binary_expression->op() == MULTIPLY)
                     {
                         if (left->type == INTEGER_LITERAL)
                         {
@@ -125,7 +126,7 @@ namespace hz
 
                     auto try_evaluate = [this](Expression* expression, int& evaluated)
                     {
-                        if (expression->type == INTEGER_LITERAL)
+                        if (expression->etype() == INTEGER_LITERAL)
                         {
                             evaluated = expression->as.integer_literal->value;
                         }

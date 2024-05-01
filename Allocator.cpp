@@ -1,4 +1,7 @@
 #include "Allocator.h"
+#include "Allocation.h"
+#include "StaticAllocation.h"
+#include "DynamicAllocation.h"
 #include "Log.h"
 
 #include <optional>
@@ -32,35 +35,35 @@ namespace hz
         generator->save(address, reg);
     }
 
-    const Register& Allocator::read(Allocation& allocation)
+    const Register& Allocator::read(Allocation* allocation)
     {
-        if (allocation.type == AllocationType::STATIC)
+        if (allocation->atype() == Allocation::Type::STATIC)
         {
-            return allocation.as.static_allocation->reg;
+            return static_cast<StaticAllocation*>(allocation)->reg;
         }
 
         Log::error("only static allocations can be read directly");
     }
 
-    void Allocator::write(Allocation& alloc, std::uint8_t value)
+    void Allocator::write(Allocation* allocation, std::uint8_t value)
     {
-        using enum AllocationType;
-        switch (alloc.type)
+        using enum Allocation::Type;
+        switch (allocation->atype())
         {
             case STATIC:
             {
-                auto allocation = alloc.as.static_allocation;
-                generator->copy(allocation->reg, value);
+                auto static_allocation = static_cast<StaticAllocation*>(allocation);
+                generator->copy(static_allocation->reg, value);
             } break;
 
             case DYNAMIC:
             {
-                auto allocation = alloc.as.dynamic_allocation;
+                auto dynamic_allocation = static_cast<DynamicAllocation*>(allocation);
 
                 auto store = [&]()
                 {
                     generator->copy(R3, value);
-                    generator->save(allocation->address, R3);
+                    generator->save(dynamic_allocation->address, R3);
                 };
 
                 if (register_ledger[R3] == Status::FREE)
@@ -79,35 +82,6 @@ namespace hz
         }
     }
 
-    Allocation Allocator::allocate_static()
-    {
-        const auto reg = find_register(register_ledger);
-
-        if (reg.has_value())
-        {
-            register_ledger[reg.value()] = Status::USED;
-            return { .as = new StaticAllocation{ reg.value(), { false, {} } } };
-        }
-
-        //TODO: fix this in case other register was R3
-        //caller may want to exclude a register from selection
-        auto mem = allocate_dynamic(false);
-        write(mem, R3);
-
-        return { .as.static_allocation = new StaticAllocation{ R3, { true, mem } } };
-    }
-
-    Allocation Allocator::allocate_static(Register reg)
-    {
-        if (register_ledger[reg] == Status::FREE)
-        {
-            register_ledger[reg] = Status::USED;
-            return { .as.static_allocation = new StaticAllocation{ reg, { false, {} } } };
-        }
-
-        //TODO: change this; logic doesn't work if caller relies on the location of storage
-        return allocate_static();
-    }
 
     void Allocator::deallocate_static(Allocation allocation)
     {
@@ -175,31 +149,5 @@ namespace hz
                 deallocate_dynamic(allocation);
             } break;
         }
-    }
-
-
-    StaticAllocation::StaticAllocation(Register reg, State state)
-        : reg(reg), state(state)
-    {
-    }
-
-    StaticAllocation::~StaticAllocation()
-    {
-        if (state.need_restore)
-        {
-            Allocator::load(reg, state.restoree.as.dynamic_allocation->address);
-        }
-
-        Allocator::deallocate(Allocation{ .type = AllocationType::STATIC, .as.static_allocation = this });
-    }
-
-    DynamicAllocation::DynamicAllocation(std::uint16_t address, bool free)
-        : address(address), free(free)
-    {
-    }
-
-    DynamicAllocation::~DynamicAllocation()
-    {
-        Allocator::deallocate(Allocation{ .type = AllocationType::DYNAMIC, .as.dynamic_allocation = this });
     }
 }

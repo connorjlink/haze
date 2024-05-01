@@ -76,8 +76,8 @@ namespace hz
         Statement* parse_statement();
         std::vector<Statement*> parse_statements();
 
-        Argument parse_argument();
-        std::vector<Argument> parse_arguments();
+        Expression* parse_argument();
+        std::vector<Expression*> parse_arguments();
 
         Function* parse_function();
         std::vector<Function*> parse_functions();

@@ -1,0 +1,7 @@
+.idea/
+.cache/
+/microcode/.venv/
+/microcode/.idea/
+/build/
+/cmake-build-debug/
+.git/

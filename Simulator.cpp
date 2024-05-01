@@ -1,8 +1,7 @@
 #include "Simulator.h"
+#include "Instruction.h"
 #include "Log.h"
 
-#include <chrono>
-#include <thread>
 #include <iostream>
 
 namespace hz
@@ -22,69 +21,70 @@ namespace hz
         immediate = fetch2;
         memory = (fetch2 << 8) | fetch3;
 
+
         switch (opcode & 0x0F)
         {
-            case 0b0000:
+            case MOVE:
             {
                 //move reg, reg
                 register_file[operand1] = register_file[operand2];
             } break;
 
-            case 0b0001:
-            {
-                //copy reg, imm
-                register_file[operand1] = immediate;
-            } break;
-
-            case 0b0010:
+            case LOAD:
             {
                 //load reg, mem
                 register_file[operand1] = ram[memory];
             } break;
 
-            case 0b0011:
+            case COPY:
+            {
+                //copy reg, imm
+                register_file[operand1] = immediate;
+            } break;
+
+            case SAVE:
             {
                 //save mem, reg
                 ram[memory] = register_file[operand2];
             } break;
 
-            case 0b0100:
+            case IADD:
             {
                 //iadd reg, reg
                 register_file[operand1] += register_file[operand2];
             } break;
 
-            case 0b0101:
+            case ISUB:
             {
                 //isub reg, reg
                 register_file[operand1] -= register_file[operand2];
             } break;
 
-            case 0b0110:
+            case BAND:
             {
                 //band reg, reg
                 register_file[operand1] &= register_file[operand2];
             } break;
 
-            case 0b0111:
+            case BIOR:
             {
                 //bior reg, reg
                 register_file[operand1] |= register_file[operand2];
             } break;
 
-            case 0b1000:
+            case BXOR:
             {
                 //bxor reg, reg
                 register_file[operand1] ^= register_file[operand2];
             } break;
 
-            case 0b1001:
+            case BNOT:
             {
                 //bnot reg
                 register_file[operand1] = ~register_file[operand1];
             } break;
 
-            case 0b1010:
+            case CALL:
             {
                 //call mem
                 ram[STACK_TOP - stack_pointer] = (instruction_pointer & 0xFF00) >> 8;
@@ -94,7 +94,7 @@ namespace hz
                 instruction_pointer = memory;
             } break;
 
-            case 0b1011:
+            case EXIT:
             {
                 //exit
                 stack_pointer--;
@@ -104,21 +104,21 @@ namespace hz
                 instruction_pointer = (upper << 8) | lower;
             } break;
 
-            case 0b1100:
+            case PUSH:
             {
                 //push reg
                 ram[STACK_TOP - stack_pointer] = register_file[operand2];
                 stack_pointer++;
             } break;
 
-            case 0b1101:
+            case PULL:
             {
                 //pull reg
                 stack_pointer--;
                 register_file[operand1] = ram[STACK_TOP - stack_pointer];
             } break;
 
-            case 0b1110:
+            case BREZ:
             {
                 //brez mem, reg
                 if (register_file[operand2] == 0)
@@ -127,7 +127,7 @@ namespace hz
                 }
             } break;
 
-            case 0b1111:
+            case RSVD:
             {
                 //XXXX
                 //TODO: use as instruction set extension prefix?
@@ -151,9 +151,63 @@ namespace hz
 
     void Simulator::run()
     {
-        Log::info("Simulation starting...");
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(850ms);
+        Log::info("Simulation loading...");
+        Log::info("Simulation ready!");
+
+        Log::info("Type 'r' run the simulation or 'q' to quit");
+
+        char input;
+        std::cin >> input;
+
+        if (input == 'r')
+        {
+            Log::info("Simulation starting...");
+            Log::info("Input 's' to step forward one instruction or 'd' to display the disassembly");
+
+            for (char option = '\0'; option != 'q' && step(); std::cin >> option)
+            {
+                switch (option)
+                {
+                    case '\n':
+                    {
+                        Log::info(fmt::format("CPU State: registers=[{}] ip=${:X} sp={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}",
+                            fmt::join(register_file, ", "), instruction_pointer, stack_pointer, STACK_TOP - stack_pointer, opcode, operand1, operand2, immediate, memory));
+                        Log::info(fmt::format("Commited Instruction: {}", diass))
+                    } break;
+
+                    case 'd':
+                    {
+
+                    }
+                }
+            }
+        }
+
+        for (char input = '\0'; input != 'q'; std::cin >> input)
+        {
+            switch (input)
+            {
+                case 'r':
+                {
+                    Log::info("Simulation starting...");
+                    Log::info("Press 'enter' to step forward one instruction");
+
+
+
+                } break;
+
+                case 'd':
+                {
+                    Log::info("")
+                } break;
+
+                default:
+                {
+                    Log::info(fmt::format("Invalid option {}", input));
+                } break;
+            }
+        }
+
 
         Log::info("Press enter to step forward by 1 instruction:");
 

@@ -7,23 +7,13 @@
 #include <vector>
 
 #include "Log.h"
+#include "Constants.h"
 
 namespace hz
 {
     class Simulator
     {
     private:
-        using word = std::uint8_t;
-        using dword = std::uint16_t;
-
-    private:
-        static constexpr auto WORD_MAX = std::numeric_limits<word>::max() + 1;
-        static constexpr auto DWORD_MAX = std::numeric_limits<dword>::max() + 1;
-        static constexpr auto HALF_WORD_MAX = WORD_MAX / 2;
-        static constexpr auto HALF_DWORD_MAX = DWORD_MAX / 2;
-        static constexpr auto QUARTER_WORD_MAX = HALF_WORD_MAX / 2;
-        static constexpr auto QUARTER_DWORD_MAX = HALF_DWORD_MAX / 2;
-
         static constexpr auto STACK_TOP = HALF_DWORD_MAX - 1;
 
     private:
@@ -51,7 +41,7 @@ namespace hz
                 return;
             }
 
-            Log::error(fmt::format("Compiled code of length {} bytes exceeds the maximum ROM size of {} bytes", bytes.size(), QUARTER_DWORD_MAX));
+            Log::error(fmt::format("Object code of length {} bytes exceeds the maximum ROM size of {} bytes", bytes.size(), QUARTER_DWORD_MAX));
         }
 
     private:
