@@ -60,7 +60,8 @@ namespace hz
 
     public:
         Instruction() = delete;
-        Instruction(std::uint32_t);
+        explicit Instruction(std::uint32_t);
+        Instruction(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);
         std::uint32_t bytes() const;
 
         //static std::uint32_t compose(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);

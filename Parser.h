@@ -23,11 +23,11 @@ namespace hz
 
     private:
         std::vector<Symbol> symbol_table;
-        void add_symbol(SymbolType, std::string_view);
+        void add_symbol(Symbol::Type, std::string_view);
 
     public:
         bool query_symbol(std::string_view);
-        Symbol* reference_symbol(SymbolType, std::string_view);
+        Symbol* reference_symbol(Symbol::Type, std::string_view);
 
     public:
         explicit Parser(const std::vector<Token>& tokens)

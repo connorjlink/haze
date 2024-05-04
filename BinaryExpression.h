@@ -7,11 +7,11 @@ namespace hz
 {
     class BinaryExpression : public Expression
     {
-    protected:
+    public:
         Expression* left;
         Expression* right;
 
-    protected:
+    public:
         enum class Type
         {
             PLUS,

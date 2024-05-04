@@ -49,12 +49,9 @@ add_executable(haze Main.cpp
         InstructionValidator.h
         Allocation.cpp
         Allocation.h
-        StaticAllocation.cpp
-        StaticAllocation.h
-        DynamicAllocation.cpp
-        DynamicAllocation.h
         BinaryExpression.cpp
         BinaryExpression.h
+        Symbol.cpp
 )
 
 find_package(fmt CONFIG REQUIRED)

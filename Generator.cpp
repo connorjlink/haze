@@ -4,10 +4,15 @@
 #include "Log.h"
 #include "Parser.h"
 #include "Symbol.h"
+#include "IdentifierExpression.h"
+#include "IntegerLiteralExpression.h"
+#include "FunctionCallExpression.h"
 
 #include <unordered_map>
 #include <iostream>
 #include <cstdlib>
+
+#include "BinaryExpression.h"
 
 namespace hz
 {
@@ -25,92 +30,91 @@ namespace hz
     void Generator::move(Register destination, Register source)
     {
         code += fmt::format("\tmove {}, {}\n", unmap(destination), unmap(source));
-        auto instruction = Instruction{ MOVE, destination, source };
-        bytes.emplace_back(Instruction::compose(MOVE, destination, source));
+        bytes.emplace_back(Instruction{ MOVE, destination, source }.bytes());
     }
 
-    void Generator::load(Register destination, int address)
+    void Generator::load(Register destination, std::uint16_t address)
     {
         code += fmt::format("\tload {}, &{}\n", unmap(destination), address);
-        bytes.emplace_back(Instruction::compose(LOAD, destination, DC, 0, address));
+        bytes.emplace_back(Instruction{ LOAD, destination, DC, 0, address }.bytes());
     }
 
-    void Generator::copy(Register destination, int immediate)
+    void Generator::copy(Register destination, std::uint8_t immediate)
     {
         code += fmt::format("\tcopy {}, #{}\n", unmap(destination), immediate);
-        bytes.emplace_back(Instruction::compose(COPY, destination, DC, immediate, 0));
+        bytes.emplace_back(Instruction{ COPY, destination, DC, immediate, 0 }.bytes());
     }
 
-    void Generator::save(int address, Register source)
+    void Generator::save(std::uint16_t address, Register source)
     {
         code += fmt::format("\tsave &{}, {}\n", address, unmap(source));
-        bytes.emplace_back(Instruction::compose(SAVE, DC, source, 0, address));
+        bytes.emplace_back(Instruction{ SAVE, DC, source, 0, address }.bytes());
     }
 
     void Generator::iadd(Register destination, Register source)
     {
         code += fmt::format("\tiadd {}, {}\n", unmap(destination), unmap(source));
-        bytes.emplace_back(Instruction::compose(IADD, destination, source));
+        bytes.emplace_back(Instruction{ IADD, destination, source }.bytes());
     }
 
     void Generator::isub(Register destination, Register source)
     {
         code += fmt::format("\tisub {}, {}\n", unmap(destination), unmap(source));
-        bytes.emplace_back(Instruction::compose(ISUB, destination, source));
+        bytes.emplace_back(Instruction{ ISUB, destination, source }.bytes());
     }
 
     void Generator::band(Register destination, Register source)
     {
         code += fmt::format("\tband {}, {}\n", unmap(destination), unmap(source));
-        bytes.emplace_back(Instruction::compose(BAND, destination, source));
+        bytes.emplace_back(Instruction{ BAND, destination, source }.bytes());
     }
 
     void Generator::bior(Register destination, Register source)
     {
         code += fmt::format("\tbior {}, {}\n", unmap(destination), unmap(source));
-        bytes.emplace_back(Instruction::compose(BIOR, destination, source));
+        bytes.emplace_back(Instruction{ BIOR, destination, source }.bytes());
     }
 
     void Generator::bxor(Register destination, Register source)
     {
         code += fmt::format("\tbxor {}, {}\n", unmap(destination), unmap(source));
-        bytes.emplace_back(Instruction::compose(BXOR, destination, source));
+        bytes.emplace_back(Instruction{ BXOR, destination, source }.bytes());
     }
 
     void Generator::bnot(Register destination)
     {
         code += fmt::format("\tbnot {}\n", unmap(destination));
-        bytes.emplace_back(Instruction::compose(BNOT, destination, DC));
+        bytes.emplace_back(Instruction{ BNOT, destination, DC }.bytes());
     }
 
-    void Generator::call(int address)
+    void Generator::call(std::uint16_t address)
     {
         code += fmt::format("\tcall &{}\n", address);
-        bytes.emplace_back(Instruction::compose(CALL, DC, DC, 0, address));
+        bytes.emplace_back(Instruction{ CALL, DC, DC, 0, address }.bytes());
     }
 
     void Generator::exit()
     {
         code += fmt::format("\texit\n");
-        bytes.emplace_back(Instruction::compose(EXIT, DC, DC));
+        bytes.emplace_back(Instruction{ EXIT, DC, DC }.bytes());
     }
 
     void Generator::push(Register source)
     {
         code += fmt::format("\tpush {}\n", unmap(source));
-        bytes.emplace_back(Instruction::compose(PUSH, DC, source));
+        bytes.emplace_back(Instruction{ PUSH, DC, source }.bytes());
     }
 
     void Generator::pull(Register destination)
     {
         code += fmt::format("\tpull {}\n", unmap(destination));
-        bytes.emplace_back(Instruction::compose(PULL, destination, DC));
+        bytes.emplace_back(Instruction{ PULL, destination, DC }.bytes());
     }
 
-    void Generator::brez(int address, Register source)
+    void Generator::brez(std::uint16_t address, Register source)
     {
         code += fmt::format("\tbrez &{}, {}\n", address, unmap(source));
-        bytes.emplace_back(Instruction::compose(BREZ, DC, source, 0, address));
+        bytes.emplace_back(Instruction{ BREZ, DC, source, 0, address }.bytes());
     }
 
     void Generator::rsvd(Register destination, Register source)
@@ -127,27 +131,27 @@ namespace hz
             return;
         }
 
-        using enum ExpressionType;
-        switch (expression->type)
+        using enum Expression::Type;
+        switch (expression->etype())
         {
             case INTEGER_LITERAL:
             {
-                auto integer_literal_expression = expression->as.integer_literal;
+                auto integer_literal_expression = AS_INTEGER_LITERAL(expression);
                 Allocator::write(allocation, integer_literal_expression->value);
             } break;
 
             case IDENTIFIER:
             {
-                auto identifier_expression = expression->as.identifier;
-                auto symbol = parser->reference_symbol(SymbolType::VARIABLE, identifier_expression->name);
+                auto identifier_expression = AS_IDENTIFIER(expression);
+                auto symbol = parser->reference_symbol(Symbol::Type::VARIABLE, identifier_expression->name);
                 Allocator::write(allocation, Allocator::read(*symbol->as.variable->allocation));
             } break;
 
             case FUNCTION_CALL:
             {
-                auto function_call = expression->as.function_call;
+                auto function_call = AS_FUNCTION_CALL(expression);
 
-                auto symbol = parser->reference_symbol(SymbolType::FUNCTION, function_call->name);
+                auto symbol = parser->reference_symbol(Symbol::Type::FUNCTION, function_call->name);
 
                 auto return_allocation = Allocator::allocate_dynamic(true);
                 symbol->as.function->allocation = &return_allocation;
@@ -161,9 +165,9 @@ namespace hz
                 //TODO: finish generating the function code
             } break;
 
-            case BINARY_EXPRESSION:
+            case BINARY:
             {
-                auto binary = expression->as.binary_expression;
+                auto binary = AS_BINARY(expression);
 
                 auto left = binary->left;
                 auto right = binary->right;
@@ -174,8 +178,8 @@ namespace hz
                 generate_expression(left, allocation);
                 generate_expression(right, allocation2);
 
-                using enum BinaryExpressionType;
-                switch (binary->type)
+                using enum BinaryExpression::Type;
+                switch (binary->btype())
                 {
                     case PLUS:
                     {
@@ -188,7 +192,7 @@ namespace hz
                     } break;
 
                     //implement other compiletime operators for ease of use
-                    case MULTIPLY: //[[fallthrough]];
+                    case TIMES: //[[fallthrough]];
                     {
                         Log::error("operator '*' is prohibited at runtime");
                     } break;
@@ -200,8 +204,8 @@ namespace hz
 
     void Generator::generate_statement(Statement* statement, Statement* parent)
     {
-        using enum StatementType;
-        switch (statement->type)
+        using enum Statement::Type;
+        switch (statement->stype())
         {
             case COMPOUND:
             {

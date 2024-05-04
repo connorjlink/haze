@@ -23,7 +23,10 @@ namespace hz
     class Optimizer
     {
     private:
-        std::vector<Function*> program;
+        using AST = std::vector<Function*>;
+
+    private:
+        AST program;
         Parser* parser;
         std::size_t parameters;
 
@@ -37,9 +40,7 @@ namespace hz
         Optimizer(std::vector<Function*>&, Parser*, std::size_t);
 
     private:
-        bool optimize_expression(Expression*);
-        bool optimize_statement(Statement*);
-        bool optimize_ast(std::vector<Function*>&);
+        AST optimize_ast(AST&);
 
     public:
         void optimize();

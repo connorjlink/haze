@@ -44,20 +44,20 @@ namespace hz
 
     public:
         void move(Register, Register);
-        void load(Register, int);
-        void copy(Register, int);
-        void save(int, Register);
+        void load(Register, std::uint16_t);
+        void copy(Register, std::uint8_t);
+        void save(std::uint16_t, Register);
         void iadd(Register, Register);
         void isub(Register, Register);
         void band(Register, Register);
         void bior(Register, Register);
         void bxor(Register, Register);
         void bnot(Register);
-        void call(int);
+        void call(std::uint16_t);
         void exit();
         void push(Register);
         void pull(Register);
-        void brez(int, Register);
+        void brez(std::uint16_t, Register);
         void rsvd(Register, Register);
 
     private:

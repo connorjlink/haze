@@ -15,7 +15,6 @@ namespace hz
 
     InstructionValidator::InstructionValidator()
     {
-
         add_test(Test{ "Instruction()", std::bind(&validate_constructor) });
         add_test(Test{ ".bytes()", std::bind(&validate_bytes) });
 

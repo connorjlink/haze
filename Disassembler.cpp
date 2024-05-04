@@ -1,4 +1,5 @@
 #include "Disassembler.h"
+#include "Instruction.h"
 
 #include <fmt/format.h>
 
@@ -6,7 +7,7 @@ namespace hz
 {
     std::string Disassembler::disassemble_instruction(std::uint32_t raw)
     {
-        const auto instruction = Instruction::decompose(raw);
+        const auto instruction = Instruction{ raw };
 
         const auto op1 = unmap(instruction.op1);
         const auto op2 = unmap(instruction.op2);
@@ -35,19 +36,19 @@ namespace hz
         }
     }
 
-    std::string Disassembler::disassemble_program(const std::vector<std::uint8_t>& program)
+    std::string Disassembler::disassemble_program(const std::vector<std::uint8_t>& program, std::size_t first, std::size_t last)
     {
         std::string result{};
 
-        for (auto i = 0; i < program.size() - 2; i+= 3)
+        for (auto i = first; i < last - 2; i+= 3)
         {
-            auto byte1 = program[i + 0];
-            auto byte2 = program[i + 1];
-            auto byte3 = program[i + 2];
+            const auto byte1 = program[i + 0];
+            const auto byte2 = program[i + 1];
+            const auto byte3 = program[i + 2];
 
-            auto instruction = (program[i + 0] << 16) | (program[i + 1] << 8) | (program[i + 2] << 0);
+            const auto instruction = (program[i + 0] << 16) | (program[i + 1] << 8) | (program[i + 2] << 0);
 
-            result.append(fmt::format("{} #{:02X} {:02X} {:02X}", disassemble_instruction(instruction), byte1, byte2, byte3));
+            result.append(fmt::format("{} ; #{:02X} {:02X} {:02X}", disassemble_instruction(instruction), byte1, byte2, byte3));
         }
 
         return result;

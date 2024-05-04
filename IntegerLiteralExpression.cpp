@@ -4,22 +4,17 @@
 
 namespace hz
 {
-    IntegerLiteralExpression::IntegerLiteralExpression(int value)
-            : value(value)
-    {
-    }
-
-    Expression* IntegerLiteralExpression::copy()
-    {
-        return new IntegerLiteralExpression{ value };
-    }
-
-    Expression::Type IntegerLiteralExpression::etype()
+    Expression::Type IntegerLiteralExpression::etype() const
     {
         return Expression::Type::INTEGER_LITERAL;
     }
 
-    std::string IntegerLiteralExpression::string()
+    Expression* IntegerLiteralExpression::copy() const
+    {
+        return new IntegerLiteralExpression{ value };
+    }
+
+    std::string IntegerLiteralExpression::string() const
     {
         return fmt::format("integer literal ({})", value);
     }

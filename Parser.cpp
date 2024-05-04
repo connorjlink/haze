@@ -50,11 +50,20 @@ namespace
 
 namespace hz
 {
-    void Parser::add_symbol(SymbolType type, std::string_view name)
+    void Parser::add_symbol(Symbol::Type type, std::string_view name)
     {
         if (query_symbol(name))
         {
             Log::error(fmt::format("symbol {} is multiply defined", name));
+        }
+
+        using enum Symbol::Type;
+        switch (type)
+        {
+            case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name });
+            case ARGUMENT:
+            case VARIABLE:
+
         }
 
         symbol_table.emplace_back(Symbol{ type, name });
@@ -65,16 +74,16 @@ namespace hz
         return ::find(name, symbol_table) != std::end(symbol_table);
     }
 
-    Symbol* Parser::reference_symbol(SymbolType type, std::string_view name)
+    Symbol* Parser::reference_symbol(Symbol::Type type, std::string_view name)
     {
         auto symbol = ::find(name, symbol_table);
         if (symbol == std::end(symbol_table))
         {
             //TODO: ensure to output undefined symbol type in the ternary if more enum variants are added
-            Log::error(fmt::format("{} {} is undefined", type == SymbolType::VARIABLE ? "variable" : "function", name));
+            Log::error(fmt::format("{} {} is undefined", type == Symbol::Type::VARIABLE ? "variable" : "function", name));
         }
 
-        if (symbol->type == type)
+        if (symbol->ytype() == type)
         {
             return &(*symbol);
         }
@@ -114,8 +123,6 @@ namespace hz
     {
         const auto name = consume(Token{ TokenType::IDENTIFIER });
         return new IdentifierExpression{ name };
-
-        return new Expression{ ExpressionType::IDENTIFIER, .as.identifier = new Identifier{ name } };
     }
 
     Expression* Parser::parse_intlit_expression()

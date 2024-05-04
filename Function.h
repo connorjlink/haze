@@ -10,14 +10,14 @@ namespace hz
 {
     class Function : public Node
     {
-    protected:
+    public:
         enum class Type
         {
             RUNTIME,
             COMPILETIME,
         };
 
-    protected:
+    public:
         std::string_view name;
         std::vector<std::string_view> arguments;
         Statement* body;
@@ -34,14 +34,14 @@ namespace hz
         }
 
     public:
-        virtual Function::Type ftype() = 0;
-        virtual Node::Type ntype() final override;
+        virtual Function::Type ftype() const = 0;
+        virtual Node::Type ntype() const final override;
     };
 
     class RuntimeFunction : public Function
     {
     public:
-        virtual Function::Type ftype() final override;
+        virtual Function::Type ftype() const final override;
         virtual Segment generate(Allocation*) final override;
         virtual Function* optimize() final override;
     };
@@ -49,7 +49,7 @@ namespace hz
     class CompiletimeFunction : public Function
     {
     public:
-        virtual Function::Type ftype() final override;
+        virtual Function::Type ftype() const final override;
         virtual Segment generate(Allocation*) final override;
         virtual Function* optimize() final override;
     };

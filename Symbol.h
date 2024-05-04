@@ -3,74 +3,82 @@
 
 #include <string_view>
 
+#define AS_FUNCTION(x) static_cast<FunctionSymbol*>(x)
+#define AS_ARGUMENT(x) static_cast<ArgumentSymbol*>(x)
+#define AS_VARIABLE(x) static_cast<VariableSymbol*>(x)
+
+#define AS_RUNTIME_VARIABLE(x) static_cast<RuntimeVariableSymbol*>(x)
+#define AS_CONSTANT_VARIABLE(x) static_cast<ConstantVariableSymbol*>(x)
+
 namespace hz
 {
     class Allocation;
 
-    enum class SymbolType
+    class Symbol
     {
-        FUNCTION,
-        ARGUMENT,
-        VARIABLE,
-    };
+    public:
+        enum class Type
+        {
+            FUNCTION,
+            ARGUMENT,
+            VARIABLE,
+        };
 
-    struct FunctionSymbol;
-    struct ArgumentSymbol;
-    struct VariableSymbol;
-
-    struct Symbol
-    {
-        SymbolType type;
+    private:
         std::string_view name;
 
-        union
+    public:
+        virtual Symbol::Type ytype() const = 0;
+    };
+
+    class FunctionSymbol : public Symbol
+    {
+    private:
+        Allocation* allocation;
+
+    public:
+        virtual Symbol::Type ytype() const final override;
+    };
+
+    class ArgumentSymbol : public Symbol
+    {
+    private:
+        Allocation* allocation;
+
+    public:
+        virtual Symbol::Type ytype() const final override;
+    };
+
+    class VariableSymbol : public Symbol
+    {
+    public:
+        enum class Type
         {
-            FunctionSymbol* function;
-            ArgumentSymbol* argument;
-            VariableSymbol* variable;
-        } as;
+            RUNTIME,
+            CONSTANT,
+        };
+
+    public:
+        virtual Symbol::Type ytype() const final override;
+        virtual VariableSymbol::Type vtype() const = 0;
     };
 
-    struct FunctionSymbol
+    class RuntimeVariableSymbol : public VariableSymbol
     {
+    private:
         Allocation* allocation;
+
+    public:
+        virtual VariableSymbol::Type vtype() const final override;
     };
 
-    struct ArgumentSymbol
+    class ConstantVariableSymbol : public VariableSymbol
     {
-        Allocation* allocation = nullptr;
-    };
+    public:
+        std::uint16_t value;
 
-    enum class VariableSymbolType
-    {
-        NORMAL,
-        CONSTANT,
-    };
-
-    struct NormalVariableSymbol;
-    struct ConstantVariableSymbol;
-
-    struct VariableSymbol
-    {
-        VariableSymbolType type;
-
-        union
-        {
-            NormalVariableSymbol* normal;
-            ConstantVariableSymbol* constant;
-        } as;
-
-        Allocation* allocation;
-    };
-
-    struct NormalVariableSymbol
-    {
-        Allocation* allocation;
-    };
-
-    struct ConstantVariableSymbol
-    {
-        int value;
+    public:
+        virtual VariableSymbol::Type vtype() const final override;
     };
 }
 

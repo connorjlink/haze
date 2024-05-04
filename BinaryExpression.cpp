@@ -1,6 +1,7 @@
 #include "BinaryExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "Allocation.h"
+#include "Log.h"
 #include <fmt/format.h>
 
 #define MULTIPLICATION_ERROR do { Log::error("machine code generation is unsupported for runtime multiplication"); } while (0)
@@ -205,6 +206,14 @@ namespace hz
             }
 
             return result;
+        }
+
+        else
+        {
+            auto optimized = copy();
+            optimized->left = left_optimized;
+            optimized->right = right_optimized;
+            return optimized;
         }
     }
 }

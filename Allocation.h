@@ -21,7 +21,7 @@ namespace hz
         };
 
     public:
-        virtual Allocation::Type atype() = 0;
+        virtual Allocation::Type atype() const = 0;
 
         virtual Allocation* allocate() = 0;
         virtual void deallocate() = 0;
@@ -29,6 +29,25 @@ namespace hz
         virtual Register& read() = 0;
         virtual void write(std::uint8_t) = 0;
     };
+
+    class StaticAllocation : public Allocation
+    {
+    private:
+        Register reg;
+
+    public:
+        virtual Allocation::Type atype() const final override;
+    };
+
+    class DynamicAllocation : public Allocation
+    {
+    private:
+        std::uint16_t address;
+
+    public:
+        virtual Allocation::Type atype() const final override;
+    };
+
 }
 
 #endif //HAZE_ALLOCATION_H

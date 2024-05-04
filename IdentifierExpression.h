@@ -11,13 +11,20 @@ namespace hz
 {
     class IdentifierExpression : public Expression
     {
-    private:
+    public:
         std::string_view name;
+        bool is_constant;
 
     public:
-        virtual Expression* copy() final override;
-        virtual Expression::Type etype() final override;
-        virtual std::string string() final override;
+        IdentifierExpression(std::string_view name)
+            : name(name)
+        {
+        }
+
+    public:
+        virtual Expression::Type etype() const final override;
+        virtual std::string string() const final override;
+        virtual Expression* copy() const final override;
         virtual Segment generate(Allocation*) final override;
         virtual Expression* optimize() final override;
     };

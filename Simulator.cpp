@@ -1,5 +1,6 @@
 #include "Simulator.h"
 #include "Instruction.h"
+#include "Disassembler.h"
 #include "Log.h"
 
 #include <iostream>
@@ -154,33 +155,50 @@ namespace hz
         Log::info("Simulation loading...");
         Log::info("Simulation ready!");
 
-        Log::info("Type 'r' run the simulation or 'q' to quit");
+        Log::info("Press 'return' to start the simulation:");
+
+        std::cin.get();
+
+        Log::info("Simulation starting...");
+        Log::info("Input 's' to step forward one instruction or 'd' to display the disassembly");
+
+        for (char option = '\0'; ; std::cin >> option)
+        {
+            switch (option)
+            {
+                case 'd':
+                {
+                    Log::info("Instruction listing:");
+                    Log::raw(Disassembler::disassemble_program(rom, instruction_pointer - std::min(3, std::abs(instruction_pointer - HALF_DWORD_MAX)), rom.size()));
+                } break;
+
+                case 's':
+                {
+                    step();
+
+                    Log::info(fmt::format("CPU State: registers=[{}] ip=${:X} sp={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}",
+                        fmt::join(register_file, ", "), instruction_pointer, stack_pointer, STACK_TOP - stack_pointer, opcode, operand1, operand2, immediate, memory));
+                } break;
+
+                case 'q':
+                {
+                    Log::info("Simulation ending...");
+                    std::exit(EXIT_SUCCESS);
+                } break;
+
+                default:
+                {
+                    Log::info("Unrecognized simulation command");
+                } break;
+            }
+        }
 
         char input;
         std::cin >> input;
 
         if (input == 'r')
         {
-            Log::info("Simulation starting...");
-            Log::info("Input 's' to step forward one instruction or 'd' to display the disassembly");
 
-            for (char option = '\0'; option != 'q' && step(); std::cin >> option)
-            {
-                switch (option)
-                {
-                    case '\n':
-                    {
-                        Log::info(fmt::format("CPU State: registers=[{}] ip=${:X} sp={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}",
-                            fmt::join(register_file, ", "), instruction_pointer, stack_pointer, STACK_TOP - stack_pointer, opcode, operand1, operand2, immediate, memory));
-                        Log::info(fmt::format("Commited Instruction: {}", diass))
-                    } break;
-
-                    case 'd':
-                    {
-
-                    }
-                }
-            }
         }
 
         for (char input = '\0'; input != 'q'; std::cin >> input)

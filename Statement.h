@@ -6,6 +6,7 @@
 
 #include "Expression.h"
 #include "Node.h"
+#include "Segment.h"
 
 namespace hz
 {

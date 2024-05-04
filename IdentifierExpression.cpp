@@ -6,33 +6,33 @@
 
 namespace hz
 {
-    Expression* IdentifierExpression::copy()
-    {
-        return new IdentifierExpression{ *this };
-    }
-
-    Expression::Type IdentifierExpression::etype()
+    Expression::Type IdentifierExpression::etype() const
     {
         return Expression::Type::IDENTIFIER;
     }
 
-    std::string IdentifierExpression::string()
+    std::string IdentifierExpression::string() const
     {
         return fmt::format("identifier ({})", name);
     }
 
+    Expression* IdentifierExpression::copy() const
+    {
+        return new IdentifierExpression{ *this };
+    }
+
     Segment IdentifierExpression::generate(Allocation* allocation)
     {
-        auto symbol = parser->reference_symbol(SymbolType::VARIABLE, name);
+        auto symbol = parser->reference_symbol(Symbol::Type::VARIABLE, name);
         return Allocator::write(allocation, Allocator::read(symbol->allocation()));
     }
 
     Expression* IdentifierExpression::optimize()
     {
-        auto variable_symbol = static_cast<VariableSymbol*>(parser->reference_symbol(SymbolType::VARIABLE, name));
-        if (variable_symbol->type() == VariableSymbolType::CONSTANT)
+        auto variable_symbol = AS_VARIABLE(parser->reference_symbol(Symbol::Type::VARIABLE, name));
+        if (variable_symbol->vtype() == VariableSymbol::Type::CONSTANT)
         {
-            return new IntegerLiteralExpression{ static_cast<ConstantVariableSymbol*>(variable_symbol)->value };
+            return new IntegerLiteralExpression{ AS_CONSTANT_VARIABLE(variable_symbol)->value };
         }
 
         return nullptr;

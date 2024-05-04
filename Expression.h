@@ -1,11 +1,6 @@
 #ifndef HAZE_EXPRESSION_H
 #define HAZE_EXPRESSION_H
 
-#include <string>
-#include <string_view>
-
-#include "Segment.h"
-#include "Allocator.h"
 #include "Node.h"
 
 #define AS_INTEGER_LITERAL(x) static_cast<IntegerLiteralExpression*>(x)
@@ -31,7 +26,6 @@ namespace hz
         virtual Node::Type ntype() const final override;
         virtual Expression::Type etype() const = 0;
         virtual Expression* optimize() override; //return nullptr--default is to do nothing
-
     };
 }
 

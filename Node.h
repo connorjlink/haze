@@ -1,5 +1,6 @@
 #ifndef HAZE_NODE_H
 #define HAZE_NODE_H
+#include "Segment.h"
 
 namespace hz
 {

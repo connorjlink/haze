@@ -14,9 +14,15 @@ namespace hz
         int value;
 
     public:
-        virtual Expression* copy() final override;
-        virtual Expression::Type etype() final override;
-        virtual std::string string() final override;
+        IntegerLiteralExpression(int value)
+            : value(value)
+        {
+        }
+
+    public:
+        virtual Expression::Type etype() const final override;
+        virtual Expression* copy() const final override;
+        virtual std::string string() const final override;
         virtual Segment generate(Allocation*) final override;
     };
 }

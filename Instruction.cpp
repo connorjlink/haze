@@ -11,6 +11,12 @@ namespace hz
         opcode = static_cast<Opcode>((bytes & 0xF00000) >> 20);
     }
 
+    Instruction::Instruction(Opcode opcode, Register op1, Register op2, std::uint8_t imm, std::uint16_t mem)
+        : opcode(opcode), op1(op1), op2(op2), imm(imm), mem(mem)
+    {
+    }
+
+
     std::uint32_t Instruction::bytes() const
     {
         std::uint32_t instruction{};

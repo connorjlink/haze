@@ -18,6 +18,12 @@ namespace hz
         }
 
     public:
+        static void raw(std::string_view msg)
+        {
+            stream << msg;
+        }
+
+    public:
         static void info(std::string_view msg)
         {
             print("Information", msg);
