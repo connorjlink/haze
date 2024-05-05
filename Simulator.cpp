@@ -169,7 +169,8 @@ namespace hz
                 case 'd':
                 {
                     Log::info("Instruction listing:");
-                    Log::raw(Disassembler::disassemble_program(rom, instruction_pointer - std::min(3, std::abs(instruction_pointer - HALF_DWORD_MAX)), rom.size()));
+                    const auto offset = instruction_pointer - HALF_DWORD_MAX;
+                    Log::raw(Disassembler::disassemble_program(rom, offset - std::min(3, offset), rom.size()));
                 } break;
 
                 case 's':
@@ -192,47 +193,5 @@ namespace hz
                 } break;
             }
         }
-
-        char input;
-        std::cin >> input;
-
-        if (input == 'r')
-        {
-
-        }
-
-        for (char input = '\0'; input != 'q'; std::cin >> input)
-        {
-            switch (input)
-            {
-                case 'r':
-                {
-                    Log::info("Simulation starting...");
-                    Log::info("Press 'enter' to step forward one instruction");
-
-
-
-                } break;
-
-                case 'd':
-                {
-                    Log::info("")
-                } break;
-
-                default:
-                {
-                    Log::info(fmt::format("Invalid option {}", input));
-                } break;
-            }
-        }
-
-
-        Log::info("Press enter to step forward by 1 instruction:");
-
-        do
-        {
-            Log::info(fmt::format("registers=[{}] ip=${:X} sp={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}", fmt::join(register_file, ", "), instruction_pointer, stack_pointer, STACK_TOP - stack_pointer, opcode, operand1, operand2, immediate, memory));
-            std::cin.get();
-        } while (step());
     }
 }

@@ -12,7 +12,7 @@ namespace hz
 {
     class Statement : public Node
     {
-    protected:
+    public:
         enum class Type
         {
             COMPOUND,
@@ -32,7 +32,7 @@ namespace hz
 
     public:
         virtual Statement::Type stype() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual void generate(Allocation*) final override;
         virtual Statement* optimize() final override;
     };
 
@@ -45,7 +45,7 @@ namespace hz
 
     public:
         virtual Statement::Type stype() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual void generate(Allocation*) final override;
         virtual Statement* optimize() final override;
     };
 
@@ -57,7 +57,7 @@ namespace hz
 
     public:
         virtual Statement::Type stype() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual void generate(Allocation*) final override;
         virtual Statement* optimize() final override;
     };
 

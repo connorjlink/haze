@@ -3,6 +3,8 @@
 
 #include <fmt/format.h>
 
+#include "Constants.h"
+
 namespace hz
 {
     std::string Disassembler::disassemble_instruction(std::uint32_t raw)
@@ -36,7 +38,7 @@ namespace hz
         }
     }
 
-    std::string Disassembler::disassemble_program(const std::vector<std::uint8_t>& program, std::size_t first, std::size_t last)
+    std::string Disassembler::disassemble_program(const std::array<std::uint8_t, QUARTER_DWORD_MAX>& program, std::size_t first, std::size_t last)
     {
         std::string result{};
 

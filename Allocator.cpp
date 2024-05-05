@@ -23,77 +23,31 @@ namespace
 
 namespace hz
 {
-    void Allocator::load(Register reg, int address)
+    void Allocator::load(Register reg, std::uint16_t address)
     {
         generator->load(reg, address);
     }
 
-    void Allocator::save(int address, Register reg)
+    void Allocator::save(std::uint16_t address, Register reg)
     {
         generator->save(address, reg);
     }
 
-    const Register& Allocator::read(Allocation* allocation)
+
+    //TODO: figure out if this is the target or exclusion register or what
+    Allocation* Allocator::allocate_static(Register exclude)
     {
-        if (allocation->atype() == Allocation::Type::STATIC)
-        {
-            return static_cast<StaticAllocation*>(allocation)->reg;
-        }
-
-        Log::error("only static allocations can be read directly");
-    }
-
-    void Allocator::write(Allocation* allocation, std::uint8_t value)
-    {
-        using enum Allocation::Type;
-        switch (allocation->atype())
-        {
-            case STATIC:
-            {
-                auto static_allocation = static_cast<StaticAllocation*>(allocation);
-                generator->copy(static_allocation->reg, value);
-            } break;
-
-            case DYNAMIC:
-            {
-                auto dynamic_allocation = static_cast<DynamicAllocation*>(allocation);
-
-                auto store = [&]()
-                {
-                    generator->copy(R3, value);
-                    generator->save(dynamic_allocation->address, R3);
-                };
-
-                if (register_ledger[R3] == Status::FREE)
-                {
-                    store();
-                }
-
-                else
-                {
-                    generator->push(R3);
-                    store();
-                    generator->pull(R3);
-                }
-
-            } break;
-        }
+        //TODO: full implemention here
     }
 
 
-    void Allocator::deallocate_static(Allocation allocation)
-    {
-        auto static_allocation = allocation.as.static_allocation;
-        register_ledger[static_allocation->reg] = Status::FREE;
-    }
-
-    Allocation Allocator::allocate_dynamic(bool free)
+    Allocation* Allocator::allocate_dynamic(bool free)
     {
         for (auto candidate = 0; candidate < heap_ledger.size(); candidate++)
         {
             if (heap_ledger[candidate] == Status::FREE)
             {
-                return { .type = AllocationType::DYNAMIC, .as.dynamic_allocation = new DynamicAllocation{ static_cast<std::uint16_t>(candidate), free } };
+                return new DynamicAllocation{ candidate, free };
             }
         }
 
@@ -101,7 +55,7 @@ namespace hz
     }
 
     [[maybe_unused]]
-    Allocation Allocator::allocate_dynamic(std::uint16_t bytes, bool free)
+    Allocation* Allocator::allocate_dynamic(std::uint16_t bytes, bool free)
     {
         for (auto address = 0; address < heap_ledger.size(); address++)
         {
@@ -116,36 +70,10 @@ namespace hz
 
             if (available)
             {
-                return { .type = AllocationType::DYNAMIC, .as.dynamic_allocation = new DynamicAllocation{ static_cast<std::uint16_t>(address), free } };
+                return new DynamicAllocation{ address, free };
             }
         }
 
         Log::error(fmt::format("could not allocate {} contiguous bytes on the available heap", bytes));
-    }
-
-    void Allocator::deallocate_dynamic(Allocation allocation)
-    {
-        auto dynamic_allocation = allocation.as.dynamic_allocation;
-        if (dynamic_allocation->free)
-        {
-            heap_ledger[allocation.as.dynamic_allocation->address] = Status::FREE;
-        }
-    }
-
-    void Allocator::deallocate(Allocation allocation)
-    {
-        using enum AllocationType;
-        switch (allocation.type)
-        {
-            case STATIC:
-            {
-                deallocate_static(allocation);
-            } break;
-
-            case DYNAMIC:
-            {
-                deallocate_dynamic(allocation);
-            } break;
-        }
     }
 }

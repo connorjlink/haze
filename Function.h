@@ -34,15 +34,17 @@ namespace hz
         }
 
     public:
-        virtual Function::Type ftype() const = 0;
         virtual Node::Type ntype() const final override;
+        virtual Function::Type ftype() const = 0;
     };
 
     class RuntimeFunction : public Function
     {
     public:
         virtual Function::Type ftype() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual std::string string() const final override;
+        virtual RuntimeFunction* copy() const final override;
+        virtual void generate(Allocation*) final override;
         virtual Function* optimize() final override;
     };
 
@@ -50,7 +52,9 @@ namespace hz
     {
     public:
         virtual Function::Type ftype() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual std::string string() const final override;
+        virtual CompiletimeFunction* copy() const final override;
+        virtual void generate(Allocation*) final override;
         virtual Function* optimize() final override;
     };
 }

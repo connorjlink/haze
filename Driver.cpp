@@ -24,7 +24,6 @@ namespace hz
         optimizer = new Optimizer{ parser->get_ast(), parser, OPTIMIZE_AST | 0 };
         optimizer->optimize();
 
-        Generator::set_parser(parser);
         generator = new Generator{ optimizer->get_ast() };
 
         reducer = new Reducer{ generator->get_bytes() };

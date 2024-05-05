@@ -33,7 +33,7 @@ namespace hz
         virtual BinaryExpression::Type btype() const final override;
         virtual std::string string() const final override;
         virtual PlusBinaryExpression* copy() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual void generate(Allocation*) final override;
         virtual Expression* optimize() final override;
     };
 
@@ -43,7 +43,7 @@ namespace hz
         virtual BinaryExpression::Type btype() const final override;
         virtual std::string string() const final override;
         virtual MinusBinaryExpression* copy() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual void generate(Allocation*) final override;
         virtual Expression* optimize() final override;
     };
 
@@ -53,7 +53,7 @@ namespace hz
         virtual BinaryExpression::Type btype() const final override;
         virtual std::string string() const final override;
         virtual TimesBinaryExpression* copy() const final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual void generate(Allocation*) final override;
         virtual Expression* optimize() final override;
     };
 }

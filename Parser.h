@@ -44,7 +44,7 @@ namespace hz
     private:
         const Token& peek() const;
         const Token& next() const;
-        std::string_view consume(const Token&);
+        std::string_view consume(const TokenType&);
 
     private:
         enum Precedence

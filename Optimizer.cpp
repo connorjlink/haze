@@ -30,10 +30,10 @@ namespace hz
     {
         if (parameters & OPTIMIZE_AST)
         {
-            for (auto pass = 0; optimize_ast(program); pass++)
+            /*for (auto pass = 0; optimize_ast(program); pass++)
             {
                 Log::info(fmt::format("AST optimization pass {} successful", pass));
-            }
+            }*/
         }
     }
 }

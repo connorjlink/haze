@@ -4,6 +4,11 @@
 
 #include <iostream>
 #include <fmt/format.h>
+#include <print>
+
+#include "BinaryExpression.h"
+#include "FunctionCallExpression.h"
+#include "IntegerLiteralExpression.h"
 
 namespace
 {
@@ -60,13 +65,10 @@ namespace hz
         using enum Symbol::Type;
         switch (type)
         {
-            case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name });
-            case ARGUMENT:
-            case VARIABLE:
-
+            case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name }); break;
+            case ARGUMENT: symbol_table.emplace_back(new ArgumentSymbol{ name }); break;
+            case VARIABLE: symbol_table.emplace_back(new VariableSymbol{ name }); break;
         }
-
-        symbol_table.emplace_back(Symbol{ type, name });
     }
 
     bool Parser::query_symbol(std::string_view name)
@@ -106,37 +108,37 @@ namespace hz
         Log::error(fmt::format("({}) unexpectedly reached the end of file", peek().line));
     }
 
-    std::string_view Parser::consume(const Token& token)
+    std::string_view Parser::consume(const TokenType& token)
     {
         const auto& current = peek();
-        if (current.type == token.type)
+        if (current.type == token)
         {
             cursor++;
             return std::string_view{ current.value.value_or("") };
         }
 
-        Log::error(fmt::format("({}) expected token '{}' but got '{}'", token.line, debug_tokens.at(token.type),
+        Log::error(fmt::format("({}) expected token '{}' but got '{}'", current.line, debug_tokens.at(token),
             ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value.value() : debug_tokens.at(current.type))));
     }
 
     Expression* Parser::parse_identifier_expression()
     {
-        const auto name = consume(Token{ TokenType::IDENTIFIER });
+        const auto name = consume(TokenType::IDENTIFIER);
         return new IdentifierExpression{ name };
     }
 
     Expression* Parser::parse_intlit_expression()
     {
         //TODO: optimize the C++ conversion to integer? (maybe dont require a copy)
-        const auto value = std::stoi(std::string{ consume(Token{ TokenType::INT }) });
-        return new Expression{ ExpressionType::INTEGER_LITERAL, .as.integer_literal = new IntegerLiteral{ value } };
+        const auto value = std::stoi(std::string{ consume(TokenType::INT) });
+        return new IntegerLiteralExpression{ value };
     }
 
     Expression* Parser::parse_paren_expression()
     {
-        (void)consume(Token{ TokenType::LPAREN });
+        (void)consume(TokenType::LPAREN);
         const auto expression = new_parse_expression();
-        (void)consume(Token{ TokenType::RPAREN });
+        (void)consume(TokenType::RPAREN);
         return expression;
     }
 
@@ -150,7 +152,7 @@ namespace hz
 
             if (peek().type != TokenType::RPAREN)
             {
-                (void)consume(Token{ TokenType::COMMA });
+                (void)consume(TokenType::COMMA);
 
                 if (peek().type == TokenType::RPAREN)
                 {
@@ -164,13 +166,13 @@ namespace hz
 
     Expression* Parser::parse_function_call_expression()
     {
-        const auto name = consume(Token{ TokenType::IDENTIFIER });
+        const auto name = consume(TokenType::IDENTIFIER);
 
-        (void)consume(Token{ TokenType::LPAREN });
+        (void)consume(TokenType::LPAREN);
         const auto arguments = parse_function_call_arguments();
-        (void)consume(Token{ TokenType::RPAREN });
+        (void)consume(TokenType::RPAREN);
 
-        return new Expression{ ExpressionType::FUNCTION_CALL, .as.function_call = new FunctionCall{ name, arguments } };
+        return new FunctionCallExpression{ name, arguments };
     }
 
     Expression* Parser::parse_expression()
@@ -228,10 +230,11 @@ namespace hz
             { TokenType::STAR, PRECEDENCE_FACTOR },
         };
 
-        static const std::unordered_map<TokenType, BinaryExpressionType> binary_expression_types =
+        static const std::unordered_map<TokenType, BinaryExpression::Type> binary_expression_types =
         {
-            { TokenType::PLUS, BinaryExpressionType::PLUS },
-            { TokenType::STAR, BinaryExpressionType::MULTIPLY },
+            { TokenType::PLUS, BinaryExpression::Type::PLUS },
+            { TokenType::MINUS, BinaryExpression::Type::MINUS },
+            { TokenType::STAR, BinaryExpression::Type::TIMES },
         };
 
         do
@@ -243,7 +246,7 @@ namespace hz
                 break;
             }
 
-            consume(Token{ next.type });
+            consume(next.type);
 
             auto right = new_parse_primary();
 
@@ -261,7 +264,12 @@ namespace hz
 
             } while(true);
 
-            left = new Expression{ ExpressionType::BINARY_EXPRESSION, .as.binary_expression = new BinaryExpression{ binary_expression_types.at(next.type), left, right } };
+            switch (next.type)
+            {
+                case TokenType::PLUS: left = new PlusBinaryExpression{ left, right }; break;
+                case TokenType::MINUS: left = new MinusBinaryExpression{ left, right }; break;
+                case TokenType::STAR: left = new TimesBinaryExpression{ left, right }; break;
+            }
         } while (true);
 
         return left;
@@ -271,48 +279,48 @@ namespace hz
 
     Statement* Parser::parse_null_statement()
     {
-        (void)consume(Token{ TokenType::SEMICOLON });
+        (void)consume(TokenType::SEMICOLON);
         return nullptr;
     }
 
     Statement* Parser::parse_vardecl_statement()
     {
-        //TODO: add other type specifiers?
-        (void)consume(Token{ TokenType::BYTE });
+        //TODO: add other type specifiers
+        (void)consume(TokenType::BYTE);
 
-        const auto name = consume(Token{ TokenType::IDENTIFIER });
-        symbol_table.emplace_back(Symbol{ SymbolType::VARIABLE, .as.variable = new VariableSymbol{ VariableSymbolType::NORMAL } });
+        const auto name = consume(TokenType::IDENTIFIER);
+        symbol_table.emplace_back(new RuntimeVariableSymbol{ name });
 
         if (peek().type == TokenType::EQUALS)
         {
-            (void)consume(Token{ TokenType::EQUALS });
+            (void)consume(TokenType::EQUALS);
             const auto value = new_parse_expression();
-            (void)consume(Token{ TokenType::SEMICOLON });
+            (void)consume(TokenType::SEMICOLON);
 
-            return new Statement{ StatementType::VARIABLE_DECLARATION, .as.variable_declaration = new VariableDeclaration{ name, value } };
+            return new VariableStatement{ new VariableDeclaration{ name, value } };
         }
 
-        (void)consume(Token{ TokenType::SEMICOLON });
+        (void)consume(TokenType::SEMICOLON);
 
-        return new Statement{ StatementType::VARIABLE_DECLARATION, .as.variable_declaration = nullptr };
+        return new VariableStatement{ nullptr };
     }
 
     Statement* Parser::parse_compound_statement()
     {
-        (void)consume(Token{ TokenType::LBRACE });
+        (void)consume(TokenType::LBRACE);
         const auto statements = parse_statements();
-        (void)consume(Token{ TokenType::RBRACE });
+        (void)consume(TokenType::RBRACE);
 
-        return new Statement{ StatementType::COMPOUND, .as.compound_statement = new Compound{ statements } };
+        return new CompoundStatement{ statements };
     }
 
     Statement* Parser::parse_return_statement()
     {
-        (void)consume(Token{ TokenType::RETURN });
+        (void)consume(TokenType::RETURN);
         const auto expression = new_parse_expression();
-        (void)consume(Token{ TokenType::SEMICOLON });
+        (void)consume(TokenType::SEMICOLON);
 
-        return new Statement{ StatementType::RETURN, .as.return_statement = new Return{ expression } };
+        return new ReturnStatement{ expression };
     }
 
     Statement* Parser::parse_statement()
@@ -320,10 +328,10 @@ namespace hz
         using enum TokenType;
         switch (peek().type)
         {
-            case    LBRACE: return parse_compound_statement();
-            case      BYTE: return parse_vardecl_statement();
+            case LBRACE: return parse_compound_statement();
+            case BYTE: return parse_vardecl_statement();
             case SEMICOLON: return parse_null_statement();
-            case    RETURN: return parse_return_statement();
+            case RETURN: return parse_return_statement();
 
             default:
             {
@@ -347,9 +355,9 @@ namespace hz
     Argument Parser::parse_argument()
     {
         //TODO: add other type specifiers for arguments?
-        (void)consume(Token{ TokenType::BYTE });
-        const auto name = consume(Token{ TokenType::IDENTIFIER });
-        add_symbol(SymbolType::ARGUMENT, name);
+        (void)consume(TokenType::BYTE);
+        const auto name = consume(TokenType::IDENTIFIER);
+        add_symbol(Symbol::Type::ARGUMENT, name);
 
         return Argument{ name };
     }
@@ -364,7 +372,7 @@ namespace hz
 
             if (peek().type != TokenType::RPAREN)
             {
-                (void)consume(Token{ TokenType::COMMA });
+                (void)consume(TokenType::COMMA);
 
                 if (peek().type == TokenType::RPAREN)
                 {
@@ -378,22 +386,23 @@ namespace hz
 
     Function* Parser::parse_function()
     {
-        (void)consume(Token{ TokenType::FUNCTION });
+        (void)consume(TokenType::FUNCTION);
         //TODO: support return types other than byte (particularly void functions)
-        (void)consume(Token{ TokenType::BYTE });
+        (void)consume(TokenType::BYTE);
 
-        const auto name = consume(Token{ TokenType::IDENTIFIER });
-        add_symbol(SymbolType::FUNCTION, name);
+        const auto name = consume(TokenType::IDENTIFIER);
+        add_symbol(Symbol::Type::FUNCTION, name);
 
-        (void)consume(Token{ TokenType::EQUALS });
+        (void)consume(TokenType::EQUALS);
 
-        (void)consume(Token{ TokenType::LPAREN });
+        (void)consume(TokenType::LPAREN);
         const auto arguments = parse_arguments();
-        (void)consume(Token{ TokenType::RPAREN });
+        (void)consume(TokenType::RPAREN);
 
         const auto body = parse_compound_statement();
 
-        return new Function{ name, arguments, body };
+        //TODO: handle compile-time function
+        return new RuntimeFunction{ name, arguments, body };
     }
 
     std::vector<Function*> Parser::parse_functions()
@@ -426,51 +435,6 @@ namespace hz
         parse_program();
     }
 
-    std::string Parser::format_expression(Expression* expression)
-    {
-        std::string result(1 << 5, '\0');
-
-        if (expression != nullptr)
-        {
-            using enum ExpressionType;
-            switch (expression->type)
-            {
-                case INTEGER_LITERAL:
-                {
-                    result = fmt::format("integer literal ({})", expression->as.integer_literal->value);
-                } break;
-
-                case IDENTIFIER:
-                {
-                    result = fmt::format("identifier ({})", expression->as.identifier->name);
-                } break;
-
-                case FUNCTION_CALL:
-                {
-                    result = fmt::format("function call ({})", expression->as.function_call->name);
-                } break;
-
-                case BINARY_EXPRESSION:
-                {
-                    char op;
-
-                    using enum BinaryExpressionType;
-                    switch (expression->as.binary_expression->type)
-                    {
-                        case     PLUS: op = '+'; break;
-                        case    MINUS: op = '-'; break;
-                        case MULTIPLY: op = '*'; break;
-                    }
-
-                    result = fmt::format("binary expression ({} {} {})",
-                        format_expression(expression->as.binary_expression->left), op, format_expression(expression->as.binary_expression->right));
-                } break;
-            }
-        }
-
-        return result;
-    }
-
     void Parser::print_expression(Expression* expression)
     {
         std::cout << format_expression(expression);
@@ -485,7 +449,7 @@ namespace hz
         {
             case COMPOUND:
             {
-                const auto compound_statement = statement->as.compound_statement;
+                const auto compound_statement = AS_COMPOUND(statement);
 
                 std::cout << "compound:";
                 ::ast_nl();
@@ -498,7 +462,7 @@ namespace hz
 
             case VARIABLE_DECLARATION:
             {
-                const auto variable_declaration = statement->as.variable_declaration;
+                const auto variable_declaration = AS_VARIABLE_DECLARATION(statement);
 
                 std::cout << fmt::format("variable declaration ({} = {})",
                     variable_declaration->name, format_expression(variable_declaration->expression));
@@ -508,7 +472,7 @@ namespace hz
 
             case RETURN:
             {
-                const auto return_statement = statement->as.return_statement;
+                const auto return_statement = AS_RETURN(statement);
 
                 std::cout << fmt::format("return ({})", format_expression(return_statement->expression));
 

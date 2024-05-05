@@ -4,6 +4,8 @@
 
 #include <fmt/format.h>
 
+#include "Allocator.h"
+
 namespace hz
 {
     Expression::Type IdentifierExpression::etype() const
@@ -21,7 +23,7 @@ namespace hz
         return new IdentifierExpression{ *this };
     }
 
-    Segment IdentifierExpression::generate(Allocation* allocation)
+    void IdentifierExpression::generate(Allocation* allocation)
     {
         auto symbol = parser->reference_symbol(Symbol::Type::VARIABLE, name);
         return Allocator::write(allocation, Allocator::read(symbol->allocation()));

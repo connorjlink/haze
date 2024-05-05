@@ -4,6 +4,8 @@
 #include "Log.h"
 #include <fmt/format.h>
 
+#include "Generator.h"
+
 #define MULTIPLICATION_ERROR do { Log::error("machine code generation is unsupported for runtime multiplication"); } while (0)
 
 namespace hz
@@ -59,28 +61,30 @@ namespace hz
 
 
 
-    Segment PlusBinaryExpression::generate(Allocation* received_allocation)
+    void PlusBinaryExpression::generate(Allocation* received_allocation)
     {
         auto temp_allocation = Allocator::allocate_static();
 
         left->generate(received_allocation);
         right->generate(temp_allocation);
 
-        generator->iadd(AS_STATIC(left)->get_register(), AS_STATIC(right)->get_register());
+        generator->iadd(received_allocation->read(), temp_allocation->read());
+        temp_allocation->deallocate();
     }
 
-    Segment MinusBinaryExpression::generate(Allocation* received_allocation)
+    void MinusBinaryExpression::generate(Allocation* received_allocation)
     {
-        //TODO:
         auto temp_allocation = Allocator::allocate_static();
 
         left->generate(received_allocation);
         right->generate(temp_allocation);
 
-        generator->isub(AS_STATIC(left)->get_register(), AS_STATIC(right)->get_register());
+        generator->isub(received_allocation->read(), temp_allocation->read());
+        temp_allocation->deallocate();
     }
 
-    Segment TimesBinaryExpression::generate(Allocation* receieved_allocation)
+    [[noreturn]]
+    void TimesBinaryExpression::generate(Allocation* receieved_allocation)
     {
         MULTIPLICATION_ERROR;
     }
@@ -91,6 +95,10 @@ namespace hz
     {
         auto left_optimized = left->optimize();
         auto right_optimized = right->optimize();
+
+        if (!left_optimized && !right_optimized) return nullptr;
+        if (!left_optimized) left_optimized = left;
+        if (!right_optimized) right_optimized = right;
 
         if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
             AS_INTEGER_LITERAL(left_optimized)->value == 0)
@@ -118,6 +126,10 @@ namespace hz
         auto left_optimized = left->optimize();
         auto right_optimized = right->optimize();
 
+        if (!left_optimized && !right_optimized) return nullptr;
+        if (!left_optimized) left_optimized = left;
+        if (!right_optimized) right_optimized = right;
+
         if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
             AS_INTEGER_LITERAL(left_optimized)->value == 0)
         {
@@ -143,6 +155,10 @@ namespace hz
     {
         auto left_optimized = left->optimize();
         auto right_optimized = right->optimize();
+
+        if (!left_optimized && !right_optimized) return nullptr;
+        if (!left_optimized) left_optimized = left;
+        if (!right_optimized) right_optimized = right;
 
         if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
         {

@@ -16,39 +16,22 @@ namespace hz
 
     class Allocator
     {
-    private:
-        inline static Generator* generator = nullptr;
+    public:
+        void load(Register, std::uint16_t);
+        void save(std::uint16_t, Register);
 
     public:
-        static void set_generator(Generator* gen)
-        {
-            generator = gen;
-        }
+        std::array<Status, 4> register_ledger = {};
+        std::array<Status, 32768> heap_ledger = {};
 
     public:
-        static void load(Register, int);
-        static void save(int, Register);
+        Allocation* allocate_static(Register = DC);
 
-    public:
-        static const Register& read(Allocation*);
-        static void write(Allocation*, std::uint8_t);
-
-    private:
-        inline static std::array<Status, 4> register_ledger = {};
-        inline static std::array<Status, 32768> heap_ledger = {};
-
-    private:
-        static void deallocate_static(Allocation*);
-        static void deallocate_dynamic(Allocation*);
-
-    public:
-        static Allocation* allocate_static(Register = DC);
-
-        static Allocation* allocate_dynamic(bool = true);
-        static Allocation* allocate_dynamic(std::uint16_t, bool = true);
-
-        static void deallocate(Allocation*);
+        Allocation* allocate_dynamic(bool = true);
+        Allocation* allocate_dynamic(std::uint16_t, bool = true);
     };
+
+    extern Allocator* allocator;
 }
 
 #endif //HAZE_ALLOCATOR_H

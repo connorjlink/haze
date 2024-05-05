@@ -23,7 +23,6 @@ namespace hz
     public:
         virtual Allocation::Type atype() const = 0;
 
-        virtual Allocation* allocate() = 0;
         virtual void deallocate() = 0;
 
         virtual Register& read() = 0;
@@ -32,20 +31,31 @@ namespace hz
 
     class StaticAllocation : public Allocation
     {
-    private:
+    public:
         Register reg;
 
     public:
         virtual Allocation::Type atype() const final override;
+
+        virtual void deallocate() final override;
+
+        virtual Register& read() final override;
+        virtual void write(std::uint8_t) final override;
     };
 
     class DynamicAllocation : public Allocation
     {
-    private:
+    public:
         std::uint16_t address;
+        bool need_free;
 
     public:
         virtual Allocation::Type atype() const final override;
+
+        virtual void deallocate() final override;
+
+        virtual Register& read() final override;
+        virtual void write(std::uint8_t) final override;
     };
 
 }

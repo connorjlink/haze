@@ -1,4 +1,5 @@
 #include "Statement.h"
+#include "Allocator.h"
 
 namespace hz
 {
@@ -7,17 +8,13 @@ namespace hz
         return Statement::Type::COMPOUND;
     }
 
-    Segment CompoundStatement::generate(Allocation*)
+    void CompoundStatement::generate(Allocation*)
     {
-        Segment result{};
-
         for (auto substatement : substatements)
         {
-            auto allocation = Allocator::allocate_static();
-            result.append(substatement->generate(allocation));
+            auto allocation = allocator->allocate_static();
+            substatement->generate(allocation);
         }
-
-        return result;
     }
 
     Statement* CompoundStatement::optimize()
@@ -44,17 +41,18 @@ namespace hz
         return Statement::Type::VARIABLE;
     }
 
-    Segment VariableStatement::generate(Allocation* received_allocation)
+    void VariableStatement::generate(Allocation* received_allocation)
     {
-        Segment result{};
-
-        allocation = received_allocation;
+        /*allocation = received_allocation;
         if (value)
         {
-            result.append(value->generate(allocation));
+            value->generate(allocation);
+        }*/
+        //TODO: is the above wrong? why does it set `allocation`
+        if (value)
+        {
+            value->generate(received_allocation);
         }
-
-        return result;
     }
 
     Statement* VariableStatement::optimize()
@@ -69,17 +67,19 @@ namespace hz
         return Statement::Type::RETURN;
     }
 
-    Segment ReturnStatement::generate(Allocation* received_allocation)
+    void ReturnStatement::generate(Allocation* received_allocation)
     {
-        Segment result{};
-
+        /*
         allocation = received_allocation;
         if (value)
         {
             result.append(value->generate(allocation));
+        }*/
+        //TODO: is the above wrong? why does it set `allocation`
+        if (value)
+        {
+            value->generate(received_allocation);
         }
-
-        return result;
     }
 
     Statement* ReturnStatement::optimize()

@@ -1,39 +1,73 @@
 #include "Function.h"
 
+#include <fmt/format.h>
+
 namespace hz
 {
-    Function::Type RuntimeFunction::type()
+    Node::Type Function::ntype() const
+    {
+        return Node::Type::FUNCTION;
+    }
+
+
+    Function::Type RuntimeFunction::ftype() const
     {
         return Function::Type::RUNTIME;
     }
 
-    Segment RuntimeFunction::generate()
-    {
-
-    }
-
-    Function* RuntimeFunction::optimize()
-    {
-        return new RuntimeFunction{ name, arguments, body->optimize() };
-    }
-
-
-
-
-    Function::Type CompiletimeFunction::type()
+    Function::Type CompiletimeFunction::ftype() const
     {
         return Function::Type::COMPILETIME;
     }
 
-    Segment CompiletimeFunction::generate()
+
+    std::string RuntimeFunction::string() const
+    {
+        return fmt::format("run-time function ({}({}))", name, fmt::join(arguments, ", "));
+    }
+
+    std::string CompiletimeFunction::string() const
+    {
+        return fmt::format("compile-time function ({}({}))", name, fmt::join(arguments, ", "));
+    }
+
+
+    RuntimeFunction* RuntimeFunction::copy() const
+    {
+        return new RuntimeFunction{ *this };
+    }
+
+    CompiletimeFunction* CompiletimeFunction::copy() const
+    {
+        return new CompiletimeFunction{ *this };
+    }
+
+
+    Segment RuntimeFunction::generate(Allocation* allocation)
+    {
+        return {};
+    }
+
+    Segment CompiletimeFunction::generate(Allocation* allocation)
     {
         //TODO: determine the best way of netting the proper return value
         return {};
     }
 
+
+    Function* RuntimeFunction::optimize()
+    {
+        if (auto body_optimized = body->optimize(); body_optimized)
+        {
+            return new RuntimeFunction{ name, arguments, body_optimized };
+        }
+
+        return nullptr;
+    }
+
     Function* CompiletimeFunction::optimize()
     {
         //No need to optimize what is already a compile time function
-        return new CompiletimeFunction{ *this };
+        return nullptr;
     }
 }

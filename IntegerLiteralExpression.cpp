@@ -19,8 +19,8 @@ namespace hz
         return fmt::format("integer literal ({})", value);
     }
 
-    Segment IntegerLiteralExpression::generate(Allocation* allocation)
+    void IntegerLiteralExpression::generate(Allocation* allocation)
     {
-        return Allocator::write(allocation, value);
+        allocation->write(value);
     }
 }

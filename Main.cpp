@@ -46,9 +46,6 @@ int main(int argc, char** argv)
 
     hz::Generator generator(parser.get_ast());
 
-    hz::Generator::set_parser(&parser);
-    hz::Allocator::set_generator(&generator);
-
     generator.generate();
 
     parser.print_ast();

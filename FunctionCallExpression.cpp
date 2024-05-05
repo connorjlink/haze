@@ -4,23 +4,19 @@
 
 namespace hz
 {
-    Expression::Type FunctionCallExpression::etype()
+    Expression::Type FunctionCallExpression::etype() const
     {
         return Expression::Type::FUNCTION_CALL;
     }
 
-    std::string FunctionCallExpression::string()
+    std::string FunctionCallExpression::string() const
     {
         return fmt::format("function call ({})", name);
     }
 
-    Segment FunctionCallExpression::generate(Allocation* allocation)
+    void FunctionCallExpression::generate(Allocation* allocation)
     {
-        Segment result{};
-
         //TODO: finish generating the function code here
-
-        return result;
     }
 
     Expression* FunctionCallExpression::optimize()

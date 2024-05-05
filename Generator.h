@@ -24,9 +24,6 @@ namespace hz
         std::string code;
         std::vector<std::uint8_t> bytes;
 
-    private:
-        inline static Parser* parser = nullptr;
-
     public:
         const std::string& get_code() const
         {
@@ -65,12 +62,6 @@ namespace hz
         void generate_statement(Statement*, Statement*);
         void generate_function(Function*);
         void generate_program();
-
-    public:
-        static void set_parser(Parser* p)
-        {
-            parser = p;
-        }
 
     public:
         explicit Generator(const std::vector<Function*>& program)

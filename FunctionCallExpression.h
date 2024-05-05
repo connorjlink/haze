@@ -10,14 +10,14 @@ namespace hz
 {
     class FunctionCallExpression : public Expression
     {
-    private:
+    public:
         std::string_view name;
         std::vector<Expression*> arguments;
 
     public:
-        virtual Expression::Type etype() final override;
-        virtual std::string string() final override;
-        virtual Segment generate(Allocation*) final override;
+        virtual Expression::Type etype() const final override;
+        virtual std::string string() const final override;
+        virtual void generate(Allocation*) final override;
         virtual Expression* optimize() final override;
     };
 }
