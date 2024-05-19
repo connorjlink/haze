@@ -1,0 +1,4 @@
+function byte test = (byte a, byte b)
+{
+    return a + b;
+}
