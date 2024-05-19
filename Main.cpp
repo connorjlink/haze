@@ -15,6 +15,7 @@
 
 hz::Allocator* hz::allocator;
 hz::Generator* hz::generator;
+hz::Parser* hz::parser;
 
 
 int main(int argc, char** argv)
@@ -34,47 +35,44 @@ int main(int argc, char** argv)
         hz::Log::error(std::format("the file {} could not be found", filepath));
     }
 
+    //Create our static and dynamic allocation manager before everything else
+    hz::allocator = new hz::Allocator;
+
     std::string contents((std::istreambuf_iterator<char>(file)),
                           std::istreambuf_iterator<char>());
 
-    hz::Preprocessor preprocessor(contents, filepath);
+    hz::Preprocessor preprocessor{ std::move(contents), filepath };
     preprocessor.preprocess();
 
-    hz::Lexer lexer(contents);
-    lexer.lex();
+    hz::Lexer lexer{ std::move(contents) };
+    auto tokens = lexer.lex();
 
-    //lexer.print_tokens();
+    hz::parser = new hz::CompilerParser{ std::move(tokens) };
+    auto ast = hz::parser->parse();
 
-    hz::Parser parser(lexer.get_tokens());
-    parser.parse();
-
-    hz::allocator = new hz::Allocator;
-
-    //hz::Generator generator(parser.get_ast());
-    hz::generator = new hz::Generator(parser.get_ast());
-
-    //generator.generate();
-
-    //parser.print_ast();
+    hz::generator = new hz::Generator{ std::move(ast) };
+    hz::generator->generate();
 
     hz::Log::info(std::format("successfully compiled {}", filepath));
 
 
-    std::vector<std::uint8_t> rom = {0x10, 0x07, 0x00, //load x, #7
-                                           0x14, 0x04, 0x00, //load y, #4
-                                           0x41, 0x00, 0x00, //iadd x, y
-                                           0x94, 0x00, 0x00, //bnot y
-                                           0xC0, 0x00, 0x00, //push x
-                                           0xC4, 0x00, 0x00, //push y
-                                           0xD0, 0x00, 0x00, //pull x
-                                           0xD4, 0x00, 0x00, //pull y
+    //REDO This since we changed the opcode mapping a bit
+    std::vector<std::uint8_t> rom = 
+    { 
+        0x10, 0x07, 0x00, //load x, #7
+        0x14, 0x04, 0x00, //load y, #4
+        0x41, 0x00, 0x00, //iadd x, y
+        0x94, 0x00, 0x00, //bnot y
+        0xC0, 0x00, 0x00, //push x
+        0xC4, 0x00, 0x00, //push y
+        0xD0, 0x00, 0x00, //pull x
+        0xD4, 0x00, 0x00, //pull y
     };
 
 
-    hz::Simulator sim{ rom };
+    hz::Simulator sim{ std::move(rom) };
     sim.reset();
     sim.run();
-
 
     return EXIT_SUCCESS;
 }

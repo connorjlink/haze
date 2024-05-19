@@ -6,9 +6,6 @@
 
 #include "Statement.h"
 
-#define AS_RUNTIME_FUNCTION(x) return static_cast<RuntimeFunction*>(x)
-#define AS_COMPILETIME_FUNCTION(x) return static_cast<CompileTimeFunction*>(x)
-
 namespace hz
 {
     class Function : public Node
@@ -19,19 +16,8 @@ namespace hz
         Statement* body;
 
     public:
-        const decltype(arguments)& get_arguments() const
-        {
-            return arguments;
-        }
-
-        const decltype(body) get_body() const
-        {
-            return body;
-        }
-
-    public:
-        Function(std::string_view name, std::vector<Expression*> arguments, Statement* body)
-            : name(name), arguments(arguments), body(body)
+        Function(std::string_view name, std::vector<Expression*>&& arguments, Statement* body)
+            : name(name), arguments(std::move(arguments)), body(body)
         {
         }
 

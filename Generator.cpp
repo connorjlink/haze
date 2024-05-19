@@ -14,6 +14,18 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "Utility.h"
+
+namespace
+{
+	void encode(std::vector<std::uint8_t>& vec, std::uint32_t bytes)
+	{
+		for (auto byte : hz::extract(bytes))
+		{
+			vec.emplace_back(byte);
+		}
+	}
+}
 
 namespace hz
 {
@@ -31,96 +43,85 @@ namespace hz
 	void Generator::move(Register destination, Register source)
 	{
 		code += std::format("\tmove {}, {}\n", unmap(destination), unmap(source));
-		bytes.emplace_back(Instruction{ MOVE, destination, source }.bytes());
+		encode(bytes, Instruction{ MOVE, destination, source }.bytes());
 	}
 
 	void Generator::load(Register destination, std::uint16_t address)
 	{
 		code += std::format("\tload {}, &{}\n", unmap(destination), address);
-		bytes.emplace_back(Instruction{ LOAD, destination, DC, 0, address }.bytes());
+		encode(bytes, Instruction{ LOAD, destination, DC, 0, address }.bytes());
 	}
 
 	void Generator::copy(Register destination, std::uint8_t immediate)
 	{
 		code += std::format("\tcopy {}, #{}\n", unmap(destination), immediate);
-		bytes.emplace_back(Instruction{ COPY, destination, DC, immediate, 0 }.bytes());
+		encode(bytes, Instruction{ COPY, destination, DC, immediate, 0 }.bytes());
 	}
 
 	void Generator::save(std::uint16_t address, Register source)
 	{
 		code += std::format("\tsave &{}, {}\n", address, unmap(source));
-		bytes.emplace_back(Instruction{ SAVE, DC, source, 0, address }.bytes());
+		encode(bytes, Instruction{ SAVE, DC, source, 0, address }.bytes());
 	}
 
 	void Generator::iadd(Register destination, Register source)
 	{
 		code += std::format("\tiadd {}, {}\n", unmap(destination), unmap(source));
-		bytes.emplace_back(Instruction{ IADD, destination, source }.bytes());
+		encode(bytes, Instruction{ IADD, destination, source }.bytes());
 	}
 
 	void Generator::isub(Register destination, Register source)
 	{
 		code += std::format("\tisub {}, {}\n", unmap(destination), unmap(source));
-		bytes.emplace_back(Instruction{ ISUB, destination, source }.bytes());
+		encode(bytes, Instruction{ ISUB, destination, source }.bytes());
 	}
 
 	void Generator::band(Register destination, Register source)
 	{
 		code += std::format("\tband {}, {}\n", unmap(destination), unmap(source));
-		bytes.emplace_back(Instruction{ BAND, destination, source }.bytes());
+		encode(bytes, Instruction{ BAND, destination, source }.bytes());
 	}
 
 	void Generator::bior(Register destination, Register source)
 	{
 		code += std::format("\tbior {}, {}\n", unmap(destination), unmap(source));
-		bytes.emplace_back(Instruction{ BIOR, destination, source }.bytes());
+		encode(bytes, Instruction{ BIOR, destination, source }.bytes());
 	}
 
 	void Generator::bxor(Register destination, Register source)
 	{
 		code += std::format("\tbxor {}, {}\n", unmap(destination), unmap(source));
-		bytes.emplace_back(Instruction{ BXOR, destination, source }.bytes());
-	}
-
-	void Generator::bnot(Register destination)
-	{
-		code += std::format("\tbnot {}\n", unmap(destination));
-		bytes.emplace_back(Instruction{ BNOT, destination, DC }.bytes());
+		encode(bytes, Instruction{ BXOR, destination, source }.bytes());
 	}
 
 	void Generator::call(std::uint16_t address)
 	{
 		code += std::format("\tcall &{}\n", address);
-		bytes.emplace_back(Instruction{ CALL, DC, DC, 0, address }.bytes());
+		encode(bytes, Instruction{ CALL, DC, DC, 0, address }.bytes());
 	}
 
 	void Generator::exit()
 	{
 		code += std::format("\texit\n");
-		bytes.emplace_back(Instruction{ EXIT, DC, DC }.bytes());
+		encode(bytes, Instruction{ EXIT, DC, DC }.bytes());
 	}
 
 	void Generator::push(Register source)
 	{
 		code += std::format("\tpush {}\n", unmap(source));
-		bytes.emplace_back(Instruction{ PUSH, DC, source }.bytes());
+		encode(bytes, Instruction{ PUSH, DC, source }.bytes());
 	}
 
 	void Generator::pull(Register destination)
 	{
 		code += std::format("\tpull {}\n", unmap(destination));
-		bytes.emplace_back(Instruction{ PULL, destination, DC }.bytes());
+		encode(bytes, Instruction{ PULL, destination, DC }.bytes());
 	}
 
 	void Generator::brez(std::uint16_t address, Register source)
 	{
 		code += std::format("\tbrez &{}, {}\n", address, unmap(source));
-		bytes.emplace_back(Instruction{ BREZ, DC, source, 0, address }.bytes());
-	}
-
-	void Generator::rsvd(Register destination, Register source)
-	{
-		Log::error("This opcode is currently reserved for future use as an instruction set extension prefix");
+		encode(bytes, Instruction{ BREZ, DC, source, 0, address }.bytes());
 	}
 
 
@@ -256,9 +257,16 @@ namespace hz
 		}
 	}*/
 
-	/*void Generator::generate()
+	void Generator::generate()
 	{
 		code.reserve(1 << 12);
-		generate_program();
-	}*/
+		
+		//generate_program()
+		for (auto function : program)
+		{
+			//TODO: does this allocation scheme even work?
+			auto allocation = allocator->allocate_static();
+			function->generate(allocation);
+		}
+	}
 }

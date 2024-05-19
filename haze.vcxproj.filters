@@ -143,9 +143,15 @@
     <ClInclude Include="Allocation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="specification.md">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

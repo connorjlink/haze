@@ -13,7 +13,7 @@ namespace hz
     {
     public:
         static std::string disassemble_instruction(std::uint32_t);
-        static std::string disassemble_program(const std::array<std::uint8_t, QUARTER_DWORD_MAX>&, std::size_t, std::size_t);
+        static std::string disassemble_program(const std::array<std::uint8_t, HALF_DWORD_MAX>&, std::size_t, std::size_t);
     };
 }
 

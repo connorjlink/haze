@@ -8,58 +8,77 @@
 
 namespace hz
 {
-    enum class TokenType
-    {
-        INT,
+	enum class TokenType
+	{
+		INT,
 
-        IDENTIFIER,
+		IDENTIFIER,
 
-        FUNCTION,
-        BYTE,
-        RETURN,
+		SEMICOLON,
+		COMMA,
+		EQUALS,
 
-        SEMICOLON,
-        COMMA,
-        EQUALS,
+		LPAREN, RPAREN,
+		LBRACE, RBRACE,
 
-        LPAREN, RPAREN,
-        LBRACE, RBRACE,
+		PLUS, MINUS, STAR,
 
-        PLUS, MINUS, STAR,
+		FUNCTION,
+		BYTE,
+		RETURN,
 
-        END,
-    };
+		DOTDEFINE, DOTORG,
 
-    struct Token
-    {
-        TokenType type;
-        std::size_t line;
-        std::optional<std::string> value;
-    };
+		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, BNOT, CALL, EXIT, PUSH, PULL, BREZ, WAIT,
 
-    static const std::unordered_map<TokenType, const char*> debug_tokens
-    {
-        { TokenType::INT, "int" },
-        { TokenType::IDENTIFIER, "identifier" },
+		END,
+	};
 
-        { TokenType::FUNCTION, "function" },
-        { TokenType::BYTE, "byte" },
+	static const std::unordered_map<std::string_view, TokenType> lexeme_map =
+	{
+		{ ";", TokenType::SEMICOLON },
+		{ ",", TokenType::COMMA },
+		{ "=", TokenType::EQUALS },
+		{ "(", TokenType::LPAREN  },
+		{ ")", TokenType::RPAREN },
+		{ "{", TokenType::LBRACE },
+		{ "}",TokenType::RBRACE },
+		{ "+", TokenType::PLUS },
+		{ "-", TokenType::MINUS },
+		{ "*", TokenType::STAR },
 
-        { TokenType::SEMICOLON, ";" },
-        { TokenType::COMMA, "," },
-        { TokenType::EQUALS, "=" },
+		{ "function", TokenType::FUNCTION },
+		{ "byte", TokenType::BYTE },
+		{ "return", TokenType::RETURN },
 
-        { TokenType::LPAREN, "(" },
-        { TokenType::RPAREN, ")" },
-        { TokenType::LBRACE, "{" },
-        { TokenType::RBRACE, "}" },
+		{ ".define", TokenType::DOTDEFINE },
+		{ ".org", TokenType::DOTORG },
 
-        { TokenType::PLUS, "+" },
-        { TokenType::MINUS, "-" },
-        { TokenType::STAR, "*" },
+		{ "move", TokenType::MOVE },
+		{ "load", TokenType::LOAD },
+		{ "copy", TokenType::COPY },
+		{ "iadd", TokenType::IADD },
+		{ "isub", TokenType::ISUB },
+		{ "BAND", TokenType::BAND },
+		{ "BIOR", TokenType::BIOR },
+		{ "BXOR", TokenType::BXOR },
+		{ "BNOT", TokenType::BNOT },
+		{ "CALL", TokenType::CALL },
+		{ "EXIT", TokenType::EXIT },
+		{ "PUSH", TokenType::PUSH },
+		{ "PULL", TokenType::PULL },
+		{ "BREZ", TokenType::BREZ },
+		{ "WAIT", TokenType::WAIT },
 
-        { TokenType::END, "eof" },
-    };
+		{ "eof", TokenType::END },
+	};
+
+	struct Token
+	{
+		TokenType type;
+		std::size_t line;
+		std::optional<std::string> value;
+	};
 }
 
 #endif //HAZE_TOKEN_H

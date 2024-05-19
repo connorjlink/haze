@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <string_view>
 
+#include "Node.h"
+
 namespace hz
 {
     enum Opcode
@@ -18,13 +20,11 @@ namespace hz
         BAND = 0x6,
         BIOR = 0x7,
         BXOR = 0x8,
-        BNOT = 0x9,
-        CALL = 0xA,
-        EXIT = 0xB,
-        PUSH = 0xC,
-        PULL = 0xD,
-        BREZ = 0xE,
-        RSVD = 0xF,
+        CALL = 0x9,
+        EXIT = 0xA,
+        PUSH = 0xB,
+        PULL = 0xC,
+        BREZ = 0xD,
     };
 
     enum Register
@@ -50,7 +50,7 @@ namespace hz
         return register_map.at(r);
     };
 
-    struct Instruction
+    class Instruction : public Node
     {
     public:
         Opcode opcode;
@@ -64,8 +64,12 @@ namespace hz
         Instruction(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);
         std::uint32_t bytes() const;
 
-        //static std::uint32_t compose(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);
-        //static Instruction decompose(std::uint32_t);
+    public:
+        virtual Node::Type ntype() const final override;
+        virtual std::string string() const final override;
+        virtual Instruction* copy() const final override;
+        virtual void generate(Allocation*) final override;
+        virtual Instruction* optimize() final override;
     };
 }
 

@@ -5,7 +5,6 @@
 
 namespace hz
 {
-    class Parser;
     class Allocation;
 
     class Node
@@ -16,6 +15,7 @@ namespace hz
             FUNCTION,
             STATEMENT,
             EXPRESSION,
+            INSTRUCTION,
         };
 
     public:
@@ -25,8 +25,6 @@ namespace hz
         virtual void generate(Allocation*) = 0;
         virtual Node* optimize() = 0;
     };
-
-    extern Parser* parser;
 }
 
 #endif //HAZE_NODE_H

@@ -87,6 +87,7 @@ namespace hz
 	[[noreturn]]
 	void TimesBinaryExpression::generate(Allocation* receieved_allocation)
 	{
+		DISCARD receieved_allocation;
 		MULTIPLICATION_ERROR;
 	}
 

@@ -10,23 +10,23 @@
 
 namespace hz
 {
-    class Expression : public Node
-    {
-    public:
-        enum class Type
-        {
-            INTEGER_LITERAL,
-            IDENTIFIER,
-            FUNCTION_CALL,
-            BINARY,
-        };
+	class Expression : public Node
+	{
+	public:
+		enum class Type
+		{
+			INTEGER_LITERAL,
+			IDENTIFIER,
+			FUNCTION_CALL,
+			BINARY,
+		};
 
-        //TODO: implement virtual destructor for this class
-    public:
-        virtual Node::Type ntype() const final override;
-        virtual Expression::Type etype() const = 0;
-        virtual Expression* optimize() override; //return nullptr--default is to do nothing
-    };
+		//TODO: implement virtual destructor for this class
+	public:
+		virtual Node::Type ntype() const final override;
+		virtual Expression::Type etype() const = 0;
+		virtual Expression* optimize() override; //return nullptr--default is to do nothing
+	};
 }
 
 #endif //HAZE_EXPRESSION_H

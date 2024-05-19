@@ -13,8 +13,8 @@ namespace hz
 		const auto op1 = unmap(instruction.op1);
 		const auto op2 = unmap(instruction.op2);
 
-		const auto& imm = instruction.imm;
-		const auto& mem = instruction.mem;
+		const auto imm = instruction.imm;
+		const auto mem = instruction.mem;
 
 		switch (instruction.opcode)
 		{
@@ -36,19 +36,16 @@ namespace hz
 		}
 	}
 
-	std::string Disassembler::disassemble_program(const std::array<std::uint8_t, QUARTER_DWORD_MAX>& program, std::size_t first, std::size_t last)
+	std::string Disassembler::disassemble_program(const std::array<std::uint8_t, HALF_DWORD_MAX>& program, std::size_t first, std::size_t last)
 	{
 		std::string result{};
 
 		for (auto i = first; i < last - 2; i+= 3)
 		{
-			const auto byte1 = program[i + 0];
-			const auto byte2 = program[i + 1];
-			const auto byte3 = program[i + 2];
+			const auto instruction = Instruction{ 
+				static_cast<std::uint32_t>((program[i + 0] << 16) | (program[i + 1] << 8) | (program[i + 2] << 0)) };
 
-			const auto instruction = (program[i + 0] << 16) | (program[i + 1] << 8) | (program[i + 2] << 0);
-
-			result.append(std::format("{} ; #{:02X} {:02X} {:02X}", disassemble_instruction(instruction), byte1, byte2, byte3));
+			result.append(instruction.string());
 		}
 
 		return result;

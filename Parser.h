@@ -1,99 +1,121 @@
 #ifndef HAZE_PARSER_H
 #define HAZE_PARSER_H
 
-#include <cstdlib>
-#include <vector>
-#include <iostream>
-#include <string_view>
-
 #include "Token.h"
 #include "Symbol.h"
+
 #include "Expression.h"
+#include "IntegerLiteralExpression.h"
+#include "IdentifierExpression.h"
+#include "FunctionCallExpression.h"
+
 #include "Statement.h"
+
+#include "Node.h"
 #include "Function.h"
+#include "Instruction.h"
+
+#define AS_COMPILER_PARSER(x) static_cast<CompilerParser*>(x)
+#define AS_ASSEMBLER_PARSER(x) static_cast<AssemblerParser*>(x)
+
+#define AS_FUNCTION(x) static_cast<Function*>(x)
+#define AS_INSTRUCTION(x) static_cast<Instruction*>(x)
 
 namespace hz
 {
-	class Parser
-	{
-	private:
-		const std::vector<Token>& tokens;
-		std::size_t cursor = 0;
-		std::vector<Function*> program;
+    class Parser
+    {
+    private:
+        std::size_t cursor;
+        std::vector<Token> tokens;
 
-	private:
-		std::vector<Symbol*> symbol_table;
-		void add_symbol(Symbol::Type, std::string_view);
+    private:
+        std::vector<Symbol*> symbol_table;
+    protected:
+        void add_symbol(Symbol::Type, std::string_view);
 
-	public:
-		bool query_symbol(std::string_view);
-		Symbol* reference_symbol(Symbol::Type, std::string_view);
+    public:
+        bool query_symbol(std::string_view);
+        Symbol* reference_symbol(Symbol::Type, std::string_view);
 
-	public:
-		explicit Parser(const std::vector<Token>& tokens)
-			: tokens(tokens)
-		{
-		}
+    protected:
+        const Token& peek() const;
+        const Token& lookahead() const;
+        //void backtrack();
+        std::string_view consume(TokenType);
 
-	public:
-		std::vector<Function*>& get_ast()
-		{
-			return program;
-		}
+    protected:
+        enum class Precedence
+        {
+            MINIMUM,
+            TERM, // + (or - later)
+            FACTOR, // * (or / later maybe)
+        };
 
-	private:
-		const Token& peek() const;
-		const Token& next() const;
-		std::string_view consume(const TokenType&);
+    protected:
+        IdentifierExpression* parse_identifier_expression();
+        IntegerLiteralExpression* parse_integerliteral_expression();
+        FunctionCallExpression* parse_functioncall_expression();
+        Expression* parse_parenthesis_expression();
 
-	private:
-		enum Precedence
-		{
-			PRECEDENCE_MIN,
-			PRECEDENCE_TERM, // + (- later)
-			PRECEDENCE_FACTOR, // * (/ later)
-		};
+    protected:
+        Expression* parse_expression();
 
-	private:
-		Expression* parse_identifier_expression();
-		Expression* parse_intlit_expression();
-		Expression* parse_paren_expression();
-		std::vector<Expression*> parse_function_call_arguments();
-		Expression* parse_function_call_expression();
+    private:
+        Expression* parse_generic_expression();
+        Expression* parse_infix_expression(Expression*, Precedence);
 
-		Expression* new_parse_primary();
-		Expression* new_parse_expression();
-		Expression* new_parse_expression1(Expression*, Precedence);
+    public:
+        virtual std::vector<Node*> parse() = 0;
 
-		Expression* parse_expression();
+    public:
+        explicit Parser(std::vector<Token>&& tokens)
+            : tokens(std::move(tokens))
+        {
+        }
+    };
 
-		Statement* parse_null_statement();
-		Statement* parse_vardecl_statement();
-		Statement* parse_compound_statement();
-		Statement* parse_return_statement();
+    class CompilerParser : public Parser
+    {
+    private:
+        Statement* parse_statement();
+        std::vector<Statement*> parse_statements();
 
-		Statement* parse_statement();
-		std::vector<Statement*> parse_statements();
+    private:
+        Statement* parse_null_statement();
+        Statement* parse_variabledeclaration_statement();
+        Statement* parse_compound_statement();
+        Statement* parse_return_statement();
 
-		Expression* parse_argument();
-		std::vector<Expression*> parse_arguments();
+    public:
+        Expression* parse_argument();
+        std::vector<Expression*> parse_arguments();
 
-		Function* parse_function();
-		std::vector<Function*> parse_functions();
+    public:
+        Node* parse_function();
+        std::vector<Node*> parse_functions();
 
-		void parse_program();
+    public:
+        virtual std::vector<Node*> parse() final override;
 
-	private:
-		//void print_expression(Expression*);
-		//void print_statement(const Statement const*, int);
-		//void print_function(Function*);
-		//void print_program();
+    public:
+        using Parser::Parser;
+    };
 
-	public:
-		//void print_ast();
-		void parse();
-	};
+    class AssemblerParser : public Parser
+    {
+    private:
+        Node* parse_instruction();
+        std::vector<Node*> parse_instructions();
 
+    public:
+        virtual std::vector<Node*> parse() final override;
+
+    public:
+        using Parser::Parser;
+    };
+
+    extern Parser* parser;
 }
 
 #endif //HAZE_PARSER_H

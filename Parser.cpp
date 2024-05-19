@@ -11,8 +11,6 @@
 #include "FunctionCallExpression.h"
 #include "IntegerLiteralExpression.h"
 
-#define DISCARD (void) 
-
 namespace
 {
 	enum
@@ -101,7 +99,7 @@ namespace hz
 		return tokens[cursor];
 	}
 
-	const Token& Parser::next() const
+	const Token& Parser::lookahead() const
 	{
 		if (cursor < tokens.size())
 		{
@@ -111,7 +109,10 @@ namespace hz
 		Log::error(std::format("({}) unexpectedly reached the end of file", peek().line));
 	}
 
-	std::string_view Parser::consume(const TokenType& token)
+	//TODO: should this have an implementation?
+	//void backtrack() {}
+
+	std::string_view Parser::consume(TokenType token)
 	{
 		const auto& current = peek();
 		if (current.type == token)
@@ -120,65 +121,57 @@ namespace hz
 			return std::string_view{ current.value.value_or("") };
 		}
 
-		Log::error(std::format("({}) expected token '{}' but got '{}'", current.line, debug_tokens.at(token),
-			((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value.value() : debug_tokens.at(current.type))));
+		auto debug = [&](auto v)
+		{
+			for (const auto& [key, value] : lexeme_map)
+			{
+				if (value == v)
+				{
+					return key;
+				}
+			}
+
+			Log::error("Invalid token cannot be indexed in the lexeme map");
+		};
+
+		Log::error(std::format("({}) expected token '{}' but got '{}'", current.line, debug(token),
+			((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value.value() : debug(current.type))));
 	}
 
-	Expression* Parser::parse_identifier_expression()
+	IdentifierExpression* Parser::parse_identifier_expression()
 	{
 		const auto name = consume(TokenType::IDENTIFIER);
 		return new IdentifierExpression{ name };
 	}
 
-	Expression* Parser::parse_intlit_expression()
+	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
 		//TODO: optimize the C++ conversion to integer? (maybe dont require a copy)
 		const auto value = std::stoi(std::string{ consume(TokenType::INT) });
 		return new IntegerLiteralExpression{ value };
 	}
 
-	Expression* Parser::parse_paren_expression()
-	{
-		DISCARD consume(TokenType::LPAREN);
-		const auto expression = new_parse_expression();
-		DISCARD consume(TokenType::RPAREN);
-		return expression;
-	}
-
-	std::vector<Expression*> Parser::parse_function_call_arguments()
-	{
-		std::vector<Expression*> arguments;
-
-		while (peek().type != TokenType::RPAREN)
-		{
-			arguments.emplace_back(new_parse_expression());
-
-			if (peek().type != TokenType::RPAREN)
-			{
-				DISCARD consume(TokenType::COMMA);
-
-				if (peek().type == TokenType::RPAREN)
-				{
-					Log::error(std::format("({}) expected another argument", peek().line));
-				}
-			}
-		}
-
-		return arguments;
-	}
-
-	Expression* Parser::parse_function_call_expression()
+	FunctionCallExpression* Parser::parse_functioncall_expression()
 	{
 		const auto name = consume(TokenType::IDENTIFIER);
 
 		DISCARD consume(TokenType::LPAREN);
-		const auto arguments = parse_function_call_arguments();
+		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments();
 		DISCARD consume(TokenType::RPAREN);
 
-		return new FunctionCallExpression{ name, arguments };
+		return new FunctionCallExpression{ name, std::move(arguments) };
 	}
 
-	Expression* Parser::parse_expression()
+	Expression* Parser::parse_parenthesis_expression()
+	{
+		DISCARD consume(TokenType::LPAREN);
+		const auto expression = parse_expression();
+		DISCARD consume(TokenType::RPAREN);
+		return expression;
+	}
+
+
+	Expression* Parser::parse_generic_expression()
 	{
 		Expression* expression;
 
@@ -187,19 +180,19 @@ namespace hz
 		{
 			case LPAREN:
 			{
-				expression = parse_paren_expression();
+				expression = parse_parenthesis_expression();
 			} break;
 
 			case INT:
 			{
-				expression = parse_intlit_expression();
+				expression = parse_integerliteral_expression();
 			} break;
 
 			case IDENTIFIER:
 			{
-				if (next().type == LPAREN)
+				if (lookahead().type == LPAREN)
 				{
-					expression = parse_function_call_expression();
+					expression = parse_functioncall_expression();
 					break;
 				}
 
@@ -215,34 +208,47 @@ namespace hz
 		return expression;
 	}
 
-	Expression* Parser::new_parse_primary()
+
+	std::vector<Expression*> CompilerParser::parse_arguments()
 	{
-		return parse_expression();
+		std::vector<Expression*> arguments;
+
+		while (lookahead().type != TokenType::RPAREN)
+		{
+			arguments.emplace_back(parse_expression());
+
+			if (peek().type != TokenType::RPAREN)
+			{
+				DISCARD consume(TokenType::COMMA);
+
+				if (peek().type == TokenType::RPAREN)
+				{
+					Log::error(std::format("({}) expected another argument", peek().line));
+				}
+			}
+		}
+
+		return arguments;
 	}
 
-	Expression* Parser::new_parse_expression()
+
+
+	Expression* Parser::parse_expression()
 	{
-		return new_parse_expression1(new_parse_primary(), PRECEDENCE_MIN);
+		return parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
 	}
 
-	Expression* Parser::new_parse_expression1(Expression* left, Precedence min_precedence)
+	Expression* Parser::parse_infix_expression(Expression* left, Precedence min_precedence)
 	{
 		static const std::unordered_map<TokenType, Precedence> precedences =
 		{
-			{ TokenType::PLUS, PRECEDENCE_TERM },
-			{ TokenType::STAR, PRECEDENCE_FACTOR },
-		};
-
-		static const std::unordered_map<TokenType, BinaryExpression::Type> binary_expression_types =
-		{
-			{ TokenType::PLUS, BinaryExpression::Type::PLUS },
-			{ TokenType::MINUS, BinaryExpression::Type::MINUS },
-			{ TokenType::STAR, BinaryExpression::Type::TIMES },
+			{ TokenType::PLUS, Precedence::TERM },
+			{ TokenType::STAR, Precedence::FACTOR },
 		};
 
 		do
 		{
-			const auto& next = peek();
+			const auto& next = lookahead();
 
 			if (!is_binary_operator(next.type) || precedences.at(next.type) < min_precedence)
 			{
@@ -251,7 +257,7 @@ namespace hz
 
 			consume(next.type);
 
-			auto right = new_parse_primary();
+			auto right = parse_expression();
 
 			do
 			{
@@ -263,7 +269,7 @@ namespace hz
 				}
 
 				//TODO: maybe add precedence+1 for the next call of the recursive function
-				right = new_parse_expression1(right, precedences.at(lookahead.type));
+				right = parse_infix_expression(right, precedences.at(lookahead.type));
 
 			} while(true);
 
@@ -280,24 +286,24 @@ namespace hz
 
 
 
-	Statement* Parser::parse_null_statement()
+	Statement* CompilerParser::parse_null_statement()
 	{
 		DISCARD consume(TokenType::SEMICOLON);
 		return nullptr;
 	}
 
-	Statement* Parser::parse_vardecl_statement()
+	Statement* CompilerParser::parse_variabledeclaration_statement()
 	{
 		//TODO: add other type specifiers
 		DISCARD consume(TokenType::BYTE);
 
 		const auto name = consume(TokenType::IDENTIFIER);
-		symbol_table.emplace_back(new VariableSymbol{ name });
+		add_symbol(Symbol::Type::VARIABLE, name);
 
 		if (peek().type == TokenType::EQUALS)
 		{
 			DISCARD consume(TokenType::EQUALS);
-			const auto value = new_parse_expression();
+			const auto value = parse_expression();
 			DISCARD consume(TokenType::SEMICOLON);
 
 			return new VariableStatement{ name, value, nullptr };
@@ -308,7 +314,7 @@ namespace hz
 		return new VariableStatement{ name, nullptr, nullptr };
 	}
 
-	Statement* Parser::parse_compound_statement()
+	Statement* CompilerParser::parse_compound_statement()
 	{
 		DISCARD consume(TokenType::LBRACE);
 		const auto statements = parse_statements();
@@ -317,22 +323,22 @@ namespace hz
 		return new CompoundStatement{ statements };
 	}
 
-	Statement* Parser::parse_return_statement()
+	Statement* CompilerParser::parse_return_statement()
 	{
 		DISCARD consume(TokenType::RETURN);
-		const auto expression = new_parse_expression();
+		const auto expression = parse_expression();
 		DISCARD consume(TokenType::SEMICOLON);
 
 		return new ReturnStatement{ expression, nullptr };
 	}
 
-	Statement* Parser::parse_statement()
+	Statement* CompilerParser::parse_statement()
 	{
 		using enum TokenType;
 		switch (peek().type)
 		{
 			case LBRACE: return parse_compound_statement();
-			case BYTE: return parse_vardecl_statement();
+			case BYTE: return parse_variabledeclaration_statement();
 			case SEMICOLON: return parse_null_statement();
 			case RETURN: return parse_return_statement();
 
@@ -343,7 +349,7 @@ namespace hz
 		}
 	}
 
-	std::vector<Statement*> Parser::parse_statements()
+	std::vector<Statement*> CompilerParser::parse_statements()
 	{
 		std::vector<Statement*> statements;
 
@@ -355,7 +361,7 @@ namespace hz
 		return statements;
 	}
 
-	Expression* Parser::parse_argument()
+	Expression* CompilerParser::parse_argument()
 	{
 		//TODO: add other type specifiers for arguments?
 		DISCARD consume(TokenType::BYTE);
@@ -365,51 +371,29 @@ namespace hz
 		return new IdentifierExpression{ name };
 	}
 
-	std::vector<Expression*> Parser::parse_arguments()
-	{
-		std::vector<Expression*> arguments;
-
-		while (peek().type != TokenType::RPAREN)
-		{
-			arguments.emplace_back(parse_argument());
-
-			if (peek().type != TokenType::RPAREN)
-			{
-				DISCARD consume(TokenType::COMMA);
-
-				if (peek().type == TokenType::RPAREN)
-				{
-					Log::error(std::format("({}) expected another argument but got ')'", peek().line));
-				}
-			}
-		}
-
-		return arguments;
-	}
-
-	Function* Parser::parse_function()
+	Node* CompilerParser::parse_function()
 	{
 		DISCARD consume(TokenType::FUNCTION);
 		//TODO: support return types other than byte (particularly void functions)
 		DISCARD consume(TokenType::BYTE);
 
-		const auto name = consume(TokenType::IDENTIFIER);
+		auto name = consume(TokenType::IDENTIFIER);
 		add_symbol(Symbol::Type::FUNCTION, name);
 
 		DISCARD consume(TokenType::EQUALS);
 
 		DISCARD consume(TokenType::LPAREN);
-		const auto arguments = parse_arguments();
+		auto arguments = parse_arguments();
 		DISCARD consume(TokenType::RPAREN);
 
-		const auto body = parse_compound_statement();
+		auto body = parse_compound_statement();
 
-		return new Function{ name, arguments, body };
+		return new Function{ name, std::move(arguments), body };
 	}
 
-	std::vector<Function*> Parser::parse_functions()
+	std::vector<Node*> CompilerParser::parse_functions()
 	{
-		std::vector<Function*> functions;
+		std::vector<Node*> functions;
 
 		while (peek().type != TokenType::END)
 		{
@@ -419,22 +403,38 @@ namespace hz
 		return functions;
 	}
 
-	void Parser::parse_program()
+	std::vector<Node*> CompilerParser::parse()
 	{
-		program = parse_functions();
+		const auto program = parse_functions();
 
 		if (std::find_if(program.begin(), program.end(), [&](auto function)
 			{
-				return (function->name == "main");
+				return (AS_FUNCTION(function)->name == "main");
 			}) == std::end(program))
 		{
 			Log::error("no main() function was defined");
 		}
+
+		return program;
 	}
 
-	void Parser::parse()
+	std::vector<Node*> AssemblerParser::parse()
 	{
-		parse_program();
+		return parse_instructions();
+	}
+
+
+
+	//TODO
+	Node* AssemblerParser::parse_instruction()
+	{
+		return nullptr;
+	}
+
+	//TODO
+	std::vector<Node*> AssemblerParser::parse_instructions()
+	{
+		return {};
 	}
 
 

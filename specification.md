@@ -20,12 +20,12 @@ instructions:
 0110 - band reg, reg
 0111 - bior reg, reg
 1000 - bxor reg, reg
-1001 - bnot reg
-1010 - call mem
-1011 - exit
-1100 - push reg
-1101 - pull reg
-1110 - brez mem, reg
+1001 - call mem
+1010 - exit
+1011 - push reg
+1100 - pull reg
+1101 - brez mem, reg
+1110 - XXXX
 1111 - XXXX
 
 

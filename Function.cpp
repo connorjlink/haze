@@ -1,7 +1,6 @@
 #include "Function.h"
 
 #include <format>
-#include <ranges>
 
 namespace hz
 {
@@ -34,7 +33,7 @@ namespace hz
 	{
 		if (auto body_optimized = body->optimize(); body_optimized)
 		{
-			return new Function{ name, arguments, static_cast<Statement*>(body_optimized) };
+			return new Function{ name, std::move(arguments), static_cast<Statement*>(body_optimized) };
 		}
 
 		return nullptr;
