@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <array>
-#include <limits>
 #include <vector>
 
 #include "Log.h"
@@ -23,15 +22,12 @@ namespace hz
 
     private:
         std::array<word, HALF_DWORD_MAX> ram;
-        std::array<word, QUARTER_DWORD_MAX> rom;
-        std::array<word, QUARTER_DWORD_MAX> dsp;
-    private:
-        int opcode, operand1, operand2, immediate, memory;
+        std::array<word, HALF_DWORD_MAX> rom;
 
     public:
-        explicit Simulator(std::vector<std::uint8_t>& bytes)
+        Simulator(std::vector<std::uint8_t>&& bytes)
         {
-            if (bytes.size() <= QUARTER_DWORD_MAX)
+            if (bytes.size() <= HALF_DWORD_MAX)
             {
                 //populate rom
                 rom = { 0 };
@@ -41,7 +37,8 @@ namespace hz
                 return;
             }
 
-            Log::error(fmt::format("Object code of length {} bytes exceeds the maximum ROM size of {} bytes", bytes.size(), QUARTER_DWORD_MAX));
+            Log::error(fmt::format("Object code of length {} bytes exceeds the maximum ROM size of {} bytes",
+                bytes.size(), HALF_DWORD_MAX));
         }
 
     private:

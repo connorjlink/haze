@@ -2,7 +2,6 @@
 #include "Log.h"
 
 #include <iostream>
-#include <fmt/format.h>
 
 namespace hz
 {
@@ -29,6 +28,70 @@ namespace hz
 
                 return out;
             };
+
+            using enum TokenType;
+
+            auto current = input[i];
+
+            if (current == ' ' || current == '\n' || current == '\r' || current == '\t')
+            {
+                if (current == '\n')
+                {
+                    line++;
+                }
+
+                continue;
+            }
+
+            else if (current == '/')
+            {
+                if (input[i + 1] == '/')
+                {
+                    while (input[i] != '\n')
+                    {
+                        i++;
+                    }
+
+                    continue;
+                }
+
+                Log::error("({}) unexpected character `/`");
+            }
+
+            else if ('0' < current && current < '9')
+            {
+                APPEND_TOKEN_VALUE(INT, rest(std::isdigit));
+            }
+
+            else if ('a' < current && current < 'z' ||
+                     'A' < current && current < 'Z')
+            {
+                const auto lexeme = rest(std::isalnum);
+                const auto search = lexeme_map.find(lexeme);
+
+                if (search != std::end(lexeme_map))
+                {
+                    APPEND_TOKEN(search->second);
+                }
+                else
+                {
+                    APPEND_TOKEN_VALUE(IDENTIFIER, lexeme);
+                }
+            }
+
+            else
+            {
+                const auto search = lexeme_map.find(std::string{ current });
+
+                if (search != std::end(lexeme_map))
+                {
+                    APPEND_TOKEN(search->second);
+                }
+                else
+                {
+                    Log::error(std::format("({}) unexpected character `{}`", line, current));
+                }
+            }
 
             using enum TokenType;
             switch (input[i])
@@ -71,21 +134,13 @@ namespace hz
 
                 case '/':
                 {
-                    if (input[i + 1] == '/')
-                    {
-                        while (input[i] != '\n')
-                        {
-                            i++;
-                        }
 
-                        break;
-                    }
                 }
 
                 [[fallthrough]];
                 default:
                 {
-                    Log::error(fmt::format("({}) unexpected character {}", line, input[i]));
+                    Log::error(fmt::format("({}) unexpected character `{}`", line, input[i]));
                 }
             }
         }

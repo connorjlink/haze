@@ -28,13 +28,12 @@ namespace hz
             case BAND: return fmt::format("band {}, {} ", op1, op2);
             case BIOR: return fmt::format("bior {}, {} ", op1, op2);
             case BXOR: return fmt::format("bxor {}, {} ", op1, op2);
-            case BNOT: return fmt::format("bnot {}     ", op1);
             case CALL: return fmt::format("call &{}    ", mem);
             case EXIT: return fmt::format("exit        ");
             case PUSH: return fmt::format("push {}     ", op2);
             case PULL: return fmt::format("pull {}     ", op1);
             case BREZ: return fmt::format("brez &{}, {}", mem, op2);
-            default:   return                  "ILLEGAL OPCODE";
+            default:   return                 "ILLEGAL OPCODE";
         }
     }
 

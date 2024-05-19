@@ -175,6 +175,7 @@ namespace hz
         return new FunctionCallExpression{ name, arguments };
     }
 
+    //parse_generic_expression()
     Expression* Parser::parse_expression()
     {
         Expression* expression;
@@ -217,24 +218,19 @@ namespace hz
         return parse_expression();
     }
 
+    //parse_expression()
     Expression* Parser::new_parse_expression()
     {
         return new_parse_expression1(new_parse_primary(), PRECEDENCE_MIN);
     }
 
+    //parse_infix_expression()
     Expression* Parser::new_parse_expression1(Expression* left, Precedence min_precedence)
     {
         static const std::unordered_map<TokenType, Precedence> precedences =
         {
-            { TokenType::PLUS, PRECEDENCE_TERM },
-            { TokenType::STAR, PRECEDENCE_FACTOR },
-        };
-
-        static const std::unordered_map<TokenType, BinaryExpression::Type> binary_expression_types =
-        {
-            { TokenType::PLUS, BinaryExpression::Type::PLUS },
-            { TokenType::MINUS, BinaryExpression::Type::MINUS },
-            { TokenType::STAR, BinaryExpression::Type::TIMES },
+            { TokenType::PLUS, Precedence::TERM },
+            { TokenType::STAR, Precedence::FACTOR },
         };
 
         do

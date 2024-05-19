@@ -9,18 +9,19 @@ namespace hz
 {
     bool Simulator::step()
     {
-        instruction_pointer &= 0xBFFF;
+        instruction_pointer &= 0xFFFF;
 
         const auto fetch1 = rom[instruction_pointer - HALF_DWORD_MAX + 0];
         const auto fetch2 = rom[instruction_pointer - HALF_DWORD_MAX + 1];
         const auto fetch3 = rom[instruction_pointer - HALF_DWORD_MAX + 2];
 
-        opcode = (fetch1 & 0xF0) >> 4;
-        operand1 = (fetch1 & 0x0F) >> 2;
-        operand2 = (fetch1 & 0x0F) >> 0;
+        const auto opcode = (fetch1 & 0xF0) >> 4;
 
-        immediate = fetch2;
-        memory = (fetch2 << 8) | fetch3;
+        const auto operand1 = (fetch1 & 0x0F) >> 2;
+        const auto operand2 = (fetch1 & 0x0F) >> 0;
+
+        const auto immediate = fetch2;
+        const auto memory = (fetch2 << 8) | fetch3;
 
 
         switch (opcode & 0x0F)
@@ -79,12 +80,6 @@ namespace hz
                 register_file[operand1] ^= register_file[operand2];
             } break;
 
-            case BNOT:
-            {
-                //bnot reg
-                register_file[operand1] = ~register_file[operand1];
-            } break;
-
             case CALL:
             {
                 //call mem
@@ -134,6 +129,11 @@ namespace hz
                 //TODO: use as instruction set extension prefix?
                 return false;
             } break;
+
+            default:
+            {
+                Log::error(fmt::format("Illegal instruction {}", opcode));
+            }
         }
 
         instruction_pointer += 3;
@@ -145,9 +145,7 @@ namespace hz
         register_file = { 0 };
         instruction_pointer = HALF_DWORD_MAX;
         stack_pointer = 0;
-
         ram = { 0 };
-        dsp = { 0 };
     }
 
     void Simulator::run()

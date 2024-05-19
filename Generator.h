@@ -7,7 +7,6 @@
 #include "Expression.h"
 #include "Statement.h"
 #include "Function.h"
-#include "Symbol.h"
 #include "Instruction.h"
 
 namespace hz
@@ -18,22 +17,11 @@ namespace hz
     {
     private:
         //Imported from the parser in the constructor
-        const std::vector<Function*>& program;
+        std::vector<Function*> program;
 
     private:
         std::string code;
         std::vector<std::uint8_t> bytes;
-
-    public:
-        const std::string& get_code() const
-        {
-            return code;
-        }
-
-        std::vector<std::uint8_t>& get_bytes()
-        {
-            return bytes;
-        }
 
     public:
         void include(std::string_view);
@@ -64,8 +52,8 @@ namespace hz
         void generate_program();
 
     public:
-        explicit Generator(const std::vector<Function*>& program)
-            : program(program)
+        Generator(std::vector<Function*>&& program)
+            : program(std::move(program))
         {
         }
 
