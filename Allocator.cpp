@@ -2,53 +2,43 @@
 #include "Allocation.h"
 #include "Log.h"
 
-#include <optional>
 #include <format>
 
-namespace
+namespace hz
 {
-	std::optional<hz::Register> find_register(std::array<hz::Status, 4>& registers)
+	std::optional<Register> Allocator::find_register(Register exclude) const
 	{
-		for (auto i = 0; i < registers.size(); i++)
+		for (auto i = 0; i < register_ledger.size(); i++)
 		{
-			if (registers[i] == hz::Status::FREE)
+			if (i != exclude && register_ledger[i] == Status::FREE)
 			{
-				return { static_cast<hz::Register>(i) };
+				return { static_cast<Register>(i) };
 			}
 		}
 
 		return std::nullopt;
 	}
-}
-
-namespace hz
-{
-	void Allocator::load(Register reg, std::uint16_t address)
-	{
-		generator->load(reg, address);
-	}
-
-	void Allocator::save(std::uint16_t address, Register reg)
-	{
-		generator->save(address, reg);
-	}
 
 
-	//TODO: figure out if this is the target or exclusion register or what
 	Allocation* Allocator::allocate_static(Register exclude)
 	{
-		//TODO: full implemention here
-		return nullptr;
+		if (auto reg = find_register(exclude); reg.has_value())
+		{
+			register_ledger[reg.value()] = Status::USED;
+			return new StaticAllocation{ reg.value() };	
+		}
+
+		Log::error(std::format("Static allocation failed with exclusion register {}", unmap(exclude)));
 	}
 
 
 	Allocation* Allocator::allocate_dynamic(bool free)
 	{
-		for (std::uint16_t candidate = 0; candidate < heap_ledger.size(); candidate++)
+		for (auto candidate = 0; candidate < heap_ledger.size(); candidate++)
 		{
 			if (heap_ledger[candidate] == Status::FREE)
 			{
-				return new DynamicAllocation{ candidate, free };
+				return new DynamicAllocation{ static_cast<std::uint16_t>(candidate), free };
 			}
 		}
 

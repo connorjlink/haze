@@ -17,12 +17,12 @@ namespace hz
 	}
 
 
-	void StaticAllocation::deallocate()
+	StaticAllocation::~StaticAllocation()
 	{
 		allocator->register_ledger[reg] = Status::FREE;
 	}
 
-	void DynamicAllocation::deallocate()
+	DynamicAllocation::~DynamicAllocation()
 	{
 		if (need_free)
 		{
@@ -49,21 +49,23 @@ namespace hz
 
 	void DynamicAllocation::write(std::uint8_t value)
 	{
-		auto store = [&]()
+		auto do_write = [&](auto reg)
 		{
-			generator->copy(R3, value);
-			generator->save(address, R3);
+			generator->copy(reg, value);
+			generator->save(address, reg);
 		};
 
-		if (allocator->register_ledger[R3] == Status::FREE)
+		auto reg = allocator->find_register();
+
+		if (reg.has_value())
 		{
-			store();
+			do_write(reg.value());
 		}
 
 		else
 		{
 			generator->push(R3);
-			store();
+			do_write(R3);
 			generator->pull(R3);
 		}
 	}
@@ -71,11 +73,41 @@ namespace hz
 	
 	void StaticAllocation::copy(Allocation* allocation) const 
 	{
-
+		switch (allocation->atype())
+		{
+			case Type::STATIC: generator->move(reg, AS_STATIC_ALLOCATION(allocation)->reg); break;
+			case Type::DYNAMIC: generator->load(reg, AS_DYNAMIC_ALLOCATION(allocation)->address); break;
+		}
 	}
 
 	void DynamicAllocation::copy(Allocation* allocation) const
 	{
+		switch (allocation->atype())
+		{
+			case Type::STATIC: generator->save(address, AS_STATIC_ALLOCATION(allocation)->reg); break;
 
+			case Type::DYNAMIC: 
+			{
+				auto do_copy = [&](auto reg)
+				{
+					generator->load(reg, AS_DYNAMIC_ALLOCATION(allocation)->address);
+					generator->save(address, reg);
+				};
+
+				auto reg = allocator->find_register();
+
+				if (reg.has_value())
+				{
+					do_copy(reg.value());
+				}
+
+				else
+				{
+					generator->push(R3);
+					do_copy(R3);
+					generator->pull(R3);
+				}
+			} break;
+		}
 	}
 }

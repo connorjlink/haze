@@ -5,15 +5,14 @@
 
 #include <cstdint>
 
-#define AS_STATIC(x) static_cast<StaticAllocation*>(x)
-#define AS_DYNAMIC(x) static_cast<DynamicAllocation*>(x)
+#define AS_STATIC_ALLOCATION(x) static_cast<StaticAllocation*>(x)
+#define AS_DYNAMIC_ALLOCATION(x) static_cast<DynamicAllocation*>(x)
 
 namespace hz
 {
 	class Allocation
 	{
 	protected:
-		friend class Allocator;
 		enum class Type
 		{
 			STATIC,
@@ -23,7 +22,9 @@ namespace hz
 	public:
 		virtual Allocation::Type atype() const = 0;
 
-		virtual void deallocate() = 0;
+		virtual ~Allocation()
+		{
+		}
 
 		virtual Register& read() = 0;
 		virtual void write(std::uint8_t) = 0;
@@ -36,9 +37,15 @@ namespace hz
 		Register reg;
 
 	public:
+		StaticAllocation(Register reg)
+			: reg(reg)
+		{
+		}
+
+	public:
 		virtual Allocation::Type atype() const final override;
 
-		virtual void deallocate() final override;
+		virtual ~StaticAllocation() final override;
 
 		virtual Register& read() final override;
 		virtual void write(std::uint8_t) final override;
@@ -60,7 +67,7 @@ namespace hz
 	public:
 		virtual Allocation::Type atype() const final override;
 
-		virtual void deallocate() final override;
+		virtual ~DynamicAllocation() final override;
 
 		virtual Register& read() final override;
 		virtual void write(std::uint8_t) final override;

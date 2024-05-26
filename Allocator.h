@@ -1,10 +1,12 @@
 #ifndef HAZE_ALLOCATOR_H
 #define HAZE_ALLOCATOR_H
 
+#include "Constants.h"
+#include "Generator.h"
+
 #include <array>
 #include <cstdint>
-
-#include "Generator.h"
+#include <optional>
 
 namespace hz
 {
@@ -17,16 +19,17 @@ namespace hz
     class Allocator
     {
     public:
-        void load(Register, std::uint16_t);
-        void save(std::uint16_t, Register);
-
-    public:
         std::array<Status, 4> register_ledger = {};
-        std::array<Status, 32768> heap_ledger = {};
+        std::array<Status, HALF_DWORD_MAX> heap_ledger = {};
 
     public:
+        std::optional<Register> find_register(Register = DC) const;
+
+    public:
+        // `Register` parameter specifies exclusion
         Allocation* allocate_static(Register = DC);
 
+        // `bool` parameter specifies whether the memory should be automatically freed at destruction
         Allocation* allocate_dynamic(bool = true);
         Allocation* allocate_dynamic(std::uint16_t, bool = true);
     };

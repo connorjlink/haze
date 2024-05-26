@@ -28,8 +28,8 @@ namespace hz
 
 		instruction |= mem;
 		instruction |= imm << 8;
-		instruction |= op2 << 16;
-		instruction |= op1 << 18;
+		instruction |= (op2 & 0b11) << 16;
+		instruction |= (op1 & 0b11) << 18;
 		instruction |= opcode << 20;
 
 		return instruction;

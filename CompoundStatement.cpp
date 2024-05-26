@@ -27,10 +27,8 @@ namespace hz
         return new CompoundStatement{ *this };
     }
 
-    void CompoundStatement::generate(Allocation*)
+    void CompoundStatement::generate(Allocation* allocation)
     {
-        auto allocation = allocator->allocate_static();
-
         for (auto substatement : substatements)
         {
             //TODO: determine if overwriting the allocation is actually bad?

@@ -70,7 +70,6 @@ namespace hz
 		right->generate(temp_allocation);
 
 		generator->iadd(received_allocation->read(), temp_allocation->read());
-		temp_allocation->deallocate();
 	}
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
@@ -81,7 +80,6 @@ namespace hz
 		right->generate(temp_allocation);
 
 		generator->isub(received_allocation->read(), temp_allocation->read());
-		temp_allocation->deallocate();
 	}
 
 	[[noreturn]]

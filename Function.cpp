@@ -24,9 +24,7 @@ namespace hz
 
 	void Function::generate(Allocation* allocation)
 	{
-		//TODO: determine the best way of netting the proper return value
-		
-		//Populate the allocation with a new static allocation and return
+		body->generate(allocation);
 	}
 
 

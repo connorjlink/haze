@@ -28,11 +28,11 @@ namespace hz
 
     enum Register
     {
-        DC = 0b00,
-        R0 = 0b00,
-        R1 = 0b01,
-        R2 = 0b10,
-        R3 = 0b11,
+        R0 = 0b000,
+        R1 = 0b001,
+        R2 = 0b010,
+        R3 = 0b011,
+        DC = 0b100,
     };
 
     static const std::unordered_map<hz::Register, std::string_view> register_map =
