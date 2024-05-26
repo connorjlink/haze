@@ -5,6 +5,7 @@
 
 namespace hz
 {
+    //Required to avoid dependency between Instruction and Allocation
     class Allocation;
 
     class Node

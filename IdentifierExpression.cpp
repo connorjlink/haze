@@ -31,8 +31,6 @@ namespace hz
 
 	Expression* IdentifierExpression::optimize()
 	{
-		//auto variable_symbol = AS_VARIABLE_SYMBOL(parser->reference_symbol(Symbol::Type::VARIABLE, name));
-		//return new IntegerLiteralExpression{ variable_symbol->allocation->read()};
 		return nullptr;
 	}
 }

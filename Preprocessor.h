@@ -32,12 +32,11 @@ namespace hz
 
 	private:
 		void preprocess_include();
-		void preprocess_definition();
 		void preprocess_macro_definition();
 		void preprocess_macro_invokation();
 
 	public:
-		void preprocess();
+		std::string preprocess();
 	};
 }
 

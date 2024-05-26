@@ -21,12 +21,7 @@ namespace hz
 		std::vector<Node*> program;
 
 	private:
-		std::string code;
 		std::vector<std::uint8_t> bytes;
-
-	public:
-		void include(std::string_view);
-		void label(std::string_view);
 
 	public:
 		void move(Register, Register);
@@ -51,7 +46,7 @@ namespace hz
 		}
 
 	public:
-		void generate();
+		std::vector<std::uint8_t> generate();
 	};
 
 	extern Generator* generator;

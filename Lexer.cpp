@@ -111,6 +111,6 @@ namespace hz
 #undef APPEND_TOKEN
 #endif
 
-		return std::move(tokens);
+		return tokens;
 	}
 }

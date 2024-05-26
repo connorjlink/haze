@@ -95,8 +95,8 @@ namespace hz
 
 	Expression* PlusBinaryExpression::optimize()
 	{
-		auto left_optimized = left->optimize();
-		auto right_optimized = right->optimize();
+		auto left_optimized = AS_EXPRESSION(left->optimize());
+		auto right_optimized = AS_EXPRESSION(right->optimize());
 
 		if (!left_optimized && !right_optimized) return nullptr;
 		if (!left_optimized) left_optimized = left;
@@ -125,8 +125,8 @@ namespace hz
 
 	Expression* MinusBinaryExpression::optimize()
 	{
-		auto left_optimized = left->optimize();
-		auto right_optimized = right->optimize();
+		auto left_optimized = AS_EXPRESSION(left->optimize());
+		auto right_optimized = AS_EXPRESSION(right->optimize());
 
 		if (!left_optimized && !right_optimized) return nullptr;
 		if (!left_optimized) left_optimized = left;
@@ -135,6 +135,8 @@ namespace hz
 		if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
 			AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
 		{
+			//(0 - x) simplifies to -x
+			AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value *= -1;
 			return right_optimized;
 		}
 
@@ -155,8 +157,8 @@ namespace hz
 
 	Expression* TimesBinaryExpression::optimize()
 	{
-		auto left_optimized = left->optimize();
-		auto right_optimized = right->optimize();
+		auto left_optimized = AS_EXPRESSION(left->optimize());
+		auto right_optimized = AS_EXPRESSION(right->optimize());
 
 		if (!left_optimized && !right_optimized) return nullptr;
 		if (!left_optimized) left_optimized = left;

@@ -73,13 +73,6 @@ namespace hz
         }
     }
 
-    // TODO: finish this before too long
-    void Preprocessor::preprocess_definition()
-    {
-        std::regex rx_pdef(R"()");
-        std::smatch matches;
-    }
-
     void Preprocessor::preprocess_macro_definition()
     {
         std::regex rx_mcro(R"((\.macro ([a-zA-Z_][a-zA-Z0-0_]*) = \((([a-zA-Z])(, ?[a-zA-Z])*)?\)\:\s*\{([^\}]*)\}))");
@@ -159,7 +152,7 @@ namespace hz
 
                 }*/
 
-                for (auto i = 0u; i < args_delim.size(); ++i)
+                for (auto i = 0; i < args_delim.size(); ++i)
                 {
                     replace(copy, std::string("[") + defined_macro.args[i] + std::string("]"), args_delim[i]);
                 }
@@ -169,11 +162,11 @@ namespace hz
         }
     }
 
-    void Preprocessor::preprocess()
+    std::string Preprocessor::preprocess()
     {
         preprocess_include();
         preprocess_macro_definition();
         preprocess_macro_invokation();
-        preprocess_definition();
+        return code;
     }
 }

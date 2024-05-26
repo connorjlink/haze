@@ -7,16 +7,23 @@
 #include "Simulator.h"
 
 #include <cstdlib>
-#include <iostream>
-#include <optional>
 #include <string>
 #include <fstream>
 #include <format>
 
-hz::Allocator* hz::allocator;
-hz::Generator* hz::generator;
-hz::Parser* hz::parser;
+using namespace hz;
 
+Allocator* hz::allocator;
+Generator* hz::generator;
+Parser* hz::parser;
+
+namespace
+{
+	consteval auto formulate(Opcode opcode, Register operand1, Register operand2)
+    {
+        return (opcode << 4) | (operand1 << 2) | (operand2 << 0);
+	}
+}
 
 int main(int argc, char** argv)
 {
@@ -24,7 +31,7 @@ int main(int argc, char** argv)
 
     if (argc != 2 || (filepath.substr(filepath.length() - 2) != "hz"))
     {
-        hz::Log::info("correct usage is 'haze file.hz'");
+        Log::info("correct usage is 'haze file.hz'");
         return EXIT_FAILURE;
     }
 
@@ -32,45 +39,44 @@ int main(int argc, char** argv)
 
     if (!file.good())
     {
-        hz::Log::error(std::format("the file {} could not be found", filepath));
+        Log::error(std::format("the file {} could not be found", filepath));
     }
 
     //Create our static and dynamic allocation manager before everything else
-    hz::allocator = new hz::Allocator;
+    allocator = new Allocator;
 
     std::string contents((std::istreambuf_iterator<char>(file)),
-                          std::istreambuf_iterator<char>());
+                           std::istreambuf_iterator<char>());
 
-    hz::Preprocessor preprocessor{ std::move(contents), filepath };
-    preprocessor.preprocess();
+    auto preprocessor = new Preprocessor{ std::move(contents), filepath };
+    auto processed = preprocessor->preprocess();
 
-    hz::Lexer lexer{ std::move(contents) };
-    auto tokens = lexer.lex();
+    auto lexer = new Lexer{ std::move(processed) };
+    auto tokens = lexer->lex();
 
-    hz::parser = new hz::CompilerParser{ std::move(tokens) };
-    auto ast = hz::parser->parse();
+    parser = new CompilerParser{ std::move(tokens) };
+    auto ast = parser->parse();
 
-    hz::generator = new hz::Generator{ std::move(ast) };
-    hz::generator->generate();
+    generator = new Generator{ std::move(ast) };
+    auto code = generator->generate();
 
-    hz::Log::info(std::format("successfully compiled {}", filepath));
-
+    Log::info(std::format("successfully compiled {}", filepath));
 
     //REDO This since we changed the opcode mapping a bit
     std::vector<std::uint8_t> rom = 
-    { 
-        0x10, 0x07, 0x00, //load x, #7
-        0x14, 0x04, 0x00, //load y, #4
-        0x41, 0x00, 0x00, //iadd x, y
-        0x94, 0x00, 0x00, //bnot y
-        0xC0, 0x00, 0x00, //push x
-        0xC4, 0x00, 0x00, //push y
-        0xD0, 0x00, 0x00, //pull x
-        0xD4, 0x00, 0x00, //pull y
+    {
+        ::formulate(LOAD, R0, DC), 0x7, 0x0, //load r0, #7
+        ::formulate(LOAD, R1, DC), 0x4, 0x0, //load r1, #4
+        ::formulate(IADD, R0, R1), 0x0, 0x0, //iadd r0, r1
+        ::formulate(BXOR, R1, R1), 0x0, 0x0, //bnot r1
+        ::formulate(PUSH, DC, R0), 0x0, 0x0, //push r0
+        ::formulate(PUSH, DC, R1), 0x0, 0x0, //push r1
+        ::formulate(PULL, R0, DC), 0x0, 0x0, //pull r0
+        ::formulate(PULL, R1, DC), 0x0, 0x0, //pull r1
     };
 
 
-    hz::Simulator sim{ std::move(rom) };
+    Simulator sim{ std::move(rom) };
     sim.reset();
     sim.run();
 

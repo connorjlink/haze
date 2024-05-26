@@ -6,9 +6,4 @@ namespace hz
 	{
 		return Node::Type::EXPRESSION;
 	}
-
-	Expression* Expression::optimize()
-	{
-		return nullptr;
-	}
 }

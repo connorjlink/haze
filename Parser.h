@@ -41,8 +41,7 @@ namespace hz
     protected:
         const Token& peek() const;
         const Token& lookahead() const;
-        //void backtrack();
-        std::string_view consume(TokenType);
+        std::string consume(TokenType);
 
     protected:
         enum class Precedence

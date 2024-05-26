@@ -26,6 +26,7 @@ namespace hz
 	{
 		//TODO: determine the best way of netting the proper return value
 		
+		//Populate the allocation with a new static allocation and return
 	}
 
 

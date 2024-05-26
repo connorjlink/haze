@@ -17,19 +17,23 @@ namespace hz
     {
     private:
         std::vector<Test> tests;
-        static inline std::size_t test_counter = 0;
+        static inline std::size_t num_tests = 0;
 
     protected:
         std::size_t test_count() const
         {
-            return test_counter;
+            return num_tests;
         }
 
         void add_test(const Test& test)
         {
             tests.emplace_back(test);
-            test_counter++;
+            num_tests++;
         }
+
+
+        //Method to get the tests variable
+		
     };
 }
 

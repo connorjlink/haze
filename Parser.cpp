@@ -1,15 +1,18 @@
 #include "Parser.h"
 #include "Log.h"
-#include "IdentifierExpression.h"
 #include "Token.h"
-#include "Statement.h"
+
+#include "CompoundStatement.h"
+#include "VariableStatement.h"
+#include "ReturnStatement.h"
+
+#include "IntegerLiteralExpression.h"
+#include "IdentifierExpression.h"
+#include "FunctionCallExpression.h"
+#include "BinaryExpression.h"
 
 #include <iostream>
 #include <format>
-
-#include "BinaryExpression.h"
-#include "FunctionCallExpression.h"
-#include "IntegerLiteralExpression.h"
 
 namespace
 {
@@ -109,16 +112,13 @@ namespace hz
 		Log::error(std::format("({}) unexpectedly reached the end of file", peek().line));
 	}
 
-	//TODO: should this have an implementation?
-	//void backtrack() {}
-
-	std::string_view Parser::consume(TokenType token)
+	std::string Parser::consume(TokenType token)
 	{
 		const auto& current = peek();
 		if (current.type == token)
 		{
 			cursor++;
-			return std::string_view{ current.value.value_or("") };
+			return current.value.value_or("UNDEFINED");
 		}
 
 		auto debug = [&](auto v)
@@ -213,7 +213,7 @@ namespace hz
 	{
 		std::vector<Expression*> arguments;
 
-		while (lookahead().type != TokenType::RPAREN)
+ 		while (peek().type != TokenType::RPAREN)
 		{
 			arguments.emplace_back(parse_expression());
 
@@ -294,7 +294,7 @@ namespace hz
 
 	Statement* CompilerParser::parse_variabledeclaration_statement()
 	{
-		//TODO: add other type specifiers
+		//TODO: support other type specifiers
 		DISCARD consume(TokenType::BYTE);
 
 		const auto name = consume(TokenType::IDENTIFIER);
@@ -317,10 +317,10 @@ namespace hz
 	Statement* CompilerParser::parse_compound_statement()
 	{
 		DISCARD consume(TokenType::LBRACE);
-		const auto statements = parse_statements();
+		auto statements = parse_statements();
 		DISCARD consume(TokenType::RBRACE);
 
-		return new CompoundStatement{ statements };
+		return new CompoundStatement{ std::move(statements) };
 	}
 
 	Statement* CompilerParser::parse_return_statement()

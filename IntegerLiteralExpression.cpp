@@ -10,14 +10,14 @@ namespace hz
         return Expression::Type::INTEGER_LITERAL;
     }
 
-    IntegerLiteralExpression* IntegerLiteralExpression::copy() const
-    {
-        return new IntegerLiteralExpression{ value };
-    }
-
     std::string IntegerLiteralExpression::string() const
     {
         return std::format("integer literal ({})", value);
+    }
+
+    IntegerLiteralExpression* IntegerLiteralExpression::copy() const
+    {
+        return new IntegerLiteralExpression{ value };
     }
 
     void IntegerLiteralExpression::generate(Allocation* allocation)
