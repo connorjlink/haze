@@ -65,8 +65,8 @@ int main(int argc, char** argv)
     //REDO This since we changed the opcode mapping a bit
     std::vector<std::uint8_t> rom = 
     {
-        ::formulate(LOAD, R0, DC), 0x7, 0x0, //load r0, #7
-        ::formulate(LOAD, R1, DC), 0x4, 0x0, //load r1, #4
+        ::formulate(COPY, R0, DC), 0x7, 0x0, //load r0, #7
+        ::formulate(COPY, R1, DC), 0x4, 0x0, //load r1, #4
         ::formulate(IADD, R0, R1), 0x0, 0x0, //iadd r0, r1
         ::formulate(BXOR, R1, R1), 0x0, 0x0, //bnot r1
         ::formulate(PUSH, DC, R0), 0x0, 0x0, //push r0

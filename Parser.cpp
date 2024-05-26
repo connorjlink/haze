@@ -248,7 +248,7 @@ namespace hz
 
 		do
 		{
-			const auto& next = lookahead();
+			const auto& next = peek();
 
 			if (!is_binary_operator(next.type) || precedences.at(next.type) < min_precedence)
 			{

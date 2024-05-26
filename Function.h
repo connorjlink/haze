@@ -2,6 +2,7 @@
 #define HAZE_FUNCTION_H
 
 #include <vector>
+#include <string>
 
 #include "Statement.h"
 #include "Expression.h"
@@ -11,13 +12,13 @@ namespace hz
     class Function : public Node
     {
     public:
-        std::string_view name;
+        std::string name;
         std::vector<Expression*> arguments;
         Statement* body;
 
     public:
-        Function(std::string_view name, std::vector<Expression*>&& arguments, Statement* body)
-            : name(name), arguments(std::move(arguments)), body(body)
+        Function(std::string name, std::vector<Expression*>&& arguments, Statement* body)
+            : name(std::move(name)), arguments(std::move(arguments)), body(body)
         {
         }
 

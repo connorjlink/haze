@@ -6,9 +6,9 @@ namespace hz
 	{
 		return
 		{
-			bytes & 0xF >> 0,
-			bytes & 0xF0 >> 8,
-			bytes & 0xF00 >> 16
+			static_cast<std::uint8_t>((bytes & 0xFF0000) >> 16),
+			static_cast<std::uint8_t>((bytes & 0xFF00) >> 8),
+			static_cast<std::uint8_t>((bytes & 0xFF) >> 0),
 		};
 	}
 }

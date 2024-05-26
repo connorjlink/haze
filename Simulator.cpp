@@ -18,8 +18,8 @@ namespace hz
 
 		opcode = (fetch1 & 0xF0) >> 4;
 
-		operand1 = (fetch1 & 0x0F) >> 2;
-		operand2 = (fetch1 & 0x0F) >> 0;
+		operand1 = (fetch1 & 0x0C) >> 2;
+		operand2 = (fetch1 & 0x03) >> 0;
 
 		immediate = fetch2;
 		memory = (fetch2 << 8) | fetch3;
@@ -179,6 +179,10 @@ namespace hz
 					Log::info("Simulation ending...");
 					std::exit(EXIT_SUCCESS);
 				} break;
+
+				//Special case to handle the first iteration cleanly
+				case '\0':
+					break;
 
 				default:
 				{
