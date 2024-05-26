@@ -228,6 +228,13 @@ namespace hz
 			}
 		}
 
+		//TODO: figure out how to support passing more than 4 arguments on the stack
+		//realistically, this is possible if we push parameters to the stack in batches of 4 or fewer at a time
+		if (arguments.size() > 4)
+		{
+			Log::error(std::format("({}) function defined with {} arguments but can have at most 4", peek().line, arguments.size()));
+		}
+
 		return arguments;
 	}
 

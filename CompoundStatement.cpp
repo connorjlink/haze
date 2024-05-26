@@ -40,12 +40,25 @@ namespace hz
     {
         std::vector<Statement*> substatements_optimized{};
 
+        bool did_optimize = false;
+
         for (auto substatement : substatements)
         {
 	        if (auto substatement_optimized = substatement->optimize())
 	        {
 		        substatements_optimized.emplace_back(AS_STATEMENT(substatement_optimized));
+                did_optimize = true;
 	        }
+
+            else
+            {
+	            substatements_optimized.emplace_back(substatement);
+            }
+        }
+
+        if (!did_optimize)
+        {
+	        return nullptr;
         }
 
         return new CompoundStatement{ std::move(substatements_optimized) };

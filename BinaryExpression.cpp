@@ -96,28 +96,52 @@ namespace hz
 		auto left_optimized = AS_EXPRESSION(left->optimize());
 		auto right_optimized = AS_EXPRESSION(right->optimize());
 
-		if (!left_optimized && !right_optimized) return nullptr;
-		if (!left_optimized) left_optimized = left;
-		if (!right_optimized) right_optimized = right;
-
-		if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
-			AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
+		if (!left_optimized && !right_optimized)
 		{
-			return right_optimized;
-		}
+			left_optimized = AS_EXPRESSION(left->copy());
+			right_optimized = AS_EXPRESSION(right->copy());
 
-		else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
-				 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
-		{
-			return left_optimized;
+			if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
+			{
+				return right_optimized;
+			}
+
+			else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
+			{
+				return left_optimized;
+			}
+
+			else if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+					 right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+			{
+				return new IntegerLiteralExpression{
+					AS_INTEGER_LITERAL_EXPRESSION(left)->value + AS_INTEGER_LITERAL_EXPRESSION(right)->value };
+			}
+
+			else
+			{
+				return new PlusBinaryExpression{ left_optimized, right_optimized };
+			}
 		}
 
 		else
 		{
-			auto optimized = copy();
-			optimized->left = left_optimized;
-			optimized->right = right_optimized;
-			return optimized;
+			if (!left_optimized)
+			{
+				return new PlusBinaryExpression{ AS_EXPRESSION(left->copy()), right_optimized };
+			}
+
+			else if (!right_optimized)
+			{
+				return new PlusBinaryExpression{ left_optimized, AS_EXPRESSION(right->copy()) };
+			}
+
+			else
+			{
+				return new PlusBinaryExpression{ left_optimized, right_optimized };
+			}
 		}
 	}
 
@@ -126,30 +150,54 @@ namespace hz
 		auto left_optimized = AS_EXPRESSION(left->optimize());
 		auto right_optimized = AS_EXPRESSION(right->optimize());
 
-		if (!left_optimized && !right_optimized) return nullptr;
-		if (!left_optimized) left_optimized = left;
-		if (!right_optimized) right_optimized = right;
-
-		if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
-			AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
+		if (!left_optimized && !right_optimized)
 		{
-			//(0 - x) simplifies to -x
-			AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value *= -1;
-			return right_optimized;
-		}
+			left_optimized = AS_EXPRESSION(left->copy());
+			right_optimized = AS_EXPRESSION(right->copy());
 
-		else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
-				 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
-		{
-			return left_optimized;
+			if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
+			{
+				//(0 - x) simplifies to -x
+				AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value *= -1;
+				return right_optimized;
+			}
+
+			else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
+			{
+				return left_optimized;
+			}
+
+			else if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+					 right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+			{
+				return new IntegerLiteralExpression{
+					AS_INTEGER_LITERAL_EXPRESSION(left)->value - AS_INTEGER_LITERAL_EXPRESSION(right)->value };
+			}
+
+			else
+			{
+				return new MinusBinaryExpression{ left_optimized, right_optimized };
+			}
 		}
 
 		else
 		{
-			auto optimized = copy();
-			optimized->left = left_optimized;
-			optimized->right = right_optimized;
-			return optimized;
+			if (!left_optimized)
+			{
+				return new MinusBinaryExpression{ AS_EXPRESSION(left->copy()), right_optimized };
+			}
+
+			else if (!right_optimized)
+			{
+				return new MinusBinaryExpression{ left_optimized, AS_EXPRESSION(right->copy()) };
+			}
+
+			else
+			{
+				return new MinusBinaryExpression{ left_optimized, right_optimized };
+			}
 		}
 	}
 
@@ -158,82 +206,94 @@ namespace hz
 		auto left_optimized = AS_EXPRESSION(left->optimize());
 		auto right_optimized = AS_EXPRESSION(right->optimize());
 
-		if (!left_optimized && !right_optimized) return nullptr;
-		if (!left_optimized) left_optimized = left;
-		if (!right_optimized) right_optimized = right;
-
-		if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+		if (!left_optimized && !right_optimized)
 		{
-			auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
-			auto result = left_optimized;
+			left_optimized = AS_EXPRESSION(left->copy());
+			right_optimized = AS_EXPRESSION(right->copy());
 
-			if (left_value == 0)
+			if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
 			{
-				AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
-			}
+				auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
+				auto result = left_optimized;
 
-			else if (left_value == 1)
-			{
-				delete result;
-				result = right_optimized;
-			}
-
-			else
-			{
-				if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+				if (left_value == 0)
 				{
-					AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
-						AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
+					AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
+				}
+
+				else if (left_value == 1)
+				{
+					delete result;
+					result = right_optimized;
 				}
 
 				else
 				{
-					MULTIPLICATION_ERROR;
+					if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+					{
+						AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
+							AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
+					}
+
+					else
+					{
+						MULTIPLICATION_ERROR;
+					}
 				}
+
+				return result;
 			}
 
-			return result;
-		}
-
-		else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
-		{
-			auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
-			auto result = right_optimized;
-
-			if (right_value == 0)
+			else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
 			{
-				AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
-			}
+				auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
+				auto result = right_optimized;
 
-			else if (right_value == 1)
-			{
-				delete result;
-				result = left_optimized;
-			}
-
-			else
-			{
-				if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+				if (right_value == 0)
 				{
-					AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
-						AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
+					AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
+				}
+
+				else if (right_value == 1)
+				{
+					delete result;
+					result = left_optimized;
 				}
 
 				else
 				{
-					MULTIPLICATION_ERROR;
-				}
-			}
+					if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+					{
+						AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
+							AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
+					}
 
-			return result;
+					else
+					{
+						MULTIPLICATION_ERROR;
+					}
+				}
+
+				return result;
+			}
 		}
 
 		else
 		{
-			auto optimized = copy();
-			optimized->left = left_optimized;
-			optimized->right = right_optimized;
-			return optimized;
+			if (!left_optimized)
+			{
+				return new TimesBinaryExpression{ AS_EXPRESSION(left->copy()), right_optimized };
+			}
+
+			else if (!right_optimized)
+			{
+				return new TimesBinaryExpression{ left_optimized, AS_EXPRESSION(right->copy()) };
+			}
+
+			else
+			{
+				return new TimesBinaryExpression{ left_optimized, right_optimized };
+			}
 		}
 	}
 }

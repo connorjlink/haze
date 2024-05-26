@@ -30,9 +30,9 @@ namespace hz
 
 	Function* Function::optimize()
 	{
-		if (auto body_optimized = body->optimize(); body_optimized)
+		if (auto body_optimized = body->optimize())
 		{
-			return new Function{ name, std::move(arguments), static_cast<Statement*>(body_optimized) };
+			return new Function{ name, std::move(arguments), AS_STATEMENT(body_optimized) };
 		}
 
 		return nullptr;

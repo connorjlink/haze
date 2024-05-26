@@ -49,6 +49,26 @@ int main(int argc, char** argv)
     parser = new CompilerParser{ std::move(tokens) };
     auto ast = parser->parse();
 
+    for (auto& node : ast)
+    {
+        auto node_optimized = node;
+
+		while (true)
+		{
+            if (auto optimized = node->optimize())
+            {
+	            node_optimized = optimized;
+            }
+
+            else
+            {
+	            break;
+            }
+
+            node = node_optimized;
+		}
+    }
+
     generator = new Generator{ std::move(ast) };
     auto code = generator->generate();
 

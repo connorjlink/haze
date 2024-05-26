@@ -67,13 +67,13 @@ namespace hz
 				Log::error("({}) unexpected character `/`");
 			}
 
-			else if ('0' < current && current < '9')
+			else if ('0' <= current && current <= '9')
 			{
 				APPEND_TOKEN_VALUE(INT, rest(std::isdigit));
 			}
 
-			else if ('a' < current && current < 'z' ||
-				'A' < current && current < 'Z')
+			else if ('a' <= current && current <= 'z' ||
+					 'A' <= current && current <= 'Z')
 			{
 				const auto lexeme = rest(std::isalnum);
 				const auto search = lexeme_map.find(lexeme);

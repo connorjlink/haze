@@ -28,7 +28,7 @@ namespace hz
 			return new StaticAllocation{ reg.value() };	
 		}
 
-		Log::error(std::format("Static allocation failed with exclusion register {}", unmap(exclude)));
+		Log::error(std::format("static allocation failed with exclusion register {}", unmap(exclude)));
 	}
 
 
