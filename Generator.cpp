@@ -1,9 +1,11 @@
 #include "Generator.h"
+
 #include "Allocator.h"
 #include "Allocation.h"
 #include "Log.h"
 #include "Parser.h"
 #include "Symbol.h"
+#include "Utility.h"
 #include "IdentifierExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "FunctionCallExpression.h"
@@ -13,26 +15,23 @@
 #include <format>
 #include <iostream>
 #include <cstdlib>
-
-#include "Utility.h"
+#include <algorithm>
 
 namespace
 {
-	void encode(std::vector<std::uint8_t>& vec, std::uint32_t bytes)
+	void encode(std::pair<std::string, std::vector<std::array<std::uint8_t, 3>>>& vec, std::uint32_t bytes)
 	{
-		for (auto byte : hz::extract(bytes))
-		{
-			vec.emplace_back(byte);
-		}
+		vec.second.emplace_back(hz::extract(bytes));
 	}
 }
 
 namespace hz
 {
-	void Generator::begin_function()
+	void Generator::begin_function(std::string name)
 	{
 		current_function++;
-		bytes.emplace_back();
+		//TODO: is there a more efficient way to do this (without copying?)
+		bytes.push_back({ name, {} });
 	}
 
 	void Generator::move(Register destination, Register source)
@@ -119,7 +118,7 @@ namespace hz
 		::encode(bytes[current_function], Instruction{ BREZ, DC, source, 0, address }.bytes());
 	}
 
-	std::vector<std::vector<std::uint8_t>> Generator::generate()
+	std::vector<std::pair<std::string, std::vector<std::array<std::uint8_t, 3>>>> Generator::generate()
 	{
 		for (auto function : program)
 		{
@@ -127,6 +126,12 @@ namespace hz
 			auto allocation = allocator->allocate_static();
 			function->generate(allocation);
 		}
+
+		//Reorder the functions so `main` is first since it's our entrypoint.
+		std::ranges::partition(bytes, [](const auto& function)
+		{
+			return function.first == "main";
+		});
 
 		return bytes;
 	}

@@ -3,8 +3,13 @@ function byte foo = ()
     return 1;
 }
 
+function byte bar = ()
+{
+    return 3;
+}
+
 function byte main = ()
 {
-    byte bar = 1;
-    return bar;
+    byte test = 2 + 4;
+    return test;
 }

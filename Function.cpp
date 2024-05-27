@@ -25,7 +25,7 @@ namespace hz
 
 	void Function::generate(Allocation* allocation)
 	{
-		generator->begin_function();
+		generator->begin_function(name);
 		body->generate(allocation);
 	}
 

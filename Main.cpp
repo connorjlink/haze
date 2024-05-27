@@ -1,10 +1,12 @@
+#include "Allocator.h"
 #include "Preprocessor.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include "Log.h"
 #include "Generator.h"
-#include "Allocator.h"
+#include "Linker.h"
 #include "Simulator.h"
+#include "Utility.h"
 
 #include <cstdlib>
 #include <string>
@@ -19,9 +21,6 @@ Parser* hz::parser;
 
 int main(int argc, char** argv)
 {
-    static constexpr auto OPTIMIZE = true;
-    static constexpr auto DEBUG = true;
-
     std::string filepath = argv[1];
 
     if (argc != 2 || (filepath.substr(filepath.length() - 2) != "hz"))
@@ -71,9 +70,9 @@ int main(int argc, char** argv)
     }
 
     generator = new Generator{ std::move(ast) };
-    auto code = generator->generate();
+	auto code = generator->generate();
 
-    auto linker = new Linker{ std::move(code); };
+    auto linker = new Linker{ std::move(code) };
     auto executable = linker->link();
 
     Log::info(std::format("successfully compiled {}", filepath));

@@ -1,13 +1,11 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
+#include <array>
 #include <vector>
 #include <string>
+#include <utility>
 
-#include "Expression.h"
-#include "Statement.h"
-#include "Function.h"
-#include "Symbol.h"
 #include "Instruction.h"
 
 namespace hz
@@ -21,11 +19,11 @@ namespace hz
 		std::vector<Node*> program;
 
 	private:
-		std::vector<std::vector<std::uint8_t>> bytes;
-		std::size_t current_function;
+		std::vector<std::pair<std::string, std::vector<std::array<std::uint8_t, 3>>>> bytes;
+		std::int32_t current_function;
 
 	public:
-		void begin_function();
+		void begin_function(std::string);
 
 	public:
 		void move(Register, Register);
@@ -45,12 +43,12 @@ namespace hz
 
 	public:
 		explicit Generator(std::vector<Node*>&& program)
-			: program(std::move(program))
+			: current_function(-1), bytes({}), program(std::move(program))
 		{
 		}
 
 	public:
-		std::vector<std::vector<std::uint8_t>> generate();
+		std::vector<std::pair<std::string, std::vector<std::array<std::uint8_t, 3>>>> generate();
 	};
 
 	extern Generator* generator;

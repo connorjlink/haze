@@ -8,6 +8,9 @@
 
 namespace hz
 {
+	inline static constexpr auto OPTIMIZE = true;
+    inline static constexpr auto DEBUG = true;
+
 	std::array<word, 3> extract(std::uint32_t bytes);
 }
 
