@@ -3,19 +3,20 @@
 
 #include "Statement.h"
 #include "Expression.h"
+#include "Allocation.h"
 
 namespace hz
 {
 	class VariableStatement : public Statement
 	{
 	private:
-		std::string_view name;
+		std::string name;
 		Expression* value;
 		Allocation* allocation;
 
 	public:
-		VariableStatement(std::string_view name, Expression* value, Allocation* allocation)
-			: name(name), value(value), allocation(allocation)
+		VariableStatement(std::string name, Expression* value, Allocation* allocation)
+			: name(std::move(name)), value(value), allocation(allocation)
 		{
 		}
 

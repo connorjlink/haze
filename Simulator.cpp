@@ -140,6 +140,7 @@ namespace hz
 		register_file = { 0 };
 		instruction_pointer = HALF_DWORD_MAX;
 		stack_pointer = 0;
+		
 		ram = { 0 };
 	}
 

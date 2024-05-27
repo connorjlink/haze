@@ -1,7 +1,7 @@
 #ifndef HAZE_VALIDATOR_H
 #define HAZE_VALIDATOR_H
 
-#include <string_view>
+#include <string>
 #include <vector>
 #include <functional>
 
@@ -9,7 +9,7 @@ namespace hz
 {
     struct Test
     {
-        std::string_view name;
+        std::string name;
         std::function<bool()> test;
     };
 

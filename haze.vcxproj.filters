@@ -80,6 +80,9 @@
     <ClCompile Include="VariableStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Linker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -163,6 +166,7 @@
     <ClInclude Include="VariableStatement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Linker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">

@@ -1,7 +1,7 @@
 #ifndef HAZE_SYMBOL_H
 #define HAZE_SYMBOL_H
 
-#include <string_view>
+#include <string>
 
 #define AS_FUNCTION_SYMBOL(x) static_cast<FunctionSymbol*>(x)
 #define AS_ARGUMENT_SYMBOL(x) static_cast<ArgumentSymbol*>(x)
@@ -25,7 +25,7 @@ namespace hz
 		};
 
 	public:
-		std::string_view name;
+		std::string name;
 
 	public:
 		virtual Symbol::Type ytype() const = 0;
@@ -34,13 +34,13 @@ namespace hz
 	class FunctionSymbol : public Symbol
 	{
 	private:
-		Allocation* allocation;
+		std::uint16_t entrypoint;
 
 	public:
-		explicit FunctionSymbol(std::string_view name)
-			: allocation(nullptr)
+		explicit FunctionSymbol(std::string name)
+			: entrypoint(0)
 		{
-			this->name = name;
+			this->name = std::move(name);
 		}
 
 	public:
@@ -53,10 +53,10 @@ namespace hz
 		Allocation* allocation;
 
 	public:
-		explicit ArgumentSymbol(std::string_view name)
+		explicit ArgumentSymbol(std::string name)
 			: allocation(nullptr)
 		{
-			this->name = name;
+			this->name = std::move(name);
 		}
 
 	public:
@@ -69,10 +69,10 @@ namespace hz
 		Allocation* allocation;
 
 	public:
-		explicit VariableSymbol(std::string_view name)
-			: allocation(nullptr)
+		explicit VariableSymbol(std::string name, Allocation* allocation)
+			: allocation(allocation)
 		{
-			this->name = name;
+			this->name = std::move(name);
 		}
 
 	public:

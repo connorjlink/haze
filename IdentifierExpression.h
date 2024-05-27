@@ -12,11 +12,11 @@ namespace hz
 	class IdentifierExpression : public Expression
 	{
 	public:
-		std::string_view name;
+		std::string name;
 
 	public:
-		IdentifierExpression(std::string_view name)
-			: name(name)
+		IdentifierExpression(std::string name)
+			: name(std::move(name))
 		{
 		}
 

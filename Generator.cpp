@@ -29,91 +29,97 @@ namespace
 
 namespace hz
 {
+	void Generator::begin_function()
+	{
+		current_function++;
+		bytes.emplace_back();
+	}
+
 	void Generator::move(Register destination, Register source)
 	{
 		//move destination, source
-		::encode(bytes, Instruction{ MOVE, destination, source }.bytes());
+		::encode(bytes[current_function], Instruction{ MOVE, destination, source }.bytes());
 	}
 
 	void Generator::load(Register destination, std::uint16_t address)
 	{
 		//load destination, &address
-		::encode(bytes, Instruction{ LOAD, destination, DC, 0, address }.bytes());
+		::encode(bytes[current_function], Instruction{ LOAD, destination, DC, 0, address }.bytes());
 	}
 
 	void Generator::copy(Register destination, std::uint8_t immediate)
 	{
 		//copy destination, #immediate
-		::encode(bytes, Instruction{ COPY, destination, DC, immediate, 0 }.bytes());
+		::encode(bytes[current_function], Instruction{ COPY, destination, DC, immediate, 0 }.bytes());
 	}
 
 	void Generator::save(std::uint16_t address, Register source)
 	{
 		//save &address, source
-		::encode(bytes, Instruction{ SAVE, DC, source, 0, address }.bytes());
+		::encode(bytes[current_function], Instruction{ SAVE, DC, source, 0, address }.bytes());
 	}
 
 	void Generator::iadd(Register destination, Register source)
 	{
 		//iadd destination, source
-		::encode(bytes, Instruction{ IADD, destination, source }.bytes());
+		::encode(bytes[current_function], Instruction{ IADD, destination, source }.bytes());
 	}
 
 	void Generator::isub(Register destination, Register source)
 	{
 		//isub destination, source
-		::encode(bytes, Instruction{ ISUB, destination, source }.bytes());
+		::encode(bytes[current_function], Instruction{ ISUB, destination, source }.bytes());
 	}
 
 	void Generator::band(Register destination, Register source)
 	{
 		//band destination, source
-		::encode(bytes, Instruction{ BAND, destination, source }.bytes());
+		::encode(bytes[current_function], Instruction{ BAND, destination, source }.bytes());
 	}
 
 	void Generator::bior(Register destination, Register source)
 	{
 		//bior destination, source
-		::encode(bytes, Instruction{ BIOR, destination, source }.bytes());
+		::encode(bytes[current_function], Instruction{ BIOR, destination, source }.bytes());
 	}
 
 	void Generator::bxor(Register destination, Register source)
 	{
 		//bxor destination, source
-		::encode(bytes, Instruction{ BXOR, destination, source }.bytes());
+		::encode(bytes[current_function], Instruction{ BXOR, destination, source }.bytes());
 	}
 
 	void Generator::call(std::uint16_t address)
 	{
 		//call &address
-		::encode(bytes, Instruction{ CALL, DC, DC, 0, address }.bytes());
+		::encode(bytes[current_function], Instruction{ CALL, DC, DC, 0, address }.bytes());
 	}
 
 	void Generator::exit()
 	{
 		//exit
-		::encode(bytes, Instruction{ EXIT, DC, DC }.bytes());
+		::encode(bytes[current_function], Instruction{ EXIT, DC, DC }.bytes());
 	}
 
 	void Generator::push(Register source)
 	{
 		//push source
-		::encode(bytes, Instruction{ PUSH, DC, source }.bytes());
+		::encode(bytes[current_function], Instruction{ PUSH, DC, source }.bytes());
 	}
 
 	void Generator::pull(Register destination)
 	{
 		//pull destination
-		::encode(bytes, Instruction{ PULL, destination, DC }.bytes());
+		::encode(bytes[current_function], Instruction{ PULL, destination, DC }.bytes());
 	}
 
 	void Generator::brez(std::uint16_t address, Register source)
 	{
 		//brez &address, source
-		::encode(bytes, Instruction{ BREZ, DC, source, 0, address }.bytes());
+		::encode(bytes[current_function], Instruction{ BREZ, DC, source, 0, address }.bytes());
 	}
 
-	std::vector<std::uint8_t> Generator::generate()
+	std::vector<std::vector<std::uint8_t>> Generator::generate()
 	{
 		for (auto function : program)
 		{

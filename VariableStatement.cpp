@@ -1,4 +1,6 @@
 #include "VariableStatement.h"
+#include "Allocator.h"
+#include "Parser.h"
 
 #include <format>
 
@@ -21,9 +23,14 @@ namespace hz
 
     void VariableStatement::generate(Allocation* received_allocation)
     {
+        //Make some space on the heap and notify the parser
+        allocation = allocator->allocate_dynamic();
+        AS_VARIABLE_SYMBOL(parser->reference_symbol(Symbol::Type::VARIABLE, name))->allocation = allocation;
+
         if (value)
         {
 	        value->generate(received_allocation);
+            allocation->copy(received_allocation);
         }
     }
 

@@ -35,16 +35,16 @@ namespace hz
         DC = 0b100,
     };
 
-    static const std::unordered_map<hz::Register, std::string_view> register_map =
+    static const std::unordered_map<Register, std::string_view> register_map =
     {
-        { hz::R0, "r0" },
-        { hz::R1, "r1" },
-        { hz::R2, "r2" },
-        { hz::R3, "r3" },
-        { hz::DC, "ud" },
+        { R0, "r0" },
+        { R1, "r1" },
+        { R2, "r2" },
+        { R3, "r3" },
+        { DC, "ud" },
     };
 
-    static const auto unmap = [](hz::Register r)
+    static const auto unmap = [](Register r)
     {
         return register_map.at(r);
     };

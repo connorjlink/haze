@@ -4,7 +4,6 @@
 #include "Expression.h"
 
 #include <string>
-#include <string_view>
 #include <vector>
 
 namespace hz
@@ -12,12 +11,12 @@ namespace hz
 	class FunctionCallExpression : public Expression
 	{
 	public:
-		std::string_view name;
+		std::string name;
 		std::vector<Expression*> arguments;
 
 	public:
-		FunctionCallExpression(std::string_view name, std::vector<Expression*>&& arguments)
-			: name(name), arguments(std::move(arguments))
+		FunctionCallExpression(std::string name, std::vector<Expression*>&& arguments)
+			: name(std::move(name)), arguments(std::move(arguments))
 		{
 		}
 

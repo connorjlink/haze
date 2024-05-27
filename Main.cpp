@@ -19,12 +19,14 @@ Parser* hz::parser;
 
 int main(int argc, char** argv)
 {
+    static constexpr auto OPTIMIZE = true;
+    static constexpr auto DEBUG = true;
+
     std::string filepath = argv[1];
 
     if (argc != 2 || (filepath.substr(filepath.length() - 2) != "hz"))
     {
-        Log::info("correct usage is 'haze file.hz'");
-        return EXIT_FAILURE;
+        Log::error("correct usage is 'haze file.hz'");
     }
 
     std::ifstream file(filepath);
@@ -49,28 +51,30 @@ int main(int argc, char** argv)
     parser = new CompilerParser{ std::move(tokens) };
     auto ast = parser->parse();
 
-    for (auto& node : ast)
+    if constexpr (OPTIMIZE)
     {
-        auto node_optimized = node;
+		for (auto& node : ast)
+        {
+	    	while (true)
+	    	{
+                if (auto node_optimized = node->optimize())
+                {
+                    node = node_optimized;
+                }
 
-		while (true)
-		{
-            if (auto optimized = node->optimize())
-            {
-	            node_optimized = optimized;
-            }
-
-            else
-            {
-	            break;
-            }
-
-            node = node_optimized;
-		}
+                else
+                {
+	                break;
+                }
+	    	}
+        }	    
     }
 
     generator = new Generator{ std::move(ast) };
     auto code = generator->generate();
+
+    auto linker = new Linker{ std::move(code); };
+    auto executable = linker->link();
 
     Log::info(std::format("successfully compiled {}", filepath));
 
@@ -94,7 +98,7 @@ int main(int argc, char** argv)
 
 
     // Simulator sim{ std::move(rom) };
-    Simulator sim{ std::move(code) };
+    Simulator sim{ std::move(executable) };
     sim.reset();
     sim.run();
 

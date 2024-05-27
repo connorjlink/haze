@@ -1,4 +1,10 @@
+function byte foo = ()
+{
+    return 1;
+}
+
 function byte main = ()
 {
-    return 1 + 2 * 3;
+    byte bar = 1;
+    return bar;
 }

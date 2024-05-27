@@ -1,4 +1,5 @@
 #include "Function.h"
+#include "Generator.h"
 
 #include <format>
 
@@ -24,6 +25,7 @@ namespace hz
 
 	void Function::generate(Allocation* allocation)
 	{
+		generator->begin_function();
 		body->generate(allocation);
 	}
 

@@ -1,6 +1,7 @@
 #include "Parser.h"
 #include "Log.h"
 #include "Token.h"
+#include "Allocator.h"
 
 #include "CompoundStatement.h"
 #include "VariableStatement.h"
@@ -48,7 +49,7 @@ namespace
 		return type == hz::TokenType::PLUS || type == hz::TokenType::STAR;
 	}
 
-	auto find(std::string_view name, std::vector<hz::Symbol*>& symbols)
+	auto find(std::string name, std::vector<hz::Symbol*>& symbols)
 	{
 		return std::find_if(symbols.begin(), symbols.end(), [&](auto symbol)
 		{
@@ -59,7 +60,7 @@ namespace
 
 namespace hz
 {
-	void Parser::add_symbol(Symbol::Type type, std::string_view name)
+	void Parser::add_symbol(Symbol::Type type, std::string name)
 	{
 		if (query_symbol(name))
 		{
@@ -71,16 +72,16 @@ namespace hz
 		{
 			case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name }); break;
 			case ARGUMENT: symbol_table.emplace_back(new ArgumentSymbol{ name }); break;
-			case VARIABLE: symbol_table.emplace_back(new VariableSymbol{ name }); break;
+			case VARIABLE: symbol_table.emplace_back(new VariableSymbol{ name, nullptr }); break;
 		}
 	}
 
-	bool Parser::query_symbol(std::string_view name)
+	bool Parser::query_symbol(std::string name)
 	{
 		return ::find(name, symbol_table) != std::end(symbol_table);
 	}
 
-	Symbol* Parser::reference_symbol(Symbol::Type type, std::string_view name)
+	Symbol* Parser::reference_symbol(Symbol::Type type, std::string name)
 	{
 		auto symbol = ::find(name, symbol_table);
 		if (symbol == std::end(symbol_table))

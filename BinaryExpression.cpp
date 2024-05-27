@@ -276,6 +276,11 @@ namespace hz
 
 				return result;
 			}
+
+			else
+			{
+				return nullptr;
+			}
 		}
 
 		else

@@ -32,11 +32,11 @@ namespace hz
     private:
         std::vector<Symbol*> symbol_table;
     protected:
-        void add_symbol(Symbol::Type, std::string_view);
+        void add_symbol(Symbol::Type, std::string);
 
     public:
-        bool query_symbol(std::string_view);
-        Symbol* reference_symbol(Symbol::Type, std::string_view);
+        bool query_symbol(std::string);
+        Symbol* reference_symbol(Symbol::Type, std::string);
 
     protected:
         const Token& peek() const;
@@ -69,7 +69,7 @@ namespace hz
 
     public:
         explicit Parser(std::vector<Token>&& tokens)
-            : tokens(std::move(tokens))
+            : cursor(0), tokens(std::move(tokens))
         {
         }
     };

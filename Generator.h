@@ -21,7 +21,11 @@ namespace hz
 		std::vector<Node*> program;
 
 	private:
-		std::vector<std::uint8_t> bytes;
+		std::vector<std::vector<std::uint8_t>> bytes;
+		std::size_t current_function;
+
+	public:
+		void begin_function();
 
 	public:
 		void move(Register, Register);
@@ -46,7 +50,7 @@ namespace hz
 		}
 
 	public:
-		std::vector<std::uint8_t> generate();
+		std::vector<std::vector<std::uint8_t>> generate();
 	};
 
 	extern Generator* generator;
