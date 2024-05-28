@@ -1,4 +1,8 @@
 ﻿#include "ReturnStatement.h"
+#include "Function.h"
+#include "IntegerLiteralExpression.h"
+#include "Parser.h"
+#include "Log.h"
 
 #include <format>
 
@@ -21,18 +25,26 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation* received_allocation)
 	{
-		//TODO: if value == nullptr, then the function MUST have `void` return type
-		if (value)
+		if (value == nullptr)
 		{
-			value->generate(received_allocation);
+			if (AS_FUNCTION_SYMBOL(parser->reference_symbol(Symbol::Type::FUNCTION, enclosing_function))->return_type
+				
+				parent->return_type != ReturnType::NVR)
+			{
+				Log::error("no return value was specified for a non-void-returning function");
+			}
+
+			value = new IntegerLiteralExpression{ 0 };
 		}
+
+		value->generate(received_allocation);
 	}
 
 	Statement* ReturnStatement::optimize()
 	{
 		if (auto value_optimized = value->optimize())
 		{
-			return new ReturnStatement{ AS_EXPRESSION(value_optimized), allocation };
+			return new ReturnStatement{ enclosing_function, AS_EXPRESSION(value_optimized), allocation };
 		}
 
 		return nullptr;

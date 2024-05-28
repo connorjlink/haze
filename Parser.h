@@ -31,6 +31,7 @@ namespace hz
 
     private:
         std::vector<Symbol*> symbol_table;
+
     protected:
         void add_symbol(Symbol::Type, std::string);
 

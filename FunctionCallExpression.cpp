@@ -1,4 +1,5 @@
 #include "FunctionCallExpression.h"
+#include "Parser.h"
 
 #include <format>
 
@@ -22,6 +23,10 @@ namespace hz
     void FunctionCallExpression::generate(Allocation* allocation)
     {
         //TODO: finish generating the function code here
+
+
+        auto symbol = parser->reference_symbol(Symbol::Type::FUNCTION, name, true);
+
     }
 
     Expression* FunctionCallExpression::optimize()

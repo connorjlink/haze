@@ -2,6 +2,7 @@
 #define HAZE_RETURNSTATEMENT_H
 
 #include "Statement.h"
+#include "Function.h"
 #include "Expression.h"
 
 namespace hz
@@ -9,12 +10,13 @@ namespace hz
 	class ReturnStatement : public Statement
 	{
 	private:
+		std::string enclosing_function;
 		Expression* value;
 		Allocation* allocation;
 
 	public:
-		ReturnStatement(Expression* value, Allocation* allocation)
-			: value(value), allocation(allocation)
+		ReturnStatement(std::string enclosing_function, Expression* value, Allocation* allocation)
+			: enclosing_function(std::move(enclosing_function)), value(value), allocation(allocation)
 		{
 		}
 

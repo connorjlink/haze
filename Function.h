@@ -9,16 +9,23 @@
 
 namespace hz
 {
+    enum class ReturnType
+    {
+	    BYTE,
+    	NVR,
+    };
+
     class Function : public Node
     {
     public:
         std::string name;
+        ReturnType return_type;
         std::vector<Expression*> arguments;
         Statement* body;
 
     public:
-        Function(std::string name, std::vector<Expression*>&& arguments, Statement* body)
-            : name(std::move(name)), arguments(std::move(arguments)), body(body)
+        Function(std::string name, ReturnType return_type, std::vector<Expression*>&& arguments, Statement* body)
+            : name(std::move(name)), return_type(return_type), arguments(std::move(arguments)), body(body)
         {
         }
 

@@ -23,7 +23,9 @@ namespace hz
 			BINARY,
 		};
 
-		//TODO: implement virtual destructor for this class
+	public:
+		virtual ~Expression() = default;
+
 	public:
 		virtual Node::Type ntype() const final override;
 		virtual Expression::Type etype() const = 0;

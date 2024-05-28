@@ -15,8 +15,7 @@ namespace hz
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
-		//TODO: is there a more efficient way to do this (without copying?)
-		object_code.push_back({ parser->reference_symbol(Symbol::Type::FUNCTION, name), {} });
+		object_code.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<Instruction*>{});
 	}
 
 #define ENCODE object_code[current_function].second.emplace_back

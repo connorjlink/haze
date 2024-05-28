@@ -21,6 +21,8 @@ namespace hz
 		{
 			for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
 			{
+				//TODO: ensure none of our bytes are branch targets
+
 				//optimize `copy-save-load` into `copy` 
 				if (i + 2 < object_code.size())
 				{
@@ -35,7 +37,6 @@ namespace hz
 						if (o1->mem == o2->mem)
 						{
 							optimized_object_code.emplace_back(o0);
-							//TODO: should two or three be added here?
 							i += 2;
 							break;
 						}

@@ -13,6 +13,7 @@
 namespace hz
 {
 	class Allocation;
+	enum class ReturnType;
 
 	class Symbol
 	{
@@ -42,10 +43,11 @@ namespace hz
 	{
 	private:
 		std::uint16_t entrypoint;
+		ReturnType return_type;
 
 	public:
-		explicit FunctionSymbol(std::string name)
-			: Symbol{ std::move(name) }, entrypoint(0)
+		explicit FunctionSymbol(std::string name, ReturnType return_type)
+			: Symbol{ std::move(name) }, entrypoint(0), return_type(static_cast<ReturnType>(0))
 		{
 		}
 

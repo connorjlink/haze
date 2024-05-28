@@ -5,7 +5,7 @@ function byte foo = ()
 
 function byte bar = ()
 {
-    return 3;
+    return foo();
 }
 
 function byte main = ()

@@ -2,9 +2,11 @@
 #include "Instruction.h"
 #include "Disassembler.h"
 #include "Log.h"
+#include "Token.h"
 
 #include <iostream>
 #include <format>
+
 
 namespace hz
 {
@@ -125,9 +127,7 @@ namespace hz
 
 			default:
 			{
-				//XXXX (0xE, 0xF)
-				//TODO: use as instruction set extension prefix?
-				return false;
+				Log::error(std::format("illegal instruction ${:02X} encountered at address ${:04X}", opcode, instruction_pointer));
 			} break;
 		}
 

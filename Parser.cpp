@@ -86,8 +86,9 @@ namespace hz
 		auto symbol = ::find(name, symbol_table);
 		if (symbol == std::end(symbol_table))
 		{
-			//TODO: ensure to output undefined symbol type in the ternary if more enum variants are added
-			Log::error(std::format("{} {} is undefined", type == Symbol::Type::VARIABLE ? "variable" : "function", name));
+			Log::error(std::format("{} {} is undefined", 
+				type == Symbol::Type::VARIABLE ? "variable" : \
+					type == Symbol::Type::FUNCTION ? "function" : "argument", name));
 		}
 
 		if ((*symbol)->ytype() == type)
@@ -152,9 +153,7 @@ namespace hz
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
-		//TODO: optimize the C++ conversion to integer? (maybe dont require a copy)
-		const auto value = std::stoi(std::string{ consume(TokenType::INT) });
-		return new IntegerLiteralExpression{ value };
+		return new IntegerLiteralExpression{ std::stoi(consume(TokenType::INT)) };
 	}
 
 	FunctionCallExpression* Parser::parse_functioncall_expression()
@@ -307,7 +306,6 @@ namespace hz
 
 	Statement* CompilerParser::parse_variabledeclaration_statement()
 	{
-		//TODO: support other type specifiers
 		DISCARD consume(TokenType::BYTE);
 
 		const auto name = consume(TokenType::IDENTIFIER);
@@ -327,25 +325,25 @@ namespace hz
 		return new VariableStatement{ name, nullptr, nullptr };
 	}
 
-	Statement* CompilerParser::parse_compound_statement()
+	Statement* CompilerParser::parse_compound_statement(std::string name)
 	{
 		DISCARD consume(TokenType::LBRACE);
-		auto statements = parse_statements();
+		auto statements = parse_statements(name);
 		DISCARD consume(TokenType::RBRACE);
 
 		return new CompoundStatement{ std::move(statements) };
 	}
 
-	Statement* CompilerParser::parse_return_statement()
+	Statement* CompilerParser::parse_return_statement(std::string name)
 	{
 		DISCARD consume(TokenType::RETURN);
 		const auto expression = parse_expression();
 		DISCARD consume(TokenType::SEMICOLON);
 
-		return new ReturnStatement{ expression, nullptr };
+		return new ReturnStatement{ name, expression, nullptr };
 	}
 
-	Statement* CompilerParser::parse_statement()
+	Statement* CompilerParser::parse_statement(std::string name)
 	{
 		using enum TokenType;
 		switch (peek().type)
@@ -362,13 +360,13 @@ namespace hz
 		}
 	}
 
-	std::vector<Statement*> CompilerParser::parse_statements()
+	std::vector<Statement*> CompilerParser::parse_statements(std::string name)
 	{
 		std::vector<Statement*> statements;
 
 		while (peek().type != TokenType::RBRACE)
 		{
-			statements.emplace_back(parse_statement());
+			statements.emplace_back(parse_statement(name));
 		}
 
 		return statements;
@@ -376,7 +374,6 @@ namespace hz
 
 	Expression* CompilerParser::parse_argument()
 	{
-		//TODO: add other type specifiers for arguments?
 		DISCARD consume(TokenType::BYTE);
 		const auto name = consume(TokenType::IDENTIFIER);
 		add_symbol(Symbol::Type::ARGUMENT, name);
@@ -387,10 +384,28 @@ namespace hz
 	Node* CompilerParser::parse_function()
 	{
 		DISCARD consume(TokenType::FUNCTION);
-		//TODO: support return types other than byte (particularly void functions)
-		DISCARD consume(TokenType::BYTE);
+
+		ReturnType return_type;
+		if (peek().type == TokenType::BYTE)
+		{
+			DISCARD consume(TokenType::BYTE);
+			return_type = ReturnType::BYTE;
+		}
+
+		else if (peek().type == TokenType::NVR)
+		{
+			DISCARD consume(TokenType::NVR);
+			return_type = ReturnType::NVR;
+		}
+
+		else
+		{
+			Log::error("expected return type `byte` or `nvr`");
+		}
 
 		auto name = consume(TokenType::IDENTIFIER);
+		//TODO: figure out how to get the proper return_type into the function symbol object
+		//maybe we make different add_symbol functions for each symbol type with different parameter list types
 		add_symbol(Symbol::Type::FUNCTION, name);
 
 		DISCARD consume(TokenType::EQUALS);
@@ -399,9 +414,9 @@ namespace hz
 		auto arguments = parse_arguments();
 		DISCARD consume(TokenType::RPAREN);
 
-		auto body = parse_compound_statement();
+		auto body = parse_compound_statement(name);
 
-		return new Function{ name, std::move(arguments), body };
+		return new Function{ name, return_type, std::move(arguments), body };
 	}
 
 	std::vector<Node*> CompilerParser::parse_functions()
@@ -440,16 +455,24 @@ namespace hz
 
 
 
+
+
 	//TODO
 	Node* AssemblerParser::parse_instruction()
 	{
 		return nullptr;
 	}
 
-	//TODO
 	std::vector<Node*> AssemblerParser::parse_instructions()
 	{
-		return {};
+		std::vector<Node*> instructions;
+
+		while (peek().type != TokenType::END)
+		{
+			instructions.emplace_back(parse_instruction());
+		}
+
+		return instructions;
 	}
 
 
