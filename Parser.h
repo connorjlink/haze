@@ -36,7 +36,7 @@ namespace hz
 
     public:
         bool query_symbol(std::string);
-        Symbol* reference_symbol(Symbol::Type, std::string);
+        Symbol* reference_symbol(Symbol::Type, std::string, bool = false);
 
     protected:
         const Token& peek() const;

@@ -26,6 +26,13 @@ namespace hz
 
 	public:
 		std::string name;
+		bool was_referenced;
+
+	public:
+		explicit Symbol(std::string name)
+			: name(std::move(name)), was_referenced(false)
+		{
+		}
 
 	public:
 		virtual Symbol::Type ytype() const = 0;
@@ -38,9 +45,8 @@ namespace hz
 
 	public:
 		explicit FunctionSymbol(std::string name)
-			: entrypoint(0)
+			: Symbol{ std::move(name) }, entrypoint(0)
 		{
-			this->name = std::move(name);
 		}
 
 	public:
@@ -54,9 +60,8 @@ namespace hz
 
 	public:
 		explicit ArgumentSymbol(std::string name)
-			: allocation(nullptr)
+			: Symbol{ std::move(name) }, allocation(nullptr)
 		{
-			this->name = std::move(name);
 		}
 
 	public:
@@ -70,9 +75,8 @@ namespace hz
 
 	public:
 		explicit VariableSymbol(std::string name, Allocation* allocation)
-			: allocation(allocation)
+			: Symbol{ std::move(name) }, allocation(allocation)
 		{
-			this->name = std::move(name);
 		}
 
 	public:

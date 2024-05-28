@@ -1,6 +1,7 @@
 #include "Linker.h"
 #include "Instruction.h"
 #include "Utility.h"
+#include "Symbol.h"
 
 namespace
 {
@@ -12,44 +13,49 @@ namespace
 
 namespace hz
 {
-	std::vector<std::array<std::uint8_t, 3>> Linker::optimize(const std::vector<std::array<std::uint8_t, 3>>& object_code) const
+	std::vector<Instruction*> Linker::optimize(const std::vector<Instruction*>& object_code) const
 	{
-		std::vector<std::array<std::uint8_t, 3>> optimized_object_code{};
+		std::vector<Instruction*> optimized_object_code{};
 
 		for (auto i = 0; i < object_code.size(); i++)
 		{
 			for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
 			{
-				//Ensure that there are two more bytes after (since we must test 3 bytes in total)
+				//optimize `copy-save-load` into `copy` 
 				if (i + 2 < object_code.size())
 				{
-					//First check the opcode sequence
-					if (object_code[i + 0][0] == make_opcode(COPY, r, DC) &&
-						object_code[i + 1][0] == make_opcode(SAVE, DC, r) &&
-						object_code[i + 2][0] == make_opcode(LOAD, r, DC))
+					const auto o0 = object_code[i + 0],
+							   o1 = object_code[i + 1],
+							   o2 = object_code[i + 2];
+
+					if (o0->opcode == COPY && o0->op1 == r && //copy r, #x
+						o1->opcode == SAVE && o1->op2 == r && //save &x, r
+						o2->opcode == LOAD && o2->op1 == r)   //load r, &y
 					{
-						//Then check that the memory addresses are the same
-						if (object_code[i + 1][1] == object_code[i + 2][1] &&
-							object_code[i + 1][2] == object_code[i + 2][2])
+						if (o1->mem == o2->mem)
 						{
-							optimized_object_code.emplace_back(object_code[i + 0]);
-							//Do we actually need to add two or three here?
+							optimized_object_code.emplace_back(o0);
+							//TODO: should two or three be added here?
 							i += 2;
-							goto next_iteration;
+							break;
 						}
 
-						optimized_object_code.emplace_back(object_code[i]);
+						
 					}
+				}
+
+				else if (false)
+				{
+					//TODO: other LTCG peephole optimizations go here!
 				}
 
 				else
 				{
+					//No optimizations could be applied here, so insert the old code
 					optimized_object_code.emplace_back(object_code[i]);
 					break;
 				}
 			}
-		next_iteration:
-			{}
 		}
 
 		return optimized_object_code;
@@ -59,18 +65,22 @@ namespace hz
 	{
 		std::vector<std::uint8_t> executable;
 
-		for (auto [_, object_code] : code)
+		for (auto [symbol, function] : object_code)
 		{
-			//This is probably not the best way of doing this since we copy
-			//But, at least it looks clean
-			if constexpr (OPTIMIZE)
+			//Optimize away functions that are not even called
+			if (symbol->was_referenced)
 			{
-				object_code = optimize(object_code);
-			}
+				//This is probably not the best way of doing this since we copy
+				//But, at least it looks clean
+				if constexpr (OPTIMIZE)
+				{
+					function = optimize(function);
+				}
 
-			for (const auto& instruction : object_code)
-			{
-				executable.append_range(instruction);
+				for (const auto& instruction : function)
+				{
+					executable.append_range(extract(instruction->bytes()));
+				}	
 			}
 		}
 

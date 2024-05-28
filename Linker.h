@@ -1,7 +1,8 @@
 #ifndef HAZE_LINKER_H
 #define HAZE_LINKER_H
 
-#include <array>
+#include "Utility.h"
+
 #include <vector>
 #include <string>
 #include <utility>
@@ -12,16 +13,16 @@ namespace hz
 	class Linker
 	{
 	private:
-		std::vector<std::pair<std::string, std::vector<std::array<std::uint8_t, 3>>>> code;
+		std::vector<Linkable> object_code;
 
 	public:
-		Linker(std::vector<std::pair<std::string, std::vector<std::array<std::uint8_t, 3>>>>&& code)
-			: code(std::move(code))
+		Linker(std::vector<Linkable>&& object_code)
+			: object_code(std::move(object_code))
 		{
 		}
 
 	public:
-		std::vector<std::array<std::uint8_t, 3>> optimize(const std::vector<std::array<std::uint8_t, 3>>&) const;
+		std::vector<Instruction*> optimize(const std::vector<Instruction*>&) const;
 		std::vector<std::uint8_t> link() const;
 	};
 }

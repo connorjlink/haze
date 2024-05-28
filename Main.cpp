@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
     if (argc != 2 || (filepath.substr(filepath.length() - 2) != "hz"))
     {
-        Log::error("correct usage is 'haze file.hz'");
+        Log::error("correct usage is 'haze *.hz'");
     }
 
     std::ifstream file(filepath);
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     Log::info(std::format("successfully compiled {}", filepath));
 
     /*
-    constexpr auto formulate = [](auto opcode, auto operand1, auto operand2)
+    consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
     {
 	    return (opcode << 4) | (operand1 << 2) | (operand2 << 0);
     };

@@ -81,7 +81,7 @@ namespace hz
 		return ::find(name, symbol_table) != std::end(symbol_table);
 	}
 
-	Symbol* Parser::reference_symbol(Symbol::Type type, std::string name)
+	Symbol* Parser::reference_symbol(Symbol::Type type, std::string name, bool visit)
 	{
 		auto symbol = ::find(name, symbol_table);
 		if (symbol == std::end(symbol_table))
@@ -92,6 +92,11 @@ namespace hz
 
 		if ((*symbol)->ytype() == type)
 		{
+			if (visit)
+			{
+				(*symbol)->was_referenced = true;
+			}
+
 			return *symbol;
 		}
 
@@ -415,15 +420,17 @@ namespace hz
 	{
 		const auto program = parse_functions();
 
-		if (std::find_if(program.begin(), program.end(), [&](auto function)
+		if (auto it = std::find_if(program.begin(), program.end(), [&](auto function)
 			{
 				return (AS_FUNCTION(function)->name == "main");
-			}) == std::end(program))
+			}); it != std::end(program))
 		{
-			Log::error("no main() function was defined");
+			//since visit == true, the main() function symbol have `was_referenced` set
+			DISCARD reference_symbol(Symbol::Type::FUNCTION, "main", true);
+			return program;
 		}
 
-		return program;
+		Log::error("no main() function was defined");
 	}
 
 	std::vector<Node*> AssemblerParser::parse()
