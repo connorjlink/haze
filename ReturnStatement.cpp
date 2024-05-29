@@ -2,9 +2,13 @@
 #include "Function.h"
 #include "IntegerLiteralExpression.h"
 #include "Parser.h"
+#include "Allocation.h"
+#include "Allocator.h"
+#include "Generator.h"
 #include "Log.h"
 
 #include <format>
+
 
 namespace hz
 {
@@ -23,13 +27,11 @@ namespace hz
 		return new ReturnStatement{ *this };
 	}
 
-	void ReturnStatement::generate(Allocation* received_allocation)
+	void ReturnStatement::generate(Allocation*)
 	{
 		if (value == nullptr)
 		{
-			if (AS_FUNCTION_SYMBOL(parser->reference_symbol(Symbol::Type::FUNCTION, enclosing_function))->return_type
-				
-				parent->return_type != ReturnType::NVR)
+			if (AS_FUNCTION_SYMBOL(parser->reference_symbol(Symbol::Type::FUNCTION, enclosing_function))->return_type != ReturnType::NVR)
 			{
 				Log::error("no return value was specified for a non-void-returning function");
 			}
@@ -37,7 +39,12 @@ namespace hz
 			value = new IntegerLiteralExpression{ 0 };
 		}
 
-		value->generate(received_allocation);
+		auto temp_allocation = allocator->allocate_static();
+		{
+			value->generate(temp_allocation);
+			generator->push(temp_allocation->read());
+		}
+		delete temp_allocation;
 	}
 
 	Statement* ReturnStatement::optimize()

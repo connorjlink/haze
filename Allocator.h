@@ -27,7 +27,7 @@ namespace hz
 
     public:
         // `Register` parameter specifies exclusion
-        Allocation* allocate_static(Register = DC);
+        Allocation* allocate_static(Register = DC, bool = false);
 
         // `bool` parameter specifies whether the memory should be automatically freed at destruction
         Allocation* allocate_dynamic(bool = true);

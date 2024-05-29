@@ -21,7 +21,7 @@ namespace hz
         return new VariableStatement{ *this };
     }
 
-    void VariableStatement::generate(Allocation* received_allocation)
+    void VariableStatement::generate(Allocation*)
     {
         //Make some space on the heap and notify the parser
         allocation = allocator->allocate_dynamic();
@@ -29,8 +29,12 @@ namespace hz
 
         if (value)
         {
-	        value->generate(received_allocation);
-            allocation->copy(received_allocation);
+            auto temp_allocation = allocator->allocate_static();
+            {
+            	value->generate(temp_allocation);
+				allocation->copy(temp_allocation);   
+            }
+            delete temp_allocation;
         }
     }
 

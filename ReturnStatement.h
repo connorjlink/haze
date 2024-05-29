@@ -16,7 +16,7 @@ namespace hz
 
 	public:
 		ReturnStatement(std::string enclosing_function, Expression* value, Allocation* allocation)
-			: enclosing_function(std::move(enclosing_function)), value(value), allocation(allocation)
+			: enclosing_function{ std::move(enclosing_function) }, value{ value }, allocation{ allocation }
 		{
 		}
 

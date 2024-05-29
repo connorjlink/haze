@@ -23,39 +23,45 @@ namespace hz
 			{
 				//TODO: ensure none of our bytes are branch targets
 
-				//optimize `copy-save-load` into `copy` 
-				if (i + 2 < object_code.size())
+				const auto o0 = object_code[i + 0];
+
+				if (i + 1 < object_code.size())
 				{
-					const auto o0 = object_code[i + 0],
-							   o1 = object_code[i + 1],
-							   o2 = object_code[i + 2];
+					const auto o1 = object_code[i + 1];
 
-					if (o0->opcode == COPY && o0->op1 == r && //copy r, #x
-						o1->opcode == SAVE && o1->op2 == r && //save &x, r
-						o2->opcode == LOAD && o2->op1 == r)   //load r, &y
-					{
-						if (o1->mem == o2->mem)
-						{
-							optimized_object_code.emplace_back(o0);
-							i += 2;
-							break;
-						}
-
+					if ((o0->opcode == PUSH && o0->op2 == r &&  //push r
+						 o1->opcode == PULL && o1->op1 == r) || //pull r
 						
+						(o0->opcode == PULL && o0->op1 == r &&  //pull r
+						 o1->opcode == PUSH && o1->op2 == r))   //push r
+					{
+						//These instructions are entirely redundant
+						i += 1;
+						break;
+					}
+
+
+					if (i + 2 < object_code.size())
+					{
+						const auto o2 = object_code[i + 2];
+
+						if (o0->opcode == COPY && o0->op1 == r && //copy r, #x
+							o1->opcode == SAVE && o1->op2 == r && //save &x, r
+							o2->opcode == LOAD && o2->op1 == r)   //load r, &y
+						{
+							if (o1->mem == o2->mem)
+							{
+								optimized_object_code.emplace_back(o0);
+								i += 2;
+								break;
+							}
+						}
 					}
 				}
 
-				else if (false)
-				{
-					//TODO: other LTCG peephole optimizations go here!
-				}
-
-				else
-				{
-					//No optimizations could be applied here, so insert the old code
-					optimized_object_code.emplace_back(object_code[i]);
-					break;
-				}
+				//No optimizations could be applied here, so insert the old code
+				optimized_object_code.emplace_back(object_code[i]);
+				break;
 			}
 		}
 
@@ -73,7 +79,7 @@ namespace hz
 			{
 				//This is probably not the best way of doing this since we copy
 				//But, at least it looks clean
-				if constexpr (OPTIMIZE)
+				if constexpr (OPTIMIZE_LTO)
 				{
 					function = optimize(function);
 				}

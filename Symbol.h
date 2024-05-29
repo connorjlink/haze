@@ -31,7 +31,7 @@ namespace hz
 
 	public:
 		explicit Symbol(std::string name)
-			: name(std::move(name)), was_referenced(false)
+			: name{ std::move(name) }, was_referenced{ false }
 		{
 		}
 
@@ -43,11 +43,13 @@ namespace hz
 	{
 	private:
 		std::uint16_t entrypoint;
+
+	public:
 		ReturnType return_type;
 
 	public:
-		explicit FunctionSymbol(std::string name, ReturnType return_type)
-			: Symbol{ std::move(name) }, entrypoint(0), return_type(static_cast<ReturnType>(0))
+		explicit FunctionSymbol(std::string name, ReturnType return_type = static_cast<ReturnType>(0))
+			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}
 		{
 		}
 
@@ -62,7 +64,7 @@ namespace hz
 
 	public:
 		explicit ArgumentSymbol(std::string name)
-			: Symbol{ std::move(name) }, allocation(nullptr)
+			: Symbol{ std::move(name) }, allocation{ nullptr }
 		{
 		}
 
@@ -77,7 +79,7 @@ namespace hz
 
 	public:
 		explicit VariableSymbol(std::string name, Allocation* allocation)
-			: Symbol{ std::move(name) }, allocation(allocation)
+			: Symbol{ std::move(name) }, allocation{ allocation }
 		{
 		}
 

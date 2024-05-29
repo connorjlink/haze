@@ -25,7 +25,7 @@ namespace hz
 
     public:
         Function(std::string name, ReturnType return_type, std::vector<Expression*>&& arguments, Statement* body)
-            : name(std::move(name)), return_type(return_type), arguments(std::move(arguments)), body(body)
+            : name{ std::move(name) }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
         {
         }
 

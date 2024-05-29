@@ -27,12 +27,12 @@ namespace hz
         return new CompoundStatement{ *this };
     }
 
-    void CompoundStatement::generate(Allocation* allocation)
+    void CompoundStatement::generate(Allocation*)
     {
         for (auto substatement : substatements)
         {
             //TODO: determine if overwriting the allocation is actually bad?
-            substatement->generate(allocation);
+            substatement->generate();
         }
     }
 

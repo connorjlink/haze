@@ -1,5 +1,7 @@
 #include "FunctionCallExpression.h"
 #include "Parser.h"
+#include "Allocator.h"
+#include "Allocation.h"
 
 #include <format>
 
@@ -22,11 +24,23 @@ namespace hz
 
     void FunctionCallExpression::generate(Allocation* allocation)
     {
-        //TODO: finish generating the function code here
-
-
         auto symbol = parser->reference_symbol(Symbol::Type::FUNCTION, name, true);
 
+		auto temp_allocation = allocator->allocate_static(allocation->read());
+        {
+            for (auto argument : arguments)
+		    {
+		    	argument->generate(temp_allocation);
+		    	generator->push(temp_allocation->read());
+            }
+
+            //Placeholder call address before we hot-patch in the correct target after linking
+		    generator->call(0xCCCC);
+
+            //return value comes off stack
+            generator->pull(allocation->read());
+        }
+        delete temp_allocation;
     }
 
     Expression* FunctionCallExpression::optimize()

@@ -16,7 +16,7 @@ namespace hz
 
 	public:
 		FunctionCallExpression(std::string name, std::vector<Expression*>&& arguments)
-			: name(std::move(name)), arguments(std::move(arguments))
+			: name{ std::move(name) }, arguments{ std::move(arguments) }
 		{
 		}
 

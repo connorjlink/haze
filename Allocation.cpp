@@ -19,6 +19,12 @@ namespace hz
 
 	StaticAllocation::~StaticAllocation()
 	{
+		if (was_forced)
+		{
+			generator->pull(reg);
+			return;
+		}
+
 		allocator->register_ledger[reg] = Status::FREE;
 	}
 
@@ -31,12 +37,12 @@ namespace hz
 	}
 
 
-	Register& StaticAllocation::read()
+	Register StaticAllocation::read()
 	{
 		return reg;
 	}
 
-	Register& DynamicAllocation::read()
+	Register DynamicAllocation::read()
 	{
 		Log::error(std::format("dynamic allocation at address {} cannot be mapped as a register for reading", address));
 	}

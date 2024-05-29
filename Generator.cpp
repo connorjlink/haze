@@ -109,8 +109,7 @@ namespace hz
 		for (auto function : program)
 		{
 			//TODO: this allocation scheme does not work
-			auto allocation = allocator->allocate_static();
-			function->generate(allocation);
+			function->generate();
 		}
 
 		//Reorder the functions so `main` is first since it's our entrypoint.

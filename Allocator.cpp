@@ -20,15 +20,22 @@ namespace hz
 	}
 
 
-	Allocation* Allocator::allocate_static(Register exclude)
+	Allocation* Allocator::allocate_static(Register exclude, bool force)
 	{
 		if (auto reg = find_register(exclude); reg.has_value())
 		{
 			register_ledger[reg.value()] = Status::USED;
-			return new StaticAllocation{ reg.value() };	
+			return new StaticAllocation{ reg.value(), false };	
 		}
 
-		Log::error(std::format("static allocation failed with exclusion register {}", unmap(exclude)));
+		if (!force)
+		{
+			Log::error(std::format("static allocation failed with exclusion register {}", unmap(exclude)));
+		}
+
+		auto new_reg = static_cast<Register>((exclude + 1) % R3);
+		generator->push(new_reg);
+		return new StaticAllocation{ new_reg, true };
 	}
 
 

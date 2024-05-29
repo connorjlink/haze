@@ -16,7 +16,7 @@ namespace hz
 
 	public:
 		VariableStatement(std::string name, Expression* value, Allocation* allocation)
-			: name(std::move(name)), value(value), allocation(allocation)
+			: name{ std::move(name) } , value{ value }, allocation{ allocation }
 		{
 		}
 

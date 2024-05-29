@@ -28,7 +28,7 @@ namespace hz
 			case BIOR: return std::format("bior {}, {}", op1, op2);
 			case BXOR: return std::format("bxor {}, {}", op1, op2);
 			case CALL: return std::format("call &{}    ", mem);
-			case EXIT: return std::format("exit        ");
+			case EXIT: return std::format("exit       ");
 			case PUSH: return std::format("push {}    ", op2);
 			case PULL: return std::format("pull {}    ", op1);
 			case BREZ: return std::format("brez &{}, {}", mem, op2);

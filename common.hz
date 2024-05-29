@@ -1,15 +1,9 @@
-function byte foo = ()
-{
-    return 1;
-}
-
 function byte bar = ()
 {
-    return foo();
+    return 1 + 2;
 }
 
 function byte main = ()
 {
-    byte test = 2 + 4;
-    return test;
+    return bar();
 }

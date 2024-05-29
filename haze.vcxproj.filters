@@ -166,7 +166,9 @@
     <ClInclude Include="VariableStatement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Linker.h" />
+    <ClInclude Include="Linker.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">

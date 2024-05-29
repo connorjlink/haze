@@ -70,7 +70,7 @@ namespace hz
 
     public:
         explicit Parser(std::vector<Token>&& tokens)
-            : cursor(0), tokens(std::move(tokens))
+            : cursor{ 0 }, tokens{ std::move(tokens) }
         {
         }
     };
@@ -78,14 +78,14 @@ namespace hz
     class CompilerParser : public Parser
     {
     private:
-        Statement* parse_statement();
-        std::vector<Statement*> parse_statements();
+        Statement* parse_statement(std::string);
+        std::vector<Statement*> parse_statements(std::string);
 
     private:
-        Statement* parse_null_statement();
-        Statement* parse_variabledeclaration_statement();
-        Statement* parse_compound_statement();
-        Statement* parse_return_statement();
+        Statement* parse_null_statement(std::string);
+        Statement* parse_variabledeclaration_statement(std::string);
+        Statement* parse_compound_statement(std::string);
+        Statement* parse_return_statement(std::string);
 
     public:
         Expression* parse_argument();

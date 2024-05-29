@@ -298,18 +298,18 @@ namespace hz
 
 
 
-	Statement* CompilerParser::parse_null_statement()
+	Statement* CompilerParser::parse_null_statement(std::string enclosing_function)
 	{
 		DISCARD consume(TokenType::SEMICOLON);
 		return nullptr;
 	}
 
-	Statement* CompilerParser::parse_variabledeclaration_statement()
+	Statement* CompilerParser::parse_variabledeclaration_statement(std::string enclosing_function)
 	{
 		DISCARD consume(TokenType::BYTE);
 
-		const auto name = consume(TokenType::IDENTIFIER);
-		add_symbol(Symbol::Type::VARIABLE, name);
+		const auto identifier = consume(TokenType::IDENTIFIER);
+		add_symbol(Symbol::Type::VARIABLE, identifier);
 
 		if (peek().type == TokenType::EQUALS)
 		{
@@ -317,41 +317,41 @@ namespace hz
 			const auto value = parse_expression();
 			DISCARD consume(TokenType::SEMICOLON);
 
-			return new VariableStatement{ name, value, nullptr };
+			return new VariableStatement{ identifier, value, nullptr };
 		}
 
 		DISCARD consume(TokenType::SEMICOLON);
 
-		return new VariableStatement{ name, nullptr, nullptr };
+		return new VariableStatement{ identifier, nullptr, nullptr };
 	}
 
-	Statement* CompilerParser::parse_compound_statement(std::string name)
+	Statement* CompilerParser::parse_compound_statement(std::string enclosing_function)
 	{
 		DISCARD consume(TokenType::LBRACE);
-		auto statements = parse_statements(name);
+		auto statements = parse_statements(enclosing_function);
 		DISCARD consume(TokenType::RBRACE);
 
 		return new CompoundStatement{ std::move(statements) };
 	}
 
-	Statement* CompilerParser::parse_return_statement(std::string name)
+	Statement* CompilerParser::parse_return_statement(std::string enclosing_function)
 	{
 		DISCARD consume(TokenType::RETURN);
 		const auto expression = parse_expression();
 		DISCARD consume(TokenType::SEMICOLON);
 
-		return new ReturnStatement{ name, expression, nullptr };
+		return new ReturnStatement{ enclosing_function, expression, nullptr };
 	}
 
-	Statement* CompilerParser::parse_statement(std::string name)
+	Statement* CompilerParser::parse_statement(std::string enclosing_function)
 	{
 		using enum TokenType;
 		switch (peek().type)
 		{
-			case LBRACE: return parse_compound_statement();
-			case BYTE: return parse_variabledeclaration_statement();
-			case SEMICOLON: return parse_null_statement();
-			case RETURN: return parse_return_statement();
+			case LBRACE: return parse_compound_statement(enclosing_function);
+			case BYTE: return parse_variabledeclaration_statement(enclosing_function);
+			case SEMICOLON: return parse_null_statement(enclosing_function);
+			case RETURN: return parse_return_statement(enclosing_function);
 
 			default:
 			{
@@ -360,13 +360,13 @@ namespace hz
 		}
 	}
 
-	std::vector<Statement*> CompilerParser::parse_statements(std::string name)
+	std::vector<Statement*> CompilerParser::parse_statements(std::string enclosing_function)
 	{
 		std::vector<Statement*> statements;
 
 		while (peek().type != TokenType::RBRACE)
 		{
-			statements.emplace_back(parse_statement(name));
+			statements.emplace_back(parse_statement(enclosing_function));
 		}
 
 		return statements;
@@ -404,9 +404,10 @@ namespace hz
 		}
 
 		auto name = consume(TokenType::IDENTIFIER);
-		//TODO: figure out how to get the proper return_type into the function symbol object
-		//maybe we make different add_symbol functions for each symbol type with different parameter list types
+
+		//TODO: implement a more efficient way of modifying the return type than this mess
 		add_symbol(Symbol::Type::FUNCTION, name);
+		AS_FUNCTION_SYMBOL(reference_symbol(Symbol::Type::FUNCTION, name))->return_type = return_type;
 
 		DISCARD consume(TokenType::EQUALS);
 
@@ -433,15 +434,35 @@ namespace hz
 
 	std::vector<Node*> CompilerParser::parse()
 	{
-		const auto program = parse_functions();
+		auto program = parse_functions();
 
 		if (auto it = std::find_if(program.begin(), program.end(), [&](auto function)
 			{
 				return (AS_FUNCTION(function)->name == "main");
 			}); it != std::end(program))
 		{
-			//since visit == true, the main() function symbol have `was_referenced` set
+			//at bare minimum, we must compile main() since it's the entrypoint
 			DISCARD reference_symbol(Symbol::Type::FUNCTION, "main", true);
+
+			if constexpr (OPTIMIZE_AST)
+			{
+				for (auto& node : program)
+				{
+					while (true)
+					{
+				        if (auto node_optimized = node->optimize())
+				        {
+				            node = node_optimized;
+				        }
+
+				        else
+				        {
+				            break;
+				        }
+					}
+				}	    	
+			}
+
 			return program;
 		}
 

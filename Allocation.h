@@ -26,7 +26,7 @@ namespace hz
 		{
 		}
 
-		virtual Register& read() = 0;
+		virtual Register read() = 0;
 		virtual void write(std::uint8_t) = 0;
 		virtual void copy(Allocation*) const = 0;
 	};
@@ -35,10 +35,11 @@ namespace hz
 	{
 	public:
 		Register reg;
+		bool was_forced;
 
 	public:
-		StaticAllocation(Register reg)
-			: reg(reg)
+		StaticAllocation(Register reg, bool was_forced)
+			: reg{ reg }, was_forced{ was_forced }
 		{
 		}
 
@@ -47,7 +48,7 @@ namespace hz
 
 		virtual ~StaticAllocation() final override;
 
-		virtual Register& read() final override;
+		virtual Register read() final override;
 		virtual void write(std::uint8_t) final override;
 		virtual void copy(Allocation*) const final override;
 	};
@@ -60,7 +61,7 @@ namespace hz
 
 	public:
 		DynamicAllocation(std::uint16_t address, bool need_free = false)
-			: address(address), need_free(need_free)
+			: address{ address }, need_free{ need_free }
 		{
 		}
 
@@ -69,7 +70,7 @@ namespace hz
 
 		virtual ~DynamicAllocation() final override;
 
-		virtual Register& read() final override;
+		virtual Register read() final override;
 		virtual void write(std::uint8_t) final override;
 		virtual void copy(Allocation*) const final override;
 	};
