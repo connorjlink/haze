@@ -16,6 +16,9 @@ namespace hz
         USED,
     };
 
+    class StaticAllocation;
+    class DynamicAllocation;
+
     class Allocator
     {
     public:
@@ -27,11 +30,11 @@ namespace hz
 
     public:
         // `Register` parameter specifies exclusion
-        Allocation* allocate_static(Register = DC, bool = false);
+        StaticAllocation* allocate_static(Register = DC, bool = false);
 
         // `bool` parameter specifies whether the memory should be automatically freed at destruction
-        Allocation* allocate_dynamic(bool = true);
-        Allocation* allocate_dynamic(std::uint16_t, bool = true);
+        DynamicAllocation* allocate_dynamic(bool = true);
+        DynamicAllocation* allocate_dynamic(std::uint16_t, bool = true);
     };
 
     extern Allocator* allocator;

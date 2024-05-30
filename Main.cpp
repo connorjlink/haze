@@ -59,12 +59,10 @@ int main(int argc, char** argv)
 
     Log::info(std::format("successfully compiled {}", filepath));
 
-    /*
-    consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
+    /*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
     {
 	    return (opcode << 4) | (operand1 << 2) | (operand2 << 0);
     };
-
     std::vector<std::uint8_t> rom = 
     {
         ::formulate(COPY, R0, DC), 0x7, 0x0, //load r0, #7
@@ -75,10 +73,9 @@ int main(int argc, char** argv)
         ::formulate(PUSH, DC, R1), 0x0, 0x0, //push r1
         ::formulate(PULL, R0, DC), 0x0, 0x0, //pull r0
         ::formulate(PULL, R1, DC), 0x0, 0x0, //pull r1
-    };*/
+    };
+    Simulator sim{ std::move(rom) };*/
 
-
-    // Simulator sim{ std::move(rom) };
     Simulator sim{ std::move(executable) };
     sim.reset();
     sim.run();

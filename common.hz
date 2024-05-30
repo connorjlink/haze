@@ -1,6 +1,6 @@
 function byte bar = ()
 {
-    return 1 + 2;
+    return (1 + 2);
 }
 
 function byte main = ()

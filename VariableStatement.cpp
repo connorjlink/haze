@@ -29,12 +29,10 @@ namespace hz
 
         if (value)
         {
-            auto temp_allocation = allocator->allocate_static();
-            {
-            	value->generate(temp_allocation);
-				allocation->copy(temp_allocation);   
-            }
-            delete temp_allocation;
+            ManagedStaticAllocation temp = allocator->allocate_static();
+
+            value->generate(temp.allocation);
+        	allocation->copy(temp.allocation); 
         }
     }
 

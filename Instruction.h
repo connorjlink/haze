@@ -56,6 +56,7 @@ namespace hz
         Register op1, op2;
         std::uint8_t imm;
         std::uint16_t mem;
+        bool marked_for_deletion;
 
     public:
         Instruction() = delete;

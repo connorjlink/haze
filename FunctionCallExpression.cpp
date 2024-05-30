@@ -26,21 +26,20 @@ namespace hz
     {
         auto symbol = parser->reference_symbol(Symbol::Type::FUNCTION, name, true);
 
-		auto temp_allocation = allocator->allocate_static(allocation->read());
-        {
-            for (auto argument : arguments)
-		    {
-		    	argument->generate(temp_allocation);
-		    	generator->push(temp_allocation->read());
-            }
+        //TODO: do we really need to exclude this register??
+        ManagedStaticAllocation temp = allocator->allocate_static(allocation->read());
 
-            //Placeholder call address before we hot-patch in the correct target after linking
-		    generator->call(0xCCCC);
-
-            //return value comes off stack
-            generator->pull(allocation->read());
+		for (auto argument : arguments)
+		{
+			argument->generate(temp.allocation);
+			generator->push(temp.allocation->read());
         }
-        delete temp_allocation;
+
+        //Placeholder call address before we hot-patch in the correct target after linking
+		generator->call(0xCCCC);
+
+        //return value comes off stack
+        generator->pull(allocation->read());
     }
 
     Expression* FunctionCallExpression::optimize()

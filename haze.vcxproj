@@ -36,6 +36,7 @@
     <ClCompile Include="InstructionValidator.cpp" />
     <ClCompile Include="IntegerLiteralExpression.cpp" />
     <ClCompile Include="Lexer.cpp" />
+    <ClCompile Include="Linkable.cpp" />
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -63,6 +64,7 @@
     <ClInclude Include="InstructionValidator.h" />
     <ClInclude Include="IntegerLiteralExpression.h" />
     <ClInclude Include="Lexer.h" />
+    <ClInclude Include="Linkable.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Node.h" />

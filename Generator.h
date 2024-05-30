@@ -1,12 +1,12 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
+#include "Instruction.h"
+#include "Linkable.h"
+
 #include <vector>
 #include <string>
 #include <utility>
-
-#include "Instruction.h"
-#include "Utility.h"
 
 namespace hz
 {
@@ -19,7 +19,7 @@ namespace hz
 		std::vector<Node*> program;
 
 	private:
-		std::vector<Linkable> object_code;
+		std::vector<Linkable> linkables;
 		std::int32_t current_function;
 
 	public:
@@ -43,7 +43,7 @@ namespace hz
 
 	public:
 		explicit Generator(std::vector<Node*>&& program)
-			: program(std::move(program)), object_code(), current_function(-1)
+			: program{ std::move(program) }, linkables{}, current_function{ -1 }
 		{
 		}
 

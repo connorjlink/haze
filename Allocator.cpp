@@ -20,7 +20,7 @@ namespace hz
 	}
 
 
-	Allocation* Allocator::allocate_static(Register exclude, bool force)
+	StaticAllocation* Allocator::allocate_static(Register exclude, bool force)
 	{
 		if (auto reg = find_register(exclude); reg.has_value())
 		{
@@ -39,7 +39,9 @@ namespace hz
 	}
 
 
-	Allocation* Allocator::allocate_dynamic(bool free)
+
+
+	DynamicAllocation* Allocator::allocate_dynamic(bool free)
 	{
 		for (auto candidate = 0; candidate < heap_ledger.size(); candidate++)
 		{
@@ -53,7 +55,7 @@ namespace hz
 	}
 
 	[[maybe_unused]]
-	Allocation* Allocator::allocate_dynamic(std::uint16_t bytes, bool free)
+	DynamicAllocation* Allocator::allocate_dynamic(std::uint16_t bytes, bool free)
 	{
 		for (std::uint16_t address = 0; address < heap_ledger.size(); address++)
 		{

@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "Token.h"
 #include "Allocator.h"
+#include "Utility.h"
 
 #include "CompoundStatement.h"
 #include "VariableStatement.h"

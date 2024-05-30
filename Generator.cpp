@@ -5,6 +5,7 @@
 #include "Symbol.h"
 #include "Utility.h"
 #include "IdentifierExpression.h"
+#include "Linkable.h"
 
 #include <format>
 #include <algorithm>
@@ -15,10 +16,10 @@ namespace hz
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
-		object_code.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<Instruction*>{});
+		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<Instruction*>{});
 	}
 
-#define ENCODE object_code[current_function].second.emplace_back
+#define ENCODE linkables[current_function].object_code.emplace_back
 	void Generator::move(Register destination, Register source)
 	{
 		//move destination, source
@@ -113,11 +114,11 @@ namespace hz
 		}
 
 		//Reorder the functions so `main` is first since it's our entrypoint.
-		std::ranges::partition(object_code, [](const auto& function)
+		std::ranges::partition(linkables, [](const auto& linkable)
 		{
-			return function.first->name == "main";
+			return linkable.symbol->name == "main";
 		});
 
-		return object_code;	
+		return linkables;	
 	}
 }

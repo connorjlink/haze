@@ -14,10 +14,11 @@ namespace hz
 		op2 = static_cast<Register>((bytes & 0x030000) >> 16);
 		op1 = static_cast<Register>((bytes & 0x0C0000) >> 18);
 		opcode = static_cast<Opcode>((bytes & 0xF00000) >> 20);
+		marked_for_deletion = false;
 	}
 
 	Instruction::Instruction(Opcode opcode, Register op1, Register op2, std::uint8_t imm, std::uint16_t mem)
-		: opcode(opcode), op1(op1), op2(op2), imm(imm), mem(mem)
+		: opcode{ opcode }, op1{ op1 }, op2{ op2 }, imm{ imm }, mem{ mem}, marked_for_deletion{ false }
 	{
 	}
 

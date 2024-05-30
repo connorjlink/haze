@@ -64,26 +64,22 @@ namespace hz
 
 	void PlusBinaryExpression::generate(Allocation* received_allocation)
 	{
-		auto temp_allocation = allocator->allocate_static();
-		{
-			left->generate(received_allocation);
-			right->generate(temp_allocation);
+		ManagedStaticAllocation temp = allocator->allocate_static();
 
-			generator->iadd(received_allocation->read(), temp_allocation->read());	
-		}
-		delete temp_allocation;
+		left->generate(received_allocation);
+		right->generate(temp.allocation);
+
+		generator->iadd(received_allocation->read(), temp.allocation->read());	
 	}
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
 	{
-		auto temp_allocation = allocator->allocate_static();
-		{
-			left->generate(received_allocation);
-			right->generate(temp_allocation);
+		ManagedStaticAllocation temp = allocator->allocate_static();
 
-			generator->isub(received_allocation->read(), temp_allocation->read());	
-		}
-		delete temp_allocation;
+		left->generate(received_allocation);
+		right->generate(temp.allocation);
+
+		generator->isub(received_allocation->read(), temp.allocation->read());
 	}
 
 	[[noreturn]]

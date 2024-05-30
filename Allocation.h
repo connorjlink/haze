@@ -53,6 +53,24 @@ namespace hz
 		virtual void copy(Allocation*) const final override;
 	};
 
+	class ManagedStaticAllocation
+	{
+	public:
+		StaticAllocation* allocation;
+
+	public:
+		ManagedStaticAllocation(StaticAllocation* allocation)
+			: allocation{ allocation }
+		{
+		}
+
+		~ManagedStaticAllocation()
+		{
+			delete allocation;
+		}
+	};
+
+
 	class DynamicAllocation : public Allocation
 	{
 	public:
@@ -74,6 +92,24 @@ namespace hz
 		virtual void write(std::uint8_t) final override;
 		virtual void copy(Allocation*) const final override;
 	};
+
+	class ManagedDynamicAllocation
+	{
+	public:
+		DynamicAllocation* allocation;
+
+	public:
+		ManagedDynamicAllocation(DynamicAllocation* allocation)
+			: allocation{ allocation }
+		{
+		}
+
+		~ManagedDynamicAllocation()
+		{
+			delete allocation;
+		}
+	};
+
 
 }
 

@@ -1,5 +1,4 @@
 #include "Linker.h"
-#include "Instruction.h"
 #include "Utility.h"
 #include "Symbol.h"
 
@@ -13,80 +12,81 @@ namespace
 
 namespace hz
 {
-	std::vector<Instruction*> Linker::optimize(const std::vector<Instruction*>& object_code) const
+	void Linker::optimize()
 	{
-		std::vector<Instruction*> optimized_object_code{};
-
-		for (auto i = 0; i < object_code.size(); i++)
+		for (auto&[symbol, function] : linkables)
 		{
-			for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
+			for (auto i = 0; i < function.size(); i++)
 			{
-				//TODO: ensure none of our bytes are branch targets
-
-				const auto o0 = object_code[i + 0];
-
-				if (i + 1 < object_code.size())
+				for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
 				{
-					const auto o1 = object_code[i + 1];
+					//TODO: ensure none of our bytes are branch targets
 
-					if ((o0->opcode == PUSH && o0->op2 == r &&  //push r
-						 o1->opcode == PULL && o1->op1 == r) || //pull r
-						
-						(o0->opcode == PULL && o0->op1 == r &&  //pull r
-						 o1->opcode == PUSH && o1->op2 == r))   //push r
+					auto o0 = function[i + 0];
+
+					if (i + 1 < function.size())
 					{
-						//These instructions are entirely redundant
-						i += 1;
-						break;
-					}
+						auto o1 = function[i + 1];
 
-
-					if (i + 2 < object_code.size())
-					{
-						const auto o2 = object_code[i + 2];
-
-						if (o0->opcode == COPY && o0->op1 == r && //copy r, #x
-							o1->opcode == SAVE && o1->op2 == r && //save &x, r
-							o2->opcode == LOAD && o2->op1 == r)   //load r, &y
+						if ((o0->opcode == PUSH && o0->op2 == r &&  //push r
+							 o1->opcode == PULL && o1->op1 == r) || //pull r
+							
+							(o0->opcode == PULL && o0->op1 == r &&  //pull r
+							 o1->opcode == PUSH && o1->op2 == r))   //push r
 						{
-							if (o1->mem == o2->mem)
+							//These instructions are entirely redundant
+							o0->marked_for_deletion = true;
+							o1->marked_for_deletion = true;
+							i += 1;
+							break;
+						}
+
+
+						if (i + 2 < function.size())
+						{
+							auto o2 = function[i + 2];
+
+							if (o0->opcode == COPY && o0->op1 == r && //copy r, #x
+								o1->opcode == SAVE && o1->op2 == r && //save &x, r
+								o2->opcode == LOAD && o2->op1 == r)   //load r, &y
 							{
-								optimized_object_code.emplace_back(o0);
-								i += 2;
-								break;
+								if (o1->mem == o2->mem)
+								{
+									o1->marked_for_deletion = true;
+									o2->marked_for_deletion = true;
+									i += 2;
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				//No optimizations could be applied here, so insert the old code
-				optimized_object_code.emplace_back(object_code[i]);
-				break;
+					//No optimizations could be applied here
+					break;
+				}
 			}
 		}
-
-		return optimized_object_code;
 	}
 
-	std::vector<std::uint8_t> Linker::link() const
+	std::vector<std::uint8_t> Linker::link()
 	{
 		std::vector<std::uint8_t> executable;
 
-		for (auto [symbol, function] : object_code)
+		for (auto [symbol, function] : linkables)
 		{
-			//Optimize away functions that are not even called
 			if (symbol->was_referenced)
 			{
-				//This is probably not the best way of doing this since we copy
-				//But, at least it looks clean
 				if constexpr (OPTIMIZE_LTO)
 				{
-					function = optimize(function);
+					optimize();
 				}
 
 				for (const auto& instruction : function)
 				{
-					executable.append_range(extract(instruction->bytes()));
+					if (!instruction->marked_for_deletion)
+					{
+						executable.append_range(extract(instruction->bytes()));
+					}
 				}	
 			}
 		}

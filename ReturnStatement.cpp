@@ -39,12 +39,10 @@ namespace hz
 			value = new IntegerLiteralExpression{ 0 };
 		}
 
-		auto temp_allocation = allocator->allocate_static();
-		{
-			value->generate(temp_allocation);
-			generator->push(temp_allocation->read());
-		}
-		delete temp_allocation;
+		ManagedStaticAllocation temp = allocator->allocate_static();
+
+		value->generate(temp.allocation);
+		generator->push(temp.allocation->read());
 	}
 
 	Statement* ReturnStatement::optimize()
