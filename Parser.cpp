@@ -256,6 +256,7 @@ namespace hz
 		static const std::unordered_map<TokenType, Precedence> precedences =
 		{
 			{ TokenType::PLUS, Precedence::TERM },
+			 { TokenType::MINUS, Precedence::TERM },
 			{ TokenType::STAR, Precedence::FACTOR },
 		};
 

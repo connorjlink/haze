@@ -6,7 +6,6 @@
 
 #include <vector>
 #include <string>
-#include <utility>
 
 namespace hz
 {
@@ -36,6 +35,7 @@ namespace hz
 		void bior(Register, Register);
 		void bxor(Register, Register);
 		void call(std::uint16_t);
+		void call(std::string);
 		void exit();
 		void push(Register);
 		void pull(Register);

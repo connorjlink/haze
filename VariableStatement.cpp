@@ -29,8 +29,7 @@ namespace hz
 
         if (value)
         {
-            ManagedStaticAllocation temp = allocator->allocate_static();
-
+            ManagedStaticAllocation temp{};
             value->generate(temp.allocation);
         	allocation->copy(temp.allocation); 
         }

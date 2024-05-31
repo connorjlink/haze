@@ -27,7 +27,7 @@ namespace hz
         auto symbol = parser->reference_symbol(Symbol::Type::FUNCTION, name, true);
 
         //TODO: do we really need to exclude this register??
-        ManagedStaticAllocation temp = allocator->allocate_static(allocation->read());
+        ManagedStaticAllocation temp{ allocation->read() };
 
 		for (auto argument : arguments)
 		{
@@ -36,7 +36,7 @@ namespace hz
         }
 
         //Placeholder call address before we hot-patch in the correct target after linking
-		generator->call(0xCCCC);
+		generator->call(name);
 
         //return value comes off stack
         generator->pull(allocation->read());

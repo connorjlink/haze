@@ -64,7 +64,7 @@ namespace hz
 
 	void PlusBinaryExpression::generate(Allocation* received_allocation)
 	{
-		ManagedStaticAllocation temp = allocator->allocate_static();
+		ManagedStaticAllocation temp{};
 
 		left->generate(received_allocation);
 		right->generate(temp.allocation);
@@ -74,7 +74,7 @@ namespace hz
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
 	{
-		ManagedStaticAllocation temp = allocator->allocate_static();
+		ManagedStaticAllocation temp{};
 
 		left->generate(received_allocation);
 		right->generate(temp.allocation);

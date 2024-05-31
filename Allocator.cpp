@@ -38,31 +38,14 @@ namespace hz
 		return new StaticAllocation{ new_reg, true };
 	}
 
-
-
-
-	DynamicAllocation* Allocator::allocate_dynamic(bool free)
-	{
-		for (auto candidate = 0; candidate < heap_ledger.size(); candidate++)
-		{
-			if (heap_ledger[candidate] == Status::FREE)
-			{
-				return new DynamicAllocation{ static_cast<std::uint16_t>(candidate), free };
-			}
-		}
-
-		Log::error("heap region has region its maximum size");
-	}
-
-	[[maybe_unused]]
 	DynamicAllocation* Allocator::allocate_dynamic(std::uint16_t bytes, bool free)
 	{
-		for (std::uint16_t address = 0; address < heap_ledger.size(); address++)
+		for (auto i = 0; i < heap_ledger.size(); i++)
 		{
 			bool available = true;
-			for (auto candidate = 0; candidate < bytes; candidate++)
+			for (auto j = 0; j < bytes; j++)
 			{
-				if (heap_ledger[candidate] != Status::FREE)
+				if (heap_ledger[j] != Status::FREE)
 				{
 					available = false;
 				}
@@ -70,7 +53,12 @@ namespace hz
 
 			if (available)
 			{
-				return new DynamicAllocation{ address, free };
+				for (auto k = i; k < i + bytes; k++)
+				{
+					heap_ledger[k] = Status::USED;
+				}
+
+				return new DynamicAllocation{ static_cast<std::uint16_t>(i), free };
 			}
 		}
 

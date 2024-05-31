@@ -14,13 +14,14 @@ namespace hz
 {
 	void Linker::optimize()
 	{
-		for (auto&[symbol, function] : linkables)
+		for (auto&[symbol, function, offset] : linkables)
 		{
 			for (auto i = 0; i < function.size(); i++)
 			{
 				for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
 				{
 					//TODO: ensure none of our bytes are branch targets
+
 
 					auto o0 = function[i + 0];
 
@@ -41,23 +42,27 @@ namespace hz
 							break;
 						}
 
+						else if ((o0->opcode == SAVE && o0->op2 == r &&
+								  o1->opcode == LOAD && o1->op1 == r) ||
+								
+								 (o0->opcode == LOAD && o0->op1 == r &&
+								  o1->opcode == SAVE && o1->op2 == r))
+						{
+							if (o0->mem == o1->mem)
+							{
+								o0->marked_for_deletion = true;
+								o1->marked_for_deletion = true;
+								i += 2;
+								break;
+							}
+						}
+
 
 						if (i + 2 < function.size())
 						{
 							auto o2 = function[i + 2];
 
-							if (o0->opcode == COPY && o0->op1 == r && //copy r, #x
-								o1->opcode == SAVE && o1->op2 == r && //save &x, r
-								o2->opcode == LOAD && o2->op1 == r)   //load r, &y
-							{
-								if (o1->mem == o2->mem)
-								{
-									o1->marked_for_deletion = true;
-									o2->marked_for_deletion = true;
-									i += 2;
-									break;
-								}
-							}
+							//TODO: 3-byte optimizations go here
 						}
 					}
 
@@ -72,7 +77,9 @@ namespace hz
 	{
 		std::vector<std::uint8_t> executable;
 
-		for (auto [symbol, function] : linkables)
+		auto address_tracker = 0;
+
+		for (auto&[symbol, function, offset] : linkables)
 		{
 			if (symbol->was_referenced)
 			{
@@ -81,14 +88,46 @@ namespace hz
 					optimize();
 				}
 
-				for (const auto& instruction : function)
+				offset = address_tracker;
+
+				for (auto instruction : function)
 				{
 					if (!instruction->marked_for_deletion)
 					{
-						executable.append_range(extract(instruction->bytes()));
+						address_tracker += 3;
 					}
-				}	
+				}
 			}
+		}
+
+		for (auto&[symbol, function, offset] : linkables)
+		{
+			for (auto& linkable : linkables)
+			{
+				for (auto& instruction : linkable.object_code)
+				{
+					if (linkable.symbol->name != symbol->name &&
+						instruction->opcode == CALL &&
+						instruction->branch_target == symbol->name)
+					{
+						static constexpr auto BASE_ADDRESS = HALF_DWORD_MAX;
+						const auto branch_target = BASE_ADDRESS + offset;
+
+						instruction->mem = branch_target;
+					}
+				}
+			}
+		}
+
+		for (auto&[symbol, function, offset] : linkables)
+		{
+			for (const auto& instruction : function)
+			{
+				if (!instruction->marked_for_deletion)
+				{
+					executable.append_range(extract(instruction->bytes()));
+				}
+			}	
 		}
 
 		return executable;

@@ -17,8 +17,8 @@ namespace hz
 		marked_for_deletion = false;
 	}
 
-	Instruction::Instruction(Opcode opcode, Register op1, Register op2, std::uint8_t imm, std::uint16_t mem)
-		: opcode{ opcode }, op1{ op1 }, op2{ op2 }, imm{ imm }, mem{ mem}, marked_for_deletion{ false }
+	Instruction::Instruction(Opcode opcode, Register op1, Register op2, std::uint8_t imm, std::uint16_t mem, std::string branch_target)
+		: opcode{ opcode }, op1{ op1 }, op2{ op2 }, imm{ imm }, mem{ mem}, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 	}
 

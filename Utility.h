@@ -1,12 +1,10 @@
 #ifndef HAZE_UTILITY_H
 #define HAZE_UTILITY_H
 
-#include <array>
-#include <utility>
-#include <vector>
-#include <cstdint>
-
 #include "Constants.h"
+
+#include <array>
+#include <cstdint>
 
 namespace hz
 {

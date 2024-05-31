@@ -19,19 +19,19 @@ namespace hz
 		switch (instruction.opcode)
 		{
 			case MOVE: return std::format("move {}, {} ", op1, op2);
-			case LOAD: return std::format("load {}, &{}", op1, mem);
-			case COPY: return std::format("copy {}, #{}", op1, imm);
-			case SAVE: return std::format("save &{}, {}", mem, op2);
+			case LOAD: return std::format("load {}, &${:04X}", op1, mem);
+			case COPY: return std::format("copy {}, #${:02X}", op1, imm);
+			case SAVE: return std::format("save &${:04X}, {}", mem, op2);
 			case IADD: return std::format("iadd {}, {}", op1, op2);
 			case ISUB: return std::format("isub {}, {}", op1, op2);
 			case BAND: return std::format("band {}, {}", op1, op2);
 			case BIOR: return std::format("bior {}, {}", op1, op2);
 			case BXOR: return std::format("bxor {}, {}", op1, op2);
-			case CALL: return std::format("call &{}    ", mem);
+			case CALL: return std::format("call ${:04X}", mem);
 			case EXIT: return std::format("exit       ");
 			case PUSH: return std::format("push {}    ", op2);
 			case PULL: return std::format("pull {}    ", op1);
-			case BREZ: return std::format("brez &{}, {}", mem, op2);
+			case BREZ: return std::format("brez &${:04X}, {}", mem, op2);
 			default:   return             "ILLEGAL OPCODE";
 		}
 	}
@@ -56,7 +56,7 @@ namespace hz
 			const auto instruction = Instruction{ 
 				static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0)) };
 
-			result.append(std::format("{}\n", instruction.string()));
+			result.append(std::format("${:04X}: {}\n", HALF_DWORD_MAX + i, instruction.string()));
 		}
 
 		return result;

@@ -53,24 +53,6 @@ namespace hz
 		virtual void copy(Allocation*) const final override;
 	};
 
-	class ManagedStaticAllocation
-	{
-	public:
-		StaticAllocation* allocation;
-
-	public:
-		ManagedStaticAllocation(StaticAllocation* allocation)
-			: allocation{ allocation }
-		{
-		}
-
-		~ManagedStaticAllocation()
-		{
-			delete allocation;
-		}
-	};
-
-
 	class DynamicAllocation : public Allocation
 	{
 	public:
@@ -93,24 +75,26 @@ namespace hz
 		virtual void copy(Allocation*) const final override;
 	};
 
+
+	class ManagedStaticAllocation
+	{
+	public:
+		StaticAllocation* allocation;
+
+	public:
+		ManagedStaticAllocation(Register = DC, bool = false);
+		~ManagedStaticAllocation();
+	};
+
 	class ManagedDynamicAllocation
 	{
 	public:
 		DynamicAllocation* allocation;
 
 	public:
-		ManagedDynamicAllocation(DynamicAllocation* allocation)
-			: allocation{ allocation }
-		{
-		}
-
-		~ManagedDynamicAllocation()
-		{
-			delete allocation;
-		}
+		ManagedDynamicAllocation(std::uint16_t = 1, bool = true);
+		~ManagedDynamicAllocation();
 	};
-
-
 }
 
 #endif //HAZE_ALLOCATION_H

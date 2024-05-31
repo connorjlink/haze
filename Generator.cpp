@@ -16,7 +16,7 @@ namespace hz
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
-		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<Instruction*>{});
+		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<Instruction*>{}, 0);
 	}
 
 #define ENCODE linkables[current_function].object_code.emplace_back
@@ -72,6 +72,12 @@ namespace hz
 	{
 		//bxor destination, source
 		ENCODE(new Instruction{ BXOR, destination, source });
+	}
+
+	void Generator::call(std::string name)
+	{
+		//call label
+		ENCODE(new Instruction{ CALL, DC, DC, 0, 0xCCCC, name });
 	}
 
 	void Generator::call(std::uint16_t address)

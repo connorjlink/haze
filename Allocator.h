@@ -33,8 +33,7 @@ namespace hz
         StaticAllocation* allocate_static(Register = DC, bool = false);
 
         // `bool` parameter specifies whether the memory should be automatically freed at destruction
-        DynamicAllocation* allocate_dynamic(bool = true);
-        DynamicAllocation* allocate_dynamic(std::uint16_t, bool = true);
+        DynamicAllocation* allocate_dynamic(std::uint16_t = 1, bool = true);
     };
 
     extern Allocator* allocator;

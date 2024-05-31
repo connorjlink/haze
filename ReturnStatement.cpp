@@ -39,7 +39,7 @@ namespace hz
 			value = new IntegerLiteralExpression{ 0 };
 		}
 
-		ManagedStaticAllocation temp = allocator->allocate_static();
+		ManagedStaticAllocation temp{};
 
 		value->generate(temp.allocation);
 		generator->push(temp.allocation->read());

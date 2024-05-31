@@ -13,10 +13,11 @@ namespace hz
 	public:
 		Symbol* symbol;
 		std::vector<Instruction*> object_code;
+		std::size_t offset;
 
 	public:
-		Linkable(Symbol* symbol, std::vector<Instruction*>&& object_code)
-			: symbol{ symbol }, object_code{ std::move(object_code) }
+		Linkable(Symbol* symbol, std::vector<Instruction*>&& object_code, std::size_t offset)
+			: symbol{ symbol }, object_code{ std::move(object_code) }, offset{ offset }
 		{
 		}
 	};

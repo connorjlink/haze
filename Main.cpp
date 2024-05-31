@@ -52,9 +52,9 @@ int main(int argc, char** argv)
 
 
     generator = new Generator{ std::move(ast) };
-	auto code = generator->generate();
+	auto linkables = generator->generate();
 
-    auto linker = new Linker{ std::move(code) };
+    auto linker = new Linker{ std::move(linkables) };
     auto executable = linker->link();
 
     Log::info(std::format("successfully compiled {}", filepath));

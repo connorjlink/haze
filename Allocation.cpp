@@ -2,6 +2,7 @@
 
 #include "Allocator.h"
 #include "Generator.h"
+#include "IdentifierExpression.h"
 #include "Log.h"
 
 namespace hz
@@ -115,5 +116,28 @@ namespace hz
 				}
 			} break;
 		}
+	}
+
+
+
+	ManagedStaticAllocation::ManagedStaticAllocation(Register reg, bool force)
+	{
+		allocation = allocator->allocate_static(reg, force);
+	}
+
+	ManagedStaticAllocation::~ManagedStaticAllocation()
+	{
+		delete allocation;
+	}
+
+
+	ManagedDynamicAllocation::ManagedDynamicAllocation(std::uint16_t bytes, bool free)
+	{
+		allocation = allocator->allocate_dynamic(bytes, free);
+	}
+
+	ManagedDynamicAllocation::~ManagedDynamicAllocation()
+	{
+		delete allocation;
 	}
 }

@@ -57,11 +57,12 @@ namespace hz
         std::uint8_t imm;
         std::uint16_t mem;
         bool marked_for_deletion;
+        std::string branch_target;
 
     public:
         Instruction() = delete;
         explicit Instruction(std::uint32_t);
-        Instruction(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0);
+        Instruction(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0, std::string = "");
         std::uint32_t bytes() const;
 
     public:
