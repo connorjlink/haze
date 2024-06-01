@@ -16,98 +16,113 @@ namespace hz
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
-		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<Instruction*>{}, 0);
+		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<IndexedInstruction>{}, 0);
 	}
 
-#define ENCODE linkables[current_function].object_code.emplace_back
+#define ENCODE(x) linkables[current_function].object_code.emplace_back(linkables[current_function].object_code.size(), x)
 	void Generator::move(Register destination, Register source)
 	{
 		//move destination, source
-		ENCODE(new Instruction{ MOVE, destination, source });
+		auto instruction = new Instruction{ MOVE, destination, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::load(Register destination, std::uint16_t address)
 	{
 		//load destination, &address
-		ENCODE(new Instruction{ LOAD, destination, DC, 0, address });
+		auto instruction = new Instruction{ LOAD, destination, DC, 0, address };
+		ENCODE(instruction);
 	}
 
 	void Generator::copy(Register destination, std::uint8_t immediate)
 	{
 		//copy destination, #immediate
-		ENCODE(new Instruction{ COPY, destination, DC, immediate, 0 });
+		auto instruction = new Instruction{ COPY, destination, DC, immediate, 0 };
+		ENCODE(instruction);
 	}
 
 	void Generator::save(std::uint16_t address, Register source)
 	{
 		//save &address, source
-		ENCODE(new Instruction{ SAVE, DC, source, 0, address });
+		auto instruction = new Instruction{ SAVE, DC, source, 0, address };
+		ENCODE(instruction);
 	}
 
 	void Generator::iadd(Register destination, Register source)
 	{
 		//iadd destination, source
-		ENCODE(new Instruction{ IADD, destination, source });
+		auto instruction = new Instruction{ IADD, destination, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::isub(Register destination, Register source)
 	{
 		//isub destination, source
-		ENCODE(new Instruction{ ISUB, destination, source });
+		auto instruction = new Instruction{ ISUB, destination, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::band(Register destination, Register source)
 	{
 		//band destination, source
-		ENCODE(new Instruction{ BAND, destination, source });
+		auto instruction = new Instruction{ BAND, destination, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::bior(Register destination, Register source)
 	{
 		//bior destination, source
-		ENCODE(new Instruction{ BIOR, destination, source });
+		auto instruction = new Instruction{ BIOR, destination, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::bxor(Register destination, Register source)
 	{
 		//bxor destination, source
-		ENCODE(new Instruction{ BXOR, destination, source });
+		auto instruction = new Instruction{ BXOR, destination, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::call(std::string name)
 	{
 		//call label
-		ENCODE(new Instruction{ CALL, DC, DC, 0, 0xCCCC, name });
+		auto instruction = new Instruction{ CALL, DC, DC, 0, 0xCCCC, name };
+		ENCODE(instruction);
 	}
 
 	void Generator::call(std::uint16_t address)
 	{
 		//call &address
-		ENCODE(new Instruction{ CALL, DC, DC, 0, address });
+		auto instruction = new Instruction{ CALL, DC, DC, 0, address };
+		ENCODE(instruction);
 	}
 
 	void Generator::exit()
 	{
 		//exit
-		ENCODE(new Instruction{ EXIT, DC, DC });
+		auto instruction = new Instruction{ EXIT, DC, DC };
+		ENCODE(instruction);
 	}
 
 	void Generator::push(Register source)
 	{
 		//push source
-		ENCODE(new Instruction{ PUSH, DC, source });
+		auto instruction = new Instruction{ PUSH, DC, source };
+		ENCODE(instruction);
 	}
 
 	void Generator::pull(Register destination)
 	{
 		//pull destination
-		ENCODE(new Instruction{ PULL, destination, DC });
+		auto instruction = new Instruction{ PULL, destination, DC };
+		ENCODE(instruction);
 	}
 
 	void Generator::brez(std::uint16_t address, Register source)
 	{
 		//brez &address, source
-		ENCODE(new Instruction{ BREZ, DC, source, 0, address });
+		auto instruction = new Instruction{ BREZ, DC, source, 0, address };
+		ENCODE(instruction);
 	}
 #undef ENCODE
 
