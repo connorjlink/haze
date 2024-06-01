@@ -162,7 +162,7 @@ namespace hz
 		const auto name = consume(TokenType::IDENTIFIER);
 
 		DISCARD consume(TokenType::LPAREN);
-		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments();
+		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		DISCARD consume(TokenType::RPAREN);
 
 		return new FunctionCallExpression{ name, std::move(arguments) };
@@ -215,13 +215,43 @@ namespace hz
 	}
 
 
-	std::vector<Expression*> CompilerParser::parse_arguments()
+	std::vector<Expression*> CompilerParser::parse_arguments(bool is_declaration)
 	{
 		std::vector<Expression*> arguments;
 
  		while (peek().type != TokenType::RPAREN)
 		{
-			arguments.emplace_back(parse_expression());
+			if (is_declaration)
+			{
+				/*
+					I have some more work to do here before arguments are ready to be used. For now, arguments
+					dont actually have an allocation and this means two things
+						-if we try to use one as an identifier, we only are checking for variables symbols which do have an allocation and must be treated differently
+						-if we try to use one as an argument, we cant perform basic allocation tasks like copy() because they don't have an allocation reserved for them. 
+
+					There are two main solutions to this going forward. 
+					
+					1.) Unpack all arguments off the stack at the beginning of every function. This would work to make an allocation for each argument
+					but would severely limit our ability to do anything with the registers in the body of our function (we would run out doing a simple addition with even 2 arguments)
+
+					2.) Don't unpack the arguments, but instead allocate arguments on the heap. This would mean the stack is reserved exclusively for function values and return addresses.
+					Howover, for this to work, we would first need to re-tool the existing heap allocator code since right now I dont think we have a good way to track arguments going out of scope
+					at function termination and freeing the heap right now :(
+				
+				*/
+
+				//TODO: require a type specifier for each argument of a function definition
+				auto identifier = parse_identifier_expression();
+				add_symbol(Symbol::Type::ARGUMENT, identifier->name);
+				//TODO: this symbol should also be of type ARGUMENT
+				arguments.emplace_back(identifier);
+			}
+
+			else
+			{
+				arguments.emplace_back(parse_expression());
+			}
+
 
 			if (peek().type != TokenType::RPAREN)
 			{
@@ -255,9 +285,9 @@ namespace hz
 	{
 		static const std::unordered_map<TokenType, Precedence> precedences =
 		{
-			{ TokenType::PLUS, Precedence::TERM },
-			 { TokenType::MINUS, Precedence::TERM },
-			{ TokenType::STAR, Precedence::FACTOR },
+			{ TokenType::PLUS,  Precedence::TERM },
+			{ TokenType::MINUS, Precedence::TERM },
+			{ TokenType::STAR,  Precedence::FACTOR },
 		};
 
 		do
@@ -414,7 +444,7 @@ namespace hz
 		DISCARD consume(TokenType::EQUALS);
 
 		DISCARD consume(TokenType::LPAREN);
-		auto arguments = parse_arguments();
+		auto arguments = parse_arguments(true);
 		DISCARD consume(TokenType::RPAREN);
 
 		auto body = parse_compound_statement(name);

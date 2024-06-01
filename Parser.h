@@ -89,7 +89,7 @@ namespace hz
 
     public:
         Expression* parse_argument();
-        std::vector<Expression*> parse_arguments();
+        std::vector<Expression*> parse_arguments(bool);
 
     public:
         Node* parse_function();

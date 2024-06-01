@@ -46,10 +46,11 @@ namespace hz
 
 	public:
 		ReturnType return_type;
+		std::uint8_t arity;
 
 	public:
 		explicit FunctionSymbol(std::string name, ReturnType return_type = static_cast<ReturnType>(0))
-			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}
+			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arity{ 0 }
 		{
 		}
 

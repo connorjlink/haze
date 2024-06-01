@@ -1,10 +1,10 @@
-function byte bar = ()
+function byte test = (a)
 {
-    return (1 + 2);
+    return a + 1;
 }
 
 function byte main = ()
 {
-    byte test = bar();
-    return test;
+    byte returnvalue = test(1);
+    return returnvalue;
 }

@@ -43,7 +43,7 @@ namespace hz
 		for (auto i = 0; i < heap_ledger.size(); i++)
 		{
 			bool available = true;
-			for (auto j = 0; j < bytes; j++)
+			for (auto j = i; j < bytes; j++)
 			{
 				if (heap_ledger[j] != Status::FREE)
 				{
@@ -53,9 +53,9 @@ namespace hz
 
 			if (available)
 			{
-				for (auto k = i; k < i + bytes; k++)
+				for (auto j = i; j < i + bytes; j++)
 				{
-					heap_ledger[k] = Status::USED;
+					heap_ledger[j] = Status::USED;
 				}
 
 				return new DynamicAllocation{ static_cast<std::uint16_t>(i), free };

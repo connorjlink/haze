@@ -1,6 +1,11 @@
 #include "Linker.h"
 #include "Utility.h"
 #include "Symbol.h"
+#include "Disassembler.h"
+#include "Log.h"
+
+#include <format>
+#include <iostream>
 
 namespace
 {
@@ -25,6 +30,8 @@ namespace
 
 		return instructions;
 	}
+
+	std::size_t _global_pass = 0;
 }
 
 namespace hz
@@ -41,6 +48,13 @@ namespace hz
 
 					if (auto instructions = ::gather(function); !instructions.empty())
 					{
+						//Log::info(std::format("Instruction sequence prior to pass {}", _global_pass));
+						//for (auto ii : instructions)
+						//{
+						//	std::cout << Disassembler::disassemble_instruction(ii.instruction->bytes()) << std::endl;
+						//}
+						//std::cout << "---------------------" << std::endl;
+
 						for (auto j = 0; j < instructions.size(); j++)
 						{
 							auto o0 = instructions[j + 0];
@@ -51,19 +65,20 @@ namespace hz
 
 								if ((o0.instruction->opcode == PUSH && o0.instruction->op2 == r &&  //push r
 									 o1.instruction->opcode == PULL && o1.instruction->op1 == r) || //pull r
-									
+
 									(o0.instruction->opcode == PULL && o0.instruction->op1 == r &&  //pull r
 									 o1.instruction->opcode == PUSH && o1.instruction->op2 == r))   //push r
 								{
 									//These instructions are entirely redundant
 									o0.instruction->marked_for_deletion = true;
 									o1.instruction->marked_for_deletion = true;
+									_global_pass++;
 									return true;
 								}
 
 								else if ((o0.instruction->opcode == SAVE && o0.instruction->op2 == r &&
 										  o1.instruction->opcode == LOAD && o1.instruction->op1 == r) ||
-										
+
 										 (o0.instruction->opcode == LOAD && o0.instruction->op1 == r &&
 										  o1.instruction->opcode == SAVE && o1.instruction->op2 == r))
 								{
@@ -71,6 +86,7 @@ namespace hz
 									{
 										o0.instruction->marked_for_deletion = true;
 										o1.instruction->marked_for_deletion = true;
+										_global_pass++;
 										return true;
 									}
 								}
@@ -85,7 +101,7 @@ namespace hz
 							}
 
 							//No optimizations could be applied here
-							//return false;	
+							//break;
 						}
 					}
 				}

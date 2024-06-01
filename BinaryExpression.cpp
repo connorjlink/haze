@@ -122,7 +122,8 @@ namespace hz
 
 			else
 			{
-				return new PlusBinaryExpression{ left_optimized, right_optimized };
+				//return new PlusBinaryExpression{ left_optimized, right_optimized };
+				return nullptr;
 			}
 		}
 
@@ -178,7 +179,8 @@ namespace hz
 
 			else
 			{
-				return new MinusBinaryExpression{ left_optimized, right_optimized };
+				//return new MinusBinaryExpression{ left_optimized, right_optimized };
+				return nullptr;
 			}
 		}
 

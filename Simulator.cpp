@@ -26,6 +26,8 @@ namespace hz
 		immediate = fetch2;
 		memory = (fetch2 << 8) | fetch3;
 
+		//TODO: fix one or more of these instructions: call, exit, 
+
 		switch (opcode & 0x0F)
 		{
 			case MOVE:

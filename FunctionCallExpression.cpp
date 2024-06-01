@@ -2,6 +2,7 @@
 #include "Parser.h"
 #include "Allocator.h"
 #include "Allocation.h"
+#include "Log.h"
 
 #include <format>
 
@@ -26,13 +27,23 @@ namespace hz
     {
         auto symbol = parser->reference_symbol(Symbol::Type::FUNCTION, name, true);
 
-        //TODO: do we really need to exclude this register??
-        ManagedStaticAllocation temp{ allocation->read() };
+        const auto expected_arity = AS_FUNCTION_SYMBOL(symbol)->arity;
+        const auto got_arity = arguments.size();
 
-		for (auto argument : arguments)
-		{
-			argument->generate(temp.allocation);
-			generator->push(temp.allocation->read());
+        if (expected_arity != got_arity)
+        {
+            Log::error(std::format("function {} expects {} arguments but was called with {}", name, expected_arity, got_arity));
+        }
+
+        if (!arguments.empty())
+        {
+            ManagedStaticAllocation temp{ allocation->read() };
+
+            for (auto argument : arguments)
+            {
+                argument->generate(temp.allocation);
+                generator->push(temp.allocation->read());
+            }
         }
 
         //Placeholder call address before we hot-patch in the correct target after linking
