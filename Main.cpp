@@ -6,12 +6,12 @@
 #include "Generator.h"
 #include "Linker.h"
 #include "Simulator.h"
-#include "Utility.h"
 
 #include <cstdlib>
 #include <string>
 #include <fstream>
 #include <format>
+#include <chrono>
 
 using namespace hz;
 
@@ -21,6 +21,8 @@ Parser* hz::parser;
 
 int main(int argc, char** argv)
 {
+    auto start_time = std::chrono::steady_clock::now();
+
     std::string filepath = argv[1];
 
     if (argc != 2 || (filepath.substr(filepath.length() - 2) != "hz"))
@@ -57,7 +59,11 @@ int main(int argc, char** argv)
     auto linker = new Linker{ std::move(linkables) };
     auto executable = linker->link();
 
-    Log::info(std::format("successfully compiled {}", filepath));
+
+    auto end_time = std::chrono::steady_clock::now();
+    auto compile_time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+
+    Log::info(std::format("successfully compiled {} in {}", filepath, compile_time));
 
     /*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
     {

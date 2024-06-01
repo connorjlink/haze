@@ -21,7 +21,7 @@ namespace hz
 		}
 
 	public:
-		void optimize();
+		bool optimize();
 		std::vector<std::uint8_t> link();
 	};
 }

@@ -72,6 +72,12 @@ namespace hz
         virtual void generate(Allocation*) final override;
         virtual Instruction* optimize() final override;
     };
+
+    struct IndexedInstruction
+    {
+	    std::size_t address;
+        Instruction* instruction;
+    };
 }
 
 #endif //HAZE_INSTRUCTION_H
