@@ -52,6 +52,9 @@ namespace hz
 				continue;
 			}
 
+			//TODO: set the each token's value to its string representation for error handling printing purposes
+
+
 			else if (current == '/')
 			{
 				if (input[i + 1] == '/')
@@ -64,7 +67,7 @@ namespace hz
 					continue;
 				}
 
-				Log::error("({}) unexpected character `/`");
+				Log::error(std::format("({}) unexpected character `/`", line));
 			}
 
 			else if ('0' <= current && current <= '9')
@@ -82,6 +85,7 @@ namespace hz
 				{
 					APPEND_TOKEN(search->second);
 				}
+
 				else
 				{
 					APPEND_TOKEN_VALUE(IDENTIFIER, lexeme);
@@ -96,6 +100,7 @@ namespace hz
 				{
 					APPEND_TOKEN(search->second);
 				}
+
 				else
 				{
 					Log::error(std::format("({}) unexpected character `{}`", line, current));

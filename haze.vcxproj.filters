@@ -183,5 +183,8 @@
     <None Include="specification.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="result.s">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

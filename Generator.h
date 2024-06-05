@@ -42,6 +42,9 @@ namespace hz
 		void brez(std::uint16_t, Register);
 
 	public:
+		void raw(Instruction*);
+
+	public:
 		explicit Generator(std::vector<Node*>&& program)
 			: program{ std::move(program) }, linkables{}, current_function{ -1 }
 		{

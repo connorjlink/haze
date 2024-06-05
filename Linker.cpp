@@ -84,6 +84,7 @@ namespace hz
 								{
 									if (o0.instruction->mem == o1.instruction->mem)
 									{
+										//These instructions are entirely redundant
 										o0.instruction->marked_for_deletion = true;
 										o1.instruction->marked_for_deletion = true;
 										_global_pass++;

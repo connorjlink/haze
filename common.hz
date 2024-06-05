@@ -1,10 +1,19 @@
-function byte test = (a)
+function byte test = ()
 {
-    return a + 1;
+	return 1 + 2;
 }
 
 function byte main = ()
 {
-    byte returnvalue = test(1);
-    return returnvalue;
+	asm
+	{
+		copy r0, #1
+		copy r1, #2
+		iadd r0, r1
+		push r0
+	}
+
+	byte foo = test();
+	byte bar = 1;
+	return foo + bar;
 }

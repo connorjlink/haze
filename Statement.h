@@ -19,6 +19,7 @@ namespace hz
 			COMPOUND,
 			VARIABLE,
 			RETURN,
+			ASM,
 		};
 
 	public:

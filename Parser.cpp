@@ -146,6 +146,15 @@ namespace hz
 			((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value.value() : debug(current.type))));
 	}
 
+	std::vector<Token> Parser::fetchUntil(TokenType type) const
+	{
+		std::vector<Token> tokens;
+
+		//TODO: implement this function 
+
+		return tokens;
+	}
+
 	IdentifierExpression* Parser::parse_identifier_expression()
 	{
 		const auto name = consume(TokenType::IDENTIFIER);
@@ -375,6 +384,23 @@ namespace hz
 		return new ReturnStatement{ enclosing_function, expression, nullptr };
 	}
 
+	Statement* CompilerParser::parse_asm_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::ASM);
+		DISCARD consume(TokenType::LBRACE);
+
+		auto assembly = fetchUntil(TokenType::LBRACE);
+		auto assembler = new AssemblerParser{ std::move(assembly) };
+		auto generated = assembler->parse();
+		
+		for (auto instruction : generated)
+		{
+			instruction->generate();
+		}
+
+
+	}
+
 	Statement* CompilerParser::parse_statement(std::string enclosing_function)
 	{
 		using enum TokenType;
@@ -384,6 +410,7 @@ namespace hz
 			case BYTE: return parse_variabledeclaration_statement(enclosing_function);
 			case SEMICOLON: return parse_null_statement(enclosing_function);
 			case RETURN: return parse_return_statement(enclosing_function);
+			case ASM: return parse_asm_statement(enclosing_function);
 
 			default:
 			{
@@ -513,7 +540,133 @@ namespace hz
 	//TODO
 	Node* AssemblerParser::parse_instruction()
 	{
-		return nullptr;
+		static const std::unordered_map<TokenType, Opcode> opcodes
+		{
+			{ TokenType::MOVE, MOVE },
+			{ TokenType::LOAD, LOAD },
+			{ TokenType::COPY, COPY },
+			{ TokenType::SAVE, SAVE },
+			{ TokenType::IADD, IADD },
+			{ TokenType::ISUB, ISUB },
+			{ TokenType::BAND, BAND },
+			{ TokenType::BIOR, BIOR },
+			{ TokenType::BXOR, BXOR },
+			{ TokenType::CALL, CALL },
+			{ TokenType::EXIT, EXIT },
+			{ TokenType::PUSH, PUSH },
+			{ TokenType::PULL, PULL },
+			{ TokenType::BREZ, BREZ },
+		};
+
+		static const std::unordered_map<TokenType, Register> registers
+		{
+			{ TokenType::R0, R0 },
+			{ TokenType::R1, R1 },
+			{ TokenType::R2, R2 },
+			{ TokenType::R3, R3 },
+		};
+
+		
+#define EXPECT_REGISTER Log::error(std::format("Expected a register but got {}", peek().value))
+
+//TODO: patch branch_target resolution to more generally just resolve labels!
+#define PARSE_IDENTIFIER_OR_INTEGER if (peek().type == TokenType::IDENTIFIER) \
+									{ \
+										auto label = peek().value; \
+										return new Instruction{ LOAD, operand1, DC, 0, 0xCCCC, label.value() };\
+									}\
+									else \
+									{ \
+										auto address_expression = parse_expression(); \
+										while (auto address_optimized = address_expression->optimize()) \
+										{ \
+											address_expression = AS_EXPRESSION(address_optimized); \
+										} \
+										if (address_expression->etype() != Expression::Type::INTEGER_LITERAL) \
+										{ \
+											Log::error("source address must be a constant expression"); \
+										} \
+										auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value; \
+										return new Instruction{ LOAD, operand1, DC, 0, address }; \
+									}
+
+		switch (peek().type)
+		{
+			case TokenType::MOVE:
+			{
+				DISCARD consume(TokenType::MOVE);
+
+				if (auto it_operand1 = registers.find(peek().type); it_operand1 != std::end(registers))
+				{
+					auto operand1 = it_operand1->second;
+					DISCARD consume(peek().type);
+
+					DISCARD consume(TokenType::COMMA);
+
+					if (auto it_operand2 = registers.find(peek().type); it_operand2 != std::end(registers))
+					{
+						auto operand2 = it_operand2->second;
+						DISCARD consume(peek().type);
+
+						return new Instruction{ MOVE, operand1, operand2 };
+					}
+
+					EXPECT_REGISTER;
+				}
+
+				EXPECT_REGISTER;
+			} break;
+
+			case TokenType::LOAD:
+			{
+				DISCARD consume(TokenType::LOAD);
+				
+				if (auto it_operand1 = registers.find(peek().type); it_operand1 != std::end(registers))
+				{
+					auto operand1 = it_operand1->second;
+					DISCARD consume(peek().type);
+
+					DISCARD consume(TokenType::COMMA);
+
+					DISCARD consume(TokenType::AMPERSAND);
+
+					//grab the label/address
+					PARSE_IDENTIFIER_OR_INTEGER
+				}
+				
+				EXPECT_REGISTER;
+			} break;
+
+			case TokenType::COPY:
+			{
+				DISCARD consume(TokenType::COPY);
+
+				if (auto it_operand1 = registers.find(peek().type); it_operand1 != std::end(registers))
+				{
+					auto operand1 = it_operand1->second;
+					DISCARD consume(peek().type);
+
+					DISCARD consume(TokenType::COMMA);
+
+					DISCARD consume(TokenType::POUND);
+
+				}
+
+				EXPECT_REGISTER;
+			} break;
+
+		}
+
+
+
+		if (auto it_opcode = opcodes.find(peek().type); it_opcode != std::end(opcodes))
+		{
+			auto opcode = it_opcode->second;
+
+			
+		}
+
+		Log::error(std::format("Unrecognized instruction mnemonic {}", peek().value));
 	}
 
 	std::vector<Node*> AssemblerParser::parse_instructions()

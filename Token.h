@@ -17,6 +17,8 @@ namespace hz
 		SEMICOLON,
 		COMMA,
 		EQUALS,
+		AMPERSAND,
+		POUND,
 
 		LPAREN, RPAREN,
 		LBRACE, RBRACE,
@@ -30,6 +32,9 @@ namespace hz
 
 		DOTDEFINE, DOTORG,
 
+		ASM,
+		R0, R1, R2, R3,
+
 		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, BNOT, CALL, EXIT, PUSH, PULL, BREZ, WAIT,
 
 		END,
@@ -40,6 +45,8 @@ namespace hz
 		{ ";", TokenType::SEMICOLON },
 		{ ",", TokenType::COMMA },
 		{ "=", TokenType::EQUALS },
+		{ "&", TokenType::AMPERSAND },
+		{ "#", TokenType::POUND },
 		{ "(", TokenType::LPAREN  },
 		{ ")", TokenType::RPAREN },
 		{ "{", TokenType::LBRACE },
@@ -55,6 +62,13 @@ namespace hz
 
 		{ ".define", TokenType::DOTDEFINE },
 		{ ".org", TokenType::DOTORG },
+
+		{ "asm", TokenType::ASM },
+
+		{ "r0", TokenType::R0 },
+		{ "r1", TokenType::R1 },
+		{ "r2", TokenType::R2 },
+		{ "r3", TokenType::R3 },
 
 		{ "move", TokenType::MOVE },
 		{ "load", TokenType::LOAD },

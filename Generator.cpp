@@ -124,6 +124,11 @@ namespace hz
 		auto instruction = new Instruction{ BREZ, DC, source, 0, address };
 		ENCODE(instruction);
 	}
+
+	void Generator::raw(Instruction* instruction)
+	{
+		ENCODE(instruction);
+	}
 #undef ENCODE
 
 	std::vector<Linkable> Generator::generate()

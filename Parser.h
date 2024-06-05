@@ -43,6 +43,7 @@ namespace hz
         const Token& peek() const;
         const Token& lookahead() const;
         std::string consume(TokenType);
+        std::vector<Token> fetchUntil(TokenType) const;
 
     protected:
         enum class Precedence
@@ -86,6 +87,7 @@ namespace hz
         Statement* parse_variabledeclaration_statement(std::string);
         Statement* parse_compound_statement(std::string);
         Statement* parse_return_statement(std::string);
+        Statement* parse_asm_statement(std::string);
 
     public:
         Expression* parse_argument();

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="AsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
     <ClCompile Include="CompoundStatement.cpp" />
     <ClCompile Include="Disassembler.cpp" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <ClInclude Include="Allocation.h" />
     <ClInclude Include="Allocator.h" />
+    <ClInclude Include="AsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
     <ClInclude Include="CompoundStatement.h" />
     <ClInclude Include="Constants.h" />
@@ -81,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />
+    <None Include="result.s" />
     <None Include="specification.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -19,7 +19,7 @@ namespace hz
 	        substatements_string += std::format("\t{}\n", substatement->string());
         }
 
-        return std::format("compound statement \n[\n{}c]\n", substatements_string);
+        return std::format("compound statement \n[\n{}]\n", substatements_string);
     }
 
     CompoundStatement* CompoundStatement::copy() const
@@ -31,7 +31,6 @@ namespace hz
     {
         for (auto substatement : substatements)
         {
-            //TODO: determine if overwriting the allocation is actually bad?
             substatement->generate();
         }
     }
