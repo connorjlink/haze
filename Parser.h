@@ -60,6 +60,7 @@ namespace hz
         Expression* parse_parenthesis_expression();
 
     protected:
+        Expression* parse_expression_optimized();
         Expression* parse_expression();
 
     private:
@@ -106,6 +107,13 @@ namespace hz
 
     class AssemblerParser : public Parser
     {
+    private:
+        Register parse_register();
+
+    private:
+        Expression* parse_address();
+        Expression* parse_immediate();
+
     private:
         Node* parse_instruction();
         std::vector<Node*> parse_instructions();
