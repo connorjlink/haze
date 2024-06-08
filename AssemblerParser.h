@@ -5,25 +5,31 @@
 
 namespace hz
 {
-    class AssemblerParser : public Parser
-    {
-    private:
-        Register parse_register();
+	class AssemblerParser : public Parser
+	{
+	private:
+		Register parse_register();
 
-    private:
-        Expression* parse_address();
-        Expression* parse_immediate();
+	private:
+		Expression* parse_address();
+		Expression* parse_immediate();
 
-    private:
-        Node* parse_instruction();
-        std::vector<Node*> parse_instructions();
+	private:
+		Node* parse_dotdefine_command();
+		Node* parse_dotorg_command();
+		Node* parse_label_command();
+		Node* parse_instruction_command();
 
-    public:
-        virtual std::vector<Node*> parse() final override;
+	private:
+		Node* parse_command();
+		std::vector<Node*> parse_commands();
 
-    public:
-        using Parser::Parser;
-    };
+	public:
+		virtual std::vector<Node*> parse() final override;
+
+	public:
+		using Parser::Parser;
+	};
 }
 
 #endif

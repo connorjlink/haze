@@ -16,4 +16,9 @@ namespace hz
 	{
 		return Symbol::Type::VARIABLE;
 	}
+
+	Symbol::Type DefineSymbol::ytype() const
+	{
+		return Symbol::Type::DEFINE;
+	}
 }

@@ -158,8 +158,7 @@ namespace hz
 			consume(peek().type);
 		}
 
-		//TODO: we need a more elegant way of accomplishing this
-		tokens.emplace_back(TokenType::END, peek().line, "\0");
+		tokens.emplace_back(TokenType::END, peek().line, "eof");
 
 		return tokens;
 	}

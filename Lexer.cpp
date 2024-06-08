@@ -4,17 +4,13 @@
 #include <iostream>
 #include <format>
 
+#define APPEND_TOKEN(x, raw) tokens.emplace_back(Token{ x, line, raw })
+
 namespace hz
 {
 	std::vector<Token> Lexer::lex()
 	{
 		std::vector<Token> tokens{};
-
-#ifndef APPEND_TOKEN
-#define APPEND_TOKEN(x) tokens.emplace_back(Token{ x, line })
-
-#ifndef APPEND_TOKEN_VALUE
-#define APPEND_TOKEN_VALUE(x, y) tokens.emplace_back(Token{ x, line, y })
 
 		/*
 		std::cout << std::format("Token: {} ({})\n", hz::debug_tokens.at(token.type),
@@ -52,9 +48,6 @@ namespace hz
 				continue;
 			}
 
-			//TODO: set the each token's value to its string representation for error handling printing purposes
-
-
 			else if (current == '/')
 			{
 				if (input[i + 1] == '/')
@@ -72,7 +65,7 @@ namespace hz
 
 			else if ('0' <= current && current <= '9')
 			{
-				APPEND_TOKEN_VALUE(INT, rest(std::isdigit));
+				APPEND_TOKEN(INT, rest(std::isdigit));
 			}
 
 			else if ('a' <= current && current <= 'z' ||
@@ -83,12 +76,12 @@ namespace hz
 
 				if (search != std::end(lexeme_map))
 				{
-					APPEND_TOKEN(search->second);
+					APPEND_TOKEN(search->second, lexeme);
 				}
 
 				else
 				{
-					APPEND_TOKEN_VALUE(IDENTIFIER, lexeme);
+					APPEND_TOKEN(IDENTIFIER, lexeme);
 				}
 			}
 
@@ -98,7 +91,7 @@ namespace hz
 
 				if (search != std::end(lexeme_map))
 				{
-					APPEND_TOKEN(search->second);
+					APPEND_TOKEN(search->second, std::string{ current });
 				}
 
 				else
@@ -108,13 +101,7 @@ namespace hz
 			}
 		}
 
-		APPEND_TOKEN(TokenType::END);
-
-#undef APPEND_TOKEN_VALUE
-#endif
-
-#undef APPEND_TOKEN
-#endif
+		APPEND_TOKEN(TokenType::END, "eof");
 
 		return tokens;
 	}

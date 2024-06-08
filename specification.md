@@ -33,7 +33,6 @@ assembly:
 
 label:
 @identifier:
-@identifier; (forward declaration)
 
 defines:
 @define identifier = value

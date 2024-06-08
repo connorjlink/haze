@@ -36,18 +36,17 @@ namespace hz
 		return instruction;
 	}
 
-
-	Node::Type Instruction::ntype() const
-	{
-		return Node::Type::INSTRUCTION;
-	}
-
 	std::string Instruction::string() const
 	{
 		const auto data = bytes();
 		const auto bytes = extract(data);
 
 		return std::format("{} ; #{:02X} {:02X} {:02X}", Disassembler::disassemble_instruction(data), bytes[0], bytes[1], bytes[2]);
+	}
+
+	Command::Type Instruction::ctype() const
+	{
+		return Command::Type::INSTRUCTION;
 	}
 
 	Instruction* Instruction::copy() const

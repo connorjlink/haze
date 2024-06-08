@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <unordered_map>
 
-#include "Node.h"
+#include "Command.h"
 
 namespace hz
 {
@@ -49,7 +49,7 @@ namespace hz
         return register_map.at(r);
     };
 
-    class Instruction : public Node
+    class Instruction : public Command
     {
     public:
         Opcode opcode;
@@ -66,17 +66,11 @@ namespace hz
         std::uint32_t bytes() const;
 
     public:
-        virtual Node::Type ntype() const final override;
+        virtual Command::Type ctype() const final override;
         virtual std::string string() const final override;
         virtual Instruction* copy() const final override;
         virtual void generate(Allocation*) final override;
         virtual Instruction* optimize() final override;
-    };
-
-    struct IndexedInstruction
-    {
-	    std::size_t address;
-        Instruction* instruction;
     };
 }
 

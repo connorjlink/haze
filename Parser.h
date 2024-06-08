@@ -25,7 +25,7 @@ namespace hz
 {
 	class Parser
 	{
-	private:
+	protected:
 		std::size_t cursor;
 		std::vector<Token> tokens;
 

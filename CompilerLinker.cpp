@@ -1,11 +1,6 @@
-#include "Linker.h"
-#include "Utility.h"
-#include "Symbol.h"
-#include "Disassembler.h"
-#include "Log.h"
+#include "CompilerLinker.h"
 
-#include <format>
-#include <iostream>
+#include "Utility.h"
 
 namespace
 {
@@ -14,17 +9,17 @@ namespace
 		return ((opcode & 0b1111) << 4) | ((operand1 & 0b11) << 2) | ((operand2 & 0b11) << 0);
 	}
 
-	std::vector<hz::IndexedInstruction> gather(const std::vector<hz::IndexedInstruction>& function)
+	std::vector<hz::Instruction*> gather(const std::vector<hz::Instruction*>& function)
 	{
-		std::vector<hz::IndexedInstruction> instructions;
+		std::vector<hz::Instruction*> instructions;
 
 		for (auto i = 0; i < function.size(); i++)
 		{
-			const auto& ii = function[i];
+			const auto& instruction = function[i];
 
-			if (!ii.instruction->marked_for_deletion)
+			if (!instruction->marked_for_deletion)
 			{
-				instructions.emplace_back(ii);
+				instructions.emplace_back(instruction);
 			}
 		}
 
@@ -36,9 +31,14 @@ namespace
 
 namespace hz
 {
-	bool Linker::optimize()
+	Linker::Type CompilerLinker::ltype() const
 	{
-		for (auto&[symbol, function, offset] : linkables)
+		return Linker::Type::COMPILER;
+	}
+
+	bool CompilerLinker::optimize()
+	{
+		for (auto& [symbol, function, offset] : linkables)
 		{
 			for (auto i = 0; i < function.size(); i++)
 			{
@@ -63,30 +63,30 @@ namespace hz
 							{
 								auto o1 = instructions[j + 1];
 
-								if ((o0.instruction->opcode == PUSH && o0.instruction->op2 == r &&  //push r
-									 o1.instruction->opcode == PULL && o1.instruction->op1 == r) || //pull r
+								if ((o0->opcode == PUSH && o0->op2 == r &&  //push r
+									 o1->opcode == PULL && o1->op1 == r) || //pull r
 
-									(o0.instruction->opcode == PULL && o0.instruction->op1 == r &&  //pull r
-									 o1.instruction->opcode == PUSH && o1.instruction->op2 == r))   //push r
+									(o0->opcode == PULL && o0->op1 == r &&  //pull r
+									 o1->opcode == PUSH && o1->op2 == r))   //push r
 								{
 									//These instructions are entirely redundant
-									o0.instruction->marked_for_deletion = true;
-									o1.instruction->marked_for_deletion = true;
+									o0->marked_for_deletion = true;
+									o1->marked_for_deletion = true;
 									_global_pass++;
 									return true;
 								}
 
-								else if ((o0.instruction->opcode == SAVE && o0.instruction->op2 == r &&
-										  o1.instruction->opcode == LOAD && o1.instruction->op1 == r) ||
+								else if ((o0->opcode == SAVE && o0->op2 == r &&  //save &x, r
+										  o1->opcode == LOAD && o1->op1 == r) || //load r, &x
 
-										 (o0.instruction->opcode == LOAD && o0.instruction->op1 == r &&
-										  o1.instruction->opcode == SAVE && o1.instruction->op2 == r))
+										 (o0->opcode == LOAD && o0->op1 == r &&  //load r, &x
+										  o1->opcode == SAVE && o1->op2 == r))   //save &x, r
 								{
-									if (o0.instruction->mem == o1.instruction->mem)
+									if (o0->mem == o1->mem)
 									{
 										//These instructions are entirely redundant
-										o0.instruction->marked_for_deletion = true;
-										o1.instruction->marked_for_deletion = true;
+										o0->marked_for_deletion = true;
+										o1->marked_for_deletion = true;
 										_global_pass++;
 										return true;
 									}
@@ -112,13 +112,13 @@ namespace hz
 		return false;
 	}
 
-	std::vector<std::uint8_t> Linker::link()
+	std::vector<std::uint8_t> CompilerLinker::link()
 	{
 		std::vector<std::uint8_t> executable;
 
 		auto address_tracker = 0;
 
-		for (auto&[symbol, function, offset] : linkables)
+		for (auto& [symbol, function, offset] : linkables)
 		{
 			if (symbol->was_referenced)
 			{
@@ -129,9 +129,9 @@ namespace hz
 
 				offset = address_tracker;
 
-				for (auto ii : function)
+				for (auto instruction : function)
 				{
-					if (!ii.instruction->marked_for_deletion)
+					if (!instruction->marked_for_deletion)
 					{
 						address_tracker += 3;
 					}
@@ -139,34 +139,34 @@ namespace hz
 			}
 		}
 
-		for (auto&[symbol, function, offset] : linkables)
+		for (auto& [symbol, function, offset] : linkables)
 		{
 			for (auto& linkable : linkables)
 			{
-				for (auto& ii : linkable.object_code)
+				for (auto& instruction : linkable.object_code)
 				{
 					if (linkable.symbol->name != symbol->name &&
-						ii.instruction->opcode == CALL &&
-						ii.instruction->branch_target == symbol->name)
+						instruction->opcode == CALL &&
+						instruction->branch_target == symbol->name)
 					{
 						static constexpr auto BASE_ADDRESS = HALF_DWORD_MAX;
 						const auto branch_target = BASE_ADDRESS + offset;
 
-						ii.instruction->mem = branch_target;
+						instruction->mem = branch_target;
 					}
 				}
 			}
 		}
 
-		for (auto&[symbol, function, offset] : linkables)
+		for (auto& [symbol, function, offset] : linkables)
 		{
-			for (const auto& ii : function)
+			for (const auto& instruction : function)
 			{
-				if (!ii.instruction->marked_for_deletion)
+				if (!instruction->marked_for_deletion)
 				{
-					executable.append_range(extract(ii.instruction->bytes()));
+					executable.append_range(extract(instruction->bytes()));
 				}
-			}	
+			}
 		}
 
 		return executable;

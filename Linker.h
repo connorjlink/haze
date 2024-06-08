@@ -11,18 +11,17 @@ namespace hz
 {
 	class Linker
 	{
-	private:
-		std::vector<Linkable> linkables;
-
 	public:
-		Linker(std::vector<Linkable>&& linkables)
-			: linkables{ std::move(linkables) }
+		enum class Type
 		{
-		}
+			COMPILER,
+			ASSEMBLER,
+		};
 
 	public:
-		bool optimize();
-		std::vector<std::uint8_t> link();
+		virtual Linker::Type ltype() const = 0;
+		virtual bool optimize() = 0;
+		virtual std::vector<std::uint8_t> link() = 0;
 	};
 }
 

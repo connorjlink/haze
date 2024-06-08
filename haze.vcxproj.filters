@@ -98,6 +98,9 @@
     <ClCompile Include="CompilerParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -199,6 +202,9 @@
     <ClInclude Include="CompilerParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Label.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -210,6 +216,8 @@
     <None Include="result.s">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="test.s" />
+    <None Include="test.s">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -18,7 +18,6 @@ namespace hz
             FUNCTION,
             STATEMENT,
             EXPRESSION,
-            INSTRUCTION,
             COMMAND,
         };
 

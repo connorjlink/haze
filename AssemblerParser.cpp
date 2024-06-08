@@ -1,5 +1,7 @@
 #include "AssemblerParser.h"
 
+#include "Label.h"
+
 #include "Instruction.h"
 #include "Constants.h"
 #include "Log.h"
@@ -19,7 +21,7 @@ namespace hz
 			{ TokenType::R3, R3 },
 		};
 
-		if (auto it_operand = registers.find(peek().type); it_operand != std::end(registers))
+		if (const auto it_operand = registers.find(peek().type); it_operand != std::end(registers))
 		{
 			DISCARD consume(peek().type);
 			return it_operand->second;
@@ -41,10 +43,10 @@ namespace hz
 			return new IdentifierExpression{ label };
 		}
 
-		auto address_expression = parse_expression_optimized();
+		const auto address_expression = parse_expression_optimized();
 		ASSERT_IS_INTEGER_LITERAL(address_expression);
 
-		auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
+		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
 		ASSERT_IN_RANGE(address, 0, DWORD_MAX);
 
 		return new IntegerLiteralExpression{ address };
@@ -56,22 +58,56 @@ namespace hz
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			auto label = peek().value;
+			const auto label = peek().value;
 			DISCARD consume(TokenType::IDENTIFIER);
 
 			return new IdentifierExpression{ label };
 		}
 
-		auto immediate_expression = parse_expression_optimized();
+		const auto immediate_expression = parse_expression_optimized();
 		ASSERT_IS_INTEGER_LITERAL(immediate_expression);
 
-		auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
+		const auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
 		ASSERT_IN_RANGE(immediate, 0, WORD_MAX);
 
 		return new IntegerLiteralExpression{ immediate };
 	}
 
-	Node* AssemblerParser::parse_instruction()
+	Node* AssemblerParser::parse_dotdefine_command()
+	{
+		DISCARD consume(TokenType::DOTDEFINE);
+		const auto identifier_expresion = parse_identifier_expression();
+		DISCARD consume(TokenType::EQUALS);
+
+		const auto value_expression = parse_expression();
+		ASSERT_IS_INTEGER_LITERAL(value_expression);
+
+		const auto identifier = identifier_expresion->name;
+		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
+
+		add_symbol(Symbol::Type::DEFINE, identifier);
+		AS_DEFINE_SYMBOL(reference_symbol(Symbol::Type::DEFINE, identifier))->value = value;
+
+		return nullptr;
+	}
+
+	Node* AssemblerParser::parse_dotorg_command()
+	{
+		//TODO: implement .org directive here!
+		return nullptr;
+	}
+
+	Node* AssemblerParser::parse_label_command()
+	{
+		const auto identifier_expression = parse_identifier_expression();
+		DISCARD consume(TokenType::COLON);
+
+		const auto identifier = identifier_expression->name;
+
+		return new Label{ identifier };
+	}
+
+	Node* AssemblerParser::parse_instruction_command()
 	{
 		//TODO: this is probably useless and should later be removed but I am leaving for now in case I come up with a need for it :)
 		/*static const std::unordered_map<TokenType, Opcode> opcodes
@@ -99,9 +135,9 @@ namespace hz
 			case TokenType::MOVE:
 			{
 				DISCARD consume(TokenType::MOVE);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				return new Instruction{ MOVE, operand1, operand2 };
 			} break;
@@ -109,9 +145,9 @@ namespace hz
 			case TokenType::LOAD:
 			{
 				DISCARD consume(TokenType::LOAD);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_address();
+				const auto operand2 = parse_address();
 
 				if (operand2->etype() == Expression::Type::IDENTIFIER)
 				{
@@ -124,16 +160,16 @@ namespace hz
 			case TokenType::COPY:
 			{
 				DISCARD consume(TokenType::COPY);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_immediate();
+				const auto operand2 = parse_immediate();
 
 				if (operand2->etype() == Expression::Type::IDENTIFIER)
 				{
 					return new Instruction{ COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
-				auto value = AS_INTEGER_LITERAL_EXPRESSION(operand2)->value;
+				const auto value = AS_INTEGER_LITERAL_EXPRESSION(operand2)->value;
 				ASSERT_IN_RANGE(value, 0, DWORD_MAX - 1);
 
 				return new Instruction{ COPY, operand1, DC, static_cast<std::uint8_t>(value) };
@@ -143,9 +179,9 @@ namespace hz
 			{
 				DISCARD consume(TokenType::SAVE);
 				DISCARD consume(TokenType::AMPERSAND);
-				auto operand1 = parse_address();
+				const auto operand1 = parse_address();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
@@ -158,9 +194,9 @@ namespace hz
 			case TokenType::IADD:
 			{
 				DISCARD consume(TokenType::IADD);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				return new Instruction{ IADD, operand1, operand2 };
 			} break;
@@ -168,9 +204,9 @@ namespace hz
 			case TokenType::ISUB:
 			{
 				DISCARD consume(TokenType::ISUB);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				return new Instruction{ ISUB, operand1, operand2 };
 			} break;
@@ -178,9 +214,9 @@ namespace hz
 			case TokenType::BAND:
 			{
 				DISCARD consume(TokenType::BAND);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				return new Instruction{ BAND, operand1, operand2 };
 			} break;
@@ -188,9 +224,9 @@ namespace hz
 			case TokenType::BIOR:
 			{
 				DISCARD consume(TokenType::BIOR);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				return new Instruction{ BIOR, operand1, operand2 };
 			} break;
@@ -198,9 +234,9 @@ namespace hz
 			case TokenType::BXOR:
 			{
 				DISCARD consume(TokenType::BXOR);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				return new Instruction{ BXOR, operand1, operand2 };
 			} break;
@@ -208,7 +244,7 @@ namespace hz
 			case TokenType::CALL:
 			{
 				DISCARD consume(TokenType::CALL);
-				auto operand1 = parse_address();
+				const auto operand1 = parse_address();
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
@@ -228,7 +264,7 @@ namespace hz
 			case TokenType::PUSH:
 			{
 				DISCARD consume(TokenType::PUSH);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 
 				return new Instruction{ PUSH, DC, operand1 };
 			} break;
@@ -236,7 +272,7 @@ namespace hz
 			case TokenType::PULL:
 			{
 				DISCARD consume(TokenType::PULL);
-				auto operand1 = parse_register();
+				const auto operand1 = parse_register();
 
 				return new Instruction{ PULL, operand1, DC };
 			} break;
@@ -244,9 +280,9 @@ namespace hz
 			case TokenType::BREZ:
 			{
 				DISCARD consume(TokenType::BREZ);
-				auto operand1 = parse_address();
+				const auto operand1 = parse_address();
 				DISCARD consume(TokenType::COMMA);
-				auto operand2 = parse_register();
+				const auto operand2 = parse_register();
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
@@ -263,13 +299,25 @@ namespace hz
 		}
 	}
 
-	std::vector<Node*> AssemblerParser::parse_instructions()
+
+	Node* AssemblerParser::parse_command()
+	{
+		switch (peek().type)
+		{
+			case TokenType::DOTDEFINE: return parse_dotdefine_command();
+			case TokenType::DOTORG: return parse_dotorg_command();
+			case TokenType::IDENTIFIER: return parse_label_command();
+			default: return parse_instruction_command();
+		}
+	}
+
+	std::vector<Node*> AssemblerParser::parse_commands()
 	{
 		std::vector<Node*> instructions;
 
 		while (peek().type != TokenType::END)
 		{
-			instructions.emplace_back(parse_instruction());
+			instructions.emplace_back(parse_command());
 		}
 
 		return instructions;
@@ -277,6 +325,6 @@ namespace hz
 
 	std::vector<Node*> AssemblerParser::parse()
 	{
-		return parse_instructions();
+		return parse_commands();
 	}
 }

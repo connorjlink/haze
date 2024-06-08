@@ -6,9 +6,7 @@
 #define AS_FUNCTION_SYMBOL(x) static_cast<FunctionSymbol*>(x)
 #define AS_ARGUMENT_SYMBOL(x) static_cast<ArgumentSymbol*>(x)
 #define AS_VARIABLE_SYMBOL(x) static_cast<VariableSymbol*>(x)
-
-#define AS_RUNTIME_VARIABLE_SYMBOL(x) static_cast<RuntimeVariableSymbol*>(x)
-#define AS_CONSTANT_VARIABLE_SYMBOL(x) static_cast<ConstantVariableSymbol*>(x)
+#define AS_DEFINE_SYMBOL(x) static_cast<DefineSymbol*>(x)
 
 namespace hz
 {
@@ -23,6 +21,7 @@ namespace hz
 			FUNCTION,
 			ARGUMENT,
 			VARIABLE,
+			DEFINE,
 		};
 
 	public:
@@ -81,6 +80,21 @@ namespace hz
 	public:
 		explicit VariableSymbol(std::string name, Allocation* allocation)
 			: Symbol{ std::move(name) }, allocation{ allocation }
+		{
+		}
+
+	public:
+		virtual Symbol::Type ytype() const final override;
+	};
+
+	class DefineSymbol : public Symbol
+	{
+	public:
+		std::uint16_t value;
+
+	public:
+		explicit DefineSymbol(std::string name, std::uint16_t value)
+			: Symbol{ std::move(name) }, value(value)
 		{
 		}
 

@@ -15,6 +15,7 @@ namespace hz
 		IDENTIFIER,
 
 		SEMICOLON,
+		COLON,
 		COMMA,
 		EQUALS,
 		AMPERSAND,
@@ -43,6 +44,7 @@ namespace hz
 	static const std::unordered_map<std::string_view, TokenType> lexeme_map =
 	{
 		{ ";", TokenType::SEMICOLON },
+		{ ":", TokenType::COLON },
 		{ ",", TokenType::COMMA },
 		{ "=", TokenType::EQUALS },
 		{ "&", TokenType::AMPERSAND },

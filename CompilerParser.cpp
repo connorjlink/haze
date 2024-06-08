@@ -237,17 +237,9 @@ namespace hz
 			{
 				for (auto& node : program)
 				{
-					while (true)
+					while (auto node_optimized = node->optimize())
 					{
-						if (auto node_optimized = node->optimize())
-						{
-							node = node_optimized;
-						}
-
-						else
-						{
-							break;
-						}
+						node = node_optimized;
 					}
 				}
 			}
