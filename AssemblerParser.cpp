@@ -1,0 +1,282 @@
+#include "AssemblerParser.h"
+
+#include "Instruction.h"
+#include "Constants.h"
+#include "Log.h"
+
+#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != Expression::Type::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
+#define ASSERT_IN_RANGE(x, a, b) if (x < a || x > b - 1) Log::error(std::format("value {} is outside the its range [0, {}]", x, b - 1))
+
+namespace hz
+{
+	Register AssemblerParser::parse_register()
+	{
+		static const std::unordered_map<TokenType, Register> registers
+		{
+			{ TokenType::R0, R0 },
+			{ TokenType::R1, R1 },
+			{ TokenType::R2, R2 },
+			{ TokenType::R3, R3 },
+		};
+
+		if (auto it_operand = registers.find(peek().type); it_operand != std::end(registers))
+		{
+			DISCARD consume(peek().type);
+			return it_operand->second;
+		}
+
+		Log::error(std::format("expected a register but got {}", peek().value));
+	}
+
+	//TODO: roll this function and parse_immediate() below it into a "nice" macro to reduce code duplication
+	Expression* AssemblerParser::parse_address()
+	{
+		DISCARD consume(TokenType::AMPERSAND);
+
+		if (peek().type == TokenType::IDENTIFIER)
+		{
+			auto label = peek().value;
+			DISCARD consume(TokenType::IDENTIFIER);
+
+			return new IdentifierExpression{ label };
+		}
+
+		auto address_expression = parse_expression_optimized();
+		ASSERT_IS_INTEGER_LITERAL(address_expression);
+
+		auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
+		ASSERT_IN_RANGE(address, 0, DWORD_MAX);
+
+		return new IntegerLiteralExpression{ address };
+	}
+
+	Expression* AssemblerParser::parse_immediate()
+	{
+		DISCARD consume(TokenType::POUND);
+
+		if (peek().type == TokenType::IDENTIFIER)
+		{
+			auto label = peek().value;
+			DISCARD consume(TokenType::IDENTIFIER);
+
+			return new IdentifierExpression{ label };
+		}
+
+		auto immediate_expression = parse_expression_optimized();
+		ASSERT_IS_INTEGER_LITERAL(immediate_expression);
+
+		auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
+		ASSERT_IN_RANGE(immediate, 0, WORD_MAX);
+
+		return new IntegerLiteralExpression{ immediate };
+	}
+
+	Node* AssemblerParser::parse_instruction()
+	{
+		//TODO: this is probably useless and should later be removed but I am leaving for now in case I come up with a need for it :)
+		/*static const std::unordered_map<TokenType, Opcode> opcodes
+		{
+			{ TokenType::MOVE, MOVE },
+			{ TokenType::LOAD, LOAD },
+			{ TokenType::COPY, COPY },
+			{ TokenType::SAVE, SAVE },
+			{ TokenType::IADD, IADD },
+			{ TokenType::ISUB, ISUB },
+			{ TokenType::BAND, BAND },
+			{ TokenType::BIOR, BIOR },
+			{ TokenType::BXOR, BXOR },
+			{ TokenType::CALL, CALL },
+			{ TokenType::EXIT, EXIT },
+			{ TokenType::PUSH, PUSH },
+			{ TokenType::PULL, PULL },
+			{ TokenType::BREZ, BREZ },
+		};*/
+
+
+		//TODO: patch branch_target resolution to more generally just resolve labels!
+		switch (peek().type)
+		{
+			case TokenType::MOVE:
+			{
+				DISCARD consume(TokenType::MOVE);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				return new Instruction{ MOVE, operand1, operand2 };
+			} break;
+
+			case TokenType::LOAD:
+			{
+				DISCARD consume(TokenType::LOAD);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_address();
+
+				if (operand2->etype() == Expression::Type::IDENTIFIER)
+				{
+					return new Instruction{ LOAD, operand1, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+				}
+
+				return new Instruction{ LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
+			} break;
+
+			case TokenType::COPY:
+			{
+				DISCARD consume(TokenType::COPY);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_immediate();
+
+				if (operand2->etype() == Expression::Type::IDENTIFIER)
+				{
+					return new Instruction{ COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+				}
+
+				auto value = AS_INTEGER_LITERAL_EXPRESSION(operand2)->value;
+				ASSERT_IN_RANGE(value, 0, DWORD_MAX - 1);
+
+				return new Instruction{ COPY, operand1, DC, static_cast<std::uint8_t>(value) };
+			} break;
+
+			case TokenType::SAVE:
+			{
+				DISCARD consume(TokenType::SAVE);
+				DISCARD consume(TokenType::AMPERSAND);
+				auto operand1 = parse_address();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				if (operand1->etype() == Expression::Type::IDENTIFIER)
+				{
+					return new Instruction{ SAVE, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+				}
+
+				return new Instruction{ SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+			} break;
+
+			case TokenType::IADD:
+			{
+				DISCARD consume(TokenType::IADD);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				return new Instruction{ IADD, operand1, operand2 };
+			} break;
+
+			case TokenType::ISUB:
+			{
+				DISCARD consume(TokenType::ISUB);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				return new Instruction{ ISUB, operand1, operand2 };
+			} break;
+
+			case TokenType::BAND:
+			{
+				DISCARD consume(TokenType::BAND);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				return new Instruction{ BAND, operand1, operand2 };
+			} break;
+
+			case TokenType::BIOR:
+			{
+				DISCARD consume(TokenType::BIOR);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				return new Instruction{ BIOR, operand1, operand2 };
+			} break;
+
+			case TokenType::BXOR:
+			{
+				DISCARD consume(TokenType::BXOR);
+				auto operand1 = parse_register();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				return new Instruction{ BXOR, operand1, operand2 };
+			} break;
+
+			case TokenType::CALL:
+			{
+				DISCARD consume(TokenType::CALL);
+				auto operand1 = parse_address();
+
+				if (operand1->etype() == Expression::Type::IDENTIFIER)
+				{
+					return new Instruction{ CALL, DC, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+				}
+
+				return new Instruction{ CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+			} break;
+
+			case TokenType::EXIT:
+			{
+				DISCARD consume(TokenType::EXIT);
+
+				return new Instruction{ EXIT, DC, DC };
+			} break;
+
+			case TokenType::PUSH:
+			{
+				DISCARD consume(TokenType::PUSH);
+				auto operand1 = parse_register();
+
+				return new Instruction{ PUSH, DC, operand1 };
+			} break;
+
+			case TokenType::PULL:
+			{
+				DISCARD consume(TokenType::PULL);
+				auto operand1 = parse_register();
+
+				return new Instruction{ PULL, operand1, DC };
+			} break;
+
+			case TokenType::BREZ:
+			{
+				DISCARD consume(TokenType::BREZ);
+				auto operand1 = parse_address();
+				DISCARD consume(TokenType::COMMA);
+				auto operand2 = parse_register();
+
+				if (operand1->etype() == Expression::Type::IDENTIFIER)
+				{
+					return new Instruction{ BREZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+				}
+
+				return new Instruction{ BREZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+			} break;
+
+			default:
+			{
+				Log::error(std::format("unrecognized instruction mnemonic {}", peek().value));
+			} break;
+		}
+	}
+
+	std::vector<Node*> AssemblerParser::parse_instructions()
+	{
+		std::vector<Node*> instructions;
+
+		while (peek().type != TokenType::END)
+		{
+			instructions.emplace_back(parse_instruction());
+		}
+
+		return instructions;
+	}
+
+	std::vector<Node*> AssemblerParser::parse()
+	{
+		return parse_instructions();
+	}
+}

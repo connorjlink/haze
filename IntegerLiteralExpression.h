@@ -11,7 +11,7 @@ namespace hz
     class IntegerLiteralExpression : public Expression
     {
     public:
-        int value;
+        std::uint16_t value;
 
     public:
         IntegerLiteralExpression(int value)

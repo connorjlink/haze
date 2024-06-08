@@ -21,7 +21,10 @@
   <ItemGroup>
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
-    <ClCompile Include="AsmStatement.cpp" />
+    <ClCompile Include="AssemblerParser.cpp" />
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CompilerParser.cpp" />
+    <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
     <ClCompile Include="CompoundStatement.cpp" />
     <ClCompile Include="Disassembler.cpp" />
@@ -52,7 +55,10 @@
   <ItemGroup>
     <ClInclude Include="Allocation.h" />
     <ClInclude Include="Allocator.h" />
-    <ClInclude Include="AsmStatement.h" />
+    <ClInclude Include="AssemblerParser.h" />
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="CompilerParser.h" />
+    <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
     <ClInclude Include="CompoundStatement.h" />
     <ClInclude Include="Constants.h" />
@@ -85,6 +91,7 @@
     <None Include="common.hz" />
     <None Include="result.s" />
     <None Include="specification.md" />
+    <None Include="test.s" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

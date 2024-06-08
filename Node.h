@@ -19,6 +19,7 @@ namespace hz
             STATEMENT,
             EXPRESSION,
             INSTRUCTION,
+            COMMAND,
         };
 
     public:

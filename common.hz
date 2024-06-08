@@ -1,8 +1,3 @@
-function byte test = ()
-{
-	return 1 + 2;
-}
-
 function byte main = ()
 {
 	asm
@@ -13,7 +8,6 @@ function byte main = ()
 		push r0
 	}
 
-	byte foo = test();
-	byte bar = 1;
-	return foo + bar;
+
+	return 1 + 2;
 }

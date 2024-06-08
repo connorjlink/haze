@@ -1,28 +1,28 @@
-#ifndef HAZE_ASMSTATEMENT_H
-#define HAZE_ASMSTATEMENT_H
+#ifndef HAZE_INLINEASMSTATEMENT_H
+#define HAZE_INLINEASMSTATEMENT_H
 
 #include "Statement.h"
-#include "Instruction.h"
+#include "Command.h"
 
 #include <vector>
 
 namespace hz
 {
-	class AsmStatement : public Statement
+	class InlineAsmStatement : public Statement
 	{
 	private:
-		std::vector<IndexedInstruction> iis;
+		std::vector<Node*> commands;
 
 	public:
-		AsmStatement(std::vector<IndexedInstruction>&& iis)
-			: iis(std::move(iis))
+		InlineAsmStatement(std::vector<Node*>&& commands)
+			: commands(std::move(commands))
 		{
 		}
 
 	public:
 		virtual Statement::Type stype() const final override;
 		virtual std::string string() const final override;
-		virtual AsmStatement* copy() const final override;
+		virtual InlineAsmStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;
 	};

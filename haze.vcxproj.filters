@@ -86,7 +86,16 @@
     <ClCompile Include="Linkable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AsmStatement.cpp">
+    <ClCompile Include="InlineAsmStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblerParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompilerParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -178,7 +187,16 @@
     <ClInclude Include="Linkable.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="AsmStatement.h">
+    <ClInclude Include="InlineAsmStatement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblerParser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompilerParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -192,5 +210,6 @@
     <None Include="result.s">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="test.s" />
   </ItemGroup>
 </Project>

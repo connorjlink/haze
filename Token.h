@@ -93,7 +93,7 @@ namespace hz
 	{
 		TokenType type;
 		std::size_t line;
-		std::optional<std::string> value;
+		std::string value;
 	};
 }
 

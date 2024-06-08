@@ -1,5 +1,9 @@
 #include "IntegerLiteralExpression.h"
+
 #include "Allocation.h"
+
+#include "Constants.h"
+#include "Log.h"
 
 #include <format>
 
@@ -22,7 +26,12 @@ namespace hz
 
     void IntegerLiteralExpression::generate(Allocation* allocation)
     {
-        allocation->write(value);
+        if (value > WORD_MAX - 1)
+        {
+            Log::error(std::format("integer literal {} is too large", value));
+        }
+
+        allocation->write(static_cast<std::uint8_t>(value));
     }
 
     Expression* IntegerLiteralExpression::optimize()
