@@ -32,7 +32,9 @@ int main(int argc, char** argv)
 		Log::error("correct usage is 'haze' *.hz(s)");
 	}
 
-	const auto path = std::filesystem::path(argv[1]);
+	//const auto path = std::filesystem::path(argv[1]);
+	//const auto path = std::filesystem::path("common.hz");
+	const auto path = std::filesystem::path("test.hzs");
 
 	const auto filepath = path.string();
 	const auto filename = path.filename().string();
@@ -66,34 +68,28 @@ int main(int argc, char** argv)
 	{
 		//We are trying to compile a program
 		parser = new CompilerParser{ std::move(tokens) };
+
+		auto ast = parser->parse();
+
+		generator = new Generator{ std::move(ast) };
+		auto linkables = generator->generate();
+
+		linker = new CompilerLinker{ std::move(linkables) };
 	}
 
 	else if (extension == ".hzs")
 	{
 		//We are trying to assemble a program
 		parser = new AssemblerParser{ std::move(tokens) };
+
+		auto commands = parser->parse();
+
+		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(parser) };
 	}
 
 	else
 	{
 		Log::error(std::format("unrecognized file extension {}", extension));
-	}
-
-	auto ast = parser->parse();
-
-	generator = new Generator{ std::move(ast) };
-	auto linkables = generator->generate();
-
-	if (extension == ".hz")
-	{
-		//We are trying to compile a program
-		linker = new CompilerLinker{ std::move(linkables) };
-	}
-
-	else
-	{
-		//We are trying to assemble a program 
-		//linker = new AssemblerLinker{ std::move(linkables) };
 	}
 
 

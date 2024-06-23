@@ -99,7 +99,7 @@
     <None Include="old.hz" />
     <None Include="result.s" />
     <None Include="specification.md" />
-    <None Include="test.s" />
+    <None Include="test.hzs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

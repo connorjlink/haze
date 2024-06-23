@@ -1,4 +1,7 @@
-; main function
+//main function
+
+.org &$8003
+
 main:
 	copy r0, #1
 	copy r1, #2

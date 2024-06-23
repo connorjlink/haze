@@ -68,6 +68,15 @@ namespace hz
 				APPEND_TOKEN(INT, rest(std::isdigit));
 			}
 
+			else if (current == '$')
+			{
+				// Hexadecimal integer literal
+				i++;
+				const auto lexeme = rest(std::isxdigit);
+				const auto number = std::stoi(lexeme, nullptr, 16);
+				APPEND_TOKEN(INT, std::format("{}", number));
+			}
+
 			else if ('a' <= current && current <= 'z' ||
 					 'A' <= current && current <= 'Z')
 			{

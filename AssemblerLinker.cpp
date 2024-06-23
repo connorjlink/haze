@@ -21,10 +21,9 @@ namespace hz
 
 	std::vector<std::uint8_t> AssemblerLinker::link(std::uint16_t base_pointer)
 	{
-		std::vector<std::uint8_t> executable(HALF_DWORD_MAX);
+		std::vector<std::uint8_t> executable(DWORD_MAX);
 
 		auto address_tracker = 0;
-
 
 		commands.insert(commands.begin(), new DotOrgCommand{ base_pointer });
 
@@ -92,6 +91,15 @@ namespace hz
 			}
 		}
 
-		return executable;
+		for (auto i = 0; i < HALF_DWORD_MAX; i++)
+		{
+			if (executable[i] != 0)
+			{
+				Log::error("Detected data loss for code imaged before $8000");
+			}
+		}
+
+
+		return std::vector(executable.begin() + HALF_DWORD_MAX, executable.end());
 	}
 }

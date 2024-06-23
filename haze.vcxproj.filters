@@ -231,7 +231,7 @@
     <None Include="result.s">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="test.s">
+    <None Include="test.hzs">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="old.hz" />
