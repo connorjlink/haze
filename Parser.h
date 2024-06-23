@@ -13,7 +13,7 @@
 
 #include "Node.h"
 #include "Function.h"
-#include "Instruction.h"
+#include "InstructionCommand.h"
 
 #define AS_COMPILER_PARSER(x) static_cast<CompilerParser*>(x)
 #define AS_ASSEMBLER_PARSER(x) static_cast<AssemblerParser*>(x)

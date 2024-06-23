@@ -12,7 +12,7 @@ namespace hz
 
     class Node
     {
-    protected:
+    public:
         enum class Type
         {
             FUNCTION,

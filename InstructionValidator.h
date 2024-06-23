@@ -1,7 +1,7 @@
 #ifndef HAZE_INSTRUCTIONVALIDATOR_H
 #define HAZE_INSTRUCTIONVALIDATOR_H
 
-#include "Instruction.h"
+#include "InstructionCommand.h"
 #include "Validator.h"
 
 namespace hz

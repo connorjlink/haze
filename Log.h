@@ -13,9 +13,9 @@ namespace hz
 	class Log
 	{
 	private:
-		static void print(std::string_view label, std::string_view msg)
+		static void print(std::string_view LabelCommand, std::string_view msg)
 		{
-			stream << std::format("{}: {}\n", label, msg);
+			stream << std::format("{}: {}\n", LabelCommand, msg);
 		}
 
 	public:

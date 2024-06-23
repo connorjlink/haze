@@ -1,7 +1,7 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
-#include "Instruction.h"
+#include "InstructionCommand.h"
 #include "Linkable.h"
 
 #include <vector>
@@ -42,7 +42,13 @@ namespace hz
 		void brez(std::uint16_t, Register);
 
 	public:
-		void raw(Instruction*);
+		void raw(InstructionCommand*);
+
+	public:
+		std::uint16_t write_pointer() const;
+
+	public:
+		void image(std::vector<std::uint8_t>&&, std::uint16_t);
 
 	public:
 		explicit Generator(std::vector<Node*>&& program)

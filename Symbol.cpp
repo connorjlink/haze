@@ -21,4 +21,9 @@ namespace hz
 	{
 		return Symbol::Type::DEFINE;
 	}
+
+	Symbol::Type LabelSymbol::ytype() const
+	{
+		return Symbol::Type::LABEL;
+	}
 }

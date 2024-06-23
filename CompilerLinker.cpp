@@ -9,9 +9,9 @@ namespace
 		return ((opcode & 0b1111) << 4) | ((operand1 & 0b11) << 2) | ((operand2 & 0b11) << 0);
 	}
 
-	std::vector<hz::Instruction*> gather(const std::vector<hz::Instruction*>& function)
+	std::vector<hz::InstructionCommand*> gather(const std::vector<hz::InstructionCommand*>& function)
 	{
-		std::vector<hz::Instruction*> instructions;
+		std::vector<hz::InstructionCommand*> instructions;
 
 		for (auto i = 0; i < function.size(); i++)
 		{
@@ -112,9 +112,9 @@ namespace hz
 		return false;
 	}
 
-	std::vector<std::uint8_t> CompilerLinker::link()
+	std::vector<std::uint8_t> CompilerLinker::link(std::uint16_t base_pointer)
 	{
-		std::vector<std::uint8_t> executable;
+		std::vector<std::uint8_t> executable(HALF_DWORD_MAX);
 
 		auto address_tracker = 0;
 
@@ -146,11 +146,10 @@ namespace hz
 				for (auto& instruction : linkable.object_code)
 				{
 					if (linkable.symbol->name != symbol->name &&
-						instruction->opcode == CALL &&
+						(instruction->opcode == CALL || instruction->opcode == BREZ) &&
 						instruction->branch_target == symbol->name)
 					{
-						static constexpr auto BASE_ADDRESS = HALF_DWORD_MAX;
-						const auto branch_target = BASE_ADDRESS + offset;
+						const auto branch_target = base_pointer + offset;
 
 						instruction->mem = branch_target;
 					}
@@ -160,11 +159,39 @@ namespace hz
 
 		for (auto& [symbol, function, offset] : linkables)
 		{
-			for (const auto& instruction : function)
+			for (auto i = 0; i < function.size(); i++)
 			{
+				const auto& instruction = function[i];
+
 				if (!instruction->marked_for_deletion)
 				{
-					executable.append_range(extract(instruction->bytes()));
+					const auto embedded_size = instruction->approximate_embedded_size;
+
+					if (embedded_size != 0)
+					{
+						for (auto j = i + 1; j < function.size(); j++)
+						{
+							function[j]->offset += embedded_size;
+						}
+
+						for (auto j = 0; j < executable.size(); j++)
+						{
+							// NOTE: since we don't do any safety checks on inline assembly,
+							// we could (or maybe even likely) are overwriting compiler-generated code.
+							// Depending on our needs going forward, this might be very undesirable for debugging purposes.
+							executable[j] = instruction->embedded_object_code[j];
+						}
+					}
+
+					else // (embedded_size == 0)
+					{
+						const auto bytes = extract(instruction->bytes());
+						const auto base = instruction->offset;
+
+						executable[base + 0] = bytes[0];
+						executable[base + 1] = bytes[1];
+						executable[base + 2] = bytes[2];
+					}
 				}
 			}
 		}

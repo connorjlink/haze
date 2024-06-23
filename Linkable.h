@@ -2,9 +2,10 @@
 #define HAZE_LINKABLE_H
 
 #include "Symbol.h"
-#include "Instruction.h"
+#include "InstructionCommand.h"
 
 #include <vector>
+#include <cstdint>
 
 namespace hz
 {
@@ -12,11 +13,11 @@ namespace hz
 	{
 	public:
 		Symbol* symbol;
-		std::vector<Instruction*> object_code;
-		std::size_t offset;
+		std::vector<InstructionCommand*> object_code;
+		std::uint16_t offset;
 
 	public:
-		Linkable(Symbol* symbol, std::vector<Instruction>&& object_code, std::size_t offset)
+		Linkable(Symbol* symbol, std::vector<InstructionCommand*>&& object_code, std::uint16_t offset)
 			: symbol{ symbol }, object_code{ std::move(object_code) }, offset{ offset }
 		{
 		}

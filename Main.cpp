@@ -5,6 +5,8 @@
 #include "AssemblerParser.h"
 #include "Generator.h"
 #include "Linker.h"
+#include "CompilerLinker.h"
+#include "AssemblerLinker.h"
 #include "Simulator.h"
 #include "Log.h"
 
@@ -57,6 +59,9 @@ int main(int argc, char** argv)
 	auto lexer = new Lexer{ std::move(processed) };
 	auto tokens = lexer->lex();
 
+	std::vector<std::uint8_t> executable;
+	Linker* linker = nullptr;
+
 	if (extension == ".hz")
 	{
 		//We are trying to compile a program
@@ -79,8 +84,20 @@ int main(int argc, char** argv)
 	generator = new Generator{ std::move(ast) };
 	auto linkables = generator->generate();
 
-	auto linker = new Linker{ std::move(linkables) };
-	auto executable = linker->link();
+	if (extension == ".hz")
+	{
+		//We are trying to compile a program
+		linker = new CompilerLinker{ std::move(linkables) };
+	}
+
+	else
+	{
+		//We are trying to assemble a program 
+		//linker = new AssemblerLinker{ std::move(linkables) };
+	}
+
+
+	executable = linker->link(HALF_DWORD_MAX);
 
 
 	auto end_time = std::chrono::steady_clock::now();

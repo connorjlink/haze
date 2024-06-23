@@ -76,6 +76,9 @@ namespace hz
 			case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name }); break;
 			case ARGUMENT: symbol_table.emplace_back(new ArgumentSymbol{ name }); break;
 			case VARIABLE: symbol_table.emplace_back(new VariableSymbol{ name, nullptr }); break;
+			case DEFINE: symbol_table.emplace_back(new DefineSymbol{ name, 0 }); break;
+			case LABEL: symbol_table.emplace_back(new LabelSymbol{ name, 0 }); break;
+			default: Log::error("Unrecognized symbol type added to registry");
 		}
 	}
 
@@ -89,9 +92,13 @@ namespace hz
 		auto symbol = ::find(name, symbol_table);
 		if (symbol == std::end(symbol_table))
 		{
+			// TODO: add other symbol types here as they are added!
 			Log::error(std::format("{} {} is undefined", 
-				type == Symbol::Type::VARIABLE ? "variable" : \
-					type == Symbol::Type::FUNCTION ? "function" : "argument", name));
+				type == Symbol::Type::VARIABLE ? "variable" :
+					type == Symbol::Type::FUNCTION ? "function" : 
+						type == Symbol::Type::ARGUMENT ? "argument" :
+							type == Symbol::Type::DEFINE ? "define" :
+								type == Symbol::Type::LABEL ? "label" : "unknown", name));
 		}
 
 		if ((*symbol)->ytype() == type)

@@ -1,17 +1,18 @@
-#ifndef HAZE_LABEL_H
-#define HAZE_LABEL_H
+#ifndef HAZE_LABELCOMMAND_H
+#define HAZE_LABELCOMMAND_H
 
 #include "Command.h"
 
 namespace hz
 {
-	class Label : public Command
+	class LabelCommand : public Command
 	{
-	private:
+	public:
 		std::string identifier;
+		std::uint16_t address;
 
 	public:
-		Label(std::string identifier)
+		LabelCommand(std::string identifier)
 			: identifier(std::move(identifier))
 		{
 		}
@@ -19,9 +20,9 @@ namespace hz
 	public:
 		virtual Command::Type ctype() const final override;
 		virtual std::string string() const final override;
-		virtual Label* copy() const final override;
+		virtual LabelCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
-		virtual Label* optimize() final override;
+		virtual LabelCommand* optimize() final override;
 	};
 }
 

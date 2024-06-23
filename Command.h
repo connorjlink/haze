@@ -7,8 +7,8 @@
 
 #define AS_DOTORG_COMMAND(x) static_cast<DotOrgCommand*>(x)
 #define AS_DOTDEFINE_COMMAND(x) static_cast<DotDefineCommand*>(x)
-#define AS_LABEL_COMMAND(x) static_cast<Label*>(x)
-#define AS_INSTRUCTION_COMMAND(x) static_cast<Instruction*>(x)
+#define AS_LABEL_COMMAND(x) static_cast<LabelCommand*>(x)
+#define AS_INSTRUCTION_COMMAND(x) static_cast<InstructionCommand*>(x)
 
 namespace hz
 {
@@ -22,6 +22,9 @@ namespace hz
 			LABEL,
 			INSTRUCTION,
 		};
+
+	public:
+		std::uint16_t offset;
 
 	public:
 		virtual ~Command() = default;

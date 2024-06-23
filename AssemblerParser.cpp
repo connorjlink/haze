@@ -1,8 +1,10 @@
 #include "AssemblerParser.h"
 
-#include "Label.h"
+#include "DotOrgCommand.h"
 
-#include "Instruction.h"
+#include "LabelCommand.h"
+
+#include "InstructionCommand.h"
 #include "Constants.h"
 #include "Log.h"
 
@@ -37,10 +39,10 @@ namespace hz
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			auto label = peek().value;
+			auto LabelCommand = peek().value;
 			DISCARD consume(TokenType::IDENTIFIER);
 
-			return new IdentifierExpression{ label };
+			return new IdentifierExpression{ LabelCommand };
 		}
 
 		const auto address_expression = parse_expression_optimized();
@@ -58,10 +60,10 @@ namespace hz
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			const auto label = peek().value;
+			const auto LabelCommand = peek().value;
 			DISCARD consume(TokenType::IDENTIFIER);
 
-			return new IdentifierExpression{ label };
+			return new IdentifierExpression{ LabelCommand };
 		}
 
 		const auto immediate_expression = parse_expression_optimized();
@@ -93,8 +95,12 @@ namespace hz
 
 	Node* AssemblerParser::parse_dotorg_command()
 	{
-		//TODO: implement .org directive here!
-		return nullptr;
+		DISCARD consume(TokenType::DOTORG);
+
+		const auto address_expression = parse_address();
+		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
+
+		return new DotOrgCommand{ address };
 	}
 
 	Node* AssemblerParser::parse_label_command()
@@ -104,7 +110,10 @@ namespace hz
 
 		const auto identifier = identifier_expression->name;
 
-		return new Label{ identifier };
+		add_symbol(Symbol::Type::LABEL, identifier);
+		//AS_LABEL_SYMBOL(reference_symbol(Symbol::Type::LABEL, identifier))->address = 
+
+		return new LabelCommand{ identifier };
 	}
 
 	Node* AssemblerParser::parse_instruction_command()
@@ -139,7 +148,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new Instruction{ MOVE, operand1, operand2 };
+				return new InstructionCommand{ MOVE, operand1, operand2 };
 			} break;
 
 			case TokenType::LOAD:
@@ -151,10 +160,10 @@ namespace hz
 
 				if (operand2->etype() == Expression::Type::IDENTIFIER)
 				{
-					return new Instruction{ LOAD, operand1, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ LOAD, operand1, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
-				return new Instruction{ LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
+				return new InstructionCommand{ LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
 			} break;
 
 			case TokenType::COPY:
@@ -166,13 +175,13 @@ namespace hz
 
 				if (operand2->etype() == Expression::Type::IDENTIFIER)
 				{
-					return new Instruction{ COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
 				const auto value = AS_INTEGER_LITERAL_EXPRESSION(operand2)->value;
 				ASSERT_IN_RANGE(value, 0, DWORD_MAX - 1);
 
-				return new Instruction{ COPY, operand1, DC, static_cast<std::uint8_t>(value) };
+				return new InstructionCommand{ COPY, operand1, DC, static_cast<std::uint8_t>(value) };
 			} break;
 
 			case TokenType::SAVE:
@@ -185,10 +194,10 @@ namespace hz
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
-					return new Instruction{ SAVE, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ SAVE, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new Instruction{ SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			case TokenType::IADD:
@@ -198,7 +207,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new Instruction{ IADD, operand1, operand2 };
+				return new InstructionCommand{ IADD, operand1, operand2 };
 			} break;
 
 			case TokenType::ISUB:
@@ -208,7 +217,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new Instruction{ ISUB, operand1, operand2 };
+				return new InstructionCommand{ ISUB, operand1, operand2 };
 			} break;
 
 			case TokenType::BAND:
@@ -218,7 +227,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new Instruction{ BAND, operand1, operand2 };
+				return new InstructionCommand{ BAND, operand1, operand2 };
 			} break;
 
 			case TokenType::BIOR:
@@ -228,7 +237,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new Instruction{ BIOR, operand1, operand2 };
+				return new InstructionCommand{ BIOR, operand1, operand2 };
 			} break;
 
 			case TokenType::BXOR:
@@ -238,7 +247,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new Instruction{ BXOR, operand1, operand2 };
+				return new InstructionCommand{ BXOR, operand1, operand2 };
 			} break;
 
 			case TokenType::CALL:
@@ -248,17 +257,17 @@ namespace hz
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
-					return new Instruction{ CALL, DC, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ CALL, DC, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new Instruction{ CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			case TokenType::EXIT:
 			{
 				DISCARD consume(TokenType::EXIT);
 
-				return new Instruction{ EXIT, DC, DC };
+				return new InstructionCommand{ EXIT, DC, DC };
 			} break;
 
 			case TokenType::PUSH:
@@ -266,7 +275,7 @@ namespace hz
 				DISCARD consume(TokenType::PUSH);
 				const auto operand1 = parse_register();
 
-				return new Instruction{ PUSH, DC, operand1 };
+				return new InstructionCommand{ PUSH, DC, operand1 };
 			} break;
 
 			case TokenType::PULL:
@@ -274,7 +283,7 @@ namespace hz
 				DISCARD consume(TokenType::PULL);
 				const auto operand1 = parse_register();
 
-				return new Instruction{ PULL, operand1, DC };
+				return new InstructionCommand{ PULL, operand1, DC };
 			} break;
 
 			case TokenType::BREZ:
@@ -286,10 +295,10 @@ namespace hz
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
-					return new Instruction{ BREZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ BREZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new Instruction{ BREZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ BREZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			default:

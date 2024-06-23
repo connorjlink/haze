@@ -85,6 +85,23 @@ namespace hz
 				}
 			}
 
+			else if (current == '.')
+			{
+				i++;
+				const auto lexeme = rest(isalnum);
+				const auto search = lexeme_map.find(std::format(".{}", lexeme));
+
+				if (search != std::end(lexeme_map))
+				{
+					APPEND_TOKEN(search->second, lexeme);
+				}
+
+				else
+				{
+					APPEND_TOKEN(IDENTIFIER, lexeme);
+				}
+			}
+
 			else
 			{
 				const auto search = lexeme_map.find(std::string{ current });

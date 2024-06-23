@@ -2,10 +2,13 @@
 #define HAZE_LINKER_H
 
 #include "Linkable.h"
-#include "Instruction.h"
+#include "InstructionCommand.h"
 
 #include <vector>
 #include <cstdint>
+
+#define AS_COMPILER_LINKER(x) static_cast<CompilerLinker*>(x)
+#define AS_ASSEMBLER_LINKER(x) static_cast<AssemblerLinker*>(x)
 
 namespace hz
 {
@@ -21,7 +24,7 @@ namespace hz
 	public:
 		virtual Linker::Type ltype() const = 0;
 		virtual bool optimize() = 0;
-		virtual std::vector<std::uint8_t> link() = 0;
+		virtual std::vector<std::uint8_t> link(std::uint16_t) = 0;
 	};
 }
 

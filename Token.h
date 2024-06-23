@@ -31,6 +31,9 @@ namespace hz
 		NVR,
 		RETURN,
 
+		INTRINSIC,
+		GEOMETRY,
+
 		DOTDEFINE, DOTORG,
 
 		ASM,
@@ -61,6 +64,9 @@ namespace hz
 		{ "byte", TokenType::BYTE },
 		{ "nvr", TokenType::NVR},
 		{ "return", TokenType::RETURN },
+
+		{ "intrinsic", TokenType::INTRINSIC },
+		{ "geometry", TokenType::GEOMETRY },
 
 		{ ".define", TokenType::DOTDEFINE },
 		{ ".org", TokenType::DOTORG },

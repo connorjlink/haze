@@ -7,6 +7,7 @@
 #define AS_ARGUMENT_SYMBOL(x) static_cast<ArgumentSymbol*>(x)
 #define AS_VARIABLE_SYMBOL(x) static_cast<VariableSymbol*>(x)
 #define AS_DEFINE_SYMBOL(x) static_cast<DefineSymbol*>(x)
+#define AS_LABEL_SYMBOL(x) static_cast<LabelSymbol*>(x)
 
 namespace hz
 {
@@ -22,6 +23,7 @@ namespace hz
 			ARGUMENT,
 			VARIABLE,
 			DEFINE,
+			LABEL,
 		};
 
 	public:
@@ -94,7 +96,22 @@ namespace hz
 
 	public:
 		explicit DefineSymbol(std::string name, std::uint16_t value)
-			: Symbol{ std::move(name) }, value(value)
+			: Symbol{ std::move(name) }, value{ value }
+		{
+		}
+
+	public:
+		virtual Symbol::Type ytype() const final override;
+	};
+
+	class LabelSymbol : public Symbol
+	{
+	public:
+		std::uint16_t address;
+
+	public:
+		explicit LabelSymbol(std::string name, std::uint16_t address)
+			: Symbol{ std::move(name) }, address{ address }
 		{
 		}
 

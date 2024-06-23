@@ -1,15 +1,9 @@
-function nvr test = ()
-{
-	byte a = 5;
-	byte b = 6;
-	byte c = a + b;
-}
-
-function byte main = ()
+function nvr main = ()
 {
 	asm
 	{
 	foo:
+		move r2, r1
 		copy r0, #1
 		copy r1, #2
 		iadd r0, r1
@@ -22,8 +16,6 @@ function byte main = ()
 		iadd r0, r1
 		push r0
 		exit
+		pull r1
 	}
-
-
-	return 1 + 2;
 }

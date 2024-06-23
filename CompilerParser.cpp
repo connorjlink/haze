@@ -93,13 +93,13 @@ namespace hz
 		DISCARD consume(TokenType::LBRACE);
 
 		auto assembly = fetchUntil(TokenType::RBRACE);
-		auto assembly_parser = new AssemblerParser{ std::move(assembly) };
-		auto commands = assembly_parser->parse();
+		auto assembler_parser = new AssemblerParser{ std::move(assembly) };
+		auto commands = assembler_parser->parse();
 
 		DISCARD consume(TokenType::RBRACE);
 
 		//TODO: massage AsmStatement to use nodes but assert that they are indeed commands!
-		return new InlineAsmStatement{ std::move(commands) };
+		return new InlineAsmStatement{ std::move(commands), assembler_parser };
 	}
 
 	Expression* CompilerParser::parse_argument()

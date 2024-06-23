@@ -1,5 +1,6 @@
 #include "InlineAsmStatement.h"
 #include "Generator.h"
+#include "AssemblerLinker.h"
 
 #include <format>
 
@@ -29,10 +30,10 @@ namespace hz
 
 	void InlineAsmStatement::generate(Allocation*)
 	{
-		for (auto command : commands)
-		{
-			command->generate();
-		}
+		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser };
+		auto object_code = linker->link(generator->write_pointer());
+
+		generator->image(std::move(object_code), AS_ASSEMBLER_LINKER(linker)->approximate_size());
 	}
 
 	Statement* InlineAsmStatement::optimize()

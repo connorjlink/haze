@@ -21,9 +21,12 @@
   <ItemGroup>
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="AssemblerLinker.cpp" />
     <ClCompile Include="AssemblerParser.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CompilerLinker.cpp" />
     <ClCompile Include="CompilerParser.cpp" />
+    <ClCompile Include="DotOrgCommand.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
     <ClCompile Include="CompoundStatement.cpp" />
@@ -36,13 +39,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="IdentifierExpression.cpp" />
-    <ClCompile Include="Instruction.cpp" />
+    <ClCompile Include="InstructionCommand.cpp" />
     <ClCompile Include="InstructionValidator.cpp" />
     <ClCompile Include="IntegerLiteralExpression.cpp" />
-    <ClCompile Include="Label.cpp" />
+    <ClCompile Include="LabelCommand.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Linkable.cpp" />
-    <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
@@ -56,9 +58,12 @@
   <ItemGroup>
     <ClInclude Include="Allocation.h" />
     <ClInclude Include="Allocator.h" />
+    <ClInclude Include="AssemblerLinker.h" />
     <ClInclude Include="AssemblerParser.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="CompilerLinker.h" />
     <ClInclude Include="CompilerParser.h" />
+    <ClInclude Include="DotOrgCommand.h" />
     <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
     <ClInclude Include="CompoundStatement.h" />
@@ -69,10 +74,10 @@
     <ClInclude Include="FunctionCallExpression.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="IdentifierExpression.h" />
-    <ClInclude Include="Instruction.h" />
+    <ClInclude Include="InstructionCommand.h" />
     <ClInclude Include="InstructionValidator.h" />
     <ClInclude Include="IntegerLiteralExpression.h" />
-    <ClInclude Include="Label.h" />
+    <ClInclude Include="LabelCommand.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Linkable.h" />
     <ClInclude Include="Linker.h" />
@@ -91,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />
+    <None Include="old.hz" />
     <None Include="result.s" />
     <None Include="specification.md" />
     <None Include="test.s" />

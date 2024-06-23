@@ -1,5 +1,5 @@
 #include "Simulator.h"
-#include "Instruction.h"
+#include "InstructionCommand.h"
 #include "Disassembler.h"
 #include "Log.h"
 #include "Token.h"
@@ -166,7 +166,8 @@ namespace hz
 				{
 					Log::info("Instruction listing:");
 					const auto offset = instruction_pointer - HALF_DWORD_MAX;
-					Log::raw(Disassembler::disassemble_program(rom, offset - std::min(3, offset), rom.size()));
+					//Log::raw(Disassembler::disassemble_program(rom, offset - std::min(3, offset), rom.size()));
+					Log::raw(Disassembler::disassemble_program(rom, offset - std::min(3, offset), rom.size() / 4));
 				} break;
 
 				case 's':

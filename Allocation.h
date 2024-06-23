@@ -1,7 +1,7 @@
 #ifndef HAZE_ALLOCATION_H
 #define HAZE_ALLOCATION_H
 
-#include "Instruction.h"
+#include "InstructionCommand.h"
 
 #include <cstdint>
 

@@ -41,7 +41,7 @@
     <ClCompile Include="IdentifierExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Instruction.cpp">
+    <ClCompile Include="InstructionCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Generator.cpp">
@@ -80,9 +80,6 @@
     <ClCompile Include="VariableStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Linker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Linkable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -98,7 +95,16 @@
     <ClCompile Include="CompilerParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Label.cpp">
+    <ClCompile Include="LabelCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblerLinker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompilerLinker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DotOrgCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -136,7 +142,7 @@
     <ClInclude Include="IntegerLiteralExpression.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Instruction.h">
+    <ClInclude Include="InstructionCommand.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="InstructionValidator.h">
@@ -202,7 +208,16 @@
     <ClInclude Include="CompilerParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Label.h">
+    <ClInclude Include="LabelCommand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AssemblerLinker.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompilerLinker.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DotOrgCommand.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -219,5 +234,6 @@
     <None Include="test.s">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="old.hz" />
   </ItemGroup>
 </Project>

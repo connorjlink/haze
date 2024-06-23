@@ -8,14 +8,17 @@
 
 namespace hz
 {
+	class AssemblerParser;
+
 	class InlineAsmStatement : public Statement
 	{
 	private:
 		std::vector<Node*> commands;
+		AssemblerParser* assembler_parser;
 
 	public:
-		InlineAsmStatement(std::vector<Node*>&& commands)
-			: commands(std::move(commands))
+		InlineAsmStatement(std::vector<Node*>&& commands, AssemblerParser* assembler_parser)
+			: commands{ std::move(commands) }, assembler_parser{ assembler_parser }
 		{
 		}
 

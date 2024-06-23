@@ -31,7 +31,7 @@ instructions:
 
 assembly:
 
-label:
+LabelCommand:
 @identifier:
 
 defines:
