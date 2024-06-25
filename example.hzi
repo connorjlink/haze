@@ -1,0 +1,23 @@
+@include "vertex.hzi"
+
+//Should really be in `color.hzi`
+.define RED = #FF0000
+.define GREEN = #00FF00
+.define BLUE = #0000FF
+.define BLACK = #000000
+.define WHITE = #FFFFFF
+
+
+intrinsic sky_color = [0.5, 0.5, 0.5]
+
+//Ranges from 1-100
+intrinsic mouse_sensitivity = 50 
+
+//Ranges from 45-135
+intrinsic fov = 90
+
+
+//Let's see if we need even need this functionality
+function nvr main()
+{
+}

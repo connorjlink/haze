@@ -107,6 +107,18 @@
     <ClCompile Include="DotOrgCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Declarator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpreterParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Intrinsic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntrinsicDeclarator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -220,6 +232,18 @@
     <ClInclude Include="DotOrgCommand.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Declarator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpreterParser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Intrinsic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntrinsicDeclarator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -228,12 +252,17 @@
     <None Include="specification.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="result.s">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="test.hzs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="old.hz" />
+    <None Include="old.hz">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="optimizations.hzs.gen">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="example.hzi">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

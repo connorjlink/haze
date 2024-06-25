@@ -26,6 +26,7 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CompilerLinker.cpp" />
     <ClCompile Include="CompilerParser.cpp" />
+    <ClCompile Include="Declarator.cpp" />
     <ClCompile Include="DotOrgCommand.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
@@ -42,6 +43,9 @@
     <ClCompile Include="InstructionCommand.cpp" />
     <ClCompile Include="InstructionValidator.cpp" />
     <ClCompile Include="IntegerLiteralExpression.cpp" />
+    <ClCompile Include="InterpreterParser.cpp" />
+    <ClCompile Include="Intrinsic.cpp" />
+    <ClCompile Include="IntrinsicDeclarator.cpp" />
     <ClCompile Include="LabelCommand.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Linkable.cpp" />
@@ -63,6 +67,7 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CompilerLinker.h" />
     <ClInclude Include="CompilerParser.h" />
+    <ClInclude Include="Declarator.h" />
     <ClInclude Include="DotOrgCommand.h" />
     <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
@@ -77,6 +82,9 @@
     <ClInclude Include="InstructionCommand.h" />
     <ClInclude Include="InstructionValidator.h" />
     <ClInclude Include="IntegerLiteralExpression.h" />
+    <ClInclude Include="InterpreterParser.h" />
+    <ClInclude Include="Intrinsic.h" />
+    <ClInclude Include="IntrinsicDeclarator.h" />
     <ClInclude Include="LabelCommand.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Linkable.h" />
@@ -96,8 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />
+    <None Include="example.hzi" />
     <None Include="old.hz" />
-    <None Include="result.s" />
+    <None Include="optimizations.hzs.gen" />
     <None Include="specification.md" />
     <None Include="test.hzs" />
   </ItemGroup>
