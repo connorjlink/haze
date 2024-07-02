@@ -6,6 +6,7 @@
 #include "Utility.h"
 #include "IdentifierExpression.h"
 #include "Linkable.h"
+#include "LabelCommand.h"
 
 #include <format>
 #include <algorithm>
@@ -17,6 +18,11 @@ namespace hz
 	{
 		current_function++;
 		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<InstructionCommand*>{}, 0);
+	}
+
+	void Generator::label(const std::string& identifier)
+	{
+		linkables[current_function].object_code.emplace_back(new LabelCommand{ identifier });
 	}
 
 #define ENCODE(x) linkables[current_function].object_code.emplace_back(x)
@@ -85,7 +91,7 @@ namespace hz
 
 	void Generator::call(std::string name)
 	{
-		//call LabelCommand
+		//call label
 		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, 0xCCCC, name };
 		ENCODE(instruction);
 	}
@@ -115,6 +121,13 @@ namespace hz
 	{
 		//pull destination
 		auto instruction = new InstructionCommand{ PULL, destination, DC };
+		ENCODE(instruction);
+	}
+
+	void Generator::brez(std::string name, Register source)
+	{
+		// brez label, source
+		auto instruction = new InstructionCommand{ BREZ, DC, DC, 0, 0xCCCC, name };
 		ENCODE(instruction);
 	}
 

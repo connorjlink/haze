@@ -1,32 +1,39 @@
 #include "CompilerLinker.h"
+#include "Command.h"
+#include "InstructionCommand.h"
 
 #include "Utility.h"
 
-namespace
+namespace hz
 {
-	std::uint8_t make_opcode(hz::Opcode opcode, hz::Register operand1, hz::Register operand2)
+	static std::uint8_t make_opcode(Opcode opcode, Register operand1, Register operand2)
 	{
 		return ((opcode & 0b1111) << 4) | ((operand1 & 0b11) << 2) | ((operand2 & 0b11) << 0);
 	}
 
-	std::vector<hz::InstructionCommand*> gather(const std::vector<hz::InstructionCommand*>& function)
+	static std::vector<Command*> gather(const std::vector<Command*>& function)
 	{
-		std::vector<hz::InstructionCommand*> instructions;
+		std::vector<Command*> commands;
 
 		for (auto i = 0; i < function.size(); i++)
 		{
-			const auto& instruction = function[i];
+			const auto& command = function[i];
 
-			if (!instruction->marked_for_deletion)
+			if (command->ctype() == Command::Type::INSTRUCTION)
 			{
-				instructions.emplace_back(instruction);
-			}
+				const auto instruction_command = AS_INSTRUCTION_COMMAND(command);
+
+				if (!instruction_command->marked_for_deletion)
+				{
+					commands.emplace_back(instruction_command);
+				}
+			}	
 		}
 
-		return instructions;
+		return commands;
 	}
 
-	std::size_t _global_pass = 0;
+	static std::size_t _global_pass = 0;
 }
 
 namespace hz

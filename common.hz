@@ -1,10 +1,17 @@
+.include "test.hz"
+
+.define TEST = 1
+
+.org $8000
+
 function nvr main = ()
 {
+	// TODO: add the following for inline assembly
 	asm
 	{
 	foo:
 		move r2, r1
-		copy r0, #1
+		copy r0, #TEST
 		copy r1, #2
 		iadd r0, r1
 		push r0
@@ -18,4 +25,6 @@ function nvr main = ()
 		exit
 		pull r1
 	}
+
+	return 1 + 2;
 }

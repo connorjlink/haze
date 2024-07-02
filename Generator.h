@@ -25,6 +25,9 @@ namespace hz
 		void begin_function(std::string);
 
 	public:
+		void label(const std::string&);
+
+	public:
 		void move(Register, Register);
 		void load(Register, std::uint16_t);
 		void copy(Register, std::uint8_t);
@@ -34,11 +37,12 @@ namespace hz
 		void band(Register, Register);
 		void bior(Register, Register);
 		void bxor(Register, Register);
-		void call(std::uint16_t);
 		void call(std::string);
+		void call(std::uint16_t);
 		void exit();
 		void push(Register);
 		void pull(Register);
+		void brez(std::string, Register);
 		void brez(std::uint16_t, Register);
 
 	public:

@@ -20,6 +20,8 @@ namespace hz
 			VARIABLE,
 			RETURN,
 			INLINEASM,
+			WHILE,
+			IF,
 		};
 
 	public:

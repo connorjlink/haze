@@ -1,4 +1,4 @@
-@include "vertex.hzi"
+.include "vertex.hzi"
 
 //Should really be in `color.hzi`
 .define RED = #FF0000
@@ -6,7 +6,6 @@
 .define BLUE = #0000FF
 .define BLACK = #000000
 .define WHITE = #FFFFFF
-
 
 intrinsic sky_color = [0.5, 0.5, 0.5]
 
