@@ -119,6 +119,15 @@
     <ClCompile Include="IntrinsicDeclarator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IfStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ForStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WhileStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -242,6 +251,18 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="IntrinsicDeclarator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IfStatement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ForStatement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WhileStatement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitter.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

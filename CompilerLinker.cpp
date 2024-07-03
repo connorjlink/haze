@@ -53,7 +53,7 @@ namespace hz
 				{
 					//TODO: ensure none of our bytes are branch targets
 
-					if (auto instructions = ::gather(function); !instructions.empty())
+					if (auto instructions = gather(function); !instructions.empty())
 					{
 						//Log::info(std::format("Instruction sequence prior to pass {}", _global_pass));
 						//for (auto ii : instructions)

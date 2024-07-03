@@ -3,7 +3,7 @@
 
 namespace hz
 {
-	InstrinsicDeclarator* InterpreterParser::parse_intrinsic()
+	IntrinsicDeclarator* InterpreterParser::parse_intrinsic()
 	{
 		DISCARD consume(TokenType::INTRINSIC);
 	}

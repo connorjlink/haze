@@ -28,6 +28,8 @@
     <ClCompile Include="CompilerParser.cpp" />
     <ClCompile Include="Declarator.cpp" />
     <ClCompile Include="DotOrgCommand.cpp" />
+    <ClCompile Include="ForStatement.cpp" />
+    <ClCompile Include="IfStatement.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
     <ClCompile Include="CompoundStatement.cpp" />
@@ -58,6 +60,7 @@
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClCompile Include="WhileStatement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Allocation.h" />
@@ -69,6 +72,9 @@
     <ClInclude Include="CompilerParser.h" />
     <ClInclude Include="Declarator.h" />
     <ClInclude Include="DotOrgCommand.h" />
+    <ClInclude Include="Emitter.h" />
+    <ClInclude Include="ForStatement.h" />
+    <ClInclude Include="IfStatement.h" />
     <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
     <ClInclude Include="CompoundStatement.h" />
@@ -101,6 +107,7 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Validator.h" />
     <ClInclude Include="VariableStatement.h" />
+    <ClInclude Include="WhileStatement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />

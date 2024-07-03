@@ -23,7 +23,7 @@ namespace hz
 			// This is a very rough estimation of the number of bytes required by an inline
 			// assembly block that doesn't utilize .org directives to jump around. In that case,
 			// our linking doesn't really work. For now I am fine with this limitation.
-			return 3 * commands.size();
+			return 3 * static_cast<std::uint16_t>(commands.size());
 		}
 
 	public:

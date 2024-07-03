@@ -28,22 +28,23 @@ namespace hz
 		void label(const std::string&);
 
 	public:
-		void move(Register, Register);
-		void load(Register, std::uint16_t);
-		void copy(Register, std::uint8_t);
-		void save(std::uint16_t, Register);
-		void iadd(Register, Register);
-		void isub(Register, Register);
-		void band(Register, Register);
-		void bior(Register, Register);
-		void bxor(Register, Register);
-		void call(std::string);
-		void call(std::uint16_t);
-		void exit();
-		void push(Register);
-		void pull(Register);
-		void brez(std::string, Register);
-		void brez(std::uint16_t, Register);
+		void make_move(Register, Register);
+		void make_load(Register, std::uint16_t);
+		void make_copy(Register, std::uint8_t);
+		void make_save(std::uint16_t, Register);
+		void make_iadd(Register, Register);
+		void make_isub(Register, Register);
+		void make_band(Register, Register);
+		void make_bior(Register, Register);
+		void make_bxor(Register, Register);
+		void make_call(std::string);
+		void make_call(std::uint16_t);
+		void make_exit();
+		void make_push(Register);
+		void make_pull(Register);
+		void make_brnz(std::string, Register);
+		void make_brnz(std::uint16_t, Register);
+		void make_bool(Register);
 
 	public:
 		void raw(InstructionCommand*);
