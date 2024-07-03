@@ -17,6 +17,10 @@ namespace hz
         Statement* parse_compound_statement(std::string);
         Statement* parse_return_statement(std::string);
         Statement* parse_inline_asm_statement(std::string);
+        Statement* parse_while_statement(std::string);
+        Statement* parse_for_statement(std::string);
+        Statement* parse_if_statement(std::string);
+        Statement* parse_expression_statement(std::string);
 
     public:
         Expression* parse_argument();

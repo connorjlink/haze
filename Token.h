@@ -30,6 +30,10 @@ namespace hz
 		BYTE,
 		NVR,
 		RETURN,
+		WHILE,
+		FOR,
+		IF,
+		ELSE,
 
 		INTRINSIC,
 		GEOMETRY,
@@ -64,6 +68,10 @@ namespace hz
 		{ "byte", TokenType::BYTE },
 		{ "nvr", TokenType::NVR},
 		{ "return", TokenType::RETURN },
+		{ "while", TokenType::WHILE },
+		{ "for", TokenType::FOR },
+		{ "if", TokenType::IF },
+		{ "else", TokenType::ELSE },
 
 		{ "intrinsic", TokenType::INTRINSIC },
 		{ "geometry", TokenType::GEOMETRY },

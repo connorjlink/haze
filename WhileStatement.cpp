@@ -3,20 +3,9 @@
 #include "Allocation.h"
 #include "Allocator.h"
 
-#include <format>
-#include <random>
+#include "Utility.h"
 
-namespace
-{
-	static std::random_device _device;
-	static std::mt19937 _engine(_device);
-	
-	int generate(int num_digits = 3)
-	{
-		auto distribution = std::uniform_int_distribution(0, (num_digits * 10) - 1);
-		return distribution(_engine);
-	}
-}
+#include <format>
 
 namespace hz
 {
@@ -27,7 +16,8 @@ namespace hz
 
 	std::string WhileStatement::string() const
 	{
-		return std::format("while statement ({}) \n[\n{}\n]\n", condition->string(), body->string());
+		return std::format("while statement ({}) \n[\n{}\n]\n", 
+			condition->string(), body->string());
 	}
 
 	WhileStatement* WhileStatement::copy() const
@@ -41,7 +31,7 @@ namespace hz
 		auto condition_allocation = allocator->allocate_static(DC, true);
 
 		// 3 digits of randomness for now
-		const auto loop_uuid = ::generate(3);
+		const auto loop_uuid = hz::generate(3);
 
 		const auto start_label = std::format("start_while_{:02d}", loop_uuid);
 		const auto end_label = std::format("end_while_{:02d}", loop_uuid);
@@ -61,5 +51,30 @@ namespace hz
 		generator->band(condition_allocation->reg, temp_allocation->reg);
 		
 		generator->brez(start_label, condition_allocation->reg);
+	}
+
+	Statement* WhileStatement::optimize()
+	{
+		auto condition_optimized = AS_EXPRESSION(condition->optimize());
+		auto body_optimized = AS_STATEMENT(body->optimize());
+
+		if (condition_optimized == nullptr &&
+			body_optimized == nullptr)
+		{
+			return nullptr;
+		}
+
+		if (condition_optimized == nullptr)
+		{
+			condition_optimized = condition;
+		}
+
+		if (body_optimized == nullptr)
+		{
+			body_optimized = body;
+		}
+
+		return new WhileStatement{ condition_optimized, body_optimized };
+
 	}
 }

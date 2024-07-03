@@ -21,6 +21,7 @@ namespace hz
 			RETURN,
 			INLINEASM,
 			WHILE,
+			FOR,
 			IF,
 		};
 

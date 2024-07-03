@@ -6,6 +6,9 @@
 #include "CompoundStatement.h"
 #include "ReturnStatement.h"
 #include "InlineAsmStatement.h"
+#include "WhileStatement.h"
+#include "ForStatement.h"
+#include "IfStatement.h"
 
 #include "Utility.h"
 #include "Log.h"
@@ -100,6 +103,58 @@ namespace hz
 
 		//TODO: massage AsmStatement to use nodes but assert that they are indeed commands!
 		return new InlineAsmStatement{ std::move(commands), assembler_parser };
+	}
+
+	Statement* CompilerParser::parse_while_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::WHILE);
+		DISCARD consume(TokenType::LPAREN);
+		auto condition = parse_expression();
+		DISCARD consume(TokenType::RPAREN);
+
+		auto body = parse_statement(enclosing_function);
+
+		return new WhileStatement{ condition, body };
+	}
+
+	Statement* CompilerParser::parse_for_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::FOR);
+		DISCARD consume(TokenType::LPAREN);
+		auto initialization = parse_variabledeclaration_statement(enclosing_function);
+		auto condition = parse_expression();
+		DISCARD consume(TokenType::SEMICOLON);
+		auto expression = parse_expression();
+		DISCARD consume(TokenType::RPAREN);
+
+		auto body = parse_statement(enclosing_function);
+
+		return new ForStatement{ initialization, condition, expression, body };
+	}
+
+	Statement* CompilerParser::parse_if_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::IF);
+		DISCARD consume(TokenType::LPAREN);
+		auto condition = parse_expression();
+		DISCARD consume(TokenType::RPAREN);
+
+		auto if_body = parse_statement(enclosing_function);
+		Statement* else_body = nullptr;
+
+		if (peek().type == TokenType::ELSE)
+		{
+			DISCARD consume(TokenType::ELSE);
+			else_body = parse_statement(enclosing_function);
+		}
+		
+		return new IfStatement{ condition, if_body, else_body };
+	}
+
+	Statement* CompilerParser::parse_expression_statement(std::string enclosing_function)
+	{
+		auto expression = parse_expression();
+		DISCARD consume(TokenType::SEMICOLON);
 	}
 
 	Expression* CompilerParser::parse_argument()
