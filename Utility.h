@@ -18,7 +18,7 @@ namespace hz
 	std::array<word, 3> extract(std::uint32_t bytes);
 
 	inline static std::random_device _device;
-	inline static std::mt19937 _engine(_device);
+	inline static std::mt19937 _engine(_device());
 
 	int generate(int = 3);
 }

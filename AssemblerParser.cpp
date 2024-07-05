@@ -295,10 +295,10 @@ namespace hz
 
 				if (operand1->etype() == Expression::Type::IDENTIFIER)
 				{
-					return new InstructionCommand{ BREZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ BRNZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ BREZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ BRNZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			default:

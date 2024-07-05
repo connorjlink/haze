@@ -22,7 +22,7 @@ namespace hz
 	public:   
 		virtual Linker::Type ltype() const final override;
 		virtual bool optimize() final override;
-		virtual std::vector<std::uint8_t> link(std::uint16_t) final override;
+		virtual std::vector<InstructionCommand*> link(std::uint16_t) final override;
 	};
 }
 

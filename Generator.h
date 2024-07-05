@@ -47,7 +47,7 @@ namespace hz
 		void make_bool(Register);
 
 	public:
-		void raw(InstructionCommand*);
+		void make_raw(InstructionCommand*);
 
 	public:
 		std::uint16_t write_pointer() const;

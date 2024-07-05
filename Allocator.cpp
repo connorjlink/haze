@@ -34,7 +34,7 @@ namespace hz
 		}
 
 		auto new_reg = static_cast<Register>((exclude + 1) % R3);
-		generator->push(new_reg);
+		generator->make_push(new_reg);
 		return new StaticAllocation{ new_reg, true };
 	}
 

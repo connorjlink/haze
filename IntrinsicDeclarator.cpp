@@ -19,7 +19,7 @@ namespace hz
 		return new IntrinsicDeclarator{ *this };
 	}
 
-	void IntrinsicDeclarator::generate()
+	void IntrinsicDeclarator::generate(Allocation*)
 	{
 		// TODO: nothing to do here??
 	}

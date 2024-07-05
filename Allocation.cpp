@@ -22,7 +22,7 @@ namespace hz
 	{
 		if (was_forced)
 		{
-			generator->pull(reg);
+			generator->make_pull(reg);
 			return;
 		}
 
@@ -51,15 +51,15 @@ namespace hz
 
 	void StaticAllocation::write(std::uint8_t value)
 	{
-		generator->copy(reg, value);
+		generator->make_copy(reg, value);
 	}
 
 	void DynamicAllocation::write(std::uint8_t value)
 	{
 		auto do_write = [&](auto reg)
 		{
-			generator->copy(reg, value);
-			generator->save(address, reg);
+			generator->make_copy(reg, value);
+			generator->make_save(address, reg);
 		};
 
 		auto reg = allocator->find_register();
@@ -71,9 +71,9 @@ namespace hz
 
 		else
 		{
-			generator->push(R3);
+			generator->make_push(R3);
 			do_write(R3);
-			generator->pull(R3);
+			generator->make_pull(R3);
 		}
 	}
 
@@ -82,8 +82,8 @@ namespace hz
 	{
 		switch (allocation->atype())
 		{
-			case Type::STATIC: generator->move(reg, AS_STATIC_ALLOCATION(allocation)->reg); break;
-			case Type::DYNAMIC: generator->load(reg, AS_DYNAMIC_ALLOCATION(allocation)->address); break;
+			case Type::STATIC: generator->make_move(reg, AS_STATIC_ALLOCATION(allocation)->reg); break;
+			case Type::DYNAMIC: generator->make_load(reg, AS_DYNAMIC_ALLOCATION(allocation)->address); break;
 		}
 	}
 
@@ -91,14 +91,14 @@ namespace hz
 	{
 		switch (allocation->atype())
 		{
-			case Type::STATIC: generator->save(address, AS_STATIC_ALLOCATION(allocation)->reg); break;
+			case Type::STATIC: generator->make_save(address, AS_STATIC_ALLOCATION(allocation)->reg); break;
 
 			case Type::DYNAMIC: 
 			{
 				auto do_copy = [&](auto reg)
 				{
-					generator->load(reg, AS_DYNAMIC_ALLOCATION(allocation)->address);
-					generator->save(address, reg);
+					generator->make_load(reg, AS_DYNAMIC_ALLOCATION(allocation)->address);
+					generator->make_save(address, reg);
 				};
 
 				auto reg = allocator->find_register();
@@ -110,9 +110,9 @@ namespace hz
 
 				else
 				{
-					generator->push(R3);
+					generator->make_push(R3);
 					do_copy(R3);
-					generator->pull(R3);
+					generator->make_pull(R3);
 				}
 			} break;
 		}

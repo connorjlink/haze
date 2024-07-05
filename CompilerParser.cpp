@@ -9,6 +9,7 @@
 #include "WhileStatement.h"
 #include "ForStatement.h"
 #include "IfStatement.h"
+#include "ExpressionStatement.h"
 
 #include "Utility.h"
 #include "Log.h"
@@ -155,6 +156,8 @@ namespace hz
 	{
 		auto expression = parse_expression();
 		DISCARD consume(TokenType::SEMICOLON);
+
+		return new ExpressionStatement{ expression };
 	}
 
 	Expression* CompilerParser::parse_argument()

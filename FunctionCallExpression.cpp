@@ -42,15 +42,15 @@ namespace hz
             for (auto argument : arguments)
             {
                 argument->generate(temp.allocation);
-                generator->push(temp.allocation->read());
+                generator->make_push(temp.allocation->read());
             }
         }
 
         //Placeholder call address before we hot-patch in the correct target after linking
-		generator->call(name);
+		generator->make_call(name);
 
         //return value comes off stack
-        generator->pull(allocation->read());
+        generator->make_pull(allocation->read());
     }
 
     Expression* FunctionCallExpression::optimize()

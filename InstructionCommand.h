@@ -62,7 +62,7 @@ namespace hz
         std::string branch_target;
 
     public:
-        std::vector<std::uint8_t> embedded_object_code;
+        std::vector<InstructionCommand*> embedded_object_code;
         std::uint16_t approximate_embedded_size;
 
     public:

@@ -118,9 +118,9 @@ namespace hz
 				register_file[operand1] = ram[STACK_TOP - stack_pointer];
 			} break;
 
-			case BREZ:
+			case BRNZ:
 			{
-				//brez mem, reg
+				//brnz mem, reg
 				if (register_file[operand2] == 0)
 				{
 					instruction_pointer = static_cast<decltype(instruction_pointer)>(memory);

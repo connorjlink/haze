@@ -45,12 +45,8 @@ namespace hz
 		// unfortunately our processor's limitation also mean we need to force this mess, too :(
 		auto temp_allocation = allocator->allocate_static(condition_allocation->reg, true);
 
-		// negate our boolean expression since we only have `brez`
-		generator->bxor(condition_allocation->reg, condition_allocation->reg);
-		generator->copy(temp_allocation->reg, 1);
-		generator->band(condition_allocation->reg, temp_allocation->reg);
-		
-		generator->brez(start_label, condition_allocation->reg);
+		// TODO: finish while statement codegen here!
+		generator->make_brnz(start_label, condition_allocation->reg);
 	}
 
 	Statement* WhileStatement::optimize()

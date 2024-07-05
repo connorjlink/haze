@@ -12,34 +12,34 @@ namespace hz
 
 		const auto opcode = instruction.opcode;
 
-		const auto op1 = unmap(instruction.op1);
-		const auto op2 = unmap(instruction.op2);
+		const auto dst = unmap(instruction.dst);
+		const auto src = unmap(instruction.src);
 
 		const auto imm = instruction.imm;
 		const auto mem = instruction.mem;
 
-		if (opcode == MOVE && op1 == op2)
+		if (opcode == MOVE && dst == src)
 		{
 			return std::format("noop           ");
 		}
 
 		switch (opcode)
 		{
-			case MOVE: return std::format("move {}, {}    ", op1, op2);
-			case LOAD: return std::format("load {}, &${:04X}", op1, mem);
-			case COPY: return std::format("copy {}, #${:02X}  ", op1, imm);
-			case SAVE: return std::format("save &${:04X}, {}", mem, op2);
-			case IADD: return std::format("iadd {}, {}    ", op1, op2);
-			case ISUB: return std::format("isub {}, {}    ", op1, op2);
-			case BAND: return std::format("band {}, {}    ", op1, op2);
-			case BIOR: return std::format("bior {}, {}    ", op1, op2);
-			case BXOR: return std::format("bxor {}, {}    ", op1, op2);
-			case CALL: return std::format("call ${:04X}     ", mem);
+			case MOVE: return std::format("move {}, {}    ",     dst, src);
+			case LOAD: return std::format("load {}, &${:04X}",   dst, mem);
+			case COPY: return std::format("copy {}, #${:02X}  ", dst, imm);
+			case SAVE: return std::format("save &${:04X}, {}",   mem, src);
+			case IADD: return std::format("iadd {}, {}    ",     dst, src);
+			case ISUB: return std::format("isub {}, {}    ",     dst, src);
+			case BAND: return std::format("band {}, {}    ",     dst, src);
+			case BIOR: return std::format("bior {}, {}    ",     dst, src);
+			case BXOR: return std::format("bxor {}, {}    ",     dst, src);
+			case CALL: return std::format("call ${:04X}     ",   mem);
 			case EXIT: return std::format("exit           ");
-			case PUSH: return std::format("push {}        ", op2);
-			case PULL: return std::format("pull {}        ", op1);
-			case BREZ: return std::format("brez &${:04X}, {}", mem, op2);
-			default:   return             "ILLEGAL OPCODE";
+			case PUSH: return std::format("push {}        ",     src);
+			case PULL: return std::format("pull {}        ",     dst);
+			case BRNZ: return std::format("brez &${:04X}, {}",   mem, src);
+			default:   return             "ILLEGAL OPCODE ";
 		}
 	}
 

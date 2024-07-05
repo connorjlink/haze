@@ -24,7 +24,7 @@ namespace hz
 	public:
 		virtual Linker::Type ltype() const = 0;
 		virtual bool optimize() = 0;
-		virtual std::vector<std::uint8_t> link(std::uint16_t) = 0;
+		virtual std::vector<InstructionCommand*> link(std::uint16_t) = 0;
 	};
 }
 

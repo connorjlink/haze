@@ -22,7 +22,7 @@ namespace hz
 		virtual Declarator::Type dtype() const final override;
 		virtual std::string string() const final override;
 		virtual IntrinsicDeclarator* copy() const final override;
-		virtual void generator(Allocation*) final override;
+		virtual void generate(Allocation*) final override;
 		virtual Declarator* optimize() final override;
 	};
 }

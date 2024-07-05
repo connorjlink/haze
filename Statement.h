@@ -23,6 +23,7 @@ namespace hz
 			WHILE,
 			FOR,
 			IF,
+			EXPRESSION,
 		};
 
 	public:

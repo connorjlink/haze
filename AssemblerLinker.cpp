@@ -19,9 +19,9 @@ namespace hz
 		return false;
 	}
 
-	std::vector<std::uint8_t> AssemblerLinker::link(std::uint16_t base_pointer)
+	std::vector<InstructionCommand*> AssemblerLinker::link(std::uint16_t base_pointer)
 	{
-		std::vector<std::uint8_t> executable(DWORD_MAX);
+		std::vector<InstructionCommand*> executable(DWORD_MAX);
 
 		auto address_tracker = 0;
 
@@ -68,7 +68,7 @@ namespace hz
 					if (!instruction_command->marked_for_deletion)
 					{
 						if (instruction_command->opcode == CALL ||
-							instruction_command->opcode == BREZ)
+							instruction_command->opcode == BRNZ)
 						{
 							auto label_symbol = AS_LABEL_SYMBOL(assembler_parser->reference_symbol(Symbol::Type::LABEL, instruction_command->branch_target));
 

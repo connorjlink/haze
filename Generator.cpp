@@ -26,119 +26,119 @@ namespace hz
 	}
 
 #define ENCODE(x) linkables[current_function].object_code.emplace_back(x)
-	void Generator::move(Register destination, Register source)
+	void Generator::make_move(Register destination, Register source)
 	{
 		//move destination, source
 		auto instruction = new InstructionCommand{ MOVE, destination, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::load(Register destination, std::uint16_t address)
+	void Generator::make_load(Register destination, std::uint16_t address)
 	{
 		//load destination, &address
 		auto instruction = new InstructionCommand{ LOAD, destination, DC, 0, address };
 		ENCODE(instruction);
 	}
 
-	void Generator::copy(Register destination, std::uint8_t immediate)
+	void Generator::make_copy(Register destination, std::uint8_t immediate)
 	{
 		//copy destination, #immediate
 		auto instruction = new InstructionCommand{ COPY, destination, DC, immediate, 0 };
 		ENCODE(instruction);
 	}
 
-	void Generator::save(std::uint16_t address, Register source)
+	void Generator::make_save(std::uint16_t address, Register source)
 	{
 		//save &address, source
 		auto instruction = new InstructionCommand{ SAVE, DC, source, 0, address };
 		ENCODE(instruction);
 	}
 
-	void Generator::iadd(Register destination, Register source)
+	void Generator::make_iadd(Register destination, Register source)
 	{
 		//iadd destination, source
 		auto instruction = new InstructionCommand{ IADD, destination, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::isub(Register destination, Register source)
+	void Generator::make_isub(Register destination, Register source)
 	{
 		//isub destination, source
 		auto instruction = new InstructionCommand{ ISUB, destination, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::band(Register destination, Register source)
+	void Generator::make_band(Register destination, Register source)
 	{
 		//band destination, source
 		auto instruction = new InstructionCommand{ BAND, destination, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::bior(Register destination, Register source)
+	void Generator::make_bior(Register destination, Register source)
 	{
 		//bior destination, source
 		auto instruction = new InstructionCommand{ BIOR, destination, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::bxor(Register destination, Register source)
+	void Generator::make_bxor(Register destination, Register source)
 	{
 		//bxor destination, source
 		auto instruction = new InstructionCommand{ BXOR, destination, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::call(std::string name)
+	void Generator::make_call(std::string name)
 	{
 		//call label
 		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, 0xCCCC, name };
 		ENCODE(instruction);
 	}
 
-	void Generator::call(std::uint16_t address)
+	void Generator::make_call(std::uint16_t address)
 	{
 		//call &address
 		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, address };
 		ENCODE(instruction);
 	}
 
-	void Generator::exit()
+	void Generator::make_exit()
 	{
 		//exit
 		auto instruction = new InstructionCommand{ EXIT, DC, DC };
 		ENCODE(instruction);
 	}
 
-	void Generator::push(Register source)
+	void Generator::make_push(Register source)
 	{
 		//push source
 		auto instruction = new InstructionCommand{ PUSH, DC, source };
 		ENCODE(instruction);
 	}
 
-	void Generator::pull(Register destination)
+	void Generator::make_pull(Register destination)
 	{
 		//pull destination
 		auto instruction = new InstructionCommand{ PULL, destination, DC };
 		ENCODE(instruction);
 	}
 
-	void Generator::brez(std::string name, Register source)
+	void Generator::make_brnz(std::string name, Register source)
 	{
 		// brez label, source
-		auto instruction = new InstructionCommand{ BREZ, DC, DC, 0, 0xCCCC, name };
+		auto instruction = new InstructionCommand{ BRNZ, DC, DC, 0, 0xCCCC, name };
 		ENCODE(instruction);
 	}
 
-	void Generator::brez(std::uint16_t address, Register source)
+	void Generator::make_brnz(std::uint16_t address, Register source)
 	{
 		//brez &address, source
-		auto instruction = new InstructionCommand{ BREZ, DC, source, 0, address };
+		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, address };
 		ENCODE(instruction);
 	}
 
-	void Generator::raw(InstructionCommand* instruction)
+	void Generator::make_raw(InstructionCommand* instruction)
 	{
 		ENCODE(instruction);
 	}

@@ -29,7 +29,7 @@ namespace hz
 	{
 		generator->begin_function(name);
 		body->generate();
-		generator->exit();
+		generator->make_exit();
 	}
 
 

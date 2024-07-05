@@ -3,6 +3,7 @@
 #include "InstructionCommand.h"
 
 #include "Utility.h"
+#include "Log.h"
 
 namespace hz
 {
@@ -31,6 +32,11 @@ namespace hz
 		}
 
 		return commands;
+	}
+
+	static void internal_linker_error()
+	{
+		Log::error("Internal linker error: unrecognized command type");
 	}
 
 	static std::size_t _global_pass = 0;
@@ -64,36 +70,50 @@ namespace hz
 
 						for (auto j = 0; j < instructions.size(); j++)
 						{
-							auto o0 = instructions[j + 0];
+							auto c0 = instructions[j + 0];
+
+							if (c0->ctype() != Command::Type::INSTRUCTION)
+							{
+								internal_linker_error();
+							}
+
+							auto i0 = AS_INSTRUCTION_COMMAND(c0);
 
 							if (j + 1 < instructions.size())
 							{
-								auto o1 = instructions[j + 1];
+								auto c1 = instructions[j + 1];
 
-								if ((o0->opcode == PUSH && o0->op2 == r &&  //push r
-									 o1->opcode == PULL && o1->op1 == r) || //pull r
+								if (c1->ctype() != Command::Type::INSTRUCTION)
+								{
+									internal_linker_error();
+								}
 
-									(o0->opcode == PULL && o0->op1 == r &&  //pull r
-									 o1->opcode == PUSH && o1->op2 == r))   //push r
+								auto i1 = AS_INSTRUCTION_COMMAND(c1);
+
+								if ((i0->opcode == PUSH && i0->src == r &&  //push r
+									 i1->opcode == PULL && i1->dst == r) || //pull r
+
+									(i0->opcode == PULL && i0->dst == r &&  //pull r
+									 i1->opcode == PUSH && i1->src == r))   //push r
 								{
 									//These instructions are entirely redundant
-									o0->marked_for_deletion = true;
-									o1->marked_for_deletion = true;
+									i0->marked_for_deletion = true;
+									i1->marked_for_deletion = true;
 									_global_pass++;
 									return true;
 								}
 
-								else if ((o0->opcode == SAVE && o0->op2 == r &&  //save &x, r
-										  o1->opcode == LOAD && o1->op1 == r) || //load r, &x
+								else if ((i0->opcode == SAVE && i0->src == r &&  //save &x, r
+										  i1->opcode == LOAD && i1->dst == r) || //load r, &x
 
-										 (o0->opcode == LOAD && o0->op1 == r &&  //load r, &x
-										  o1->opcode == SAVE && o1->op2 == r))   //save &x, r
+										 (i0->opcode == LOAD && i0->dst == r &&  //load r, &x
+										  i1->opcode == SAVE && i1->src == r))   //save &x, r
 								{
-									if (o0->mem == o1->mem)
+									if (i0->mem == i1->mem)
 									{
 										//These instructions are entirely redundant
-										o0->marked_for_deletion = true;
-										o1->marked_for_deletion = true;
+										i0->marked_for_deletion = true;
+										i1->marked_for_deletion = true;
 										_global_pass++;
 										return true;
 									}
@@ -119,9 +139,9 @@ namespace hz
 		return false;
 	}
 
-	std::vector<std::uint8_t> CompilerLinker::link(std::uint16_t base_pointer)
+	std::vector<InstructionCommand*> CompilerLinker::link(std::uint16_t base_pointer)
 	{
-		std::vector<std::uint8_t> executable(HALF_DWORD_MAX);
+		std::vector<InstructionCommand*> executable(HALF_DWORD_MAX);
 
 		auto address_tracker = 0;
 
@@ -136,8 +156,15 @@ namespace hz
 
 				offset = address_tracker;
 
-				for (auto instruction : function)
+				for (auto command : function)
 				{
+					if (command->ctype() != Command::Type::INSTRUCTION)
+					{
+						internal_linker_error();
+					}
+
+					auto instruction = AS_INSTRUCTION_COMMAND(command);
+
 					if (!instruction->marked_for_deletion)
 					{
 						address_tracker += 3;
@@ -150,10 +177,17 @@ namespace hz
 		{
 			for (auto& linkable : linkables)
 			{
-				for (auto& instruction : linkable.object_code)
+				for (auto command : linkable.object_code)
 				{
+					if (command->ctype() != Command::Type::INSTRUCTION)
+					{
+						internal_linker_error();
+					}
+
+					auto instruction = AS_INSTRUCTION_COMMAND(command);
+
 					if (linkable.symbol->name != symbol->name &&
-						(instruction->opcode == CALL || instruction->opcode == BREZ) &&
+					   (instruction->opcode == CALL || instruction->opcode == BRNZ) &&
 						instruction->branch_target == symbol->name)
 					{
 						const auto branch_target = base_pointer + offset;
@@ -168,7 +202,14 @@ namespace hz
 		{
 			for (auto i = 0; i < function.size(); i++)
 			{
-				const auto& instruction = function[i];
+				const auto& command = function[i];
+
+				if (command->ctype() != Command::Type::INSTRUCTION)
+				{
+					internal_linker_error();
+				}
+
+				auto instruction = AS_INSTRUCTION_COMMAND(command);
 
 				if (!instruction->marked_for_deletion)
 				{

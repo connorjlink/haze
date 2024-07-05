@@ -128,6 +128,15 @@
     <ClCompile Include="WhileStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HazeEmitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Emitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpressionStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -263,6 +272,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Emitter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HazeEmitter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpressionStatement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
