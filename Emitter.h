@@ -14,30 +14,35 @@ namespace hz
 		enum class Type
 		{
 			HAZE,  // NOTE: current implementation
-			LIVE,  // NOTE: interpreter for geo
 			X86,   // NOTE: near future
 			ARM64, // NOTE: far future
 		};
 
-	private:
+	protected:
 		std::vector<InstructionCommand*> image;
 
+	private:
+		virtual std::vector<std::uint8_t> emit_move(Register, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) = 0;
+		virtual std::vector<std::uint8_t> emit_copy(Register, std::uint8_t) = 0;
+		virtual std::vector<std::uint8_t> emit_save(std::uint16_t, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_iadd(Register, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_isub(Register, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_band(Register, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_bior(Register, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_bxor(Register, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_call(std::uint16_t) = 0;
+		virtual std::vector<std::uint8_t> emit_exit() = 0;
+		virtual std::vector<std::uint8_t> emit_push(Register) = 0;
+		virtual std::vector<std::uint8_t> emit_pull(Register) = 0;
+		virtual std::vector<std::uint8_t> emit_brnz(std::uint16_t, Register) = 0;
+		virtual std::vector<std::uint8_t> emit_bool(Register) = 0;
+
 	public:
-		virtual void emit_move(Register, Register) = 0;
-		virtual void emit_load(Register, std::uint16_t) = 0;
-		virtual void emit_copy(Register, std::uint8_t) = 0;
-		virtual void emit_save(std::uint16_t, Register) = 0;
-		virtual void emit_iadd(Register, Register) = 0;
-		virtual void emit_isub(Register, Register) = 0;
-		virtual void emit_band(Register, Register) = 0;
-		virtual void emit_bior(Register, Register) = 0;
-		virtual void emit_bxor(Register, Register) = 0;
-		virtual void emit_call(std::uint16_t) = 0;
-		virtual void emit_exit() = 0;
-		virtual void emit_push(Register) = 0;
-		virtual void emit_pull(Register) = 0;
-		virtual void emit_brnz(std::uint16_t, Register) = 0;
-		virtual void emit_bool(Register) = 0;
+		virtual Emitter::Type etype() const = 0;
+
+	public:
+		virtual std::vector<std::uint8_t> emit() = 0;
 	};
 }
 

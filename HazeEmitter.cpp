@@ -1,0 +1,127 @@
+#include "HazeEmitter.h"
+
+namespace
+{
+	constexpr std::vector<std::uint8_t> haze_instruction(hz::Opcode opcode, hz::Register destination, hz::Register source, std::uint8_t imm, std::uint16_t mem)
+	{
+		std::vector<std::uint8_t> result;
+
+		result.emplace_back((opcode << 4) | (destination << 2) | (source << 0));
+		result.emplace_back(imm | (mem >> 8));
+		result.emplace_back(mem & 0xFF);
+
+		return result;
+	}
+}
+
+namespace hz
+{
+	Emitter::Type HazeEmitter::etype() const
+	{
+		return Emitter::Type::HAZE;
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_move(Register destination, Register source)
+	{
+		return haze_instruction(MOVE, destination, source, 0x00, 0x000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_load(Register destination, std::uint16_t address)
+	{
+		return haze_instruction(LOAD, destination, DC, 0x00, address);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_copy(Register destination, std::uint8_t immediate)
+	{
+		return haze_instruction(COPY, destination, DC, immediate, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_save(std::uint16_t address, Register source)
+	{
+		return haze_instruction(SAVE, DC, source, 0x00, address);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_iadd(Register destination, Register source)
+	{
+		return haze_instruction(IADD, destination, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_isub(Register destination, Register source)
+	{
+		return haze_instruction(ISUB, destination, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_band(Register destination, Register source)
+	{
+		return haze_instruction(BAND, destination, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_bior(Register destination, Register source)
+	{
+		return haze_instruction(BIOR, destination, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_bxor(Register destination, Register source)
+	{
+		return haze_instruction(BXOR, destination, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_call(std::uint16_t address)
+	{
+		return haze_instruction(CALL, DC, DC, 0x00, address);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_exit()
+	{
+		return haze_instruction(EXIT, DC, DC, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_push(Register source)
+	{
+		return haze_instruction(PUSH, DC, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_pull(Register destination)
+	{
+		return haze_instruction(PULL, destination, DC, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_brnz(std::uint16_t address, Register source)
+	{
+		return haze_instruction(BRNZ, DC, source, 0x00, address);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit_bool(Register source)
+	{
+		return haze_instruction(BOOL, DC, source, 0x00, 0x0000);
+	}
+
+	std::vector<std::uint8_t> HazeEmitter::emit()
+	{
+		std::vector<std::uint8_t> result;
+
+		for (auto instruction_command : image)
+		{
+			switch (instruction_command->opcode)
+			{
+			case MOVE: result.append_range(emit_move(instruction_command->dst, instruction_command->src)); break;
+			case LOAD: result.append_range(emit_load(instruction_command->dst, instruction_command->mem)); break;
+			case COPY: result.append_range(emit_copy(instruction_command->dst, instruction_command->imm)); break;
+			case SAVE: result.append_range(emit_save(instruction_command->mem, instruction_command->src)); break;
+			case IADD: result.append_range(emit_iadd(instruction_command->dst, instruction_command->src)); break;
+			case ISUB: result.append_range(emit_isub(instruction_command->dst, instruction_command->src)); break;
+			case BAND: result.append_range(emit_band(instruction_command->dst, instruction_command->src)); break;
+			case BIOR: result.append_range(emit_bior(instruction_command->dst, instruction_command->src)); break;
+			case BXOR: result.append_range(emit_bxor(instruction_command->dst, instruction_command->src)); break;
+			case CALL: result.append_range(emit_call(instruction_command->mem)); break;
+			case EXIT: result.append_range(emit_exit()); break;
+			case PUSH: result.append_range(emit_push(instruction_command->src)); break;
+			case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
+			case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
+			case BOOL: result.append_range(emit_bool(instruction_command->src));
+			}
+		}
+
+		return result;
+	}
+}

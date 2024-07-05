@@ -11,14 +11,14 @@ namespace hz
 	{
 		mem = bytes & 0xFFFF;
 		imm = (bytes & 0xFF00) >> 8;
-		op2 = static_cast<Register>((bytes & 0x030000) >> 16);
-		op1 = static_cast<Register>((bytes & 0x0C0000) >> 18);
-		opcode = static_cast<Opcode>((bytes & 0xF00000) >> 20);
+		src = static_cast<Register>((bytes & (0x03 << 16)) >> 16);
+		dst = static_cast<Register>((bytes & (0x0C << 16)) >> 18);
+		opcode = static_cast<Opcode>((bytes & (0xF0 << 16)) >> 20);
 		marked_for_deletion = false;
 	}
 
 	InstructionCommand::InstructionCommand(Opcode opcode, Register op1, Register op2, std::uint8_t imm, std::uint16_t mem, std::string branch_target)
-		: opcode{ opcode }, op1{ op1 }, op2{ op2 }, imm{ imm }, mem{ mem}, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
+		: opcode{ opcode }, dst{ dst }, src{ src }, imm{ imm }, mem{ mem}, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 		embedded_object_code = {};
 		approximate_embedded_size = 0;
@@ -31,8 +31,8 @@ namespace hz
 
 		instruction |= mem;
 		instruction |= imm << 8;
-		instruction |= (op2 & 0b11) << 16;
-		instruction |= (op1 & 0b11) << 18;
+		instruction |= (src & 0b11) << 16;
+		instruction |= (dst & 0b11) << 18;
 		instruction |= opcode << 20;
 
 		return instruction;
@@ -60,20 +60,21 @@ namespace hz
 	{
 		switch (opcode)
 		{
-			case MOVE: generator->move(op1, op2); break;
-			case LOAD: generator->load(op1, mem); break;
-			case COPY: generator->copy(op1, imm); break;
-			case SAVE: generator->save(mem, op2); break;
-			case IADD: generator->iadd(op1, op2); break;
-			case ISUB: generator->isub(op1, op2); break;
-			case BAND: generator->band(op1, op2); break;
-			case BIOR: generator->bior(op1, op2); break;
-			case BXOR: generator->bxor(op1, op2); break;
-			case CALL: generator->call(mem);      break;
-			case EXIT: generator->exit();         break;
-			case PUSH: generator->push(op2);      break;
-			case PULL: generator->pull(op1);      break;
-			case BREZ: generator->brez(mem, op2); break;
+			case MOVE: generator->make_move(dst, src); break;
+			case LOAD: generator->make_load(dst, mem); break;
+			case COPY: generator->make_copy(dst, imm); break;
+			case SAVE: generator->make_save(mem, src); break;
+			case IADD: generator->make_iadd(dst, src); break;
+			case ISUB: generator->make_isub(dst, src); break;
+			case BAND: generator->make_band(dst, src); break;
+			case BIOR: generator->make_bior(dst, src); break;
+			case BXOR: generator->make_bxor(dst, src); break;
+			case CALL: generator->make_call(mem);      break;
+			case EXIT: generator->make_exit();         break;
+			case PUSH: generator->make_push(src);      break;
+			case PULL: generator->make_pull(dst);      break;
+			case BRNZ: generator->make_brnz(mem, src); break;
+			case BOOL: generator->make_bool(src);      break;
 		}
 	}
 

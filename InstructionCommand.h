@@ -23,7 +23,9 @@ namespace hz
         EXIT = 0xA,
         PUSH = 0xB,
         PULL = 0xC,
-        BREZ = 0xD,
+        BRNZ = 0xD,
+        BOOL = 0xE,
+        //0xF reserved for future ISA extensions
     };
 
     enum Register
@@ -53,7 +55,7 @@ namespace hz
     {
     public:
         Opcode opcode;
-        Register op1, op2;
+        Register dst, src;
         std::uint8_t imm;
         std::uint16_t mem;
         bool marked_for_deletion;
