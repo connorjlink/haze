@@ -23,6 +23,7 @@ namespace hz
 
 		LPAREN, RPAREN,
 		LBRACE, RBRACE,
+		LBRACKET, RBRACKET,
 
 		PLUS, MINUS, STAR,
 
@@ -60,6 +61,8 @@ namespace hz
 		{ ")", TokenType::RPAREN },
 		{ "{", TokenType::LBRACE },
 		{ "}", TokenType::RBRACE },
+		{ "[", TokenType::LBRACKET },
+		{ "]", TokenType::RBRACKET },
 		{ "+", TokenType::PLUS },
 		{ "-", TokenType::MINUS },
 		{ "*", TokenType::STAR },

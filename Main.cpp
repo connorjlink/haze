@@ -9,6 +9,8 @@
 #include "AssemblerLinker.h"
 #include "Simulator.h"
 #include "Log.h"
+#include "Emitter.h"
+#include "HazeEmitter.h"
 
 #include <cstdlib>
 #include <string>
@@ -61,7 +63,6 @@ int main(int argc, char** argv)
 	auto lexer = new Lexer{ std::move(processed) };
 	auto tokens = lexer->lex();
 
-	std::vector<std::uint8_t> executable;
 	Linker* linker = nullptr;
 
 	if (extension == ".hz")
@@ -93,7 +94,11 @@ int main(int argc, char** argv)
 	}
 
 
-	executable = linker->link(HALF_DWORD_MAX);
+	auto image = linker->link(HALF_DWORD_MAX);
+
+	auto emitter = new HazeEmitter{ std::move(image) };
+
+	auto executable = emitter->emit();
 
 
 	auto end_time = std::chrono::steady_clock::now();

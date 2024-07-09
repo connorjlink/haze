@@ -13,7 +13,7 @@ namespace hz
 		
 
 	private:
-		IntrinsicDeclarator* parse_intrinsic();
+		IntrinsicDeclarator* parse_intrinsic_declarator();
 
 	private:
 		Node* parse_declarator();

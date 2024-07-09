@@ -7,6 +7,15 @@ namespace hz
 {
 	class HazeEmitter : public Emitter
 	{
+	public:
+		using Emitter::Emitter;
+
+	public:
+		HazeEmitter(std::vector<InstructionCommand*>&& image)
+			: Emitter{ std::move(image) }
+		{
+		}
+
 	private:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) final override;
 		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) final override;

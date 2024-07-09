@@ -21,6 +21,12 @@ namespace hz
 	protected:
 		std::vector<InstructionCommand*> image;
 
+	public:
+		Emitter(std::vector<InstructionCommand*>&& image)
+			: image{ std::move(image) }
+		{
+		}
+
 	private:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) = 0;
 		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) = 0;
