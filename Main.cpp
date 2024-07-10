@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 	}
 
 
-	auto image = linker->link(HALF_DWORD_MAX);
+ 	auto image = linker->link(HALF_DWORD_MAX);
 
 	auto emitter = new HazeEmitter{ std::move(image) };
 

@@ -1,4 +1,5 @@
 #include "HazeEmitter.h"
+#include "Log.h"
 
 namespace
 {
@@ -6,9 +7,15 @@ namespace
 	{
 		std::vector<std::uint8_t> result;
 
-		result.emplace_back((opcode << 4) | (destination << 2) | (source << 0));
-		result.emplace_back(imm | (mem >> 8));
-		result.emplace_back(mem & 0xFF);
+		const auto o = opcode & 0xF;
+		const auto d = destination & 0b11;
+		const auto s = source & 0b11;
+		const auto i = imm & 0xFF;
+		const auto m = mem & 0xFFFF;
+
+		result.emplace_back((o << 4) | (d << 2) | (s << 0));
+		result.emplace_back(i | (m >> 8));
+		result.emplace_back(m & 0xFF);
 
 		return result;
 	}
@@ -98,27 +105,30 @@ namespace hz
 
 	std::vector<std::uint8_t> HazeEmitter::emit()
 	{
-		std::vector<std::uint8_t> result;
+		std::vector<std::uint8_t> result{};
 
 		for (auto instruction_command : image)
 		{
-			switch (instruction_command->opcode)
+			if (instruction_command != nullptr)
 			{
-				case MOVE: result.append_range(emit_move(instruction_command->dst, instruction_command->src)); break;
-				case LOAD: result.append_range(emit_load(instruction_command->dst, instruction_command->mem)); break;
-				case COPY: result.append_range(emit_copy(instruction_command->dst, instruction_command->imm)); break;
-				case SAVE: result.append_range(emit_save(instruction_command->mem, instruction_command->src)); break;
-				case IADD: result.append_range(emit_iadd(instruction_command->dst, instruction_command->src)); break;
-				case ISUB: result.append_range(emit_isub(instruction_command->dst, instruction_command->src)); break;
-				case BAND: result.append_range(emit_band(instruction_command->dst, instruction_command->src)); break;
-				case BIOR: result.append_range(emit_bior(instruction_command->dst, instruction_command->src)); break;
-				case BXOR: result.append_range(emit_bxor(instruction_command->dst, instruction_command->src)); break;
-				case CALL: result.append_range(emit_call(instruction_command->mem)); break;
-				case EXIT: result.append_range(emit_exit()); break;
-				case PUSH: result.append_range(emit_push(instruction_command->src)); break;
-				case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
-				case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
-				case BOOL: result.append_range(emit_bool(instruction_command->src));
+				switch (instruction_command->opcode)
+				{
+					case MOVE: result.append_range(emit_move(instruction_command->dst, instruction_command->src)); break;
+					case LOAD: result.append_range(emit_load(instruction_command->dst, instruction_command->mem)); break;
+					case COPY: result.append_range(emit_copy(instruction_command->dst, instruction_command->imm)); break;
+					case SAVE: result.append_range(emit_save(instruction_command->mem, instruction_command->src)); break;
+					case IADD: result.append_range(emit_iadd(instruction_command->dst, instruction_command->src)); break;
+					case ISUB: result.append_range(emit_isub(instruction_command->dst, instruction_command->src)); break;
+					case BAND: result.append_range(emit_band(instruction_command->dst, instruction_command->src)); break;
+					case BIOR: result.append_range(emit_bior(instruction_command->dst, instruction_command->src)); break;
+					case BXOR: result.append_range(emit_bxor(instruction_command->dst, instruction_command->src)); break;
+					case CALL: result.append_range(emit_call(instruction_command->mem)); break;
+					case EXIT: result.append_range(emit_exit()); break;
+					case PUSH: result.append_range(emit_push(instruction_command->src)); break;
+					case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
+					case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
+					case BOOL: result.append_range(emit_bool(instruction_command->src));
+				}
 			}
 		}
 

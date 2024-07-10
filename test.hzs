@@ -1,6 +1,6 @@
 //main function
 
-.org &$8003
+.org &$8000
 
 main:
 	copy r0, #1

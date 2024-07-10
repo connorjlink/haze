@@ -17,7 +17,9 @@ namespace hz
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
-		linkables.emplace_back(parser->reference_symbol(Symbol::Type::FUNCTION, name), std::vector<InstructionCommand*>{}, 0);
+
+		const auto linkable = Linkable{ parser->reference_symbol(Symbol::Type::FUNCTION, name), {}, 0 };
+		linkables.emplace_back(linkable);
 	}
 
 	void Generator::label(const std::string& identifier)
@@ -138,6 +140,13 @@ namespace hz
 		ENCODE(instruction);
 	}
 
+	void Generator::make_bool(Register source)
+	{
+		//bool source
+		auto instruction = new InstructionCommand{ BOOL, DC, source };
+		ENCODE(instruction);
+	}
+
 	void Generator::make_raw(InstructionCommand* instruction)
 	{
 		ENCODE(instruction);
@@ -149,7 +158,7 @@ namespace hz
 		return static_cast<std::uint16_t>(linkables[current_function].object_code.size());
 	}
 
-	void Generator::image(std::vector<std::uint8_t>&& object_code, std::uint16_t approximate_size)
+	void Generator::image(std::vector<InstructionCommand*>&& object_code, std::uint16_t approximate_size)
 	{
 		auto dummy_command = new InstructionCommand{ 0 };
 		dummy_command->embedded_object_code = std::move(object_code);

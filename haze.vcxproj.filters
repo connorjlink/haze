@@ -294,7 +294,7 @@
     <None Include="old.hz">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="optimizations.hzs.gen">
+    <None Include="generated_optimizations.hzs">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="example.hzi">

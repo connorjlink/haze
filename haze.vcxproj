@@ -118,7 +118,7 @@
     <None Include="common.hz" />
     <None Include="example.hzi" />
     <None Include="old.hz" />
-    <None Include="optimizations.hzs.gen" />
+    <None Include="generated_optimizations.hzs" />
     <None Include="specification.md" />
     <None Include="test.hzs" />
   </ItemGroup>

@@ -53,7 +53,7 @@ namespace hz
 		std::uint16_t write_pointer() const;
 
 	public:
-		void image(std::vector<std::uint8_t>&&, std::uint16_t);
+		void image(std::vector<InstructionCommand*>&&, std::uint16_t);
 
 	public:
 		explicit Generator(std::vector<Node*>&& program)

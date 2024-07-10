@@ -37,7 +37,7 @@ namespace hz
 			{
 				case Command::Type::INSTRUCTION:
 				{
-					address_tracker += 3;
+					address_tracker++;
 				} break;
 
 				case Command::Type::DOTORG:
@@ -78,12 +78,7 @@ namespace hz
 							instruction_command->mem = branch_target;
 						}
 
-						const auto bytes = extract(instruction_command->bytes());
-						const auto base = instruction_command->offset;
-
-						executable[base + 0] = bytes[0];
-						executable[base + 1] = bytes[1];
-						executable[base + 2] = bytes[2];
+						executable[instruction_command->offset] = instruction_command;
 					}
 				} break;
 				

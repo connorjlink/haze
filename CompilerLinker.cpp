@@ -141,7 +141,7 @@ namespace hz
 
 	std::vector<InstructionCommand*> CompilerLinker::link(std::uint16_t base_pointer)
 	{
-		std::vector<InstructionCommand*> executable(HALF_DWORD_MAX);
+		std::vector<InstructionCommand*> executable{};
 
 		auto address_tracker = 0;
 
@@ -227,18 +227,13 @@ namespace hz
 							// NOTE: since we don't do any safety checks on inline assembly,
 							// we could (or maybe even likely) are overwriting compiler-generated code.
 							// Depending on our needs going forward, this might be very undesirable for debugging purposes.
-							executable[j] = instruction->embedded_object_code[j];
+							executable.emplace_back(instruction->embedded_object_code[j]);
 						}
 					}
 
 					else // (embedded_size == 0)
 					{
-						const auto bytes = extract(instruction->bytes());
-						const auto base = instruction->offset;
-
-						executable[base + 0] = bytes[0];
-						executable[base + 1] = bytes[1];
-						executable[base + 2] = bytes[2];
+						executable.emplace_back(instruction);
 					}
 				}
 			}
