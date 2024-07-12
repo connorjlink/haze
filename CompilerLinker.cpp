@@ -222,12 +222,16 @@ namespace hz
 							function[j]->offset += embedded_size;
 						}
 
-						for (auto j = 0; j < executable.size(); j++)
+						for (auto& embedded_instruction : instruction->embedded_object_code)
 						{
 							// NOTE: since we don't do any safety checks on inline assembly,
 							// we could (or maybe even likely) are overwriting compiler-generated code.
 							// Depending on our needs going forward, this might be very undesirable for debugging purposes.
-							executable.emplace_back(instruction->embedded_object_code[j]);
+
+							if (embedded_instruction != nullptr)
+							{
+								executable.emplace_back(embedded_instruction);
+							}
 						}
 					}
 

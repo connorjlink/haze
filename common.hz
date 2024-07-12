@@ -24,6 +24,4 @@ function nvr main = ()
 		exit
 		pull r1
 	}
-
-	return 1 + 2;
 }

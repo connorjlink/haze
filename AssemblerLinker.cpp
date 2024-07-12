@@ -27,6 +27,12 @@ namespace hz
 
 		commands.insert(commands.begin(), new DotOrgCommand{ base_pointer });
 
+		std::erase_if(commands, [&](auto& command)
+		{
+			return command == nullptr;
+		});
+
+
 		for (auto node : commands)
 		{
 			auto command = AS_COMMAND(node);
