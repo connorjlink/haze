@@ -1,6 +1,6 @@
 function nvr test = ()
 {
-	byte a = 5;
+	byte a = 5; 
 	byte b = 6;
 	byte c = a + b;
 }

@@ -113,6 +113,7 @@ namespace hz
 
 			else
 			{
+				//if (current != '')
 				const auto search = lexeme_map.find(std::string{ current });
 
 				if (search != std::end(lexeme_map))

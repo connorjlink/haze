@@ -46,7 +46,7 @@ namespace hz
 {
     void Preprocessor::preprocess_include()
     {
-        std::regex rx_incl(R"((\.include \"(.*)\"\s*((;.*$)?|$)))");
+        std::regex rx_incl(R"(^(\.include \"(.*)\"\s*((;.*$)?|$)))");
         std::smatch matches;
 
         while (std::regex_search(code, matches, rx_incl))
