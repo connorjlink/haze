@@ -11,6 +11,7 @@
 #include "Log.h"
 #include "Emitter.h"
 #include "HazeEmitter.h"
+#include "X86Emitter.h"
 
 #include <cstdlib>
 #include <string>
@@ -34,9 +35,11 @@ int main(int argc, char** argv)
 		Log::error("correct usage is 'haze' *.hz(s)");
 	}
 
-	const auto path = std::filesystem::path(argv[1]);
+	//const auto path = std::filesystem::path(argv[1]);
 	//const auto path = std::filesystem::path("./common.hz");
 	//const auto path = std::filesystem::path("test.hzs");
+	//const auto path = std::filesystem::path("test.hz");
+	const auto path = std::filesystem::path("sample.hzs");
 
 	const auto filepath = path.string();
 	const auto filename = path.filename().string();
@@ -96,7 +99,8 @@ int main(int argc, char** argv)
 
  	auto image = linker->link(HALF_DWORD_MAX);
 
-	auto emitter = new HazeEmitter{ std::move(image) };
+	//auto emitter = new HazeEmitter{ std::move(image) };
+	auto emitter = new X86Emitter{ std::move(image) };
 
 	auto executable = emitter->emit();
 

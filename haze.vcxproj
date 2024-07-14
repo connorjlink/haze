@@ -64,6 +64,7 @@
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
     <ClCompile Include="WhileStatement.cpp" />
+    <ClCompile Include="X86Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Allocation.h" />
@@ -113,13 +114,16 @@
     <ClInclude Include="Validator.h" />
     <ClInclude Include="VariableStatement.h" />
     <ClInclude Include="WhileStatement.h" />
+    <ClInclude Include="X86Emitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />
     <None Include="example.hzi" />
     <None Include="old.hz" />
     <None Include="generated_optimizations.hzs" />
+    <None Include="sample.hzs" />
     <None Include="specification.md" />
+    <None Include="test.hz" />
     <None Include="test.hzs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

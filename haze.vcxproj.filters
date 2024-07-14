@@ -137,6 +137,9 @@
     <ClCompile Include="ExpressionStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="X86Emitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -280,6 +283,9 @@
     <ClInclude Include="ExpressionStatement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="X86Emitter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -298,6 +304,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="example.hzi">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test.hz">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="sample.hzs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -1,17 +1,17 @@
-#ifndef HAZE_HAZEEMITTER_H
-#define HAZE_HAZEEMITTER_H
+#ifndef HAZE_x86EMITTER_H
+#define HAZE_x86EMITTER_H
 
 #include "Emitter.h"
 
 namespace hz
 {
-	class HazeEmitter : public Emitter
+	class X86Emitter : public Emitter
 	{
 	public:
 		using Emitter::Emitter;
 
 	public:
-		HazeEmitter(std::vector<InstructionCommand*>&& image)
+		X86Emitter(std::vector<InstructionCommand*>&& image)
 			: Emitter{ std::move(image) }
 		{
 		}
