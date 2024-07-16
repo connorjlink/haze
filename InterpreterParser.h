@@ -1,19 +1,20 @@
 #ifndef HAZE_INTERPRETERPARSER_H
 #define HAZE_INTERPRETERPARSER_H
 
-#include "Parser.h"
+#include "CompilerParser.h"
 
 #include "IntrinsicDeclarator.h"
 
 namespace hz
 {
-	class InterpreterParser : public Parser
+	class InterpreterParser : public CompilerParser
 	{
 	private:
 		
 
 	private:
 		IntrinsicDeclarator* parse_intrinsic_declarator();
+		FunctionDeclarator* parse_function_declarator();
 
 	private:
 		Node* parse_declarator();
@@ -23,7 +24,7 @@ namespace hz
 		virtual std::vector<Node*> parse() final override;
 
 	public:
-		using Parser::Parser;
+		using CompilerParser::CompilerParser;
 	};
 }
 

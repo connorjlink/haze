@@ -11,6 +11,7 @@ namespace hz
 		enum class Type
 		{
 			INTRINSIC,
+			FUNCTION,
 		};
 
 	public:

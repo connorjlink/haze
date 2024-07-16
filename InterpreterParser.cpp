@@ -45,6 +45,7 @@ namespace hz
 		switch (peek().type)
 		{
 			case TokenType::INTRINSIC: return parse_intrinsic_declarator();
+			case TokenType::FUNCTION: return parse_function_declarator();
 			default: Log::error("Unrecognized script declarator");
 		}
 	}

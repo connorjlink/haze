@@ -31,7 +31,7 @@ namespace hz
         std::vector<Node*> parse_functions();
 
     public:
-        virtual std::vector<Node*> parse() final override;
+        virtual std::vector<Node*> parse() override;
 
     public:
         using Parser::Parser;
