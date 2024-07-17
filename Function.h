@@ -7,6 +7,8 @@
 #include "Statement.h"
 #include "Expression.h"
 
+#define AS_FUNCTION(x) static_cast<Function*>(x)
+
 namespace hz
 {
     enum class ReturnType

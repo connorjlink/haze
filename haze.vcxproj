@@ -31,8 +31,10 @@
     <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
     <ClCompile Include="ForStatement.cpp" />
+    <ClCompile Include="FunctionDeclarator.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
     <ClCompile Include="IfStatement.cpp" />
+    <ClCompile Include="IfStatementDeclarator.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
     <ClCompile Include="CompoundStatement.cpp" />
@@ -60,6 +62,7 @@
     <ClCompile Include="ReturnStatement.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Statement.cpp" />
+    <ClCompile Include="StatementDeclarator.cpp" />
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
@@ -81,6 +84,7 @@
     <ClInclude Include="ForStatement.h" />
     <ClInclude Include="HazeEmitter.h" />
     <ClInclude Include="IfStatement.h" />
+    <ClInclude Include="IfStatementDeclarator.h" />
     <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
     <ClInclude Include="CompoundStatement.h" />
@@ -108,6 +112,7 @@
     <ClInclude Include="ReturnStatement.h" />
     <ClInclude Include="Simulator.h" />
     <ClInclude Include="Statement.h" />
+    <ClInclude Include="StatementDeclarator.h" />
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="Utility.h" />
@@ -119,6 +124,7 @@
   <ItemGroup>
     <None Include="common.hz" />
     <None Include="example.hzi" />
+    <None Include="FunctionDeclarator.h" />
     <None Include="old.hz" />
     <None Include="generated_optimizations.hzs" />
     <None Include="sample.hzs" />

@@ -3,17 +3,12 @@
 
 #include "Node.h"
 
+#include "DeclaratorType.h"
+
 namespace hz
 {
 	class Declarator : public Node
 	{
-	public:
-		enum class Type
-		{
-			INTRINSIC,
-			FUNCTION,
-		};
-
 	public:
 		virtual ~Declarator() = default;
 

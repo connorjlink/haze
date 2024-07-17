@@ -140,6 +140,15 @@
     <ClCompile Include="X86Emitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FunctionDeclarator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StatementDeclarator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IfStatementDeclarator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -286,6 +295,12 @@
     <ClInclude Include="X86Emitter.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="StatementDeclarator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IfStatementDeclarator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -311,6 +326,9 @@
     </None>
     <None Include="sample.hzs">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="FunctionDeclarator.h">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ namespace hz
 
 	std::string FunctionDeclarator::string() const
 	{
-		return std::format("function declarator ({})", function->name);
+		return std::format("function declarator ({})", function->string());
 	}
 
 	FunctionDeclarator* FunctionDeclarator::copy() const
@@ -29,13 +29,11 @@ namespace hz
 
 	Declarator* FunctionDeclarator::optimize()
 	{
-		auto function_body_optimized = AS_STATEMENT(function->body->optimize());
+		auto function_optimized = AS_FUNCTION(function->optimize());
 
-		if (function_body_optimized != nullptr)
+		if (function_optimized != nullptr)
 		{
-			auto function_copy = new Function{ *function };
-			function_copy->body = function_body_optimized;
-			return new FunctionDeclarator{ function_copy };
+			return new FunctionDeclarator{ function_optimized };
 		}
 
 		return nullptr;

@@ -4,6 +4,9 @@
 #include "CompilerParser.h"
 
 #include "IntrinsicDeclarator.h"
+#include "FunctionDeclarator.h"
+#include "StatementDeclarator.h"
+#include "ExpressionDeclarator.h"
 
 namespace hz
 {
@@ -15,6 +18,8 @@ namespace hz
 	private:
 		IntrinsicDeclarator* parse_intrinsic_declarator();
 		FunctionDeclarator* parse_function_declarator();
+		StatementDeclarator* parse_statement_declarator();
+		ExpressionDeclarator* parse_expression_declarator();l
 
 	private:
 		Node* parse_declarator();
