@@ -40,6 +40,11 @@ namespace hz
 		return new IntrinsicDeclarator{ identifier->name, intrinsic };
 	}
 
+	FunctionDeclarator* InterpreterParser::parse_function_declarator()
+	{
+
+	}
+
 	Node* InterpreterParser::parse_declarator()
 	{
 		switch (peek().type)

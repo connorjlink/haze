@@ -14,7 +14,11 @@ namespace hz
 		};
 
 	public:
-		explicit Intrinsic()
+		std::string name;
+
+	public:
+		Intrinsic(std::string&& name)
+			: name{ std::move(name) }
 		{
 		}
 
@@ -29,8 +33,8 @@ namespace hz
 		float r, g, b;
 
 	public:
-		ColorIntrinsic(float r, float g, float b)
-			: r{ r }, g{ g }, b{ b }
+		ColorIntrinsic(std::string&& name, float r, float g, float b)
+			: Intrinsic{ std::move(name) }, r { r }, g{ g }, b{ b }
 		{
 		}
 
@@ -40,6 +44,9 @@ namespace hz
 		virtual ColorIntrinsic* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Intrinsic* optimize() final override;
+
+	public:
+		using Intrinsic::Intrinsic;
 	};
 
 }

@@ -13,13 +13,10 @@ namespace hz
 	class InterpreterParser : public CompilerParser
 	{
 	private:
-		
-
-	private:
 		IntrinsicDeclarator* parse_intrinsic_declarator();
 		FunctionDeclarator* parse_function_declarator();
 		StatementDeclarator* parse_statement_declarator();
-		ExpressionDeclarator* parse_expression_declarator();l
+		ExpressionDeclarator* parse_expression_declarator();
 
 	private:
 		Node* parse_declarator();

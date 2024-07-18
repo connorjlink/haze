@@ -11,7 +11,7 @@ namespace hz
         Statement* parse_statement(std::string);
         std::vector<Statement*> parse_statements(std::string);
 
-    private:
+    protected:
         Statement* parse_null_statement(std::string);
         Statement* parse_variabledeclaration_statement(std::string);
         Statement* parse_compound_statement(std::string);
