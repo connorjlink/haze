@@ -2,8 +2,8 @@
 
 namespace hz
 {
-	Node::Type Expression::ntype() const
+	NodeType Expression::ntype() const
 	{
-		return Node::Type::EXPRESSION;
+		return NodeType::EXPRESSION;
 	}
 }

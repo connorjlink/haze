@@ -1,9 +1,11 @@
 #include "InterpreterParser.h"
 #include "Log.h"
 
+#include "ColorIntrinsic.h"
+
 namespace hz
 {
-	IntrinsicDeclarator* InterpreterParser::parse_intrinsic_declarator()
+	Intrinsic* InterpreterParser::parse_intrinsic()
 	{
 		DISCARD consume(TokenType::INTRINSIC);
 
@@ -28,7 +30,7 @@ namespace hz
 					return static_cast<float>(value * 100);
 				};
 
-				intrinsic = new ColorIntrinsic{ percent(r->value), percent(g->value), percent(b->value) };
+				intrinsic = new ColorIntrinsic{ std::move(identifier->name), percent(r->value), percent(g->value), percent(b->value) };
 			} break;
 			
 			default:
@@ -37,20 +39,15 @@ namespace hz
 			} break;
 		}
 
-		return new IntrinsicDeclarator{ identifier->name, intrinsic };
-	}
-
-	FunctionDeclarator* InterpreterParser::parse_function_declarator()
-	{
-
+		return intrinsic;
 	}
 
 	Node* InterpreterParser::parse_declarator()
 	{
 		switch (peek().type)
 		{
-			case TokenType::INTRINSIC: return parse_intrinsic_declarator();
-			case TokenType::FUNCTION: return parse_function_declarator();
+			case TokenType::INTRINSIC: return parse_intrinsic();
+			case TokenType::FUNCTION: return parse_function();
 			default: Log::error("Unrecognized script declarator");
 		}
 	}

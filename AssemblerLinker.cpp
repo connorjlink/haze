@@ -9,9 +9,9 @@
 
 namespace hz
 {
-	Linker::Type AssemblerLinker::ltype() const
+	LinkerType AssemblerLinker::ltype() const
 	{
-		return Linker::Type::ASSEMBLER;
+		return LinkerType::ASSEMBLER;
 	}
 
 	bool AssemblerLinker::optimize()
@@ -41,17 +41,17 @@ namespace hz
 
 			switch (command->ctype())
 			{
-				case Command::Type::INSTRUCTION:
+				case CommandType::INSTRUCTION:
 				{
 					address_tracker++;
 				} break;
 
-				case Command::Type::DOTORG:
+				case CommandType::DOTORG:
 				{
 					address_tracker = AS_DOTORG_COMMAND(command)->address;
 				} break;
 
-				case Command::Type::LABEL:
+				case CommandType::LABEL:
 				{
 					auto label_command = AS_LABEL_COMMAND(command);
 
@@ -67,7 +67,7 @@ namespace hz
 
 			switch (command->ctype())
 			{
-				case Command::Type::INSTRUCTION:
+				case CommandType::INSTRUCTION:
 				{
 					auto instruction_command = AS_INSTRUCTION_COMMAND(command);
 

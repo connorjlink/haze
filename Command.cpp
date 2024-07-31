@@ -2,8 +2,8 @@
 
 namespace hz
 {
-	Node::Type Command::ntype() const
+	NodeType Command::ntype() const
 	{
-		return Node::Type::COMMAND;
+		return NodeType::COMMAND;
 	}
 }

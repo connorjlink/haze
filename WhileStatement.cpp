@@ -9,9 +9,9 @@
 
 namespace hz
 {
-	Statement::Type WhileStatement::stype() const
+	StatementType WhileStatement::stype() const
 	{
-		return Statement::Type::WHILE;
+		return StatementType::WHILE;
 	}
 
 	std::string WhileStatement::string() const
@@ -28,7 +28,7 @@ namespace hz
 	void WhileStatement::generate(Allocation*)
 	{
 		// we need to force allocate this one :(
-		auto condition_allocation = allocator->allocate_static(DC, true);
+		auto condition_allocation = _allocator->allocate_static(DC, true);
 
 		// 3 digits of randomness for now
 		const auto loop_uuid = hz::generate(3);
@@ -36,17 +36,17 @@ namespace hz
 		const auto start_label = std::format("start_while_{:02d}", loop_uuid);
 		const auto end_label = std::format("end_while_{:02d}", loop_uuid);
 
-		generator->label(start_label);
+		_generator->label(start_label);
 
 		body->generate();
 
 		condition->generate(condition_allocation);
 		
 		// unfortunately our processor's limitation also mean we need to force this mess, too :(
-		auto temp_allocation = allocator->allocate_static(condition_allocation->reg, true);
+		auto temp_allocation = _allocator->allocate_static(condition_allocation->reg, true);
 
 		// TODO: finish while statement codegen here!
-		generator->make_brnz(start_label, condition_allocation->reg);
+		_generator->make_brnz(start_label, condition_allocation->reg);
 	}
 
 	Statement* WhileStatement::optimize()

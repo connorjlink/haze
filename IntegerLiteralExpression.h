@@ -20,7 +20,7 @@ namespace hz
         }
 
     public:
-        virtual Expression::Type etype() const final override;
+        virtual ExpressionType etype() const final override;
         virtual IntegerLiteralExpression* copy() const final override;
         virtual std::string string() const final override;
         virtual void generate(Allocation*) final override;

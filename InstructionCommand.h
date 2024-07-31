@@ -72,7 +72,7 @@ namespace hz
         std::uint32_t bytes() const;
 
     public:
-        virtual Command::Type ctype() const final override;
+        virtual CommandType ctype() const final override;
         virtual std::string string() const final override;
         virtual InstructionCommand* copy() const final override;
         virtual void generate(Allocation*) final override;

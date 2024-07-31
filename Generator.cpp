@@ -18,7 +18,7 @@ namespace hz
 	{
 		current_function++;
 
-		const auto linkable = Linkable{ parser->reference_symbol(Symbol::Type::FUNCTION, name), {}, 0 };
+		const auto linkable = Linkable{ _parser->reference_symbol(Symbol::Type::FUNCTION, name), {}, 0 };
 		linkables.emplace_back(linkable);
 	}
 

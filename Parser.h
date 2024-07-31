@@ -77,7 +77,7 @@ namespace hz
 		}
 	};
 
-	extern Parser* parser;
+	extern Parser* _parser;
 }
 
 #endif //HAZE_PARSER_H

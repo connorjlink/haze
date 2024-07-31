@@ -4,9 +4,9 @@
 
 namespace hz
 {
-	Command::Type DotOrgCommand::ctype() const
+	CommandType DotOrgCommand::ctype() const
 	{
-		return Command::Type::DOTORG;
+		return CommandType::DOTORG;
 	}
 
 	std::string DotOrgCommand::string() const

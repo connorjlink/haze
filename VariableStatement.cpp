@@ -6,9 +6,9 @@
 
 namespace hz
 {
-	Statement::Type VariableStatement::stype() const
+	StatementType VariableStatement::stype() const
     {
-        return Statement::Type::VARIABLE;
+        return StatementType::VARIABLE;
     }
 
     std::string VariableStatement::string() const
@@ -24,8 +24,8 @@ namespace hz
     void VariableStatement::generate(Allocation*)
     {
         //Make some space on the heap and notify the parser
-        allocation = allocator->allocate_dynamic();
-        AS_VARIABLE_SYMBOL(parser->reference_symbol(Symbol::Type::VARIABLE, name))->allocation = allocation;
+        allocation = _allocator->allocate_dynamic();
+        AS_VARIABLE_SYMBOL(_parser->reference_symbol(Symbol::Type::VARIABLE, name))->allocation = allocation;
 
         if (value)
         {

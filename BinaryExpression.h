@@ -3,6 +3,8 @@
 
 #include "Expression.h"
 
+#include "BinaryExpressionType.h"
+
 namespace hz
 {
 	class BinaryExpression : public Expression
@@ -18,18 +20,10 @@ namespace hz
 		}
 
 	public:
-		enum class Type
+		virtual BinaryExpressionType btype() const = 0;
+		virtual ExpressionType etype() const final override
 		{
-			PLUS,
-			MINUS,
-			TIMES,
-		};
-
-	public:
-		virtual BinaryExpression::Type btype() const = 0;
-		virtual Expression::Type etype() const final override
-		{
-			return Expression::Type::BINARY;
+			return ExpressionType::BINARY;
 		}
 	};
 
@@ -39,7 +33,7 @@ namespace hz
 		using BinaryExpression::BinaryExpression;
 
 	public:
-		virtual BinaryExpression::Type btype() const final override;
+		virtual BinaryExpressionType btype() const final override;
 		virtual std::string string() const final override;
 		virtual PlusBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
@@ -52,7 +46,7 @@ namespace hz
 		using BinaryExpression::BinaryExpression;
 
 	public:
-		virtual BinaryExpression::Type btype() const final override;
+		virtual BinaryExpressionType btype() const final override;
 		virtual std::string string() const final override;
 		virtual MinusBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
@@ -65,7 +59,7 @@ namespace hz
 		using BinaryExpression::BinaryExpression;
 
 	public:
-		virtual BinaryExpression::Type btype() const final override;
+		virtual BinaryExpressionType btype() const final override;
 		virtual std::string string() const final override;
 		virtual TimesBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;

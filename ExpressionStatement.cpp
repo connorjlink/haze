@@ -4,9 +4,9 @@
 
 namespace hz
 {
-	Statement::Type ExpressionStatement::stype() const
+	StatementType ExpressionStatement::stype() const
 	{
-		return Statement::Type::EXPRESSION;
+		return StatementType::EXPRESSION;
 	}
 
 	std::string ExpressionStatement::string() const

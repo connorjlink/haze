@@ -6,9 +6,9 @@
 
 namespace hz
 {
-	Statement::Type InlineAsmStatement::stype() const
+	StatementType InlineAsmStatement::stype() const
 	{
-		return Statement::Type::INLINEASM;
+		return StatementType::INLINEASM;
 	}
 
 	std::string InlineAsmStatement::string() const
@@ -31,9 +31,9 @@ namespace hz
 	void InlineAsmStatement::generate(Allocation*)
 	{
 		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser };
-		auto object_code = linker->link(generator->write_pointer());
+		auto object_code = linker->link(_generator->write_pointer());
 
-		generator->image(std::move(object_code), AS_ASSEMBLER_LINKER(linker)->approximate_size());
+		_generator->image(std::move(object_code), AS_ASSEMBLER_LINKER(linker)->approximate_size());
 	}
 
 	Statement* InlineAsmStatement::optimize()

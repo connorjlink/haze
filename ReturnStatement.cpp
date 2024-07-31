@@ -12,9 +12,9 @@
 
 namespace hz
 {
-	Statement::Type ReturnStatement::stype() const
+	StatementType ReturnStatement::stype() const
 	{
-		return Statement::Type::RETURN;
+		return StatementType::RETURN;
 	}
 
 	std::string ReturnStatement::string() const
@@ -31,7 +31,7 @@ namespace hz
 	{
 		if (value == nullptr)
 		{
-			if (AS_FUNCTION_SYMBOL(parser->reference_symbol(Symbol::Type::FUNCTION, enclosing_function))->return_type != ReturnType::NVR)
+			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(Symbol::Type::FUNCTION, enclosing_function))->return_type != ReturnType::NVR)
 			{
 				Log::error("no return value was specified for a non-void-returning function");
 			}
@@ -42,7 +42,7 @@ namespace hz
 		ManagedStaticAllocation temp{};
 
 		value->generate(temp.allocation);
-		generator->make_push(temp.allocation->read());
+		_generator->make_push(temp.allocation->read());
 	}
 
 	Statement* ReturnStatement::optimize()

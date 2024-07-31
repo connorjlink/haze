@@ -7,9 +7,9 @@
 
 namespace hz
 {
-	Node::Type Function::ntype() const
+	NodeType Function::ntype() const
 	{
-		return Node::Type::FUNCTION;
+		return NodeType::FUNCTION;
 	}
 
 
@@ -27,9 +27,9 @@ namespace hz
 
 	void Function::generate(Allocation*)
 	{
-		generator->begin_function(name);
+		_generator->begin_function(name);
 		body->generate();
-		generator->make_exit();
+		_generator->make_exit();
 	}
 
 

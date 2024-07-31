@@ -13,7 +13,7 @@ namespace hz
 		virtual ~Expression() = default;
 
 	public:
-		virtual Node::Type ntype() const final override;
+		virtual NodeType ntype() const final override;
 		virtual ExpressionType etype() const = 0;
 	};
 }

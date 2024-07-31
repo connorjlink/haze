@@ -23,7 +23,7 @@ namespace hz
 		}
 
 	public:
-		virtual Statement::Type stype() const final override;
+		virtual StatementType stype() const final override;
 		virtual std::string string() const final override;
 		virtual InlineAsmStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;

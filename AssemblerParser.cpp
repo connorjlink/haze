@@ -8,7 +8,7 @@
 #include "Constants.h"
 #include "Log.h"
 
-#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != Expression::Type::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
+#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
 #define ASSERT_IN_RANGE(x, a, b) if (x < a || x > b - 1) Log::error(std::format("value {} is outside the its range [0, {}]", x, b - 1))
 
 namespace hz
@@ -158,7 +158,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_address();
 
-				if (operand2->etype() == Expression::Type::IDENTIFIER)
+				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
 					return new InstructionCommand{ LOAD, operand1, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
@@ -173,7 +173,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_immediate();
 
-				if (operand2->etype() == Expression::Type::IDENTIFIER)
+				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
 					return new InstructionCommand{ COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
@@ -192,7 +192,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				if (operand1->etype() == Expression::Type::IDENTIFIER)
+				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
 					return new InstructionCommand{ SAVE, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
@@ -255,7 +255,7 @@ namespace hz
 				DISCARD consume(TokenType::CALL);
 				const auto operand1 = parse_address();
 
-				if (operand1->etype() == Expression::Type::IDENTIFIER)
+				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
 					return new InstructionCommand{ CALL, DC, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
@@ -293,7 +293,7 @@ namespace hz
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				if (operand1->etype() == Expression::Type::IDENTIFIER)
+				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
 					return new InstructionCommand{ BRNZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}

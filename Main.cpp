@@ -22,9 +22,10 @@
 
 using namespace hz;
 
-Allocator* hz::allocator;
-Generator* hz::generator;
-Parser* hz::parser;
+Allocator* hz::_allocator;
+Generator* hz::_generator;
+Parser* hz::_parser;
+Context* hz::_context;
 
 int main(int argc, char** argv)
 {
@@ -58,7 +59,7 @@ int main(int argc, char** argv)
 	source_code.assign((std::istreambuf_iterator<char>(file)),
 						std::istreambuf_iterator<char>());
 
-	allocator = new Allocator{};
+	_allocator = new Allocator{};
 
 	auto preprocessor = new Preprocessor{ std::move(source_code), filepath };
 	auto processed = preprocessor->preprocess();
@@ -71,12 +72,12 @@ int main(int argc, char** argv)
 	if (extension == ".hz")
 	{
 		//We are trying to compile a program
-		parser = new CompilerParser{ std::move(tokens) };
+		_parser = new CompilerParser{ std::move(tokens) };
 
-		auto ast = parser->parse();
+		auto ast = _parser->parse();
 
-		generator = new Generator{ std::move(ast) };
-		auto linkables = generator->generate();
+		_generator = new Generator{ std::move(ast) };
+		auto linkables = _generator->generate();
 
 		linker = new CompilerLinker{ std::move(linkables) };
 	}
@@ -84,11 +85,11 @@ int main(int argc, char** argv)
 	else if (extension == ".hzs")
 	{
 		//We are trying to assemble a program
-		parser = new AssemblerParser{ std::move(tokens) };
+		_parser = new AssemblerParser{ std::move(tokens) };
 
-		auto commands = parser->parse();
+		auto commands = _parser->parse();
 
-		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(parser) };
+		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser) };
 	}
 
 	else

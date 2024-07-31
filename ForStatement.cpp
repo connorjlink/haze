@@ -1,4 +1,5 @@
 #include "ForStatement.h"
+#include "IntegerLiteralExpression.h"
 
 #include "Allocation.h"
 #include "Allocator.h"
@@ -7,9 +8,9 @@
 
 namespace hz
 {
-	Statement::Type ForStatement::stype() const
+	StatementType ForStatement::stype() const
 	{
-		return Statement::Type::FOR;
+		return StatementType::FOR;
 	}
 
 	std::string ForStatement::string() const
@@ -26,7 +27,7 @@ namespace hz
 	void ForStatement::generate(Allocation*)
 	{
 		// we need to force allocate this one :(
-		auto condition_allocation = allocator->allocate_static(DC, true);
+		auto condition_allocation = _allocator->allocate_static(DC, true);
 
 		// TODO: finish for statement generation
 	}
@@ -64,6 +65,19 @@ namespace hz
 		if (body_optimized == nullptr)
 		{
 			body_optimized = body;
+		}
+
+		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(_context));
+
+		if (condition_optimized_evaluated != nullptr)
+		{
+			auto value = AS_INTEGER_LITERAL_EXPRESSION(condition_optimized_evaluated)->value;
+
+			// The value is constexpr false so we don't even need to run the loop
+			if (value == 0)
+			{
+				return new NullStatement{};
+			}
 		}
 
 		return new ForStatement{ initialization_optimized, condition_optimized, expression_optimized, body_optimized };

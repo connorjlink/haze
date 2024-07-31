@@ -65,7 +65,7 @@ namespace hz
 		std::vector<Linkable> generate();
 	};
 
-	extern Generator* generator;
+	extern Generator* _generator;
 }
 
 #endif //HAZE_GENERATOR_H

@@ -1,4 +1,5 @@
 #include "IfStatement.h"
+#include "IntegerLiteralExpression.h"
 
 #include "Allocation.h"
 #include "Allocator.h"
@@ -9,9 +10,9 @@
 
 namespace hz
 {
-	Statement::Type IfStatement::stype() const
+	StatementType IfStatement::stype() const
 	{
-		return Statement::Type::IF;
+		return StatementType::IF;
 	}
 
 	std::string IfStatement::string() const
@@ -28,7 +29,7 @@ namespace hz
 	void IfStatement::generate(Allocation*)
 	{
 		// we need to force allocate this one :(
-		auto condition_allocation = allocator->allocate_static(DC, true);
+		auto condition_allocation = _allocator->allocate_static(DC, true);
 
 		// TODO: finish if statement generation here
 	}
@@ -59,6 +60,25 @@ namespace hz
 		if (else_body_optimized == nullptr)
 		{
 			else_body_optimized = else_body;
+		}
+
+		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(_context));
+
+		if (condition_optimized_evaluated != nullptr)
+		{
+			auto value = AS_INTEGER_LITERAL_EXPRESSION(condition_optimized_evaluated)->value;
+
+			// The condition is constexpr true, so run if branch only
+			if (value != 0)
+			{
+				return if_body_optimized;
+			}
+
+			// otherwise run the else branch
+			else
+			{
+				return else_body_optimized;
+			}
 		}
 
 		return new IfStatement{ condition_optimized, if_body_optimized, else_body_optimized };

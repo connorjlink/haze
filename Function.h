@@ -32,7 +32,7 @@ namespace hz
         }
 
     public:
-        virtual Node::Type ntype() const final override;
+        virtual NodeType ntype() const final override;
         virtual std::string string() const final override;
         virtual Function* copy() const final override;
         virtual void generate(Allocation*) final override;

@@ -9,9 +9,9 @@
 
 namespace hz
 {
-    Expression::Type IntegerLiteralExpression::etype() const
+    ExpressionType IntegerLiteralExpression::etype() const
     {
-        return Expression::Type::INTEGER_LITERAL;
+        return ExpressionType::INTEGER_LITERAL;
     }
 
     std::string IntegerLiteralExpression::string() const

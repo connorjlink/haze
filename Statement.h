@@ -3,6 +3,8 @@
 
 #include "Node.h"
 
+#include "StatementType.h"
+
 #define AS_STATEMENT(x) static_cast<Statement*>(x)
 
 #define AS_COMPOUND_STATEMENT(x) static_cast<CompoundStatement*>(x)
@@ -19,21 +21,8 @@ namespace hz
 	class Statement : public Node
 	{
 	public:
-		enum class Type
-		{
-			COMPOUND,
-			VARIABLE,
-			RETURN,
-			INLINEASM,
-			WHILE,
-			FOR,
-			IF,
-			EXPRESSION,
-		};
-
-	public:
-		virtual Node::Type ntype() const final override;
-		virtual Statement::Type stype() const = 0;
+		virtual NodeType ntype() const final override;
+		virtual StatementType stype() const = 0;
 	};
 }
 

@@ -8,9 +8,9 @@
 
 namespace hz
 {
-	Expression::Type IdentifierExpression::etype() const
+	ExpressionType IdentifierExpression::etype() const
 	{
-		return Expression::Type::IDENTIFIER;
+		return ExpressionType::IDENTIFIER;
 	}
 
 	std::string IdentifierExpression::string() const
@@ -25,7 +25,7 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		auto variable_symbol = AS_VARIABLE_SYMBOL(parser->reference_symbol(Symbol::Type::VARIABLE, name));
+		auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(Symbol::Type::VARIABLE, name));
 		allocation->copy(variable_symbol->allocation);
 	}
 

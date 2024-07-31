@@ -5,9 +5,9 @@
 
 namespace hz
 {
-	Statement::Type CompoundStatement::stype() const
+	StatementType CompoundStatement::stype() const
     {
-        return Statement::Type::COMPOUND;
+        return StatementType::COMPOUND;
     }
 
     std::string CompoundStatement::string() const

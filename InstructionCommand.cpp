@@ -38,9 +38,9 @@ namespace hz
 		return instruction;
 	}
 
-	Command::Type InstructionCommand::ctype() const
+	CommandType InstructionCommand::ctype() const
 	{
-		return Command::Type::INSTRUCTION;
+		return CommandType::INSTRUCTION;
 	}
 
 	std::string InstructionCommand::string() const
@@ -60,21 +60,21 @@ namespace hz
 	{
 		switch (opcode)
 		{
-			case MOVE: generator->make_move(dst, src); break;
-			case LOAD: generator->make_load(dst, mem); break;
-			case COPY: generator->make_copy(dst, imm); break;
-			case SAVE: generator->make_save(mem, src); break;
-			case IADD: generator->make_iadd(dst, src); break;
-			case ISUB: generator->make_isub(dst, src); break;
-			case BAND: generator->make_band(dst, src); break;
-			case BIOR: generator->make_bior(dst, src); break;
-			case BXOR: generator->make_bxor(dst, src); break;
-			case CALL: generator->make_call(mem);      break;
-			case EXIT: generator->make_exit();         break;
-			case PUSH: generator->make_push(src);      break;
-			case PULL: generator->make_pull(dst);      break;
-			case BRNZ: generator->make_brnz(mem, src); break;
-			case BOOL: generator->make_bool(src);      break;
+			case MOVE: _generator->make_move(dst, src); break;
+			case LOAD: _generator->make_load(dst, mem); break;
+			case COPY: _generator->make_copy(dst, imm); break;
+			case SAVE: _generator->make_save(mem, src); break;
+			case IADD: _generator->make_iadd(dst, src); break;
+			case ISUB: _generator->make_isub(dst, src); break;
+			case BAND: _generator->make_band(dst, src); break;
+			case BIOR: _generator->make_bior(dst, src); break;
+			case BXOR: _generator->make_bxor(dst, src); break;
+			case CALL: _generator->make_call(mem);      break;
+			case EXIT: _generator->make_exit();         break;
+			case PUSH: _generator->make_push(src);      break;
+			case PULL: _generator->make_pull(dst);      break;
+			case BRNZ: _generator->make_brnz(mem, src); break;
+			case BOOL: _generator->make_bool(src);      break;
 		}
 	}
 

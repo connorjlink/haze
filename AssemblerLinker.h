@@ -33,7 +33,7 @@ namespace hz
 		{
 			for (auto node : commands)
 			{
-				if (node->ntype() != Node::Type::COMMAND)
+				if (node->ntype() != NodeType::COMMAND)
 				{
 					Log::error("Invalid node type encountered for assembly linking");
 				}
@@ -41,7 +41,7 @@ namespace hz
 		}
 
 	public:
-		virtual Linker::Type ltype() const final override;
+		virtual LinkerType ltype() const final override;
 		virtual bool optimize() final override;
 		virtual std::vector<InstructionCommand*> link(std::uint16_t) final override;
 	};

@@ -20,7 +20,7 @@ namespace hz
 		{
 			const auto& command = function[i];
 
-			if (command->ctype() == Command::Type::INSTRUCTION)
+			if (command->ctype() == CommandType::INSTRUCTION)
 			{
 				const auto instruction_command = AS_INSTRUCTION_COMMAND(command);
 
@@ -44,9 +44,9 @@ namespace hz
 
 namespace hz
 {
-	Linker::Type CompilerLinker::ltype() const
+	LinkerType CompilerLinker::ltype() const
 	{
-		return Linker::Type::COMPILER;
+		return LinkerType::COMPILER;
 	}
 
 	bool CompilerLinker::optimize()
@@ -72,7 +72,7 @@ namespace hz
 						{
 							auto c0 = instructions[j + 0];
 
-							if (c0->ctype() != Command::Type::INSTRUCTION)
+							if (c0->ctype() != CommandType::INSTRUCTION)
 							{
 								internal_linker_error();
 							}
@@ -83,7 +83,7 @@ namespace hz
 							{
 								auto c1 = instructions[j + 1];
 
-								if (c1->ctype() != Command::Type::INSTRUCTION)
+								if (c1->ctype() != CommandType::INSTRUCTION)
 								{
 									internal_linker_error();
 								}
@@ -158,7 +158,7 @@ namespace hz
 
 				for (auto command : function)
 				{
-					if (command->ctype() != Command::Type::INSTRUCTION)
+					if (command->ctype() != CommandType::INSTRUCTION)
 					{
 						internal_linker_error();
 					}
@@ -179,7 +179,7 @@ namespace hz
 			{
 				for (auto command : linkable.object_code)
 				{
-					if (command->ctype() != Command::Type::INSTRUCTION)
+					if (command->ctype() != CommandType::INSTRUCTION)
 					{
 						internal_linker_error();
 					}
@@ -204,7 +204,7 @@ namespace hz
 			{
 				const auto& command = function[i];
 
-				if (command->ctype() != Command::Type::INSTRUCTION)
+				if (command->ctype() != CommandType::INSTRUCTION)
 				{
 					internal_linker_error();
 				}

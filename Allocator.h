@@ -36,7 +36,7 @@ namespace hz
         DynamicAllocation* allocate_dynamic(std::uint16_t = 1, bool = true);
     };
 
-    extern Allocator* allocator;
+    extern Allocator* _allocator;
 }
 
 #endif //HAZE_ALLOCATOR_H

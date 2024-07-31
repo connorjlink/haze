@@ -3,8 +3,8 @@
 
 namespace hz
 {
-    Node::Type Statement::ntype() const
+    NodeType Statement::ntype() const
     {
-        return Node::Type::STATEMENT;
+        return NodeType::STATEMENT;
     }
 }

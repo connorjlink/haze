@@ -11,19 +11,19 @@
 
 namespace hz
 {
-	BinaryExpression::Type PlusBinaryExpression::btype() const
+	BinaryExpressionType PlusBinaryExpression::btype() const
 	{
-		return BinaryExpression::Type::PLUS;
+		return BinaryExpressionType::PLUS;
 	}
 
-	BinaryExpression::Type MinusBinaryExpression::btype() const
+	BinaryExpressionType MinusBinaryExpression::btype() const
 	{
-		return BinaryExpression::Type::MINUS;
+		return BinaryExpressionType::MINUS;
 	}
 
-	BinaryExpression::Type TimesBinaryExpression::btype() const
+	BinaryExpressionType TimesBinaryExpression::btype() const
 	{
-		return BinaryExpression::Type::TIMES;
+		return BinaryExpressionType::TIMES;
 	}
 
 
@@ -69,7 +69,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.allocation);
 
-		generator->make_iadd(received_allocation->read(), temp.allocation->read());
+		_generator->make_iadd(received_allocation->read(), temp.allocation->read());
 	}
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
@@ -79,7 +79,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.allocation);
 
-		generator->make_isub(received_allocation->read(), temp.allocation->read());
+		_generator->make_isub(received_allocation->read(), temp.allocation->read());
 	}
 
 	[[noreturn]]
@@ -101,20 +101,20 @@ namespace hz
 			left_optimized = AS_EXPRESSION(left->copy());
 			right_optimized = AS_EXPRESSION(right->copy());
 
-			if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
 			{
 				return right_optimized;
 			}
 
-			else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
 			{
 				return left_optimized;
 			}
 
-			else if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
-					 right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+			else if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
+					 right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
 				return new IntegerLiteralExpression{
 					AS_INTEGER_LITERAL_EXPRESSION(left)->value + AS_INTEGER_LITERAL_EXPRESSION(right)->value };
@@ -156,7 +156,7 @@ namespace hz
 			left_optimized = AS_EXPRESSION(left->copy());
 			right_optimized = AS_EXPRESSION(right->copy());
 
-			if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
 			{
 				//(0 - x) simplifies to -x
@@ -164,14 +164,14 @@ namespace hz
 				return right_optimized;
 			}
 
-			else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
+			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
 			{
 				return left_optimized;
 			}
 
-			else if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL &&
-					 right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+			else if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
+					 right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
 				return new IntegerLiteralExpression{
 					AS_INTEGER_LITERAL_EXPRESSION(left)->value - AS_INTEGER_LITERAL_EXPRESSION(right)->value };
@@ -213,7 +213,7 @@ namespace hz
 			left_optimized = AS_EXPRESSION(left->copy());
 			right_optimized = AS_EXPRESSION(right->copy());
 
-			if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
 				auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
 				auto result = left_optimized;
@@ -231,7 +231,7 @@ namespace hz
 
 				else
 				{
-					if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+					if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 					{
 						AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
 							AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
@@ -246,7 +246,7 @@ namespace hz
 				return result;
 			}
 
-			else if (right_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
 				auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
 				auto result = right_optimized;
@@ -264,7 +264,7 @@ namespace hz
 
 				else
 				{
-					if (left_optimized->etype() == Expression::Type::INTEGER_LITERAL)
+					if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 					{
 						AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
 							AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;

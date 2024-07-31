@@ -107,16 +107,10 @@
     <ClCompile Include="DotOrgCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Declarator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InterpreterParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Intrinsic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntrinsicDeclarator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IfStatement.cpp">
@@ -140,13 +134,7 @@
     <ClCompile Include="X86Emitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FunctionDeclarator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StatementDeclarator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IfStatementDeclarator.cpp">
+    <ClCompile Include="ColorIntrinsic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -262,16 +250,10 @@
     <ClInclude Include="DotOrgCommand.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Declarator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="InterpreterParser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Intrinsic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntrinsicDeclarator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="IfStatement.h">
@@ -295,10 +277,31 @@
     <ClInclude Include="X86Emitter.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="StatementDeclarator.h">
+    <ClInclude Include="BinaryExpressionType.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="IfStatementDeclarator.h">
+    <ClInclude Include="IntrinsicType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorIntrinsic.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkerType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpressionType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StatementType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Context.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -326,9 +329,6 @@
     </None>
     <None Include="sample.hzs">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="FunctionDeclarator.h">
-      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

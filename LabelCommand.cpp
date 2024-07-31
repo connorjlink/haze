@@ -6,9 +6,9 @@
 
 namespace hz
 {
-	Command::Type LabelCommand::ctype() const
+	CommandType LabelCommand::ctype() const
 	{
-		return Command::Type::LABEL;
+		return CommandType::LABEL;
 	}
 
 	std::string LabelCommand::string() const
