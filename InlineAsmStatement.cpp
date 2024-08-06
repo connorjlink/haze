@@ -40,4 +40,10 @@ namespace hz
 	{
 		return nullptr;
 	}
+
+	Node* InlineAsmStatement::evaluate(Context* context) const
+	{
+		Log::warning("Inline assembly statements cannot be evaluated in an interpreted context; any side effects are ignored");
+		return nullptr;
+	}
 }

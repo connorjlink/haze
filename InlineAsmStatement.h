@@ -28,6 +28,7 @@ namespace hz
 		virtual InlineAsmStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
 	};
 }
 

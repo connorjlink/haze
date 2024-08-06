@@ -54,6 +54,7 @@
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Linkable.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NullStatement.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="ReturnStatement.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
+    <ClInclude Include="NullStatement.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="ReturnStatement.h" />

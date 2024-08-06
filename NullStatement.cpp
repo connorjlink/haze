@@ -29,4 +29,9 @@ namespace hz
 		// No optimizations possible for a null
 		return nullptr;
 	}
+
+	Node* NullStatement::evaluate(Context* context) const
+	{
+		return nullptr;
+	}
 }

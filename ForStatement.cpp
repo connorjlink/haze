@@ -1,5 +1,6 @@
 #include "ForStatement.h"
 #include "IntegerLiteralExpression.h"
+#include "NullStatement.h"
 
 #include "Allocation.h"
 #include "Allocator.h"
@@ -81,5 +82,22 @@ namespace hz
 		}
 
 		return new ForStatement{ initialization_optimized, condition_optimized, expression_optimized, body_optimized };
+	}
+
+	Node* ForStatement::evaluate(Context* context) const
+	{
+		DISCARD initialization->evaluate(context);
+
+		auto condition_evaluated = condition->evaluate(context);
+
+		while (harvest(condition_evaluated) != 0)
+		{
+			DISCARD body->evaluate(context);
+			DISCARD expression->evaluate(context);
+
+			condition_evaluated = condition->evaluate(context);
+		}
+
+		return nullptr;
 	}
 }

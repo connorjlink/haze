@@ -38,4 +38,9 @@ namespace hz
     {
         return nullptr;
     }
+
+    Node* IntegerLiteralExpression::evaluate(Context* context) const
+    {
+        return copy();
+    }
 }

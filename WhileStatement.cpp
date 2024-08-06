@@ -4,6 +4,7 @@
 #include "Allocator.h"
 
 #include "Utility.h"
+#include "Log.h"
 
 #include <format>
 
@@ -71,6 +72,19 @@ namespace hz
 		}
 
 		return new WhileStatement{ condition_optimized, body_optimized };
+	}
 
+	Node* WhileStatement::evaluate(Context* context) const
+	{
+		auto condition_evaluated = condition->evaluate(context);
+		
+		while (harvest(condition_evaluated) != 0)
+		{
+			DISCARD body->evaluate(context);
+
+			condition_evaluated = condition->evaluate(context);
+		}
+
+		return nullptr;
 	}
 }

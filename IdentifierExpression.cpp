@@ -33,4 +33,17 @@ namespace hz
 	{
 		return nullptr;
 	}
+
+	Node* IdentifierExpression::evaluate(Context* context) const
+	{
+		for (auto& variable : context->_variables)
+		{
+			if (variable._name == name)
+			{
+				return new IntegerLiteralExpression{ variable._value };
+			}
+		}
+
+		Log::error(std::format("identifier {} is undefined and cannot be evaluated", name));
+	}
 }

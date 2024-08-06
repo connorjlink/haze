@@ -6,6 +6,7 @@
 #include <cstdint>
 
 #include "Context.h"
+#include "Log.h"
 
 #include "NodeType.h"
 
@@ -27,6 +28,7 @@ namespace hz
         // this could be extended later to do compile time stuff in the compiler
         virtual Node* evaluate(Context*) const
         {
+            Log::info("function evaluate() was not implemented for the target class");
             return nullptr;
         }
     };

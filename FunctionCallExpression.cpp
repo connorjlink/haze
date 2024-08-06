@@ -60,4 +60,9 @@ namespace hz
 		//for now, we don't have that functionality so just terminate further optimization of this node
 		return nullptr;
 	}
+
+	Node* FunctionCallExpression::evaluate(Context* context) const
+	{
+		return nullptr;
+	}
 }

@@ -137,6 +137,9 @@
     <ClCompile Include="ColorIntrinsic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NullStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -302,6 +305,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NullStatement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

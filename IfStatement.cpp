@@ -7,6 +7,7 @@
 #include "Utility.h"
 
 #include <format>
+#include "Log.h"
 
 namespace hz
 {
@@ -82,5 +83,21 @@ namespace hz
 		}
 
 		return new IfStatement{ condition_optimized, if_body_optimized, else_body_optimized };
+	}
+
+	Node* IfStatement::evaluate(Context* context) const
+	{
+		auto condition_evaluated = condition->evaluate(context);
+		if (harvest(condition_evaluated) != 0)
+		{
+			DISCARD if_body->evaluate(context);
+		}
+
+		else
+		{
+			DISCARD else_body->evaluate(context);
+		}
+
+		return nullptr;
 	}
 }

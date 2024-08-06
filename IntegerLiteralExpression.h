@@ -25,6 +25,7 @@ namespace hz
         virtual std::string string() const final override;
         virtual void generate(Allocation*) final override;
         virtual Expression* optimize() final override;
+        virtual Node* evaluate(Context* context) const final override;
     };
 }
 
