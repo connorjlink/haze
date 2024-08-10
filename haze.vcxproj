@@ -29,6 +29,7 @@
     <ClCompile Include="CompilerParser.cpp" />
     <ClCompile Include="DotOrgCommand.cpp" />
     <ClCompile Include="Emitter.cpp" />
+    <ClCompile Include="Evaluator.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
     <ClCompile Include="ForStatement.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Context.h" />
     <ClInclude Include="DotOrgCommand.h" />
     <ClInclude Include="Emitter.h" />
+    <ClInclude Include="Evaluator.h" />
     <ClInclude Include="ExpressionStatement.h" />
     <ClInclude Include="ExpressionType.h" />
     <ClInclude Include="ForStatement.h" />

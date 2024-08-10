@@ -1,4 +1,5 @@
 #include "DotOrgCommand.h"
+#include "Log.h"
 
 #include <format>
 
@@ -27,5 +28,10 @@ namespace hz
 	DotOrgCommand* DotOrgCommand::optimize()
 	{
 		return nullptr;
+	}
+
+	Node* DotOrgCommand::evaluate(Context* context) const
+	{
+		Log::error(".org assembly directives cannot be evaluated in an interpreted context");
 	}
 }

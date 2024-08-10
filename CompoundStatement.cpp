@@ -67,7 +67,6 @@ namespace hz
     {
         for (auto& substatement : substatements)
         {
-            // TODO: is it valid to throw away the result of a statement evaluation?
             DISCARD substatement->evaluate(context);
         }
 

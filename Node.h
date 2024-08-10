@@ -5,15 +5,17 @@
 #include <vector>
 #include <cstdint>
 
-#include "Context.h"
 #include "Log.h"
 
 #include "NodeType.h"
 
 namespace hz
 {
-    //Required to avoid dependency between Instruction and Allocation
+    // Required to avoid dependency between Instruction and Allocation
     class Allocation;
+
+    // Required to avoid dependency between Node and Context
+    class Context;
 
     class Node
     {
@@ -26,11 +28,7 @@ namespace hz
 
         // we will use this to store execution information in the interpreter
         // this could be extended later to do compile time stuff in the compiler
-        virtual Node* evaluate(Context*) const
-        {
-            Log::info("function evaluate() was not implemented for the target class");
-            return nullptr;
-        }
+        virtual Node* evaluate(Context*) const = 0;
     };
 }
 

@@ -22,6 +22,7 @@ namespace hz
 		virtual ColorIntrinsic* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Intrinsic* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
 
 	public:
 		using Intrinsic::Intrinsic;

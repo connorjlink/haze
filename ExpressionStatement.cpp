@@ -37,4 +37,10 @@ namespace hz
 
 		return new ExpressionStatement{ expression_optimized };
 	}
+
+	Node* ExpressionStatement::evaluate(Context* context) const
+	{
+#pragma message("TODO: is it alright to discard here???")
+		DISCARD expression->evaluate(context);
+	}
 }

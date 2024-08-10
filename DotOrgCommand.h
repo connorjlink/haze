@@ -22,6 +22,7 @@ namespace hz
 		virtual DotOrgCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual DotOrgCommand* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
 	};
 }
 

@@ -29,4 +29,10 @@ namespace hz
 	{
 		return nullptr;
 	}
+
+	Node* ColorIntrinsic::evaluate(Context*) const
+	{
+#pragma message("TODO: implement intrinsic interpreter evaluation here")
+		return nullptr;
+	}
 }
