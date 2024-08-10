@@ -38,6 +38,7 @@ namespace hz
 		virtual PlusBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
 	};
 
 	class MinusBinaryExpression : public BinaryExpression
@@ -51,6 +52,7 @@ namespace hz
 		virtual MinusBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
 	};
 
 	class TimesBinaryExpression : public BinaryExpression
@@ -64,6 +66,7 @@ namespace hz
 		virtual TimesBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
 	};
 }
 

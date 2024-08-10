@@ -36,12 +36,12 @@ namespace hz
 
 	Node* IdentifierExpression::evaluate(Context* context) const
 	{
-		for (auto& variable : context->_variables)
+		auto it = context->_variables.find(name);
+
+		if (it != std::end(context->_variables))
 		{
-			if (variable._name == name)
-			{
-				return new IntegerLiteralExpression{ variable._value };
-			}
+			// TODO: is the second actually getting our VariableType value??
+			return new IntegerLiteralExpression{ it->second };
 		}
 
 		Log::error(std::format("identifier {} is undefined and cannot be evaluated", name));

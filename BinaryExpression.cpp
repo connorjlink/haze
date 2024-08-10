@@ -303,4 +303,30 @@ namespace hz
 			}
 		}
 	}
+
+
+
+	Node* PlusBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		return new IntegerLiteralExpression{ harvest(left_evaluated) + harvest(right_evaluated) };
+	}
+
+	Node* MinusBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		return new IntegerLiteralExpression{ harvest(left_evaluated) - harvest(right_evaluated) };
+	}
+
+	Node* TimesBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		return new IntegerLiteralExpression{ harvest(left_evaluated) * harvest(right_evaluated) };
+	}
 }

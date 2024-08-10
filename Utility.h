@@ -8,6 +8,8 @@
 
 #include <random>
 
+#define POP(x) x.top(); x.pop()
+
 namespace hz
 {
 	inline static constexpr auto OPTIMIZE_AST = true;

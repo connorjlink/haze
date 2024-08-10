@@ -23,6 +23,7 @@ namespace hz
 	void ExpressionStatement::generate(Allocation*)
 	{
 		// TODO: expression statement codegen here!
+#pragma message("TODO: expression statement codegen here!")
 	}
 
 	Statement* ExpressionStatement::optimize()

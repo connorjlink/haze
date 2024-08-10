@@ -2,6 +2,7 @@
 #include "Parser.h"
 #include "Allocator.h"
 #include "Allocation.h"
+#include "Utility.h"
 #include "Log.h"
 
 #include <format>
@@ -63,6 +64,26 @@ namespace hz
 
 	Node* FunctionCallExpression::evaluate(Context* context) const
 	{
-		return nullptr;
+		std::vector<Expression*> arguments_evaluated{};
+
+		for (auto& argument : arguments)
+		{
+			arguments_evaluated.emplace_back(argument->evaluate(context));
+		}
+
+		for (auto& function : context->_functions)
+		{
+			if (function->name == name)
+			{
+				context->_arguments.emplace(arguments_evaluated);
+				function->evaluate(context);
+
+				const auto return_value = POP(context->_returns);
+
+				return new IntgerLiteralExpression{ return_value };
+			}
+		}
+
+		Log::error(std::format("function {} is undefined and cannot be called", name));
 	}
 }
