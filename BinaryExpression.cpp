@@ -4,6 +4,7 @@
 #include "Allocator.h"
 #include "Log.h"
 #include "Generator.h"
+#include "Evaluator.h"
 
 #include <format>
 

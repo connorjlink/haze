@@ -4,6 +4,7 @@
 #include "Statement.h"
 #include "Function.h"
 #include "Expression.h"
+#include "Context.h"
 
 namespace hz
 {

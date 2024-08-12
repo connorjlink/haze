@@ -42,5 +42,6 @@ namespace hz
 	{
 #pragma message("TODO: is it alright to discard here???")
 		DISCARD expression->evaluate(context);
+		return nullptr;
 	}
 }

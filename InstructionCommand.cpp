@@ -83,4 +83,8 @@ namespace hz
 		return nullptr;
 	}
 
+	Node* InstructionCommand::evaluate(Context* context) const
+	{
+		Log::error("Instruction assembly commands cannot be evaluated in an interpreted context");
+	}
 }

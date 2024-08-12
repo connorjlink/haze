@@ -1,11 +1,13 @@
 #ifndef HAZE_FUNCTION_H
 #define HAZE_FUNCTION_H
 
-#include <vector>
-#include <string>
 
 #include "Statement.h"
 #include "Expression.h"
+#include "Context.h"
+
+#include <string>
+#include <vector>
 
 #define AS_FUNCTION(x) static_cast<Function*>(x)
 

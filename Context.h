@@ -6,11 +6,17 @@
 #include <stack>
 #include <unordered_map>
 
-#include "Function.h"
+
 
 namespace hz
 {
 	using VariableType = int;
+	
+	// Required to avoid a dependency between Function and Context
+	class Function;
+
+	// Required to avoid a dependency between Expression and Context
+	class Expression;
 
 	struct Context
 	{

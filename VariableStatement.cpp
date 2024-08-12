@@ -1,6 +1,7 @@
 #include "VariableStatement.h"
 #include "Allocator.h"
 #include "Parser.h"
+#include "Evaluator.h"
 
 #include <format>
 

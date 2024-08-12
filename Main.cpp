@@ -8,10 +8,11 @@
 #include "CompilerLinker.h"
 #include "AssemblerLinker.h"
 #include "Simulator.h"
-#include "Log.h"
 #include "Emitter.h"
 #include "HazeEmitter.h"
 #include "X86Emitter.h"
+#include "Context.h"
+#include "Log.h"
 
 #include <cstdlib>
 #include <string>

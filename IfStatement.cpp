@@ -5,6 +5,7 @@
 #include "Allocator.h"
 
 #include "Utility.h"
+#include "Evaluator.h"
 
 #include <format>
 #include "Log.h"

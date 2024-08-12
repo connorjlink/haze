@@ -4,15 +4,22 @@
 
 namespace hz
 {
-	VariableType harvest(Expression* expression)
+	VariableType harvest(Node* node)
 	{
-		if (expression->etype() == ExpressionType::INTEGER_LITERAL)
+		if (node->ntype() == NodeType::EXPRESSION)
 		{
-			auto integer_literal_expression = AS_INTEGER_LITERAL_EXPRESSION(expression);
+			auto expression = AS_EXPRESSION(node);
 
-			return integer_literal_expression->value;
+			if (expression->etype() == ExpressionType::INTEGER_LITERAL)
+			{
+				auto integer_literal_expression = AS_INTEGER_LITERAL_EXPRESSION(expression);
+
+				return integer_literal_expression->value;
+			}
+
+			Log::error("Interpreter evaluation data harvesting only accepts integer literal expressions");
 		}
 
-		Log::error("Interpreter evaluation data harvesting only accepts integer literal types");
+		Log::error("Interpreter evaluation data harvesting only accepts expression nodes");
 	}
 }

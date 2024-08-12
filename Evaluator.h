@@ -2,11 +2,11 @@
 #define HAZE_EVALUATOR_H
 
 #include "Context.h"
-#include "Expression.h"
+#include "Node.h"
 
 namespace hz
 {
-	VariableType harvest(Expression*);
+	VariableType harvest(Node*);
 }
 
 #endif

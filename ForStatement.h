@@ -3,6 +3,7 @@
 
 #include "Statement.h"
 #include "Expression.h"
+#include "Context.h"
 
 namespace hz
 {
