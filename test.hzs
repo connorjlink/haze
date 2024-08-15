@@ -7,3 +7,8 @@ main:
 	copy r0, #7
 	push r0
 	exit 
+
+
+
+
+
