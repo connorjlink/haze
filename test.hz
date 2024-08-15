@@ -1,7 +1,18 @@
-//.include "../common.hz"
+.include "std.hz"
 
 function nvr main = ()
 {
+    asm
+    {
+    .define TEST = 1
+	.org &$8000
+
+        copy r0, #TEST
+        copy r1, #TEST
+        iadd r0, r1 ; 1 + 1
+    }
+
     byte foo = (2 * 3) + 1;
-    byte bar = 1 + 2 * 3;
+    // 7
+    return foo;
 }

@@ -1,0 +1,20 @@
+.include "std.hzi"
+
+.define RANGE = 1
+
+.macro X = (a):
+{
+	(a[0])
+}
+
+intrinsic sky_color = [0.5, 0.5, 0.5];
+intrinsic mouse_sensitivity = 50;
+intrinsic fov = 90;
+
+function nvr main(float deltaT) {
+	if ($X(sky_color) < RANGE) {
+		$X(sky_color) += deltaT;
+	} else if ($X(sky_color) > -RANGE) {
+		$X(sky_color) -= deltaT;
+	}
+}

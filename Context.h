@@ -6,8 +6,6 @@
 #include <stack>
 #include <unordered_map>
 
-
-
 namespace hz
 {
 	using VariableType = int;
