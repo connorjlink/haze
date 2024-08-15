@@ -333,7 +333,7 @@
     <None Include="generated_optimizations.hzs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="example.hzi">
+    <None Include="test.hzi">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="test.hz">
