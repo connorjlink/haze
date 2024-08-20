@@ -68,7 +68,14 @@ namespace hz
 
 		for (auto& argument : arguments)
 		{
-			arguments_evaluated.emplace_back(argument->evaluate(context));
+			const auto argument_evaluated = argument->evaluate(context);
+
+			if (argument_evaluated->ntype() != NodeType::EXPRESSION)
+			{
+				Log::error("Function call arguments must evaluate to a single expression");
+			}
+
+			arguments_evaluated.emplace_back(AS_EXPRESSION(argument_evaluated));
 		}
 
 		for (auto& function : context->_functions)
@@ -80,7 +87,7 @@ namespace hz
 
 				const auto return_value = POP(context->_returns);
 
-				return new IntgerLiteralExpression{ return_value };
+				return new IntegerLiteralExpression{ return_value };
 			}
 		}
 

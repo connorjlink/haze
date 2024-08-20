@@ -3,6 +3,7 @@
 #include "Lexer.h"
 #include "CompilerParser.h"
 #include "AssemblerParser.h"
+#include "InterpreterParser.h"
 #include "Generator.h"
 #include "Linker.h"
 #include "CompilerLinker.h"
@@ -93,6 +94,28 @@ int main(int argc, char** argv)
 		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser) };
 	}
 
+	else if (extension == ".hzi")
+	{
+		//We are trying to interpreter a script
+		_parser = new InterpreterParser{ std::move(tokens) };
+
+		auto declarators = _parser->parse();
+
+		for (auto& declarator : declarators)
+		{
+#pragma message("TODO: figure out if there are ever return values from Declarator->Evaluate() that we actually need to hold onto")
+			DISCARD declarator->evaluate(_context);
+		}
+
+		// TODO: connect up our mqtt stuff here
+		// so probably we will send a context state? over to the engine periodically
+		// like after executing a function/intrinsic (so after each declarator), we
+		// hook the engine runtime to update our values as appropriate
+		std::cin.get();
+
+		return EXIT_SUCCESS;
+	}
+
 	else
 	{
 		Log::error(std::format("unrecognized file extension {}", extension));
@@ -101,8 +124,8 @@ int main(int argc, char** argv)
 
  	auto image = linker->link(HALF_DWORD_MAX);
 
-	//auto emitter = new HazeEmitter{ std::move(image) };
-	auto emitter = new X86Emitter{ std::move(image) };
+	auto emitter = new HazeEmitter{ std::move(image) };
+	//auto emitter = new X86Emitter{ std::move(image) };
 
 	auto executable = emitter->emit();
 

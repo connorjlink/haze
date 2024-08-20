@@ -18,11 +18,6 @@ namespace hz
 		const auto imm = instruction.imm;
 		const auto mem = instruction.mem;
 
-		if (opcode == MOVE && dst == src)
-		{
-			return std::format("noop           ");
-		}
-
 		switch (opcode)
 		{
 			case MOVE: return std::format("move {}, {}    ",     dst, src);
@@ -53,31 +48,33 @@ namespace hz
 			           byte2 = program[i + 1],
 			           byte3 = program[i + 2];
 
-			//if (byte1 == 0 && byte2 == 0 && byte3 == 0)
-			//{
-			//	// We want to cut off disassembly if we get too many zero bytes in a row
-			//	// a meaningful program should never "move r0, r0"
-			//
-			//	if (i < last - 5)
-			//	{
-			//		const auto byte4 = program[i + 3],
-			//				   byte5 = program[i + 4],
-			//				   byte6 = program[i + 5];
-			//
-			//		if (byte4 == 0 && byte5 == 0 && byte6 == 0)
-			//		{
-			//			break;
-			//		}
-			//	}
-			//
-			//	else
-			//	{
-			//		break;
-			//	}
-			//}
+			if (byte1 == 0 && byte2 == 0 && byte3 == 0)
+			{
+				// We want to cut off disassembly if we get too many zero bytes in a row
+				// a meaningful program should never "move r0, r0"
+			
+				if (i < last - 5)
+				{
+					const auto byte4 = program[i + 3],
+							   byte5 = program[i + 4],
+							   byte6 = program[i + 5];
+			
+					if (byte4 == 0 && byte5 == 0 && byte6 == 0)
+					{
+						break;
+					}
+				}
+			
+				else
+				{
+					break;
+				}
+			}
 
-			const auto instruction = InstructionCommand{ 
-				static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0)) };
+			const auto instruction = InstructionCommand
+			{ 
+				static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0))
+			};
 
 			result.append(std::format("${:04X}: {}\n", HALF_DWORD_MAX + i, instruction.string()));
 		}

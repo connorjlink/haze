@@ -5,6 +5,7 @@
 #include "Allocator.h"
 
 #include <format>
+#include "Evaluator.h"
 
 namespace hz
 {

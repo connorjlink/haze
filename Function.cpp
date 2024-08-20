@@ -6,6 +6,7 @@
 #include "Log.h"
 
 #include <format>
+#include "Evaluator.h"
 
 
 namespace hz
