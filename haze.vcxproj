@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="AssemblerLinker.cpp" />
@@ -35,6 +36,9 @@
     <ClCompile Include="ForStatement.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
     <ClCompile Include="HazeEvaluator.cpp" />
+    <ClCompile Include="Hook.cpp" />
+    <ClCompile Include="HookStatement.cpp" />
+    <ClCompile Include="HookTopicBuilder.cpp" />
     <ClCompile Include="IfStatement.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
@@ -57,7 +61,7 @@
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Linkable.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MQTTClient.cpp" />
+    <ClCompile Include="HookClient.cpp" />
     <ClCompile Include="NullStatement.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
@@ -72,6 +76,7 @@
     <ClCompile Include="X86Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdjustExpression.h" />
     <ClInclude Include="Allocation.h" />
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="AssemblerLinker.h" />
@@ -92,6 +97,8 @@
     <ClInclude Include="ForStatement.h" />
     <ClInclude Include="HazeEmitter.h" />
     <ClInclude Include="HazeEvaluator.h" />
+    <ClInclude Include="Hook.h" />
+    <ClInclude Include="HookStatement.h" />
     <ClInclude Include="IfStatement.h" />
     <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
@@ -115,9 +122,8 @@
     <ClInclude Include="Linker.h" />
     <ClInclude Include="LinkerType.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="MQTTClient.h" />
-    <ClInclude Include="MQTTTopicBuilder.h" />
-    <ClInclude Include="MQTTTopics.h" />
+    <ClInclude Include="HookClient.h" />
+    <ClInclude Include="HookTopicBuilder.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NullStatement.h" />
@@ -238,7 +244,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -273,7 +279,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

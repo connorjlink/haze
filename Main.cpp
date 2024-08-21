@@ -15,7 +15,9 @@
 #include "Context.h"
 #include "Log.h"
 
-#include "MQTTTopicBuilder.h"
+#include "Hook.h"
+#include "HazeEvaluator.h"
+
 
 #include <cstdlib>
 #include <string>
@@ -23,8 +25,6 @@
 #include <filesystem>
 #include <format>
 #include <chrono>
-
-#include <mqtt/client.h>
 
 using namespace hz;
 
@@ -53,7 +53,9 @@ int main(int argc, char** argv)
 	//const auto path = std::filesystem::path("test.hzs");
 	//const auto path = std::filesystem::path("test.hz");
 	//const auto path = std::filesystem::path("sample.hzs");
-	const auto path = std::filesystem::path("test.hzi");
+	//const auto path = std::filesystem::path("test.hzi");
+	const auto path = std::filesystem::path("sample.hzi");
+
 
 	const auto filepath = path.string();
 	const auto filename = path.filename().string();
@@ -107,10 +109,14 @@ int main(int argc, char** argv)
 
 	else if (extension == ".hzi")
 	{
+		_context = new Context{};
+
 		//We are trying to interpreter a script
 		_parser = new InterpreterParser{ std::move(tokens) };
 
 		auto declarators = _parser->parse();
+
+#pragma message("TODO: use HazeEvaluator here instead of manual operations")
 
 		/*if (declarators.size() > 0 &&
 			declarators[0]->ntype() == NodeType::CONFIG)
@@ -118,39 +124,31 @@ int main(int argc, char** argv)
 
 		}*/
 
-		mqtt::client client("mqtt://localhost:1883", "haze-interpreter");
-
-		mqtt::connect_options connect_options;
-		connect_options.set_keep_alive_interval(5);
-		connect_options.set_clean_session(true);
-		connect_options.set_automatic_reconnect(true);
-
-		client.connect(connect_options);
-
 		using enum Project;
 		using enum Subproject;
 		using enum Datapoint;
 		using enum Operation;
 
-		const auto topic = build(GEO, ENGINE, HEALTH, BROADCAST);
+		//const auto topic = build_topic(GEO, ENGINE, HEALTH, BROADCAST);
 
-		auto pubmsg = mqtt::make_message(topic, "OK");
-		pubmsg->set_qos(2);
+		/*auto message = mqtt::make_message(topic, "OK");
+		mqtt::make_message(topic, "OK", AT_LEAST_ONCE, true);
 
 
-		client.publish(pubmsg);
 		std::cin.get();
 		client.publish(pubmsg);
 		std::cin.get();
 		client.publish(pubmsg);
 		std::cin.get();
-		client.publish(pubmsg);
+		client.publish(pubmsg);*/
 
-		/*for (auto& declarator : declarators)
+		
+
+		for (auto& declarator : declarators)
 		{
 #pragma message("TODO: figure out if there are ever return values from Declarator->Evaluate() that we actually need to hold onto")
 			DISCARD declarator->evaluate(_context);
-		}*/
+		}
 
 
 
@@ -158,6 +156,7 @@ int main(int argc, char** argv)
 		// so probably we will send a context state? over to the engine periodically
 		// like after executing a function/intrinsic (so after each declarator), we
 		// hook the engine runtime to update our values as appropriate
+		std::cout << "Done!";
 		std::cin.get();
 
 		return EXIT_SUCCESS;

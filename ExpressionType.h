@@ -16,6 +16,7 @@ namespace hz
 		IDENTIFIER,
 		FUNCTION_CALL,
 		BINARY,
+		ADJUST,
 	};
 }
 

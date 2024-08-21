@@ -2,10 +2,8 @@
 #define HAZE_IDENTIFIEREXPRESSION_H
 
 #include "Expression.h"
-#include "Segment.h"
 
 #include <string>
-#include <string_view>
 
 namespace hz
 {
@@ -23,7 +21,7 @@ namespace hz
 	public:
 		virtual ExpressionType etype() const final override;
 		virtual std::string string() const final override;
-		virtual Expression* copy() const final override;
+		virtual IdentifierExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;

@@ -149,13 +149,25 @@
     <ClCompile Include="HazeEvaluator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MQTTClient.cpp">
+    <ClCompile Include="HookClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PrintStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HookStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HookTopicBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AdjustExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -334,19 +346,25 @@
     <ClInclude Include="HazeEvaluator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MQTTClient.h">
+    <ClInclude Include="HookClient.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MQTTTopics.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MQTTTopicBuilder.h">
+    <ClInclude Include="HookTopicBuilder.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="PrintStatement.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Bimap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hook.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HookStatement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AdjustExpression.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

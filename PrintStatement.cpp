@@ -1,4 +1,6 @@
 #include "PrintStatement.h"
+#include "Expression.h"
+#include "Evaluator.h"
 
 #include <format>
 
@@ -6,7 +8,7 @@ namespace hz
 {
 	StatementType PrintStatement::stype() const
 	{
-		return StatementType::NONE;
+		return StatementType::PRINT;
 	}
 
 	std::string PrintStatement::string() const
@@ -32,7 +34,10 @@ namespace hz
 
 	Node* PrintStatement::evaluate(Context* context) const
 	{
-		context->print(message);
+#pragma message("TODO: support stringexpressions here too!")
+		const auto value = harvest(message->evaluate(context));
+
+		context->print(std::format("{}", value));
 		return nullptr;
 	}
 }

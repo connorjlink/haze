@@ -3,6 +3,7 @@
 #include "Parser.h"
 #include "Allocator.h"
 #include "Allocation.h"
+#include "Evaluator.h"
 
 #include <format>
 
@@ -18,7 +19,7 @@ namespace hz
 		return std::format("identifier ({})", name);
 	}
 
-	Expression* IdentifierExpression::copy() const
+	IdentifierExpression* IdentifierExpression::copy() const
 	{
 		return new IdentifierExpression{ *this };
 	}

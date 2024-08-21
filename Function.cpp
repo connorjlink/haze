@@ -47,22 +47,31 @@ namespace hz
 
 	Node* Function::evaluate(Context* context) const
 	{
-		const auto arguments_evaluated = context->pop_arguments();
-
-		if (arguments.size() != arguments_evaluated.size())
+		if (name == "main")
 		{
-			// NOTE: this theoretically should never fire since we actually check 
-			// the argument count during function call expression parsing
-			Log::error(std::format("Function {} expected {} but got {} during evaluation", name, arguments.size(), arguments_evaluated.size()));
+			DISCARD body->evaluate(context);
+			return nullptr;
 		}
 
-		for (auto i = 0; i < arguments.size(); i++)
+		else
 		{
-			const auto argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
-			context->define_variable(argument_name, harvest(arguments_evaluated[i]));
-		}
+			const auto arguments_evaluated = context->pop_arguments();
 
-		DISCARD body->evaluate(context);
-		return nullptr;
+			if (arguments.size() != arguments_evaluated.size())
+			{
+				// NOTE: this theoretically should never fire since we actually check 
+				// the argument count during function call expression parsing
+				Log::error(std::format("Function {} expected {} but got {} during evaluation", name, arguments.size(), arguments_evaluated.size()));
+			}
+
+			for (auto i = 0; i < arguments.size(); i++)
+			{
+				const auto argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
+				context->define_variable(argument_name, harvest(arguments_evaluated[i]));
+			}
+
+			DISCARD body->evaluate(context);
+			return nullptr;
+		}
 	}
 }

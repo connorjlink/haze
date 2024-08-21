@@ -18,6 +18,7 @@ namespace hz
 		using enum TokenType;
 		switch (peek().type)
 		{
+			// Color intrinsic parsing
 			case LBRACKET:
 			{
 				// TODO: support real expressions instead of only literals
@@ -35,7 +36,7 @@ namespace hz
 			
 			default:
 			{
-				Log::error("Unrecognized intrinsic declaration");
+				Log::error(std::format("({}) unrecognized intrinsic declaration", peek().line));
 			} break;
 		}
 
@@ -48,7 +49,7 @@ namespace hz
 		{
 			case TokenType::INTRINSIC: return parse_intrinsic();
 			case TokenType::FUNCTION: return parse_function();
-			default: Log::error("Unrecognized script declarator");
+			default: Log::error(std::format("({}) unrecognized script declarator", peek().line));
 		}
 	}
 

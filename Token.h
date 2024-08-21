@@ -27,6 +27,8 @@ namespace hz
 
 		PLUS, MINUS, STAR,
 
+		TILDE, EXCLAMATION,
+
 		FUNCTION,
 		BYTE,
 		NVR,
@@ -40,7 +42,7 @@ namespace hz
 		GEOMETRY,
 
 		DOTDEFINE, DOTORG,
-		DOTHOOK,
+		DOTHOOK, DOTUNHOOK,
 
 		ASM,
 		R0, R1, R2, R3,
@@ -70,6 +72,8 @@ namespace hz
 		{ "+", TokenType::PLUS },
 		{ "-", TokenType::MINUS },
 		{ "*", TokenType::STAR },
+		{ "~", TokenType::TILDE },
+		{ "!", TokenType::EXCLAMATION },
 
 		{ "function", TokenType::FUNCTION },
 		{ "byte", TokenType::BYTE },
@@ -87,6 +91,7 @@ namespace hz
 		{ ".org", TokenType::DOTORG },
 
 		{ ".hook", TokenType::DOTHOOK },
+		{ ".unhook", TokenType::DOTUNHOOK },
 
 		{ "asm", TokenType::ASM },
 

@@ -200,6 +200,44 @@ namespace hz
 		return expression;
 	}
 
+	AdjustExpression* Parser::parse_increment_expression()
+	{
+		DISCARD consume(TokenType::TILDE);
+		
+		if (peek().type == TokenType::IDENTIFIER)
+		{
+			auto identifier_expression = parse_identifier_expression();
+			return new AdjustExpression{ true, identifier_expression };
+		}
+
+		else if (peek().type == TokenType::INT)
+		{
+			auto integer_literal_expression = parse_integerliteral_expression();
+			return new AdjustExpression{ true, integer_literal_expression };
+		}
+
+		Log::error("Increment expresion target must be an integer literal or identifier");
+	}
+
+	AdjustExpression* Parser::parse_decrement_expression()
+	{
+		DISCARD consume(TokenType::EXCLAMATION);
+
+		if (peek().type == TokenType::IDENTIFIER)
+		{
+			auto identifier_expression = parse_identifier_expression();
+			return new AdjustExpression{ false, identifier_expression };
+		}
+
+		else if (peek().type == TokenType::INT)
+		{
+			auto integer_literal_expression = parse_integerliteral_expression();
+			return new AdjustExpression{ false, integer_literal_expression };
+		}
+
+		Log::error("Decrement expresion target must be an integer literal or identifier");
+	}
+
 
 	Expression* Parser::parse_generic_expression()
 	{
@@ -227,6 +265,16 @@ namespace hz
 				}
 
 				expression = parse_identifier_expression();
+			} break;
+
+			case TILDE:
+			{
+				expression = parse_increment_expression();
+			} break;
+
+			case EXCLAMATION:
+			{
+				expression = parse_decrement_expression();
 			} break;
 
 			default:

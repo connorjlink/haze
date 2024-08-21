@@ -11,6 +11,7 @@
 #include "IfStatement.h"
 #include "ExpressionStatement.h"
 #include "PrintStatement.h"
+#include "HookStatement.h"
 
 #include "Utility.h"
 #include "Log.h"
@@ -27,11 +28,20 @@ namespace hz
 			case SEMICOLON: return parse_null_statement(enclosing_function);
 			case RETURN: return parse_return_statement(enclosing_function);
 			case ASM: return parse_inline_asm_statement(enclosing_function);
+			case FOR: return parse_for_statement(enclosing_function);
+			case WHILE: return parse_while_statement(enclosing_function);
+			case IF: return parse_if_statement(enclosing_function);
+			case PRINT: return parse_print_statement(enclosing_function);
+			case DOTHOOK: return parse_hook_statement(enclosing_function);
+			case DOTUNHOOK: return parse_unhook_statement(enclosing_function);
 
-			default:
+#pragma message("TODO: better handling of when to try expression statement parsing")
+			default: return parse_expression_statement(enclosing_function);
+
+			/*default:
 			{
 				Log::error(std::format("({}) unexpected statement type", peek().line));
-			} break;
+			} break;*/
 		}
 	}
 
@@ -157,11 +167,39 @@ namespace hz
 	{
 		DISCARD consume(TokenType::PRINT);
 		DISCARD consume(TokenType::LPAREN);
-		auto message = consume(TokenType::STRING);
+
+		Expression* expression = nullptr;
+
+		if (peek().type == TokenType::STRING)
+		{
+			const auto message = consume(TokenType::STRING);
+#pragma message("TODO: implement string expression!")
+			//expression = new StringExpression{ std::move(message) };
+		}
+
+		else
+		{
+			expression = parse_expression();
+		}
+
 		DISCARD consume(TokenType::RPAREN);
 		DISCARD consume(TokenType::SEMICOLON);
 
-		return new PrintStatement{ std::move(message) };
+		return new PrintStatement{ expression };
+	}
+
+	Statement* CompilerParser::parse_hook_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::DOTHOOK);
+
+		return new HookStatement{ true };
+	}
+
+	Statement* CompilerParser::parse_unhook_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::DOTUNHOOK);
+
+		return new HookStatement{ false };
 	}
 
 	Statement* CompilerParser::parse_expression_statement(std::string enclosing_function)

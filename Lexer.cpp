@@ -4,7 +4,15 @@
 #include <iostream>
 #include <format>
 
-#define APPEND_TOKEN(x, raw) tokens.emplace_back(Token{ x, line, raw })
+#define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, line, raw })
+
+namespace
+{
+	int isquoted(int c)
+	{
+		return c != '"';
+	}
+}
 
 namespace hz
 {
@@ -97,7 +105,7 @@ namespace hz
 			else if (current == '.')
 			{
 				i++;
-				const auto lexeme = rest(isalnum);
+				const auto lexeme = rest(std::isalnum);
 				const auto search = lexeme_map.find(std::format(".{}", lexeme));
 
 				if (search != std::end(lexeme_map))
@@ -111,9 +119,21 @@ namespace hz
 				}
 			}
 
+			else if (current == '"')
+			{
+				i++;
+
+				const auto lexeme = rest(::isquoted);
+
+				i++;
+
+				APPEND_TOKEN(STRING, lexeme);
+			}
+
 			else
 			{
 				//if (current != '')
+				// TODO: replace the lexeme_map with my custom Bimap for better performance
 				const auto search = lexeme_map.find(std::string{ current });
 
 				if (search != std::end(lexeme_map))

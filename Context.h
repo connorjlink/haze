@@ -6,6 +6,8 @@
 #include <stack>
 #include <unordered_map>
 
+#include "Hook.h"
+
 namespace hz
 {	
 	// Required to avoid a dependency between Function and Context
@@ -28,6 +30,9 @@ namespace hz
 		std::stack<return_t> _returns;
 		std::stack<arguments_t> _arguments;
 
+	private:
+		Hook _hook;
+
 	public:
 		void define_variable(std::string, variable_t);
 		const decltype(_variables)& variables() const;
@@ -42,6 +47,10 @@ namespace hz
 	public:
 		void push_arguments(arguments_t);
 		arguments_t pop_arguments();
+
+	public:
+		void hook();
+		void unhook();
 
 	public:
 		void print(const std::string& message);

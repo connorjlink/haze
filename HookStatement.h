@@ -1,32 +1,30 @@
-#ifndef HAZE_PRINTSTATEMENT_H
-#define HAZE_PRINTSTATEMENT_H
+#ifndef HAZE_HOOKSTATEMENT_H
+#define HAZE_HOOKSTATEMENT_H
 
 #include "Statement.h"
-#include "Context.h"
-
-#include <string>
 
 namespace hz
 {
-	class PrintStatement : public Statement
+	class HookStatement : public Statement
 	{
 	private:
-		Expression* message;
+		// if true, hook; if false, unhook
+		bool hook;
 
 	public:
-		PrintStatement(Expression* message)
-			: message{ message }
+		HookStatement(bool hook)
+			: hook{ hook }
 		{
 		}
 
 	public:
 		virtual StatementType stype() const final override;
 		virtual std::string string() const final override;
-		virtual PrintStatement* copy() const final override;
+		virtual HookStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;
 	};
 }
 
-#endif 
+#endif

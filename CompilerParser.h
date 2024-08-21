@@ -21,7 +21,13 @@ namespace hz
         Statement* parse_for_statement(std::string);
         Statement* parse_if_statement(std::string);
         Statement* parse_expression_statement(std::string);
+
+    // interpreter-specific functionality
+    // but it needs to interface with statements, so we include it in the compiler as well
+    private:
         Statement* parse_print_statement(std::string);
+        Statement* parse_hook_statement(std::string);
+        Statement* parse_unhook_statement(std::string);
 
     public:
         Expression* parse_argument();

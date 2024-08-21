@@ -1,0 +1,12 @@
+function nvr main = ()
+{
+	byte a = 0;
+
+	while (1)
+	{
+		a = ~a;
+	}
+
+	byte a = ~2;
+	print(a);
+}

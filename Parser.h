@@ -8,6 +8,7 @@
 #include "IntegerLiteralExpression.h"
 #include "IdentifierExpression.h"
 #include "FunctionCallExpression.h"
+#include "AdjustExpression.h"
 
 #include "Statement.h"
 
@@ -58,6 +59,10 @@ namespace hz
 		IntegerLiteralExpression* parse_integerliteral_expression();
 		FunctionCallExpression* parse_functioncall_expression();
 		Expression* parse_parenthesis_expression();
+
+	protected:
+		AdjustExpression* parse_increment_expression();
+		AdjustExpression* parse_decrement_expression();
 
 	protected:
 		Expression* parse_expression_optimized();

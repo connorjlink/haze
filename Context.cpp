@@ -47,6 +47,16 @@ namespace hz
 		return arguments;
 	}
 
+	void Context::hook()
+	{
+		_hook.hook();
+	}
+
+	void Context::unhook()
+	{
+		_hook.unhook();
+	}
+
 	void Context::print(const std::string& message)
 	{
 		Log::output(message);

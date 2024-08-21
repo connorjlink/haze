@@ -14,6 +14,7 @@ namespace hz
 		IF,
 		EXPRESSION,
 		PRINT,
+		HOOK,
 		NONE, // TODO: this is the NullStatement, let's fix that later
 	};
 }

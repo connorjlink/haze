@@ -10,7 +10,7 @@
 namespace hz
 {
 	template<typename T>
-	struct Bimap_t
+	struct bimap_t
 	{
 		T value;
 		std::string identifier;
