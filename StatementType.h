@@ -13,6 +13,7 @@ namespace hz
 		FOR,
 		IF,
 		EXPRESSION,
+		PRINT,
 		NONE, // TODO: this is the NullStatement, let's fix that later
 	};
 }

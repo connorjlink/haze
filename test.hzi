@@ -1,5 +1,3 @@
-.include "std.hzi"
-
 .define RANGE = 1
 
 .macro X = (a):

@@ -48,7 +48,7 @@ namespace hz
 
     Node* VariableStatement::evaluate(Context* context) const
     {
-        context->_variables[name] = harvest(value->evaluate(context));
+        context->define_variable(name, harvest(value->evaluate(context)));
         return nullptr;
     }
 }

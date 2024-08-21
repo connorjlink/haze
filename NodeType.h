@@ -11,7 +11,6 @@ namespace hz
         STATEMENT,
         EXPRESSION,
         COMMAND,
-        DECLARATOR,
         INTRINSIC,
     };
 }

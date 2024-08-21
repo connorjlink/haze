@@ -7,21 +7,51 @@
 #include <unordered_map>
 
 namespace hz
-{
-	using VariableType = int;
-	
+{	
 	// Required to avoid a dependency between Function and Context
 	class Function;
 
 	// Required to avoid a dependency between Expression and Context
 	class Expression;
 
-	struct Context
+	// TODO: scope these types further in (within Context?)
+	using variable_t = int;
+	using arguments_t = std::vector<Expression*>;
+	using return_t = variable_t;
+
+	class Context
 	{
-		std::unordered_map<std::string, VariableType> _variables;
+	private:
+		std::unordered_map<std::string, variable_t> _variables;
 		std::vector<Function*> _functions;
-		std::stack<VariableType> _returns;
-		std::stack<std::vector<Expression*>> _arguments;
+
+		std::stack<return_t> _returns;
+		std::stack<arguments_t> _arguments;
+
+	public:
+		void define_variable(std::string, variable_t);
+		const decltype(_variables)& variables() const;
+
+		void define_function(Function*);
+		const decltype(_functions)& functions() const;
+
+	public:
+		void push_return(return_t);
+		return_t pop_return();
+
+	public:
+		void push_arguments(arguments_t);
+		arguments_t pop_arguments();
+
+	public:
+		void print(const std::string& message);
+
+	public:
+		Context()
+			: _variables{}, _functions{}, _returns{}, _arguments{}
+		{
+		}
+
 	};
 
 	extern Context* _context;

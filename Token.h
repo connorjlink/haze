@@ -40,11 +40,15 @@ namespace hz
 		GEOMETRY,
 
 		DOTDEFINE, DOTORG,
+		DOTHOOK,
 
 		ASM,
 		R0, R1, R2, R3,
 
 		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, BNOT, CALL, EXIT, PUSH, PULL, BREZ, WAIT,
+
+		PRINT,
+		STRING,
 
 		END,
 	};
@@ -82,6 +86,8 @@ namespace hz
 		{ ".define", TokenType::DOTDEFINE },
 		{ ".org", TokenType::DOTORG },
 
+		{ ".hook", TokenType::DOTHOOK },
+
 		{ "asm", TokenType::ASM },
 
 		{ "r0", TokenType::R0 },
@@ -104,6 +110,9 @@ namespace hz
 		{ "pull", TokenType::PULL },
 		{ "brez", TokenType::BREZ },
 		{ "wait", TokenType::WAIT },
+
+		{ "print", TokenType::PRINT },
+		{ "[string literal]", TokenType::STRING },
 
 		{ "eof", TokenType::END },
 	};

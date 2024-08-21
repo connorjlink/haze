@@ -21,6 +21,7 @@ namespace hz
         Statement* parse_for_statement(std::string);
         Statement* parse_if_statement(std::string);
         Statement* parse_expression_statement(std::string);
+        Statement* parse_print_statement(std::string);
 
     public:
         Expression* parse_argument();

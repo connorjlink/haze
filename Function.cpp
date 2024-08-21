@@ -47,7 +47,7 @@ namespace hz
 
 	Node* Function::evaluate(Context* context) const
 	{
-		const auto arguments_evaluated = POP(context->_arguments);
+		const auto arguments_evaluated = context->pop_arguments();
 
 		if (arguments.size() != arguments_evaluated.size())
 		{
@@ -59,8 +59,7 @@ namespace hz
 		for (auto i = 0; i < arguments.size(); i++)
 		{
 			const auto argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
-
-			context->_variables[argument_name] = harvest(arguments_evaluated[i]);
+			context->define_variable(argument_name, harvest(arguments_evaluated[i]));
 		}
 
 		DISCARD body->evaluate(context);

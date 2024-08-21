@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	VariableType harvest(Node*);
+	variable_t harvest(Node*);
 }
 
 #endif

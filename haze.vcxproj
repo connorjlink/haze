@@ -27,12 +27,14 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CompilerLinker.cpp" />
     <ClCompile Include="CompilerParser.cpp" />
+    <ClCompile Include="Context.cpp" />
     <ClCompile Include="DotOrgCommand.cpp" />
     <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="Evaluator.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
     <ClCompile Include="ForStatement.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
+    <ClCompile Include="HazeEvaluator.cpp" />
     <ClCompile Include="IfStatement.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
@@ -55,9 +57,11 @@
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Linkable.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MQTTClient.cpp" />
     <ClCompile Include="NullStatement.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
+    <ClCompile Include="PrintStatement.cpp" />
     <ClCompile Include="ReturnStatement.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Statement.cpp" />
@@ -72,6 +76,7 @@
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="AssemblerLinker.h" />
     <ClInclude Include="AssemblerParser.h" />
+    <ClInclude Include="Bimap.h" />
     <ClInclude Include="BinaryExpressionType.h" />
     <ClInclude Include="ColorIntrinsic.h" />
     <ClInclude Include="Command.h" />
@@ -86,6 +91,7 @@
     <ClInclude Include="ExpressionType.h" />
     <ClInclude Include="ForStatement.h" />
     <ClInclude Include="HazeEmitter.h" />
+    <ClInclude Include="HazeEvaluator.h" />
     <ClInclude Include="IfStatement.h" />
     <ClInclude Include="InlineAsmStatement.h" />
     <ClInclude Include="BinaryExpression.h" />
@@ -109,11 +115,15 @@
     <ClInclude Include="Linker.h" />
     <ClInclude Include="LinkerType.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MQTTClient.h" />
+    <ClInclude Include="MQTTTopicBuilder.h" />
+    <ClInclude Include="MQTTTopics.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NullStatement.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Preprocessor.h" />
+    <ClInclude Include="PrintStatement.h" />
     <ClInclude Include="ReturnStatement.h" />
     <ClInclude Include="Simulator.h" />
     <ClInclude Include="Statement.h" />
@@ -128,6 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />
+    <None Include="sample.hzi" />
+    <None Include="vcpkg.json" />
     <None Include="test.hzi" />
     <None Include="old.hz" />
     <None Include="generated_optimizations.hzs" />
@@ -135,6 +147,7 @@
     <None Include="specification.md" />
     <None Include="test.hz" />
     <None Include="test.hzs" />
+    <None Include="vcpkg-configuration.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -191,16 +204,33 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed\</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed\</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed\</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgInstalledDir>$(SolutionDir)vcpkg_installed\</VcpkgInstalledDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -209,21 +239,23 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -233,6 +265,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -241,7 +274,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -267,6 +300,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

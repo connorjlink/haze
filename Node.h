@@ -15,7 +15,7 @@ namespace hz
     class Allocation;
 
     // Required to avoid dependency between Node and Context
-    struct Context;
+    class Context;
 
     class Node
     {

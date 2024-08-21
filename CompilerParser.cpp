@@ -10,6 +10,7 @@
 #include "ForStatement.h"
 #include "IfStatement.h"
 #include "ExpressionStatement.h"
+#include "PrintStatement.h"
 
 #include "Utility.h"
 #include "Log.h"
@@ -150,6 +151,17 @@ namespace hz
 		}
 		
 		return new IfStatement{ condition, if_body, else_body };
+	}
+
+	Statement* CompilerParser::parse_print_statement(std::string enclosing_function)
+	{
+		DISCARD consume(TokenType::PRINT);
+		DISCARD consume(TokenType::LPAREN);
+		auto message = consume(TokenType::STRING);
+		DISCARD consume(TokenType::RPAREN);
+		DISCARD consume(TokenType::SEMICOLON);
+
+		return new PrintStatement{ std::move(message) };
 	}
 
 	Statement* CompilerParser::parse_expression_statement(std::string enclosing_function)

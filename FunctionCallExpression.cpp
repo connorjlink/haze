@@ -78,14 +78,14 @@ namespace hz
 			arguments_evaluated.emplace_back(AS_EXPRESSION(argument_evaluated));
 		}
 
-		for (auto& function : context->_functions)
+		for (auto& function : context->functions())
 		{
 			if (function->name == name)
 			{
-				context->_arguments.emplace(arguments_evaluated);
+				context->push_arguments(arguments_evaluated);
 				function->evaluate(context);
 
-				const auto return_value = POP(context->_returns);
+				const auto return_value = context->pop_return();
 
 				return new IntegerLiteralExpression{ return_value };
 			}

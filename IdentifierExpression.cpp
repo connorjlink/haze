@@ -36,9 +36,8 @@ namespace hz
 
 	Node* IdentifierExpression::evaluate(Context* context) const
 	{
-		auto it = context->_variables.find(name);
-
-		if (it != std::end(context->_variables))
+		if (auto it = context->variables().find(name);
+			it != std::end(context->variables()))
 		{
 			// TODO: is the second actually getting our VariableType value??
 			return new IntegerLiteralExpression{ it->second };

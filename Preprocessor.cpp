@@ -40,6 +40,29 @@ namespace
             start_pos += to.length();
         }
     }
+
+    constexpr auto ws = " \t\n\r";
+
+    // Thanks https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring :)
+    // trim from end of string (right)
+    inline std::string& rtrim(std::string& s, const char* t = ws)
+    {
+        s.erase(s.find_last_not_of(t) + 1);
+        return s;
+    }
+
+    // trim from beginning of string (left)
+    inline std::string& ltrim(std::string& s, const char* t = ws)
+    {
+        s.erase(0, s.find_first_not_of(t));
+        return s;
+    }
+
+    // trim from both ends of string (right then left)
+    inline std::string& trim(std::string& s, const char* t = ws)
+    {
+        return ltrim(rtrim(s, t), t);
+    }
 }
 
 namespace hz
@@ -87,13 +110,14 @@ namespace hz
             const auto args_delim = split(args, ',');
 
             std::string mcode = matches[6];
+            trim(mcode);
 
             Macro macro{ name, args_delim, mcode };
 
             if (std::find_if(defined_macros.begin(), defined_macros.end(), [&](auto m)
                 {
                     return (m.name == macro.name);
-                }) == std::end(defined_macros))
+                }) != std::end(defined_macros))
             {
                 Log::error(std::format("macro {} is multiply defined", macro.name));
             }

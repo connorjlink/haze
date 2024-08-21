@@ -9,6 +9,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Meta Files">
+      <UniqueIdentifier>{bb747166-e62d-4931-8cee-5001fbbd75f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Symbol.cpp">
@@ -141,6 +144,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Evaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HazeEvaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MQTTClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -316,6 +331,24 @@
     <ClInclude Include="Evaluator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="HazeEvaluator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MQTTClient.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MQTTTopics.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MQTTTopicBuilder.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintStatement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bimap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -340,6 +373,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="sample.hzs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="vcpkg.json">
+      <Filter>Meta Files</Filter>
+    </None>
+    <None Include="vcpkg-configuration.json">
+      <Filter>Meta Files</Filter>
+    </None>
+    <None Include="sample.hzi">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

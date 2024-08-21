@@ -15,12 +15,16 @@
 #include "Context.h"
 #include "Log.h"
 
+#include "MQTTTopicBuilder.h"
+
 #include <cstdlib>
 #include <string>
 #include <fstream>
 #include <filesystem>
 #include <format>
 #include <chrono>
+
+#include <mqtt/client.h>
 
 using namespace hz;
 
@@ -29,20 +33,27 @@ Generator* hz::_generator;
 Parser* hz::_parser;
 Context* hz::_context;
 
+namespace mqtt
+{
+	const int message::DFLT_QOS = 2;
+	const bool message::DFLT_RETAINED = true;
+}
+
 int main(int argc, char** argv)
 {
 	auto start_time = std::chrono::steady_clock::now();
 
 	if (argc != 2)
 	{
-		Log::error("correct usage is 'haze' *.hz(s)");
+		Log::error("correct usage is 'haze' *.hzx");
 	}
 
 	//const auto path = std::filesystem::path(argv[1]);
 	//const auto path = std::filesystem::path("./common.hz");
 	//const auto path = std::filesystem::path("test.hzs");
 	//const auto path = std::filesystem::path("test.hz");
-	const auto path = std::filesystem::path("sample.hzs");
+	//const auto path = std::filesystem::path("sample.hzs");
+	const auto path = std::filesystem::path("test.hzi");
 
 	const auto filepath = path.string();
 	const auto filename = path.filename().string();
@@ -101,11 +112,47 @@ int main(int argc, char** argv)
 
 		auto declarators = _parser->parse();
 
-		for (auto& declarator : declarators)
+		/*if (declarators.size() > 0 &&
+			declarators[0]->ntype() == NodeType::CONFIG)
+		{
+
+		}*/
+
+		mqtt::client client("mqtt://localhost:1883", "haze-interpreter");
+
+		mqtt::connect_options connect_options;
+		connect_options.set_keep_alive_interval(5);
+		connect_options.set_clean_session(true);
+		connect_options.set_automatic_reconnect(true);
+
+		client.connect(connect_options);
+
+		using enum Project;
+		using enum Subproject;
+		using enum Datapoint;
+		using enum Operation;
+
+		const auto topic = build(GEO, ENGINE, HEALTH, BROADCAST);
+
+		auto pubmsg = mqtt::make_message(topic, "OK");
+		pubmsg->set_qos(2);
+
+
+		client.publish(pubmsg);
+		std::cin.get();
+		client.publish(pubmsg);
+		std::cin.get();
+		client.publish(pubmsg);
+		std::cin.get();
+		client.publish(pubmsg);
+
+		/*for (auto& declarator : declarators)
 		{
 #pragma message("TODO: figure out if there are ever return values from Declarator->Evaluate() that we actually need to hold onto")
 			DISCARD declarator->evaluate(_context);
-		}
+		}*/
+
+
 
 		// TODO: connect up our mqtt stuff here
 		// so probably we will send a context state? over to the engine periodically

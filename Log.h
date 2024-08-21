@@ -13,33 +13,38 @@ namespace hz
 	class Log
 	{
 	private:
-		static void print(std::string_view LabelCommand, std::string_view msg)
+		static void print(std::string_view label, std::string_view message)
 		{
-			stream << std::format("{}: {}\n", LabelCommand, msg);
+			stream << std::format("{}: {}\n", label, message);
 		}
 
 	public:
-		static void raw(std::string_view msg)
+		static void raw(std::string_view message)
 		{
-			stream << msg;
+			stream << message;
 		}
 
 	public:
-		static void info(std::string_view msg)
+		static void output(std::string_view message)
 		{
-			print("Information", msg);
+			print("Output", message);
+		}
+
+		static void info(std::string_view message)
+		{
+			print("Information", message);
 		}
 
 		[[noreturn]]
-		static void error(std::string_view msg)
+		static void error(std::string_view message)
 		{
-			print("Error", msg);
+			print("Error", message);
 			std::exit(EXIT_FAILURE);
 		}
 
-		static void warning(std::string_view msg)
+		static void warning(std::string_view message)
 		{
-			print("Warning", msg);
+			print("Warning", message);
 		}
 	};
 }

@@ -4,7 +4,7 @@
 
 namespace hz
 {
-	VariableType harvest(Node* node)
+	variable_t harvest(Node* node)
 	{
 		if (node->ntype() == NodeType::EXPRESSION)
 		{
