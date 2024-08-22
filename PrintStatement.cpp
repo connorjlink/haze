@@ -34,10 +34,8 @@ namespace hz
 
 	Node* PrintStatement::evaluate(Context* context) const
 	{
-#pragma message("TODO: support stringexpressions here too!")
 		const auto value = harvest(message->evaluate(context));
-
-		context->print(std::format("{}", value));
+		context->print(std::format("{}", format(value)));
 		return nullptr;
 	}
 }

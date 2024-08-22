@@ -75,24 +75,6 @@ namespace hz
 		return new IntegerLiteralExpression{ immediate };
 	}
 
-	Node* AssemblerParser::parse_dotdefine_command()
-	{
-		DISCARD consume(TokenType::DOTDEFINE);
-		const auto identifier_expresion = parse_identifier_expression();
-		DISCARD consume(TokenType::EQUALS);
-
-		const auto value_expression = parse_expression();
-		ASSERT_IS_INTEGER_LITERAL(value_expression);
-
-		const auto identifier = identifier_expresion->name;
-		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
-
-		add_symbol(Symbol::Type::DEFINE, identifier);
-		AS_DEFINE_SYMBOL(reference_symbol(Symbol::Type::DEFINE, identifier))->value = value;
-
-		return nullptr;
-	}
-
 	Node* AssemblerParser::parse_dotorg_command()
 	{
 		DISCARD consume(TokenType::DOTORG);

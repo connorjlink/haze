@@ -44,7 +44,7 @@ namespace hz
 		const Token& peek() const;
 		const Token& lookahead() const;
 		std::string consume(TokenType);
-		std::vector<Token> fetchUntil(TokenType);
+		std::vector<Token> fetch_until(TokenType);
 
 	protected:
 		enum class Precedence
@@ -53,6 +53,9 @@ namespace hz
 			TERM, // + (or - later)
 			FACTOR, // * (or / later maybe)
 		};
+
+	protected:
+		Node* parse_dotdefine_command();
 
 	protected:
 		IdentifierExpression* parse_identifier_expression();

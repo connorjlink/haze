@@ -1,12 +1,24 @@
+.include "std.hzi"
+
+.define A = 1
+.define B = 2
+.define C = 3
+
+.macro MUL = (x, y):
+{
+	[x] * [y]
+}
+
 function nvr main = ()
 {
-	byte a = 0;
+	// don't install MQTT hook
+	.unhook
 
-	while (1)
-	{
-		a = ~a;
-	}
-
-	byte a = ~2;
-	print(a);
+	byte foo = $MUL(A, B) + C;
+	print(foo * 2);
+	// output: 10
 }
+
+
+
+

@@ -15,8 +15,12 @@
 #include "FunctionCallExpression.h"
 #include "BinaryExpression.h"
 
+#include "DotDefineCommand.h"
+
 #include <iostream>
 #include <format>
+
+#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
 
 namespace
 {
@@ -155,7 +159,7 @@ namespace hz
 			((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value : debug(current.type))));
 	}
 
-	std::vector<Token> Parser::fetchUntil(TokenType type)
+	std::vector<Token> Parser::fetch_until(TokenType type)
 	{
 		std::vector<Token> tokens;
 
@@ -168,6 +172,24 @@ namespace hz
 		tokens.emplace_back(TokenType::END, peek().line, "eof");
 
 		return tokens;
+	}
+
+	Node* Parser::parse_dotdefine_command()
+	{
+		DISCARD consume(TokenType::DOTDEFINE);
+		const auto identifier_expresion = parse_identifier_expression();
+		DISCARD consume(TokenType::EQUALS);
+
+		const auto value_expression = parse_expression();
+		ASSERT_IS_INTEGER_LITERAL(value_expression);
+
+		const auto identifier = identifier_expresion->name;
+		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
+
+		add_symbol(Symbol::Type::DEFINE, identifier);
+		AS_DEFINE_SYMBOL(reference_symbol(Symbol::Type::DEFINE, identifier))->value = value;
+
+		return new DotDefineCommand{ identifier, { value } };
 	}
 
 	IdentifierExpression* Parser::parse_identifier_expression()

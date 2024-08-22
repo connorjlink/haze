@@ -3,6 +3,7 @@
 #include "Allocator.h"
 #include "Allocation.h"
 #include "Utility.h"
+#include "Evaluator.h"
 #include "Log.h"
 
 #include <format>
@@ -86,8 +87,7 @@ namespace hz
 				function->evaluate(context);
 
 				const auto return_value = context->pop_return();
-
-				return new IntegerLiteralExpression{ return_value };
+				return unharvest(return_value);
 			}
 		}
 

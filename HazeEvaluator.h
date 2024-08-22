@@ -13,10 +13,10 @@ namespace hz
 		std::vector<Node*> declarators;
 
 	private:
-		Context& context;
+		Context* context;
 
 	public:
-		HazeEvaluator(std::vector<Node*>& declarators, Context& context)
+		HazeEvaluator(std::vector<Node*>&& declarators, Context* context)
 			: declarators{ std::move(declarators) }, context{ context }
 		{
 		}

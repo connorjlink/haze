@@ -15,7 +15,6 @@ namespace hz
 		Expression* parse_immediate();
 
 	private:
-		Node* parse_dotdefine_command();
 		Node* parse_dotorg_command();
 		Node* parse_label_command();
 		Node* parse_instruction_command();

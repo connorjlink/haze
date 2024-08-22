@@ -7,9 +7,6 @@ namespace hz
 {
 	class NullStatement : public Statement
 	{
-	private:
-		// No class members
-
 	public:
 		NullStatement()
 		{

@@ -89,7 +89,14 @@ namespace hz
 	Node* IfStatement::evaluate(Context* context) const
 	{
 		auto condition_evaluated = condition->evaluate(context);
-		if (harvest(condition_evaluated) != 0)
+
+		if (condition->ntype() == NodeType::EXPRESSION &&
+			condition->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("'if' statement conditions must evaluate to an integer");
+		}
+
+		if (std::get<int>(harvest(condition_evaluated)) != 0)
 		{
 			DISCARD if_body->evaluate(context);
 		}

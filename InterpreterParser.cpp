@@ -47,6 +47,7 @@ namespace hz
 	{
 		switch (peek().type)
 		{
+			case TokenType::DOTDEFINE: return parse_dotdefine_command();
 			case TokenType::INTRINSIC: return parse_intrinsic();
 			case TokenType::FUNCTION: return parse_function();
 			default: Log::error(std::format("({}) unrecognized script declarator", peek().line));

@@ -1,5 +1,6 @@
 #include "IdentifierExpression.h"
 #include "IntegerLiteralExpression.h"
+#include "StringExpression.h"
 #include "Parser.h"
 #include "Allocator.h"
 #include "Allocation.h"
@@ -32,6 +33,7 @@ namespace hz
 
 	Expression* IdentifierExpression::optimize()
 	{
+		// No optimizations possible for an identifier expression
 		return nullptr;
 	}
 
@@ -40,8 +42,8 @@ namespace hz
 		if (auto it = context->variables().find(name);
 			it != std::end(context->variables()))
 		{
-			// TODO: is the second actually getting our VariableType value??
-			return new IntegerLiteralExpression{ it->second };
+			auto value = it->second;
+			return unharvest(value);
 		}
 
 		Log::error(std::format("identifier {} is undefined and cannot be evaluated", name));

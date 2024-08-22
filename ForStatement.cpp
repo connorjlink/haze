@@ -5,6 +5,8 @@
 #include "Allocator.h"
 
 #include <format>
+#include <variant>
+
 #include "Evaluator.h"
 
 namespace hz
@@ -90,7 +92,13 @@ namespace hz
 
 		auto condition_evaluated = condition->evaluate(context);
 
-		while (harvest(condition_evaluated) != 0)
+		if (condition->ntype() == NodeType::EXPRESSION &&
+			condition->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("'for' loop conditions must evaluate to an integer");
+		}
+
+		while (std::get<int>(harvest(condition_evaluated)) != 0)
 		{
 			DISCARD body->evaluate(context);
 			DISCARD expression->evaluate(context);

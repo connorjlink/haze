@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <variant>
 #include <unordered_map>
 
 #include "Hook.h"
@@ -16,8 +17,11 @@ namespace hz
 	// Required to avoid a dependency between Expression and Context
 	class Expression;
 
+
+	//using variable_t = int;
+	using variable_t = std::variant<int, std::string>;
+
 	// TODO: scope these types further in (within Context?)
-	using variable_t = int;
 	using arguments_t = std::vector<Expression*>;
 	using return_t = variable_t;
 

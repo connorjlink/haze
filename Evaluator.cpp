@@ -1,6 +1,10 @@
 #include "Evaluator.h"
 #include "IntegerLiteralExpression.h"
+#include "StringExpression.h"
 #include "Log.h"
+
+#include <format>
+#include <variant>
 
 namespace hz
 {
@@ -14,12 +18,34 @@ namespace hz
 			{
 				auto integer_literal_expression = AS_INTEGER_LITERAL_EXPRESSION(expression);
 
-				return integer_literal_expression->value;
+				return { integer_literal_expression->value };
 			}
 
-			Log::error("Interpreter evaluation data harvesting only accepts integer literal expressions");
+			else if (expression->etype() == ExpressionType::STRING)
+			{
+				auto string_expression = AS_STRING_EXPRESSION(expression);
+
+				return { string_expression->message };
+			}
+
+			Log::error("interpreter evaluation data harvesting only accepts literal-type expressions");
 		}
 
-		Log::error("Interpreter evaluation data harvesting only accepts expression nodes");
+		Log::error("interpreter evaluation data harvesting only accepts expressions");
+	}
+
+	Node* unharvest(variable_t value)
+	{
+		switch (value.index())
+		{
+			case 0: return new IntegerLiteralExpression{ std::get<0>(value) };
+			case 1: return new StringExpression{ std::get<1>(value) };
+			default: Log::error(std::format("variable_t type index {} is invalid and cannot be evaluated", value.index()));
+		}
+	}
+
+	std::string format(variable_t value)
+	{
+		return std::visit([](const auto& arg) { return std::format("{}", arg); }, value);
 	}
 }

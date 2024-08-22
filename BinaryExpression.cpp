@@ -312,7 +312,13 @@ namespace hz
 		const auto left_evaluated = left->evaluate(context);
 		const auto right_evaluated = right->evaluate(context);
 
-		return new IntegerLiteralExpression{ harvest(left_evaluated) + harvest(right_evaluated) };
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression{ std::get<int>(harvest(left_evaluated)) + std::get<int>(harvest(right_evaluated)) };
 	}
 
 	Node* MinusBinaryExpression::evaluate(Context* context) const
@@ -320,7 +326,13 @@ namespace hz
 		const auto left_evaluated = left->evaluate(context);
 		const auto right_evaluated = right->evaluate(context);
 
-		return new IntegerLiteralExpression{ harvest(left_evaluated) - harvest(right_evaluated) };
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression{ std::get<int>(harvest(left_evaluated)) - std::get<int>(harvest(right_evaluated)) };
 	}
 
 	Node* TimesBinaryExpression::evaluate(Context* context) const
@@ -328,6 +340,12 @@ namespace hz
 		const auto left_evaluated = left->evaluate(context);
 		const auto right_evaluated = right->evaluate(context);
 
-		return new IntegerLiteralExpression{ harvest(left_evaluated) * harvest(right_evaluated) };
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression{ std::get<int>(harvest(left_evaluated)) * std::get<int>(harvest(right_evaluated)) };
 	}
 }

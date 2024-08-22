@@ -12,6 +12,9 @@
 #include "ExpressionStatement.h"
 #include "PrintStatement.h"
 #include "HookStatement.h"
+#include "NullStatement.h"
+
+#include "StringExpression.h"
 
 #include "Utility.h"
 #include "Log.h"
@@ -60,7 +63,7 @@ namespace hz
 	Statement* CompilerParser::parse_null_statement(std::string enclosing_function)
 	{
 		DISCARD consume(TokenType::SEMICOLON);
-		return nullptr;
+		return new NullStatement{};
 	}
 
 	Statement* CompilerParser::parse_variabledeclaration_statement(std::string enclosing_function)
@@ -107,7 +110,7 @@ namespace hz
 		DISCARD consume(TokenType::ASM);
 		DISCARD consume(TokenType::LBRACE);
 
-		auto assembly = fetchUntil(TokenType::RBRACE);
+		auto assembly = fetch_until(TokenType::RBRACE);
 		auto assembler_parser = new AssemblerParser{ std::move(assembly) };
 		auto commands = assembler_parser->parse();
 
@@ -173,8 +176,7 @@ namespace hz
 		if (peek().type == TokenType::STRING)
 		{
 			const auto message = consume(TokenType::STRING);
-#pragma message("TODO: implement string expression!")
-			//expression = new StringExpression{ std::move(message) };
+			expression = new StringExpression{ std::move(message) };
 		}
 
 		else

@@ -170,6 +170,12 @@
     <ClCompile Include="AdjustExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StringExpression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DotDefineCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -367,6 +373,12 @@
     <ClInclude Include="AdjustExpression.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="StringExpression.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DotDefineCommand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -400,6 +412,9 @@
       <Filter>Meta Files</Filter>
     </None>
     <None Include="sample.hzi">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="std.hzi">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -29,6 +29,7 @@
     <ClCompile Include="CompilerLinker.cpp" />
     <ClCompile Include="CompilerParser.cpp" />
     <ClCompile Include="Context.cpp" />
+    <ClCompile Include="DotDefineCommand.cpp" />
     <ClCompile Include="DotOrgCommand.cpp" />
     <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="Evaluator.cpp" />
@@ -69,6 +70,7 @@
     <ClCompile Include="ReturnStatement.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Statement.cpp" />
+    <ClCompile Include="StringExpression.cpp" />
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
@@ -89,6 +91,7 @@
     <ClInclude Include="CompilerLinker.h" />
     <ClInclude Include="CompilerParser.h" />
     <ClInclude Include="Context.h" />
+    <ClInclude Include="DotDefineCommand.h" />
     <ClInclude Include="DotOrgCommand.h" />
     <ClInclude Include="Emitter.h" />
     <ClInclude Include="Evaluator.h" />
@@ -134,6 +137,7 @@
     <ClInclude Include="Simulator.h" />
     <ClInclude Include="Statement.h" />
     <ClInclude Include="StatementType.h" />
+    <ClInclude Include="StringExpression.h" />
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="Utility.h" />
@@ -145,6 +149,7 @@
   <ItemGroup>
     <None Include="common.hz" />
     <None Include="sample.hzi" />
+    <None Include="std.hzi" />
     <None Include="vcpkg.json" />
     <None Include="test.hzi" />
     <None Include="old.hz" />
@@ -232,11 +237,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -248,6 +256,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -255,6 +265,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -264,7 +275,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
@@ -272,6 +283,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -292,7 +304,7 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <DebugInformationFormat>None</DebugInformationFormat>
       <CompileAsManaged>false</CompileAsManaged>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -307,6 +319,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

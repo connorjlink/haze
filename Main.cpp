@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
 	if (argc != 2)
 	{
-		Log::error("correct usage is 'haze' *.hzx");
+		Log::error("correct usage is 'haze' *.hz[x]");
 	}
 
 	//const auto path = std::filesystem::path(argv[1]);
@@ -111,53 +111,13 @@ int main(int argc, char** argv)
 	{
 		_context = new Context{};
 
-		//We are trying to interpreter a script
+		//We are trying to interpret a script
 		_parser = new InterpreterParser{ std::move(tokens) };
 
 		auto declarators = _parser->parse();
 
-#pragma message("TODO: use HazeEvaluator here instead of manual operations")
-
-		/*if (declarators.size() > 0 &&
-			declarators[0]->ntype() == NodeType::CONFIG)
-		{
-
-		}*/
-
-		using enum Project;
-		using enum Subproject;
-		using enum Datapoint;
-		using enum Operation;
-
-		//const auto topic = build_topic(GEO, ENGINE, HEALTH, BROADCAST);
-
-		/*auto message = mqtt::make_message(topic, "OK");
-		mqtt::make_message(topic, "OK", AT_LEAST_ONCE, true);
-
-
-		std::cin.get();
-		client.publish(pubmsg);
-		std::cin.get();
-		client.publish(pubmsg);
-		std::cin.get();
-		client.publish(pubmsg);*/
-
-		
-
-		for (auto& declarator : declarators)
-		{
-#pragma message("TODO: figure out if there are ever return values from Declarator->Evaluate() that we actually need to hold onto")
-			DISCARD declarator->evaluate(_context);
-		}
-
-
-
-		// TODO: connect up our mqtt stuff here
-		// so probably we will send a context state? over to the engine periodically
-		// like after executing a function/intrinsic (so after each declarator), we
-		// hook the engine runtime to update our values as appropriate
-		std::cout << "Done!";
-		std::cin.get();
+		auto evaluator = new HazeEvaluator{ std::move(declarators), _context };
+		evaluator->evaluate();
 
 		return EXIT_SUCCESS;
 	}
@@ -167,6 +127,8 @@ int main(int argc, char** argv)
 		Log::error(std::format("unrecognized file extension {}", extension));
 	}
 
+
+	// Interpreter context will never fall through to here
 
  	auto image = linker->link(HALF_DWORD_MAX);
 
