@@ -8,6 +8,14 @@ namespace hz
 		PLUS,
 		MINUS,
 		TIMES,
+
+		ASSIGN,
+
+		EQUALITY,
+		INEQUALITY,
+
+		GREATER,
+		LESS,
 	};
 }
 

@@ -1,5 +1,7 @@
 #include "BinaryExpression.h"
 #include "IntegerLiteralExpression.h"
+#include "StringExpression.h"
+#include "IdentifierExpression.h"
 #include "Allocation.h"
 #include "Allocator.h"
 #include "Log.h"
@@ -27,6 +29,31 @@ namespace hz
 		return BinaryExpressionType::TIMES;
 	}
 
+	BinaryExpressionType AssignBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::ASSIGN;
+	}
+
+	BinaryExpressionType EqualityBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::EQUALITY;
+	}
+
+	BinaryExpressionType InequalityBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::INEQUALITY;
+	}
+
+	BinaryExpressionType GreaterBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::GREATER;
+	}
+
+	BinaryExpressionType LessBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::LESS;
+	}
+
 
 
 	std::string PlusBinaryExpression::string() const
@@ -44,6 +71,31 @@ namespace hz
 		return std::format("binary expression ({} * {})", left->string(), right->string());
 	}
 
+	std::string AssignBinaryExpression::string() const
+	{
+		return std::format("binary expression ({} = {})", left->string(), right->string());
+	}
+
+	std::string EqualityBinaryExpression::string() const
+	{
+		return std::format("binary expression ({} == {})", left->string(), right->string());
+	}
+
+	std::string InequalityBinaryExpression::string() const
+	{
+		return std::format("binary expression ({} != {})", left->string(), right->string());
+	}
+
+	std::string GreaterBinaryExpression::string() const
+	{
+		return std::format("binary expression ({} > {})", left->string(), right->string());
+	}
+
+	std::string LessBinaryExpression::string() const
+	{
+		return std::format("binary expression ({} < {})", left->string(), right->string());
+	}
+
 
 
 	PlusBinaryExpression* PlusBinaryExpression::copy() const
@@ -59,6 +111,31 @@ namespace hz
 	TimesBinaryExpression* TimesBinaryExpression::copy() const
 	{
 		return new TimesBinaryExpression{ *this };
+	}
+
+	AssignBinaryExpression* AssignBinaryExpression::copy() const
+	{
+		return new AssignBinaryExpression{ *this };
+	}
+
+	EqualityBinaryExpression* EqualityBinaryExpression::copy() const
+	{
+		return new EqualityBinaryExpression{ *this };
+	}
+
+	InequalityBinaryExpression* InequalityBinaryExpression::copy() const
+	{
+		return new InequalityBinaryExpression{ *this };
+	}
+
+	GreaterBinaryExpression* GreaterBinaryExpression::copy() const
+	{
+		return new GreaterBinaryExpression{ *this };
+	}
+
+	LessBinaryExpression* LessBinaryExpression::copy() const
+	{
+		return new LessBinaryExpression{ *this };
 	}
 
 
@@ -83,11 +160,34 @@ namespace hz
 		_generator->make_isub(received_allocation->read(), temp.allocation->read());
 	}
 
-	[[noreturn]]
-	void TimesBinaryExpression::generate(Allocation* receieved_allocation)
+	void TimesBinaryExpression::generate(Allocation*)
 	{
-		DISCARD receieved_allocation;
-		MULTIPLICATION_ERROR;
+		Log::error("multiplication is invalid in a compiled context");
+	}
+
+	void AssignBinaryExpression::generate(Allocation*)
+	{
+		Log::error("assignment is invalid in a compiled context");
+	}
+
+	void EqualityBinaryExpression::generate(Allocation*)
+	{
+		Log::error("comparison is invalid in a compiled context");
+	}
+
+	void InequalityBinaryExpression::generate(Allocation*)
+	{
+		Log::error("comparison is invalid in a compiled context");
+	}
+
+	void GreaterBinaryExpression::generate(Allocation*)
+	{
+		Log::error("comparison is invalid in a compiled context");
+	}
+
+	void LessBinaryExpression::generate(Allocation*)
+	{
+		Log::error("comparison is invalid in a compiled context");
 	}
 
 
@@ -305,6 +405,31 @@ namespace hz
 		}
 	}
 
+	Expression* AssignBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* EqualityBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* InequalityBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* GreaterBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* LessBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
 
 
 	Node* PlusBinaryExpression::evaluate(Context* context) const
@@ -312,13 +437,27 @@ namespace hz
 		const auto left_evaluated = left->evaluate(context);
 		const auto right_evaluated = right->evaluate(context);
 
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		if (AS_EXPRESSION(left_evaluated)->etype() == ExpressionType::INTEGER_LITERAL &&
+			AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::INTEGER_LITERAL)
 		{
-			Log::error("both operands of a binary expression must evaluate to integers");
+			return new IntegerLiteralExpression
+			{ 
+				std::get<int>(harvest(left_evaluated)) + std::get<int>(harvest(right_evaluated)) 
+			};
 		}
 
-		return new IntegerLiteralExpression{ std::get<int>(harvest(left_evaluated)) + std::get<int>(harvest(right_evaluated)) };
+		else if (AS_EXPRESSION(left_evaluated)->etype() == ExpressionType::STRING &&
+				 AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::STRING)
+		{
+			return new StringExpression
+			{
+				std::format("{}{}",
+					std::get<std::string>(harvest(left_evaluated)),
+					std::get<std::string>(harvest(right_evaluated)))
+			};
+		}
+
+		Log::error("both operands of a binary expression must evaluate to integers");
 	}
 
 	Node* MinusBinaryExpression::evaluate(Context* context) const
@@ -332,7 +471,10 @@ namespace hz
 			Log::error("both operands of a binary expression must evaluate to integers");
 		}
 
-		return new IntegerLiteralExpression{ std::get<int>(harvest(left_evaluated)) - std::get<int>(harvest(right_evaluated)) };
+		return new IntegerLiteralExpression
+		{ 
+			std::get<int>(harvest(left_evaluated)) - std::get<int>(harvest(right_evaluated)) 
+		};
 	}
 
 	Node* TimesBinaryExpression::evaluate(Context* context) const
@@ -346,6 +488,97 @@ namespace hz
 			Log::error("both operands of a binary expression must evaluate to integers");
 		}
 
-		return new IntegerLiteralExpression{ std::get<int>(harvest(left_evaluated)) * std::get<int>(harvest(right_evaluated)) };
+		return new IntegerLiteralExpression
+		{ 
+			std::get<int>(harvest(left_evaluated)) * std::get<int>(harvest(right_evaluated))
+		};
+	}
+
+	Node* AssignBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::IDENTIFIER)
+		{
+			Log::error("the left-hand operand of an assignment must be a modifiable l-value");
+		}
+
+		if (AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL &&
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::IDENTIFIER)
+		{
+			context->define_variable(
+				AS_IDENTIFIER_EXPRESSION(left_evaluated)->name, harvest(right_evaluated));
+		}
+
+		Log::error("the right-hand operand of an assignment must be an r-value");
+	}
+
+	Node* EqualityBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression
+		{ 
+			std::get<int>(harvest(left_evaluated)) == std::get<int>(harvest(right_evaluated)) 
+		};
+	}
+
+	Node* InequalityBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression
+		{ 
+			std::get<int>(harvest(left_evaluated)) != std::get<int>(harvest(right_evaluated))
+		};
+	}
+
+	Node* GreaterBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression
+		{ 
+			std::get<int>(harvest(left_evaluated)) > std::get<int>(harvest(right_evaluated))
+		};
+	}
+
+	Node* LessBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = left->evaluate(context);
+		const auto right_evaluated = right->evaluate(context);
+
+		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			Log::error("both operands of a binary expression must evaluate to integers");
+		}
+
+		return new IntegerLiteralExpression
+		{ 
+			std::get<int>(harvest(left_evaluated)) < std::get<int>(harvest(right_evaluated))
+		};
 	}
 }

@@ -68,6 +68,76 @@ namespace hz
 		virtual Expression* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;
 	};
+
+	class AssignBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual std::string string() const final override;
+		virtual AssignBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class EqualityBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual std::string string() const final override;
+		virtual EqualityBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class InequalityBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual std::string string() const final override;
+		virtual InequalityBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class GreaterBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual std::string string() const final override;
+		virtual GreaterBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class LessBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual std::string string() const final override;
+		virtual LessBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
 }
 
 #endif //HAZE_BINARYEXPRESSION_H

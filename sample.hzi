@@ -16,5 +16,6 @@ function nvr main = ()
 
 	byte foo = $MUL(A, B) + C;
 	print(foo * 2);
+	print("hello" + "123");
 	// output: 10
 }

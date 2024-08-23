@@ -26,15 +26,11 @@ namespace hz
 		Log::error(std::format("job id {} is undefined and cannot be stopped", uuid));
 	}
 
-	std::string JobManager::format() const
+	void JobManager::log() const
 	{
-		std::string result;
-
 		for (auto& job : _jobs)
 		{
-			result += std::format("{}\n", job.format());
+			Log::info(job.format());
 		}
-
-		return result;
 	}
 }

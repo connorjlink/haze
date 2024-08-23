@@ -202,6 +202,12 @@ namespace hz
 		return new IntegerLiteralExpression{ std::stoi(consume(TokenType::INT)) };
 	}
 
+	StringExpression* Parser::parse_string_expression()
+	{
+		const auto message = consume(TokenType::STRING);
+		return new StringExpression{ std::move(message) };
+	}
+
 	FunctionCallExpression* Parser::parse_functioncall_expression()
 	{
 		const auto name = consume(TokenType::IDENTIFIER);
@@ -275,6 +281,11 @@ namespace hz
 			case INT:
 			{
 				expression = parse_integerliteral_expression();
+			} break;
+			
+			case STRING:
+			{
+				expression = parse_string_expression();
 			} break;
 
 			case IDENTIFIER:

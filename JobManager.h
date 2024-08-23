@@ -17,7 +17,7 @@ namespace hz
 		void end_job(std::uint32_t);
 
 	public:
-		std::string format() const;
+		void log() const;
 
 	public:
 		JobManager()

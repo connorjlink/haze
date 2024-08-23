@@ -171,18 +171,7 @@ namespace hz
 		DISCARD consume(TokenType::PRINT);
 		DISCARD consume(TokenType::LPAREN);
 
-		Expression* expression = nullptr;
-
-		if (peek().type == TokenType::STRING)
-		{
-			const auto message = consume(TokenType::STRING);
-			expression = new StringExpression{ std::move(message) };
-		}
-
-		else
-		{
-			expression = parse_expression();
-		}
+		auto expression = parse_expression();
 
 		DISCARD consume(TokenType::RPAREN);
 		DISCARD consume(TokenType::SEMICOLON);
