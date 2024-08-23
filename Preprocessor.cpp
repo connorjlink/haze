@@ -69,7 +69,7 @@ namespace hz
 {
     void Preprocessor::preprocess_include()
     {
-        std::regex rx_incl(R"(^(\.include \"(.*)\"\s*((;.*$)?|$)))");
+        std::regex rx_incl(R"(^(\.include \"(.*)\"\s*((;.*$)?|$)))", std::regex::optimize);
         std::smatch matches;
 
         while (std::regex_search(code, matches, rx_incl))
@@ -98,7 +98,7 @@ namespace hz
 
     void Preprocessor::preprocess_macro_definition()
     {
-        std::regex rx_mcro(R"((\.macro ([a-zA-Z_][a-zA-Z0-0_]*) = \((([a-zA-Z])(, ?[a-zA-Z])*)?\)\:\s*\{([^\}]*)\}))");
+        std::regex rx_mcro(R"((\.macro ([a-zA-Z_][a-zA-Z0-0_]*) = \((([a-zA-Z])(, ?[a-zA-Z])*)?\)\:\s*\{([^\}]*)\}))", std::regex::optimize);
         std::smatch matches;
 
         while (std::regex_search(code, matches, rx_mcro))
@@ -130,7 +130,7 @@ namespace hz
 
     void Preprocessor::preprocess_macro_invokation()
     {
-        std::regex rx_invk(R"((\$([a-zA-Z_][a-zA-Z0-9_]*)\(([^\,\)]*\s*(\,[^\,\)]*)*)?\)))");
+        std::regex rx_invk(R"((\$([a-zA-Z_][a-zA-Z0-9_]*)\(([^\,\)]*\s*(\,[^\,\)]*)*)?\)))", std::regex::optimize);
         std::smatch matches;
 
         while (std::regex_search(code, matches, rx_invk))
@@ -152,7 +152,7 @@ namespace hz
                     }
 
                     return false;
-                }) == std::end(defined_macros))
+                }) == defined_macros.end())
             {
                 Log::error(std::format("macro {} is undefined", macro.name));
             }

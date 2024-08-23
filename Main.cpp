@@ -18,6 +18,7 @@
 #include "Hook.h"
 #include "HazeEvaluator.h"
 
+#include "JobManager.h"
 
 #include <cstdlib>
 #include <string>
@@ -70,17 +71,31 @@ int main(int argc, char** argv)
 		Log::error(std::format("the file {} could not be opened", filepath));
 	}
 
+	JobManager job_manager{};
+
+	auto task = job_manager.begin_job("input file reading");
+
 	std::string source_code(filesize, '\0');
 	source_code.assign((std::istreambuf_iterator<char>(file)),
 						std::istreambuf_iterator<char>());
 
+	job_manager.end_job(task);
+
 	_allocator = new Allocator{};
+
+	task = job_manager.begin_job("preprocessing");
 
 	auto preprocessor = new Preprocessor{ std::move(source_code), filepath };
 	auto processed = preprocessor->preprocess();
 
+	job_manager.end_job(task);
+
+	task = job_manager.begin_job("lexing");
+
 	auto lexer = new Lexer{ std::move(processed) };
 	auto tokens = lexer->lex();
+
+	job_manager.end_job(task);
 
 	Linker* linker = nullptr;
 
@@ -111,13 +126,23 @@ int main(int argc, char** argv)
 	{
 		_context = new Context{};
 
+		task = job_manager.begin_job("parsing");
+
 		//We are trying to interpret a script
 		_parser = new InterpreterParser{ std::move(tokens) };
-
 		auto declarators = _parser->parse();
+
+		job_manager.end_job(task);
+
+
+		task = job_manager.begin_job("evaluating");
 
 		auto evaluator = new HazeEvaluator{ std::move(declarators), _context };
 		evaluator->evaluate();
+
+		job_manager.end_job(task);
+
+		std::cout << job_manager.format() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

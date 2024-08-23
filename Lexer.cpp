@@ -89,11 +89,11 @@ namespace hz
 					 'A' <= current && current <= 'Z')
 			{
 				const auto lexeme = rest(std::isalnum);
-				const auto search = lexeme_map.find(lexeme);
+				const auto search = lexeme_map.at(lexeme);
 
-				if (search != std::end(lexeme_map))
+				if (search)
 				{
-					APPEND_TOKEN(search->second, lexeme);
+					APPEND_TOKEN(*search, lexeme);
 				}
 
 				else
@@ -106,11 +106,11 @@ namespace hz
 			{
 				i++;
 				const auto lexeme = rest(std::isalnum);
-				const auto search = lexeme_map.find(std::format(".{}", lexeme));
+				const auto search = lexeme_map.at(std::format(".{}", lexeme));
 
-				if (search != std::end(lexeme_map))
+				if (search)
 				{
-					APPEND_TOKEN(search->second, lexeme);
+					APPEND_TOKEN(*search, lexeme);
 				}
 
 				else
@@ -132,13 +132,13 @@ namespace hz
 
 			else
 			{
-				//if (current != '')
-				// TODO: replace the lexeme_map with my custom Bimap for better performance
-				const auto search = lexeme_map.find(std::string{ current });
+				const auto current_string = std::string{ current };
 
-				if (search != std::end(lexeme_map))
+				const auto search = lexeme_map.at(current_string);
+
+				if (search.has_value())
 				{
-					APPEND_TOKEN(search->second, std::string{ current });
+					APPEND_TOKEN(search.value(), std::string{current});
 				}
 
 				else

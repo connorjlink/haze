@@ -144,15 +144,14 @@ namespace hz
 
 		auto debug = [&](auto v)
 		{
-			for (const auto& [key, value] : lexeme_map)
+			const auto item = lexeme_map.at(v);
+
+			if (item)
 			{
-				if (value == v)
-				{
-					return key;
-				}
+				return *item;
 			}
 
-			Log::error("Invalid token cannot be indexed in the lexeme map");
+			Log::error("invalid token not defined in the topic map");
 		};
 
 		Log::error(std::format("({}) expected token '{}' but got '{}'", current.line, debug(token),

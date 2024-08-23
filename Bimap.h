@@ -1,62 +1,78 @@
 #ifndef HAZE_BIMAP_H
 #define HAZE_BIMAP_H
 
-#include <unordered_map>
 #include <string>
 #include <format>
+#include <optional>
+
+#include <type_traits>
+#include <unordered_map>
 
 #include "Log.h"
 
 namespace hz
 {
-	template<typename T>
+	template<typename T, typename U>
 	struct bimap_t
 	{
-		T value;
-		std::string identifier;
+		T _first;
+		U _second;
 	};
 
-	template<typename T, typename... Ts>
+	template<typename T, typename U>
 	class Bimap
 	{
 	private:
-		std::unordered_map<T, std::string> _forward;
-		std::unordered_map<std::string, T> _backward;
+		std::unordered_map<T, U> _forward;
+		std::unordered_map<U, T> _backward;
 
 	public:
-		const std::string& at(const T& value) const
+		std::optional<U> at(const T& value) const
 		{
-			if (auto it = _forward.at(value);
-				it != std::end(_forward))
+			if (auto it = _forward.find(value);
+				it != _forward.end())
 			{
-				return *it;
+				return { it->second };
 			}
 
-			Log::error(std::format("Value {} was not defined", value));
+			return std::nullopt;
 		}
 
-		T at(const std::string& identifier) const
+		std::optional<T> at(const U& value) const
 		{
-			if (auto it = _backward.at(identifier);
-				it != std::end(_backward))
+			if (auto it = _backward.find(value);
+				it != _backward.end())
 			{
-				return *it;
+				return { it->second };
 			}
 
-			Log::error(std::format("Identifier {} was not defined", identifier));
+			return std::nullopt;
+		}
+
+	private:
+		template<typename P, typename... Rs>
+		void add_impl(P&& p, Rs&&... rs)
+		{
+			add(p);
+			add_impl(rs...);
+		}
+
+		void add_impl()
+		{
 		}
 
 	public:
-		void add(Bimap_t<T> set)
+		void add(bimap_t<T, U> set)
 		{
-			_forward[set.value] = set.identifier;
-			_backward[set.identifier] = set.value;
+			_forward[set._first] = set._second;
+			_backward[set._second] = set._first;
 		}
 
 	public:
-		Bimap(Ts... sets)
+		template<typename... Vs>
+		Bimap(Vs... vs)
 		{
-			add(sets...);
+			add_impl(vs...);
 		}
 	};
 }

@@ -18,7 +18,3 @@ function nvr main = ()
 	print(foo * 2);
 	// output: 10
 }
-
-
-
-

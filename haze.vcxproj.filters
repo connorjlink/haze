@@ -176,6 +176,12 @@
     <ClCompile Include="DotDefineCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JobManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Job.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Validator.h">
@@ -377,6 +383,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="DotDefineCommand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JobManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Job.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

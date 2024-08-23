@@ -58,6 +58,8 @@
     <ClCompile Include="IntegerLiteralExpression.cpp" />
     <ClCompile Include="InterpreterParser.cpp" />
     <ClCompile Include="Intrinsic.cpp" />
+    <ClCompile Include="Job.cpp" />
+    <ClCompile Include="JobManager.cpp" />
     <ClCompile Include="LabelCommand.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="Linkable.cpp" />
@@ -119,6 +121,8 @@
     <ClInclude Include="InterpreterParser.h" />
     <ClInclude Include="Intrinsic.h" />
     <ClInclude Include="IntrinsicType.h" />
+    <ClInclude Include="Job.h" />
+    <ClInclude Include="JobManager.h" />
     <ClInclude Include="LabelCommand.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Linkable.h" />
@@ -244,7 +248,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -265,7 +269,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -283,7 +287,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -319,7 +323,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>$(SolutionDir)vcpkg_installed\x64-windows\bin\paho-mqtt3a.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

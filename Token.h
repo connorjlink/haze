@@ -3,8 +3,8 @@
 
 #include <cstdlib>
 #include <string>
-#include <optional>
-#include <unordered_map>
+
+#include "Bimap.h"
 
 namespace hz
 {
@@ -55,71 +55,73 @@ namespace hz
 		END,
 	};
 
-	static const std::unordered_map<std::string_view, TokenType> lexeme_map =
+#define S(x) std::string{ x }
+
+	static const Bimap<std::string, TokenType> lexeme_map
 	{
-		{ ";", TokenType::SEMICOLON },
-		{ ":", TokenType::COLON },
-		{ ",", TokenType::COMMA },
-		{ "=", TokenType::EQUALS },
-		{ "&", TokenType::AMPERSAND },
-		{ "#", TokenType::POUND },
-		{ "(", TokenType::LPAREN  },
-		{ ")", TokenType::RPAREN },
-		{ "{", TokenType::LBRACE },
-		{ "}", TokenType::RBRACE },
-		{ "[", TokenType::LBRACKET },
-		{ "]", TokenType::RBRACKET },
-		{ "+", TokenType::PLUS },
-		{ "-", TokenType::MINUS },
-		{ "*", TokenType::STAR },
-		{ "~", TokenType::TILDE },
-		{ "!", TokenType::EXCLAMATION },
+		bimap_t{ S(";"), TokenType::SEMICOLON },
+		bimap_t{ S(":"), TokenType::COLON },
+		bimap_t{ S(","), TokenType::COMMA },
+		bimap_t{ S("="), TokenType::EQUALS },
+		bimap_t{ S("&"), TokenType::AMPERSAND },
+		bimap_t{ S("#"), TokenType::POUND },
+		bimap_t{ S("("), TokenType::LPAREN  },
+		bimap_t{ S(")"), TokenType::RPAREN },
+		bimap_t{ S("{"), TokenType::LBRACE },
+		bimap_t{ S("}"), TokenType::RBRACE },
+		bimap_t{ S("["), TokenType::LBRACKET },
+		bimap_t{ S("]"), TokenType::RBRACKET },
+		bimap_t{ S("+"), TokenType::PLUS },
+		bimap_t{ S("-"), TokenType::MINUS },
+		bimap_t{ S("*"), TokenType::STAR },
+		bimap_t{ S("~"), TokenType::TILDE },
+		bimap_t{ S("!"), TokenType::EXCLAMATION },
+		
+		bimap_t{ S("function"), TokenType::FUNCTION },
+		bimap_t{ S("byte"), TokenType::BYTE },
+		bimap_t{ S("nvr"), TokenType::NVR},
+		bimap_t{ S("return"), TokenType::RETURN },
+		bimap_t{ S("while"), TokenType::WHILE },
+		bimap_t{ S("for"), TokenType::FOR },
+		bimap_t{ S("if"), TokenType::IF },
+		bimap_t{ S("else"), TokenType::ELSE },
+		
+		bimap_t{ S("intrinsic"), TokenType::INTRINSIC },
+		bimap_t{ S("geometry"), TokenType::GEOMETRY },
+		
+		bimap_t{ S(".define"), TokenType::DOTDEFINE },
+		bimap_t{ S(".org"), TokenType::DOTORG },
+		
+		bimap_t{ S(".hook"), TokenType::DOTHOOK },
+		bimap_t{ S(".unhook"), TokenType::DOTUNHOOK },
+		
+		bimap_t{ S("asm"), TokenType::ASM },
+		
+		bimap_t{ S("r0"), TokenType::R0 },
+		bimap_t{ S("r1"), TokenType::R1 },
+		bimap_t{ S("r2"), TokenType::R2 },
+		bimap_t{ S("r3"), TokenType::R3 },
 
-		{ "function", TokenType::FUNCTION },
-		{ "byte", TokenType::BYTE },
-		{ "nvr", TokenType::NVR},
-		{ "return", TokenType::RETURN },
-		{ "while", TokenType::WHILE },
-		{ "for", TokenType::FOR },
-		{ "if", TokenType::IF },
-		{ "else", TokenType::ELSE },
-
-		{ "intrinsic", TokenType::INTRINSIC },
-		{ "geometry", TokenType::GEOMETRY },
-
-		{ ".define", TokenType::DOTDEFINE },
-		{ ".org", TokenType::DOTORG },
-
-		{ ".hook", TokenType::DOTHOOK },
-		{ ".unhook", TokenType::DOTUNHOOK },
-
-		{ "asm", TokenType::ASM },
-
-		{ "r0", TokenType::R0 },
-		{ "r1", TokenType::R1 },
-		{ "r2", TokenType::R2 },
-		{ "r3", TokenType::R3 },
-
-		{ "move", TokenType::MOVE },
-		{ "load", TokenType::LOAD },
-		{ "copy", TokenType::COPY },
-		{ "iadd", TokenType::IADD },
-		{ "isub", TokenType::ISUB },
-		{ "band", TokenType::BAND },
-		{ "bior", TokenType::BIOR },
-		{ "bxor", TokenType::BXOR },
-		{ "bnot", TokenType::BNOT },
-		{ "call", TokenType::CALL },
-		{ "exit", TokenType::EXIT },
-		{ "push", TokenType::PUSH },
-		{ "pull", TokenType::PULL },
-		{ "brez", TokenType::BREZ },
-		{ "wait", TokenType::WAIT },
-
-		{ "print", TokenType::PRINT },
-		{ "[string literal]", TokenType::STRING },
-
-		{ "eof", TokenType::END },
+		bimap_t{ S("move"), TokenType::MOVE },
+		bimap_t{ S("load"), TokenType::LOAD },
+		bimap_t{ S("copy"), TokenType::COPY },
+		bimap_t{ S("iadd"), TokenType::IADD },
+		bimap_t{ S("isub"), TokenType::ISUB },
+		bimap_t{ S("band"), TokenType::BAND },
+		bimap_t{ S("bior"), TokenType::BIOR },
+		bimap_t{ S("bxor"), TokenType::BXOR },
+		bimap_t{ S("bnot"), TokenType::BNOT },
+		bimap_t{ S("call"), TokenType::CALL },
+		bimap_t{ S("exit"), TokenType::EXIT },
+		bimap_t{ S("push"), TokenType::PUSH },
+		bimap_t{ S("pull"), TokenType::PULL },
+		bimap_t{ S("brez"), TokenType::BREZ },
+		bimap_t{ S("wait"), TokenType::WAIT },
+		
+		bimap_t{ S("print"), TokenType::PRINT },
+		bimap_t{ S("[string literal]"), TokenType::STRING },
+		
+		bimap_t{ S("eof"), TokenType::END },
 	};
 
 	struct Token
