@@ -127,9 +127,11 @@ namespace hz
 	struct Token
 	{
 		TokenType type;
-		std::size_t line;
+		std::int32_t offset;
 		std::string value;
 	};
+
+	static const auto NULL_TOKEN = Token{ TokenType::END, -1, "" };
 }
 
 #endif //HAZE_TOKEN_H

@@ -34,7 +34,7 @@ namespace hz
 		virtual std::vector<std::uint8_t> emit_bool(Register) final override;
 
 	public:
-		virtual Emitter::Type etype() const final override;
+		virtual EmitterType etype() const final override;
 
 	public:
 		std::vector<std::uint8_t> emit() final override;

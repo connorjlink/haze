@@ -1,6 +1,8 @@
 #ifndef HAZE_EMITTER_H
 #define HAZE_EMITTER_H
 
+#include "EmitterType.h"
+
 #include "InstructionCommand.h"
 
 #include <cstdint>
@@ -10,14 +12,6 @@ namespace hz
 {
 	class Emitter
 	{
-	public:
-		enum class Type
-		{
-			HAZE,  // NOTE: current implementation
-			X86,   // NOTE: near future
-			ARM64, // NOTE: far future
-		};
-
 	protected:
 		std::vector<InstructionCommand*> image;
 
@@ -45,7 +39,7 @@ namespace hz
 		virtual std::vector<std::uint8_t> emit_bool(Register) = 0;
 
 	public:
-		virtual Emitter::Type etype() const = 0;
+		virtual EmitterType etype() const = 0;
 
 	public:
 		virtual std::vector<std::uint8_t> emit() = 0;

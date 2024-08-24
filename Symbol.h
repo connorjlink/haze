@@ -1,13 +1,9 @@
 #ifndef HAZE_SYMBOL_H
 #define HAZE_SYMBOL_H
 
-#include <string>
+#include "SymbolType.h"
 
-#define AS_FUNCTION_SYMBOL(x) static_cast<FunctionSymbol*>(x)
-#define AS_ARGUMENT_SYMBOL(x) static_cast<ArgumentSymbol*>(x)
-#define AS_VARIABLE_SYMBOL(x) static_cast<VariableSymbol*>(x)
-#define AS_DEFINE_SYMBOL(x) static_cast<DefineSymbol*>(x)
-#define AS_LABEL_SYMBOL(x) static_cast<LabelSymbol*>(x)
+#include <string>
 
 namespace hz
 {
@@ -16,16 +12,6 @@ namespace hz
 
 	class Symbol
 	{
-	public:
-		enum class Type
-		{
-			FUNCTION,
-			ARGUMENT,
-			VARIABLE,
-			DEFINE,
-			LABEL,
-		};
-
 	public:
 		std::string name;
 		bool was_referenced;

@@ -1,51 +1,30 @@
 #ifndef HAZE_LOG_H
 #define HAZE_LOG_H
 
-#include <iostream>
-#include <format>
+#include "ErrorType.h"
 
-#define stream std::cerr
-
-#define DISCARD (void) 
+#include <string_view>
 
 namespace hz
 {
 	class Log
 	{
 	private:
-		static void print(std::string_view label, std::string_view message)
-		{
-			stream << std::format("{}: {}\n", label, message);
-		}
+		static void print(std::string_view, std::string_view);
 
 	public:
-		static void raw(std::string_view message)
-		{
-			stream << message;
-		}
+		static void raw(std::string_view);
 
 	public:
-		static void output(std::string_view message)
-		{
-			print("Output", message);
-		}
+		static void with_severity(std::string_view, ErrorType);
 
-		static void info(std::string_view message)
-		{
-			print("Information", message);
-		}
-
+	public:
+		static void output(std::string_view);
+		static void info(std::string_view);
+		static void warning(std::string_view);
 		[[noreturn]]
-		static void error(std::string_view message)
-		{
-			print("Error", message);
-			std::exit(EXIT_FAILURE);
-		}
-
-		static void warning(std::string_view message)
-		{
-			print("Warning", message);
-		}
+		static void error(std::string_view);
+		static void uncorrectable(std::string_view);
 	};
 }
 

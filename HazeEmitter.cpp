@@ -23,9 +23,9 @@ namespace
 
 namespace hz
 {
-	Emitter::Type HazeEmitter::etype() const
+	EmitterType HazeEmitter::etype() const
 	{
-		return Emitter::Type::HAZE;
+		return EmitterType::HAZE;
 	}
 
 	std::vector<std::uint8_t> HazeEmitter::emit_move(Register destination, Register source)

@@ -46,9 +46,9 @@ namespace
 
 namespace hz
 {
-	Emitter::Type X86Emitter::etype() const
+	EmitterType X86Emitter::etype() const
 	{
-		return Emitter::Type::X86;
+		return EmitterType::X86;
 	}
 
 	std::vector<std::uint8_t> X86Emitter::emit_move(Register destination, Register source)
