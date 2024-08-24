@@ -7,9 +7,9 @@ namespace hz
 {
 	std::string File::contents() const 
 	{
-		auto file = std::ifstream(_filepath);
+		auto file = std::ifstream(_filepath, std::ios::in);
 
-		if (!file.good())
+		if (file.good())
 		{
 			const auto filesize = std::filesystem::file_size(_filepath);
 

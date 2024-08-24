@@ -12,11 +12,12 @@ namespace hz
 	{
 		_filepaths = filepaths;
 
-		_toolchain_task = _job_manager->begin_job("toolchain exeuction");
+		_toolchain_task = _job_manager->begin_job("toolchain execution");
 
 		for (auto& filepath : _filepaths)
 		{
 			_error_reporter->open_context(filepath, "interpreting");
+
 
 			const auto read_task = _job_manager->begin_job("file reading");
 			_file_manager.open_file(filepath);
@@ -35,7 +36,12 @@ namespace hz
 			const auto lexer = new Lexer{ std::move(source_processed) };
 			_tokens[filepath] = lexer->lex();
 			_job_manager->end_job(lex_task);
+
+
+			_error_reporter->close_context();
 		}
+
+		run();
 	}
 
 	void Toolchain::shut_down()

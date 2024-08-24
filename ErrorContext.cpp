@@ -23,7 +23,7 @@ namespace hz
 
 		for (auto& error : _errors)
 		{
-
+			result += std::format("in {} while {}\n  {}", _file, _task, error.format());
 		}
 
 		return result;
@@ -38,6 +38,6 @@ namespace hz
 	{
 		const auto pos = ::locate(token);
 		const auto line = ::at_line(_file, pos._line);
-		_errors.emplace_back(Error{ pos, line, message });
+		_errors.emplace_back(Error{ pos, line, message, severity });
 	}
 }

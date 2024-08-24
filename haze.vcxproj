@@ -84,6 +84,7 @@
     <ClCompile Include="StringExpression.cpp" />
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Toolchain.cpp" />
+    <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Emitter.cpp" />

@@ -45,12 +45,15 @@ namespace hz
 
 	void ErrorReporter::post_error(std::string message, Token token)
 	{
+		_had_error = true;
 		_open_contexts.top().post(ErrorType::ERROR, message, token);
 	}
 
 	void ErrorReporter::post_uncorrectable(std::string message, Token token)
 	{
+		_had_error = true;
 		_open_contexts.top().post(ErrorType::UNCORRECTABLE, message, token);
+		close_context();
 		_toolchain->panic();
 	}
 }

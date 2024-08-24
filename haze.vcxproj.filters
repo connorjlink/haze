@@ -251,6 +251,9 @@
     <ClCompile Include="HazeEvaluator.cpp">
       <Filter>Source Files\Evaluator</Filter>
     </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">

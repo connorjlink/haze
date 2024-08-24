@@ -38,6 +38,7 @@ Parser* hz::_parser;
 Context* hz::_context;
 Toolchain* hz::_toolchain;
 ErrorReporter* hz::_error_reporter;
+JobManager* hz::_job_manager;
 
 namespace mqtt
 {
@@ -78,67 +79,38 @@ int main(int argc, char** argv)
 
 	_allocator = new Allocator{};
 
-
-	JobManager job_manager{};
-
-	const auto compile_task = job_manager.begin_job("compilation");
-
-
-	const auto read_task = job_manager.begin_job("input file reading");
-
-	std::string source_code(filesize, '\0');
-	source_code.assign((std::istreambuf_iterator<char>(file)),
-						std::istreambuf_iterator<char>());
-
-	job_manager.end_job(read_task);
-
-
-	const auto preprocess_task = job_manager.begin_job("preprocessing");
-
-	auto preprocessor = new Preprocessor{ std::move(source_code), filepath };
-	auto processed = preprocessor->preprocess();
-
-	job_manager.end_job(preprocess_task);
-
-
-	const auto lex_task = job_manager.begin_job("lexing");
-
-	auto lexer = new Lexer{ std::move(processed) };
-	auto tokens = lexer->lex();
-
-	job_manager.end_job(lex_task);
-
-
-	Linker* linker = nullptr;
+	_error_reporter = new ErrorReporter{};
+	_job_manager = new JobManager{};
 
 	if (extension == ".hz")
 	{
 		//We are trying to compile a program
-		_parser = new CompilerParser{ std::move(tokens) };
+		/*_parser = new CompilerParser{ std::move(tokens) };
 
 		auto ast = _parser->parse();
 
 		_generator = new Generator{ std::move(ast) };
 		auto linkables = _generator->generate();
 
-		linker = new CompilerLinker{ std::move(linkables) };
+		linker = new CompilerLinker{ std::move(linkables) };*/
 	}
 
 	else if (extension == ".hzs")
 	{
 		//We are trying to assemble a program
-		_parser = new AssemblerParser{ std::move(tokens) };
+		/*_parser = new AssemblerParser{ std::move(tokens) };
 
 		auto commands = _parser->parse();
 
-		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser) };
+		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser) };*/
 	}
 
 	else if (extension == ".hzi")
 	{
 		_context = new Context{};
 
-		_toolchain = new InterpreterToolchain{ { filepath } };
+		_toolchain = new InterpreterToolchain{};
+		_toolchain->init({ filepath });
 
 		return EXIT_SUCCESS;
 	}
@@ -151,6 +123,7 @@ int main(int argc, char** argv)
 
 	// Interpreter context will never fall through to here
 
+	Linker* linker = nullptr;
  	auto image = linker->link(HALF_DWORD_MAX);
 
 	auto emitter = new HazeEmitter{ std::move(image) };
