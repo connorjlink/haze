@@ -16,8 +16,10 @@ namespace hz
 		std::string contents() const;
 
 	public:
-		File(std::string&& filepath)
-			: _filepath{ std::move(filepath) }
+		File() = default;
+
+		File(const std::string& filepath)
+			: _filepath{ filepath }
 		{
 		}
 	};

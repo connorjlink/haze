@@ -17,13 +17,13 @@ namespace hz
 		bool was_referenced;
 
 	public:
-		explicit Symbol(std::string name)
+		Symbol(std::string name)
 			: name{ std::move(name) }, was_referenced{ false }
 		{
 		}
 
 	public:
-		virtual Symbol::Type ytype() const = 0;
+		virtual SymbolType ytype() const = 0;
 	};
 
 	class FunctionSymbol : public Symbol
@@ -36,13 +36,13 @@ namespace hz
 		std::uint8_t arity;
 
 	public:
-		explicit FunctionSymbol(std::string name, ReturnType return_type = static_cast<ReturnType>(0))
+		FunctionSymbol(std::string name, ReturnType return_type = static_cast<ReturnType>(0))
 			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arity{ 0 }
 		{
 		}
 
 	public:
-		virtual Symbol::Type ytype() const final override;
+		virtual SymbolType ytype() const final override;
 	};
 
 	class ArgumentSymbol : public Symbol
@@ -51,13 +51,13 @@ namespace hz
 		Allocation* allocation;
 
 	public:
-		explicit ArgumentSymbol(std::string name)
+		ArgumentSymbol(std::string name)
 			: Symbol{ std::move(name) }, allocation{ nullptr }
 		{
 		}
 
 	public:
-		virtual Symbol::Type ytype() const final override;
+		virtual SymbolType ytype() const final override;
 	};
 
 	class VariableSymbol : public Symbol
@@ -66,13 +66,13 @@ namespace hz
 		Allocation* allocation;
 
 	public:
-		explicit VariableSymbol(std::string name, Allocation* allocation)
+		VariableSymbol(std::string name, Allocation* allocation)
 			: Symbol{ std::move(name) }, allocation{ allocation }
 		{
 		}
 
 	public:
-		virtual Symbol::Type ytype() const final override;
+		virtual SymbolType ytype() const final override;
 	};
 
 	class DefineSymbol : public Symbol
@@ -81,13 +81,13 @@ namespace hz
 		std::uint16_t value;
 
 	public:
-		explicit DefineSymbol(std::string name, std::uint16_t value)
+		DefineSymbol(std::string name, std::uint16_t value)
 			: Symbol{ std::move(name) }, value{ value }
 		{
 		}
 
 	public:
-		virtual Symbol::Type ytype() const final override;
+		virtual SymbolType ytype() const final override;
 	};
 
 	class LabelSymbol : public Symbol
@@ -96,13 +96,13 @@ namespace hz
 		std::uint16_t address;
 
 	public:
-		explicit LabelSymbol(std::string name, std::uint16_t address)
+		LabelSymbol(std::string name, std::uint16_t address)
 			: Symbol{ std::move(name) }, address{ address }
 		{
 		}
 
 	public:
-		virtual Symbol::Type ytype() const final override;
+		virtual SymbolType ytype() const final override;
 	};
 }
 

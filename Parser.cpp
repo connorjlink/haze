@@ -67,14 +67,14 @@ namespace
 
 namespace hz
 {
-	void Parser::add_symbol(Symbol::Type type, std::string name)
+	void Parser::add_symbol(SymbolType type, std::string name)
 	{
 		if (query_symbol(name))
 		{
 			Log::error(std::format("symbol {} is multiply defined", name));
 		}
 
-		using enum Symbol::Type;
+		using enum SymbolType;
 		switch (type)
 		{
 			case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name }); break;
@@ -91,18 +91,19 @@ namespace hz
 		return ::find(name, symbol_table) != std::end(symbol_table);
 	}
 
-	Symbol* Parser::reference_symbol(Symbol::Type type, std::string name, bool visit)
+	Symbol* Parser::reference_symbol(SymbolType type, std::string name, bool visit)
 	{
 		auto symbol = ::find(name, symbol_table);
 		if (symbol == std::end(symbol_table))
 		{
+#pragma message("TODO: symbol type bimap :)")
 			// TODO: add other symbol types here as they are added!
 			Log::error(std::format("{} {} is undefined", 
-				type == Symbol::Type::VARIABLE ? "variable" :
-					type == Symbol::Type::FUNCTION ? "function" : 
-						type == Symbol::Type::ARGUMENT ? "argument" :
-							type == Symbol::Type::DEFINE ? "define" :
-								type == Symbol::Type::LABEL ? "label" : "unknown", name));
+				type == SymbolType::VARIABLE ? "variable" :
+					type == SymbolType::FUNCTION ? "function" : 
+						type == SymbolType::ARGUMENT ? "argument" :
+							type == SymbolType::DEFINE ? "define" :
+								type == SymbolType::LABEL ? "label" : "unknown", name));
 		}
 
 		if ((*symbol)->ytype() == type)
@@ -130,7 +131,7 @@ namespace hz
 			return tokens[cursor + 1];
 		}
 
-		Log::error(std::format("({}) unexpectedly reached the end of file", peek().line));
+		Log::error(std::format("({}) unexpectedly reached the end of file", peek().offset));
 	}
 
 	std::string Parser::consume(TokenType token)
@@ -154,7 +155,7 @@ namespace hz
 			Log::error("invalid token not defined in the topic map");
 		};
 
-		Log::error(std::format("({}) expected token '{}' but got '{}'", current.line, debug(token),
+		Log::error(std::format("({}) expected token '{}' but got '{}'", current.offset, debug(token),
 			((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value : debug(current.type))));
 	}
 
@@ -168,7 +169,7 @@ namespace hz
 			consume(peek().type);
 		}
 
-		tokens.emplace_back(TokenType::END, peek().line, "eof");
+		tokens.emplace_back(TokenType::END, peek().offset, "eof");
 
 		return tokens;
 	}
@@ -185,8 +186,8 @@ namespace hz
 		const auto identifier = identifier_expresion->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
-		add_symbol(Symbol::Type::DEFINE, identifier);
-		AS_DEFINE_SYMBOL(reference_symbol(Symbol::Type::DEFINE, identifier))->value = value;
+		add_symbol(SymbolType::DEFINE, identifier);
+		AS_DEFINE_SYMBOL(reference_symbol(SymbolType::DEFINE, identifier))->value = value;
 
 		return new DotDefineCommand{ identifier, { value } };
 	}
@@ -311,7 +312,7 @@ namespace hz
 
 			default:
 			{
-				Log::error(std::format("({}) unexpected expression type", peek().line));
+				Log::error(std::format("({}) unexpected expression type", peek().offset));
 			} break;
 		}
 

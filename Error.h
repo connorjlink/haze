@@ -24,7 +24,7 @@ namespace hz
 
 	public:
 		Error(TokenPosition position, std::string erroring_line, std::string message)
-			: _position{ position }, _erroring_line { std::move(erroring_line }, _message{ std::move(message) }
+			: _position{ position }, _erroring_line { std::move(erroring_line) }, _message{ std::move(message) }
 		{
 		}
 	};

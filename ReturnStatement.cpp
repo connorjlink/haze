@@ -32,7 +32,7 @@ namespace hz
 	{
 		if (value == nullptr)
 		{
-			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(Symbol::Type::FUNCTION, enclosing_function))->return_type != ReturnType::NVR)
+			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function))->return_type != ReturnType::NVR)
 			{
 				Log::error("no return value was specified for a non-void-returning function");
 			}

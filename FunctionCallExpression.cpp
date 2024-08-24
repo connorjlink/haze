@@ -27,7 +27,7 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = _parser->reference_symbol(Symbol::Type::FUNCTION, name, true);
+		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, name, true);
 
 		const auto expected_arity = AS_FUNCTION_SYMBOL(symbol)->arity;
 		const auto got_arity = arguments.size();

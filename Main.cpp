@@ -20,6 +20,9 @@
 
 #include "JobManager.h"
 
+#include "Toolchain.h"
+#include "InterpreterToolchain.h"
+
 #include <cstdlib>
 #include <string>
 #include <fstream>
@@ -33,6 +36,8 @@ Allocator* hz::_allocator;
 Generator* hz::_generator;
 Parser* hz::_parser;
 Context* hz::_context;
+Toolchain* hz::_toolchain;
+ErrorReporter* hz::_error_reporter;
 
 namespace mqtt
 {
@@ -133,27 +138,7 @@ int main(int argc, char** argv)
 	{
 		_context = new Context{};
 
-
-		const auto parse_task = job_manager.begin_job("parsing");
-
-		//We are trying to interpret a script
-		_parser = new InterpreterParser{ std::move(tokens) };
-		auto declarators = _parser->parse();
-
-		job_manager.end_job(parse_task);
-
-
-		const auto evaluate_task = job_manager.begin_job("evaluating");
-
-		auto evaluator = new HazeEvaluator{ std::move(declarators), _context };
-		evaluator->evaluate();
-
-		job_manager.end_job(evaluate_task);
-
-
-		job_manager.end_job(compile_task);
-
-		job_manager.log();
+		_toolchain = new InterpreterToolchain{ { filepath } };
 
 		return EXIT_SUCCESS;
 	}

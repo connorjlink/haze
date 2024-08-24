@@ -71,7 +71,7 @@ namespace hz
 		DISCARD consume(TokenType::BYTE);
 
 		const auto identifier = consume(TokenType::IDENTIFIER);
-		add_symbol(Symbol::Type::VARIABLE, identifier);
+		add_symbol(SymbolType::VARIABLE, identifier);
 
 		if (peek().type == TokenType::EQUALS)
 		{
@@ -205,7 +205,7 @@ namespace hz
 	{
 		DISCARD consume(TokenType::BYTE);
 		const auto name = consume(TokenType::IDENTIFIER);
-		add_symbol(Symbol::Type::ARGUMENT, name);
+		add_symbol(SymbolType::ARGUMENT, name);
 
 		return new IdentifierExpression{ name };
 	}
@@ -237,7 +237,7 @@ namespace hz
 
 				//TODO: require a type specifier for each argument of a function definition
 				auto identifier = parse_identifier_expression();
-				add_symbol(Symbol::Type::ARGUMENT, identifier->name);
+				add_symbol(SymbolType::ARGUMENT, identifier->name);
 				//TODO: this symbol should also be of type ARGUMENT
 				arguments.emplace_back(identifier);
 			}
@@ -254,7 +254,7 @@ namespace hz
 
 				if (peek().type == TokenType::RPAREN)
 				{
-					Log::error(std::format("({}) expected another argument", peek().line));
+					Log::error(std::format("({}) expected another argument", peek().offset));
 				}
 			}
 		}
@@ -263,7 +263,7 @@ namespace hz
 		//realistically, this is possible if we push parameters to the stack in batches of 4 or fewer at a time
 		if (arguments.size() > 4)
 		{
-			Log::error(std::format("({}) function defined with {} arguments but can have at most 4", peek().line, arguments.size()));
+			Log::error(std::format("({}) function defined with {} arguments but can have at most 4", peek().offset, arguments.size()));
 		}
 
 		return arguments;
@@ -294,8 +294,8 @@ namespace hz
 		auto name = consume(TokenType::IDENTIFIER);
 
 		//TODO: implement a more efficient way of modifying the return type than this mess
-		add_symbol(Symbol::Type::FUNCTION, name);
-		AS_FUNCTION_SYMBOL(reference_symbol(Symbol::Type::FUNCTION, name))->return_type = return_type;
+		add_symbol(SymbolType::FUNCTION, name);
+		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name))->return_type = return_type;
 
 		DISCARD consume(TokenType::EQUALS);
 
@@ -330,7 +330,7 @@ namespace hz
 			}); it != std::end(program))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
-			DISCARD reference_symbol(Symbol::Type::FUNCTION, "main", true);
+			DISCARD reference_symbol(SymbolType::FUNCTION, "main", true);
 
 			if constexpr (OPTIMIZE_AST)
 			{

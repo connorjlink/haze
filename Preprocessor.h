@@ -14,8 +14,8 @@ namespace hz
 		std::string parent_filepath;
 
 	public:
-		Preprocessor(std::string&& code, std::string parent_filepath)
-			: code(std::move(code)), parent_filepath(std::move(parent_filepath))
+		Preprocessor(std::string&& code, const std::string& parent_filepath)
+			: code{ std::move(code) }, parent_filepath{ parent_filepath }
 		{
 		}
 

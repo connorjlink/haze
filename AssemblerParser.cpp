@@ -1,11 +1,9 @@
 #include "AssemblerParser.h"
-
 #include "DotOrgCommand.h"
-
 #include "LabelCommand.h"
-
 #include "InstructionCommand.h"
 #include "Constants.h"
+#include "Utility.h"
 #include "Log.h"
 
 #define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
@@ -92,7 +90,7 @@ namespace hz
 
 		const auto identifier = identifier_expression->name;
 
-		add_symbol(Symbol::Type::LABEL, identifier);
+		add_symbol(SymbolType::LABEL, identifier);
 		//AS_LABEL_SYMBOL(reference_symbol(Symbol::Type::LABEL, identifier))->address = 
 
 		return new LabelCommand{ identifier };

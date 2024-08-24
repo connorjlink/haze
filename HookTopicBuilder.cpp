@@ -1,5 +1,7 @@
 #include "HookTopicBuilder.h"
 
+#include <format>
+
 namespace hz
 {
 	constexpr std::string_view project(Project _project)
@@ -67,6 +69,7 @@ namespace hz
 	std::string build_topic(Project _project, Subproject _subproject, Datapoint _datapoint, Operation _operation)
 	{
 		constexpr auto PREFIX = "cjl";
-		return std::format("{}/{}/{}/{}/{}", PREFIX, project(_project), subproject(_subproject), datapoint(_datapoint), operation(_operation));
+		return std::format("{}/{}/{}/{}/{}", 
+			PREFIX, project(_project), subproject(_subproject), datapoint(_datapoint), operation(_operation));
 	}
 }

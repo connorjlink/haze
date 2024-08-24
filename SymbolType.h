@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	enum class Type
+	enum class SymbolType
 	{
 		FUNCTION,
 		ARGUMENT,

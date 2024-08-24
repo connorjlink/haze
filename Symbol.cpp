@@ -2,28 +2,28 @@
 
 namespace hz
 {
-	Symbol::Type FunctionSymbol::ytype() const
+	SymbolType FunctionSymbol::ytype() const
 	{
-		return Symbol::Type::FUNCTION;
+		return SymbolType::FUNCTION;
 	}
 
-	Symbol::Type ArgumentSymbol::ytype() const
+	SymbolType ArgumentSymbol::ytype() const
 	{
-		return Symbol::Type::ARGUMENT;
+		return SymbolType::ARGUMENT;
 	}
 
-	Symbol::Type VariableSymbol::ytype() const
+	SymbolType VariableSymbol::ytype() const
 	{
-		return Symbol::Type::VARIABLE;
+		return SymbolType::VARIABLE;
 	}
 
-	Symbol::Type DefineSymbol::ytype() const
+	SymbolType DefineSymbol::ytype() const
 	{
-		return Symbol::Type::DEFINE;
+		return SymbolType::DEFINE;
 	}
 
-	Symbol::Type LabelSymbol::ytype() const
+	SymbolType LabelSymbol::ytype() const
 	{
-		return Symbol::Type::LABEL;
+		return SymbolType::LABEL;
 	}
 }

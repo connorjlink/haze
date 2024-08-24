@@ -27,7 +27,7 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(Symbol::Type::VARIABLE, name));
+		auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name));
 		allocation->copy(variable_symbol->allocation);
 	}
 

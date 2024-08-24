@@ -1,12 +1,13 @@
 #ifndef HAZE_SIMULATOR_H
 #define HAZE_SIMULATOR_H
 
+#include "Constants.h"
+#include "Log.h"
+
 #include <cstdint>
 #include <array>
 #include <vector>
-
-#include "Log.h"
-#include "Constants.h"
+#include <format>
 
 namespace hz
 {
@@ -27,7 +28,7 @@ namespace hz
 		int opcode, operand1, operand2, immediate, memory;
 
 	public:
-		explicit Simulator(std::vector<std::uint8_t>&& bytes)
+		Simulator(const std::vector<std::uint8_t>& bytes)
 		{
 			if (bytes.size() <= HALF_DWORD_MAX)
 			{

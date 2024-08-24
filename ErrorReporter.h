@@ -35,6 +35,7 @@ namespace hz
 		void post_information(std::string, Token);
 		void post_warning(std::string, Token);
 		void post_error(std::string, Token);
+		[[noreturn]]
 		void post_uncorrectable(std::string, Token);
 
 	public:

@@ -25,6 +25,8 @@ namespace hz
 		{
 		}
 	};
+
+	extern JobManager* _job_manager;
 }
 
 #endif

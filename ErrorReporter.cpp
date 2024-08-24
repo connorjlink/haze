@@ -18,7 +18,7 @@ namespace hz
 		const auto context = _open_contexts.top();
 		_open_contexts.pop();
 
-		_closed_contexts.emplace_back(context.
+		_closed_contexts.emplace_back(context.format());
 	}
 
 	std::string ErrorReporter::generate_report()
@@ -51,6 +51,6 @@ namespace hz
 	void ErrorReporter::post_uncorrectable(std::string message, Token token)
 	{
 		_open_contexts.top().post(ErrorType::UNCORRECTABLE, message, token);
-		_toolchain.panic();
+		_toolchain->panic();
 	}
 }

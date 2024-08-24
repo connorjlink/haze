@@ -12,11 +12,11 @@ namespace hz
 	{
 	private:
 		std::string input;
-		std::size_t line = 1;
+		std::int32_t line = 1;
 
 	public:
-		explicit Lexer(std::string&& input)
-			: input(std::move(input))
+		Lexer(std::string&& input)
+			: input{ std::move(input) }
 		{
 		}
 

@@ -35,11 +35,11 @@ namespace hz
 		std::vector<Symbol*> symbol_table;
 
 	protected:
-		void add_symbol(Symbol::Type, std::string);
+		void add_symbol(SymbolType, std::string);
 
 	public:
 		bool query_symbol(std::string);
-		Symbol* reference_symbol(Symbol::Type, std::string, bool = false);
+		Symbol* reference_symbol(SymbolType, std::string, bool = false);
 
 	protected:
 		const Token& peek() const;

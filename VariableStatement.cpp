@@ -26,7 +26,7 @@ namespace hz
     {
         //Make some space on the heap and notify the parser
         allocation = _allocator->allocate_dynamic();
-        AS_VARIABLE_SYMBOL(_parser->reference_symbol(Symbol::Type::VARIABLE, name))->allocation = allocation;
+        AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name))->allocation = allocation;
 
         if (value)
         {

@@ -1,7 +1,7 @@
 #include "InterpreterParser.h"
-#include "Log.h"
-
 #include "ColorIntrinsic.h"
+#include "Utility.h"
+#include "Log.h"
 
 namespace hz
 {
@@ -36,7 +36,7 @@ namespace hz
 			
 			default:
 			{
-				Log::error(std::format("({}) unrecognized intrinsic declaration", peek().line));
+				Log::error(std::format("({}) unrecognized intrinsic declaration", peek().offset));
 			} break;
 		}
 
@@ -50,7 +50,7 @@ namespace hz
 			case TokenType::DOTDEFINE: return parse_dotdefine_command();
 			case TokenType::INTRINSIC: return parse_intrinsic();
 			case TokenType::FUNCTION: return parse_function();
-			default: Log::error(std::format("({}) unrecognized script declarator", peek().line));
+			default: Log::error(std::format("({}) unrecognized script declarator", peek().offset));
 		}
 	}
 

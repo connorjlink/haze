@@ -5,6 +5,8 @@
 #include "IdentifierExpression.h"
 #include "Log.h"
 
+#include <format>
+
 namespace hz
 {
 	Allocation::Type StaticAllocation::atype() const

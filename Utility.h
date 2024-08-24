@@ -8,6 +8,8 @@
 
 #include <random>
 
+#define DISCARD (void)
+
 namespace hz
 {
 	// abstract syntax tree optimizations

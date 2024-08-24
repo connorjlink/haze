@@ -1,4 +1,5 @@
 #include "HazeEvaluator.h"
+#include "Utility.h"
 
 namespace hz
 {

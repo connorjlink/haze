@@ -56,7 +56,7 @@ namespace hz
 		void image(std::vector<InstructionCommand*>&&, std::uint16_t);
 
 	public:
-		explicit Generator(std::vector<Node*>&& program)
+		Generator(std::vector<Node*>&& program)
 			: program{ std::move(program) }, linkables{}, current_function{ -1 }
 		{
 		}

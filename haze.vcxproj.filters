@@ -48,6 +48,12 @@
     <Filter Include="Source Files\Symbol">
       <UniqueIdentifier>{fc11c81a-5027-4af5-8b2a-ce8a81f5ae64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Command">
+      <UniqueIdentifier>{1e59256a-d3bd-42d7-8bac-b2b993192a64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Evaluator">
+      <UniqueIdentifier>{fb401d20-591b-4e9e-845b-f581154aa9db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -63,9 +69,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Lexer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InstructionCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Generator.cpp">
@@ -86,31 +89,13 @@
     <ClCompile Include="Linkable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LabelCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DotOrgCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Intrinsic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ColorIntrinsic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Evaluator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HazeEvaluator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Context.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DotDefineCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp">
@@ -245,6 +230,27 @@
     <ClCompile Include="Symbol.cpp">
       <Filter>Source Files\Symbol</Filter>
     </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="DotDefineCommand.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="DotOrgCommand.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionCommand.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="LabelCommand.cpp">
+      <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Evaluator.cpp">
+      <Filter>Source Files\Evaluator</Filter>
+    </ClCompile>
+    <ClCompile Include="HazeEvaluator.cpp">
+      <Filter>Source Files\Evaluator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -266,9 +272,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InstructionCommand.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Generator.h">
@@ -298,15 +301,6 @@
     <ClInclude Include="Linkable.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LabelCommand.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DotOrgCommand.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Intrinsic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -319,25 +313,13 @@
     <ClInclude Include="ColorIntrinsic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommandType.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="LinkerType.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Evaluator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HazeEvaluator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bimap.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DotDefineCommand.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="AdjustExpression.h">
@@ -492,6 +474,30 @@
     </ClInclude>
     <ClInclude Include="SymbolType.h">
       <Filter>Source Files\Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandType.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="DotDefineCommand.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="DotOrgCommand.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionCommand.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="LabelCommand.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Evaluator.h">
+      <Filter>Source Files\Evaluator</Filter>
+    </ClInclude>
+    <ClInclude Include="HazeEvaluator.h">
+      <Filter>Source Files\Evaluator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

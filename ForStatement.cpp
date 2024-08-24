@@ -3,11 +3,11 @@
 #include "NullStatement.h"
 #include "Allocation.h"
 #include "Allocator.h"
+#include "Evaluator.h"
+#include "Utility.h"
 
 #include <format>
 #include <variant>
-
-#include "Evaluator.h"
 
 namespace hz
 {
