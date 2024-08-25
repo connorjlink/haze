@@ -90,8 +90,7 @@ namespace hz
 	{
 		auto condition_evaluated = condition->evaluate(context);
 
-		if (condition->ntype() == NodeType::EXPRESSION &&
-			condition->etype() != ExpressionType::INTEGER_LITERAL)
+		if (AS_EXPRESSION(condition_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
 			Log::error("'if' statement conditions must evaluate to an integer");
 		}
@@ -103,7 +102,10 @@ namespace hz
 
 		else
 		{
-			DISCARD else_body->evaluate(context);
+			if (else_body != nullptr)
+			{
+				DISCARD else_body->evaluate(context);
+			}
 		}
 
 		return nullptr;

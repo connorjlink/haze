@@ -1,8 +1,11 @@
 #include "Toolchain.h"
 #include "JobManager.h"
+#include "FileManager.h"
 #include "Preprocessor.h"
 #include "Lexer.h"
+#include "ErrorReporter.h"
 #include "Log.h"
+
 
 #include <cstdlib>
 
@@ -16,12 +19,13 @@ namespace hz
 
 		for (auto& filepath : _filepaths)
 		{
-			_error_reporter->open_context(filepath, "interpreting");
-
+			_error_reporter->open_context(filepath, "initializing");
 
 			const auto read_task = _job_manager->begin_job("file reading");
-			_file_manager.open_file(filepath);
-			const auto file = _file_manager.get_file(filepath);
+			// TODO: figure out where the filepath vector should be
+			// currently, this file is opened in main() already
+			//_file_manager->open_file(filepath);
+			auto& file = _file_manager->get_file(filepath);
 			auto source = file.contents();
 			_job_manager->end_job(read_task);
 
@@ -36,7 +40,6 @@ namespace hz
 			const auto lexer = new Lexer{ std::move(source_processed) };
 			_tokens[filepath] = lexer->lex();
 			_job_manager->end_job(lex_task);
-
 
 			_error_reporter->close_context();
 		}

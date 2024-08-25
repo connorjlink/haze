@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "ErrorReporter.h"
 
 #include <format>
 
@@ -457,7 +458,7 @@ namespace hz
 			};
 		}
 
-		Log::error("both operands of a binary expression must evaluate to integers");
+		_error_reporter->post_uncorrectable("both operands of a binary expression must evaluate to integers", NULL_TOKEN);
 	}
 
 	Node* MinusBinaryExpression::evaluate(Context* context) const
@@ -496,7 +497,7 @@ namespace hz
 
 	Node* AssignBinaryExpression::evaluate(Context* context) const
 	{
-		const auto left_evaluated = left->evaluate(context);
+		const auto left_evaluated = left;
 		const auto right_evaluated = right->evaluate(context);
 
 		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::IDENTIFIER)
@@ -504,11 +505,12 @@ namespace hz
 			Log::error("the left-hand operand of an assignment must be a modifiable l-value");
 		}
 
-		if (AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL &&
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::IDENTIFIER)
+		if (AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::INTEGER_LITERAL ||
+			AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::IDENTIFIER)
 		{
 			context->define_variable(
 				AS_IDENTIFIER_EXPRESSION(left_evaluated)->name, harvest(right_evaluated));
+			return nullptr;
 		}
 
 		Log::error("the right-hand operand of an assignment must be an r-value");

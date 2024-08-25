@@ -8,6 +8,7 @@ namespace hz
 	void FileManager::open_file(const std::string& filepath)
 	{
 		auto file = File{ filepath };
+		file.compute_type();
 		_files[filepath] = file;
 	}
 
@@ -18,6 +19,6 @@ namespace hz
 			return _files.at(filepath);
 		}
 
-		_error_reporter->post_uncorrectable(std::format("file {} was not opened", filepath), NULL_TOKEN);
+		_error_reporter->post_uncorrectable(std::format("file {} was never opened", filepath), NULL_TOKEN);
 	}
 }

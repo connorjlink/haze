@@ -8,21 +8,17 @@
 #include <cctype>
 #include <format>
 #include <filesystem>
+#include <ranges>
 
 namespace
 {
-    std::vector<std::string> split(const std::string& text, char delim)
+    std::vector<std::string> split(std::string text, char delimiter)
     {
-        std::string line;
-        std::vector<std::string> vec;
-        std::stringstream ss(text);
-
-        while (std::getline(ss, line, delim))
-        {
-            vec.emplace_back(line);
-        }
-
-        return vec;
+        return text
+            | std::ranges::views::split(delimiter)
+            | std::ranges::views::transform([](auto&& str)
+                { return std::string_view(&*str.begin(), std::ranges::distance(str)); })
+            | std::ranges::to<std::vector<std::string>>();
     }
 
     void replace(std::string& str, const std::string& from, const std::string& to)

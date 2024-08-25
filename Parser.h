@@ -51,6 +51,9 @@ namespace hz
 		enum class Precedence
 		{
 			MINIMUM,
+			ASSIGN,
+			EQUALITY,
+			COMPARE,
 			TERM, // + (or - later)
 			FACTOR, // * (or / later maybe)
 		};

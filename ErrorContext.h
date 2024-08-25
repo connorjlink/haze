@@ -14,7 +14,6 @@ namespace hz
 	class ErrorContext
 	{
 	private:
-		std::string _file;
 		std::string _task;
 	
 	private:
@@ -27,11 +26,11 @@ namespace hz
 		std::size_t error_count() const;
 
 	public:
-		void post(ErrorType, std::string, Token);
+		void post(ErrorType, const std::string&, const std::string&, Token);
 
 	public:
-		ErrorContext(std::string file, std::string task)
-			: _file{ std::move(file) }, _task{ std::move(task) }
+		ErrorContext(const std::string& task)
+			: _task{ task }
 		{
 		}
 	};

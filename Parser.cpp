@@ -53,7 +53,10 @@ namespace
 
 	bool is_binary_operator(hz::TokenType type)
 	{
-		return type == hz::TokenType::PLUS || type == hz::TokenType::STAR;
+		return type == hz::TokenType::PLUS || type == hz::TokenType::STAR ||
+			   type == hz::TokenType::EQUALS ||
+			   type == hz::TokenType::EQUALSEQUALS || type == hz::TokenType::EXCLAMATIONEQUALS ||
+			   type == hz::TokenType::GREATER || type == hz::TokenType::LESS;
 	}
 
 	auto find(std::string name, std::vector<hz::Symbol*>& symbols)
@@ -340,9 +343,14 @@ namespace hz
 	{
 		static const std::unordered_map<TokenType, Precedence> precedences =
 		{
-			{ TokenType::PLUS,  Precedence::TERM },
-			{ TokenType::MINUS, Precedence::TERM },
-			{ TokenType::STAR,  Precedence::FACTOR },
+			{ TokenType::EQUALS, Precedence::ASSIGN },
+			{ TokenType::EQUALSEQUALS, Precedence::EQUALITY },
+			{ TokenType::EXCLAMATIONEQUALS, Precedence::EQUALITY },
+			{ TokenType::GREATER, Precedence::COMPARE },
+			{ TokenType::LESS,    Precedence::COMPARE },
+			{ TokenType::PLUS,    Precedence::TERM },
+			{ TokenType::MINUS,   Precedence::TERM },
+			{ TokenType::STAR,    Precedence::FACTOR },
 		};
 
 		do
@@ -377,6 +385,14 @@ namespace hz
 				case TokenType::PLUS: left = new PlusBinaryExpression{ left, right }; break;
 				case TokenType::MINUS: left = new MinusBinaryExpression{ left, right }; break;
 				case TokenType::STAR: left = new TimesBinaryExpression{ left, right }; break;
+
+				case TokenType::EQUALS: left = new AssignBinaryExpression{ left, right }; break;
+
+				case TokenType::EQUALSEQUALS: left = new EqualityBinaryExpression{ left, right }; break;
+				case TokenType::EXCLAMATIONEQUALS: left = new InequalityBinaryExpression{ left, right }; break;
+
+				case TokenType::GREATER: left = new GreaterBinaryExpression{ left, right }; break;
+				case TokenType::LESS: left = new LessBinaryExpression{ left, right }; break;
 			}
 		} while (true);
 

@@ -21,11 +21,14 @@
 #include "Hook.h"
 
 #include "JobManager.h"
+#include "FileManager.h"
 
 #include "Toolchain.h"
 #include "CompilerToolchain.h"
 #include "AssemblerToolchain.h"
 #include "InterpreterToolchain.h"
+
+#include "ErrorReporter.h"
 
 #include <cstdlib>
 #include <string>
@@ -41,8 +44,11 @@ Generator* hz::_generator;
 Parser* hz::_parser;
 Context* hz::_context;
 Toolchain* hz::_toolchain;
+Linker* hz::_linker;
 ErrorReporter* hz::_error_reporter;
 JobManager* hz::_job_manager;
+FileManager* hz::_file_manager;
+CommandLineOptions* hz::_options;
 
 namespace mqtt
 {
@@ -60,85 +66,39 @@ int main(int argc, char** argv)
 
 
 	auto command_line_parser = CommandLineParser{};
-	*_options = command_line_parser.parse(argc, argv);
+	command_line_parser.parse(argc, argv);
 
-	if (argc != 2)
-	{
-		Log::error("correct usage is 'haze' *.hz[x]");
-	}
-
-	//const auto path = std::filesystem::path(argv[1]);
-	//const auto path = std::filesystem::path("./common.hz");
-	//const auto path = std::filesystem::path("test.hzs");
-	//const auto path = std::filesystem::path("test.hz");
-	//const auto path = std::filesystem::path("sample.hzs");
-	//const auto path = std::filesystem::path("test.hzi");
-	const auto path = std::filesystem::path("sample.hzi");
-
-
-	const auto filepath = path.string();
-	const auto filename = path.filename().string();
-	const auto extension = path.extension().string();
-
-	const auto filesize = std::filesystem::file_size(filepath);
-
-	auto file = std::ifstream(path);
-
-	if (!file.good())
-	{
-		Log::error(std::format("the file {} could not be opened", filepath));
-	}
-
+	_file_manager = new FileManager{};
 	
-
-
-	if (extension == ".hz")
+	for (auto& filepath : command_line_parser.files())
 	{
-		// Compiler
-		_toolchain = new CompilerToolchain{};
+		_file_manager->open_file(filepath);
+		const auto& file = _file_manager->get_file(filepath);
+
+		switch (file.ttype())
+		{
+			case ToolchainType::ASSEMBLER:
+			{
+				// Assembler
+				_toolchain = new AssemblerToolchain{};
+			} break;
+
+			case ToolchainType::COMPILER:
+			{
+				// Compiler
+				_toolchain = new CompilerToolchain{};
+			} break;
+
+			case ToolchainType::INTERPRETER:
+			{
+				// Interpreter
+				_toolchain = new InterpreterToolchain{};
+			} break;
+		}
+
 		_toolchain->init({ filepath });
+
 	}
-
-	else if (extension == ".hzs")
-	{
-		// Assembler
-
-		//We are trying to assemble a program
-		/*_parser = new AssemblerParser{ std::move(tokens) };
-
-		auto commands = _parser->parse();
-
-		linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser) };*/
-	}
-
-	else if (extension == ".hzi")
-	{
-		// Interpreter
-		_toolchain = new InterpreterToolchain{};
-		_toolchain->init({ filepath });
-	}
-
-	else
-	{
-		Log::error(std::format("unrecognized file extension {}", extension));
-	}
-
-
-	// Interpreter context will never fall through to here
-
-	Linker* linker = nullptr;
- 	auto image = linker->link(HALF_DWORD_MAX);
-
-	auto emitter = new HazeEmitter{ std::move(image) };
-	//auto emitter = new X86Emitter{ std::move(image) };
-
-	auto executable = emitter->emit();
-
-
-	auto end_time = std::chrono::steady_clock::now();
-	auto compile_time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
-
-	Log::info(std::format("successfully compiled {} in {}", filepath, compile_time));
 
 	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
 	{
@@ -156,10 +116,6 @@ int main(int argc, char** argv)
 		::formulate(PULL, R1, DC), 0x0, 0x0, //pull r1
 	};
 	Simulator sim{ std::move(rom) };*/
-
-	Simulator sim{ std::move(executable) };
-	sim.reset();
-	sim.run();
 
 	return EXIT_SUCCESS;
 }

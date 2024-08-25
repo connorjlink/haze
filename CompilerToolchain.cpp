@@ -2,12 +2,12 @@
 #include "JobManager.h"
 #include "CompilerParser.h"
 #include "Generator.h"
+#include "ErrorReporter.h"
+#include "CommonToolchain.h"
 #include "CompilerLinker.h"
-#include "HazeEmitter.h"
-#include "X86Emitter.h"
-#include "Simulator.h"
-#include "Constants.h"
-#include "CommandLineOptions.h"
+
+#include <fstream>
+#include <format>
 
 namespace hz
 {
@@ -20,6 +20,8 @@ namespace hz
 	{
 		for (auto& filepath : _filepaths)
 		{
+			_error_reporter->open_context(filepath, "compiling");
+
 			const auto parse_task = _job_manager->begin_job("parsing");
 			_parser = new CompilerParser{ _tokens.at(filepath) };
 			auto ast = _parser->parse();
@@ -32,30 +34,13 @@ namespace hz
 			_job_manager->end_job(generator_task);
 
 
-			const auto link_task = _job_manager->begin_job("linking");
 			_linker = new CompilerLinker{ std::move(linkables) };
-			// begin writing commands at $8000
-			auto image = _linker->link(HALF_DWORD_MAX);
-			_job_manager->end_job(link_task);
-
-
-			const auto emit_task = _job_manager->begin_job("emitting");
-
-			switch (_options->_architecture)
-			{
-
-			}
-
-#pragma message("TODO: add custom command-line options to support x86 here")
-			const auto emitter = new HazeEmitter{ std::move(image) };
-			auto executable = emitter->emit();
-			_job_manager->end_job(emit_task);
-
-
-#pragma message("TODO: add custom command-line options to either sim or write to binary dump file")
-			Simulator sim{ std::move(executable) };
-			sim.reset();
-			sim.run();
+			// shared environment with Assembler/Compiler
+			auto image = common_link();
+			auto executable = common_emit(std::move(image));
+			common_finalize(std::move(executable), filepath);
+			
+			_error_reporter->close_context();
 		}
 	}
 }

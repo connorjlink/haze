@@ -14,9 +14,6 @@ namespace hz
 	class Toolchain
 	{
 	protected:
-		FileManager _file_manager;
-
-	protected:
 		std::vector<std::string> _filepaths;
 
 	protected:
@@ -28,7 +25,7 @@ namespace hz
 
 	public:
 		Toolchain()
-			: _file_manager{}, _filepaths{}, _tokens{}
+			: _filepaths{}, _tokens{}
 		{
 			_toolchain_task = -1;
 		}

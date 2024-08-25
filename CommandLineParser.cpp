@@ -7,7 +7,7 @@
 
 namespace
 {
-	std::vector<std::string> split(std::string text, std::string delimiter)
+	std::vector<std::string> split(std::string text, const std::string& delimiter)
 	{
 		return text
 			| std::ranges::views::split(delimiter)
@@ -21,9 +21,12 @@ namespace
 		std::vector<std::string> arguments{};
 		arguments.reserve(argc);
 
-		for (auto i = 0; i < argc; i++)
+		if (argc > 0)
 		{
-			arguments.emplace_back(argv[i]);
+			for (auto i = 1; i < argc; i++)
+			{
+				arguments.emplace_back(argv[i]);
+			}
 		}
 
 		return arguments;
@@ -32,7 +35,7 @@ namespace
 
 namespace hz
 {
-	CommandLineOptions parse(int argc, char** argv)
+	void CommandLineParser::parse(int argc, char** argv)
 	{
 		static constexpr auto TASK = "identifying arguments";
 
@@ -91,6 +94,17 @@ namespace hz
 						_options->_verbosity = _verbosity_map.at(value);
 					} break;
 
+					case EXECUTION:
+					{
+						if (!_execution_map.contains(value))
+						{
+							_error_reporter->post_warning(std::format("unrecognized execution type {}", value), NULL_TOKEN);
+							continue;
+						}
+
+						_options->_execution = _execution_map.at(value);
+					} break;
+
 					case OPTIMIZATION:
 					{
 						if (!_optimization_map.contains(value))
@@ -108,7 +122,7 @@ namespace hz
 			// parsing a source code filepath
 			else
 			{
-
+				_filepaths.emplace_back(argument);
 			}
 		}
 

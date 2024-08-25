@@ -158,9 +158,6 @@
     <ClCompile Include="IdentifierExpression.cpp">
       <Filter>Source Files\Expression</Filter>
     </ClCompile>
-    <ClCompile Include="IfStatement.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
     <ClCompile Include="FunctionCallExpression.cpp">
       <Filter>Source Files\Expression</Filter>
     </ClCompile>
@@ -265,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="VerbosityType.h">
       <Filter>Source Files\Argument</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonToolchain.cpp">
+      <Filter>Source Files\Toolchain</Filter>
+    </ClCompile>
+    <ClCompile Include="IfStatement.cpp">
+      <Filter>Source Files\Statement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +392,6 @@
       <Filter>Source Files\Hook</Filter>
     </ClInclude>
     <ClInclude Include="IdentifierExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="IfStatement.h">
       <Filter>Source Files\Expression</Filter>
     </ClInclude>
     <ClInclude Include="FunctionCallExpression.h">
@@ -523,6 +523,18 @@
     <ClInclude Include="OptimizationType.h">
       <Filter>Source Files\Argument</Filter>
     </ClInclude>
+    <ClInclude Include="OptionType.h">
+      <Filter>Source Files\Argument</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutionType.h">
+      <Filter>Source Files\Toolchain</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonToolchain.h">
+      <Filter>Source Files\Toolchain</Filter>
+    </ClInclude>
+    <ClInclude Include="IfStatement.h">
+      <Filter>Source Files\Statement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -561,5 +573,6 @@
     <None Include="std.hzi">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="fibonacci.hzi" />
   </ItemGroup>
 </Project>

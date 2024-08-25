@@ -27,6 +27,10 @@ namespace hz
 
 		PLUS, MINUS, STAR,
 
+		EQUALSEQUALS, EXCLAMATIONEQUALS,
+
+		GREATER, LESS,
+
 		TILDE, EXCLAMATION,
 
 		FUNCTION,
@@ -74,6 +78,10 @@ namespace hz
 		bimap_t{ S("+"), TokenType::PLUS },
 		bimap_t{ S("-"), TokenType::MINUS },
 		bimap_t{ S("*"), TokenType::STAR },
+		bimap_t{ S("=="), TokenType::EQUALSEQUALS },
+		bimap_t{ S("!="), TokenType::EXCLAMATIONEQUALS },
+		bimap_t{ S(">"), TokenType::GREATER },
+		bimap_t{ S("<"), TokenType::LESS },
 		bimap_t{ S("~"), TokenType::TILDE },
 		bimap_t{ S("!"), TokenType::EXCLAMATION },
 		

@@ -79,8 +79,7 @@ namespace hz
 	{
 		auto condition_evaluated = condition->evaluate(context);
 		
-		if (condition->ntype() == NodeType::EXPRESSION &&
-			condition->etype() != ExpressionType::INTEGER_LITERAL)
+		if (AS_EXPRESSION(condition_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
 			Log::error("'while' loop conditions must evaluate to an integer");
 		}

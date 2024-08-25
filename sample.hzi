@@ -4,6 +4,16 @@
 .define B = 2
 .define C = 3
 
+.macro ADD = (x, y):
+{
+	[x] + [y]
+}
+
+.macro SUB = (x, y):
+{
+	[x] - [y]
+}
+
 .macro MUL = (x, y):
 {
 	[x] * [y]
@@ -16,6 +26,5 @@ function nvr main = ()
 
 	byte foo = $MUL(A, B) + C;
 	print(foo * 2);
-	print("hello" + "123");
 	// output: 10
 }

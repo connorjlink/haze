@@ -23,6 +23,8 @@ namespace hz
 			_files = {};
 		}
 	};
+
+	extern FileManager* _file_manager;
 }
 
 #endif 

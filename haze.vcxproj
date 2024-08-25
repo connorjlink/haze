@@ -29,6 +29,7 @@
     <ClCompile Include="ColorIntrinsic.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandLineParser.cpp" />
+    <ClCompile Include="CommonToolchain.cpp" />
     <ClCompile Include="CompilerLinker.cpp" />
     <ClCompile Include="CompilerParser.cpp" />
     <ClCompile Include="CompilerToolchain.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="CommandLineOptions.h" />
     <ClInclude Include="CommandLineParser.h" />
     <ClInclude Include="CommandType.h" />
+    <ClInclude Include="CommonToolchain.h" />
     <ClInclude Include="CompilerLinker.h" />
     <ClInclude Include="CompilerParser.h" />
     <ClInclude Include="CompilerToolchain.h" />
@@ -119,6 +121,7 @@
     <ClInclude Include="ErrorReporter.h" />
     <ClInclude Include="ErrorType.h" />
     <ClInclude Include="Evaluator.h" />
+    <ClInclude Include="ExecutionType.h" />
     <ClInclude Include="ExpressionStatement.h" />
     <ClInclude Include="ExpressionType.h" />
     <ClInclude Include="File.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NullStatement.h" />
     <ClInclude Include="OptimizationType.h" />
+    <ClInclude Include="OptionType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PrintStatement.h" />
@@ -181,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz" />
+    <None Include="fibonacci.hzi" />
     <None Include="sample.hzi" />
     <None Include="std.hzi" />
     <None Include="vcpkg.json" />

@@ -4,7 +4,7 @@ namespace
 {
 	hz::TokenPosition locate(const hz::Token& token)
 	{
-#pragma message("TODO: implement token offsets to find the line and colum here")
+#pragma message("TODO: implement token offsets to find the line and column here")
 		return { 0, 0 };
 	}
 
@@ -23,7 +23,7 @@ namespace hz
 
 		for (auto& error : _errors)
 		{
-			result += std::format("in {} while {}\n  {}", _file, _task, error.format());
+			result += std::format("  while {}\n  {}", _task, error.format());
 		}
 
 		return result;
@@ -34,10 +34,10 @@ namespace hz
 		return _errors.size();
 	}
 
-	void ErrorContext::post(ErrorType severity, std::string message, Token token)
+	void ErrorContext::post(ErrorType severity, const std::string& message, const std::string& file, Token token)
 	{
 		const auto pos = ::locate(token);
-		const auto line = ::at_line(_file, pos._line);
+		const auto line = ::at_line(file, pos._line);
 		_errors.emplace_back(Error{ pos, line, message, severity });
 	}
 }

@@ -1,0 +1,25 @@
+.define MAXITERATIONS = 20
+
+function nvr main = ()
+{
+	.unhook
+
+	byte n0 = 0;
+	byte n1 = 1;
+
+	byte iteration = 0;
+	while (iteration < MAXITERATIONS)
+	{
+		print(n0);
+		byte n2 = n0 + n1;
+		n0 = n1;
+		n1 = n2;
+
+		iteration = iteration + 1;
+	}
+}
+
+
+
+
+

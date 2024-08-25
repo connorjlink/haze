@@ -5,6 +5,9 @@
 #define AS_COMPILER_TOOLCHAIN(x) static_cast<CompilerToolchain*>(x)
 #define AS_INTERPRETER_TOOLCHAIN(x) static_cast<InterpreterToolchain*>(x)
 
+#include <string>
+#include <unordered_map>
+
 namespace hz
 {
 	enum class ToolchainType
@@ -12,6 +15,13 @@ namespace hz
 		ASSEMBLER,
 		COMPILER,
 		INTERPRETER,
+	};
+
+	static const std::unordered_map<std::string, ToolchainType> _toolchain_map
+	{
+		{ ".hzs", ToolchainType::ASSEMBLER },
+		{ ".hz", ToolchainType::COMPILER },
+		{ ".hzi", ToolchainType::INTERPRETER },
 	};
 }
 

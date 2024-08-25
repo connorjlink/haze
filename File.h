@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "ErrorReporter.h"
+#include "ToolchainType.h"
 
 namespace hz
 {
@@ -11,15 +11,20 @@ namespace hz
 	{
 	private:
 		std::string _filepath;
+		ToolchainType _type;
 
 	public:
-		std::string contents() const;
+		std::string contents();
+		ToolchainType ttype() const;
+
+	public:
+		void compute_type();
 
 	public:
 		File() = default;
 
 		File(const std::string& filepath)
-			: _filepath{ filepath }
+			: _filepath{ filepath }, _type{}
 		{
 		}
 	};

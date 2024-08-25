@@ -4,12 +4,20 @@
 #include "CommandLineOptions.h"
 
 #include <string>
+#include <vector>
 
 namespace hz
 {
 	class CommandLineParser
 	{
 	private:
+		std::vector<std::string> _filepaths;
+
+	public:
+		const std::vector<std::string>& files() const
+		{
+			return _filepaths;
+		}
 
 	public:
 		CommandLineParser()
@@ -17,7 +25,7 @@ namespace hz
 		}
 
 	public:
-		CommandLineOptions parse(int, char**);
+		void parse(int, char**);
 	};
 }
 

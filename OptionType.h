@@ -10,6 +10,7 @@ namespace hz
 	{
 		ARCHITECTURE,
 		VERBOSITY,
+		EXECUTION,
 		OPTIMIZATION,
 	};
 
@@ -17,6 +18,7 @@ namespace hz
 	{
 		{ "architecture", OptionType::ARCHITECTURE },
 		{ "verbosity", OptionType::VERBOSITY },
+		{ "execution", OptionType::EXECUTION },
 		{ "optimization", OptionType::OPTIMIZATION },
 	};
 }

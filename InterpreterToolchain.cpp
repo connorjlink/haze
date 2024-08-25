@@ -2,6 +2,7 @@
 #include "JobManager.h"
 #include "InterpreterParser.h"
 #include "HazeEvaluator.h"
+#include "ErrorReporter.h"
 
 namespace hz
 {
@@ -14,6 +15,8 @@ namespace hz
 	{
 		for (auto& filepath : _filepaths)
 		{
+			_error_reporter->open_context(filepath, "interpreting");
+
 			const auto parse_task = _job_manager->begin_job("parsing");
 			_parser = new InterpreterParser{ _tokens.at(filepath) };
 			auto declarators = _parser->parse();
@@ -23,6 +26,8 @@ namespace hz
 			const auto evaluator = new HazeEvaluator{ std::move(declarators), _context };
 			evaluator->evaluate();
 			_job_manager->end_job(evaluate_task);
+
+			_error_reporter->close_context();
 		}
 	}
 }
