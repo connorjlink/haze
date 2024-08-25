@@ -15,7 +15,7 @@ namespace hz
 		for (auto& filepath : _filepaths)
 		{
 			const auto parse_task = _job_manager->begin_job("parsing");
-			_parser = new InterpreterParser{ std::move(_tokens.at(filepath)) };
+			_parser = new InterpreterParser{ _tokens.at(filepath) };
 			auto declarators = _parser->parse();
 			_job_manager->end_job(parse_task);
 
@@ -24,7 +24,5 @@ namespace hz
 			evaluator->evaluate();
 			_job_manager->end_job(evaluate_task);
 		}
-
-		shut_down();
 	}
 }

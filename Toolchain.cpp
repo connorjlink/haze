@@ -42,6 +42,8 @@ namespace hz
 		}
 
 		run();
+
+		shut_down();
 	}
 
 	void Toolchain::shut_down()

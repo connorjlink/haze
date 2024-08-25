@@ -22,11 +22,13 @@
     <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="ArchitectureType.h" />
     <ClCompile Include="AssemblerLinker.cpp" />
     <ClCompile Include="AssemblerParser.cpp" />
     <ClCompile Include="AssemblerToolchain.cpp" />
     <ClCompile Include="ColorIntrinsic.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CommandLineParser.cpp" />
     <ClCompile Include="CompilerLinker.cpp" />
     <ClCompile Include="CompilerParser.cpp" />
     <ClCompile Include="CompilerToolchain.cpp" />
@@ -86,6 +88,7 @@
     <ClCompile Include="Toolchain.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClCompile Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Emitter.cpp" />
   </ItemGroup>
@@ -100,6 +103,8 @@
     <ClInclude Include="BinaryExpressionType.h" />
     <ClInclude Include="ColorIntrinsic.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="CommandLineOptions.h" />
+    <ClInclude Include="CommandLineParser.h" />
     <ClInclude Include="CommandType.h" />
     <ClInclude Include="CompilerLinker.h" />
     <ClInclude Include="CompilerParser.h" />
@@ -154,6 +159,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NullStatement.h" />
+    <ClInclude Include="OptimizationType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PrintStatement.h" />

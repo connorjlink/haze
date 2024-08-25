@@ -15,12 +15,16 @@
 #include "Context.h"
 #include "Log.h"
 
+
+#include "CommandLineParser.h"
+
 #include "Hook.h"
-#include "HazeEvaluator.h"
 
 #include "JobManager.h"
 
 #include "Toolchain.h"
+#include "CompilerToolchain.h"
+#include "AssemblerToolchain.h"
 #include "InterpreterToolchain.h"
 
 #include <cstdlib>
@@ -42,13 +46,21 @@ JobManager* hz::_job_manager;
 
 namespace mqtt
 {
-	const int message::DFLT_QOS = 2;
+	const int message::DFLT_QOS = 0;
 	const bool message::DFLT_RETAINED = true;
 }
 
 int main(int argc, char** argv)
 {
-	auto start_time = std::chrono::steady_clock::now();
+	_allocator = new Allocator{};
+	_context = new Context{};
+
+	_error_reporter = new ErrorReporter{};
+	_job_manager = new JobManager{};
+
+
+	auto command_line_parser = CommandLineParser{};
+	*_options = command_line_parser.parse(argc, argv);
 
 	if (argc != 2)
 	{
@@ -77,26 +89,20 @@ int main(int argc, char** argv)
 		Log::error(std::format("the file {} could not be opened", filepath));
 	}
 
-	_allocator = new Allocator{};
+	
 
-	_error_reporter = new ErrorReporter{};
-	_job_manager = new JobManager{};
 
 	if (extension == ".hz")
 	{
-		//We are trying to compile a program
-		/*_parser = new CompilerParser{ std::move(tokens) };
-
-		auto ast = _parser->parse();
-
-		_generator = new Generator{ std::move(ast) };
-		auto linkables = _generator->generate();
-
-		linker = new CompilerLinker{ std::move(linkables) };*/
+		// Compiler
+		_toolchain = new CompilerToolchain{};
+		_toolchain->init({ filepath });
 	}
 
 	else if (extension == ".hzs")
 	{
+		// Assembler
+
 		//We are trying to assemble a program
 		/*_parser = new AssemblerParser{ std::move(tokens) };
 
@@ -107,12 +113,9 @@ int main(int argc, char** argv)
 
 	else if (extension == ".hzi")
 	{
-		_context = new Context{};
-
+		// Interpreter
 		_toolchain = new InterpreterToolchain{};
 		_toolchain->init({ filepath });
-
-		return EXIT_SUCCESS;
 	}
 
 	else

@@ -81,8 +81,8 @@ namespace hz
 		virtual std::vector<Node*> parse() = 0;
 
 	public:
-		explicit Parser(std::vector<Token>&& tokens)
-			: cursor{ 0 }, tokens{ std::move(tokens) }
+		Parser(const std::vector<Token>& tokens)
+			: cursor{ 0 }, tokens{ tokens }
 		{
 		}
 	};

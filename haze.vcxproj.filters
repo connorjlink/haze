@@ -54,6 +54,9 @@
     <Filter Include="Source Files\Evaluator">
       <UniqueIdentifier>{fb401d20-591b-4e9e-845b-f581154aa9db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Argument">
+      <UniqueIdentifier>{82183aef-d26a-468c-a538-72baee1d93bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -254,6 +257,15 @@
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CommandLineParser.cpp">
+      <Filter>Source Files\Argument</Filter>
+    </ClCompile>
+    <ClCompile Include="ArchitectureType.h">
+      <Filter>Source Files\Argument</Filter>
+    </ClCompile>
+    <ClCompile Include="VerbosityType.h">
+      <Filter>Source Files\Argument</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -298,9 +310,6 @@
     <ClInclude Include="Utility.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Linker.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Linkable.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -314,9 +323,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ColorIntrinsic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkerType.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
@@ -501,6 +507,21 @@
     </ClInclude>
     <ClInclude Include="HazeEvaluator.h">
       <Filter>Source Files\Evaluator</Filter>
+    </ClInclude>
+    <ClInclude Include="Linker.h">
+      <Filter>Source Files\Linker</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkerType.h">
+      <Filter>Source Files\Linker</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandLineParser.h">
+      <Filter>Source Files\Argument</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandLineOptions.h">
+      <Filter>Source Files\Argument</Filter>
+    </ClInclude>
+    <ClInclude Include="OptimizationType.h">
+      <Filter>Source Files\Argument</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

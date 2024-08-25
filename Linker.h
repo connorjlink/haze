@@ -18,6 +18,8 @@ namespace hz
 		virtual bool optimize() = 0;
 		virtual std::vector<InstructionCommand*> link(std::uint16_t) = 0;
 	};
+
+	extern Linker* _linker;
 }
 
 #endif
