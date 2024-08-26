@@ -287,6 +287,11 @@ namespace hz
 		auto arguments = parse_arguments(true);
 		DISCARD consume(TokenType::RPAREN);
 
+
+		// inform the parser of the function argument count (arity)
+		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name, peek()))->arity = arguments.size();
+
+
 		auto body = parse_compound_statement(name);
 
 		return new Function{ name, return_type, std::move(arguments), body };
@@ -307,7 +312,7 @@ namespace hz
 	std::vector<Node*> CompilerParser::parse()
 	{
 		auto program = parse_functions();
-
+#pragma message("TODO: unordered map for name -> functions")
 		if (auto it = std::find_if(program.begin(), program.end(), [&](auto function)
 			{
 				return (AS_FUNCTION(function)->name == "main");

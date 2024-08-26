@@ -1,11 +1,21 @@
-function byte test = (byte x)
+function byte add = (byte x, byte y)
 {
-    return x;
+    return x + y;
+}
+
+function byte sub = (byte x, byte y)
+{
+    return x - y;
 }
 
 function nvr main = ()
 {
-    return test(1);
+    byte foo = add(1, 2); // 1 + 2 = 3
+    byte bar = sub(10, 5); // 10 - 5 = 5
+    byte baz = foo + bar; // 8
+
+    print(baz);
+    return 255;
 }
 
 // main:

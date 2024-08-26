@@ -44,7 +44,7 @@ namespace hz
 
 		ManagedStaticAllocation temp{};
 		value->generate(temp.allocation);
-		_generator->fake_push(RETURNS, temp.allocation->read());
+		_generator->make_push(temp.allocation->read());
 	}
 
 	Statement* ReturnStatement::optimize()

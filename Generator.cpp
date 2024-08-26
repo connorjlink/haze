@@ -189,9 +189,15 @@ namespace hz
 		}
 
 		//Reorder the functions so `main` is first since it's our entrypoint.
-		std::ranges::partition(linkables, [](const auto& linkable)
+		std::ranges::partition(linkables, [](auto& linkable)
 		{
-			return linkable.symbol->name == "main";
+			if (linkable.symbol->name == "main")
+			{
+				*(linkable.object_code.end() - 1) = (new InstructionCommand{ (Opcode)0xF, DC, DC });
+				return true;
+			}
+
+			return false;
 		});
 
 		return linkables;	

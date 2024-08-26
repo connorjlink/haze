@@ -1,3 +1,4 @@
+#include "CommandLineOptions.h"
 #include "Log.h"
 
 #include <iostream>
@@ -30,17 +31,29 @@ namespace hz
 
 	void Log::info(std::string_view message)
 	{
-		print(_severity_map.at(ErrorType::INFORMATION), message);
-	}
-
-	void Log::error(std::string_view message)
-	{
-		print(_severity_map.at(ErrorType::ERROR), message);
+		if (_options->_verbosity == VerbosityType::VERBOSE)
+		{
+			print(_severity_map.at(ErrorType::INFORMATION), message);
+		}
 	}
 
 	void Log::warning(std::string_view message)
 	{
-		print(_severity_map.at(ErrorType::WARNING), message);
+		if (_options->_verbosity == VerbosityType::VERBOSE ||
+			_options->_verbosity == VerbosityType::NORMAL)
+		{
+			print(_severity_map.at(ErrorType::WARNING), message);
+		}
+	}
+
+	void Log::error(std::string_view message)
+	{
+		if (_options->_verbosity == VerbosityType::VERBOSE ||
+			_options->_verbosity == VerbosityType::NORMAL ||
+			_options->_verbosity == VerbosityType::QUIET)
+		{
+			print(_severity_map.at(ErrorType::ERROR), message);
+		}
 	}
 
 	void Log::uncorrectable(std::string_view message)

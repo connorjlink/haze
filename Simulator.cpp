@@ -1,6 +1,7 @@
 #include "Simulator.h"
 #include "InstructionCommand.h"
 #include "Disassembler.h"
+#include "ErrorReporter.h"
 #include "Log.h"
 #include "Token.h"
 
@@ -52,6 +53,10 @@ namespace hz
 			{
 				//save mem, reg
 				ram[memory] = register_file[operand2];
+				if (memory == 0x1111)
+				{
+					_error_reporter->post_information(std::format("program output character `{}`", ram[memory]), NULL_TOKEN);
+				}
 			} break;
 
 			case IADD:
@@ -87,35 +92,42 @@ namespace hz
 			case CALL:
 			{
 				//call mem
-				ram[STACK_TOP - stack_pointer] = (instruction_pointer & 0xFF00) >> 8;
-				stack_pointer++;
-				ram[STACK_TOP - stack_pointer] = (instruction_pointer & 0x00FF) >> 0;
-				stack_pointer++;
+				ram[CODE_STACK - code_stack_pointer] = (instruction_pointer & 0xFF00) >> 8;
+				code_stack_pointer++;
+				ram[CODE_STACK - code_stack_pointer] = (instruction_pointer & 0x00FF) >> 0;
+				code_stack_pointer++;
 				instruction_pointer = static_cast<decltype(instruction_pointer)>(memory);
+				return true;
 			} break;
 
 			case EXIT:
 			{
 				//exit
-				stack_pointer--;
-				const auto lower = ram[STACK_TOP - stack_pointer];
-				stack_pointer--;
-				const auto upper = ram[STACK_TOP - stack_pointer];
+				code_stack_pointer--;
+				const auto lower = ram[CODE_STACK - code_stack_pointer];
+				code_stack_pointer--;
+				const auto upper = ram[CODE_STACK - code_stack_pointer];
 				instruction_pointer = (upper << 8) | lower;
 			} break;
 
 			case PUSH:
 			{
 				//push reg
-				ram[STACK_TOP - stack_pointer] = register_file[operand2];
-				stack_pointer++;
+				if (data_stack_pointer <= DATA_STACK)
+				{
+					ram[DATA_STACK - data_stack_pointer] = register_file[operand2];
+					data_stack_pointer++;
+				}
 			} break;
 
 			case PULL:
 			{
 				//pull reg
-				stack_pointer--;
-				register_file[operand1] = ram[STACK_TOP - stack_pointer];
+				if (data_stack_pointer <= DATA_STACK)
+				{
+					data_stack_pointer--;
+					register_file[operand1] = ram[DATA_STACK - data_stack_pointer];
+				}
 			} break;
 
 			case BRNZ:
@@ -129,7 +141,9 @@ namespace hz
 
 			default:
 			{
-				Log::error(std::format("illegal instruction ${:02X} encountered at address ${:04X}", opcode, instruction_pointer));
+				Log::output(std::format("break instruction encountered at address ${:04X}", instruction_pointer));
+				running = false;
+				return false;
 			} break;
 		}
 
@@ -141,8 +155,9 @@ namespace hz
 	{
 		register_file = { 0 };
 		instruction_pointer = HALF_DWORD_MAX;
-		stack_pointer = 0;
-		
+		data_stack_pointer = 0;
+		code_stack_pointer = 0;
+
 		ram = { 0 };
 	}
 
@@ -151,14 +166,15 @@ namespace hz
 		Log::info("Simulation loading...");
 		Log::info("Simulation ready!");
 
-		Log::info("Press 'return' to start the simulation:");
+		Log::output("Press 'return' to start the simulation:");
 
 		std::cin.get();
 
 		Log::info("Simulation starting...");
 		Log::info("Input 's' to step forward one instruction or 'd' to display the disassembly");
 
-		for (char option = '\0'; ; std::cin >> option)
+		//for (char option = '\0'; running; std::cin >> option)
+		for (auto option = 's'; running;)
 		{
 			switch (option)
 			{
@@ -172,16 +188,17 @@ namespace hz
 
 				case 's':
 				{
-					step();
-
-					Log::info(std::format("CPU State: registers=[{}, {}, {}, {}] ip=${:X} sp={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}",
-						register_file[0], register_file[1], register_file[2], register_file[3], instruction_pointer, stack_pointer, STACK_TOP - stack_pointer, opcode, operand1, operand2, immediate, memory));
+					if (step())
+					{
+						Log::info(std::format("CPU State: registers=[{}, {}, {}, {}] ip=${:X} ds={:0X} ({}) cs={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}",
+							register_file[0], register_file[1], register_file[2], register_file[3], instruction_pointer, data_stack_pointer, DATA_STACK - data_stack_pointer, code_stack_pointer, CODE_STACK - code_stack_pointer, opcode, operand1, operand2, immediate, memory));
+					}
 				} break;
 
 				case 'q':
 				{
 					Log::info("Simulation ending...");
-					std::exit(EXIT_SUCCESS);
+					return;
 				} break;
 
 				//Special case to handle the first iteration cleanly

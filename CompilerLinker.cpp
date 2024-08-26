@@ -79,6 +79,14 @@ namespace hz
 
 							auto i0 = AS_INSTRUCTION_COMMAND(c0);
 
+							if (i0->opcode == MOVE &&
+								i0->src == i0->dst)
+							{
+								i0->marked_for_deletion = true;
+								_global_pass++;
+								return true;
+							}
+
 							if (j + 1 < instructions.size())
 							{
 								auto c1 = instructions[j + 1];

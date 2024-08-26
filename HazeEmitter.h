@@ -26,6 +26,7 @@ namespace hz
 		virtual std::vector<std::uint8_t> emit_pull(Register) final override;
 		virtual std::vector<std::uint8_t> emit_brnz(std::uint16_t, Register) final override;
 		virtual std::vector<std::uint8_t> emit_bool(Register) final override;
+		std::vector<std::uint8_t> emit_unknown();
 
 	public:
 		virtual EmitterType etype() const final override;

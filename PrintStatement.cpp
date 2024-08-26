@@ -27,9 +27,9 @@ namespace hz
 	{
 		ManagedStaticAllocation temp{};
 		message->generate(temp.allocation);
-		// NOTE: $FFFF is the screen buffer address
+		// NOTE: $1111 is the screen buffer address
 		// it is flushed once per clock cycle
-		_generator->make_save(0xFFFF, temp.allocation->read());
+		_generator->make_save(0x1111, temp.allocation->read());
 	}
 
 	Statement* PrintStatement::optimize()

@@ -14,18 +14,23 @@ namespace hz
 	class Simulator
 	{
 	private:
-		static constexpr auto STACK_TOP = HALF_DWORD_MAX - 1;
+		static constexpr auto DATA_STACK = HALF_DWORD_MAX - 1;
+		static constexpr auto CODE_STACK = QUARTER_DWORD_MAX - 1;
 
 	private:
 		std::array<word, 4> register_file;
 		dword instruction_pointer;
-		dword stack_pointer;
+		dword data_stack_pointer;
+		dword code_stack_pointer;
 
 	private:
 		std::array<word, HALF_DWORD_MAX> ram;
 		std::array<word, HALF_DWORD_MAX> rom;
 	private:
 		int opcode, operand1, operand2, immediate, memory;
+
+	private:
+		bool running = true;
 
 	public:
 		Simulator(const std::vector<std::uint8_t>& bytes)

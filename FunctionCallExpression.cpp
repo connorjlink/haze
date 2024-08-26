@@ -46,7 +46,7 @@ namespace hz
 			for (auto argument : arguments)
 			{
 				argument->generate(temp.allocation);
-				_generator->fake_push(ARGUMENTS, temp.allocation->read());
+				_generator->make_push(temp.allocation->read());
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace hz
 		_generator->make_call(name);
 
 		// return value comes off fake stack
-		_generator->fake_pull(allocation->read(), RETURNS);
+		_generator->make_pull(allocation->read());
 	}
 
 	Expression* FunctionCallExpression::optimize()

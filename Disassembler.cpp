@@ -34,7 +34,7 @@ namespace hz
 			case PUSH: return std::format("push {}        ",     src);
 			case PULL: return std::format("pull {}        ",     dst);
 			case BRNZ: return std::format("brez &${:04X}, {}",   mem, src);
-			default:   return             "ILLEGAL OPCODE ";
+			default:   return             "XXXX           ";
 		}
 	}
 

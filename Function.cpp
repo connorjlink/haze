@@ -37,13 +37,13 @@ namespace hz
 		// TODO: support argument inputs here!
 		const auto arity = arguments.size();
 
-		if (arity > 0)
-		{
-			_generator->make_push(R0);
-			_generator->make_push(R1);
-			_generator->make_push(R2);
-			_generator->make_push(R3);
-		}
+		//if (arity > 0)
+		//{
+		//	for (auto i = 0; i < arity; i++)
+		//	{
+		//		_generator->make_push(static_cast<Register>(i));
+		//	}
+		//}
 		
 
 		if (arity > 4)
@@ -52,30 +52,36 @@ namespace hz
 		}
 
 
-		for (auto i = 0; i < arity; i++)
+		for (int i = 0; i < arity; i++)
 		{
-			const auto address = _generator->fake_pull(static_cast<Register>(i), ARGUMENTS);
+			auto reg = static_cast<Register>(i);
+
+			_generator->make_pull(static_cast<Register>(arity - i - 1));
 			// NOTE: this will not support recursion for now ;(
 			// all arguments of of ->etype() == ExpressionType::ARGUMENT
 			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
-				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation = new DynamicAllocation{ address };
+				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation = new StaticAllocation{ reg, false };
 		}
 
 
 		body->generate();
 
 		// in case there was no return statement, a default return value of 0 is provided
-		ManagedStaticAllocation temp{};
-		_generator->make_copy(temp.allocation->read(), 0);
-		_generator->fake_push(RETURNS, temp.allocation->read());
-
-		if (arity > 0)
+		if constexpr (0)
 		{
-			_generator->make_pull(R3);
-			_generator->make_pull(R2);
-			_generator->make_pull(R1);
-			_generator->make_pull(R0);
+			ManagedStaticAllocation temp{};
+			_generator->make_copy(temp.allocation->read(), 0);
+			_generator->make_push(temp.allocation->read());
 		}
+		
+
+		//if (arity > 0)
+		//{
+		//	for (auto i = arity - 1; i >= 0; i--)
+		//	{
+		//		_generator->make_pull(static_cast<Register>(i));
+		//	}
+		//}
 
 		_generator->make_exit();
 	}
