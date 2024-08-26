@@ -48,6 +48,7 @@ namespace hz
 		_job_manager->end_job(_toolchain_task);
 		_job_manager->log();
 
+		_error_reporter->close_all_contexts();
 		Log::raw(_error_reporter->generate_report());
 	}
 

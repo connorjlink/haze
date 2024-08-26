@@ -1,14 +1,12 @@
 #include "IfStatement.h"
 #include "IntegerLiteralExpression.h"
-
 #include "Allocation.h"
 #include "Allocator.h"
-
 #include "Utility.h"
 #include "Evaluator.h"
+#include "Log.h"
 
 #include <format>
-#include "Log.h"
 
 namespace hz
 {
@@ -30,11 +28,40 @@ namespace hz
 
 	void IfStatement::generate(Allocation*)
 	{
-#pragma message("TODO: if statement code generation for compiler")
-		// we need to force allocate this one :(
-		auto condition_allocation = _allocator->allocate_static(DC, true);
+		// 3 digits of randomness for now
+		const auto else_uuid = hz::generate(3);
 
-		// TODO: finish if statement generation here
+		const auto begin_else_label = std::format("begin_else_{:02d}", else_uuid);
+		const auto end_else_label = std::format("end-else_{:02d}", else_uuid);
+
+		// scoping so that the if body can use our condition register
+		{
+			// we need to force allocate this one :(
+			ManagedStaticAllocation condition_allocation{ DC, true };
+
+			condition->generate(condition_allocation.allocation);
+
+			_generator->make_bool(condition_allocation.allocation->read());
+			_generator->make_brnz(begin_else_label, condition_allocation.allocation->read());
+		}
+
+		if_body->generate();
+
+		if (else_body != nullptr)
+		{
+			ManagedStaticAllocation temp{};
+			_generator->make_copy(temp.allocation->read(), 1);
+			_generator->make_brnz(end_else_label, temp.allocation->read());
+		}
+		
+		_generator->label(begin_else_label);
+
+		if (else_body != nullptr)
+		{
+			else_body->generate();
+		}
+
+		_generator->label(end_else_label);
 	}
 
 	Statement* IfStatement::optimize()

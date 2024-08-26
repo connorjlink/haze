@@ -1,20 +1,9 @@
 main:
-    copy r0, #1
-    save $5000, r0
-    call test
-    load r0, &6000
-    exit
-test:
-    push r0
-    push r1
-    push r2
-    push r3
 
-    load r0, &5000
-    save &6000, r0
-    exit
 
-    pull r3
-    pull r2
-    pull r1
-    pull r0
+
+
+
+
+
+

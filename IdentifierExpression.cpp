@@ -27,16 +27,27 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		// try first as a variable
-		if (auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN)))
-		{
-			allocation->copy(variable_symbol->allocation);
-		}
+		auto type = _parser->query_symbol_type(name, NULL_TOKEN);
 
-		else
+		using enum SymbolType;
+		switch (type)
 		{
-			auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, NULL_TOKEN));
-			allocation->copy(argument_symbol->allocation);
+			case SymbolType::VARIABLE:
+			{
+				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN));
+				allocation->copy(variable_symbol->allocation);
+			} break;
+
+			case SymbolType::ARGUMENT:
+			{
+				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, NULL_TOKEN));
+				allocation->copy(argument_symbol->allocation);
+			} break;
+
+			default:
+			{
+				_error_reporter->post_error("invalid symbol type for identifier", NULL_TOKEN);
+			} break;
 		}
 	}
 

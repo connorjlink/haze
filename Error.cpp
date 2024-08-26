@@ -12,7 +12,7 @@ namespace hz
 				_severity_map.at(_severity), _position._line, _position._column, _erroring_line, _message);
 		}
 
-		return std::format("  {}\n      {}",
+		return std::format("  {}: {}\n",
 			_severity_map.at(_severity), _message);
 	}
 }

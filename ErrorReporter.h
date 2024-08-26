@@ -17,7 +17,7 @@ namespace hz
 	private:
 		static constexpr auto MAX_ERRORS = 5;
 
-	private:
+	public:
 		bool _had_error;
 
 	private:
@@ -28,7 +28,7 @@ namespace hz
 		std::stack<ErrorContext*> _active_contexts;
 		std::stack<std::string> _active_files;
 
-	private:
+	public:
 		void close_all_contexts();
 
 	public:

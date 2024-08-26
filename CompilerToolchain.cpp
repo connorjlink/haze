@@ -36,7 +36,11 @@ namespace hz
 		// shared environment with Assembler/Compiler
 		auto image = common_link();
 		auto executable = common_emit(std::move(image), _filepath);
-		common_finalize(std::move(executable), _filepath);
+
+		if (!_error_reporter->_had_error)
+		{
+			common_finalize(std::move(executable), _filepath);
+		}
 
 		_error_reporter->close_context();
 	}

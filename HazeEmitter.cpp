@@ -132,8 +132,8 @@ namespace hz
 					case PUSH: result.append_range(emit_push(instruction_command->src)); break;
 					case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
 					case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
-					case BOOL: result.append_range(emit_bool(instruction_command->src));
-					default:   result.append_range(emit_unknown());
+					case BOOL: result.append_range(emit_bool(instruction_command->src)); break;
+					default:   result.append_range(emit_unknown()); break;
 				}
 			}
 		}

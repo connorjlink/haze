@@ -1,18 +1,20 @@
 #include "CompilerLinker.h"
 #include "Command.h"
 #include "InstructionCommand.h"
-
+#include "LabelCommand.h"
 #include "Utility.h"
 #include "Log.h"
 
-namespace hz
+namespace 
 {
-	static std::uint8_t make_opcode(Opcode opcode, Register operand1, Register operand2)
+	using namespace hz;
+
+	std::uint8_t make_opcode(Opcode opcode, Register operand1, Register operand2)
 	{
 		return ((opcode & 0b1111) << 4) | ((operand1 & 0b11) << 2) | ((operand2 & 0b11) << 0);
 	}
 
-	static std::vector<Command*> gather(const std::vector<Command*>& function)
+	std::vector<Command*> gather(const std::vector<Command*>& function)
 	{
 		std::vector<Command*> commands;
 
@@ -34,12 +36,12 @@ namespace hz
 		return commands;
 	}
 
-	static void internal_linker_error()
+	void internal_linker_error()
 	{
-		Log::error("Internal linker error: unrecognized command type");
+		_error_reporter->post_error("internal error caused by unrecognized command type", NULL_TOKEN);
 	}
 
-	static std::size_t _global_pass = 0;
+	std::size_t _global_pass = 0;
 }
 
 namespace hz
@@ -166,16 +168,29 @@ namespace hz
 
 				for (auto command : function)
 				{
-					if (command->ctype() != CommandType::INSTRUCTION)
+					using enum CommandType;
+					switch (command->ctype())
 					{
-						internal_linker_error();
-					}
+						case LABEL:
+						{
+							auto label = AS_LABEL_COMMAND(command);
+							label->offset = address_tracker;
+						} break;
 
-					auto instruction = AS_INSTRUCTION_COMMAND(command);
+						case INSTRUCTION:
+						{
+							auto instruction = AS_INSTRUCTION_COMMAND(command);
 
-					if (!instruction->marked_for_deletion)
-					{
-						address_tracker += 3;
+							if (!instruction->marked_for_deletion)
+							{
+								address_tracker += 3;
+							}
+						} break;
+
+						default:
+						{
+							internal_linker_error();
+						} break;
 					}
 				}
 			}
@@ -187,20 +202,52 @@ namespace hz
 			{
 				for (auto command : linkable.object_code)
 				{
-					if (command->ctype() != CommandType::INSTRUCTION)
+					using enum CommandType;
+					switch (command->ctype())
 					{
-						internal_linker_error();
-					}
+						case LABEL:
+						{
+							auto label = AS_LABEL_COMMAND(command);
 
-					auto instruction = AS_INSTRUCTION_COMMAND(command);
+							for (auto& patching_linkable : linkables)
+							{
+								for (auto patching_command : patching_linkable.object_code)
+								{
+									if (patching_command->ctype() == INSTRUCTION)
+									{
+										auto patching_instruction = AS_INSTRUCTION_COMMAND(patching_command);
 
-					if (linkable.symbol->name != symbol->name &&
-					   (instruction->opcode == CALL || instruction->opcode == BRNZ) &&
-						instruction->branch_target == symbol->name)
-					{
-						const auto branch_target = base_pointer + offset;
+										if (patching_instruction->opcode == BRNZ)
+										{
+											if (patching_instruction->branch_target == label->identifier)
+											{
+												const auto branch_target = base_pointer + label->offset;
+												patching_instruction->mem = branch_target;
+											}
+										}
+									}
+								}
+							}
+						} break;
 
-						instruction->mem = branch_target;
+						case INSTRUCTION:
+						{
+							auto instruction = AS_INSTRUCTION_COMMAND(command);
+
+							if (linkable.symbol->name != symbol->name &&
+							   (instruction->opcode == CALL || instruction->opcode == BRNZ) &&
+								instruction->branch_target == symbol->name)
+							{
+								const auto branch_target = base_pointer + offset;
+
+								instruction->mem = branch_target;
+							}
+						} break;
+
+						default:
+						{
+							internal_linker_error();
+						} break;
 					}
 				}
 			}
@@ -212,41 +259,53 @@ namespace hz
 			{
 				const auto& command = function[i];
 
-				if (command->ctype() != CommandType::INSTRUCTION)
+				using enum CommandType;
+				switch (command->ctype())
 				{
-					internal_linker_error();
-				}
-
-				auto instruction = AS_INSTRUCTION_COMMAND(command);
-
-				if (!instruction->marked_for_deletion)
-				{
-					const auto embedded_size = instruction->approximate_embedded_size;
-
-					if (embedded_size != 0)
+					case LABEL:
 					{
-						for (auto j = i + 1; j < function.size(); j++)
-						{
-							function[j]->offset += embedded_size;
-						}
 
-						for (auto& embedded_instruction : instruction->embedded_object_code)
-						{
-							// NOTE: since we don't do any safety checks on inline assembly,
-							// we could (or maybe even likely) are overwriting compiler-generated code.
-							// Depending on our needs going forward, this might be very undesirable for debugging purposes.
+					} break;
 
-							if (embedded_instruction != nullptr)
+					case INSTRUCTION:
+					{
+						auto instruction = AS_INSTRUCTION_COMMAND(command);
+
+						if (!instruction->marked_for_deletion)
+						{
+							const auto embedded_size = instruction->approximate_embedded_size;
+
+							if (embedded_size != 0)
 							{
-								executable.emplace_back(embedded_instruction);
+								for (auto j = i + 1; j < function.size(); j++)
+								{
+									function[j]->offset += embedded_size;
+								}
+
+								for (auto& embedded_instruction : instruction->embedded_object_code)
+								{
+									// NOTE: since we don't do any safety checks on inline assembly,
+									// we could (or maybe even likely) are overwriting compiler-generated code.
+									// Depending on our needs going forward, this might be very undesirable for debugging purposes.
+
+									if (embedded_instruction != nullptr)
+									{
+										executable.emplace_back(embedded_instruction);
+									}
+								}
+							}
+
+							else // (embedded_size == 0)
+							{
+								executable.emplace_back(instruction);
 							}
 						}
-					}
+					} break;
 
-					else // (embedded_size == 0)
+					default:
 					{
-						executable.emplace_back(instruction);
-					}
+						internal_linker_error();
+					} break;
 				}
 			}
 		}

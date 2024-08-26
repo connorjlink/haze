@@ -33,7 +33,8 @@ namespace hz
 			case EXIT: return std::format("exit           ");
 			case PUSH: return std::format("push {}        ",     src);
 			case PULL: return std::format("pull {}        ",     dst);
-			case BRNZ: return std::format("brez &${:04X}, {}",   mem, src);
+			case BRNZ: return std::format("brnz &${:04X}, {}", mem, src);
+			case BOOL: return std::format("bool {}        ", src);
 			default:   return             "XXXX           ";
 		}
 	}

@@ -133,10 +133,17 @@ namespace hz
 			case BRNZ:
 			{
 				//brnz mem, reg
-				if (register_file[operand2] == 0)
+				if (register_file[operand2] != 0)
 				{
 					instruction_pointer = static_cast<decltype(instruction_pointer)>(memory);
+					return true;
 				}
+			} break;
+
+			case BOOL:
+			{
+				//bool reg
+				register_file[operand2] = !(static_cast<bool>(register_file[operand2]));
 			} break;
 
 			default:
@@ -173,9 +180,14 @@ namespace hz
 		Log::info("Simulation starting...");
 		Log::info("Input 's' to step forward one instruction or 'd' to display the disassembly");
 
-		//for (char option = '\0'; running; std::cin >> option)
-		for (auto option = 's'; running;)
+		bool freerunning = false;
+		for (char option = '\0'; running; )
 		{
+			if (!freerunning)
+			{
+				std::cin >> option;
+			}
+
 			switch (option)
 			{
 				case 'd':
@@ -188,6 +200,7 @@ namespace hz
 
 				case 's':
 				{
+					freerunning = true;
 					if (step())
 					{
 						Log::info(std::format("CPU State: registers=[{}, {}, {}, {}] ip=${:X} ds={:0X} ({}) cs={:0X} ({}) committed={{opcode:{:04B} op1:{:02B} op2:{:02B} imm:(${:02X}) mem:${:04X}}}",

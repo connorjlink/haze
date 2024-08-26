@@ -36,6 +36,7 @@ namespace hz
 		void add_symbol(SymbolType, std::string, Token&);
 
 	public:
+		SymbolType query_symbol_type(std::string, Token&);
 		Symbol* reference_symbol(SymbolType, std::string, Token&, bool = false);
 
 	protected:

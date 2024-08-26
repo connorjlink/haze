@@ -65,6 +65,18 @@ namespace hz
 		}
 	}
 
+
+	SymbolType Parser::query_symbol_type(std::string name, Token& location)
+	{
+		if (!symbol_table.contains(name))
+		{
+			_error_reporter->post_error(std::format("symbol `{}` is undefined", name), location);
+			return SymbolType::VARIABLE;
+		}
+
+		return symbol_table.at(name)->ytype();
+	}
+
 	Symbol* Parser::reference_symbol(SymbolType type, std::string name, Token& location, bool mark_visited)
 	{
 		if (!_symbol_map.contains(type))
