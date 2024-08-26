@@ -15,6 +15,7 @@
 #include "NullStatement.h"
 #include "ErrorReporter.h"
 #include "StringExpression.h"
+#include "ArgumentExpression.h"
 #include "FileManager.h"
 #include "Utility.h"
 #include "Log.h"
@@ -231,7 +232,7 @@ namespace hz
 				auto identifier = parse_identifier_expression();
 				add_symbol(SymbolType::ARGUMENT, identifier->name, lookbehind());
 				AS_ARGUMENT_SYMBOL(reference_symbol(SymbolType::ARGUMENT, identifier->name, peek(), false))->type = type_specifier;
-				arguments.emplace_back(identifier);
+				arguments.emplace_back(new ArgumentExpression{ type_specifier, identifier });
 			}
 
 			else

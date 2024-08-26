@@ -42,11 +42,9 @@ namespace hz
 			value = new IntegerLiteralExpression{ 0 };
 		}
 
-		/// TODO: move the return value to r0?
-		// but how will this work if we are recursive?
 		ManagedStaticAllocation temp{};
 		value->generate(temp.allocation);
-		_generator->make_push(temp.allocation->read());
+		_generator->fake_push(RETURNS, temp.allocation->read());
 	}
 
 	Statement* ReturnStatement::optimize()

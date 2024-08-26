@@ -31,12 +31,12 @@ namespace hz
 		// for function calls
 		// each register has its own custom "stack"
 		// function return values also have their own stack
-		std::array<std::uint16_t, 5> fake_stack = { 0x0000, 0x1000, 0x2000, 0x3000, 0x4000 };
+		std::array<std::uint16_t, 7> fake_stack = { 0x0000, 0x1000, 0x2000, 0x3000, 0x4000, 0x5000, 0x6000 };
 
 	public:
 		// for function calls
-		void fake_push(Register);
-		void fake_pull(Register);
+		void fake_push(Register, Register);
+		std::uint16_t fake_pull(Register, Register);
 
 	public:
 		void begin_function(std::string);

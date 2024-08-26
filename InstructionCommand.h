@@ -35,7 +35,8 @@ namespace hz
         R2 = 0b010,
         R3 = 0b011,
         DC = 0b100,
-        RV = DC, // alias for return values "fake stack"
+        ARGUMENTS = 0b101,
+        RETURNS = 0b110, // alias for return values "fake stack"
     };
 
     static const std::unordered_map<Register, std::string_view> register_map =

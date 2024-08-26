@@ -27,8 +27,17 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN));
-		allocation->copy(variable_symbol->allocation);
+		// try first as a variable
+		if (auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN)))
+		{
+			allocation->copy(variable_symbol->allocation);
+		}
+
+		else
+		{
+			auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, NULL_TOKEN));
+			allocation->copy(argument_symbol->allocation);
+		}
 	}
 
 	Expression* IdentifierExpression::optimize()
@@ -39,10 +48,9 @@ namespace hz
 
 	Node* IdentifierExpression::evaluate(Context* context) const
 	{
-		if (auto it = context->variables().find(name);
-			it != std::end(context->variables()))
+		if (context->variables().contains(name))
 		{
-			auto value = it->second;
+			const auto value = context->variables().at(name);
 			return unharvest(value);
 		}
 

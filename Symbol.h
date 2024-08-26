@@ -48,7 +48,7 @@ namespace hz
 
 	class ArgumentSymbol : public Symbol
 	{
-	private:
+	public:
 		Allocation* allocation;
 
 	public:

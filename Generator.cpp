@@ -14,16 +14,17 @@
 
 namespace hz
 {
-	void Generator::fake_push(Register source)
+	void Generator::fake_push(Register destination, Register source)
 	{
-		make_save(fake_stack[source], source);
-		fake_stack[source]++;
+		make_save(fake_stack[destination], source);
+		fake_stack[destination]++;
 	}
 
-	void Generator::fake_pull(Register destination)
+	std::uint16_t Generator::fake_pull(Register destination, Register source)
 	{
-		fake_stack[destination]--;
-		make_load(destination, fake_stack[destination]);
+		fake_stack[source]--;
+		make_load(destination, fake_stack[source]);
+		return fake_stack[source];
 	}
 
 	void Generator::begin_function(std::string name)

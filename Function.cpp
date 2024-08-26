@@ -2,12 +2,15 @@
 #include "Generator.h"
 #include "Allocator.h"
 #include "IdentifierExpression.h"
+#include "ArgumentExpression.h"
 #include "Utility.h"
+#include "Allocation.h"
+#include "Evaluator.h"
+#include "Parser.h"
 #include "Log.h"
 
 #include <format>
-#include "Evaluator.h"
-
+#include <cassert>
 
 namespace hz
 {
@@ -28,10 +31,52 @@ namespace hz
 
 	void Function::generate(Allocation*)
 	{
-		// TODO: support argument inputs here!
-
 		_generator->begin_function(name);
+
+
+		// TODO: support argument inputs here!
+		const auto arity = arguments.size();
+
+		if (arity > 0)
+		{
+			_generator->make_push(R0);
+			_generator->make_push(R1);
+			_generator->make_push(R2);
+			_generator->make_push(R3);
+		}
+		
+
+		if (arity > 4)
+		{
+			_error_reporter->post_uncorrectable(std::format("invalid argument count for function {}", name), NULL_TOKEN);
+		}
+
+
+		for (auto i = 0; i < arity; i++)
+		{
+			const auto address = _generator->fake_pull(static_cast<Register>(i), ARGUMENTS);
+			// NOTE: this will not support recursion for now ;(
+			// all arguments of of ->etype() == ExpressionType::ARGUMENT
+			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
+				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation = new DynamicAllocation{ address };
+		}
+
+
 		body->generate();
+
+		// in case there was no return statement, a default return value of 0 is provided
+		ManagedStaticAllocation temp{};
+		_generator->make_copy(temp.allocation->read(), 0);
+		_generator->fake_push(RETURNS, temp.allocation->read());
+
+		if (arity > 0)
+		{
+			_generator->make_pull(R3);
+			_generator->make_pull(R2);
+			_generator->make_pull(R1);
+			_generator->make_pull(R0);
+		}
+
 		_generator->make_exit();
 	}
 
