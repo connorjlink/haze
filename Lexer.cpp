@@ -89,7 +89,7 @@ namespace hz
 					 'A' <= current && current <= 'Z')
 			{
 				const auto lexeme = rest(std::isalnum);
-				const auto search = lexeme_map.at(lexeme);
+				const auto search = _token_map.at(lexeme);
 
 				if (search)
 				{
@@ -106,7 +106,7 @@ namespace hz
 			{
 				i++;
 				const auto lexeme = rest(std::isalnum);
-				const auto search = lexeme_map.at(std::format(".{}", lexeme));
+				const auto search = _token_map.at(std::format(".{}", lexeme));
 
 				if (search)
 				{
@@ -134,7 +134,7 @@ namespace hz
 			{
 				const auto current_string = std::string{ current };
 
-				const auto search = lexeme_map.at(current_string);
+				const auto search = _token_map.at(current_string);
 
 				if (search.has_value())
 				{

@@ -25,6 +25,7 @@ namespace hz
 	};
 
 	extern FileManager* _file_manager;
+	extern std::string _current_file;
 }
 
 #endif 

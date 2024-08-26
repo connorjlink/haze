@@ -3,9 +3,12 @@
 
 #include "InstructionCommand.h"
 #include "Linkable.h"
+#include "ErrorReporter.h"
 
-#include <vector>
 #include <string>
+#include <array>
+#include <vector>
+#include <cstdint>
 
 namespace hz
 {
@@ -20,6 +23,20 @@ namespace hz
 	private:
 		std::vector<Linkable> linkables;
 		std::int32_t current_function;
+
+
+		// NOTE: fake stacks grow upwards
+		// pointers always point to the about to be written by the next PUSH
+	private:
+		// for function calls
+		// each register has its own custom "stack"
+		// function return values also have their own stack
+		std::array<std::uint16_t, 5> fake_stack = { 0x0000, 0x1000, 0x2000, 0x3000, 0x4000 };
+
+	public:
+		// for function calls
+		void fake_push(Register);
+		void fake_pull(Register);
 
 	public:
 		void begin_function(std::string);
@@ -56,9 +73,15 @@ namespace hz
 		void image(std::vector<InstructionCommand*>&&, std::uint16_t);
 
 	public:
-		Generator(std::vector<Node*>&& program)
+		Generator(std::vector<Node*>&& program, const std::string& filepath)
 			: program{ std::move(program) }, linkables{}, current_function{ -1 }
 		{
+			_error_reporter->open_context(filepath, "generating");
+		}
+
+		~Generator()
+		{
+			_error_reporter->close_context();
 		}
 
 	public:

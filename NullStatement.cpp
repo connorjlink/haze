@@ -1,4 +1,5 @@
 #include "NullStatement.h"
+#include "Generator.h"
 
 #include <format>
 
@@ -21,7 +22,7 @@ namespace hz
 
 	void NullStatement::generate(Allocation*)
 	{
-		// No code generated for a null
+		_generator->make_move(R0, R0);
 	}
 
 	Statement* NullStatement::optimize()

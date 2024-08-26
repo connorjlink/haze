@@ -2,11 +2,12 @@
 #define HAZE_EMITTER_H
 
 #include "EmitterType.h"
-
 #include "InstructionCommand.h"
+#include "ErrorReporter.h"
 
-#include <cstdint>
+#include <string>
 #include <vector>
+#include <cstdint>
 
 namespace hz
 {
@@ -16,9 +17,15 @@ namespace hz
 		std::vector<InstructionCommand*> image;
 
 	public:
-		Emitter(std::vector<InstructionCommand*>&& image)
+		Emitter(std::vector<InstructionCommand*>&& image, const std::string& filepath)
 			: image{ std::move(image) }
 		{
+			_error_reporter->open_context(filepath, "emitting");
+		}
+
+		virtual ~Emitter()
+		{
+			_error_reporter->close_context();
 		}
 
 	private:

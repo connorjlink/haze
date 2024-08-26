@@ -1,13 +1,14 @@
 #ifndef HAZE_FUNCTION_H
 #define HAZE_FUNCTION_H
 
-
+#include "Token.h"
 #include "Statement.h"
 #include "Expression.h"
 #include "Context.h"
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #define AS_FUNCTION(x) static_cast<Function*>(x)
 
@@ -17,6 +18,12 @@ namespace hz
     {
 	    BYTE,
     	NVR,
+    };
+
+    static const std::unordered_map<TokenType, ReturnType> _type_map
+    {
+        { TokenType::BYTE, ReturnType::BYTE },
+        { TokenType::NVR, ReturnType::NVR },
     };
 
     class Function : public Node

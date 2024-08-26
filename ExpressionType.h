@@ -9,6 +9,7 @@
 #define AS_BINARY_EXPRESSION(x) static_cast<BinaryExpression*>(x)
 #define AS_ADJUST_EXPRESSION(x) static_cast<AdjustExpression*>(x)
 #define AS_STRING_EXPRESSION(x) static_cast<StringExpression*>(x)
+#define AS_ARGUMENT_EXPRESSION(x) static_cast<ArgumentExpression*>(x)
 
 namespace hz
 {
@@ -20,6 +21,7 @@ namespace hz
 		BINARY,
 		ADJUST,
 		STRING,
+		ARGUMENT,
 	};
 }
 

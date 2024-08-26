@@ -4,6 +4,7 @@
 #include "Allocation.h"
 #include "Utility.h"
 #include "Evaluator.h"
+#include "ErrorReporter.h"
 #include "Log.h"
 
 #include <format>
@@ -27,14 +28,15 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, name, true);
+		auto symbol = AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN, true));
 
-		const auto expected_arity = AS_FUNCTION_SYMBOL(symbol)->arity;
-		const auto got_arity = arguments.size();
+		const auto defined_arity = symbol->arity;
+		const auto called_arity = arguments.size();
 
-		if (expected_arity != got_arity)
+		if (defined_arity != called_arity)
 		{
-			Log::error(std::format("function {} expects {} arguments but was called with {}", name, expected_arity, got_arity));
+			_error_reporter->post_error(std::format("function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), NULL_TOKEN);
+			return;
 		}
 
 		if (!arguments.empty())

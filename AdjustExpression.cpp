@@ -3,6 +3,9 @@
 #include "IdentifierExpression.h"
 #include "Context.h"
 #include "Evaluator.h"
+#include "Generator.h"
+#include "Allocator.h"
+#include "Allocation.h"
 
 #include <format>
 
@@ -24,10 +27,21 @@ namespace hz
 		return new AdjustExpression{ *this };
 	}
 
-	void AdjustExpression::generate(Allocation*)
+	void AdjustExpression::generate(Allocation* allocation)
 	{
-#pragma message("TODO: implement increment/decrement for compiling")
-		Log::error("");
+		target->generate(allocation);
+		ManagedStaticAllocation temp{ allocation->read(), true };
+		_generator->make_copy(temp.allocation->read(), 1);
+
+		if (increment)
+		{
+			_generator->make_iadd(allocation->read(), temp.allocation->read());
+		}
+
+		else
+		{
+			_generator->make_isub(allocation->read(), temp.allocation->read());
+		}
 	}
 
 	Expression* AdjustExpression::optimize()

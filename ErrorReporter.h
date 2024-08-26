@@ -28,6 +28,9 @@ namespace hz
 		std::stack<ErrorContext*> _active_contexts;
 		std::stack<std::string> _active_files;
 
+	private:
+		void close_all_contexts();
+
 	public:
 		void open_context(const std::string&, const std::string&);
 		void close_context();

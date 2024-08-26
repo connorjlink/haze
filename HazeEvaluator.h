@@ -2,7 +2,9 @@
 #define HAZE_HAZEEVALUATOR_H
 
 #include "Node.h"
+#include "ErrorReporter.h"
 
+#include <string>
 #include <vector>
 
 namespace hz
@@ -12,13 +14,16 @@ namespace hz
 	private:
 		std::vector<Node*> declarators;
 
-	private:
-		Context* context;
-
 	public:
-		HazeEvaluator(std::vector<Node*>&& declarators, Context* context)
-			: declarators{ std::move(declarators) }, context{ context }
+		HazeEvaluator(std::vector<Node*>&& declarators, const std::string& filepath)
+			: declarators{ std::move(declarators) }
 		{
+			_error_reporter->open_context(filepath, "evaluating");
+		}
+
+		~HazeEvaluator()
+		{
+			_error_reporter->close_context();
 		}
 
 	public:

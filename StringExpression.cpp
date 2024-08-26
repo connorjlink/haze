@@ -1,4 +1,7 @@
 #include "StringExpression.h"
+#include "ErrorReporter.h"
+#include "Allocation.h"
+#include "Generator.h"
 #include "Log.h"
 
 #include <format>
@@ -22,7 +25,8 @@ namespace hz
 
 	void StringExpression::generate(Allocation* allocation)
 	{
-		Log::error("");
+		_error_reporter->post_error("unsupported compiler expression type `string`", NULL_TOKEN);
+		_generator->make_copy(allocation->read(), 0xEE);
 	}
 
 	Expression* StringExpression::optimize()

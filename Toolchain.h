@@ -14,7 +14,7 @@ namespace hz
 	class Toolchain
 	{
 	protected:
-		std::vector<std::string> _filepaths;
+		std::string _filepath;
 
 	protected:
 		// filepath to vector<token> mapping
@@ -25,8 +25,9 @@ namespace hz
 
 	public:
 		Toolchain()
-			: _filepaths{}, _tokens{}
+			: _tokens{}
 		{
+			_filepath = "";
 			_toolchain_task = -1;
 		}
 
@@ -41,7 +42,7 @@ namespace hz
 		virtual void run() = 0;
 
 	public:
-		void init(const std::vector<std::string>&);
+		void init(const std::string&);
 		void shut_down();
 	};
 

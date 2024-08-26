@@ -1,6 +1,8 @@
 #include "PrintStatement.h"
 #include "Expression.h"
 #include "Evaluator.h"
+#include "Allocation.h"
+#include "Generator.h"
 
 #include <format>
 
@@ -23,7 +25,11 @@ namespace hz
 
 	void PrintStatement::generate(Allocation*)
 	{
-		Log::error("Print statements cannot be generated in a compiled context");
+		ManagedStaticAllocation temp{};
+		message->generate(temp.allocation);
+		// NOTE: $FFFF is the screen buffer address
+		// it is flushed once per clock cycle
+		_generator->make_save(0xFFFF, temp.allocation->read());
 	}
 
 	Statement* PrintStatement::optimize()

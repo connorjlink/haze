@@ -24,9 +24,9 @@ namespace hz
 
     void VariableStatement::generate(Allocation*)
     {
-        //Make some space on the heap and notify the parser
+        // Make some space on the heap and notify the parser
         allocation = _allocator->allocate_dynamic();
-        AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name))->allocation = allocation;
+        AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN))->allocation = allocation;
 
         if (value)
         {
@@ -40,7 +40,7 @@ namespace hz
     {
         if (auto value_optimized = value->optimize())
         {
-	        return new VariableStatement{ name, AS_EXPRESSION(value_optimized), allocation };
+	        return new VariableStatement{ type, name, AS_EXPRESSION(value_optimized), allocation };
         }
 
         return nullptr;
@@ -48,7 +48,16 @@ namespace hz
 
     Node* VariableStatement::evaluate(Context* context) const
     {
-        context->define_variable(name, harvest(value->evaluate(context)));
+        if (value)
+        {
+            context->define_variable(name, harvest(value->evaluate(context)));
+        }
+
+        else
+        {
+            context->define_variable(name, variable_t{ 0 });
+        }
+
         return nullptr;
     }
 }

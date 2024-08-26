@@ -14,8 +14,8 @@ namespace hz
 		std::vector<Linkable> linkables;
 
 	public:
-		CompilerLinker(std::vector<Linkable>&& linkables)
-			: linkables{ std::move(linkables) }
+		CompilerLinker(std::vector<Linkable>&& linkables, const std::string& filepath)
+			: Linker{ filepath }, linkables { std::move(linkables) }
 		{
 		}
 

@@ -2,23 +2,24 @@
 #define HAZE_SYMBOL_H
 
 #include "SymbolType.h"
+#include "Function.h"
 
 #include <string>
 
 namespace hz
 {
 	class Allocation;
-	enum class ReturnType;
 
 	class Symbol
 	{
 	public:
 		std::string name;
 		bool was_referenced;
+		ReturnType type;
 
 	public:
 		Symbol(std::string name)
-			: name{ std::move(name) }, was_referenced{ false }
+			: name{ std::move(name) }, was_referenced{ false }, type{ ReturnType::BYTE }
 		{
 		}
 

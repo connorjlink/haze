@@ -29,6 +29,7 @@ namespace hz
 
 	void WhileStatement::generate(Allocation*)
 	{
+#pragma message("TODO: code generation for while")
 		// we need to force allocate this one :(
 		auto condition_allocation = _allocator->allocate_static(DC, true);
 

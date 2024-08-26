@@ -3,25 +3,23 @@
 
 #include "Token.h"
 #include "Symbol.h"
-
 #include "Expression.h"
 #include "IdentifierExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "StringExpression.h"
 #include "FunctionCallExpression.h"
 #include "AdjustExpression.h"
-
+#include "ErrorReporter.h"
 #include "Statement.h"
-
 #include "Node.h"
 #include "Function.h"
 #include "InstructionCommand.h"
+#include "ParserType.h"
 
-#define AS_COMPILER_PARSER(x) static_cast<CompilerParser*>(x)
-#define AS_ASSEMBLER_PARSER(x) static_cast<AssemblerParser*>(x)
-
-#define AS_FUNCTION(x) static_cast<Function*>(x)
-#define AS_INSTRUCTION(x) static_cast<Instruction*>(x)
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <cstdlib>
 
 namespace hz
 {
@@ -32,18 +30,20 @@ namespace hz
 		std::vector<Token> tokens;
 
 	private:
-		std::vector<Symbol*> symbol_table;
+		std::unordered_map<std::string, Symbol*> symbol_table;
 
 	protected:
-		void add_symbol(SymbolType, std::string);
+		void add_symbol(SymbolType, std::string, Token&);
 
 	public:
-		bool query_symbol(std::string);
-		Symbol* reference_symbol(SymbolType, std::string, bool = false);
+		Symbol* reference_symbol(SymbolType, std::string, Token&, bool = false);
 
 	protected:
-		const Token& peek() const;
-		const Token& lookahead() const;
+		Token& lookbehind();
+		Token& peek();
+		Token& lookahead();
+
+	protected:
 		std::string consume(TokenType);
 		std::vector<Token> fetch_until(TokenType);
 
@@ -84,9 +84,15 @@ namespace hz
 		virtual std::vector<Node*> parse() = 0;
 
 	public:
-		Parser(const std::vector<Token>& tokens)
+		Parser(const std::vector<Token>& tokens, const std::string& filepath)
 			: cursor{ 0 }, tokens{ tokens }
 		{
+			_error_reporter->open_context(filepath, "parsing");
+		}
+
+		~Parser()
+		{
+			_error_reporter->close_context();
 		}
 	};
 

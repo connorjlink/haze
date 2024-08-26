@@ -7,16 +7,19 @@
 
 namespace hz
 {
+	enum class ReturnType;
+
 	class VariableStatement : public Statement
 	{
 	private:
+		ReturnType type;
 		std::string name;
 		Expression* value;
 		Allocation* allocation;
 
 	public:
-		VariableStatement(std::string name, Expression* value, Allocation* allocation)
-			: name{ std::move(name) } , value{ value }, allocation{ allocation }
+		VariableStatement(ReturnType type, std::string name, Expression* value, Allocation* allocation)
+			: type{ type }, name { std::move(name) }, value{ value }, allocation{ allocation }
 		{
 		}
 

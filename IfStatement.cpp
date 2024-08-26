@@ -30,6 +30,7 @@ namespace hz
 
 	void IfStatement::generate(Allocation*)
 	{
+#pragma message("TODO: if statement code generation for compiler")
 		// we need to force allocate this one :(
 		auto condition_allocation = _allocator->allocate_static(DC, true);
 

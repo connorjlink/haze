@@ -6,6 +6,7 @@
 #include "Allocator.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "ErrorReporter.h"
 #include "Log.h"
 
 #include <format>
@@ -32,16 +33,18 @@ namespace hz
 	{
 		if (value == nullptr)
 		{
-			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function))->return_type != ReturnType::NVR)
+			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, NULL_TOKEN))->return_type != ReturnType::NVR)
 			{
-				Log::error("no return value was specified for a non-void-returning function");
+				_error_reporter->post_error("no return value was specified for a non-`nvr` function", NULL_TOKEN);
+				return;
 			}
 
 			value = new IntegerLiteralExpression{ 0 };
 		}
 
+		/// TODO: move the return value to r0?
+		// but how will this work if we are recursive?
 		ManagedStaticAllocation temp{};
-
 		value->generate(temp.allocation);
 		_generator->make_push(temp.allocation->read());
 	}

@@ -1,6 +1,7 @@
 #include "InlineAsmStatement.h"
 #include "Generator.h"
 #include "AssemblerLinker.h"
+#include "FileManager.h"
 
 #include <format>
 
@@ -30,7 +31,7 @@ namespace hz
 
 	void InlineAsmStatement::generate(Allocation*)
 	{
-		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser };
+		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser, _current_file };
 		auto object_code = linker->link(_generator->write_pointer());
 
 		_generator->image(std::move(object_code), AS_ASSEMBLER_LINKER(linker)->approximate_size());

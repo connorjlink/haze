@@ -23,6 +23,7 @@
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="ArchitectureType.h" />
+    <ClCompile Include="ArgumentExpression.cpp" />
     <ClCompile Include="AssemblerLinker.cpp" />
     <ClCompile Include="AssemblerParser.cpp" />
     <ClCompile Include="AssemblerToolchain.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="AdjustExpression.h" />
     <ClInclude Include="Allocation.h" />
     <ClInclude Include="Allocator.h" />
+    <ClInclude Include="ArgumentExpression.h" />
     <ClInclude Include="AssemblerLinker.h" />
     <ClInclude Include="AssemblerParser.h" />
     <ClInclude Include="AssemblerToolchain.h" />
@@ -165,6 +167,7 @@
     <ClInclude Include="OptimizationType.h" />
     <ClInclude Include="OptionType.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="ParserType.h" />
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PrintStatement.h" />
     <ClInclude Include="ReturnStatement.h" />
@@ -186,6 +189,7 @@
   <ItemGroup>
     <None Include="common.hz" />
     <None Include="fibonacci.hzi" />
+    <None Include="README.md" />
     <None Include="sample.hzi" />
     <None Include="std.hzi" />
     <None Include="vcpkg.json" />

@@ -56,7 +56,7 @@ namespace hz
 					auto label_command = AS_LABEL_COMMAND(command);
 
 					label_command->offset = address_tracker; // TODO: this assignment might be unnecessary
-					AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, label_command->identifier))->address = address_tracker;
+					AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, label_command->identifier, NULL_TOKEN))->address = address_tracker;
 				} break;
 			}
 		}
@@ -76,7 +76,7 @@ namespace hz
 						if (instruction_command->opcode == CALL ||
 							instruction_command->opcode == BRNZ)
 						{
-							auto label_symbol = AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, instruction_command->branch_target));
+							auto label_symbol = AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, instruction_command->branch_target, NULL_TOKEN));
 
 							//const auto branch_target = base_pointer + label_symbol->address;
 							const auto branch_target = label_symbol->address;

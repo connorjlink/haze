@@ -10,12 +10,6 @@ namespace hz
 	public:
 		using Emitter::Emitter;
 
-	public:
-		X86Emitter(std::vector<InstructionCommand*>&& image)
-			: Emitter{ std::move(image) }
-		{
-		}
-
 	private:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) final override;
 		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) final override;

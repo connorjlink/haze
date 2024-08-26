@@ -65,9 +65,6 @@
     <ClCompile Include="Preprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -269,6 +266,12 @@
     <ClCompile Include="IfStatement.cpp">
       <Filter>Source Files\Statement</Filter>
     </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ArgumentExpression.cpp">
+      <Filter>Source Files\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -278,9 +281,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Preprocessor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
@@ -535,6 +535,15 @@
     <ClInclude Include="IfStatement.h">
       <Filter>Source Files\Statement</Filter>
     </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Source Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ParserType.h">
+      <Filter>Source Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ArgumentExpression.h">
+      <Filter>Source Files\Expression</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -573,6 +582,9 @@
     <None Include="std.hzi">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="fibonacci.hzi" />
+    <None Include="README.md" />
+    <None Include="fibonacci.hzi">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@
 #include <filesystem>
 #include <format>
 #include <chrono>
+#include <exception>
 
 using namespace hz;
 
@@ -49,6 +50,7 @@ ErrorReporter* hz::_error_reporter;
 JobManager* hz::_job_manager;
 FileManager* hz::_file_manager;
 CommandLineOptions* hz::_options;
+std::string hz::_current_file;
 
 namespace mqtt
 {
@@ -64,19 +66,24 @@ int main(int argc, char** argv)
 	_error_reporter = new ErrorReporter{};
 	_job_manager = new JobManager{};
 
+	_options = new CommandLineOptions{};
 
 	auto command_line_parser = CommandLineParser{};
 	command_line_parser.parse(argc, argv);
 
 	_file_manager = new FileManager{};
-	
+	_current_file = "";
+
 	for (auto& filepath : command_line_parser.files())
 	{
-		_file_manager->open_file(filepath);
-		const auto& file = _file_manager->get_file(filepath);
-
-		switch (file.ttype())
+		try
 		{
+			_file_manager->open_file(filepath);
+			const auto& file = _file_manager->get_file(filepath);
+			_current_file = filepath;
+
+			switch (file.ttype())
+			{
 			case ToolchainType::ASSEMBLER:
 			{
 				// Assembler
@@ -94,10 +101,15 @@ int main(int argc, char** argv)
 				// Interpreter
 				_toolchain = new InterpreterToolchain{};
 			} break;
+			}
+
+			_toolchain->init(filepath);
 		}
-
-		_toolchain->init({ filepath });
-
+		
+		catch (std::exception)
+		{
+			_toolchain->panic();
+		}
 	}
 
 	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)

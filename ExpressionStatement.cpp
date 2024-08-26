@@ -1,5 +1,6 @@
 #include "ExpressionStatement.h"
 #include "Utility.h"
+#include "Allocation.h"
 
 #include <format>
 
@@ -23,8 +24,8 @@ namespace hz
 
 	void ExpressionStatement::generate(Allocation*)
 	{
-		// TODO: expression statement codegen here!
-#pragma message("TODO: expression statement codegen here!")
+		ManagedStaticAllocation temp{};
+		expression->generate(temp.allocation);
 	}
 
 	Statement* ExpressionStatement::optimize()

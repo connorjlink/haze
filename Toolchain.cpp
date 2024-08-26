@@ -11,38 +11,32 @@
 
 namespace hz
 {
-	void Toolchain::init(const std::vector<std::string>& filepaths)
+	void Toolchain::init(const std::string& filepath)
 	{
-		_filepaths = filepaths;
+		_filepath = filepath;
 
 		_toolchain_task = _job_manager->begin_job("toolchain execution");
 
-		for (auto& filepath : _filepaths)
-		{
-			_error_reporter->open_context(filepath, "initializing");
+		_error_reporter->open_context(_filepath, "initializing");
 
-			const auto read_task = _job_manager->begin_job("file reading");
-			// TODO: figure out where the filepath vector should be
-			// currently, this file is opened in main() already
-			//_file_manager->open_file(filepath);
-			auto& file = _file_manager->get_file(filepath);
-			auto source = file.contents();
-			_job_manager->end_job(read_task);
+		const auto read_task = _job_manager->begin_job("file reading");
+		auto& file = _file_manager->get_file(_filepath);
+		auto source = file.contents();
+		_job_manager->end_job(read_task);
 
 
-			const auto preprocess_task = _job_manager->begin_job("preprocessing");
-			const auto preprocessor = new Preprocessor{ std::move(source), filepath };
-			auto source_processed = preprocessor->preprocess();
-			_job_manager->end_job(preprocess_task);
+		const auto preprocess_task = _job_manager->begin_job("preprocessing");
+		const auto preprocessor = new Preprocessor{ std::move(source), _filepath };
+		auto source_processed = preprocessor->preprocess();
+		_job_manager->end_job(preprocess_task);
 
 
-			const auto lex_task = _job_manager->begin_job("lexing");
-			const auto lexer = new Lexer{ std::move(source_processed) };
-			_tokens[filepath] = lexer->lex();
-			_job_manager->end_job(lex_task);
+		const auto lex_task = _job_manager->begin_job("lexing");
+		const auto lexer = new Lexer{ std::move(source_processed) };
+		_tokens[_filepath] = lexer->lex();
+		_job_manager->end_job(lex_task);
 
-			_error_reporter->close_context();
-		}
+		_error_reporter->close_context();
 
 		run();
 

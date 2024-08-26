@@ -31,110 +31,94 @@ namespace
 		TL_STATEMENT,
 	};
 
-	void ast_indent(int times)
-	{
-		for (auto i = 0; i < 2 * times; i++)
-		{
-			std::cout << ' ';
-		}
-	}
-
-	void ast_print(const std::string& text, int indentation)
-	{
-		std::cout << "[AST] ";
-		::ast_indent(indentation);
-		std::cout << text;
-	}
-
-	void ast_nl()
-	{
-		std::cout << std::endl;
-	}
-
 	bool is_binary_operator(hz::TokenType type)
 	{
-		return type == hz::TokenType::PLUS || type == hz::TokenType::STAR ||
-			   type == hz::TokenType::EQUALS ||
-			   type == hz::TokenType::EQUALSEQUALS || type == hz::TokenType::EXCLAMATIONEQUALS ||
-			   type == hz::TokenType::GREATER || type == hz::TokenType::LESS;
-	}
-
-	auto find(std::string name, std::vector<hz::Symbol*>& symbols)
-	{
-		return std::find_if(symbols.begin(), symbols.end(), [&](auto symbol)
-		{
-			return symbol->name == name;
-		});
+		return hz::_binary_expression_map.contains(type);
 	}
 }
 
 namespace hz
 {
-	void Parser::add_symbol(SymbolType type, std::string name)
+	void Parser::add_symbol(SymbolType type, std::string name, Token& location)
 	{
-		if (query_symbol(name))
+		// does the symbol already exist in the registry?
+		if (symbol_table.contains(name))
 		{
-			Log::error(std::format("symbol {} is multiply defined", name));
+			_error_reporter->post_error(std::format("symbol `{}` was already defined as a {}",
+				name, _symbol_map.at(symbol_table.at(name)->ytype())), location);
+			return;
 		}
 
 		using enum SymbolType;
 		switch (type)
 		{
-			case FUNCTION: symbol_table.emplace_back(new FunctionSymbol{ name }); break;
-			case ARGUMENT: symbol_table.emplace_back(new ArgumentSymbol{ name }); break;
-			case VARIABLE: symbol_table.emplace_back(new VariableSymbol{ name, nullptr }); break;
-			case DEFINE: symbol_table.emplace_back(new DefineSymbol{ name, 0 }); break;
-			case LABEL: symbol_table.emplace_back(new LabelSymbol{ name, 0 }); break;
-			default: Log::error("Unrecognized symbol type added to registry");
-		}
-	}
+			case FUNCTION: symbol_table[name] = new FunctionSymbol{ name }; break;
+			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name }; break;
+			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr }; break;
+			case DEFINE: symbol_table[name] = new DefineSymbol{ name, 0 }; break;
+			case LABEL: symbol_table[name] = new LabelSymbol{ name, 0 }; break;
 
-	bool Parser::query_symbol(std::string name)
-	{
-		return ::find(name, symbol_table) != std::end(symbol_table);
-	}
-
-	Symbol* Parser::reference_symbol(SymbolType type, std::string name, bool visit)
-	{
-		auto symbol = ::find(name, symbol_table);
-		if (symbol == std::end(symbol_table))
-		{
-#pragma message("TODO: symbol type bimap :)")
-			// TODO: add other symbol types here as they are added!
-			Log::error(std::format("{} {} is undefined", 
-				type == SymbolType::VARIABLE ? "variable" :
-					type == SymbolType::FUNCTION ? "function" : 
-						type == SymbolType::ARGUMENT ? "argument" :
-							type == SymbolType::DEFINE ? "define" :
-								type == SymbolType::LABEL ? "label" : "unknown", name));
-		}
-
-		if ((*symbol)->ytype() == type)
-		{
-			if (visit)
+			default:
 			{
-				(*symbol)->was_referenced = true;
-			}
-
-			return *symbol;
+				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
+			} break;
 		}
-
-		Log::error(std::format("the specified symbol {} does not match the expected type", name));
 	}
 
-	const Token& Parser::peek() const
+	Symbol* Parser::reference_symbol(SymbolType type, std::string name, Token& location, bool mark_visited)
+	{
+		if (!_symbol_map.contains(type))
+		{
+			_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
+			return nullptr;
+		}
+
+		if (!symbol_table.contains(name))
+		{
+			_error_reporter->post_error(std::format("symbol `{}` is undefined", name), location);
+			return nullptr;
+		}
+
+		auto symbol = symbol_table.at(name);
+
+		if (symbol->ytype() != type)
+		{
+			_error_reporter->post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
+				name, _symbol_map.at(symbol->ytype()), _symbol_map.at(type)), location);
+			return nullptr;
+		}
+
+		if (mark_visited)
+		{
+			symbol->was_referenced = true;
+		}
+
+		return symbol;
+	}
+
+	Token& Parser::lookbehind()
+	{
+		if (cursor > 0)
+		{
+			return tokens[cursor - 1];
+		}
+
+		_error_reporter->post_uncorrectable("invalid token backtrack", peek());
+	}
+
+	Token& Parser::peek()
 	{
 		return tokens[cursor];
 	}
 
-	const Token& Parser::lookahead() const
+	Token& Parser::lookahead()
 	{
 		if (cursor < tokens.size() - 1)
 		{
 			return tokens[cursor + 1];
 		}
 
-		Log::error(std::format("({}) unexpectedly reached the end of file", peek().offset));
+		_error_reporter->post_uncorrectable("unexpectedly reached the end of file", peek());
 	}
 
 	std::string Parser::consume(TokenType token)
@@ -146,20 +130,22 @@ namespace hz
 			return current.value;
 		}
 
-		auto debug = [&](auto v)
+		auto convert = [&](auto v)
 		{
-			const auto item = lexeme_map.at(v);
+			const auto item = _token_map.at(v);
 
 			if (item)
 			{
 				return *item;
 			}
 
-			Log::error("invalid token not defined in the topic map");
+			_error_reporter->post_error("invalid token", current);
+			return std::string{ "[error]" };
 		};
 
-		Log::error(std::format("({}) expected token '{}' but got '{}'", current.offset, debug(token),
-			((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value : debug(current.type))));
+		_error_reporter->post_error(std::format("expected token `{}` but got `{}`", 
+			convert(token), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value : convert(current.type))), current);
+		return current.value;
 	}
 
 	std::vector<Token> Parser::fetch_until(TokenType type)
@@ -189,8 +175,8 @@ namespace hz
 		const auto identifier = identifier_expresion->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
-		add_symbol(SymbolType::DEFINE, identifier);
-		AS_DEFINE_SYMBOL(reference_symbol(SymbolType::DEFINE, identifier))->value = value;
+		add_symbol(SymbolType::DEFINE, identifier, peek());
+		AS_DEFINE_SYMBOL(reference_symbol(SymbolType::DEFINE, identifier, peek()))->value = value;
 
 		return new DotDefineCommand{ identifier, { value } };
 	}
@@ -217,6 +203,7 @@ namespace hz
 		const auto name = consume(TokenType::IDENTIFIER);
 
 		DISCARD consume(TokenType::LPAREN);
+		// TODO: verify that we are a compiler or interpreter parser before doing this!
 		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		DISCARD consume(TokenType::RPAREN);
 
@@ -336,21 +323,21 @@ namespace hz
 
 	Expression* Parser::parse_expression()
 	{
-		return parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
+		return AS_EXPRESSION(parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM)->copy());
 	}
 
 	Expression* Parser::parse_infix_expression(Expression* left, Precedence min_precedence)
 	{
-		static const std::unordered_map<TokenType, Precedence> precedences =
+		static const std::unordered_map<TokenType, Precedence> precedences
 		{
-			{ TokenType::EQUALS, Precedence::ASSIGN },
-			{ TokenType::EQUALSEQUALS, Precedence::EQUALITY },
+			{ TokenType::EQUALS,            Precedence::ASSIGN },
+			{ TokenType::EQUALSEQUALS,      Precedence::EQUALITY },
 			{ TokenType::EXCLAMATIONEQUALS, Precedence::EQUALITY },
-			{ TokenType::GREATER, Precedence::COMPARE },
-			{ TokenType::LESS,    Precedence::COMPARE },
-			{ TokenType::PLUS,    Precedence::TERM },
-			{ TokenType::MINUS,   Precedence::TERM },
-			{ TokenType::STAR,    Precedence::FACTOR },
+			{ TokenType::GREATER,           Precedence::COMPARE },
+			{ TokenType::LESS,              Precedence::COMPARE },
+			{ TokenType::PLUS,              Precedence::TERM },
+			{ TokenType::MINUS,             Precedence::TERM },
+			{ TokenType::STAR,              Precedence::FACTOR },
 		};
 
 		do
@@ -398,73 +385,4 @@ namespace hz
 
 		return left;
 	}
-
-	/*void Parser::print_statement(const Statement const* statement, int indent)
-	{
-		::ast_print("Statement: ", indent);
-
-		using enum Statement::Type;
-		switch (statement->stype())
-		{
-			case COMPOUND:
-			{
-				const auto compound_statement = AS_COMPOUND_STATEMENT(statement);
-
-				std::cout << "compound:";
-				::ast_nl();
-
-				for (const auto statement : compound_statement->substatements)
-				{
-					print_statement(statement, indent + 2);
-				}
-			} break;
-
-			case VARIABLE:
-			{
-				const auto variable_declaration = AS_VARIABLE_DECLARATION_STATEMENT(statement);
-
-				std::cout << std::format("variable declaration ({} = {})",
-					variable_declaration->name, variable_declaration->expression->string());
-
-				::ast_nl();
-			} break;
-
-			case RETURN:
-			{
-				const auto return_statement = AS_RETURN_STATEMENT(statement);
-
-				std::cout << std::format("return ({})", return_statement->expression->string());
-
-				::ast_nl();
-			}
-		}
-	}*/
-
-	/*void Parser::print_function(Function* function)
-	{
-		::ast_print("Function: ", TL_FUNCTION);
-
-		std::cout << std::format(" ({})\n");
-
-		print_statement(function->get_body(), TL_STATEMENT);
-	}*/
-
-	/*void Parser::print_program()
-	{
-		if (!program.empty())
-		{
-			::ast_print("Program: ", TL_PROGRAM);
-			::ast_nl();
-
-			for (const auto function : program)
-			{
-				print_function(function);
-			}
-		}
-	}*/
-
-	/*void Parser::print_ast()
-	{
-		print_program();
-	}*/
 }

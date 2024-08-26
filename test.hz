@@ -1,22 +1,18 @@
-.include "std.hz"
+function byte test = (byte x)
+{
+    return x;
+}
 
 function nvr main = ()
 {
-    asm
-    {
-    .define TEST = 1
-	.org &$8000
-
-        copy r0, #TEST
-        copy r1, #TEST
-        iadd r0, r1 ; 1 + 1
-    }
-
-    byte foo = (2 * 3) + 1;
-    // 7
-    return foo;
+    return test(1);
 }
 
-
-
-
+// main:
+//   copy r0, #1
+//   save &0000, r0
+//   call test
+//   exit
+// test:
+//   load r0, &0000
+//   exit

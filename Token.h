@@ -61,7 +61,7 @@ namespace hz
 
 #define S(x) std::string{ x }
 
-	static const Bimap<std::string, TokenType> lexeme_map
+	static const Bimap<std::string, TokenType> _token_map
 	{
 		bimap_t{ S(";"), TokenType::SEMICOLON },
 		bimap_t{ S(":"), TokenType::COLON },
@@ -139,7 +139,7 @@ namespace hz
 		std::string value;
 	};
 
-	static const auto NULL_TOKEN = Token{ TokenType::END, -1, "" };
+	static auto NULL_TOKEN = Token{ TokenType::END, -1, "" };
 }
 
 #endif //HAZE_TOKEN_H

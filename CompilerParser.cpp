@@ -13,9 +13,9 @@
 #include "PrintStatement.h"
 #include "HookStatement.h"
 #include "NullStatement.h"
-
+#include "ErrorReporter.h"
 #include "StringExpression.h"
-
+#include "FileManager.h"
 #include "Utility.h"
 #include "Log.h"
 
@@ -68,10 +68,9 @@ namespace hz
 
 	Statement* CompilerParser::parse_variabledeclaration_statement(std::string enclosing_function)
 	{
-		DISCARD consume(TokenType::BYTE);
-
+		const auto type = parse_type_specifier();
 		const auto identifier = consume(TokenType::IDENTIFIER);
-		add_symbol(SymbolType::VARIABLE, identifier);
+		add_symbol(SymbolType::VARIABLE, identifier, lookbehind());
 
 		if (peek().type == TokenType::EQUALS)
 		{
@@ -79,12 +78,12 @@ namespace hz
 			const auto value = parse_expression();
 			DISCARD consume(TokenType::SEMICOLON);
 
-			return new VariableStatement{ identifier, value, nullptr };
+			return new VariableStatement{ type, identifier, value, nullptr };
 		}
 
 		DISCARD consume(TokenType::SEMICOLON);
 
-		return new VariableStatement{ identifier, nullptr, nullptr };
+		return new VariableStatement{ type, identifier, nullptr, nullptr };
 	}
 
 	Statement* CompilerParser::parse_compound_statement(std::string enclosing_function)
@@ -111,7 +110,7 @@ namespace hz
 		DISCARD consume(TokenType::LBRACE);
 
 		auto assembly = fetch_until(TokenType::RBRACE);
-		auto assembler_parser = new AssemblerParser{ std::move(assembly) };
+		auto assembler_parser = new AssemblerParser{ std::move(assembly), _current_file };
 		auto commands = assembler_parser->parse();
 
 		DISCARD consume(TokenType::RBRACE);
@@ -201,24 +200,15 @@ namespace hz
 		return new ExpressionStatement{ expression };
 	}
 
-	Expression* CompilerParser::parse_argument()
-	{
-		DISCARD consume(TokenType::BYTE);
-		const auto name = consume(TokenType::IDENTIFIER);
-		add_symbol(SymbolType::ARGUMENT, name);
-
-		return new IdentifierExpression{ name };
-	}
-
-	std::vector<Expression*> CompilerParser::parse_arguments(bool is_declaration)
+	// is_definition controls whether we are a function definition or call
+	std::vector<Expression*> CompilerParser::parse_arguments(bool is_definition)
 	{
 		std::vector<Expression*> arguments;
 
 		while (peek().type != TokenType::RPAREN)
 		{
-			if (is_declaration)
-			{
-				/*
+
+			/*
 					I have some more work to do here before arguments are ready to be used. For now, arguments
 					dont actually have an allocation and this means two things
 						-if we try to use one as an identifier, we only are checking for variables symbols which do have an allocation and must be treated differently
@@ -235,10 +225,12 @@ namespace hz
 
 				*/
 
-				//TODO: require a type specifier for each argument of a function definition
+			if (is_definition)
+			{
+				auto type_specifier = parse_type_specifier();
 				auto identifier = parse_identifier_expression();
-				add_symbol(SymbolType::ARGUMENT, identifier->name);
-				//TODO: this symbol should also be of type ARGUMENT
+				add_symbol(SymbolType::ARGUMENT, identifier->name, lookbehind());
+				AS_ARGUMENT_SYMBOL(reference_symbol(SymbolType::ARGUMENT, identifier->name, peek(), false))->type = type_specifier;
 				arguments.emplace_back(identifier);
 			}
 
@@ -254,48 +246,39 @@ namespace hz
 
 				if (peek().type == TokenType::RPAREN)
 				{
-					Log::error(std::format("({}) expected another argument", peek().offset));
+					_error_reporter->post_error("expected another function argument", peek());
+					break;
 				}
 			}
 		}
 
-		//TODO: figure out how to support passing more than 4 arguments on the stack
-		//realistically, this is possible if we push parameters to the stack in batches of 4 or fewer at a time
-		if (arguments.size() > 4)
+		return arguments;
+	}
+
+	ReturnType CompilerParser::parse_type_specifier()
+	{
+		if (!_type_map.contains(peek().type))
 		{
-			Log::error(std::format("({}) function defined with {} arguments but can have at most 4", peek().offset, arguments.size()));
+			_error_reporter->post_error(std::format("unrecognized type specifier `{}`", peek().value), peek());
+			return ReturnType::NVR;
 		}
 
-		return arguments;
+		auto type_specifier = _type_map.at(peek().type);
+		DISCARD consume(peek().type);
+		return type_specifier;
 	}
 
 	Node* CompilerParser::parse_function()
 	{
 		DISCARD consume(TokenType::FUNCTION);
 
-		ReturnType return_type;
-		if (peek().type == TokenType::BYTE)
-		{
-			DISCARD consume(TokenType::BYTE);
-			return_type = ReturnType::BYTE;
-		}
-
-		else if (peek().type == TokenType::NVR)
-		{
-			DISCARD consume(TokenType::NVR);
-			return_type = ReturnType::NVR;
-		}
-
-		else
-		{
-			Log::error("expected return type `byte` or `nvr`");
-		}
+		auto return_type = parse_type_specifier();
 
 		auto name = consume(TokenType::IDENTIFIER);
 
 		//TODO: implement a more efficient way of modifying the return type than this mess
-		add_symbol(SymbolType::FUNCTION, name);
-		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name))->return_type = return_type;
+		add_symbol(SymbolType::FUNCTION, name, lookbehind());
+		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name, peek()))->return_type = return_type;
 
 		DISCARD consume(TokenType::EQUALS);
 
@@ -330,7 +313,7 @@ namespace hz
 			}); it != std::end(program))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
-			DISCARD reference_symbol(SymbolType::FUNCTION, "main", true);
+			DISCARD reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
 
 			if constexpr (OPTIMIZE_AST)
 			{

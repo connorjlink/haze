@@ -90,7 +90,8 @@ namespace hz
 
 		const auto identifier = identifier_expression->name;
 
-		add_symbol(SymbolType::LABEL, identifier);
+		add_symbol(SymbolType::LABEL, identifier, lookbehind());
+		// NOTE: we don't yet know the address since we haven't linked to resolve it yet
 		//AS_LABEL_SYMBOL(reference_symbol(Symbol::Type::LABEL, identifier))->address = 
 
 		return new LabelCommand{ identifier };

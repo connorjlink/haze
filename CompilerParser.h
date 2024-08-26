@@ -30,7 +30,7 @@ namespace hz
         Statement* parse_unhook_statement(std::string);
 
     public:
-        Expression* parse_argument();
+        ReturnType parse_type_specifier();
         std::vector<Expression*> parse_arguments(bool);
 
     public:

@@ -3,6 +3,14 @@
 
 namespace hz
 {
+	void ErrorReporter::close_all_contexts()
+	{
+		while (_active_contexts.size() > 0)
+		{
+			close_context();
+		}
+	}
+
 	void ErrorReporter::open_context(const std::string& file, const std::string& task)
 	{
 		auto& existing_contexts = _open_contexts[file];
@@ -55,7 +63,7 @@ namespace hz
 	{
 		_had_error = true;
 		_active_contexts.top()->post(ErrorType::UNCORRECTABLE, message, _active_files.top(), token);
-		close_context();
+		close_all_contexts();
 		_toolchain->panic();
 	}
 }

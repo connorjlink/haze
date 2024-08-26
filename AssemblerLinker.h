@@ -28,16 +28,28 @@ namespace hz
 		}
 
 	public:
-		AssemblerLinker(std::vector<Node*>&& commands, AssemblerParser* assembler_parser)
-			: commands{ std::move(commands) }, assembler_parser{ assembler_parser }
+		AssemblerLinker(std::vector<Node*>&& commands, AssemblerParser* assembler_parser, const std::string& filepath)
+			: Linker{ filepath }, commands { std::move(commands) }, assembler_parser{ assembler_parser }
 		{
-			for (auto node : commands)
+			commands.erase(std::remove_if(commands.begin(), commands.end(), [&](auto&& val)
 			{
-				if (node->ntype() != NodeType::COMMAND)
+				if (val->ntype() != NodeType::COMMAND)
 				{
-					Log::error("Invalid node type encountered for assembly linking");
+					if (!_node_map.contains(val->ntype()))
+					{
+						_error_reporter->post_error("unrecognized node type", NULL_TOKEN);
+					}
+
+					else
+					{
+						_error_reporter->post_error(std::format("invalid node type `{}`", _node_map.at(val->ntype())), NULL_TOKEN);
+					}
+
+					return true;
 				}
-			}
+
+				return false;
+			}));
 		}
 
 	public:

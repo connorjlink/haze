@@ -7,6 +7,9 @@
 #define AS_DEFINE_SYMBOL(x) static_cast<DefineSymbol*>(x)
 #define AS_LABEL_SYMBOL(x) static_cast<LabelSymbol*>(x)
 
+#include <string>
+#include <unordered_map>
+
 namespace hz
 {
 	enum class SymbolType
@@ -16,6 +19,15 @@ namespace hz
 		VARIABLE,
 		DEFINE,
 		LABEL,
+	};
+
+	static const std::unordered_map<SymbolType, std::string> _symbol_map
+	{
+		{ SymbolType::FUNCTION, "function" },
+		{ SymbolType::ARGUMENT, "argument" },
+		{ SymbolType::VARIABLE, "variable" },
+		{ SymbolType::DEFINE, "define" },
+		{ SymbolType::LABEL, "label" },
 	};
 }
 

@@ -1,5 +1,6 @@
 #include "HookStatement.h"
 #include "Context.h"
+#include "ErrorReporter.h"
 
 #include <format>
 
@@ -23,7 +24,8 @@ namespace hz
 
 	void HookStatement::generate(Allocation*)
 	{
-		Log::error("Hook statements cannot be generated in a compiled context");
+		const auto type = hook ? "hook" : "unhook";
+		_error_reporter->post_error(std::format("unsupported compiler statement type `{}`", type), NULL_TOKEN);
 	}
 
 	Statement* HookStatement::optimize()

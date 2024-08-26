@@ -25,7 +25,7 @@ namespace hz
 		return image;
 	}
 	
-	std::vector<std::uint8_t> common_emit(std::vector<InstructionCommand*>&& image)
+	std::vector<std::uint8_t> common_emit(std::vector<InstructionCommand*>&& image, const std::string& filepath)
 	{
 		const auto emit_task = _job_manager->begin_job("emitting");
 		Emitter* emitter = nullptr;
@@ -35,12 +35,12 @@ namespace hz
 		{
 			case HAZE:
 			{
-				emitter = new HazeEmitter{ std::move(image) };
+				emitter = new HazeEmitter{ std::move(image), filepath };
 			} break;
 
 			case X86:
 			{
-				emitter = new X86Emitter{ std::move(image) };
+				emitter = new X86Emitter{ std::move(image), filepath };
 			} break;
 		}
 

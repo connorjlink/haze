@@ -1,14 +1,14 @@
-23-bit instruction format:
+24-bit instruction format:
 x x x x  x x x x  x x x x x x x x  x x x x x x x x   
 \_____/  \_/ \_/  \_____________/  \_____________/
    |      |   |          \________________/
   insn   op1 op2         |       |
                         imm     mem
 registers:                           
-00 - x                        
-01 - y
-10 - z
-11 - w
+00 - r0                        
+01 - r1
+10 - r2
+11 - r3
 
 instructions:
 0000 - move reg, reg

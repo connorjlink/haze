@@ -14,11 +14,23 @@
 
 namespace hz
 {
+	void Generator::fake_push(Register source)
+	{
+		make_save(fake_stack[source], source);
+		fake_stack[source]++;
+	}
+
+	void Generator::fake_pull(Register destination)
+	{
+		fake_stack[destination]--;
+		make_load(destination, fake_stack[destination]);
+	}
+
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
 
-		const auto linkable = Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name), {}, 0 };
+		const auto linkable = Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, 0 };
 		linkables.emplace_back(linkable);
 	}
 
