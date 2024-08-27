@@ -57,6 +57,12 @@
     <Filter Include="Source Files\Argument">
       <UniqueIdentifier>{82183aef-d26a-468c-a538-72baee1d93bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test Files">
+      <UniqueIdentifier>{35486fac-b1f1-4267-85cd-832a11fb56b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Execute">
+      <UniqueIdentifier>{8a997064-5801-4141-9767-107e0064d213}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -271,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="ArgumentExpression.cpp">
       <Filter>Source Files\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="PEBuilder.cpp">
+      <Filter>Source Files\Execute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,6 +553,9 @@
     <ClInclude Include="ArgumentExpression.h">
       <Filter>Source Files\Expression</Filter>
     </ClInclude>
+    <ClInclude Include="PEBuilder.h">
+      <Filter>Source Files\Execute</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -585,6 +597,9 @@
     <None Include="README.md" />
     <None Include="fibonacci.hzi">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test.exe">
+      <Filter>Test Files</Filter>
     </None>
   </ItemGroup>
 </Project>

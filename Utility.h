@@ -19,7 +19,7 @@ namespace hz
 
     inline static constexpr auto DEBUG = true;
 
-	std::array<word, 3> extract(std::uint32_t bytes);
+	std::array<byte, 3> extract(std::uint32_t bytes);
 
 	inline static std::random_device _device;
 	inline static std::mt19937 _engine(_device());

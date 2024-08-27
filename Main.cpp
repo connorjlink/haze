@@ -14,21 +14,17 @@
 #include "X86Emitter.h"
 #include "Context.h"
 #include "Log.h"
-
-
 #include "CommandLineParser.h"
-
 #include "Hook.h"
-
 #include "JobManager.h"
 #include "FileManager.h"
-
 #include "Toolchain.h"
 #include "CompilerToolchain.h"
 #include "AssemblerToolchain.h"
 #include "InterpreterToolchain.h"
-
+#include "Simulator.h"
 #include "ErrorReporter.h"
+#include "PEBuilder.h"
 
 #include <cstdlib>
 #include <string>
@@ -58,6 +54,8 @@ namespace mqtt
 	const bool message::DFLT_RETAINED = true;
 }
 
+#include <fstream>
+
 int main(int argc, char** argv)
 {
 	_allocator = new Allocator{};
@@ -74,43 +72,48 @@ int main(int argc, char** argv)
 	_file_manager = new FileManager{};
 	_current_file = "";
 
-	for (auto& filepath : command_line_parser.files())
-	{
-		try
-		{
-			_file_manager->open_file(filepath);
-			const auto& file = _file_manager->get_file(filepath);
-			_current_file = filepath;
 
-			switch (file.ttype())
-			{
-			case ToolchainType::ASSEMBLER:
-			{
-				// Assembler
-				_toolchain = new AssemblerToolchain{};
-			} break;
+	auto binary = PEBuilder::build();
+	auto binfile = std::fstream("test.exe", std::ios::binary | std::ios::out);
+	binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
 
-			case ToolchainType::COMPILER:
-			{
-				// Compiler
-				_toolchain = new CompilerToolchain{};
-			} break;
+	//for (auto& filepath : command_line_parser.files())
+	//{
+	//	try
+	//	{
+	//		_file_manager->open_file(filepath);
+	//		const auto& file = _file_manager->get_file(filepath);
+	//		_current_file = filepath;
 
-			case ToolchainType::INTERPRETER:
-			{
-				// Interpreter
-				_toolchain = new InterpreterToolchain{};
-			} break;
-			}
+	//		switch (file.ttype())
+	//		{
+	//		case ToolchainType::ASSEMBLER:
+	//		{
+	//			// Assembler
+	//			_toolchain = new AssemblerToolchain{};
+	//		} break;
 
-			_toolchain->init(filepath);
-		}
-		
-		catch (std::exception)
-		{
-			_toolchain->panic();
-		}
-	}
+	//		case ToolchainType::COMPILER:
+	//		{
+	//			// Compiler
+	//			_toolchain = new CompilerToolchain{};
+	//		} break;
+
+	//		case ToolchainType::INTERPRETER:
+	//		{
+	//			// Interpreter
+	//			_toolchain = new InterpreterToolchain{};
+	//		} break;
+	//		}
+
+	//		_toolchain->init(filepath);
+	//	}
+	//	
+	//	catch (std::exception)
+	//	{
+	//		_toolchain->panic();
+	//	}
+	//}
 
 	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
 	{

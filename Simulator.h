@@ -18,14 +18,14 @@ namespace hz
 		static constexpr auto CODE_STACK = QUARTER_DWORD_MAX - 1;
 
 	private:
-		std::array<word, 4> register_file;
-		dword instruction_pointer;
-		dword data_stack_pointer;
-		dword code_stack_pointer;
+		std::array<byte, 4> register_file;
+		word instruction_pointer;
+		word data_stack_pointer;
+		word code_stack_pointer;
 
 	private:
-		std::array<word, HALF_DWORD_MAX> ram;
-		std::array<word, HALF_DWORD_MAX> rom;
+		std::array<byte, HALF_DWORD_MAX> ram;
+		std::array<byte, HALF_DWORD_MAX> rom;
 	private:
 		int opcode, operand1, operand2, immediate, memory;
 

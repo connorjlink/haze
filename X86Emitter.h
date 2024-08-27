@@ -10,7 +10,20 @@ namespace hz
 	public:
 		using Emitter::Emitter;
 
-	private:
+	public:
+		enum
+		{
+			EAX = 0,
+			ECX,
+			EDX,
+			EBX,
+			ESP,
+			EBP,
+			ESI,
+			EDI,
+		};
+
+	public:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) final override;
 		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) final override;
 		virtual std::vector<std::uint8_t> emit_copy(Register, std::uint8_t) final override;

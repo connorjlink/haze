@@ -80,6 +80,7 @@
     <ClCompile Include="HookClient.cpp" />
     <ClCompile Include="NullStatement.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="PEBuilder.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="PrintStatement.cpp" />
     <ClCompile Include="ReturnStatement.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="OptionType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="ParserType.h" />
+    <ClInclude Include="PEBuilder.h" />
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PrintStatement.h" />
     <ClInclude Include="ReturnStatement.h" />
@@ -192,6 +194,7 @@
     <None Include="README.md" />
     <None Include="sample.hzi" />
     <None Include="std.hzi" />
+    <None Include="test.exe" />
     <None Include="vcpkg.json" />
     <None Include="test.hzi" />
     <None Include="old.hz" />
