@@ -59,18 +59,18 @@ namespace hz
         Opcode opcode;
         Register dst, src;
         std::uint8_t imm;
-        std::uint16_t mem;
+        std::uint32_t mem;
         bool marked_for_deletion;
         std::string branch_target;
 
     public:
         std::vector<InstructionCommand*> embedded_object_code;
-        std::uint16_t approximate_embedded_size;
+        std::uint32_t approximate_embedded_size;
 
     public:
         InstructionCommand() = delete;
         explicit InstructionCommand(std::uint32_t);
-        InstructionCommand(Opcode, Register, Register, std::uint8_t = 0, std::uint16_t = 0, std::string = "");
+        InstructionCommand(Opcode, Register, Register, std::uint8_t = 0, std::uint32_t = 0, std::string = "");
         std::uint32_t bytes() const;
 
     public:

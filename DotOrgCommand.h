@@ -8,10 +8,10 @@ namespace hz
 	class DotOrgCommand : public Command
 	{
 	public:
-		std::uint16_t address;
+		std::uint32_t address;
 
 	public:
-		DotOrgCommand(std::uint16_t address)
+		DotOrgCommand(std::uint32_t address)
 			: address{ address }
 		{
 		}

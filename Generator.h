@@ -31,12 +31,12 @@ namespace hz
 		// for function calls
 		// each register has its own custom "stack"
 		// function return values also have their own stack
-		std::array<std::uint16_t, 7> fake_stack = { 0x0000, 0x1000, 0x2000, 0x3000, 0x4000, 0x5000, 0x6000 };
+		std::array<std::uint32_t, 7> fake_stack = { 0x0000, 0x1000, 0x2000, 0x3000, 0x4000, 0x5000, 0x6000 };
 
 	public:
 		// for function calls
 		void fake_push(Register, Register);
-		std::uint16_t fake_pull(Register, Register);
+		std::uint32_t fake_pull(Register, Register);
 
 	public:
 		void begin_function(std::string);
@@ -46,21 +46,21 @@ namespace hz
 
 	public:
 		void make_move(Register, Register);
-		void make_load(Register, std::uint16_t);
+		void make_load(Register, std::uint32_t);
 		void make_copy(Register, std::uint8_t);
-		void make_save(std::uint16_t, Register);
+		void make_save(std::uint32_t, Register);
 		void make_iadd(Register, Register);
 		void make_isub(Register, Register);
 		void make_band(Register, Register);
 		void make_bior(Register, Register);
 		void make_bxor(Register, Register);
 		void make_call(std::string);
-		void make_call(std::uint16_t);
+		void make_call(std::uint32_t);
 		void make_exit();
 		void make_push(Register);
 		void make_pull(Register);
 		void make_brnz(std::string, Register);
-		void make_brnz(std::uint16_t, Register);
+		void make_brnz(std::uint32_t, Register);
 		void make_bool(Register);
 		void make_stop();
 
@@ -68,10 +68,10 @@ namespace hz
 		void make_raw(InstructionCommand*);
 
 	public:
-		std::uint16_t write_pointer() const;
+		std::uint32_t write_pointer() const;
 
 	public:
-		void image(std::vector<InstructionCommand*>&&, std::uint16_t);
+		void image(std::vector<InstructionCommand*>&&, std::uint32_t);
 
 	public:
 		Generator(std::vector<Node*>&& program, const std::string& filepath)

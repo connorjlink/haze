@@ -19,7 +19,7 @@ namespace hz
 		return false;
 	}
 
-	std::vector<InstructionCommand*> AssemblerLinker::link(std::uint16_t base_pointer)
+	std::vector<InstructionCommand*> AssemblerLinker::link(std::uint32_t base_pointer)
 	{
 		std::vector<InstructionCommand*> executable(DWORD_MAX);
 

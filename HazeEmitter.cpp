@@ -3,7 +3,7 @@
 
 namespace
 {
-	constexpr std::vector<std::uint8_t> haze_instruction(hz::Opcode opcode, hz::Register destination, hz::Register source, std::uint8_t imm, std::uint16_t mem)
+	constexpr std::vector<std::uint8_t> haze_instruction(hz::Opcode opcode, hz::Register destination, hz::Register source, std::uint8_t imm, std::uint32_t mem)
 	{
 		std::vector<std::uint8_t> result;
 
@@ -33,7 +33,7 @@ namespace hz
 		return haze_instruction(MOVE, destination, source, 0x00, 0x000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_load(Register destination, std::uint16_t address)
+	std::vector<std::uint8_t> HazeEmitter::emit_load(Register destination, std::uint32_t address)
 	{
 		return haze_instruction(LOAD, destination, DC, 0x00, address);
 	}
@@ -43,7 +43,7 @@ namespace hz
 		return haze_instruction(COPY, destination, DC, immediate, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_save(std::uint16_t address, Register source)
+	std::vector<std::uint8_t> HazeEmitter::emit_save(std::uint32_t address, Register source)
 	{
 		return haze_instruction(SAVE, DC, source, 0x00, address);
 	}
@@ -73,7 +73,7 @@ namespace hz
 		return haze_instruction(BXOR, destination, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_call(std::uint16_t address)
+	std::vector<std::uint8_t> HazeEmitter::emit_call(std::uint32_t address)
 	{
 		return haze_instruction(CALL, DC, DC, 0x00, address);
 	}
@@ -93,7 +93,7 @@ namespace hz
 		return haze_instruction(PULL, destination, DC, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_brnz(std::uint16_t address, Register source)
+	std::vector<std::uint8_t> HazeEmitter::emit_brnz(std::uint32_t address, Register source)
 	{
 		return haze_instruction(BRNZ, DC, source, 0x00, address);
 	}

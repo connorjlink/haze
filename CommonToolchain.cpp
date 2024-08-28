@@ -10,6 +10,7 @@
 #include "CommandLineOptions.h"
 #include "ErrorReporter.h"
 #include "Simulator.h"
+#include "PEBuilder.h"
 
 #include <fstream>
 #include <filesystem>
@@ -17,7 +18,7 @@
 
 namespace hz
 {
-	std::vector<InstructionCommand*> common_link(std::uint16_t entrypoint)
+	std::vector<InstructionCommand*> common_link(std::uint32_t entrypoint)
 	{
 		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
 		// This is done here by simply emitting the corresponding instruction with dummy values
@@ -30,7 +31,8 @@ namespace hz
 		}
 
 		const auto link_task = _job_manager->begin_job("linking");
-		// begin writing commands at $8000
+		// begin writing commands at $8000 for haze
+		// and currently 0x401200 for Windows PE 32
 		auto image = _linker->link(entrypoint);
 		_job_manager->end_job(link_task);
 		return image;
@@ -76,7 +78,9 @@ namespace hz
 		{
 			case COMPILE:
 			{
-				
+				auto binary = PEBuilder::build(executable);
+				auto binfile = std::fstream("test.exe", std::ios::binary | std::ios::out);
+				binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
 			} break;
 
 			case SIMULATE:

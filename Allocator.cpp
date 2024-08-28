@@ -38,7 +38,7 @@ namespace hz
 		return new StaticAllocation{ new_reg, true };
 	}
 
-	DynamicAllocation* Allocator::allocate_dynamic(std::uint16_t bytes, bool free)
+	DynamicAllocation* Allocator::allocate_dynamic(std::uint32_t bytes, bool free)
 	{
 		for (auto i = 0; i < heap_ledger.size(); i++)
 		{
@@ -58,7 +58,7 @@ namespace hz
 					heap_ledger[j] = Status::USED;
 				}
 
-				return new DynamicAllocation{ static_cast<std::uint16_t>(i), free };
+				return new DynamicAllocation{ static_cast<std::uint32_t>(i), free };
 			}
 		}
 

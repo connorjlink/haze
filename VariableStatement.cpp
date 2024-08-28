@@ -55,7 +55,7 @@ namespace hz
 
         else
         {
-            context->define_variable(name, variable_t{ 0 });
+            context->define_variable(name, variable_t{ 0u });
         }
 
         return nullptr;

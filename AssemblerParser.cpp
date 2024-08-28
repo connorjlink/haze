@@ -141,7 +141,7 @@ namespace hz
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ LOAD, operand1, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ LOAD, operand1, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
 				return new InstructionCommand{ LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
@@ -175,7 +175,7 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ SAVE, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ SAVE, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
 				return new InstructionCommand{ SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
@@ -238,7 +238,7 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ CALL, DC, DC, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ CALL, DC, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
 				return new InstructionCommand{ CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
@@ -276,7 +276,7 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ BRNZ, DC, operand2, 0, 0xCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ BRNZ, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
 				return new InstructionCommand{ BRNZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };

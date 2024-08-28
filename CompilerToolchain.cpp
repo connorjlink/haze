@@ -40,7 +40,9 @@ namespace hz
 
 		if (_options->_architecture == ArchitectureType::X86)
 		{
-			entrypoint = 0x200;
+			//entrypoint = 0x401000 + 0x200;
+			//entrypoint = 0x1000;
+			entrypoint = 0x41000;
 		}
 
 		// shared environment with Assembler/Compiler

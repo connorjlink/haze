@@ -18,8 +18,7 @@ namespace hz
 	class Expression;
 
 
-	//using variable_t = int;
-	using variable_t = std::variant<int, std::string>;
+	using variable_t = std::variant<std::uint32_t, std::string>;
 
 	// TODO: scope these types further in (within Context?)
 	using arguments_t = std::vector<Expression*>;

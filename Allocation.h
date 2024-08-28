@@ -56,11 +56,11 @@ namespace hz
 	class DynamicAllocation : public Allocation
 	{
 	public:
-		std::uint16_t address;
+		std::uint32_t address;
 		bool need_free;
 
 	public:
-		DynamicAllocation(std::uint16_t address, bool need_free = false)
+		DynamicAllocation(std::uint32_t address, bool need_free = false)
 			: address{ address }, need_free{ need_free }
 		{
 		}
@@ -92,7 +92,7 @@ namespace hz
 		DynamicAllocation* allocation;
 
 	public:
-		ManagedDynamicAllocation(std::uint16_t = 1, bool = true);
+		ManagedDynamicAllocation(std::uint32_t = 1, bool = true);
 		~ManagedDynamicAllocation();
 	};
 }

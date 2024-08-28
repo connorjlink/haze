@@ -73,14 +73,7 @@ int main(int argc, char** argv)
 	_file_manager = new FileManager{};
 	_current_file = "";
 
-
-	///*
-	auto binary = PEBuilder::build();
-	auto binfile = std::fstream("test.exe", std::ios::binary | std::ios::out);
-	binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
-	//*/
-
-	/*
+	
 	for (auto& filepath : command_line_parser.files())
 	{
 		try
@@ -118,7 +111,7 @@ int main(int argc, char** argv)
 			_toolchain->panic();
 		}
 	}
-	*/
+	
 
 	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
 	{

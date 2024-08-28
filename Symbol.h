@@ -30,7 +30,7 @@ namespace hz
 	class FunctionSymbol : public Symbol
 	{
 	private:
-		std::uint16_t entrypoint;
+		std::uint32_t entrypoint;
 
 	public:
 		ReturnType return_type;
@@ -79,10 +79,10 @@ namespace hz
 	class DefineSymbol : public Symbol
 	{
 	public:
-		std::uint16_t value;
+		std::uint32_t value;
 
 	public:
-		DefineSymbol(std::string name, std::uint16_t value)
+		DefineSymbol(std::string name, std::uint32_t value)
 			: Symbol{ std::move(name) }, value{ value }
 		{
 		}
@@ -94,10 +94,10 @@ namespace hz
 	class LabelSymbol : public Symbol
 	{
 	public:
-		std::uint16_t address;
+		std::uint32_t address;
 
 	public:
-		LabelSymbol(std::string name, std::uint16_t address)
+		LabelSymbol(std::string name, std::uint32_t address)
 			: Symbol{ std::move(name) }, address{ address }
 		{
 		}

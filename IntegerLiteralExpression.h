@@ -11,10 +11,10 @@ namespace hz
     class IntegerLiteralExpression : public Expression
     {
     public:
-        std::uint16_t value;
+        std::uint32_t value;
 
     public:
-        IntegerLiteralExpression(int value)
+        IntegerLiteralExpression(std::uint32_t value)
             : value(value)
         {
         }

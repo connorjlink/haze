@@ -18,11 +18,11 @@ namespace hz
 
 	public:
 		static bytes_t make8(std::uint8_t);
-		static bytes_t make16(std::uint16_t);
+		static bytes_t make16(std::uint32_t);
 		static bytes_t make32(std::uint32_t);
 
 	public:
-		static bytes_t build();
+		static bytes_t build(bytes_t);
 	};
 
 	inline static const auto pad8 = PEBuilder::make8(0x0);

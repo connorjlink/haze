@@ -71,7 +71,7 @@ namespace hz
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_load(Register destination, std::uint16_t address)
+	std::vector<std::uint8_t> X86Emitter::emit_load(Register destination, std::uint32_t address)
 	{
 		// mov r32, r/m32 
 		PEBuilder::bytes_t out{};
@@ -98,7 +98,7 @@ namespace hz
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_save(std::uint16_t address, Register source)
+	std::vector<std::uint8_t> X86Emitter::emit_save(std::uint32_t address, Register source)
 	{
 		// mov r/m32, r32
 		PEBuilder::bytes_t out{};
@@ -161,13 +161,19 @@ namespace hz
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_call(std::uint16_t address)
+	std::vector<std::uint8_t> X86Emitter::emit_call(std::uint32_t address)
 	{
+		// push imm32 (save some space on the stack for the return value)
 		// call NEAR
 		PEBuilder::bytes_t out{};
 		
-		PUT(PEBuilder::make8(0xFF));
-		PUT(PEBuilder::make8(0x15));
+		//PUT(PEBuilder::make8(0xFF));
+		//PUT(PEBuilder::make8(0x15));
+
+		PUT(PEBuilder::make8(0x68));
+		PUT(PEBuilder::make32(0xAAAAAAAA));
+
+		PUT(PEBuilder::make8(0xE8));
 		PUT(PEBuilder::make32(address));
 
 		return out;
@@ -195,10 +201,9 @@ namespace hz
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_brnz(std::uint16_t address, Register source)
+	std::vector<std::uint8_t> X86Emitter::emit_brnz(std::uint32_t address, Register source)
 	{
 		// jne NEAR (cant use because its relative jumping)
-		// TODO: patch linker to allow for relative branches
 
 		// test r/m32, r32
 		// je skip
@@ -207,13 +212,24 @@ namespace hz
 		
 		PEBuilder::bytes_t out{};
 
+		//PUT(PEBuilder::make8(0x85));
+		//PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
+		//PUT(PEBuilder::make8(0x74));
+		//PUT(PEBuilder::make8(0x06)); // 6 since the length of the next instruction is 6 bytes
+		//PUT(PEBuilder::make8(0xFF));
+		//PUT(PEBuilder::make8(0x25));
+		//PUT(PEBuilder::make32(address));
+
+
+		// test r/m32, r32
+		// jne rel32
 		PUT(PEBuilder::make8(0x85));
 		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
-		PUT(PEBuilder::make8(0x74));
-		PUT(PEBuilder::make8(0x06)); // 6 since the length of the next instruction is 6 bytes
-		PUT(PEBuilder::make8(0xFF));
-		PUT(PEBuilder::make8(0x25));
+		// TODO: optimizations for rel8/rel16 jumps which have shorter encoding!
+		PUT(PEBuilder::make8(0x0F));
+		PUT(PEBuilder::make8(0x85));
 		PUT(PEBuilder::make32(address));
+
 
 		return out;
 	}

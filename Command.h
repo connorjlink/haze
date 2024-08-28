@@ -10,7 +10,7 @@ namespace hz
 	class Command : public Node
 	{
 	public:
-		std::uint16_t offset;
+		std::uint32_t offset;
 
 	public:
 		virtual ~Command() = default;

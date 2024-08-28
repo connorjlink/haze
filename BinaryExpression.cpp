@@ -443,7 +443,7 @@ namespace hz
 		{
 			return new IntegerLiteralExpression
 			{ 
-				std::get<int>(harvest(left_evaluated)) + std::get<int>(harvest(right_evaluated)) 
+				std::get<std::uint32_t>(harvest(left_evaluated)) + std::get<std::uint32_t>(harvest(right_evaluated))
 			};
 		}
 
@@ -474,7 +474,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<int>(harvest(left_evaluated)) - std::get<int>(harvest(right_evaluated)) 
+			std::get<std::uint32_t>(harvest(left_evaluated)) - std::get<std::uint32_t>(harvest(right_evaluated))
 		};
 	}
 
@@ -491,7 +491,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<int>(harvest(left_evaluated)) * std::get<int>(harvest(right_evaluated))
+			std::get<std::uint32_t>(harvest(left_evaluated)) * std::get<std::uint32_t>(harvest(right_evaluated))
 		};
 	}
 
@@ -529,7 +529,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<int>(harvest(left_evaluated)) == std::get<int>(harvest(right_evaluated)) 
+			std::get<std::uint32_t>(harvest(left_evaluated)) == std::get<std::uint32_t>(harvest(right_evaluated))
 		};
 	}
 
@@ -546,7 +546,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<int>(harvest(left_evaluated)) != std::get<int>(harvest(right_evaluated))
+			std::get<std::uint32_t>(harvest(left_evaluated)) != std::get<std::uint32_t>(harvest(right_evaluated))
 		};
 	}
 
@@ -563,7 +563,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<int>(harvest(left_evaluated)) > std::get<int>(harvest(right_evaluated))
+			std::get<std::uint32_t>(harvest(left_evaluated)) > std::get<std::uint32_t>(harvest(right_evaluated))
 		};
 	}
 
@@ -580,7 +580,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<int>(harvest(left_evaluated)) < std::get<int>(harvest(right_evaluated))
+			std::get<std::uint32_t>(harvest(left_evaluated)) < std::get<std::uint32_t>(harvest(right_evaluated))
 		};
 	}
 }

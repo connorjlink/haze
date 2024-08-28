@@ -26,7 +26,7 @@ namespace hz
 				auto g = parse_integerliteral_expression();
 				auto b = parse_integerliteral_expression();
 
-				auto percent = [&](std::uint16_t value)
+				auto percent = [&](std::uint32_t value)
 				{
 					return static_cast<float>(value * 100);
 				};

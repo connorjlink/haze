@@ -20,7 +20,7 @@ namespace hz
 		fake_stack[destination]++;
 	}
 
-	std::uint16_t Generator::fake_pull(Register destination, Register source)
+	std::uint32_t Generator::fake_pull(Register destination, Register source)
 	{
 		fake_stack[source]--;
 		make_load(destination, fake_stack[source]);
@@ -48,7 +48,7 @@ namespace hz
 		ENCODE(instruction);
 	}
 
-	void Generator::make_load(Register destination, std::uint16_t address)
+	void Generator::make_load(Register destination, std::uint32_t address)
 	{
 		//load destination, &address
 		auto instruction = new InstructionCommand{ LOAD, destination, DC, 0, address };
@@ -62,7 +62,7 @@ namespace hz
 		ENCODE(instruction);
 	}
 
-	void Generator::make_save(std::uint16_t address, Register source)
+	void Generator::make_save(std::uint32_t address, Register source)
 	{
 		//save &address, source
 		auto instruction = new InstructionCommand{ SAVE, DC, source, 0, address };
@@ -107,11 +107,11 @@ namespace hz
 	void Generator::make_call(std::string name)
 	{
 		//call label
-		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, 0xCCCC, name };
+		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, 0xCCCCCCCC, name };
 		ENCODE(instruction);
 	}
 
-	void Generator::make_call(std::uint16_t address)
+	void Generator::make_call(std::uint32_t address)
 	{
 		//call &address
 		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, address };
@@ -142,11 +142,11 @@ namespace hz
 	void Generator::make_brnz(std::string name, Register source)
 	{
 		// brez label, source
-		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, 0xCCCC, name };
+		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, 0xCCCCCCCC, name };
 		ENCODE(instruction);
 	}
 
-	void Generator::make_brnz(std::uint16_t address, Register source)
+	void Generator::make_brnz(std::uint32_t address, Register source)
 	{
 		//brez &address, source
 		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, address };
@@ -173,12 +173,12 @@ namespace hz
 	}
 #undef ENCODE
 
-	std::uint16_t Generator::write_pointer() const
+	std::uint32_t Generator::write_pointer() const
 	{
-		return static_cast<std::uint16_t>(linkables[current_function].object_code.size());
+		return static_cast<std::uint32_t>(linkables[current_function].object_code.size());
 	}
 
-	void Generator::image(std::vector<InstructionCommand*>&& object_code, std::uint16_t approximate_size)
+	void Generator::image(std::vector<InstructionCommand*>&& object_code, std::uint32_t approximate_size)
 	{
 		auto dummy_command = new InstructionCommand{ 0 };
 		dummy_command->embedded_object_code = std::move(object_code);

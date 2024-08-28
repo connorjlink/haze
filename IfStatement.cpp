@@ -123,7 +123,7 @@ namespace hz
 			Log::error("'if' statement conditions must evaluate to an integer");
 		}
 
-		if (std::get<int>(harvest(condition_evaluated)) != 0)
+		if (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
 		{
 			DISCARD if_body->evaluate(context);
 		}

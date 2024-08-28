@@ -201,7 +201,8 @@ namespace hz
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
-		return new IntegerLiteralExpression{ std::stoi(consume(TokenType::INT)) };
+#pragma message("TODO: replace stoi with <charconv>")
+		return new IntegerLiteralExpression{ std::stoul(consume(TokenType::INT)) };
 	}
 
 	StringExpression* Parser::parse_string_expression()

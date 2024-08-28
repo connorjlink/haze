@@ -9,7 +9,7 @@ namespace hz
 	{
 	public:
 		std::string identifier;
-		std::uint16_t address;
+		std::uint32_t address;
 
 	public:
 		LabelCommand(std::string identifier)

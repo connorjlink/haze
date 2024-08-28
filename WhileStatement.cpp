@@ -85,7 +85,7 @@ namespace hz
 			Log::error("'while' loop conditions must evaluate to an integer");
 		}
 
-		while (std::get<int>(harvest(condition_evaluated)) != 0)
+		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
 		{
 			DISCARD body->evaluate(context);
 

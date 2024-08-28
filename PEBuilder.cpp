@@ -277,7 +277,7 @@ namespace hz
 		return bytes_t{ b0 };
 	}
 
-	PEBuilder::bytes_t PEBuilder::make16(std::uint16_t value)
+	PEBuilder::bytes_t PEBuilder::make16(std::uint32_t value)
 	{
 		const byte b0 = (value & 0xFF) >> 0;
 		const byte b1 = (value & 0xFF00) >> 8;
@@ -294,7 +294,7 @@ namespace hz
 	}
 
 
-	PEBuilder::bytes_t PEBuilder::build()
+	PEBuilder::bytes_t PEBuilder::build(bytes_t code)
 	{
 		PEBuilder::bytes_t binary{};
 		binary.resize(0x4000); // image size
@@ -307,7 +307,7 @@ namespace hz
 		auto directories = data_directories();
 		auto sections = sections_table();
 
-		auto code = code_section();
+		//auto code = code_section();
 		auto imports = imports_section();
 		auto data = data_section();
 

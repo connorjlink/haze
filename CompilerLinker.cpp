@@ -42,6 +42,37 @@ namespace
 		_error_reporter->post_error("internal error caused by unrecognized command type", NULL_TOKEN);
 	}
 
+
+	std::size_t resolve_instruction_length(InstructionCommand* instruction)
+	{
+		std::size_t length = 0;
+		
+		using enum Opcode;
+		switch (instruction->opcode)
+		{
+			case MOVE: length = _emitter->emit_move(instruction->dst, instruction->src).size(); break;
+			case LOAD: length = _emitter->emit_load(instruction->dst, instruction->mem).size(); break;
+			case COPY: length = _emitter->emit_copy(instruction->dst, instruction->imm).size(); break;
+			case SAVE: length = _emitter->emit_save(instruction->mem, instruction->src).size(); break;
+			case IADD: length = _emitter->emit_iadd(instruction->dst, instruction->src).size(); break;
+			case ISUB: length = _emitter->emit_isub(instruction->dst, instruction->src).size(); break;
+			case BAND: length = _emitter->emit_band(instruction->dst, instruction->src).size(); break;
+			case BIOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
+			case BXOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
+			case CALL: length = _emitter->emit_call(instruction->mem).size(); break;
+			case EXIT: length = _emitter->emit_exit().size(); break;
+			case PUSH: length = _emitter->emit_push(instruction->src).size(); break;
+			case PULL: length = _emitter->emit_pull(instruction->dst).size(); break;
+			case BRNZ: length = _emitter->emit_brnz(instruction->mem, instruction->src).size(); break;
+			case BOOL: length = _emitter->emit_bool(instruction->src).size(); break;
+			case STOP: length = _emitter->emit_stop().size(); break;
+		}
+
+		return length;
+	}
+
+
+
 	std::size_t _global_pass = 0;
 }
 
@@ -150,12 +181,13 @@ namespace hz
 		return false;
 	}
 
-	std::vector<InstructionCommand*> CompilerLinker::link(std::uint16_t base_pointer)
+	std::vector<InstructionCommand*> CompilerLinker::link(std::uint32_t base_pointer)
 	{
 		std::vector<InstructionCommand*> executable{};
 
-		auto address_tracker = 0;
+		std::size_t address_tracker = 0;
 
+		// resolve the length of each instruction to compute each label's address
 		for (auto& [symbol, function, offset] : linkables)
 		{
 			if (symbol->was_referenced)
@@ -184,29 +216,7 @@ namespace hz
 
 							if (!instruction->marked_for_deletion)
 							{
-								// TODO: resolve instruction lengths here
-								auto length = 0;
-
-								using enum Opcode;
-								switch (instruction->opcode)
-								{
-									case MOVE: length = _emitter->emit_move(instruction->dst, instruction->src).size(); break;
-									case LOAD: length = _emitter->emit_load(instruction->dst, instruction->mem).size(); break;
-									case COPY: length = _emitter->emit_copy(instruction->dst, instruction->imm).size(); break;
-									case SAVE: length = _emitter->emit_save(instruction->mem, instruction->src).size(); break;
-									case IADD: length = _emitter->emit_iadd(instruction->dst, instruction->src).size(); break;
-									case ISUB: length = _emitter->emit_isub(instruction->dst, instruction->src).size(); break;
-									case BAND: length = _emitter->emit_band(instruction->dst, instruction->src).size(); break;
-									case BIOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
-									case BXOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
-									case CALL: length = _emitter->emit_call(instruction->mem).size(); break;
-									case EXIT: length = _emitter->emit_exit().size(); break;
-									case PUSH: length = _emitter->emit_push(instruction->src).size(); break;
-									case PULL: length = _emitter->emit_pull(instruction->dst).size(); break;
-									case BRNZ: length = _emitter->emit_brnz(instruction->mem, instruction->src).size(); break;
-									case BOOL: length = _emitter->emit_bool(instruction->src).size(); break;
-									case STOP: length = _emitter->emit_stop().size(); break;
-								}
+								auto length = resolve_instruction_length(instruction);
 
 								// previously this was always 3 (since haze instructions are 24 bits)
 								address_tracker += length;
@@ -224,6 +234,9 @@ namespace hz
 
 		for (auto& [symbol, function, offset] : linkables)
 		{
+			// reset the address tracker to be used again
+			address_tracker = 0;
+
 			for (auto& linkable : linkables)
 			{
 				for (auto command : linkable.object_code)
@@ -243,12 +256,27 @@ namespace hz
 									{
 										auto patching_instruction = AS_INSTRUCTION_COMMAND(patching_command);
 
-										if (patching_instruction->opcode == BRNZ)
+										if (!patching_instruction->marked_for_deletion)
 										{
-											if (patching_instruction->branch_target == label->identifier)
+											if (patching_instruction->opcode == BRNZ)
 											{
-												const auto branch_target = base_pointer + label->offset;
-												patching_instruction->mem = branch_target;
+												if (patching_instruction->branch_target == label->identifier)
+												{
+													// compute the absolute address of the jump
+													const auto branch_target = offset;
+
+													// compute the absolute address of the current instruction start
+													const auto branch_start = address_tracker;
+
+													// compute the relative address
+													const auto distance = branch_target - branch_start;
+
+													patching_instruction->mem = distance + 1;
+
+													// NOTE: absolute addressing only works for brnz
+													//const auto branch_target = base_pointer + label->offset;
+													//patching_instruction->mem = branch_target;
+												}
 											}
 										}
 									}
@@ -260,13 +288,35 @@ namespace hz
 						{
 							auto instruction = AS_INSTRUCTION_COMMAND(command);
 
-							if (linkable.symbol->name != symbol->name &&
-							   (instruction->opcode == CALL || instruction->opcode == BRNZ) &&
-								instruction->branch_target == symbol->name)
+							if (!instruction->marked_for_deletion)
 							{
-								const auto branch_target = base_pointer + offset;
+								auto length = resolve_instruction_length(instruction);
 
-								instruction->mem = branch_target;
+								// NOTE: `linkable.symbol->name != symbol->name &&`
+								// previously was part of this condition. Why?
+								// Should be able to call the current function recursively...
+								if (instruction->branch_target == symbol->name)
+								{
+									if (instruction->opcode == CALL)
+									{
+										// compute the absolute address of the jump
+										const auto branch_target = offset;
+
+										// compute the absolute address of the current instruction start
+										const auto branch_start = address_tracker;
+
+										// compute the relative address
+										const auto distance = branch_target - branch_start - length;
+
+										// NOTE: call only works with relative addressing
+										//const auto call_target = branch_target - address_tracker + length + length - base_pointer;
+										instruction->mem = distance;
+									}
+
+								}
+
+								// previously this was always 3 (since haze instructions are 24 bits)
+								address_tracker += length;
 							}
 						} break;
 

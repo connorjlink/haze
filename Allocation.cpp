@@ -133,7 +133,7 @@ namespace hz
 	}
 
 
-	ManagedDynamicAllocation::ManagedDynamicAllocation(std::uint16_t bytes, bool free)
+	ManagedDynamicAllocation::ManagedDynamicAllocation(std::uint32_t bytes, bool free)
 	{
 		allocation = _allocator->allocate_dynamic(bytes, free);
 	}
