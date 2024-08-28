@@ -1,31 +1,9 @@
-function byte test = ()
+function byte test = (byte x)
 {
-    return 0;
+    return x + 1;
 }
 
 function nvr main = ()
 {
-    byte bar = 1;
-
-    // 5 + 5 = 10
-    if (bar)
-    {
-        bar = 2;
-    }
-
-    else
-    {
-        print(bar);
-    }
-
-    print(bar);
+    print(test(10));
 }
-
-// main:
-//   copy r0, #1
-//   save &0000, r0
-//   call test
-//   exit
-// test:
-//   load r0, &0000
-//   exit

@@ -27,6 +27,7 @@
     <ClCompile Include="AssemblerLinker.cpp" />
     <ClCompile Include="AssemblerParser.cpp" />
     <ClCompile Include="AssemblerToolchain.cpp" />
+    <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="ColorIntrinsic.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandLineParser.cpp" />
@@ -93,6 +94,7 @@
     <ClCompile Include="VariableStatement.cpp" />
     <ClCompile Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
+    <ClCompile Include="X86Builder.cpp" />
     <ClCompile Include="X86Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -104,7 +106,9 @@
     <ClInclude Include="AssemblerParser.h" />
     <ClInclude Include="AssemblerToolchain.h" />
     <ClInclude Include="Bimap.h" />
+    <ClInclude Include="BinaryConstants.h" />
     <ClInclude Include="BinaryExpressionType.h" />
+    <ClInclude Include="BinaryUtilities.h" />
     <ClInclude Include="ColorIntrinsic.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandLineOptions.h" />
@@ -186,6 +190,7 @@
     <ClInclude Include="Validator.h" />
     <ClInclude Include="VariableStatement.h" />
     <ClInclude Include="WhileStatement.h" />
+    <ClInclude Include="X86Builder.h" />
     <ClInclude Include="X86Emitter.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include <cstdint>
 
 #include "Constants.h"
+#include "BinaryUtilities.h"
 
 #define PUT(x) out.append_range(x)
 
@@ -13,21 +14,33 @@ namespace hz
 {
 	class PEBuilder
 	{
-	public:
-		using bytes_t = std::vector<std::uint8_t>;
+	// pe utilities
+	private:
+		byterange make_section(std::string, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
+		byterange make_import();
+
+
+	private:
+		byterange dos_header();
+		byterange dos_footer();
+
+	private:
+		byterange pe_header();
+
+	private:
+		byterange sections_table();
+		// sections
+		byterange imports_section();
+		byterange data_section();
 
 	public:
-		static bytes_t make8(std::uint8_t);
-		static bytes_t make16(std::uint32_t);
-		static bytes_t make32(std::uint32_t);
+		// code is at offset 0x200
+		void write_code(byterange);
 
 	public:
-		static bytes_t build(bytes_t);
+		void build_pe();
+		void export_exe();
 	};
-
-	inline static const auto pad8 = PEBuilder::make8(0x0);
-	inline static const auto pad16 = PEBuilder::make16(0x0);
-	inline static const auto pad32 = PEBuilder::make32(0x0);
 }
 
 #endif 

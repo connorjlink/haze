@@ -1,16 +1,19 @@
 #ifndef HAZE_CONSTANTS_H
 #define HAZE_CONSTANTS_H
 
-#include <cstdint>
+#include <vector>
 #include <limits>
+#include <cstdint>
 
 #undef max
 
 namespace hz
 {
 	using byte = std::uint8_t;
-	using word = std::uint32_t;
-	using byte = byte;
+	using byterange = std::vector<std::uint8_t>;
+
+	using word = std::uint16_t;
+	using dword = std::uint32_t;
 
 	inline static constexpr auto WORD_MAX = 0xFF + 1;
 	inline static constexpr auto DWORD_MAX = 0xFFFF + 1;

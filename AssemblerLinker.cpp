@@ -16,6 +16,8 @@ namespace hz
 
 	bool AssemblerLinker::optimize()
 	{
+		// choose not to do any optimizations for the assembler
+		// if the user wants to do very unoptimized things, assembler is the place to let him/her do that :)
 		return false;
 	}
 
