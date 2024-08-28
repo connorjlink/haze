@@ -218,6 +218,8 @@ namespace hz
 							{
 								auto length = resolve_instruction_length(instruction);
 
+								instruction->offset = address_tracker;
+
 								// previously this was always 3 (since haze instructions are 24 bits)
 								address_tracker += length;
 							}
@@ -263,15 +265,15 @@ namespace hz
 												if (patching_instruction->branch_target == label->identifier)
 												{
 													// compute the absolute address of the jump
-													const auto branch_target = offset;
+													const auto branch_target = label->offset;
 
 													// compute the absolute address of the current instruction start
-													const auto branch_start = address_tracker;
+													const auto branch_start = patching_instruction->offset;
 
 													// compute the relative address
-													const auto distance = branch_target - branch_start;
+													const auto distance = branch_target - branch_start - resolve_instruction_length(patching_instruction);
 
-													patching_instruction->mem = distance + 1;
+													patching_instruction->mem = distance;
 
 													// NOTE: absolute addressing only works for brnz
 													//const auto branch_target = base_pointer + label->offset;

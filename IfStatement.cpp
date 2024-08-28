@@ -29,10 +29,11 @@ namespace hz
 	void IfStatement::generate(Allocation*)
 	{
 		// 3 digits of randomness for now
-		const auto else_uuid = hz::generate(3);
+		const auto uuid = hz::generate(3);
 
-		const auto begin_else_label = std::format("begin_else_{:02d}", else_uuid);
-		const auto end_else_label = std::format("end-else_{:02d}", else_uuid);
+		const auto begin_if_label = std::format("begin_if_{:03d}", uuid);
+		const auto begin_else_label = std::format("begin_else_{:03d}", uuid);
+		const auto end_else_label = std::format("end_else_{:03d}", uuid);
 
 		// scoping so that the if body can use our condition register
 		{
@@ -44,6 +45,8 @@ namespace hz
 			_generator->make_bool(condition_allocation.allocation->read());
 			_generator->make_brnz(begin_else_label, condition_allocation.allocation->read());
 		}
+
+		_generator->label(begin_if_label);
 
 		if_body->generate();
 

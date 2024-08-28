@@ -105,14 +105,10 @@ namespace hz
 
 		if (address == 0x1111)
 		{
-			PUT(emit_push(source));
-
+			PUT(PEBuilder::make8(BYTE(0x50 | source)));
 			PUT(PEBuilder::make8(0xFF));
 			PUT(PEBuilder::make8(0x15));
 			PUT(PEBuilder::make32(EXIT_PROCESS_VA));
-
-			// temporary debugging purposes only
-			//PUT(PEBuilder::make8(0xCC));
 		}
 
 		else
@@ -170,8 +166,9 @@ namespace hz
 		//PUT(PEBuilder::make8(0xFF));
 		//PUT(PEBuilder::make8(0x15));
 
+		// TODO: replace with `sub esp, 4`
 		PUT(PEBuilder::make8(0x68));
-		PUT(PEBuilder::make32(0xAAAAAAAA));
+		PUT(PEBuilder::make32(0xAAAAAAAA)); // temp value
 
 		PUT(PEBuilder::make8(0xE8));
 		PUT(PEBuilder::make32(address));
@@ -189,15 +186,37 @@ namespace hz
 	// done
 	std::vector<std::uint8_t> X86Emitter::emit_push(Register source)
 	{
+		// NOTE: old format--clobbers the stack pointer register so the `ret` goes bad :(
 		// push r32
-		return { BYTE(0x50 | source) };
+		//return { BYTE(0x50 | source) };
+
+		PEBuilder::bytes_t out{};
+
+		// mov DWORD PTR [esp+0x4], r32
+		PUT(PEBuilder::make8(0x89));
+		PUT(PEBuilder::make8(::x86_modrm(0b01, source, 0b100)));
+		PUT(PEBuilder::make8(0x24));
+		PUT(PEBuilder::make8(0x04));
+
+		return out;
 	}
 
 	// done
 	std::vector<std::uint8_t> X86Emitter::emit_pull(Register destination)
 	{
+		// NOTE: old format--pops fake bytes we pushed instead of the `real` old esp
 		// pop r32
 		return { BYTE(0x58 | destination) };
+
+		//PEBuilder::bytes_t out{};
+
+		// mov r32, DWORD PTR [esp-0x4]
+		//PUT(PEBuilder::make8(0x8b));
+		//PUT(PEBuilder::make8(::x86_modrm(0b01, destination, 0b100)));
+		//PUT(PEBuilder::make8(0x24));
+		//PUT(PEBuilder::make8(0xFC));
+
+		//return out;
 	}
 
 	// done
