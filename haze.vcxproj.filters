@@ -601,5 +601,8 @@
     <None Include="test.exe">
       <Filter>Test Files</Filter>
     </None>
+    <None Include="test.hzb">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

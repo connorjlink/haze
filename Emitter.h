@@ -28,7 +28,7 @@ namespace hz
 			_error_reporter->close_context();
 		}
 
-	private:
+	public:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) = 0;
 		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) = 0;
 		virtual std::vector<std::uint8_t> emit_copy(Register, std::uint8_t) = 0;
@@ -44,6 +44,7 @@ namespace hz
 		virtual std::vector<std::uint8_t> emit_pull(Register) = 0;
 		virtual std::vector<std::uint8_t> emit_brnz(std::uint16_t, Register) = 0;
 		virtual std::vector<std::uint8_t> emit_bool(Register) = 0;
+		virtual std::vector<std::uint8_t> emit_stop() = 0;
 
 	public:
 		virtual EmitterType etype() const = 0;
@@ -51,6 +52,8 @@ namespace hz
 	public:
 		virtual std::vector<std::uint8_t> emit() = 0;
 	};
+
+	extern Emitter* _emitter;
 }
 
 #endif 

@@ -195,6 +195,7 @@
     <None Include="sample.hzi" />
     <None Include="std.hzi" />
     <None Include="test.exe" />
+    <None Include="test.hzb" />
     <None Include="vcpkg.json" />
     <None Include="test.hzi" />
     <None Include="old.hz" />

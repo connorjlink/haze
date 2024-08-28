@@ -96,7 +96,7 @@ namespace hz
 		{
 			if (executable[i] != 0)
 			{
-				Log::error("Detected data loss for code imaged before $8000");
+				_error_reporter->post_warning("possible data loss for code imaged prior to program entrypoint", NULL_TOKEN);
 			}
 		}
 

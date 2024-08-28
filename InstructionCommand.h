@@ -25,7 +25,7 @@ namespace hz
         PULL = 0xC,
         BRNZ = 0xD,
         BOOL = 0xE,
-        //0xF reserved for future ISA extensions
+        STOP = 0xF,
     };
 
     enum Register

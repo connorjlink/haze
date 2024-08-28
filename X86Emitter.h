@@ -23,6 +23,9 @@ namespace hz
 			EDI,
 		};
 
+	private:
+		std::vector<std::uint8_t> build_stop(std::uint8_t);
+
 	public:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) final override;
 		virtual std::vector<std::uint8_t> emit_load(Register, std::uint16_t) final override;
@@ -39,6 +42,7 @@ namespace hz
 		virtual std::vector<std::uint8_t> emit_pull(Register) final override;
 		virtual std::vector<std::uint8_t> emit_brnz(std::uint16_t, Register) final override;
 		virtual std::vector<std::uint8_t> emit_bool(Register) final override;
+		virtual std::vector<std::uint8_t> emit_stop() final override;
 
 	public:
 		virtual EmitterType etype() const final override;

@@ -103,9 +103,9 @@ namespace hz
 		return haze_instruction(BOOL, DC, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_unknown()
+	std::vector<std::uint8_t> HazeEmitter::emit_stop()
 	{
-		return haze_instruction((Opcode)0xF, DC, DC, 0x00, 0x0000);
+		return haze_instruction(STOP, DC, DC, 0x00, 0x0000);
 	}
 
 	std::vector<std::uint8_t> HazeEmitter::emit()
@@ -133,7 +133,12 @@ namespace hz
 					case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
 					case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
 					case BOOL: result.append_range(emit_bool(instruction_command->src)); break;
-					default:   result.append_range(emit_unknown()); break;
+					case STOP: result.append_range(emit_stop()); break;
+
+					default: 
+					{
+						_error_reporter->post_error(std::format("unrecognized instruction {:02x}", static_cast<std::uint8_t>(instruction_command->opcode)), NULL_TOKEN);
+					} break;
 				}
 			}
 		}

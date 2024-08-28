@@ -1,48 +1,38 @@
 #include "X86Emitter.h"
 #include "Log.h"
 #include "PEBuilder.h"
+#include "ErrorReporter.h"
 
 #include <format>
 
 namespace
 {
-	constexpr auto x86_reg(hz::Register reg)
-	{
-		switch (reg)
-		{
-			case hz::R0: return 0b00; // eax
-			case hz::R2: return 0b01; // ecx
-			case hz::R3: return 0b10; // edx
-			case hz::R1: return 0b11; // ebx
-		}
-
-		hz::Log::error(std::format("Register value {} cannot be mapped an x86 register", static_cast<int>(reg)));
-	}
+	using namespace hz;
 
 	constexpr auto x86_modrm(std::uint8_t mod, std::uint8_t reg, std::uint8_t rm)
 	{
 		return ((mod & 0b11) << 6) | ((reg & 0b111) << 3) | ((rm & 0b111) << 0);
 	}
 
-	constexpr auto x86_reg_reg(hz::Register destination, hz::Register source)
+	constexpr auto x86_reg_reg(Register destination, Register source)
 	{
 		const auto mod = 0b11;
-		const auto reg = x86_reg(source);
-		const auto rm = x86_reg(destination);
+		const auto reg = source;
+		const auto rm = destination;
 
 		return x86_modrm(mod, reg, rm);
 	}
 	
 	[[maybe_unused]]
-	constexpr auto x86_reg_reg_embedded(hz::Register destination, hz::Register source)
+	constexpr auto x86_reg_reg_embedded(Register destination, Register source)
 	{
-		const auto upper = x86_reg(destination);
-		const auto lower = x86_reg(source);
+		const auto upper = destination;
+		const auto lower = source;
 
 		return (upper << 2) | lower;
 	}
 
-	
+	static constexpr auto EXIT_PROCESS_VA = 0x402068;
 }
 
 #define BYTE(x) static_cast<std::uint8_t>(x)
@@ -53,6 +43,25 @@ namespace hz
 	{
 		return EmitterType::X86;
 	}
+
+
+	PEBuilder::bytes_t X86Emitter::build_stop(std::uint8_t exit_code)
+	{
+		// push {exit_code}
+		// call [0x402068] (ExitProcessA)
+
+		PEBuilder::bytes_t out{};
+
+		PUT(PEBuilder::make8(0x68));
+		PUT(PEBuilder::make32(exit_code));
+
+		PUT(PEBuilder::make8(0xFF));
+		PUT(PEBuilder::make8(0x15));
+		PUT(PEBuilder::make32(EXIT_PROCESS_VA));
+
+		return out;
+	}
+
 
 	// done
 	std::vector<std::uint8_t> X86Emitter::emit_move(Register destination, Register source)
@@ -65,15 +74,13 @@ namespace hz
 	std::vector<std::uint8_t> X86Emitter::emit_load(Register destination, std::uint16_t address)
 	{
 		// mov r32, r/m32 
-		const auto address_cast = static_cast<std::uint32_t>(address);
-
 		PEBuilder::bytes_t out{};
 
 		PUT(PEBuilder::make8(0x8B));
 		// mod == 0, so displacement only
 		// r/m == 111, so 32-bit displacement
-		PUT(BYTE(::x86_modrm(0b00, ::x86_reg(destination), 0b101))); 
-		PUT(PEBuilder::make32(address_cast));
+		PUT(PEBuilder::make8(BYTE(::x86_modrm(0b00, destination, 0b101)))); 
+		PUT(PEBuilder::make32(address));
 
 		return out;
 	}
@@ -82,19 +89,40 @@ namespace hz
 	std::vector<std::uint8_t> X86Emitter::emit_copy(Register destination, std::uint8_t immediate)
 	{
 		// mov r/m32, imm32
-		const auto immediate_cast = static_cast<std::uint32_t>(immediate);
-
 		PEBuilder::bytes_t out{};
 
-		PUT(PEBuilder::make8(0xB8 | ::x86_reg(destination)));
-		PUT(PEBuilder::make32(immediate_cast));
+		PUT(PEBuilder::make8(0xB8 | destination));
+		PUT(PEBuilder::make32(immediate));
 
 		return out;
 	}
 
+	// done
 	std::vector<std::uint8_t> X86Emitter::emit_save(std::uint16_t address, Register source)
 	{
-		return {};
+		// mov r/m32, r32
+		PEBuilder::bytes_t out{};
+
+		if (address == 0x1111)
+		{
+			PUT(emit_push(source));
+
+			PUT(PEBuilder::make8(0xFF));
+			PUT(PEBuilder::make8(0x15));
+			PUT(PEBuilder::make32(EXIT_PROCESS_VA));
+
+			// temporary debugging purposes only
+			//PUT(PEBuilder::make8(0xCC));
+		}
+
+		else
+		{
+			PUT(PEBuilder::make8(0x89));
+			PUT(PEBuilder::make8(BYTE(::x86_modrm(0b00, source, 0b101))));
+			PUT(PEBuilder::make32(address));
+		}
+		
+		return out;
 	}
 
 	// done
@@ -132,10 +160,17 @@ namespace hz
 		return { 0x31, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
-	
+	// done
 	std::vector<std::uint8_t> X86Emitter::emit_call(std::uint16_t address)
 	{
-		return {};
+		// call NEAR
+		PEBuilder::bytes_t out{};
+		
+		PUT(PEBuilder::make8(0xFF));
+		PUT(PEBuilder::make8(0x15));
+		PUT(PEBuilder::make32(address));
+
+		return out;
 	}
 
 	// done
@@ -149,26 +184,64 @@ namespace hz
 	std::vector<std::uint8_t> X86Emitter::emit_push(Register source)
 	{
 		// push r32
-		return { BYTE(0x50 | ::x86_reg(source)) };
+		return { BYTE(0x50 | source) };
 	}
 
 	// done
 	std::vector<std::uint8_t> X86Emitter::emit_pull(Register destination)
 	{
 		// pop r32
-		return { BYTE(0x58 | ::x86_reg(destination)) };
+		return { BYTE(0x58 | destination) };
 	}
 
+	// done
 	std::vector<std::uint8_t> X86Emitter::emit_brnz(std::uint16_t address, Register source)
 	{
-		return {};
+		// jne NEAR (cant use because its relative jumping)
+		// TODO: patch linker to allow for relative branches
+
+		// test r/m32, r32
+		// je skip
+		// jmp abs32
+		//skip:
+		
+		PEBuilder::bytes_t out{};
+
+		PUT(PEBuilder::make8(0x85));
+		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
+		PUT(PEBuilder::make8(0x74));
+		PUT(PEBuilder::make8(0x06)); // 6 since the length of the next instruction is 6 bytes
+		PUT(PEBuilder::make8(0xFF));
+		PUT(PEBuilder::make8(0x25));
+		PUT(PEBuilder::make32(address));
+
+		return out;
 	}
 
+	// done
 	std::vector<std::uint8_t> X86Emitter::emit_bool(Register source)
 	{
-		// test r/m8, r8
+		// test r/m32, r32
 		// sete r/m8
-		return { 0x84, BYTE(::x86_reg_reg(source, source)), 0x0F, 0x94, BYTE(::x86_reg_reg(source, source)) };
+		
+		PEBuilder::bytes_t out{};
+
+		PUT(PEBuilder::make8(0x85));
+		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
+		PUT(PEBuilder::make8(0x0F));
+		PUT(PEBuilder::make8(0x94));
+		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
+
+		return out;
+	}
+
+	
+	std::vector<std::uint8_t> X86Emitter::emit_stop()
+	{
+		// push 0
+		// call [0x402068] (ExitProcessA)
+
+		return build_stop(0);
 	}
 
 
@@ -197,7 +270,8 @@ namespace hz
 					case PUSH: result.append_range(emit_push(instruction_command->src)); break;
 					case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
 					case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
-					case BOOL: result.append_range(emit_bool(instruction_command->src));
+					case BOOL: result.append_range(emit_bool(instruction_command->src)); break;
+					case STOP: result.append_range(emit_stop()); break;
 				}
 			}
 		}

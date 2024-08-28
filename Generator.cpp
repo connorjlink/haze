@@ -142,7 +142,7 @@ namespace hz
 	void Generator::make_brnz(std::string name, Register source)
 	{
 		// brez label, source
-		auto instruction = new InstructionCommand{ BRNZ, DC, DC, 0, 0xCCCC, name };
+		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, 0xCCCC, name };
 		ENCODE(instruction);
 	}
 
@@ -159,6 +159,13 @@ namespace hz
 		auto instruction = new InstructionCommand{ BOOL, DC, source };
 		ENCODE(instruction);
 	}
+	
+	void Generator::make_stop()
+	{
+		auto instruction = new InstructionCommand{ STOP, DC, DC };
+		ENCODE(instruction);
+	}
+
 
 	void Generator::make_raw(InstructionCommand* instruction)
 	{
@@ -193,7 +200,8 @@ namespace hz
 		{
 			if (linkable.symbol->name == "main")
 			{
-				*(linkable.object_code.end() - 1) = (new InstructionCommand{ (Opcode)0xF, DC, DC });
+				// put a stop instruction at the end of main
+				*(linkable.object_code.end() - 1) = (new InstructionCommand{ STOP, DC, DC });
 				return true;
 			}
 

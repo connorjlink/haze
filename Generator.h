@@ -62,6 +62,7 @@ namespace hz
 		void make_brnz(std::string, Register);
 		void make_brnz(std::uint16_t, Register);
 		void make_bool(Register);
+		void make_stop();
 
 	public:
 		void make_raw(InstructionCommand*);

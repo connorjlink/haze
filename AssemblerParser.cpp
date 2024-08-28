@@ -267,9 +267,9 @@ namespace hz
 				return new InstructionCommand{ PULL, operand1, DC };
 			} break;
 
-			case TokenType::BREZ:
+			case TokenType::BRNZ:
 			{
-				DISCARD consume(TokenType::BREZ);
+				DISCARD consume(TokenType::BRNZ);
 				const auto operand1 = parse_address();
 				DISCARD consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
@@ -280,6 +280,21 @@ namespace hz
 				}
 
 				return new InstructionCommand{ BRNZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+			} break;
+
+			case TokenType::BOOL:
+			{
+				DISCARD consume(TokenType::BOOL);
+				const auto operand1 = parse_register();
+
+				return new InstructionCommand{ BOOL, DC, operand1 };
+			} break;
+
+			case TokenType::STOP:
+			{
+				DISCARD consume(TokenType::STOP);
+
+				return new InstructionCommand{ STOP, DC, DC };
 			} break;
 
 			default:

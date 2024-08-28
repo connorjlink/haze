@@ -41,6 +41,7 @@ Generator* hz::_generator;
 Parser* hz::_parser;
 Context* hz::_context;
 Toolchain* hz::_toolchain;
+Emitter* hz::_emitter;
 Linker* hz::_linker;
 ErrorReporter* hz::_error_reporter;
 JobManager* hz::_job_manager;
@@ -73,47 +74,51 @@ int main(int argc, char** argv)
 	_current_file = "";
 
 
+	///*
 	auto binary = PEBuilder::build();
 	auto binfile = std::fstream("test.exe", std::ios::binary | std::ios::out);
 	binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
+	//*/
 
-	//for (auto& filepath : command_line_parser.files())
-	//{
-	//	try
-	//	{
-	//		_file_manager->open_file(filepath);
-	//		const auto& file = _file_manager->get_file(filepath);
-	//		_current_file = filepath;
+	/*
+	for (auto& filepath : command_line_parser.files())
+	{
+		try
+		{
+			_file_manager->open_file(filepath);
+			const auto& file = _file_manager->get_file(filepath);
+			_current_file = filepath;
 
-	//		switch (file.ttype())
-	//		{
-	//		case ToolchainType::ASSEMBLER:
-	//		{
-	//			// Assembler
-	//			_toolchain = new AssemblerToolchain{};
-	//		} break;
+			switch (file.ttype())
+			{
+				case ToolchainType::ASSEMBLER:
+				{
+					// Assembler
+					_toolchain = new AssemblerToolchain{};
+				} break;
 
-	//		case ToolchainType::COMPILER:
-	//		{
-	//			// Compiler
-	//			_toolchain = new CompilerToolchain{};
-	//		} break;
+				case ToolchainType::COMPILER:
+				{
+					// Compiler
+					_toolchain = new CompilerToolchain{};
+				} break;
 
-	//		case ToolchainType::INTERPRETER:
-	//		{
-	//			// Interpreter
-	//			_toolchain = new InterpreterToolchain{};
-	//		} break;
-	//		}
+				case ToolchainType::INTERPRETER:
+				{
+					// Interpreter
+					_toolchain = new InterpreterToolchain{};
+				} break;
+			}
 
-	//		_toolchain->init(filepath);
-	//	}
-	//	
-	//	catch (std::exception)
-	//	{
-	//		_toolchain->panic();
-	//	}
-	//}
+			_toolchain->init(filepath);
+		}
+		
+		catch (std::exception)
+		{
+			_toolchain->panic();
+		}
+	}
+	*/
 
 	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
 	{

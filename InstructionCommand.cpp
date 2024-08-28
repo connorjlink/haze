@@ -75,6 +75,7 @@ namespace hz
 			case PULL: _generator->make_pull(dst);      break;
 			case BRNZ: _generator->make_brnz(mem, src); break;
 			case BOOL: _generator->make_bool(src);      break;
+			case STOP: _generator->make_stop();         break;
 		}
 	}
 

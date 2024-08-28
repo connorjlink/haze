@@ -12,15 +12,26 @@
 #include "Simulator.h"
 
 #include <fstream>
+#include <filesystem>
 #include <format>
 
 namespace hz
 {
-	std::vector<InstructionCommand*> common_link()
+	std::vector<InstructionCommand*> common_link(std::uint16_t entrypoint)
 	{
+		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
+		// This is done here by simply emitting the corresponding instruction with dummy values
+		// and checking its length. So, make a temporary emitter object here to do so.
+		using enum ArchitectureType;
+		switch (_options->_architecture)
+		{
+			case HAZE: _emitter = new HazeEmitter{ {}, "" }; break;
+			case X86: _emitter = new X86Emitter{ {}, "" }; break;
+		}
+
 		const auto link_task = _job_manager->begin_job("linking");
 		// begin writing commands at $8000
-		auto image = _linker->link(HALF_DWORD_MAX);
+		auto image = _linker->link(entrypoint);
 		_job_manager->end_job(link_task);
 		return image;
 	}
@@ -28,23 +39,15 @@ namespace hz
 	std::vector<std::uint8_t> common_emit(std::vector<InstructionCommand*>&& image, const std::string& filepath)
 	{
 		const auto emit_task = _job_manager->begin_job("emitting");
-		Emitter* emitter = nullptr;
 
 		using enum ArchitectureType;
 		switch (_options->_architecture)
 		{
-			case HAZE:
-			{
-				emitter = new HazeEmitter{ std::move(image), filepath };
-			} break;
-
-			case X86:
-			{
-				emitter = new X86Emitter{ std::move(image), filepath };
-			} break;
+			case HAZE: _emitter = new HazeEmitter{ std::move(image), filepath }; break;
+			case X86: _emitter = new X86Emitter{ std::move(image), filepath }; break;
 		}
 
-		auto executable = emitter->emit();
+		auto executable = _emitter->emit();
 		_job_manager->end_job(emit_task);
 		return executable;
 	}
@@ -53,23 +56,27 @@ namespace hz
 	{
 		const auto finalize_task = _job_manager->begin_job("finalizing");
 
+		const auto fullpath = std::filesystem::path(filepath);
+		const auto filename = fullpath.stem().string();
+		const auto filepath_out = std::format("{}.hzb", filename);
+
+		auto outfile = std::ofstream(filepath_out, std::ios::out | std::ios::binary);
+
+		if (!outfile.good())
+		{
+			_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
+			goto file_error;
+		}
+
+		outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());
+		outfile.close();
+
 		using enum ExecutionType;
 		switch (_options->_execution)
 		{
 			case COMPILE:
 			{
-				const auto filepath_out = std::format("{}.s", filepath);
-
-				auto outfile = std::ofstream(filepath_out, std::ios::out | std::ios::binary);
-
-				if (!outfile.good())
-				{
-					_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
-					break;
-				}
-
-				outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());
-				outfile.close();
+				
 			} break;
 
 			case SIMULATE:
@@ -80,6 +87,7 @@ namespace hz
 			} break;
 		}
 
+		file_error:
 		_job_manager->end_job(finalize_task);
 	}
 }

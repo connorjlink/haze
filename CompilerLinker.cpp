@@ -3,6 +3,7 @@
 #include "InstructionCommand.h"
 #include "LabelCommand.h"
 #include "Utility.h"
+#include "Emitter.h"
 #include "Log.h"
 
 namespace 
@@ -183,7 +184,32 @@ namespace hz
 
 							if (!instruction->marked_for_deletion)
 							{
-								address_tracker += 3;
+								// TODO: resolve instruction lengths here
+								auto length = 0;
+
+								using enum Opcode;
+								switch (instruction->opcode)
+								{
+									case MOVE: length = _emitter->emit_move(instruction->dst, instruction->src).size(); break;
+									case LOAD: length = _emitter->emit_load(instruction->dst, instruction->mem).size(); break;
+									case COPY: length = _emitter->emit_copy(instruction->dst, instruction->imm).size(); break;
+									case SAVE: length = _emitter->emit_save(instruction->mem, instruction->src).size(); break;
+									case IADD: length = _emitter->emit_iadd(instruction->dst, instruction->src).size(); break;
+									case ISUB: length = _emitter->emit_isub(instruction->dst, instruction->src).size(); break;
+									case BAND: length = _emitter->emit_band(instruction->dst, instruction->src).size(); break;
+									case BIOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
+									case BXOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
+									case CALL: length = _emitter->emit_call(instruction->mem).size(); break;
+									case EXIT: length = _emitter->emit_exit().size(); break;
+									case PUSH: length = _emitter->emit_push(instruction->src).size(); break;
+									case PULL: length = _emitter->emit_pull(instruction->dst).size(); break;
+									case BRNZ: length = _emitter->emit_brnz(instruction->mem, instruction->src).size(); break;
+									case BOOL: length = _emitter->emit_bool(instruction->src).size(); break;
+									case STOP: length = _emitter->emit_stop().size(); break;
+								}
+
+								// previously this was always 3 (since haze instructions are 24 bits)
+								address_tracker += length;
 							}
 						} break;
 

@@ -51,7 +51,7 @@ namespace hz
 		ASM,
 		R0, R1, R2, R3,
 
-		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, BNOT, CALL, EXIT, PUSH, PULL, BREZ, WAIT,
+		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, CALL, EXIT, PUSH, PULL, BRNZ, BOOL, STOP,
 
 		PRINT,
 		STRING,
@@ -118,13 +118,12 @@ namespace hz
 		bimap_t{ S("band"), TokenType::BAND },
 		bimap_t{ S("bior"), TokenType::BIOR },
 		bimap_t{ S("bxor"), TokenType::BXOR },
-		bimap_t{ S("bnot"), TokenType::BNOT },
 		bimap_t{ S("call"), TokenType::CALL },
 		bimap_t{ S("exit"), TokenType::EXIT },
 		bimap_t{ S("push"), TokenType::PUSH },
 		bimap_t{ S("pull"), TokenType::PULL },
-		bimap_t{ S("brez"), TokenType::BREZ },
-		bimap_t{ S("wait"), TokenType::WAIT },
+		bimap_t{ S("brnz"), TokenType::BRNZ },
+		bimap_t{ S("stop"), TokenType::STOP },
 		
 		bimap_t{ S("print"), TokenType::PRINT },
 		bimap_t{ S("[string literal]"), TokenType::STRING },

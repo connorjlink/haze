@@ -5,6 +5,8 @@
 #include "ErrorReporter.h"
 #include "CommonToolchain.h"
 #include "CompilerLinker.h"
+#include "Constants.h"
+#include "CommandLineOptions.h"
 
 #include <fstream>
 #include <format>
@@ -33,8 +35,16 @@ namespace hz
 
 
 		_linker = new CompilerLinker{ std::move(linkables), _filepath };
+
+		auto entrypoint = HALF_DWORD_MAX;
+
+		if (_options->_architecture == ArchitectureType::X86)
+		{
+			entrypoint = 0x200;
+		}
+
 		// shared environment with Assembler/Compiler
-		auto image = common_link();
+		auto image = common_link(entrypoint);
 		auto executable = common_emit(std::move(image), _filepath);
 
 		if (!_error_reporter->_had_error)
