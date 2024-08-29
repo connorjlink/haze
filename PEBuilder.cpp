@@ -275,11 +275,13 @@ namespace hz
 
 		std::copy(code.begin(), code.end(), head + CODE_OFFSET);
 		std::copy(imports.begin(), imports.end(), head + IMPORTS_OFFSET);
-		std::copy(data.begin(), data.end(), head + DATA_DIRECTORIES_OFFSET);
+		std::copy(data.begin(), data.end(), head + DATA_OFFSET);
 	}
 
 	void PEBuilder::export_exe(const std::string& filepath)
 	{
+		build_pe();
+
 		auto binfile = std::fstream(filepath, std::ios::binary | std::ios::out);
 		binfile.write(reinterpret_cast<const char*>(_binary.data()), _binary.size());
 	}

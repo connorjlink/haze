@@ -247,9 +247,45 @@ namespace hz
 	byterange X86Emitter::emit_stop()
 	{
 		// push 0
-		// call [0x402068] (ExitProcessA)
+		// call [0x402068] (ExitProcess)
+		//return build_stop(0);
 
-		return build_stop(0);
+		// push 0
+		// push 0x403017
+		// push 0x403017
+		// push 0
+		// call [0x402070] (MessageBoxA)
+
+		byterange out{};
+
+		PUT(BinaryUtilities::range8(0x6A));
+		PUT(BinaryUtilities::range8(0x00));
+
+		PUT(BinaryUtilities::range8(0x68));
+		PUT(BinaryUtilities::range8(0x00));
+		PUT(BinaryUtilities::range8(0x30));
+		PUT(BinaryUtilities::range8(0x40));
+		PUT(BinaryUtilities::range8(0x00));
+
+		PUT(BinaryUtilities::range8(0x68));
+		PUT(BinaryUtilities::range8(0x00));
+		PUT(BinaryUtilities::range8(0x30));
+		PUT(BinaryUtilities::range8(0x40));
+		PUT(BinaryUtilities::range8(0x00));
+
+		PUT(BinaryUtilities::range8(0x6A));
+		PUT(BinaryUtilities::range8(0x00));
+
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x15));
+		PUT(BinaryUtilities::range8(0x70));
+		PUT(BinaryUtilities::range8(0x20));
+		PUT(BinaryUtilities::range8(0x40));
+		PUT(BinaryUtilities::range8(0x00));
+
+		PUT(build_stop(101));
+
+		return out;
 	}
 
 

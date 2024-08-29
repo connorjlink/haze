@@ -22,7 +22,7 @@ namespace hz
 
 	public:
 		Lexer(std::string&& input)
-			: _input{ std::move(_input) }, _character{ -1 }
+			: _input{ std::move(input) }, _character{ -1 }
 		{
 			// NOTE: line and column default value is 1, not 0 for better debug messaging
 			_line = 1;
