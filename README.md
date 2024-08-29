@@ -6,6 +6,7 @@
 - Fully custom compiler
   - Haze CPU support
   - x86_64 CPU support
+    - Custom Win32 PE .exe exporter
 - Fully custom interpreter
   - Function as `geo` engine scripting language
     - Use custom MQTT-based RPC
