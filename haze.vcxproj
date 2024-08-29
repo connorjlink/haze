@@ -22,7 +22,7 @@
     <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
-    <ClCompile Include="ArchitectureType.h" />
+    <ClInclude Include="ArchitectureType.h" />
     <ClCompile Include="ArgumentExpression.cpp" />
     <ClCompile Include="AssemblerLinker.cpp" />
     <ClCompile Include="AssemblerParser.cpp" />
@@ -49,9 +49,19 @@
     <ClCompile Include="ForStatement.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
     <ClCompile Include="HazeEvaluator.cpp" />
-    <ClCompile Include="Hook.cpp" />
+    <ClCompile Include="Hook.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="HookStatement.cpp" />
-    <ClCompile Include="HookTopicBuilder.cpp" />
+    <ClCompile Include="HookTopicBuilder.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="IfStatement.cpp" />
     <ClCompile Include="InlineAsmStatement.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
@@ -78,7 +88,12 @@
     <ClCompile Include="Linkable.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="HookClient.cpp" />
+    <ClCompile Include="HookClient.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="NullStatement.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PEBuilder.cpp" />
@@ -92,7 +107,7 @@
     <ClCompile Include="Toolchain.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
-    <ClCompile Include="VerbosityType.h" />
+    <ClInclude Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Builder.cpp" />
     <ClCompile Include="X86Emitter.cpp" />
@@ -136,7 +151,12 @@
     <ClInclude Include="ForStatement.h" />
     <ClInclude Include="HazeEmitter.h" />
     <ClInclude Include="HazeEvaluator.h" />
-    <ClInclude Include="Hook.h" />
+    <ClInclude Include="Hook.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="HookStatement.h" />
     <ClInclude Include="IfStatement.h" />
     <ClInclude Include="InlineAsmStatement.h" />
@@ -164,8 +184,18 @@
     <ClInclude Include="Linker.h" />
     <ClInclude Include="LinkerType.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="HookClient.h" />
-    <ClInclude Include="HookTopicBuilder.h" />
+    <ClInclude Include="HookClient.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="HookTopicBuilder.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NullStatement.h" />

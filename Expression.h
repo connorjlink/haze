@@ -10,6 +10,12 @@ namespace hz
 	class Expression : public Node
 	{
 	public:
+		Expression(Token token)
+			: Node{ token }
+		{
+		}
+
+	public:
 		virtual ~Expression() = default;
 
 	public:

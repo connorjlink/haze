@@ -12,21 +12,11 @@
 #include <algorithm>
 #include <cstdlib>
 
+// Haze Generator.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
-	void Generator::fake_push(Register destination, Register source)
-	{
-		make_save(fake_stack[destination], source);
-		fake_stack[destination]++;
-	}
-
-	std::uint32_t Generator::fake_pull(Register destination, Register source)
-	{
-		fake_stack[source]--;
-		make_load(destination, fake_stack[source]);
-		return fake_stack[source];
-	}
-
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;
@@ -37,132 +27,132 @@ namespace hz
 
 	void Generator::label(const std::string& identifier)
 	{
-		linkables[current_function].object_code.emplace_back(new LabelCommand{ identifier });
+		linkables[current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
 	}
 
-#define ENCODE(x) linkables[current_function].object_code.emplace_back(x)
+#define ENCODE(x) linkables[current_function].commands.emplace_back(x)
 	void Generator::make_move(Register destination, Register source)
 	{
 		//move destination, source
-		auto instruction = new InstructionCommand{ MOVE, destination, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, MOVE, destination, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_load(Register destination, std::uint32_t address)
 	{
 		//load destination, &address
-		auto instruction = new InstructionCommand{ LOAD, destination, DC, 0, address };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, LOAD, destination, DC, 0, address };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_copy(Register destination, std::uint8_t immediate)
 	{
 		//copy destination, #immediate
-		auto instruction = new InstructionCommand{ COPY, destination, DC, immediate, 0 };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, COPY, destination, DC, immediate, 0 };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_save(std::uint32_t address, Register source)
 	{
 		//save &address, source
-		auto instruction = new InstructionCommand{ SAVE, DC, source, 0, address };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, SAVE, DC, source, 0, address };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_iadd(Register destination, Register source)
 	{
 		//iadd destination, source
-		auto instruction = new InstructionCommand{ IADD, destination, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, IADD, destination, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_isub(Register destination, Register source)
 	{
 		//isub destination, source
-		auto instruction = new InstructionCommand{ ISUB, destination, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, ISUB, destination, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_band(Register destination, Register source)
 	{
 		//band destination, source
-		auto instruction = new InstructionCommand{ BAND, destination, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, BAND, destination, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_bior(Register destination, Register source)
 	{
 		//bior destination, source
-		auto instruction = new InstructionCommand{ BIOR, destination, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, BIOR, destination, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_bxor(Register destination, Register source)
 	{
 		//bxor destination, source
-		auto instruction = new InstructionCommand{ BXOR, destination, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, BXOR, destination, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_call(std::string name)
 	{
 		//call label
-		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, 0xCCCCCCCC, name };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, CALL, DC, DC, 0, 0xCCCCCCCC, name };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_call(std::uint32_t address)
 	{
 		//call &address
-		auto instruction = new InstructionCommand{ CALL, DC, DC, 0, address };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, CALL, DC, DC, 0, address };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_exit()
 	{
 		//exit
-		auto instruction = new InstructionCommand{ EXIT, DC, DC };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, EXIT, DC, DC };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_push(Register source)
 	{
 		//push source
-		auto instruction = new InstructionCommand{ PUSH, DC, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, PUSH, DC, source };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_pull(Register destination)
 	{
 		//pull destination
-		auto instruction = new InstructionCommand{ PULL, destination, DC };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, PULL, destination, DC };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_brnz(std::string name, Register source)
 	{
 		// brez label, source
-		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, 0xCCCCCCCC, name };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, BRNZ, DC, source, 0, 0xCCCCCCCC, name };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_brnz(std::uint32_t address, Register source)
 	{
 		//brez &address, source
-		auto instruction = new InstructionCommand{ BRNZ, DC, source, 0, address };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, BRNZ, DC, source, 0, address };
 		ENCODE(instruction);
 	}
 
 	void Generator::make_bool(Register source)
 	{
 		//bool source
-		auto instruction = new InstructionCommand{ BOOL, DC, source };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, BOOL, DC, source };
 		ENCODE(instruction);
 	}
 	
 	void Generator::make_stop()
 	{
-		auto instruction = new InstructionCommand{ STOP, DC, DC };
+		auto instruction = new InstructionCommand{ NULL_TOKEN, STOP, DC, DC };
 		ENCODE(instruction);
 	}
 
@@ -175,16 +165,16 @@ namespace hz
 
 	std::uint32_t Generator::write_pointer() const
 	{
-		return static_cast<std::uint32_t>(linkables[current_function].object_code.size());
+		return static_cast<std::uint32_t>(linkables[current_function].commands.size());
 	}
 
 	void Generator::image(std::vector<InstructionCommand*>&& object_code, std::uint32_t approximate_size)
 	{
-		auto dummy_command = new InstructionCommand{ 0 };
+		auto dummy_command = new InstructionCommand{ 0, NULL_TOKEN };
 		dummy_command->embedded_object_code = std::move(object_code);
 		dummy_command->approximate_embedded_size = approximate_size;
 
-		linkables[current_function].object_code.emplace_back(dummy_command);
+		linkables[current_function].commands.emplace_back(dummy_command);
 	}
 
 	std::vector<Linkable> Generator::generate()
@@ -201,7 +191,7 @@ namespace hz
 			if (linkable.symbol->name == "main")
 			{
 				// put a stop instruction at the end of main
-				*(linkable.object_code.end() - 1) = (new InstructionCommand{ STOP, DC, DC });
+				*(linkable.commands.end() - 1) = (new InstructionCommand{ NULL_TOKEN, STOP, DC, DC });
 				return true;
 			}
 

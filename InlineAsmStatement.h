@@ -17,8 +17,8 @@ namespace hz
 		AssemblerParser* assembler_parser;
 
 	public:
-		InlineAsmStatement(std::vector<Node*>&& commands, AssemblerParser* assembler_parser)
-			: commands{ std::move(commands) }, assembler_parser{ assembler_parser }
+		InlineAsmStatement(std::vector<Node*>&& commands, AssemblerParser* assembler_parser, Token token)
+			: Statement{ token }, commands{ std::move(commands) }, assembler_parser{ assembler_parser }
 		{
 		}
 

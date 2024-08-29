@@ -2,13 +2,12 @@
 #define HAZE_BIMAP_H
 
 #include <string>
-#include <format>
 #include <optional>
-
-#include <type_traits>
 #include <unordered_map>
+#include <type_traits>
 
-#include "Log.h"
+// Haze Bimap.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

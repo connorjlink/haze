@@ -5,6 +5,9 @@
 
 #include <string_view>
 
+// Haze Log.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Log
@@ -28,4 +31,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_LOG_H
+#endif

@@ -260,12 +260,6 @@
     <ClCompile Include="CommandLineParser.cpp">
       <Filter>Source Files\Argument</Filter>
     </ClCompile>
-    <ClCompile Include="ArchitectureType.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClCompile>
-    <ClCompile Include="VerbosityType.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClCompile>
     <ClCompile Include="CommonToolchain.cpp">
       <Filter>Source Files\Toolchain</Filter>
     </ClCompile>
@@ -570,6 +564,12 @@
     </ClInclude>
     <ClInclude Include="X86Builder.h">
       <Filter>Source Files\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="VerbosityType.h">
+      <Filter>Source Files\Argument</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchitectureType.h">
+      <Filter>Source Files\Argument</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

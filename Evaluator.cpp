@@ -38,14 +38,14 @@ namespace hz
 	{
 		switch (value.index())
 		{
-			case 0: return new IntegerLiteralExpression{ std::get<0>(value) };
-			case 1: return new StringExpression{ std::get<1>(value) };
+			case 0: return new IntegerLiteralExpression{ std::get<0>(value), NULL_TOKEN };
+			case 1: return new StringExpression{ std::get<1>(value), NULL_TOKEN };
 			default: Log::error(std::format("variable_t type index {} is invalid and cannot be evaluated", value.index()));
 		}
 	}
 
 	std::string format(variable_t value)
 	{
-		return std::visit([](const auto& arg) { return std::format("{}", arg); }, value);
+		return std::visit([](auto&& arg) { return std::format("{}", arg); }, value);
 	}
 }

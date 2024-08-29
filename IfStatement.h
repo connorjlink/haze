@@ -14,8 +14,8 @@ namespace hz
 		Statement* else_body;
 
 	public:
-		IfStatement(Expression* condition, Statement* if_body, Statement* else_body)
-			: condition{ condition }, if_body{ if_body }, else_body{ else_body }
+		IfStatement(Expression* condition, Statement* if_body, Statement* else_body, Token token)
+			: Statement{ token }, condition{ condition }, if_body{ if_body }, else_body{ else_body }
 		{
 		}
 

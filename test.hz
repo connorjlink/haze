@@ -1,9 +1,4 @@
-function byte test = (byte x)
-{
-    return x + 1;
-}
-
 function nvr main = ()
 {
-    print(test(10));
+	return 1;
 }

@@ -21,6 +21,9 @@
 #include <unordered_map>
 #include <cstdlib>
 
+// Haze Parser.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Parser
@@ -45,7 +48,7 @@ namespace hz
 		Token& lookahead();
 
 	protected:
-		std::string consume(TokenType);
+		Token consume(TokenType);
 		std::vector<Token> fetch_until(TokenType);
 
 	protected:
@@ -100,4 +103,4 @@ namespace hz
 	extern Parser* _parser;
 }
 
-#endif //HAZE_PARSER_H
+#endif

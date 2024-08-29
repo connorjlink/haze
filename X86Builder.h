@@ -1,6 +1,8 @@
 #ifndef HAZE_X86BUILDER_H
 #define HAZE_X86BUILDER_H
 
+#include "InstructionCommand.h"
+
 #include <cstdint>
 
 // Haze X86Builder.h
@@ -26,6 +28,7 @@ namespace hz
 
 	public:
 		static std::uint8_t modrm(std::uint8_t, std::uint8_t, std::uint8_t);
+		static std::uint8_t modrm_rr(Register source, Register destination);
 	};
 }
 

@@ -39,4 +39,4 @@ namespace hz
     extern Allocator* _allocator;
 }
 
-#endif //HAZE_ALLOCATOR_H
+#endif

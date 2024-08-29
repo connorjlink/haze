@@ -12,6 +12,9 @@
 #include <format>
 #include <cassert>
 
+// Haze Function.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	NodeType Function::ntype() const
@@ -90,7 +93,7 @@ namespace hz
 	{
 		if (auto body_optimized = body->optimize())
 		{
-			return new Function{ name, return_type, std::move(arguments), AS_STATEMENT(body_optimized) };
+			return new Function{ name, return_type, std::move(arguments), AS_STATEMENT(body_optimized), _token };
 		}
 
 		return nullptr;

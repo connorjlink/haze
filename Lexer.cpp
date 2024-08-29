@@ -6,7 +6,7 @@
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, line, raw })
+#define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, raw, _line, _column })
 
 namespace
 {
@@ -22,7 +22,11 @@ namespace
 	{
 		hz::Token token{};
 
-		token.offset
+		token.value = value;
+		token.line = line;
+		token.column = column;
+
+		return token;
 	}
 }
 
@@ -82,9 +86,8 @@ namespace hz
 				}
 
 				
-				_error_reporter->post_error("unexpected chacter")
-
-				Log::error(std::format("({}) unexpected character `/`", line));
+				_error_reporter->post_error("unexpected character `/`", 
+					::error_token({ current }, _line, _column));
 			}
 
 			else if ('0' <= current && current <= '9')
@@ -154,12 +157,13 @@ namespace hz
 
 				if (search.has_value())
 				{
-					APPEND_TOKEN(search.value(), std::string{current});
+					APPEND_TOKEN(search.value(), std::string{ current });
 				}
 
 				else
 				{
-					Log::error(std::format("({}) unexpected character `{}`", line, current));
+					_error_reporter->post_error(std::format("unexpected character `{}`", current),
+						::error_token(std::string{ current }, _line, _column));
 				}
 			}
 		}

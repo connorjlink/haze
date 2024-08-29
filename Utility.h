@@ -4,9 +4,11 @@
 #include "Constants.h"
 
 #include <array>
+#include <random>
 #include <cstdint>
 
-#include <random>
+// Haze Utility.h
+// (c) Connor J. Link. All Rights Reserved.
 
 #define DISCARD (void)
 

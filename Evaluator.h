@@ -4,6 +4,9 @@
 #include "Context.h"
 #include "Node.h"
 
+// Haze Evaluator.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	variable_t harvest(Node*);

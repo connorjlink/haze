@@ -11,8 +11,8 @@ namespace hz
 		std::string message;
 
 	public:
-		StringExpression(std::string message)
-			: message{ std::move(message) }
+		StringExpression(std::string message, Token token)
+			: Expression{ token }, message{ std::move(message) }
 		{
 		}
 		

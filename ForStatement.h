@@ -16,8 +16,8 @@ namespace hz
 		Statement* body;
 
 	public:
-		ForStatement(Statement* initialization, Expression* condition, Expression* expression, Statement* body)
-			: initialization{ initialization }, condition{condition}, expression{expression}, body{body}
+		ForStatement(Statement* initialization, Expression* condition, Expression* expression, Statement* body, Token token)
+			: Statement{ token }, initialization{ initialization }, condition{condition}, expression{expression}, body{body}
 		{
 		}
 

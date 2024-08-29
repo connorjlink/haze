@@ -2,12 +2,17 @@
 #include "Disassembler.h"
 #include "Generator.h"
 #include "Utility.h"
+#include "Log.h"
 
 #include <format>
 
+// Haze InstructionCommand.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
-	InstructionCommand::InstructionCommand(std::uint32_t bytes)
+	InstructionCommand::InstructionCommand(std::uint32_t bytes, Token token)
+		: Command{ token }
 	{
 		mem = bytes & 0xFFFF;
 		imm = (bytes & 0xFF00) >> 8;
@@ -17,8 +22,8 @@ namespace hz
 		marked_for_deletion = false;
 	}
 
-	InstructionCommand::InstructionCommand(Opcode opcode, Register dst, Register src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
-		: opcode{ opcode }, dst{ dst }, src{ src }, imm{ imm }, mem{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
+	InstructionCommand::InstructionCommand(Token token, Opcode opcode, Register dst, Register src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
+		: Command{ token }, opcode{ opcode }, dst{ dst }, src{ src }, imm{ imm }, mem{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 		embedded_object_code = {};
 		approximate_embedded_size = 0;

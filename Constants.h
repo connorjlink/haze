@@ -10,10 +10,6 @@
 
 #undef max
 
-#define BYTE(x) static_cast<byte>(x)
-#define WORD(x) static_cast<word>(x)
-#define DWORD(X) static_cast<dword>(x)
-
 namespace hz
 {
 	using byte = std::uint8_t;

@@ -12,8 +12,8 @@ namespace hz
 		std::uint32_t address;
 
 	public:
-		LabelCommand(std::string identifier)
-			: identifier(std::move(identifier))
+		LabelCommand(std::string identifier, Token token)
+			: Command{ token }, identifier{ std::move(identifier) }
 		{
 		}
 

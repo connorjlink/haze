@@ -8,7 +8,7 @@ namespace hz
 {
 	std::string Disassembler::disassemble_instruction(std::uint32_t raw)
 	{
-		const auto instruction = InstructionCommand{ raw };
+		const auto instruction = InstructionCommand{ raw, NULL_TOKEN };
 
 		const auto opcode = instruction.opcode;
 
@@ -74,7 +74,8 @@ namespace hz
 
 			const auto instruction = InstructionCommand
 			{ 
-				static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0))
+				static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0)),
+				NULL_TOKEN,
 			};
 
 			result.append(std::format("${:04X}: {}\n", HALF_DWORD_MAX + i, instruction.string()));

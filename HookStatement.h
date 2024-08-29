@@ -12,8 +12,8 @@ namespace hz
 		bool hook;
 
 	public:
-		HookStatement(bool hook)
-			: hook{ hook }
+		HookStatement(bool hook, Token token)
+			: Statement{ token }, hook{ hook }
 		{
 		}
 

@@ -15,8 +15,8 @@ namespace hz
 		std::vector<Expression*> arguments;
 
 	public:
-		FunctionCallExpression(std::string name, std::vector<Expression*>&& arguments)
-			: name{ std::move(name) }, arguments{ std::move(arguments) }
+		FunctionCallExpression(std::string name, std::vector<Expression*>&& arguments, Token token)
+			: Expression{ token }, name{ std::move(name) }, arguments{ std::move(arguments) }
 		{
 		}
 

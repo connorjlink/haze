@@ -11,8 +11,8 @@ namespace hz
 		float r, g, b;
 
 	public:
-		ColorIntrinsic(std::string&& name, float r, float g, float b)
-			: Intrinsic{ std::move(name) }, r{ r }, g{ g }, b{ b }
+		ColorIntrinsic(std::string&& name, float r, float g, float b, Token token)
+			: Intrinsic{ std::move(name), token }, r{ r }, g{ g }, b{ b }
 		{
 		}
 

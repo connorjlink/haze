@@ -3,11 +3,16 @@
 #include "Utility.h"
 #include "Log.h"
 
+#include <format>
+
+// Haze InterpreterParser.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	Intrinsic* InterpreterParser::parse_intrinsic()
 	{
-		DISCARD consume(TokenType::INTRINSIC);
+		const auto intrinsic_token = consume(TokenType::INTRINSIC);
 
 		auto identifier = parse_identifier_expression();
 
@@ -31,12 +36,12 @@ namespace hz
 					return static_cast<float>(value * 100);
 				};
 
-				intrinsic = new ColorIntrinsic{ std::move(identifier->name), percent(r->value), percent(g->value), percent(b->value) };
+				intrinsic = new ColorIntrinsic{ std::move(identifier->name), percent(r->value), percent(g->value), percent(b->value), intrinsic_token };
 			} break;
 			
 			default:
 			{
-				Log::error(std::format("({}) unrecognized intrinsic declaration", peek().offset));
+				_error_reporter->post_error(std::format("invalid intrinsic type `{}`", peek().value), peek());
 			} break;
 		}
 
@@ -50,7 +55,12 @@ namespace hz
 			case TokenType::DOTDEFINE: return parse_dotdefine_command();
 			case TokenType::INTRINSIC: return parse_intrinsic();
 			case TokenType::FUNCTION: return parse_function();
-			default: Log::error(std::format("({}) unrecognized script declarator", peek().offset));
+
+			default:
+			{
+				_error_reporter->post_error(std::format("invalid script declarator `{}`", peek().value), peek());
+				return nullptr;
+			} break;
 		}
 	}
 

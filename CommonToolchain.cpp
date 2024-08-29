@@ -16,6 +16,9 @@
 #include <filesystem>
 #include <format>
 
+// Haze CommonToolchain.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	std::vector<InstructionCommand*> common_link(std::uint32_t entrypoint)
@@ -33,6 +36,7 @@ namespace hz
 		const auto link_task = _job_manager->begin_job("linking");
 		// begin writing commands at $8000 for haze
 		// and currently 0x401200 for Windows PE 32
+
 		auto image = _linker->link(entrypoint);
 		_job_manager->end_job(link_task);
 		return image;
@@ -42,6 +46,7 @@ namespace hz
 	{
 		const auto emit_task = _job_manager->begin_job("emitting");
 
+		// NOTE: this is the *actual* machine code emitter
 		using enum ArchitectureType;
 		switch (_options->_architecture)
 		{
@@ -78,9 +83,12 @@ namespace hz
 		{
 			case COMPILE:
 			{
-				auto binary = PEBuilder::build(executable);
-				auto binfile = std::fstream("test.exe", std::ios::binary | std::ios::out);
-				binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
+#pragma message("TODO: for now only one translation unit is supported per executable")
+				// later on compiling multiple files into one .exe is desired
+				const auto exefile = std::format("{}.exe", filename);
+
+				auto pe_builder = new PEBuilder{ std::move(executable) };
+				pe_builder->export_exe(exefile);
 			} break;
 
 			case SIMULATE:

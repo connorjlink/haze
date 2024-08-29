@@ -18,8 +18,8 @@ namespace hz
 		Allocation* allocation;
 
 	public:
-		VariableStatement(ReturnType type, std::string name, Expression* value, Allocation* allocation)
-			: type{ type }, name { std::move(name) }, value{ value }, allocation{ allocation }
+		VariableStatement(ReturnType type, std::string name, Expression* value, Allocation* allocation, Token token)
+			: Statement{ token }, type{ type }, name { std::move(name) }, value{ value }, allocation{ allocation }
 		{
 		}
 

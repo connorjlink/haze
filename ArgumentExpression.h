@@ -15,8 +15,8 @@ namespace hz
 		IdentifierExpression* identifier;
 
 	public:
-		ArgumentExpression(ReturnType type_specifier, IdentifierExpression* identifier)
-			: type_specifier{ type_specifier }, identifier{ identifier }
+		ArgumentExpression(ReturnType type_specifier, IdentifierExpression* identifier, Token token)
+			: Expression{ token }, type_specifier { type_specifier }, identifier{ identifier }
 		{
 		}
 

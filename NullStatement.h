@@ -8,7 +8,8 @@ namespace hz
 	class NullStatement : public Statement
 	{
 	public:
-		NullStatement()
+		NullStatement(Token token)
+			: Statement{ token }
 		{
 		}
 

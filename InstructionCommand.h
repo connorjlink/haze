@@ -69,8 +69,8 @@ namespace hz
 
     public:
         InstructionCommand() = delete;
-        explicit InstructionCommand(std::uint32_t);
-        InstructionCommand(Opcode, Register, Register, std::uint8_t = 0, std::uint32_t = 0, std::string = "");
+        explicit InstructionCommand(std::uint32_t, Token);
+        InstructionCommand(Token, Opcode, Register, Register, std::uint8_t = 0, std::uint32_t = 0, std::string = "");
         std::uint32_t bytes() const;
 
     public:

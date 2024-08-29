@@ -1,37 +1,18 @@
 #include "Allocator.h"
-#include "Preprocessor.h"
-#include "Lexer.h"
-#include "CompilerParser.h"
-#include "AssemblerParser.h"
-#include "InterpreterParser.h"
-#include "Generator.h"
-#include "Linker.h"
-#include "CompilerLinker.h"
-#include "AssemblerLinker.h"
-#include "Simulator.h"
-#include "Emitter.h"
-#include "HazeEmitter.h"
-#include "X86Emitter.h"
 #include "Context.h"
-#include "Log.h"
 #include "CommandLineParser.h"
-#include "Hook.h"
+#include "Emitter.h"
 #include "JobManager.h"
 #include "FileManager.h"
-#include "Toolchain.h"
+#include "Linker.h"
 #include "CompilerToolchain.h"
 #include "AssemblerToolchain.h"
 #include "InterpreterToolchain.h"
-#include "Simulator.h"
 #include "ErrorReporter.h"
-#include "PEBuilder.h"
+#include "Parser.h"
+//#include "Hook.h"
 
-#include <cstdlib>
-#include <string>
 #include <fstream>
-#include <filesystem>
-#include <format>
-#include <chrono>
 #include <exception>
 
 using namespace hz;
@@ -49,13 +30,13 @@ FileManager* hz::_file_manager;
 CommandLineOptions* hz::_options;
 std::string hz::_current_file;
 
-namespace mqtt
-{
-	const int message::DFLT_QOS = 0;
-	const bool message::DFLT_RETAINED = true;
-}
+//namespace mqtt
+//{
+//	const int message::DFLT_QOS = 0;
+//	const bool message::DFLT_RETAINED = true;
+//}
 
-#include <fstream>
+
 
 int main(int argc, char** argv)
 {
@@ -111,7 +92,6 @@ int main(int argc, char** argv)
 			_toolchain->panic();
 		}
 	}
-	
 
 	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
 	{

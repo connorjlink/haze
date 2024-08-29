@@ -1,6 +1,11 @@
 #include "HazeEmitter.h"
 #include "Log.h"
 
+#include <format>
+
+// Haze HazeEmitter.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace
 {
 	constexpr std::vector<std::uint8_t> haze_instruction(hz::Opcode opcode, hz::Register destination, hz::Register source, std::uint8_t imm, std::uint32_t mem)

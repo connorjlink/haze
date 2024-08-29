@@ -15,8 +15,8 @@ namespace hz
 		variable_t value;
 
 	public:
-		DotDefineCommand(std::string identifier, variable_t value)
-			: identifier{ std::move(identifier) }, value{ value }
+		DotDefineCommand(std::string identifier, variable_t value, Token token)
+			: Command{ token }, identifier{ std::move(identifier) }, value{ value }
 		{
 		}
 

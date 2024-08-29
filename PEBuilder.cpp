@@ -2,107 +2,12 @@
 #include "X86Emitter.h"
 #include "BinaryUtilities.h"
 #include "ErrorReporter.h"
+#include "BinaryConstants.h"
+
+#include <fstream>
 
 // Haze PEBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.
-
-namespace
-{
-	using namespace hz;
-
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	// at offset 0x58
-	PEBuilder::bytes_t optional_header()
-	{
-		const auto magic = PEBuilder::make16(0x010B);
-		const auto entrypoint = PEBuilder::make32(0x00001000);
-		const auto image_base = PEBuilder::make32(0x00400000);
-		const auto section_alignment = PEBuilder::make32(0x00001000);
-		const auto file_alignment = PEBuilder::make32(0x00000200);
-		const auto major_subsystem = PEBuilder::make16(0x0004);
-		// `image size` - need to modify when making changes to the underlying object code
-		const auto image_size = PEBuilder::make32(0x00004000);
-		const auto header_size = PEBuilder::make32(0x00000200);
-		//const auto subsystem = PEBuilder::make16(0x0002); // for GUI?
-		const auto subsystem = PEBuilder::make16(0x0003); // for CLI?
-		const auto directory_count = PEBuilder::make32(0x00000010);
-
-		PEBuilder::bytes_t out{};
-
-		PUT(magic);
-		PUT(pad16);
-		PUT(pad32);
-
-		PUT(pad32);
-		PUT(pad32);
-		PUT(entrypoint);
-		PUT(pad32);
-
-		PUT(pad32);
-		PUT(image_base);
-		PUT(section_alignment);
-		PUT(file_alignment);
-
-		PUT(pad32);
-		PUT(pad32);
-		PUT(major_subsystem);
-		PUT(pad16);
-		PUT(pad32);
-
-		PUT(image_size);
-		PUT(header_size);
-		PUT(pad32);
-		PUT(subsystem);
-		PUT(pad16);
-
-		PUT(pad32);
-		PUT(pad32);
-		PUT(pad32);
-		PUT(pad32);
-
-		PUT(pad32);
-		PUT(directory_count);
-
-		return out;
-	}
-
-	// TODO: at offset 0xB8?
-	byterange PEBuilder::data_directories()
-	{
-		const auto imports_va = PEBuilder::make32(0x00002000);
-
-		PEBuilder::bytes_t out{};
-
-		PUT(pad32);
-		PUT(pad32);
-
-		PUT(imports_va);
-		PUT(pad32);
-		PUT(pad32);
-		PUT(pad32);
-
-		PUT(pad32);
-		PUT(pad32);
-		PUT(pad32);
-		PUT(pad32);
-
-		return out;
-	}
-
-	
-}
 
 namespace hz
 {
@@ -145,7 +50,6 @@ namespace hz
 	}
 
 
-
 	byterange PEBuilder::dos_header()
 	{
 		const auto magic = BinaryUtilities::range16(0x5A4D);
@@ -161,7 +65,6 @@ namespace hz
 		return out;
 	}
 
-	
 	byterange PEBuilder::dos_footer()
 	{
 		const auto lfanew = BinaryUtilities::range32(0x00000040);
@@ -177,8 +80,6 @@ namespace hz
 	}
 
 
-	// NOTE: pe and optional header immediately adjacent in the final image
-	// at offset 0x40
 	byterange PEBuilder::pe_header()
 	{
 		const auto signature = BinaryUtilities::range32(0x00004550);
@@ -203,7 +104,83 @@ namespace hz
 	}
 
 
+	byterange PEBuilder::optional_header()
+	{
+		const auto magic = BinaryUtilities::range16(0x010B);
+		const auto entrypoint = BinaryUtilities::range32(0x00001000);
+		const auto image_base = BinaryUtilities::range32(0x00400000);
+		// VAs will start at 0x00401000
+		const auto section_alignment = BinaryUtilities::range32(0x00001000);
+		const auto file_alignment = BinaryUtilities::range32(0x00000200);
+		const auto major_subsystem = BinaryUtilities::range16(0x0004);
+		// `image size` - need to modify when making changes to the underlying object code
+		const auto image_size = BinaryUtilities::range32(0x00004000); // 16k
+		const auto header_size = BinaryUtilities::range32(0x00000200);
+		//const auto subsystem = PEBuilder::make16(0x0002); // if using GUI
+		const auto subsystem = BinaryUtilities::range16(0x0003); //  /SUBSYSTEM:CONSOLE
+		const auto directory_count = BinaryUtilities::range32(0x00000010); // max 16
 
+		byterange out{};
+
+		PUT(magic);
+		PUT(pad16);
+		PUT(pad32);
+
+		PUT(pad32);
+		PUT(pad32);
+		PUT(entrypoint);
+		PUT(pad32);
+
+		PUT(pad32);
+		PUT(image_base);
+		PUT(section_alignment);
+		PUT(file_alignment);
+
+		PUT(pad32);
+		PUT(pad32);
+		PUT(major_subsystem);
+		PUT(pad16);
+		PUT(pad32);
+
+		PUT(image_size);
+		PUT(header_size);
+		PUT(pad32);
+		PUT(subsystem);
+		PUT(pad16);
+
+		PUT(pad32);
+		PUT(pad32);
+		PUT(pad32);
+		PUT(pad32);
+
+		PUT(pad32);
+		PUT(directory_count);
+
+		return out;
+	}
+
+
+	byterange PEBuilder::data_directories()
+	{
+		const auto imports_va = BinaryUtilities::range32(0x00002000);
+
+		byterange out{};
+
+		PUT(pad32);
+		PUT(pad32);
+
+		PUT(imports_va);
+		PUT(pad32);
+		PUT(pad32);
+		PUT(pad32);
+
+		PUT(pad32);
+		PUT(pad32);
+		PUT(pad32);
+		PUT(pad32);
+
+		return out;
+	}
 
 
 	byterange PEBuilder::sections_table()
@@ -243,54 +220,67 @@ namespace hz
 	{
 		// for any compile-time strings to be used 
 
+		// Current String:
+
 		// Haze Optimizing Compiler Executable
-		// (c) 2024 Connor J. Link. All Rights Reserved.
+		// (c) Connor J. Link. All Rights Reserved.
 
 		return std::vector<std::uint8_t>
 		{
-			0x61, 0x20, 0x73, 0x69, 0x6D, 0x70, 0x6C, 0x65, 0x20, 0x50, 0x45, 0x20, 0x65, 0x78, 0x65, 0x63,
-			0x75, 0x74, 0x61, 0x62, 0x6C, 0x65, 0x00, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72,
-			0x6C, 0x64, 0x21, 0x00,
+			0x48, 0x61, 0x7A, 0x65,  0x20, 0x4F, 0x70, 0x74,  0x69, 0x6D, 0x69, 0x7A,  0x69, 0x6E, 0x67, 0x20, 
+			0x43, 0x6F, 0x6D, 0x70,  0x69, 0x6C, 0x65, 0x72,  0x20, 0x45, 0x78, 0x65,  0x63, 0x75, 0x74, 0x61, 
+			0x62, 0x6C, 0x65, 0x0A,  0x28, 0x63, 0x29, 0x20,  0x43, 0x6F, 0x6E, 0x6E,  0x6F, 0x72, 0x20, 0x4A, 
+			0x2E, 0x20, 0x4C, 0x69,  0x6E, 0x6B, 0x2E, 0x20,  0x41, 0x6C, 0x6C, 0x20,  0x52, 0x69, 0x67, 0x68, 
+			0x74, 0x73, 0x20, 0x52,  0x65, 0x73, 0x65, 0x72,  0x76, 0x65, 0x64, 0x2E,
 		};
 	}
 
-	
 
-
-	PEBuilder::bytes_t PEBuilder::build(bytes_t code)
+	void PEBuilder::build_pe()
 	{
-		PEBuilder::bytes_t binary{};
-		binary.resize(0x4000); // image size
+		// NOTE: extremely minimal PE builder
+		// Any and all optional information is abbreviated
+		
+		_binary.resize(IMAGE_SIZE);
+		auto head = _binary.begin();
 
-		auto dos = dos_magic();
-		auto footer = dos_lfanew();
-		auto pe = pe_header();
-		auto optional = optional_header();
+		// legacy DOS header
+		const auto header = dos_header();
+		const auto footer = dos_footer();
 
-		auto directories = data_directories();
-		auto sections = sections_table();
+		// modern PE header
+		const auto pe = pe_header();
+		const auto optional = optional_header();
 
-		//auto code = code_section();
-		auto imports = imports_section();
-		auto data = data_section();
+		// pointer metadata
+		const auto directories = data_directories();
+		const auto sections = sections_table();
 
-		auto head = binary.begin();
+		// program data
+		const auto code = _code_section;
+		const auto imports = imports_section();
+		const auto data = data_section();
 
-		std::copy(dos.begin(), dos.end(), head + 0x00);
-		std::copy(footer.begin(), footer.end(), head + 0x30);
-		std::copy(pe.begin(), pe.end(), head + 0x40);
+		
+		// NOTE: not using std::move() here since profiling shows its slower here
 
-		optional.append_range(directories);
+		std::copy(header.begin(), header.end(), head + DOS_HEADER_OFFSET);
+		std::copy(footer.begin(), footer.end(), head + DOS_FOOTER_OFFSET);
 
-		//std::copy(directories.begin(), directories.end(), optional.end());
-		std::copy(optional.begin(), optional.end(), head + 0x58);
-		//std::copy(directories.begin(), directories.end(), head + ? );
-		std::copy(sections.begin(), sections.end(), head + 0x138);
+		std::copy(pe.begin(), pe.end(), head + PE_HEADER_OFFSET);
+		std::copy(optional.begin(), optional.end(), head + OPTIONAL_HEADER_OFFSET);
 
-		std::copy(code.begin(), code.end(), head + 0x200);
-		std::copy(imports.begin(), imports.end(), head + 0x400);
-		std::copy(data.begin(), data.end(), head + 0x600);
+		std::copy(directories.begin(), directories.end(), head + DATA_DIRECTORIES_OFFSET);
+		std::copy(sections.begin(), sections.end(), head + SECTIONS_TABLE_OFFSET);
 
-		return binary;
+		std::copy(code.begin(), code.end(), head + CODE_OFFSET);
+		std::copy(imports.begin(), imports.end(), head + IMPORTS_OFFSET);
+		std::copy(data.begin(), data.end(), head + DATA_DIRECTORIES_OFFSET);
+	}
+
+	void PEBuilder::export_exe(const std::string& filepath)
+	{
+		auto binfile = std::fstream(filepath, std::ios::binary | std::ios::out);
+		binfile.write(reinterpret_cast<const char*>(_binary.data()), _binary.size());
 	}
 }

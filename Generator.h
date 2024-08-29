@@ -10,6 +10,9 @@
 #include <vector>
 #include <cstdint>
 
+// Haze Generator.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Parser;
@@ -23,20 +26,6 @@ namespace hz
 	private:
 		std::vector<Linkable> linkables;
 		std::int32_t current_function;
-
-
-		// NOTE: fake stacks grow upwards
-		// pointers always point to the about to be written by the next PUSH
-	private:
-		// for function calls
-		// each register has its own custom "stack"
-		// function return values also have their own stack
-		std::array<std::uint32_t, 7> fake_stack = { 0x0000, 0x1000, 0x2000, 0x3000, 0x4000, 0x5000, 0x6000 };
-
-	public:
-		// for function calls
-		void fake_push(Register, Register);
-		std::uint32_t fake_pull(Register, Register);
 
 	public:
 		void begin_function(std::string);
@@ -92,4 +81,4 @@ namespace hz
 	extern Generator* _generator;
 }
 
-#endif //HAZE_GENERATOR_H
+#endif

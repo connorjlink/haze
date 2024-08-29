@@ -1,5 +1,5 @@
 #include "Context.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 namespace hz
 {
@@ -49,16 +49,16 @@ namespace hz
 
 	void Context::hook()
 	{
-		_hook.hook();
+		//_hook.hook();
 	}
 
 	void Context::unhook()
 	{
-		_hook.unhook();
+		//_hook.unhook();
 	}
 
 	void Context::print(const std::string& message)
 	{
-		Log::output(message);
+		_error_reporter->post_information(message, NULL_TOKEN);
 	}
 }

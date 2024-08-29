@@ -13,8 +13,8 @@ namespace hz
 		Expression* target;
 
 	public:
-		AdjustExpression(bool increment, Expression* target)
-			: increment{ increment }, target{ target }
+		AdjustExpression(bool increment, Expression* target, Token token)
+			: Expression{ token }, increment{ increment }, target{ target }
 		{
 		}
 

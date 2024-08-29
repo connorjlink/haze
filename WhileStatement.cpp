@@ -73,7 +73,7 @@ namespace hz
 			body_optimized = body;
 		}
 
-		return new WhileStatement{ condition_optimized, body_optimized };
+		return new WhileStatement{ condition_optimized, body_optimized, _token };
 	}
 
 	Node* WhileStatement::evaluate(Context* context) const

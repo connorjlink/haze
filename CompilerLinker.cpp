@@ -241,7 +241,7 @@ namespace hz
 
 			for (auto& linkable : linkables)
 			{
-				for (auto command : linkable.object_code)
+				for (auto command : linkable.commands)
 				{
 					using enum CommandType;
 					switch (command->ctype())
@@ -252,7 +252,7 @@ namespace hz
 
 							for (auto& patching_linkable : linkables)
 							{
-								for (auto patching_command : patching_linkable.object_code)
+								for (auto patching_command : patching_linkable.commands)
 								{
 									if (patching_command->ctype() == INSTRUCTION)
 									{

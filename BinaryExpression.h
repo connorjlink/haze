@@ -14,8 +14,8 @@ namespace hz
 		Expression* right;
 
 	public:
-		BinaryExpression(Expression* left, Expression* right)
-			: left(left), right(right)
+		BinaryExpression(Expression* left, Expression* right, Token token)
+			: Expression{ token }, left(left), right(right)
 		{
 		}
 

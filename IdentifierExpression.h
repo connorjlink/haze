@@ -13,8 +13,8 @@ namespace hz
 		std::string name;
 
 	public:
-		IdentifierExpression(std::string name)
-			: name{ std::move(name) }
+		IdentifierExpression(std::string name, Token token)
+			: Expression{ token }, name { std::move(name) }
 		{
 		}
 

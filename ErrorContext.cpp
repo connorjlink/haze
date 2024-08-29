@@ -1,5 +1,10 @@
 #include "ErrorContext.h"
 
+#include <format>
+
+// Haze ErrorContext.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace
 {
 	hz::TokenPosition locate(const hz::Token& token)
@@ -36,8 +41,7 @@ namespace hz
 
 	void ErrorContext::post(ErrorType severity, const std::string& message, const std::string& file, Token token)
 	{
-		const auto pos = ::locate(token);
-		const auto line = ::at_line(file, pos._line);
-		_errors.emplace_back(Error{ pos, line, message, severity });
+		const auto pos = TokenPosition{ token.line, token.column };
+		_errors.emplace_back(Error{ pos, token.value, message, severity });
 	}
 }

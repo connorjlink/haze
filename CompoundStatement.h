@@ -13,8 +13,8 @@ namespace hz
 		std::vector<Statement*> substatements;
 
 	public:
-		CompoundStatement(std::vector<Statement*>&& substatements)
-			: substatements(std::move(substatements))
+		CompoundStatement(std::vector<Statement*>&& substatements, Token token)
+			: Statement{ token }, substatements(std::move(substatements))
 		{
 		}
 

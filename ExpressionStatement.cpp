@@ -37,7 +37,7 @@ namespace hz
 			return nullptr;
 		}
 
-		return new ExpressionStatement{ expression_optimized };
+		return new ExpressionStatement{ expression_optimized, _token };
 	}
 
 	Node* ExpressionStatement::evaluate(Context* context) const

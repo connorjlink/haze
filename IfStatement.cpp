@@ -114,7 +114,7 @@ namespace hz
 			}
 		}
 
-		return new IfStatement{ condition_optimized, if_body_optimized, else_body_optimized };
+		return new IfStatement{ condition_optimized, if_body_optimized, else_body_optimized, _token };
 	}
 
 	Node* IfStatement::evaluate(Context* context) const

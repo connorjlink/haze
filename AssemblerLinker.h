@@ -2,13 +2,12 @@
 #define HAZE_ASSEMBLERLINKER_H
 
 #include "Linker.h"
-
 #include "AssemblerParser.h"
-
 #include "Command.h"
 #include "InstructionCommand.h"
-
 #include "Log.h"
+
+#include <format>
 
 namespace hz
 {

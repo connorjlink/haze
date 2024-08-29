@@ -1,6 +1,11 @@
 #include "ErrorReporter.h"
 #include "Toolchain.h"
 
+#include <format>
+
+// Haze ErrorReporter.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	void ErrorReporter::close_all_contexts()

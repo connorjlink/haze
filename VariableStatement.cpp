@@ -40,7 +40,7 @@ namespace hz
     {
         if (auto value_optimized = value->optimize())
         {
-	        return new VariableStatement{ type, name, AS_EXPRESSION(value_optimized), allocation };
+	        return new VariableStatement{ type, name, AS_EXPRESSION(value_optimized), allocation, _token };
         }
 
         return nullptr;

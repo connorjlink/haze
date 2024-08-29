@@ -13,6 +13,12 @@ namespace hz
 		std::uint32_t offset;
 
 	public:
+		Command(Token token)
+			: Node{ token }
+		{
+		}
+
+	public:
 		virtual ~Command() = default;
 
 	public:

@@ -1,10 +1,13 @@
 #ifndef HAZE_TOKEN_H
 #define HAZE_TOKEN_H
 
-#include <cstdlib>
 #include <string>
+#include <cstdint>
 
 #include "Bimap.h"
+
+// Haze Token.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -138,7 +141,7 @@ namespace hz
 		std::int16_t line, column;
 	};
 
-	static auto NULL_TOKEN = Token{ TokenType::END, -1, "" };
+	static auto NULL_TOKEN = Token{ TokenType::END, "", -1, -1 };
 }
 
-#endif //HAZE_TOKEN_H
+#endif

@@ -4,6 +4,11 @@
 #include <unordered_map>
 #include <string>
 
+// Haze ErrorType.h
+// (c) Connor J. Link. All Rights Reserved.
+
+#undef ERROR
+
 namespace hz
 {
 	enum class ErrorType

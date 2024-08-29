@@ -31,7 +31,6 @@ namespace hz
 	void File::compute_type()
 	{
 		const auto filepath = std::filesystem::path(_filepath);
-		const auto basename = filepath.filename().string();
 		const auto extension = filepath.extension().string();
 
 		if (!_toolchain_map.contains(extension))

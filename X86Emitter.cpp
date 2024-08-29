@@ -10,25 +10,6 @@
 // Haze X86Emitter.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace
-{
-	using namespace hz;
-
-	
-
-	constexpr auto x86_reg_reg(Register destination, Register source)
-	{
-		const auto mod = 0b11;
-		const auto reg = source;
-		const auto rm = destination;
-
-		return X86Builder::modrm(mod, reg, rm);
-	}
-	
-	
-}
-
-
 namespace hz
 {
 	EmitterType X86Emitter::etype() const
@@ -58,7 +39,7 @@ namespace hz
 	byterange X86Emitter::emit_move(Register destination, Register source)
 	{
 		// mov r/m32, r32
-		return { 0x89, BYTE(::x86_reg_reg(destination, source)) };
+		return { 0x89, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
@@ -70,7 +51,7 @@ namespace hz
 		PUT(BinaryUtilities::range8(0x8B));
 		// mod == 0, so displacement only
 		// r/m == 101, so 32-bit displacement?
-		PUT(BinaryUtilities::range8(BYTE(X86Builder::modrm(0b00, destination, 0b101)))); 
+		PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, destination, 0b101))); 
 		PUT(BinaryUtilities::range32(address));
 
 		return out;
@@ -96,7 +77,7 @@ namespace hz
 		//special case the print statements
 		if (address == 0x1111)
 		{
-			PUT(BinaryUtilities::range8(BYTE(0x50 | source)));
+			PUT(BinaryUtilities::range8(0x50 | source));
 			PUT(BinaryUtilities::range8(0xFF));
 			PUT(BinaryUtilities::range8(0x15));
 			PUT(BinaryUtilities::range32(EXIT_PROCESS_VA));
@@ -117,35 +98,35 @@ namespace hz
 	byterange X86Emitter::emit_iadd(Register destination, Register source)
 	{
 		// add r/m32, r32
-		return { 0x01, BYTE(::x86_reg_reg(destination, source)) };
+		return { 0x01, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
 	byterange X86Emitter::emit_isub(Register destination, Register source)
 	{
 		// sub r/m32, r32
-		return { 0x29, BYTE(::x86_reg_reg(destination, source)) };
+		return { 0x29, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
 	byterange X86Emitter::emit_band(Register destination, Register source)
 	{
 		// and r/m32, r32
-		return { 0x21, BYTE(::x86_reg_reg(destination, source)) };
+		return { 0x21, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
 	byterange X86Emitter::emit_bior(Register destination, Register source)
 	{
 		// or r/m32, r32
-		return { 0x09, BYTE(::x86_reg_reg(destination, source)) };
+		return { 0x09, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
 	byterange X86Emitter::emit_bxor(Register destination, Register source)
 	{
 		// xor r/m32, r32
-		return { 0x31, BYTE(::x86_reg_reg(destination, source)) };
+		return { 0x31, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
@@ -169,7 +150,7 @@ namespace hz
 	byterange X86Emitter::emit_exit()
 	{
 		// ret NEAR
-		return { BYTE(0xC3) };
+		return { 0xC3 };
 	}
 
 	// done
@@ -200,7 +181,7 @@ namespace hz
 		// another pop will point to the desired return value.
 		
 		// pop r32
-		return { BYTE(0x58 | destination) };
+		return { static_cast<byte>(0x58 | static_cast<byte>(destination)) };
 
 		//PEBuilder::bytes_t out{};
 
@@ -235,7 +216,7 @@ namespace hz
 
 		// test r/m32, r32
 		PUT(BinaryUtilities::range8(0x85));
-		PUT(BinaryUtilities::range8(BYTE(::x86_reg_reg(source, source))));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
 #pragma message("TODO: optimizations for rel8/rel16 jumps which have shorter encoding!")
 		// jne rel32
 		PUT(BinaryUtilities::range8(0x0F));
@@ -253,11 +234,11 @@ namespace hz
 
 		// test r/m32, r32
 		PUT(BinaryUtilities::range8(0x85));
-		PUT(BinaryUtilities::range8(BYTE(::x86_reg_reg(source, source))));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
 		// sete r/m8
 		PUT(BinaryUtilities::range8(0x0F));
 		PUT(BinaryUtilities::range8(0x94));
-		PUT(BinaryUtilities::range8(BYTE(::x86_reg_reg(source, source))));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
 
 		return out;
 	}

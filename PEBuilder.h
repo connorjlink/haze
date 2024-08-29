@@ -22,7 +22,6 @@ namespace hz
 		byterange make_section(std::string, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
 		byterange make_import();
 
-
 	private:
 		byterange dos_header();
 		byterange dos_footer();
@@ -31,18 +30,33 @@ namespace hz
 		byterange pe_header();
 
 	private:
+		byterange optional_header();
+
+	private:
+		// points to the imports VA
+		byterange data_directories();
+
+	private:
 		byterange sections_table();
 		// sections
 		byterange imports_section();
 		byterange data_section();
 
-	public:
-		// code is at offset 0x200
-		void write_code(byterange);
+	private:
+		byterange _code_section;
+		byterange _binary;
+
+	private:
+		void build_pe();
 
 	public:
-		void build_pe();
-		void export_exe();
+		PEBuilder(byterange&& executable)
+			: _code_section{ std::move(executable) }, _binary{}
+		{
+		}
+
+	public:
+		void export_exe(const std::string&);
 	};
 }
 

@@ -11,8 +11,8 @@ namespace hz
 		std::uint32_t address;
 
 	public:
-		DotOrgCommand(std::uint32_t address)
-			: address{ address }
+		DotOrgCommand(std::uint32_t address, Token token)
+			: Command{ token }, address{ address }
 		{
 		}
 

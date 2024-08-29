@@ -33,13 +33,13 @@ namespace hz
 	{
 		if (value == nullptr)
 		{
-			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, NULL_TOKEN))->return_type != ReturnType::NVR)
+			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type != ReturnType::NVR)
 			{
-				_error_reporter->post_error("no return value was specified for a non-`nvr` function", NULL_TOKEN);
+				_error_reporter->post_error("no return value was specified for a non-`nvr` function", _token);
 				return;
 			}
 
-			value = new IntegerLiteralExpression{ 0 };
+			value = new IntegerLiteralExpression{ 0, _token };
 		}
 
 		ManagedStaticAllocation temp{};
@@ -51,7 +51,7 @@ namespace hz
 	{
 		if (auto value_optimized = value->optimize())
 		{
-			return new ReturnStatement{ enclosing_function, AS_EXPRESSION(value_optimized), allocation };
+			return new ReturnStatement{ enclosing_function, AS_EXPRESSION(value_optimized), allocation, _token };
 		}
 
 		return nullptr;

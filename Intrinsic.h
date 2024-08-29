@@ -13,8 +13,8 @@ namespace hz
 		std::string name;
 
 	public:
-		Intrinsic(std::string&& name)
-			: name{ std::move(name) }
+		Intrinsic(std::string&& name, Token token)
+			: Node{ token }, name{ std::move(name) }
 		{
 		}
 

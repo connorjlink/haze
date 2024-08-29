@@ -6,6 +6,7 @@
 #include "Generator.h"
 #include "Allocator.h"
 #include "Allocation.h"
+#include "Log.h"
 
 #include <format>
 

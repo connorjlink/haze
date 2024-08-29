@@ -27,7 +27,7 @@ namespace hz
 
 		auto address_tracker = 0;
 
-		commands.insert(commands.begin(), new DotOrgCommand{ base_pointer });
+		commands.insert(commands.begin(), new DotOrgCommand{ base_pointer, NULL_TOKEN });
 
 		std::erase_if(commands, [&](auto& command)
 		{

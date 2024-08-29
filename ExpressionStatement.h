@@ -12,8 +12,8 @@ namespace hz
 		Expression* expression;
 
 	public:
-		ExpressionStatement(Expression* expression)
-			: expression{ expression }
+		ExpressionStatement(Expression* expression, Token token)
+			: Statement{ token }, expression{ expression }
 		{
 		}
 

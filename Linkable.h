@@ -4,7 +4,7 @@
 #include "Symbol.h"
 #include "InstructionCommand.h"
 
-#include <list>
+#include <vector>
 #include <cstdint>
 
 // Haze Linkable.h
@@ -18,12 +18,12 @@ namespace hz
 		// a reference to the FunctionSymbol associated with this
 		Symbol* symbol;
 		// object code for the function
-		std::list<Command*> commands;
+		std::vector<Command*> commands;
 		// entry point of the function 
 		std::uint32_t offset;
 
 	public:
-		Linkable(Symbol* symbol, std::list<Command*>&& object_code, std::uint32_t offset)
+		Linkable(Symbol* symbol, std::vector<Command*>&& object_code, std::uint32_t offset)
 			: symbol{ symbol }, commands{ std::move(object_code) }, offset{ offset }
 		{
 		}

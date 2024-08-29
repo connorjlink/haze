@@ -14,8 +14,8 @@ namespace hz
         std::uint32_t value;
 
     public:
-        IntegerLiteralExpression(std::uint32_t value)
-            : value(value)
+        IntegerLiteralExpression(std::uint32_t value, Token token)
+            : Expression{ token }, value(value)
         {
         }
 

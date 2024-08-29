@@ -7,7 +7,7 @@
 #include <variant>
 #include <unordered_map>
 
-#include "Hook.h"
+//#include "Hook.h"
 
 namespace hz
 {	
@@ -34,7 +34,7 @@ namespace hz
 		std::stack<arguments_t> _arguments;
 
 	private:
-		Hook _hook;
+		//Hook _hook;
 
 	public:
 		void define_variable(std::string, variable_t);

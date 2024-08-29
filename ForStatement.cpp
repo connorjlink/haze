@@ -5,6 +5,7 @@
 #include "Allocator.h"
 #include "Evaluator.h"
 #include "Utility.h"
+#include "Log.h"
 
 #include <format>
 #include <variant>
@@ -80,11 +81,11 @@ namespace hz
 			// The value is constexpr false so we don't even need to run the loop
 			if (value == 0)
 			{
-				return new NullStatement{};
+				return new NullStatement{ _token };
 			}
 		}
 
-		return new ForStatement{ initialization_optimized, condition_optimized, expression_optimized, body_optimized };
+		return new ForStatement{ initialization_optimized, condition_optimized, expression_optimized, body_optimized, _token };
 	}
 
 	Node* ForStatement::evaluate(Context* context) const

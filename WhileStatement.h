@@ -13,8 +13,8 @@ namespace hz
 		Statement* body;
 
 	public:
-		WhileStatement(Expression* condition, Statement* body)
-			: condition{ condition }, body{ body }
+		WhileStatement(Expression* condition, Statement* body, Token token)
+			: Statement{ token }, condition{ condition }, body{ body }
 		{
 		}
 

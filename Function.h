@@ -10,6 +10,9 @@
 #include <vector>
 #include <unordered_map>
 
+// Haze Function.h
+// (c) Connor J. Link. All Rights Reserved.
+
 #define AS_FUNCTION(x) static_cast<Function*>(x)
 
 namespace hz
@@ -35,8 +38,8 @@ namespace hz
         Statement* body;
 
     public:
-        Function(std::string name, ReturnType return_type, std::vector<Expression*>&& arguments, Statement* body)
-            : name{ std::move(name) }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+        Function(std::string name, ReturnType return_type, std::vector<Expression*>&& arguments, Statement* body, Token token)
+            : Node{ token }, name{ std::move(name) }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
         {
         }
 
