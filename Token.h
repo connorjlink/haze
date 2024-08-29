@@ -134,8 +134,8 @@ namespace hz
 	struct Token
 	{
 		TokenType type;
-		std::int32_t offset;
 		std::string value;
+		std::int16_t line, column;
 	};
 
 	static auto NULL_TOKEN = Token{ TokenType::END, -1, "" };

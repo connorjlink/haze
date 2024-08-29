@@ -10,19 +10,6 @@ namespace hz
 	public:
 		using Emitter::Emitter;
 
-	public:
-		enum
-		{
-			EAX = 0,
-			ECX,
-			EDX,
-			EBX,
-			ESP,
-			EBP,
-			ESI,
-			EDI,
-		};
-
 	private:
 		std::vector<std::uint8_t> build_stop(std::uint8_t);
 

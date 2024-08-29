@@ -1,18 +1,20 @@
 #include "X86Emitter.h"
-#include "Log.h"
+#include "X86Builder.h"
 #include "PEBuilder.h"
+#include "BinaryConstants.h"
 #include "ErrorReporter.h"
+#include "Log.h"
 
 #include <format>
+
+// Haze X86Emitter.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace
 {
 	using namespace hz;
 
-	constexpr auto x86_modrm(std::uint8_t mod, std::uint8_t reg, std::uint8_t rm)
-	{
-		return ((mod & 0b11) << 6) | ((reg & 0b111) << 3) | ((rm & 0b111) << 0);
-	}
+	
 
 	constexpr auto x86_reg_reg(Register destination, Register source)
 	{
@@ -20,22 +22,12 @@ namespace
 		const auto reg = source;
 		const auto rm = destination;
 
-		return x86_modrm(mod, reg, rm);
+		return X86Builder::modrm(mod, reg, rm);
 	}
 	
-	[[maybe_unused]]
-	constexpr auto x86_reg_reg_embedded(Register destination, Register source)
-	{
-		const auto upper = destination;
-		const auto lower = source;
-
-		return (upper << 2) | lower;
-	}
-
-	static constexpr auto EXIT_PROCESS_VA = 0x402068;
+	
 }
 
-#define BYTE(x) static_cast<std::uint8_t>(x)
 
 namespace hz
 {
@@ -45,166 +37,168 @@ namespace hz
 	}
 
 
-	PEBuilder::bytes_t X86Emitter::build_stop(std::uint8_t exit_code)
+	byterange X86Emitter::build_stop(std::uint8_t exit_code)
 	{
+		byterange out{};
+
 		// push {exit_code}
+		PUT(BinaryUtilities::range8(0x68));
+		PUT(BinaryUtilities::range32(exit_code));
+
 		// call [0x402068] (ExitProcessA)
-
-		PEBuilder::bytes_t out{};
-
-		PUT(PEBuilder::make8(0x68));
-		PUT(PEBuilder::make32(exit_code));
-
-		PUT(PEBuilder::make8(0xFF));
-		PUT(PEBuilder::make8(0x15));
-		PUT(PEBuilder::make32(EXIT_PROCESS_VA));
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x15));
+		PUT(BinaryUtilities::range32(EXIT_PROCESS_VA));
 
 		return out;
 	}
 
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_move(Register destination, Register source)
+	byterange X86Emitter::emit_move(Register destination, Register source)
 	{
 		// mov r/m32, r32
 		return { 0x89, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_load(Register destination, std::uint32_t address)
+	byterange X86Emitter::emit_load(Register destination, std::uint32_t address)
 	{
-		// mov r32, r/m32 
-		PEBuilder::bytes_t out{};
+		byterange out{};
 
-		PUT(PEBuilder::make8(0x8B));
+		// mov r32, r/m32 
+		PUT(BinaryUtilities::range8(0x8B));
 		// mod == 0, so displacement only
-		// r/m == 111, so 32-bit displacement
-		PUT(PEBuilder::make8(BYTE(::x86_modrm(0b00, destination, 0b101)))); 
-		PUT(PEBuilder::make32(address));
+		// r/m == 101, so 32-bit displacement?
+		PUT(BinaryUtilities::range8(BYTE(X86Builder::modrm(0b00, destination, 0b101)))); 
+		PUT(BinaryUtilities::range32(address));
 
 		return out;
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_copy(Register destination, std::uint8_t immediate)
+	byterange X86Emitter::emit_copy(Register destination, std::uint8_t immediate)
 	{
 		// mov r/m32, imm32
-		PEBuilder::bytes_t out{};
+		byterange out{};
 
-		PUT(PEBuilder::make8(0xB8 | destination));
-		PUT(PEBuilder::make32(immediate));
+		PUT(BinaryUtilities::range8(0xB8 | destination));
+		PUT(BinaryUtilities::range32(immediate));
 
 		return out;
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_save(std::uint32_t address, Register source)
+	byterange X86Emitter::emit_save(std::uint32_t address, Register source)
 	{
-		// mov r/m32, r32
-		PEBuilder::bytes_t out{};
+		byterange out{};
 
+		//special case the print statements
 		if (address == 0x1111)
 		{
-			PUT(PEBuilder::make8(BYTE(0x50 | source)));
-			PUT(PEBuilder::make8(0xFF));
-			PUT(PEBuilder::make8(0x15));
-			PUT(PEBuilder::make32(EXIT_PROCESS_VA));
+			PUT(BinaryUtilities::range8(BYTE(0x50 | source)));
+			PUT(BinaryUtilities::range8(0xFF));
+			PUT(BinaryUtilities::range8(0x15));
+			PUT(BinaryUtilities::range32(EXIT_PROCESS_VA));
 		}
 
 		else
 		{
-			PUT(PEBuilder::make8(0x89));
-			PUT(PEBuilder::make8(BYTE(::x86_modrm(0b00, source, 0b101))));
-			PUT(PEBuilder::make32(address));
+			// mov r/m32, r32
+			PUT(BinaryUtilities::range8(0x89));
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, source, 0b101)));
+			PUT(BinaryUtilities::range32(address));
 		}
 		
 		return out;
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_iadd(Register destination, Register source)
+	byterange X86Emitter::emit_iadd(Register destination, Register source)
 	{
 		// add r/m32, r32
 		return { 0x01, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_isub(Register destination, Register source)
+	byterange X86Emitter::emit_isub(Register destination, Register source)
 	{
 		// sub r/m32, r32
 		return { 0x29, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_band(Register destination, Register source)
+	byterange X86Emitter::emit_band(Register destination, Register source)
 	{
 		// and r/m32, r32
 		return { 0x21, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_bior(Register destination, Register source)
+	byterange X86Emitter::emit_bior(Register destination, Register source)
 	{
 		// or r/m32, r32
 		return { 0x09, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_bxor(Register destination, Register source)
+	byterange X86Emitter::emit_bxor(Register destination, Register source)
 	{
 		// xor r/m32, r32
 		return { 0x31, BYTE(::x86_reg_reg(destination, source)) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_call(std::uint32_t address)
+	byterange X86Emitter::emit_call(std::uint32_t address)
 	{
-		// push imm32 (save some space on the stack for the return value)
-		// call NEAR
-		PEBuilder::bytes_t out{};
-		
-		//PUT(PEBuilder::make8(0xFF));
-		//PUT(PEBuilder::make8(0x15));
+		byterange out{};
 
 		// TODO: replace with `sub esp, 4`
-		PUT(PEBuilder::make8(0x68));
-		PUT(PEBuilder::make32(0xAAAAAAAA)); // temp value
+		// push imm32 (save some space on the stack for the return value)
+		PUT(BinaryUtilities::range8(0x68));
+		PUT(BinaryUtilities::range32(0xAAAAAAAA)); // temp value
 
-		PUT(PEBuilder::make8(0xE8));
-		PUT(PEBuilder::make32(address));
+		// call NEAR
+		PUT(BinaryUtilities::range8(0xE8));
+		PUT(BinaryUtilities::range32(address));
 
 		return out;
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_exit()
+	byterange X86Emitter::emit_exit()
 	{
 		// ret NEAR
 		return { BYTE(0xC3) };
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_push(Register source)
+	byterange X86Emitter::emit_push(Register source)
 	{
 		// NOTE: old format--clobbers the stack pointer register so the `ret` goes bad :(
 		// push r32
 		//return { BYTE(0x50 | source) };
 
-		PEBuilder::bytes_t out{};
+#pragma message("TODO: have to figure out how to pass both return values and parameters")
+
+		byterange out{};
 
 		// mov DWORD PTR [esp+0x4], r32
-		PUT(PEBuilder::make8(0x89));
-		PUT(PEBuilder::make8(::x86_modrm(0b01, source, 0b100)));
-		PUT(PEBuilder::make8(0x24));
-		PUT(PEBuilder::make8(0x04));
+		PUT(BinaryUtilities::range8(0x89));
+		PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, source, 0b100)));
+		PUT(BinaryUtilities::range8(0x24));
+		PUT(BinaryUtilities::range8(0x04));
 
 		return out;
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_pull(Register destination)
+	byterange X86Emitter::emit_pull(Register destination)
 	{
-		// NOTE: old format--pops fake bytes we pushed instead of the `real` old esp
+		// NOTE: even if putting data at [esp+0x4], this is still fine to do
+		// Since we first would pop the return value and increment, 
+		// another pop will point to the desired return value.
+		
 		// pop r32
 		return { BYTE(0x58 | destination) };
 
@@ -220,16 +214,14 @@ namespace hz
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_brnz(std::uint32_t address, Register source)
+	byterange X86Emitter::emit_brnz(std::uint32_t address, Register source)
 	{
-		// jne NEAR (cant use because its relative jumping)
-
+		// NOTE: old format before using relative jump addresses
+		
 		// test r/m32, r32
 		// je skip
 		// jmp abs32
 		//skip:
-		
-		PEBuilder::bytes_t out{};
 
 		//PUT(PEBuilder::make8(0x85));
 		//PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
@@ -238,40 +230,40 @@ namespace hz
 		//PUT(PEBuilder::make8(0xFF));
 		//PUT(PEBuilder::make8(0x25));
 		//PUT(PEBuilder::make32(address));
-
+		
+		byterange out{};
 
 		// test r/m32, r32
+		PUT(BinaryUtilities::range8(0x85));
+		PUT(BinaryUtilities::range8(BYTE(::x86_reg_reg(source, source))));
+#pragma message("TODO: optimizations for rel8/rel16 jumps which have shorter encoding!")
 		// jne rel32
-		PUT(PEBuilder::make8(0x85));
-		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
-		// TODO: optimizations for rel8/rel16 jumps which have shorter encoding!
-		PUT(PEBuilder::make8(0x0F));
-		PUT(PEBuilder::make8(0x85));
-		PUT(PEBuilder::make32(address));
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x85));
+		PUT(BinaryUtilities::range32(address));
 
 
 		return out;
 	}
 
 	// done
-	std::vector<std::uint8_t> X86Emitter::emit_bool(Register source)
+	byterange X86Emitter::emit_bool(Register source)
 	{
-		// test r/m32, r32
-		// sete r/m8
-		
-		PEBuilder::bytes_t out{};
+		byterange out{};
 
-		PUT(PEBuilder::make8(0x85));
-		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
-		PUT(PEBuilder::make8(0x0F));
-		PUT(PEBuilder::make8(0x94));
-		PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
+		// test r/m32, r32
+		PUT(BinaryUtilities::range8(0x85));
+		PUT(BinaryUtilities::range8(BYTE(::x86_reg_reg(source, source))));
+		// sete r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x94));
+		PUT(BinaryUtilities::range8(BYTE(::x86_reg_reg(source, source))));
 
 		return out;
 	}
 
 	
-	std::vector<std::uint8_t> X86Emitter::emit_stop()
+	byterange X86Emitter::emit_stop()
 	{
 		// push 0
 		// call [0x402068] (ExitProcessA)
@@ -281,9 +273,9 @@ namespace hz
 
 
 
-	std::vector<std::uint8_t> X86Emitter::emit()
+	byterange X86Emitter::emit()
 	{
-		std::vector<std::uint8_t> result{};
+		byterange result{};
 
 		for (auto instruction_command : image)
 		{

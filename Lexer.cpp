@@ -1,16 +1,28 @@
 #include "Lexer.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
-#include <iostream>
 #include <format>
+
+// Haze Lexer.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 #define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, line, raw })
 
 namespace
 {
+	// used to continue parsing until reaching the end of a string literal
+	// NOTE: this method does not work if there are escape code \" characters embedded within!
 	int isquoted(int c)
 	{
 		return c != '"';
+	}
+
+
+	hz::Token error_token(std::string value, std::int16_t line, std::int16_t column)
+	{
+		hz::Token token{};
+
+		token.offset
 	}
 }
 
@@ -25,15 +37,15 @@ namespace hz
 			(token.type == TokenType::INT || token.type == TokenType::IDENTIFIER) ? std::format("({})", token.value.value_or("undef")) : "");
 		*/
 
-		for (auto i = 0; i < input.length(); i++)
+		for (auto i = 0; i < _input.length(); i++)
 		{
 			auto rest = [&](int(*functor)(int))
 			{
 				std::string out;
 
-				while (i < input.length() && functor(input[i]))
+				while (i < _input.length() && functor(_input[i]))
 				{
-					out += input[i];
+					out += _input[i];
 					i++;
 				}
 
@@ -44,13 +56,14 @@ namespace hz
 
 
 			using enum TokenType;
-			const auto& current = input[i];
+			const auto& current = _input[i];
 
 			if (current == ' ' || current == '\n' || current == '\r' || current == '\t')
 			{
 				if (current == '\n')
 				{
-					line++;
+					_line++;
+					_column = 1;
 				}
 
 				continue;
@@ -58,15 +71,18 @@ namespace hz
 
 			else if (current == '/')
 			{
-				if (input[i + 1] == '/')
+				if (_input[i + 1] == '/')
 				{
-					while (input[i] != '\n')
+					while (_input[i] != '\n')
 					{
 						i++;
 					}
 
 					continue;
 				}
+
+				
+				_error_reporter->post_error("unexpected chacter")
 
 				Log::error(std::format("({}) unexpected character `/`", line));
 			}

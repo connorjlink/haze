@@ -4,21 +4,27 @@
 #include "Symbol.h"
 #include "InstructionCommand.h"
 
-#include <vector>
+#include <list>
 #include <cstdint>
+
+// Haze Linkable.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	class Linkable
 	{
 	public:
+		// a reference to the FunctionSymbol associated with this
 		Symbol* symbol;
-		std::vector<Command*> object_code;
+		// object code for the function
+		std::list<Command*> commands;
+		// entry point of the function 
 		std::uint32_t offset;
 
 	public:
-		Linkable(Symbol* symbol, std::vector<Command*>&& object_code, std::uint32_t offset)
-			: symbol{ symbol }, object_code{ std::move(object_code) }, offset{ offset }
+		Linkable(Symbol* symbol, std::list<Command*>&& object_code, std::uint32_t offset)
+			: symbol{ symbol }, commands{ std::move(object_code) }, offset{ offset }
 		{
 		}
 	};

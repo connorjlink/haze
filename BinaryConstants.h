@@ -1,12 +1,18 @@
 #ifndef HAZE_BINARYCONSTANTS_H
 #define HAZE_BINARYCONSTANTS_H
 
+// Haze BinaryConstants.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	// for magic
 	inline static constexpr auto DOS_HEADER_OFFSET = 0x00;
 	// for lfanew
 	inline static constexpr auto DOS_FOOTER_OFFSET = 0x30;
+
+
+	inline static constexpr auto PE_HEADER_OFFSET = 0x40;
 
 
 	inline static constexpr auto SECTIONS_TABLE_OFFSET = 0x138;
@@ -17,6 +23,9 @@ namespace hz
 
 
 	inline static constexpr auto IMAGESIZE = 0x4000;
+
+
+	inline static constexpr auto EXIT_PROCESS_VA = 0x402068;
 }
 
 #endif 

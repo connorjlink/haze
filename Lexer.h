@@ -6,18 +6,27 @@
 
 #include "Token.h"
 
+// Haze Lexer.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Lexer
 	{
 	private:
-		std::string input;
-		std::int32_t line = 1;
+		std::string _input;
+		std::int32_t _character;
+
+	private:
+		std::int16_t _line, _column;
 
 	public:
 		Lexer(std::string&& input)
-			: input{ std::move(input) }
+			: _input{ std::move(_input) }, _character{ -1 }
 		{
+			// NOTE: line and column default value is 1, not 0 for better debug messaging
+			_line = 1;
+			_column = 1;
 		}
 
 	public:

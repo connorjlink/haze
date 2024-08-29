@@ -1,12 +1,15 @@
 #ifndef HAZE_PEBUILDER_H
 #define HAZE_PEBUILDER_H
 
+#include "Constants.h"
+#include "BinaryUtilities.h"
+
 #include <string>
 #include <vector>
 #include <cstdint>
 
-#include "Constants.h"
-#include "BinaryUtilities.h"
+// Haze PEBuilder.h
+// (c) Connor J. Link. All Rights Reserved.
 
 #define PUT(x) out.append_range(x)
 

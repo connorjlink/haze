@@ -1,7 +1,10 @@
 #include "PEBuilder.h"
 #include "X86Emitter.h"
+#include "BinaryUtilities.h"
 #include "ErrorReporter.h"
 
+// Haze PEBuilder.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace
 {
@@ -10,12 +13,7 @@ namespace
 
 	
 
-	PEBuilder::bytes_t make_import()
-	{
-		//return 
-
-		return {};
-	}
+	
 
 
 
@@ -23,30 +21,7 @@ namespace
 
 	
 
-	// NOTE: pe and optional header immediately adjacent in the final image
-	// at offset 0x40
-	PEBuilder::bytes_t pe_header()
-	{
-		const auto signature = PEBuilder::make32(0x00004550);
-		const auto machine = PEBuilder::make16(0x014C);
-		const auto section_count = PEBuilder::make16(0x0003);
-		const auto optional_size = PEBuilder::make16(0x00E0);
-		const auto characteristics = PEBuilder::make16(0x0102);
-
-		PEBuilder::bytes_t out{};
-
-		PUT(signature);
-		PUT(machine);
-		PUT(section_count);
-		PUT(pad32);
-		PUT(pad32);
-
-		PUT(pad32);
-		PUT(optional_size);
-		PUT(characteristics);
-
-		return out;
-	}
+	
 
 	// at offset 0x58
 	PEBuilder::bytes_t optional_header()
@@ -104,7 +79,7 @@ namespace
 	}
 
 	// TODO: at offset 0xB8?
-	PEBuilder::bytes_t data_directories()
+	byterange PEBuilder::data_directories()
 	{
 		const auto imports_va = PEBuilder::make32(0x00002000);
 
@@ -162,6 +137,13 @@ namespace hz
 		return out;
 	}
 
+	byterange PEBuilder::make_import()
+	{
+		//return 
+
+		return {};
+	}
+
 
 
 	byterange PEBuilder::dos_header()
@@ -194,6 +176,31 @@ namespace hz
 		return out;
 	}
 
+
+	// NOTE: pe and optional header immediately adjacent in the final image
+	// at offset 0x40
+	byterange PEBuilder::pe_header()
+	{
+		const auto signature = BinaryUtilities::range32(0x00004550);
+		const auto machine = BinaryUtilities::range16(0x014C);
+		const auto section_count = BinaryUtilities::range16(0x0003);
+		const auto optional_size = BinaryUtilities::range16(0x00E0);
+		const auto characteristics = BinaryUtilities::range16(0x0102);
+
+		byterange out{};
+
+		PUT(signature);
+		PUT(machine);
+		PUT(section_count);
+		PUT(pad32);
+		PUT(pad32);
+
+		PUT(pad32);
+		PUT(optional_size);
+		PUT(characteristics);
+
+		return out;
+	}
 
 
 
