@@ -24,4 +24,18 @@ namespace hz
 		const byte b3 = (value & 0xFF000000) >> 24;
 		return { b0, b1, b2, b3 };
 	}
+
+	byterange BinaryUtilities::range_string(std::string string)
+	{
+		byterange out{};
+
+		for (auto c : string)
+		{
+			out.emplace_back(static_cast<std::uint8_t>(c));
+		}
+
+		out.emplace_back(0x00);
+
+		return out;
+	}
 }

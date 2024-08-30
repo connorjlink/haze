@@ -5,6 +5,7 @@
 #include "ErrorReporter.h"
 #include "Log.h"
 
+#include <windows.h>
 #include <format>
 
 // Haze X86Emitter.cpp
@@ -29,7 +30,7 @@ namespace hz
 		// call [0x402068] (ExitProcessA)
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(EXIT_PROCESS_VA));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + exitprocess_va));
 
 		return out;
 	}
@@ -69,6 +70,11 @@ namespace hz
 		return out;
 	}
 
+	byterange emit_print(std::uint32_t text_pointer)
+	{
+
+	}
+
 	// done
 	byterange X86Emitter::emit_save(std::uint32_t address, Register source)
 	{
@@ -77,10 +83,75 @@ namespace hz
 		//special case the print statements
 		if (address == 0x1111)
 		{
-			PUT(BinaryUtilities::range8(0x50 | source));
+			// push NULL
+			PUT(BinaryUtilities::range8(0x6A));
+			PUT(BinaryUtilities::range8(0x00));
+
+			// push NULL
+			PUT(BinaryUtilities::range8(0x6A));
+			PUT(BinaryUtilities::range8(0x00));
+
+			// push length (15 bytes)
+			PUT(BinaryUtilities::range8(0x6A));
+			PUT(BinaryUtilities::range8(16));
+
+			// push string (output info)
+			PUT(BinaryUtilities::range8(0x68));
+			PUT(BinaryUtilities::range32(0x0040304E));
+
+			// TODO: convert register integer to ascii!
+			//PUT(BinaryUtilities::range8(0x50 | source));
+
+			// push esi
+			PUT(BinaryUtilities::range8(0x56));
+
+			// call WriteConsole()
 			PUT(BinaryUtilities::range8(0xFF));
 			PUT(BinaryUtilities::range8(0x15));
-			PUT(BinaryUtilities::range32(EXIT_PROCESS_VA));
+			PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
+
+			//25 ff 00 00 00          and    eax,0xff
+			//5:  83 c0 30
+
+			PUT(BinaryUtilities::range8(0x81));
+			PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
+			PUT(BinaryUtilities::range8(0xFF));
+			PUT(BinaryUtilities::range8(0x00));
+			PUT(BinaryUtilities::range8(0x00));
+			PUT(BinaryUtilities::range8(0x00));
+
+			PUT(BinaryUtilities::range8(0x83));
+			PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
+			PUT(BinaryUtilities::range8(0x30));
+
+
+
+			// push NULL
+			PUT(BinaryUtilities::range8(0x6A));
+			PUT(BinaryUtilities::range8(0x00));
+
+			// push NULL
+			PUT(BinaryUtilities::range8(0x6A));
+			PUT(BinaryUtilities::range8(0x00));
+
+			// push length (15 bytes)
+			PUT(BinaryUtilities::range8(0x6A));
+			PUT(BinaryUtilities::range8(16));
+
+			// push string (output info)
+			PUT(BinaryUtilities::range8(0x68));
+			PUT(BinaryUtilities::range32(0x0040304E));
+
+			// TODO: convert register integer to ascii!
+			//PUT(BinaryUtilities::range8(0x50 | source));
+
+			// push esi
+			PUT(BinaryUtilities::range8(0x56));
+
+			// call WriteConsole()
+			PUT(BinaryUtilities::range8(0xFF));
+			PUT(BinaryUtilities::range8(0x15));
+			PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
 		}
 
 		else
@@ -278,10 +349,13 @@ namespace hz
 
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range8(0x70));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + exitprocess_iat_va));
+
+		// old exit process proc address
+		/*PUT(BinaryUtilities::range8(0x70));
 		PUT(BinaryUtilities::range8(0x20));
 		PUT(BinaryUtilities::range8(0x40));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(BinaryUtilities::range8(0x00));*/
 
 		PUT(build_stop(101));
 
@@ -289,10 +363,62 @@ namespace hz
 	}
 
 
+	byterange emit_init()
+	{
+		byterange out{};
+
+		// push STD_OUTPUT_HANDLE
+		PUT(BinaryUtilities::range8(0x68));
+		PUT(BinaryUtilities::range32(STD_OUTPUT_HANDLE));
+
+		// call GetStdHandle
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x15));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + getstdhandle_iat_va));
+		//PUT(BinaryUtilities::range32(0x402080));
+
+		// handle is stored in eax
+		// mov esi, eax
+		PUT(BinaryUtilities::range8(0x89));
+		PUT(BinaryUtilities::range8(0xC6));
+
+		// push NULL
+		PUT(BinaryUtilities::range8(0x6A));
+		PUT(BinaryUtilities::range8(0x00));
+
+		// push NULL
+		PUT(BinaryUtilities::range8(0x6A));
+		PUT(BinaryUtilities::range8(0x00));
+
+		// push length (77 bytes)
+		PUT(BinaryUtilities::range8(0x6A));
+		PUT(BinaryUtilities::range8(77));
+
+		// push string (copyright logo)
+		PUT(BinaryUtilities::range8(0x68));
+		PUT(BinaryUtilities::range8(0x00));
+		PUT(BinaryUtilities::range8(0x30));
+		PUT(BinaryUtilities::range8(0x40));
+		PUT(BinaryUtilities::range8(0x00));
+
+		// push eax
+		PUT(BinaryUtilities::range8(0x50));
+
+		// call WriteConsoleA
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x15));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
+		//PUT(BinaryUtilities::range32(0x4020A0));
+
+		return out;
+	}
+
 
 	byterange X86Emitter::emit()
 	{
 		byterange result{};
+
+		result.append_range(emit_init());
 
 		for (auto instruction_command : image)
 		{

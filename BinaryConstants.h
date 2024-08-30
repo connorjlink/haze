@@ -24,15 +24,47 @@ namespace hz
 
 	inline static constexpr auto SECTIONS_TABLE_OFFSET = 0x138;
 	// sections
-	inline static constexpr auto CODE_OFFSET = 0x200;
-	inline static constexpr auto IMPORTS_OFFSET = 0x400;
-	inline static constexpr auto DATA_OFFSET = 0x600;
+	inline static constexpr auto CODE_OFFSET = 0x200; // .text
+	inline static constexpr auto IMPORTS_OFFSET = 0x400; // .rdata
+	inline static constexpr auto DATA_OFFSET = 0x600; // .data
 
 
 	inline static constexpr auto IMAGE_SIZE = 0x4000;
 
 
-	inline static constexpr auto EXIT_PROCESS_VA = 0x402068;
+	inline static constexpr auto PROCEDURE_BASE = 0x402000;
+
+#define PROCEDURE(x) (PROCEDURE_BASE + x)
+
+	// GetStdHandle()
+	inline const auto getstdhandle_int_va = 0x70;
+	inline const auto getstdhandle_iat_va = 0x80;
+
+	// WriteConsole()
+	inline const auto writeconsole_int_va = 0x90;
+	inline const auto writeconsole_iat_va = 0xA0;
+
+	// ExitProcess()
+	inline const auto exitprocess_int_va = 0xB0;
+	inline const auto exitprocess_iat_va = 0xC0;
+
+	// MessageBoxA()
+	inline const auto messageboxa_int_va = 0xD0;
+	inline const auto messageboxa_iat_va = 0xE0;
+
+
+	inline const auto kernel32_pointer = 0x150;
+	inline const auto user32_pointer = 0x160;
+
+	// function name strings
+	inline const auto getstdhandle_va = 0x180;
+	inline const auto writeconsole_va = 0x190;
+	inline const auto exitprocess_va = 0x1A0;
+	inline const auto messageboxa_va = 0x1B0;
+
+	// dll name strings
+	inline const auto kernel32_va = 0x1C0;
+	inline const auto user32_va = 0x1D0;
 }
 
 #endif 

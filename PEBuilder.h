@@ -20,6 +20,9 @@ namespace hz
 	// pe utilities
 	private:
 		byterange make_section(std::string, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
+
+	private:
+		byterange make_import_descriptor(std::uint32_t, std::uint32_t, std::uint32_t);
 		byterange make_import();
 
 	private:
@@ -46,14 +49,14 @@ namespace hz
 		byterange _code_section;
 		byterange _binary;
 
-	private:
-		void build_pe();
-
 	public:
 		PEBuilder(byterange&& executable)
 			: _code_section{ std::move(executable) }, _binary{}
 		{
 		}
+
+	private:
+		void build_pe();
 
 	public:
 		void export_exe(const std::string&);

@@ -5,6 +5,7 @@
 #include "BinaryConstants.h"
 
 #include <fstream>
+#include <memory>
 
 // Haze PEBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -12,22 +13,20 @@
 namespace hz
 {
 	byterange PEBuilder::make_section(std::string name, std::uint32_t virtual_size, std::uint32_t virtual_address,
-		std::uint32_t raw_size, std::uint32_t raw_pointer, std::uint32_t characteristics)
+								      std::uint32_t raw_size, std::uint32_t raw_pointer, std::uint32_t characteristics)
 	{
-		if (name.length() > 8)
+		if (name.length() > 7)
 		{
 			_error_reporter->post_error(std::format("section name `{}` exceeds the maximum allowable length", name), NULL_TOKEN);
 		}
 
-		name.resize(8, '\0');
+		name.resize(7, '\0');
+		// if the string was too big, then make sure there is a terminator byte still
 
 		byterange out{};
 
 		// insert section name char by char
-		for (auto c : name)
-		{
-			PUT(BinaryUtilities::range8(c));
-		}
+		PUT(BinaryUtilities::range_string(name));
 
 		PUT(BinaryUtilities::range32(virtual_size));
 		PUT(BinaryUtilities::range32(virtual_address));
@@ -42,11 +41,94 @@ namespace hz
 		return out;
 	}
 
-	byterange PEBuilder::make_import()
-	{
-		//return 
+#define DWORD std::uint32_t
+#define WORD std::uint16_t
 
-		return {};
+	// Helper function to write data into a vector
+	template<typename T>
+	void WriteToVector(std::vector<uint8_t>& vec, const T& data) {
+		const uint8_t* byteData = reinterpret_cast<const uint8_t*>(&data);
+		vec.insert(vec.end(), byteData, byteData + sizeof(T));
+	}
+
+	// Function to calculate the final address of the functions
+	std::vector<DWORD> GetFunctionAddresses(const std::vector<std::pair<std::string, std::vector<std::string>>>& dlls) {
+		std::vector<DWORD> addresses;
+		// For demonstration purposes, this function returns dummy addresses
+		// In practice, you'd need to load the DLL and resolve the function addresses
+
+		DWORD dummyAddress = 0x1000;
+		for (const auto& dll : dlls) {
+			for (const auto& functionName : dll.second) {
+				addresses.push_back(dummyAddress); // Dummy address
+				dummyAddress += 0x10; // Increment dummy address for demonstration
+			}
+		}
+		return addresses;
+	}
+
+	void BuildImportTable(std::vector<uint8_t>& importTable, const std::vector<std::pair<std::string, std::vector<std::string>>>& dlls, std::vector<DWORD>& finalAddresses) {
+		// Define the import directory entry structure
+		struct ImportDescriptor {
+			DWORD Characteristics;
+			DWORD TimeDateStamp;
+			DWORD ForwarderChain;
+			DWORD Name;
+			DWORD FirstThunk;
+		};
+
+		// Define the Import Name Table (INT) and Import Address Table (IAT) structure
+		struct ImportByName {
+			WORD Hint;
+			char Name[1]; // Variable length
+		};
+
+		size_t currentOffset = 0;
+		std::vector<DWORD> addressList = GetFunctionAddresses(dlls);
+
+		// Write the import descriptors
+		for (const auto& dll : dlls) {
+			ImportDescriptor importDescriptor = { 0 };
+			importDescriptor.Name = currentOffset;
+			importDescriptor.FirstThunk = currentOffset + sizeof(ImportDescriptor);
+
+			WriteToVector(importTable, importDescriptor);
+
+			// Write the Import Name Table (INT)
+			for (const auto& functionName : dll.second) {
+				size_t nameLength = functionName.size() + 1;
+				auto importByName = std::unique_ptr<uint8_t[]>(new uint8_t[sizeof(WORD) + nameLength]);
+				auto importByNamePtr = reinterpret_cast<ImportByName*>(importByName.get());
+
+				importByNamePtr->Hint = 0; // Hint is 0 for simplicity
+				std::memcpy(importByNamePtr->Name, functionName.c_str(), nameLength);
+
+				WriteToVector(importTable, *importByNamePtr);
+
+				finalAddresses.push_back(addressList.front());
+				addressList.erase(addressList.begin());
+			}
+
+			currentOffset = importTable.size();
+		}
+
+		// Write an ending import descriptor with all zeros
+		ImportDescriptor endDescriptor = { 0 };
+		WriteToVector(importTable, endDescriptor);
+	}
+
+
+	byterange PEBuilder::make_import_descriptor(std::uint32_t int_pointer, std::uint32_t dll_pointer, std::uint32_t iat_pointer)
+	{
+		byterange out{};
+
+		PUT(BinaryUtilities::range32(int_pointer));
+		PUT(pad32);
+		PUT(pad32);
+		PUT(BinaryUtilities::range32(dll_pointer));
+		PUT(BinaryUtilities::range32(iat_pointer));
+
+		return out;
 	}
 
 
@@ -185,8 +267,7 @@ namespace hz
 
 	byterange PEBuilder::sections_table()
 	{
-		// TODO: figure out spacing on this function 
-		return std::vector<std::uint8_t>
+		/*return std::vector<std::uint8_t>
 		{
 			                                                0x2E, 0x74, 0x65, 0x78, 0x74, 0x00, 0x00, 0x00,
 			0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00,
@@ -196,13 +277,21 @@ namespace hz
 			0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x40, 0x2E, 0x64, 0x61, 0x74, 0x61, 0x00, 0x00, 0x00,
 			0x00, 0x10, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0xC0,
-		};
+		};*/
+
+		byterange out{};
+
+		PUT(make_section(".text", 0x1000, 0x1000, 0x200, CODE_OFFSET, 0x60000020)); // code execute read
+		PUT(make_section(".rdata", 0x1000, 0x2000, 0x200, IMPORTS_OFFSET, 0x40000040)); // initialized read
+		PUT(make_section(".data", 0x1000, 0x3000, 0x200, DATA_OFFSET, 0xC0000040)); // data read write
+
+		return out;
 	}
 
 
 	byterange PEBuilder::imports_section()
 	{
-		return std::vector<std::uint8_t>
+		/*return std::vector<std::uint8_t>
 		{
 			0x3C, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0x20, 0x00, 0x00,
 			0x68, 0x20, 0x00, 0x00, 0x44, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -213,26 +302,129 @@ namespace hz
 			0x61, 0x67, 0x65, 0x42, 0x6F, 0x78, 0x41, 0x00, 0x4C, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x5A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x6B, 0x65, 0x72, 0x6E, 0x65, 0x6C, 0x33, 0x32,
 			0x2E, 0x64, 0x6C, 0x6C, 0x00, 0x75, 0x73, 0x65, 0x72, 0x33, 0x32, 0x2E, 0x64, 0x6C, 0x6C, 0x00,
-		};
+		};*/
+
+		/*std::vector<std::pair<std::string, std::vector<std::string>>> dlls = {
+			{"kernel32.dll", {"CreateFileA", "ReadFile", "WriteFile"}},
+			{"user32.dll", {"MessageBoxA", "GetMessageA"}}
+		};*/
+
+		//std::vector<std::pair<std::string, std::vector<std::string>>> dlls
+		//{
+		//	{ "kernel32.dll", { "ExitProcess" } },
+		//	{ "user32.dll", { "MessageBoxA" } },
+		//};
+
+		//std::vector<uint8_t> importTable;
+		//std::vector<DWORD> finalAddresses;
+		//BuildImportTable(importTable, dlls, finalAddresses);
+
+		//// Output the import table for verification (for demonstration purposes)
+		//for (auto byte : importTable) {
+		//	std::printf("%02X ", byte);
+		//}
+		//std::printf("\n");
+
+		//// Output final addresses
+		//std::printf("Function Addresses:\n");
+		//for (auto address : finalAddresses) {
+		//	std::printf("%08X\n", address);
+		//}
+
+		//return importTable;
+
+		
+
+		byterange out{};
+		out.resize(0x200);
+
+		auto head = out.begin();
+
+		const auto base = 0x2000; // RVA - base_address
+
+#define CALC(x) (base + x)
+
+		const auto dummy_descriptor = make_import_descriptor(0x0, 0x0, 0x0);
+		const auto length = dummy_descriptor.size();
+
+		const auto getstdhandle_descriptor = make_import_descriptor(CALC(getstdhandle_int_va), CALC(kernel32_va), CALC(getstdhandle_iat_va));
+		const auto writeconsole_descriptor = make_import_descriptor(CALC(writeconsole_int_va), CALC(kernel32_va), CALC(writeconsole_iat_va));
+		const auto exitprocess_descriptor = make_import_descriptor(CALC(exitprocess_int_va), CALC(kernel32_va), CALC(exitprocess_iat_va));
+		const auto messageboxa_descriptor = make_import_descriptor(CALC(messageboxa_int_va), CALC(user32_va), CALC(messageboxa_iat_va));
+
+		std::copy(getstdhandle_descriptor.begin(), getstdhandle_descriptor.end(), head + (length * 0));
+		std::copy(writeconsole_descriptor.begin(), writeconsole_descriptor.end(), head + (length * 1));
+		std::copy(exitprocess_descriptor.begin(), exitprocess_descriptor.end(), head + (length * 2));
+		std::copy(messageboxa_descriptor.begin(), messageboxa_descriptor.end(), head + (length * 3));
+		std::copy(dummy_descriptor.begin(), dummy_descriptor.end(), head + (length * 4));
+
+
+
+		auto getstdhandle_int_iat = BinaryUtilities::range32(base + getstdhandle_va);
+		getstdhandle_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		std::copy(getstdhandle_int_iat.begin(), getstdhandle_int_iat.end(), head + getstdhandle_int_va);
+		std::copy(getstdhandle_int_iat.begin(), getstdhandle_int_iat.end(), head + getstdhandle_iat_va);
+
+		auto writeconsole_int_iat = BinaryUtilities::range32(base + writeconsole_va);
+		writeconsole_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		std::copy(writeconsole_int_iat.begin(), writeconsole_int_iat.end(), head + writeconsole_int_va);
+		std::copy(writeconsole_int_iat.begin(), writeconsole_int_iat.end(), head + writeconsole_iat_va);
+
+		auto exitprocess_int_iat = BinaryUtilities::range32(base + exitprocess_va);
+		exitprocess_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		std::copy(exitprocess_int_iat.begin(), exitprocess_int_iat.end(), head + exitprocess_int_va);
+		std::copy(exitprocess_int_iat.begin(), exitprocess_int_iat.end(), head + exitprocess_iat_va);
+
+		auto messageboxa_int_iat = BinaryUtilities::range32(base + messageboxa_va);
+		messageboxa_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_iat_va);
+		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_int_va);
+
+
+		// NOTE: format is hint, name
+		// ignoring hint addresses and using only by-name imports for now
+
+		// function name imports
+		auto getstdhandle = BinaryUtilities::range16(0x0000);
+		getstdhandle.append_range(BinaryUtilities::range_string("GetStdHandle")); // from kernel32.dll
+		std::copy(getstdhandle.begin(), getstdhandle.end(), head + getstdhandle_va);
+
+		auto writeconsole = BinaryUtilities::range16(0x0000);
+		writeconsole.append_range(BinaryUtilities::range_string("WriteConsoleA")); // from kernel32.dll
+		std::copy(writeconsole.begin(), writeconsole.end(), head + writeconsole_va);
+
+		auto exitprocess = BinaryUtilities::range16(0x0000);
+		exitprocess.append_range(BinaryUtilities::range_string("ExitProcess")); // from kernel32.dll
+		std::copy(exitprocess.begin(), exitprocess.end(), head + exitprocess_va);
+
+		auto messageboxa = BinaryUtilities::range16(0x0000);
+		messageboxa.append_range(BinaryUtilities::range_string("MessageBoxA")); // from user32.dll
+		std::copy(messageboxa.begin(), messageboxa.end(), head + messageboxa_va);
+
+		
+		// dll name imports
+		const auto kernel32 = BinaryUtilities::range_string("kernel32.dll");
+		std::copy(kernel32.begin(), kernel32.end(), head + kernel32_va);
+
+		const auto user32 = BinaryUtilities::range_string("user32.dll");
+		std::copy(user32.begin(), user32.end(), head + user32_va);
+
+
+		return out;
 	}
 
+	// compile-time ROM strings section
 	byterange PEBuilder::data_section()
 	{
-		// for any compile-time strings to be used 
+		byterange out{};
 
-		// Current String:
+		const auto logo_string = BinaryUtilities::range_string("Haze Optimizing Compiler Executable\n(c) Connor J. Link. All Rights Reserved.\n");
+		PUT(logo_string);
 
-		// Haze Optimizing Compiler Executable
-		// (c) Connor J. Link. All Rights Reserved.
+		const auto output_string = BinaryUtilities::range_string("Program output: ");
+		PUT(output_string);
 
-		return std::vector<std::uint8_t>
-		{
-			0x48, 0x61, 0x7A, 0x65,  0x20, 0x4F, 0x70, 0x74,  0x69, 0x6D, 0x69, 0x7A,  0x69, 0x6E, 0x67, 0x20, 
-			0x43, 0x6F, 0x6D, 0x70,  0x69, 0x6C, 0x65, 0x72,  0x20, 0x45, 0x78, 0x65,  0x63, 0x75, 0x74, 0x61, 
-			0x62, 0x6C, 0x65, 0x0A,  0x28, 0x63, 0x29, 0x20,  0x43, 0x6F, 0x6E, 0x6E,  0x6F, 0x72, 0x20, 0x4A, 
-			0x2E, 0x20, 0x4C, 0x69,  0x6E, 0x6B, 0x2E, 0x20,  0x41, 0x6C, 0x6C, 0x20,  0x52, 0x69, 0x67, 0x68, 
-			0x74, 0x73, 0x20, 0x52,  0x65, 0x73, 0x65, 0x72,  0x76, 0x65, 0x64, 0x2E,
-		};
+		return out;
 	}
 
 

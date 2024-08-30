@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 
+#include <string>
 #include <cstdint>
 
 namespace hz
@@ -13,6 +14,9 @@ namespace hz
 		static byterange range8(std::uint8_t);
 		static byterange range16(std::uint16_t);
 		static byterange range32(std::uint32_t);
+
+	public:
+		static byterange range_string(std::string);
 	};
 
 	inline static const auto pad8 = BinaryUtilities::range8(0x0);
