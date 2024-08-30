@@ -134,18 +134,9 @@ namespace hz
 			PUT(BinaryUtilities::range8(0x6A));
 			PUT(BinaryUtilities::range8(0x00));
 
-			// push length (4 bytes)
+			// push length (1 byte)
 			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(16));
-
-			// push string (output info)
-			//PUT(BinaryUtilities::range8(0x68));
-			//PUT(BinaryUtilities::range32(0x0040304E));
-
-
-			// TODO: convert register integer to ascii!
-			//0:  89 0d ff 13 40 00       mov    DWORD PTR ds : 0x4013ff, ecx
-			//6 : ff 35 ff 13 40 00       push   DWORD PTR ds : 0x4013ff
+			PUT(BinaryUtilities::range8(2));
 
 			// move [0x4013FF], r/m32
 			if (source == X86Builder::EAX)
@@ -164,9 +155,9 @@ namespace hz
 			
 
 			// push [0x4013FF]
-			PUT(BinaryUtilities::range8(0xFF));
-			//PUT(BinaryUtilities::range8(0x68)); // non-dereferencing?
-			PUT(BinaryUtilities::range8(0x35));
+			PUT(BinaryUtilities::range8(0x68)); // non-dereferencing?
+			//PUT(BinaryUtilities::range8(0xFF));
+			//PUT(BinaryUtilities::range8(0x35));
 			PUT(BinaryUtilities::range32(0x004033FF));
 
 

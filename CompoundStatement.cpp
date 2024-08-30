@@ -32,7 +32,10 @@ namespace hz
     {
         for (auto substatement : substatements)
         {
-            substatement->generate();
+            if (substatement != nullptr)
+            {
+                substatement->generate();
+            }
         }
     }
 
@@ -44,15 +47,18 @@ namespace hz
 
         for (auto substatement : substatements)
         {
-            if (auto substatement_optimized = substatement->optimize())
+            if (substatement != nullptr)
             {
-                substatements_optimized.emplace_back(AS_STATEMENT(substatement_optimized));
-                did_optimize = true;
-            }
+                if (auto substatement_optimized = substatement->optimize())
+                {
+                    substatements_optimized.emplace_back(AS_STATEMENT(substatement_optimized));
+                    did_optimize = true;
+                }
 
-            else
-            {
-                substatements_optimized.emplace_back(substatement);
+                else
+                {
+                    substatements_optimized.emplace_back(substatement);
+                }
             }
         }
 

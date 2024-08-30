@@ -222,6 +222,20 @@ namespace hz
 		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		DISCARD consume(TokenType::RPAREN);
 
+		if (!symbol_table.contains(name_token.value))
+		{
+			_error_reporter->post_error(std::format("function `{}` is undefined", name_token.value), name_token);
+			return nullptr;
+		}
+
+		if (auto symbol = symbol_table.at(name_token.value);
+			symbol->ytype() != SymbolType::FUNCTION)
+		{
+			_error_reporter->post_error(std::format("symbol `{}` is a {} but was referenced as a function", 
+				name_token.value, _symbol_map.at(symbol->ytype())), name_token);
+			return nullptr;
+		}
+
 		return new FunctionCallExpression{ name_token.value, std::move(arguments), name_token };
 	}
 
@@ -338,7 +352,15 @@ namespace hz
 
 	Expression* Parser::parse_expression()
 	{
-		return AS_EXPRESSION(parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM)->copy());
+		// parse until the minimum precedence level is reached (so parse everything possible basically)
+		auto infix_expression = parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
+
+		if (infix_expression != nullptr)
+		{
+			return AS_EXPRESSION(infix_expression->copy());
+		}
+
+		return nullptr;
 	}
 
 	Expression* Parser::parse_infix_expression(Expression* left, Precedence min_precedence)

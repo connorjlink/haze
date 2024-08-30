@@ -211,7 +211,12 @@ namespace hz
 		auto expression = parse_expression();
 		DISCARD consume(TokenType::SEMICOLON);
 
-		return new ExpressionStatement{ expression, expression->_token };
+		if (expression != nullptr)
+		{
+			return new ExpressionStatement{ expression, expression->_token };
+		}
+
+		return nullptr;
 	}
 
 	// is_definition controls whether we are a function definition or call
