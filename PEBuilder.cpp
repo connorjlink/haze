@@ -41,82 +41,6 @@ namespace hz
 		return out;
 	}
 
-#define DWORD std::uint32_t
-#define WORD std::uint16_t
-
-	// Helper function to write data into a vector
-	template<typename T>
-	void WriteToVector(std::vector<uint8_t>& vec, const T& data) {
-		const uint8_t* byteData = reinterpret_cast<const uint8_t*>(&data);
-		vec.insert(vec.end(), byteData, byteData + sizeof(T));
-	}
-
-	// Function to calculate the final address of the functions
-	std::vector<DWORD> GetFunctionAddresses(const std::vector<std::pair<std::string, std::vector<std::string>>>& dlls) {
-		std::vector<DWORD> addresses;
-		// For demonstration purposes, this function returns dummy addresses
-		// In practice, you'd need to load the DLL and resolve the function addresses
-
-		DWORD dummyAddress = 0x1000;
-		for (const auto& dll : dlls) {
-			for (const auto& functionName : dll.second) {
-				addresses.push_back(dummyAddress); // Dummy address
-				dummyAddress += 0x10; // Increment dummy address for demonstration
-			}
-		}
-		return addresses;
-	}
-
-	void BuildImportTable(std::vector<uint8_t>& importTable, const std::vector<std::pair<std::string, std::vector<std::string>>>& dlls, std::vector<DWORD>& finalAddresses) {
-		// Define the import directory entry structure
-		struct ImportDescriptor {
-			DWORD Characteristics;
-			DWORD TimeDateStamp;
-			DWORD ForwarderChain;
-			DWORD Name;
-			DWORD FirstThunk;
-		};
-
-		// Define the Import Name Table (INT) and Import Address Table (IAT) structure
-		struct ImportByName {
-			WORD Hint;
-			char Name[1]; // Variable length
-		};
-
-		size_t currentOffset = 0;
-		std::vector<DWORD> addressList = GetFunctionAddresses(dlls);
-
-		// Write the import descriptors
-		for (const auto& dll : dlls) {
-			ImportDescriptor importDescriptor = { 0 };
-			importDescriptor.Name = currentOffset;
-			importDescriptor.FirstThunk = currentOffset + sizeof(ImportDescriptor);
-
-			WriteToVector(importTable, importDescriptor);
-
-			// Write the Import Name Table (INT)
-			for (const auto& functionName : dll.second) {
-				size_t nameLength = functionName.size() + 1;
-				auto importByName = std::unique_ptr<uint8_t[]>(new uint8_t[sizeof(WORD) + nameLength]);
-				auto importByNamePtr = reinterpret_cast<ImportByName*>(importByName.get());
-
-				importByNamePtr->Hint = 0; // Hint is 0 for simplicity
-				std::memcpy(importByNamePtr->Name, functionName.c_str(), nameLength);
-
-				WriteToVector(importTable, *importByNamePtr);
-
-				finalAddresses.push_back(addressList.front());
-				addressList.erase(addressList.begin());
-			}
-
-			currentOffset = importTable.size();
-		}
-
-		// Write an ending import descriptor with all zeros
-		ImportDescriptor endDescriptor = { 0 };
-		WriteToVector(importTable, endDescriptor);
-	}
-
 
 	byterange PEBuilder::make_import_descriptor(std::uint32_t int_pointer, std::uint32_t dll_pointer, std::uint32_t iat_pointer)
 	{
@@ -303,37 +227,6 @@ namespace hz
 			0x5A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x6B, 0x65, 0x72, 0x6E, 0x65, 0x6C, 0x33, 0x32,
 			0x2E, 0x64, 0x6C, 0x6C, 0x00, 0x75, 0x73, 0x65, 0x72, 0x33, 0x32, 0x2E, 0x64, 0x6C, 0x6C, 0x00,
 		};*/
-
-		/*std::vector<std::pair<std::string, std::vector<std::string>>> dlls = {
-			{"kernel32.dll", {"CreateFileA", "ReadFile", "WriteFile"}},
-			{"user32.dll", {"MessageBoxA", "GetMessageA"}}
-		};*/
-
-		//std::vector<std::pair<std::string, std::vector<std::string>>> dlls
-		//{
-		//	{ "kernel32.dll", { "ExitProcess" } },
-		//	{ "user32.dll", { "MessageBoxA" } },
-		//};
-
-		//std::vector<uint8_t> importTable;
-		//std::vector<DWORD> finalAddresses;
-		//BuildImportTable(importTable, dlls, finalAddresses);
-
-		//// Output the import table for verification (for demonstration purposes)
-		//for (auto byte : importTable) {
-		//	std::printf("%02X ", byte);
-		//}
-		//std::printf("\n");
-
-		//// Output final addresses
-		//std::printf("Function Addresses:\n");
-		//for (auto address : finalAddresses) {
-		//	std::printf("%08X\n", address);
-		//}
-
-		//return importTable;
-
-		
 
 		byterange out{};
 		out.resize(0x200);

@@ -27,10 +27,10 @@ namespace hz
 		PUT(BinaryUtilities::range8(0x68));
 		PUT(BinaryUtilities::range32(exit_code));
 
-		// call [0x402068] (ExitProcessA)
+		// call ExitProcessA
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + exitprocess_va));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + exitprocess_iat_va));
 
 		return out;
 	}
@@ -72,7 +72,7 @@ namespace hz
 
 	byterange emit_print(std::uint32_t text_pointer)
 	{
-
+		return {};
 	}
 
 	// done
@@ -99,9 +99,6 @@ namespace hz
 			PUT(BinaryUtilities::range8(0x68));
 			PUT(BinaryUtilities::range32(0x0040304E));
 
-			// TODO: convert register integer to ascii!
-			//PUT(BinaryUtilities::range8(0x50 | source));
-
 			// push esi
 			PUT(BinaryUtilities::range8(0x56));
 
@@ -110,16 +107,19 @@ namespace hz
 			PUT(BinaryUtilities::range8(0x15));
 			PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
 
-			//25 ff 00 00 00          and    eax,0xff
-			//5:  83 c0 30
 
+			// Convert our one? digit to ascii
+
+			// and r/m32, 0xFF
 			PUT(BinaryUtilities::range8(0x81));
-			PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b11, 0b100, source)));
+			//PUT(BinaryUtilities::range8(0xE0));
 			PUT(BinaryUtilities::range8(0xFF));
 			PUT(BinaryUtilities::range8(0x00));
 			PUT(BinaryUtilities::range8(0x00));
 			PUT(BinaryUtilities::range8(0x00));
 
+			// add r/m32, imm8
 			PUT(BinaryUtilities::range8(0x83));
 			PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
 			PUT(BinaryUtilities::range8(0x30));
@@ -134,16 +134,41 @@ namespace hz
 			PUT(BinaryUtilities::range8(0x6A));
 			PUT(BinaryUtilities::range8(0x00));
 
-			// push length (15 bytes)
+			// push length (4 bytes)
 			PUT(BinaryUtilities::range8(0x6A));
 			PUT(BinaryUtilities::range8(16));
 
 			// push string (output info)
-			PUT(BinaryUtilities::range8(0x68));
-			PUT(BinaryUtilities::range32(0x0040304E));
+			//PUT(BinaryUtilities::range8(0x68));
+			//PUT(BinaryUtilities::range32(0x0040304E));
+
 
 			// TODO: convert register integer to ascii!
-			//PUT(BinaryUtilities::range8(0x50 | source));
+			//0:  89 0d ff 13 40 00       mov    DWORD PTR ds : 0x4013ff, ecx
+			//6 : ff 35 ff 13 40 00       push   DWORD PTR ds : 0x4013ff
+
+			// move [0x4013FF], r/m32
+			if (source == X86Builder::EAX)
+			{
+				PUT(BinaryUtilities::range8(0xA3));
+				PUT(BinaryUtilities::range32(0x004033FF));
+			}
+
+			else
+			{
+				PUT(BinaryUtilities::range8(0x89));
+				PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, source, 0b101)));
+				PUT(BinaryUtilities::range32(0x004033FF));
+			}
+
+			
+
+			// push [0x4013FF]
+			PUT(BinaryUtilities::range8(0xFF));
+			//PUT(BinaryUtilities::range8(0x68)); // non-dereferencing?
+			PUT(BinaryUtilities::range8(0x35));
+			PUT(BinaryUtilities::range32(0x004033FF));
+
 
 			// push esi
 			PUT(BinaryUtilities::range8(0x56));
@@ -322,14 +347,14 @@ namespace hz
 		//return build_stop(0);
 
 		// push 0
-		// push 0x403017
-		// push 0x403017
+		// push 0x403000
+		// push 0x403000
 		// push 0
-		// call [0x402070] (MessageBoxA)
+		// call MessageBoxA
 
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(0x6A));
+		/*PUT(BinaryUtilities::range8(0x6A));
 		PUT(BinaryUtilities::range8(0x00));
 
 		PUT(BinaryUtilities::range8(0x68));
@@ -349,7 +374,7 @@ namespace hz
 
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + exitprocess_iat_va));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + messageboxa_iat_va));*/
 
 		// old exit process proc address
 		/*PUT(BinaryUtilities::range8(0x70));
@@ -357,7 +382,7 @@ namespace hz
 		PUT(BinaryUtilities::range8(0x40));
 		PUT(BinaryUtilities::range8(0x00));*/
 
-		PUT(build_stop(101));
+		PUT(build_stop(201));
 
 		return out;
 	}
