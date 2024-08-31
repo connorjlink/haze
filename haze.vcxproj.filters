@@ -284,6 +284,9 @@
     <ClCompile Include="ExitStatement.cpp">
       <Filter>Source Files\Statement</Filter>
     </ClCompile>
+    <ClCompile Include="Linker.cpp">
+      <Filter>Source Files\Linker</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">

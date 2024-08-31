@@ -4,10 +4,11 @@
 #include "Command.h"
 #include "Context.h"
 
+// Haze DotDefineCommand.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
-
-
 	class DotDefineCommand : public Command
 	{
 	private:
@@ -22,7 +23,6 @@ namespace hz
 
 	public:
 		virtual CommandType ctype() const final override;
-		virtual std::string string() const final override;
 		virtual DotDefineCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Command* optimize() final override;

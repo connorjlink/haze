@@ -4,6 +4,9 @@
 #include "Statement.h"
 #include "Expression.h"
 
+// Haze ExpressionStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class ExpressionStatement : public Statement
@@ -19,7 +22,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual ExpressionStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

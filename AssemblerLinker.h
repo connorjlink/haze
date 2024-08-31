@@ -3,11 +3,12 @@
 
 #include "Linker.h"
 #include "AssemblerParser.h"
-#include "Command.h"
 #include "InstructionCommand.h"
-#include "Log.h"
 
 #include <format>
+
+// Haze AssemblerLinker.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

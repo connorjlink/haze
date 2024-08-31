@@ -1,7 +1,10 @@
 #include "JobManager.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
+
+// Haze JobManager.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -23,14 +26,14 @@ namespace hz
 			}
 		}
 
-		Log::error(std::format("job id {} is undefined and cannot be stopped", uuid));
+		_error_reporter->post_error(std::format("job id {} is undefined and cannot be stopped", uuid), NULL_TOKEN);
 	}
 
 	void JobManager::log() const
 	{
 		for (auto& job : _jobs)
 		{
-			Log::info(job.format());
+			_error_reporter->post_information(job.format(), NULL_TOKEN);
 		}
 	}
 }

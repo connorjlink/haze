@@ -5,6 +5,9 @@
 #include <vector>
 #include <ranges>
 
+// Haze CommandLineParser.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace
 {
 	std::vector<std::string> split(std::string text, const std::string& delimiter)
@@ -85,13 +88,13 @@ namespace hz
 
 					case VERBOSITY:
 					{
-						if (!_verbosity_map.contains(value))
+						if (!_verbosity__type_map.contains(value))
 						{
 							_error_reporter->post_warning(std::format("unrecognized verbosity type {}", value), NULL_TOKEN);
 							continue;
 						}
 
-						_options->_verbosity = _verbosity_map.at(value);
+						_options->_verbosity = _verbosity__type_map.at(value);
 					} break;
 
 					case EXECUTION:

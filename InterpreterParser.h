@@ -3,10 +3,14 @@
 
 #include "CompilerParser.h"
 
-#include "Intrinsic.h"
+// Haze InterpreterParser.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	class Node;
+	class Intrinsic;
+
 	class InterpreterParser : public CompilerParser
 	{
 	private:

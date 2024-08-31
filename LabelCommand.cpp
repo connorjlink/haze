@@ -1,19 +1,14 @@
 #include "LabelCommand.h"
+#include "ErrorReporter.h"
 
-#include "Log.h"
-
-#include <format>
+// Haze LabelCommand.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	CommandType LabelCommand::ctype() const
 	{
 		return CommandType::LABEL;
-	}
-
-	std::string LabelCommand::string() const
-	{
-		return std::format("LabelCommand ({})", identifier);
 	}
 
 	LabelCommand* LabelCommand::copy() const
@@ -23,16 +18,18 @@ namespace hz
 
 	void LabelCommand::generate(Allocation*)
 	{
-		Log::error("invalid generate() for type `LabelCommand`");
+		_error_reporter->post_error("unsupported compiler command type `label`", _token);
 	}
 
 	LabelCommand* LabelCommand::optimize()
 	{
+		// No optimizations possible for a label command
 		return nullptr;
 	}
 
-	Node* LabelCommand::evaluate(Context* context) const
+	Node* LabelCommand::evaluate(Context*) const
 	{
-		Log::error("Label assembly commands cannot be evaluated in an interpreted context");
+		_error_reporter->post_error("unsupported interpreter command type `label`", _token);
+		return nullptr;
 	}
 }

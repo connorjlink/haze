@@ -1,20 +1,16 @@
 #include "ExpressionStatement.h"
-#include "Utility.h"
 #include "Allocation.h"
 
 #include <format>
+
+// Haze ExpressionStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType ExpressionStatement::stype() const
 	{
 		return StatementType::EXPRESSION;
-	}
-
-	std::string ExpressionStatement::string() const
-	{
-		return std::format("expression statement ({})", 
-			expression->string());
 	}
 
 	ExpressionStatement* ExpressionStatement::copy() const

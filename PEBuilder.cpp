@@ -1,11 +1,10 @@
 #include "PEBuilder.h"
 #include "X86Emitter.h"
 #include "BinaryUtilities.h"
-#include "ErrorReporter.h"
 #include "BinaryConstants.h"
+#include "ErrorReporter.h"
 
 #include <fstream>
-#include <memory>
 
 // Haze PEBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.

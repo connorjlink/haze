@@ -3,6 +3,9 @@
 
 #include <format>
 
+// Haze FileManager.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	void FileManager::open_file(const std::string& filepath)

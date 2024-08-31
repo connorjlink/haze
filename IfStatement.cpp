@@ -1,24 +1,21 @@
 #include "IfStatement.h"
 #include "IntegerLiteralExpression.h"
 #include "Allocation.h"
-#include "Allocator.h"
-#include "Utility.h"
 #include "Evaluator.h"
-#include "Log.h"
+#include "Generator.h"
+#include "RandomUtility.h"
+#include "ErrorReporter.h"
 
 #include <format>
+
+// Haze IfStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType IfStatement::stype() const
 	{
 		return StatementType::IF;
-	}
-
-	std::string IfStatement::string() const
-	{
-		return std::format("if statement ({}) \n[\n{}\n]\n else \n[\n{}\n]\n",
-			condition->string(), if_body->string(), else_body ? else_body->string() : "");
 	}
 
 	IfStatement* IfStatement::copy() const
@@ -123,7 +120,8 @@ namespace hz
 
 		if (AS_EXPRESSION(condition_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			Log::error("'if' statement conditions must evaluate to an integer");
+			_error_reporter->post_error("`if` statement conditions must result in an r-value", condition_evaluated->_token);
+			return nullptr;
 		}
 
 		if (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)

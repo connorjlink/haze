@@ -2,20 +2,17 @@
 #include "Allocation.h"
 #include "Constants.h"
 #include "ErrorReporter.h"
-#include "Log.h"
 
 #include <format>
+
+// Haze IntegerLiteralExpression.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
     ExpressionType IntegerLiteralExpression::etype() const
     {
         return ExpressionType::INTEGER_LITERAL;
-    }
-
-    std::string IntegerLiteralExpression::string() const
-    {
-        return std::format("integer literal ({})", value);
     }
 
     IntegerLiteralExpression* IntegerLiteralExpression::copy() const
@@ -27,7 +24,7 @@ namespace hz
     {
         if (value > WORD_MAX - 1)
         {
-            _error_reporter->post_warning(std::format("integer literal {} out of range", value), NULL_TOKEN);
+            _error_reporter->post_warning(std::format("integer literal {} out of range", value), _token);
         }
 
         allocation->write(static_cast<std::uint8_t>(value));

@@ -3,8 +3,8 @@
 
 #include "Linker.h"
 
-#include <vector>
-#include <cstdint>
+// Haze CompilerLinker.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

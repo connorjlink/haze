@@ -2,8 +2,10 @@
 #define HAZE_EXPRESSION_H
 
 #include "Node.h"
-
 #include "ExpressionType.h"
+
+// Haze ExpressionType.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -24,4 +26,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_EXPRESSION_H
+#endif

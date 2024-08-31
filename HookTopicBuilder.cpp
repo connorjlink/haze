@@ -1,6 +1,10 @@
 #include "HookTopicBuilder.h"
+#include "ErrorReporter.h"
 
 #include <format>
+
+// Haze HookTopicBuilder.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -12,7 +16,11 @@ namespace hz
 			case HAZE: return "haze";
 			case GEO: return "geo";
 
-			default: Log::error("Invalid project type");
+			default:
+			{
+				_error_reporter->post_error("invalid project type", NULL_TOKEN);
+				return "ERROR";
+			} break;
 		}
 	}
 
@@ -30,7 +38,11 @@ namespace hz
 			case ENGINE: return "engine";
 			case FRONTEND: return "frontend";
 
-			default: Log::error("Invalid namespace type");
+			default:
+			{
+				_error_reporter->post_error("invalid namespace type", NULL_TOKEN);
+				return "ERROR";
+			} break;
 		}
 	}
 
@@ -49,7 +61,11 @@ namespace hz
 			// common
 			case HEALTH: return "health";
 
-			default: Log::error("Invalid datapoint type");
+			default:
+			{
+				_error_reporter->post_error("invalid datapoint type", NULL_TOKEN);
+				return "ERROR";
+			} break;
 		}
 	}
 
@@ -62,7 +78,11 @@ namespace hz
 			case SET: return "set";
 			case BROADCAST: return "broadcast";
 
-			default: Log::error("Invalid operation type");
+			default:
+			{
+				_error_reporter->post_error("invalid operation type", NULL_TOKEN);
+				return "ERROR";
+			} break;
 		}
 	}
 

@@ -3,6 +3,9 @@
 
 #include "Expression.h"
 
+// Haze StringExpression.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class StringExpression : public Expression
@@ -11,14 +14,13 @@ namespace hz
 		std::string message;
 
 	public:
-		StringExpression(std::string message, Token token)
-			: Expression{ token }, message{ std::move(message) }
+		StringExpression(const std::string& message, Token token)
+			: Expression{ token }, message{ message }
 		{
 		}
 		
 	public:
 		virtual ExpressionType etype() const final override;
-		virtual std::string string() const final override;
 		virtual StringExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;

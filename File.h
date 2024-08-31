@@ -1,9 +1,12 @@
 #ifndef HAZE_FILE_H
 #define HAZE_FILE_H
 
+#include "ToolchainType.h"
+
 #include <string>
 
-#include "ToolchainType.h"
+// Haze File.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

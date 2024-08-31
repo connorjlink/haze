@@ -78,7 +78,8 @@ namespace hz
 				NULL_TOKEN,
 			};
 
-			result.append(std::format("${:04X}: {}\n", HALF_DWORD_MAX + i, instruction.string()));
+#pragma message("TODO: fix instruction disassembly")
+			//result.append(std::format("${:04X}: {}\n", HALF_DWORD_MAX + i, instruction.string()));
 		}
 
 		return result;

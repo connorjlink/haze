@@ -5,7 +5,7 @@
 #include "Allocator.h"
 #include "Allocation.h"
 #include "Evaluator.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
 
@@ -19,11 +19,6 @@ namespace hz
 		return ExpressionType::IDENTIFIER;
 	}
 
-	std::string IdentifierExpression::string() const
-	{
-		return std::format("identifier ({})", name);
-	}
-
 	IdentifierExpression* IdentifierExpression::copy() const
 	{
 		return new IdentifierExpression{ *this };
@@ -31,26 +26,26 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		auto type = _parser->query_symbol_type(name, NULL_TOKEN);
+		auto type = _parser->query_symbol_type(name, _token);
 
 		using enum SymbolType;
 		switch (type)
 		{
 			case SymbolType::VARIABLE:
 			{
-				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN));
+				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, _token));
 				allocation->copy(variable_symbol->allocation);
 			} break;
 
 			case SymbolType::ARGUMENT:
 			{
-				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, NULL_TOKEN));
+				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, _token));
 				allocation->copy(argument_symbol->allocation);
 			} break;
 
 			default:
 			{
-				_error_reporter->post_error("invalid symbol type for identifier", NULL_TOKEN);
+				_error_reporter->post_error("invalid identifier symbol type", _token);
 			} break;
 		}
 	}
@@ -69,6 +64,7 @@ namespace hz
 			return unharvest(value);
 		}
 
-		Log::error(std::format("identifier {} is undefined and cannot be evaluated", name));
+		_error_reporter->post_error(std::format("identifier `{}` is undefined", name), _token);
+		return nullptr;
 	}
 }

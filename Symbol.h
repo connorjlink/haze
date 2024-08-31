@@ -4,8 +4,6 @@
 #include "SymbolType.h"
 #include "Function.h"
 
-#include <string>
-
 namespace hz
 {
 	class Allocation;
@@ -15,11 +13,11 @@ namespace hz
 	public:
 		std::string name;
 		bool was_referenced;
-		ReturnType type;
+		TypeSpecifier type;
 
 	public:
 		Symbol(std::string name)
-			: name{ std::move(name) }, was_referenced{ false }, type{ ReturnType::BYTE }
+			: name{ std::move(name) }, was_referenced{ false }, type{ TypeSpecifier::BYTE }
 		{
 		}
 
@@ -33,11 +31,11 @@ namespace hz
 		std::uint32_t entrypoint;
 
 	public:
-		ReturnType return_type;
+		TypeSpecifier return_type;
 		std::uint8_t arity;
 
 	public:
-		FunctionSymbol(std::string name, ReturnType return_type = static_cast<ReturnType>(0))
+		FunctionSymbol(std::string name, TypeSpecifier return_type = static_cast<TypeSpecifier>(0))
 			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arity{ 0 }
 		{
 		}

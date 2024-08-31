@@ -1,18 +1,17 @@
 #include "NullStatement.h"
+#include "InstructionEncoding.h"
 #include "Generator.h"
 
 #include <format>
+
+// Haze NullStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType NullStatement::stype() const
 	{
 		return StatementType::NONE;
-	}
-
-	std::string NullStatement::string() const
-	{
-		return std::format("null statement");
 	}
 
 	NullStatement* NullStatement::copy() const

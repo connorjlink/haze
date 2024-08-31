@@ -2,11 +2,9 @@
 #include "X86Builder.h"
 #include "PEBuilder.h"
 #include "BinaryConstants.h"
+#include "BinaryUtilities.h"
+#include "InstructionCommand.h"
 #include "ErrorReporter.h"
-#include "Log.h"
-
-#include <windows.h>
-#include <format>
 
 // Haze X86Emitter.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -410,7 +408,18 @@ namespace hz
 
 		// push STD_OUTPUT_HANDLE
 		PUT(BinaryUtilities::range8(0x68));
+
+
+		// NOTE: this is some hackery so we can avoid including <windows.h> 
+		// since it is a MASSIVE header file and we really don't need anything from it.
+		// See the following link for more info:
+		// https://learn.microsoft.com/en-us/windows/console/getstdhandle
+#define DWORD std::uint32_t
+#define STD_OUTPUT_HANDLE ((DWORD)-11)
 		PUT(BinaryUtilities::range32(STD_OUTPUT_HANDLE));
+#undef STD_OUTPUT_HANDLE
+#undef DWORD
+
 
 		// call GetStdHandle
 		PUT(BinaryUtilities::range8(0xFF));

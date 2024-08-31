@@ -1,7 +1,8 @@
 #include "InterpreterParser.h"
+#include "IntegerLiteralExpression.h"
+#include "IdentifierExpression.h"
 #include "ColorIntrinsic.h"
-#include "Utility.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
 

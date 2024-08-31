@@ -2,12 +2,14 @@
 #define HAZE_PRINTSTATEMENT_H
 
 #include "Statement.h"
-#include "Context.h"
 
-#include <string>
+// Haze PrintStatement.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	class Expression;
+
 	class PrintStatement : public Statement
 	{
 	private:
@@ -21,7 +23,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual PrintStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

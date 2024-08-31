@@ -1,9 +1,12 @@
 #ifndef HAZE_JOBMANAGER_H
 #define HAZE_JOBMANAGER_H
 
+#include "Job.h"
+
 #include <vector>
 
-#include "Job.h"
+// Haze JobManager.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

@@ -1,24 +1,20 @@
 #include "FunctionCallExpression.h"
 #include "Parser.h"
-#include "Allocator.h"
 #include "Allocation.h"
-#include "Utility.h"
+#include "Generator.h"
 #include "Evaluator.h"
 #include "ErrorReporter.h"
-#include "Log.h"
 
 #include <format>
+
+// Haze FunctionCallExpression.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	ExpressionType FunctionCallExpression::etype() const
 	{
 		return ExpressionType::FUNCTION_CALL;
-	}
-
-	std::string FunctionCallExpression::string() const
-	{
-		return std::format("function call ({})", name);
 	}
 
 	FunctionCallExpression* FunctionCallExpression::copy() const
@@ -28,14 +24,14 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN, true));
+		auto symbol = AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, name, _token, true));
 
 		const auto defined_arity = symbol->arity;
 		const auto called_arity = arguments.size();
 
 		if (defined_arity != called_arity)
 		{
-			_error_reporter->post_error(std::format("function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), NULL_TOKEN);
+			_error_reporter->post_error(std::format("function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), _token);
 			return;
 		}
 
@@ -75,7 +71,7 @@ namespace hz
 
 			if (argument_evaluated->ntype() != NodeType::EXPRESSION)
 			{
-				Log::error("Function call arguments must evaluate to a single expression");
+				_error_reporter->post_error("function call arguments must evaluate to an r-value", argument->_token);
 			}
 
 			arguments_evaluated.emplace_back(AS_EXPRESSION(argument_evaluated));
@@ -93,6 +89,7 @@ namespace hz
 			}
 		}
 
-		Log::error(std::format("function {} is undefined and cannot be called", name));
+		_error_reporter->post_error(std::format("function `{}` is undefined", name), _token);
+		return nullptr;
 	}
 }

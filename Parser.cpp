@@ -8,8 +8,11 @@
 #include "IntegerLiteralExpression.h"
 #include "IdentifierExpression.h"
 #include "FunctionCallExpression.h"
+#include "AdjustExpression.h"
+#include "StringExpression.h"
 #include "BinaryExpression.h"
 #include "DotDefineCommand.h"
+#include "ErrorReporter.h"
 
 #include <format>
 
@@ -25,6 +28,18 @@ namespace
 
 namespace hz
 {
+	Parser::Parser(const std::vector<Token>& tokens, const std::string& filepath)
+		: cursor{ 0 }, tokens{ tokens }
+	{
+		_error_reporter->open_context(filepath, "parsing");
+	}
+
+	Parser::~Parser()
+	{
+		_error_reporter->close_context();
+	}
+
+
 	void Parser::add_symbol(SymbolType type, std::string name, Token& location)
 	{
 		// does the symbol already exist in the registry?
@@ -138,7 +153,7 @@ namespace hz
 			}
 
 			_error_reporter->post_error("invalid token", current);
-			return std::string{ "[error]" };
+			return std::string_view{ "[error]" };
 		};
 
 		_error_reporter->post_error(std::format("expected token `{}` but got `{}`", 
@@ -172,7 +187,7 @@ namespace hz
 
 		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("definitions must evaluate to a constant expression");
+			_error_reporter->post_error("definitions must result in a constant expression", value_expression->_token);
 			return nullptr;
 		}
 

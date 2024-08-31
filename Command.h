@@ -2,8 +2,10 @@
 #define HAZE_COMMAND_H
 
 #include "Node.h"
-
 #include "CommandType.h"
+
+// Haze Command.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

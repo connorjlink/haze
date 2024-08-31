@@ -2,9 +2,7 @@
 #define HAZE_RETURNSTATEMENT_H
 
 #include "Statement.h"
-#include "Function.h"
 #include "Expression.h"
-#include "Context.h"
 
 // Haze ReturnStatement.h
 // (c) Connor J. Link. All Rights Reserved.

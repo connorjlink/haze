@@ -3,6 +3,9 @@
 
 #include "Emitter.h"
 
+// Haze X86Emitter.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class X86Emitter : public Emitter

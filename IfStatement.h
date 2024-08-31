@@ -4,6 +4,9 @@
 #include "Expression.h"
 #include "Statement.h"
 
+// Haze IfStatement.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class IfStatement : public Statement
@@ -21,7 +24,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual IfStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

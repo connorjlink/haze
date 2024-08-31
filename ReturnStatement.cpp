@@ -1,13 +1,11 @@
 ﻿#include "ReturnStatement.h"
 #include "Function.h"
-#include "IntegerLiteralExpression.h"
 #include "Parser.h"
 #include "Allocation.h"
-#include "Allocator.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "IntegerLiteralExpression.h"
 #include "ErrorReporter.h"
-#include "Log.h"
 
 // Haze ReturnStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -28,7 +26,7 @@ namespace hz
 	{
 		if (value == nullptr)
 		{
-			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type != ReturnType::NVR)
+			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type != TypeSpecifier::NVR)
 			{
 				_error_reporter->post_error("no return value was specified for a non-`nvr` function", _token);
 				return;

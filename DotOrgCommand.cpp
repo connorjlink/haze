@@ -1,18 +1,14 @@
 #include "DotOrgCommand.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
-#include <format>
+// Haze DotOrgCommand.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	CommandType DotOrgCommand::ctype() const
 	{
 		return CommandType::DOTORG;
-	}
-
-	std::string DotOrgCommand::string() const
-	{
-		return std::format(".org command {:04X}", address);
 	}
 
 	DotOrgCommand* DotOrgCommand::copy() const
@@ -22,7 +18,7 @@ namespace hz
 
 	void DotOrgCommand::generate(Allocation*)
 	{
-		//TODO: nothing to do here??
+		_error_reporter->post_error("unsupported compiler command type `.org`", _token);
 	}
 
 	DotOrgCommand* DotOrgCommand::optimize()
@@ -32,6 +28,7 @@ namespace hz
 
 	Node* DotOrgCommand::evaluate(Context* context) const
 	{
-		Log::error(".org assembly directives cannot be evaluated in an interpreted context");
+		_error_reporter->post_error("unsupported interpreter command type `.org`", _token);
+		return nullptr;
 	}
 }

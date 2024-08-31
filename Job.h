@@ -6,6 +6,9 @@
 
 #include <cstdint>
 
+// Haze Job.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Job

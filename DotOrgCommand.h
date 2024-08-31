@@ -3,6 +3,9 @@
 
 #include "Command.h"
 
+// Haze DotOrgCommand.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class DotOrgCommand : public Command
@@ -18,7 +21,6 @@ namespace hz
 
 	public:
 		virtual CommandType ctype() const final override;
-		virtual std::string string() const final override;
 		virtual DotOrgCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual DotOrgCommand* optimize() final override;

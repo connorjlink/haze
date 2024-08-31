@@ -6,6 +6,9 @@
 #include <string>
 #include <unordered_map>
 
+// Haze FileManager.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class FileManager
@@ -14,18 +17,20 @@ namespace hz
 		std::unordered_map<std::string, File> _files;
 
 	public:
+		std::string _current_file;
+
+	public:
 		void open_file(const std::string&);
 		File& get_file(const std::string&);
 
 	public:
 		FileManager()
+			: _files{}, _current_file{ "" }
 		{
-			_files = {};
 		}
 	};
 
 	extern FileManager* _file_manager;
-	extern std::string _current_file;
 }
 
 #endif 

@@ -4,6 +4,9 @@
 #include "HookTopicBuilder.h"
 #include "HookClient.h"
 
+// Haze Hook.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Hook

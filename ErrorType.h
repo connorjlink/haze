@@ -1,8 +1,8 @@
 #ifndef HAZE_ERRORTYPE_H
 #define HAZE_ERRORTYPE_H
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 // Haze ErrorType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -20,7 +20,7 @@ namespace hz
 		UNCORRECTABLE,
 	};
 
-	static const std::unordered_map<ErrorType, std::string> _severity_map
+	static const std::unordered_map<ErrorType, std::string> _error_type_map
 	{
 		{ ErrorType::OUTPUT, "output" },
 		{ ErrorType::INFORMATION, "information" },

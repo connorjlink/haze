@@ -1,6 +1,7 @@
 #ifndef HAZE_FUNCTION_H
 #define HAZE_FUNCTION_H
 
+#include "Node.h"
 #include "TypeSpecifier.h"
 
 #include <string>
@@ -11,6 +12,7 @@
 
 namespace hz
 {
+    class Expression;
     class Statement;
 
     class Function : public Node

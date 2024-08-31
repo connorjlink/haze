@@ -2,6 +2,10 @@
 #define HAZE_ASSEMBLERPARSER_H
 
 #include "Parser.h"
+#include "InstructionEncoding.h"
+
+// Haze AssemblerParser.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

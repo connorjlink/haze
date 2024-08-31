@@ -2,30 +2,28 @@
 #define HAZE_PARSER_H
 
 #include "Token.h"
-#include "Symbol.h"
-#include "Expression.h"
-#include "IdentifierExpression.h"
-#include "IntegerLiteralExpression.h"
-#include "StringExpression.h"
-#include "FunctionCallExpression.h"
-#include "AdjustExpression.h"
-#include "ErrorReporter.h"
-#include "Statement.h"
-#include "Node.h"
-#include "Function.h"
-#include "InstructionCommand.h"
 #include "ParserType.h"
 
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <cstdlib>
 
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	class Symbol;
+	class Node;
+	class Expression;
+	class IdentifierExpression;
+	class IntegerLiteralExpression;
+	class StringExpression;
+	class FunctionCallExpression;
+	class AdjustExpression;
+
+	enum class SymbolType;
+
 	class Parser
 	{
 	protected:
@@ -88,16 +86,8 @@ namespace hz
 		virtual std::vector<Node*> parse() = 0;
 
 	public:
-		Parser(const std::vector<Token>& tokens, const std::string& filepath)
-			: cursor{ 0 }, tokens{ tokens }
-		{
-			_error_reporter->open_context(filepath, "parsing");
-		}
-
-		~Parser()
-		{
-			_error_reporter->close_context();
-		}
+		Parser(const std::vector<Token>&, const std::string&);
+		virtual ~Parser();
 	};
 
 	extern Parser* _parser;

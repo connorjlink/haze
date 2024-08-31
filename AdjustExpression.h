@@ -3,6 +3,9 @@
 
 #include "Expression.h"
 
+// Haze AdjustExpression.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class AdjustExpression : public Expression
@@ -20,7 +23,6 @@ namespace hz
 
 	public:
 		virtual ExpressionType etype() const final override;
-		virtual std::string string() const final override;
 		virtual AdjustExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;

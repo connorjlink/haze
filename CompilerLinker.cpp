@@ -2,10 +2,12 @@
 #include "Command.h"
 #include "InstructionCommand.h"
 #include "LabelCommand.h"
-#include "Utility.h"
 #include "Emitter.h"
 #include "CommandLineOptions.h"
-#include "Log.h"
+#include "ErrorReporter.h"
+
+// Haze CompilerLinker.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace 
 {
@@ -44,7 +46,7 @@ namespace
 	}
 
 
-	std::size_t resolve_instruction_length(InstructionCommand* instruction)
+	std::uint32_t resolve_instruction_length(InstructionCommand* instruction)
 	{
 		std::size_t length = 0;
 		
@@ -69,7 +71,8 @@ namespace
 			case STOP: length = _emitter->emit_stop().size(); break;
 		}
 
-		return length;
+		// explicit narrowing conversion to avoid nuisance warning
+		return static_cast<std::uint32_t>(length);
 	}
 
 
@@ -186,7 +189,7 @@ namespace hz
 	{
 		std::vector<InstructionCommand*> executable{};
 
-		std::size_t address_tracker = 0;
+		std::uint32_t address_tracker = 0;
 
 		// resolve the length of each instruction to compute each label's address
 		for (auto& [symbol, function, offset] : linkables)

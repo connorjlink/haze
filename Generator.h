@@ -2,11 +2,7 @@
 #define HAZE_GENERATOR_H
 
 #include "Linkable.h"
-#include "ErrorReporter.h"
-
-#include <string>
-#include <vector>
-#include <cstdint>
+#include "InstructionEncoding.h"
 
 // Haze Generator.h
 // (c) Connor J. Link. All Rights Reserved.

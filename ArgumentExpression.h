@@ -4,18 +4,21 @@
 #include "Expression.h"
 #include "IdentifierExpression.h"
 
+// Haze ArgumentExpression.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
-	enum class ReturnType;
+	enum class TypeSpecifier;
 
 	class ArgumentExpression : public Expression
 	{
 	public:
-		ReturnType type_specifier;
+		TypeSpecifier type_specifier;
 		IdentifierExpression* identifier;
 
 	public:
-		ArgumentExpression(ReturnType type_specifier, IdentifierExpression* identifier, Token token)
+		ArgumentExpression(TypeSpecifier type_specifier, IdentifierExpression* identifier, Token token)
 			: Expression{ token }, type_specifier { type_specifier }, identifier{ identifier }
 		{
 		}
@@ -23,7 +26,6 @@ namespace hz
 	public:
 		virtual ExpressionType etype() const final override;
 		virtual ArgumentExpression* copy() const final override;
-		virtual std::string string() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
 		virtual Node* evaluate(Context* context) const final override;

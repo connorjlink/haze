@@ -5,21 +5,6 @@
 // Haze ErrorContext.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace
-{
-	hz::TokenPosition locate(const hz::Token& token)
-	{
-#pragma message("TODO: implement token offsets to find the line and column here")
-		return { 0, 0 };
-	}
-
-	std::string at_line(std::string file, std::int32_t line)
-	{
-#pragma message("TODO: implement getting the contents of a line by index")
-		return "";
-	}
-}
-
 namespace hz
 {
 	std::string ErrorContext::format() const

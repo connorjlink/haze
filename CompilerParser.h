@@ -2,9 +2,15 @@
 #define HAZE_COMPILERPARSER_H
 
 #include "Parser.h"
+#include "TypeSpecifier.h"
+
+// Haze CompilerParser.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+    class Statement;
+
     class CompilerParser : public Parser
     {
     private:
@@ -30,7 +36,7 @@ namespace hz
         Statement* parse_unhook_statement(std::string);
 
     public:
-        ReturnType parse_type_specifier();
+        TypeSpecifier parse_type_specifier();
         std::vector<Expression*> parse_arguments(bool);
 
     public:

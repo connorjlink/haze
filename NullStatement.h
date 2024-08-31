@@ -3,6 +3,9 @@
 
 #include "Statement.h"
 
+// Haze NullStatement.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class NullStatement : public Statement
@@ -15,7 +18,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual NullStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

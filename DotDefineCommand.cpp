@@ -1,18 +1,14 @@
 #include "DotDefineCommand.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
-#include <format>
+// Haze DotDefineCommand.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	CommandType DotDefineCommand::ctype() const
 	{
 		return CommandType::DOTDEFINE;
-	}
-
-	std::string DotDefineCommand::string() const
-	{
-		return std::format(".define command");
 	}
 
 	DotDefineCommand* DotDefineCommand::copy() const
@@ -22,7 +18,7 @@ namespace hz
 
 	void DotDefineCommand::generate(Allocation*)
 	{
-		Log::error(".define commands cannot be generated in a compiled context");
+		_error_reporter->post_error("unsupported compiler command type `.define`", _token);
 	}
 
 	Command* DotDefineCommand::optimize()

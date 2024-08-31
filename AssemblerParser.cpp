@@ -2,14 +2,19 @@
 #include "DotOrgCommand.h"
 #include "LabelCommand.h"
 #include "InstructionCommand.h"
+#include "IdentifierExpression.h"
+#include "IntegerLiteralExpression.h"
 #include "Constants.h"
-#include "Utility.h"
-#include "Log.h"
+#include "ErrorReporter.h"
+#include "SymbolType.h"
 
 #include <format>
 
-#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
-#define ASSERT_IN_RANGE(x, a, b) if (x < a || x > b - 1) Log::error(std::format("value {} is outside the its range [0, {}]", x, b - 1))
+// Haze AssemblerParser.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
+#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) { _error_reporter->post_error("term must result in a constant expression", NULL_TOKEN); return nullptr; }
+#define ASSERT_IN_RANGE(x, a, b) if (x < a || x > b - 1) { _error_reporter->post_error(std::format("value {} is outside the its range [0, {}]", x, b - 1), NULL_TOKEN); return nullptr; }
 
 namespace hz
 {
@@ -29,7 +34,8 @@ namespace hz
 			return it_operand->second;
 		}
 
-		Log::error(std::format("expected a register but got {}", peek().value));
+		_error_reporter->post_error(std::format("expected a register but got {}", peek().value), peek());
+		return static_cast<Register>(0);
 	}
 
 	//TODO: roll this function and parse_immediate() below it into a "nice" macro to reduce code duplication
@@ -311,7 +317,8 @@ namespace hz
 
 			default:
 			{
-				Log::error(std::format("unrecognized instruction mnemonic {}", peek().value));
+				_error_reporter->post_error(std::format("invalid instruction mnemonic `{}`", peek().value), peek());
+				return nullptr;
 			} break;
 		}
 	}

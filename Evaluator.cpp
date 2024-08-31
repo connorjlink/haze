@@ -1,10 +1,13 @@
 #include "Evaluator.h"
 #include "IntegerLiteralExpression.h"
 #include "StringExpression.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
 #include <variant>
+
+// Haze ArgumentExpression.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -28,10 +31,12 @@ namespace hz
 				return { string_expression->message };
 			}
 
-			Log::error("interpreter evaluation data harvesting only accepts literal-type expressions");
+			_error_reporter->post_error(std::format("invalid harvest expression type `{}`", _expression_type_map.at(expression->etype())), NULL_TOKEN);
+			return { (std::uint32_t)-1 };
 		}
 
-		Log::error("interpreter evaluation data harvesting only accepts expressions");
+		_error_reporter->post_error(std::format("invalid harvest node type `{}`", _node_map.at(node->ntype())), NULL_TOKEN);
+		return { (std::uint32_t)-1 };
 	}
 
 	Node* unharvest(variable_t value)
@@ -40,7 +45,12 @@ namespace hz
 		{
 			case 0: return new IntegerLiteralExpression{ std::get<0>(value), NULL_TOKEN };
 			case 1: return new StringExpression{ std::get<1>(value), NULL_TOKEN };
-			default: Log::error(std::format("variable_t type index {} is invalid and cannot be evaluated", value.index()));
+
+			default:
+			{
+				_error_reporter->post_error(std::format("invalid variable type index {}", value.index()), NULL_TOKEN);
+				return nullptr;
+			} break;
 		}
 	}
 

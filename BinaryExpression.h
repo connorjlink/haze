@@ -2,8 +2,10 @@
 #define HAZE_BINARYEXPRESSION_H
 
 #include "Expression.h"
-
 #include "BinaryExpressionType.h"
+
+// Haze BinaryExpression.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -15,7 +17,7 @@ namespace hz
 
 	public:
 		BinaryExpression(Expression* left, Expression* right, Token token)
-			: Expression{ token }, left(left), right(right)
+			: Expression{ token }, left{ left }, right{ right }
 		{
 		}
 
@@ -34,7 +36,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual PlusBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -48,7 +49,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual MinusBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -62,7 +62,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual TimesBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -76,7 +75,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual AssignBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -90,7 +88,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual EqualityBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -104,7 +101,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual InequalityBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -118,7 +114,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual GreaterBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -132,7 +127,6 @@ namespace hz
 
 	public:
 		virtual BinaryExpressionType btype() const final override;
-		virtual std::string string() const final override;
 		virtual LessBinaryExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -140,4 +134,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_BINARYEXPRESSION_H
+#endif

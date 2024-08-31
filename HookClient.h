@@ -6,6 +6,9 @@
 
 #include <mqtt/client.h>
 
+// Haze HookClient.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	enum QoS

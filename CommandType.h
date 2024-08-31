@@ -1,6 +1,9 @@
 #ifndef HAZE_COMMANDTYPE_H
 #define HAZE_COMMANDTYPE_H
 
+// Haze CommandType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 #define AS_COMMAND(x) static_cast<Command*>(x)
 
 #define AS_DOTORG_COMMAND(x) static_cast<DotOrgCommand*>(x)

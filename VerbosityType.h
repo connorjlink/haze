@@ -4,6 +4,9 @@
 #include <string>
 #include <unordered_map>
 
+// Haze VerbosityType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	enum class VerbosityType
@@ -13,7 +16,7 @@ namespace hz
 		VERBOSE,
 	};
 
-	static const std::unordered_map<std::string, VerbosityType> _verbosity_map
+	static const std::unordered_map<std::string, VerbosityType> _verbosity__type_map
 	{
 		{ "quiet", VerbosityType::QUIET },
 		{ "normal", VerbosityType::NORMAL },

@@ -2,31 +2,27 @@
 #define HAZE_EMITTER_H
 
 #include "EmitterType.h"
-#include "InstructionCommand.h"
-#include "ErrorReporter.h"
+#include "InstructionEncoding.h"
 
 #include <string>
 #include <vector>
 #include <cstdint>
 
+// Haze Emitter.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
+	class InstructionCommand;
+
 	class Emitter
 	{
 	protected:
 		std::vector<InstructionCommand*> image;
 
 	public:
-		Emitter(std::vector<InstructionCommand*>&& image, const std::string& filepath)
-			: image{ std::move(image) }
-		{
-			_error_reporter->open_context(filepath, "emitting");
-		}
-
-		virtual ~Emitter()
-		{
-			_error_reporter->close_context();
-		}
+		Emitter(std::vector<InstructionCommand*>&& image, const std::string& filepath);
+		virtual ~Emitter();
 
 	public:
 		virtual std::vector<std::uint8_t> emit_move(Register, Register) = 0;

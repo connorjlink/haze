@@ -1,5 +1,7 @@
 #include "Statement.h"
-#include "Allocator.h"
+
+// Haze Statement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

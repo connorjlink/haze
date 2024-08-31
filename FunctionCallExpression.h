@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+// Haze FunctionCallExpression.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class FunctionCallExpression : public Expression
@@ -15,14 +18,13 @@ namespace hz
 		std::vector<Expression*> arguments;
 
 	public:
-		FunctionCallExpression(std::string name, std::vector<Expression*>&& arguments, Token token)
-			: Expression{ token }, name{ std::move(name) }, arguments{ std::move(arguments) }
+		FunctionCallExpression(const std::string& name, std::vector<Expression*>&& arguments, Token token)
+			: Expression{ token }, name{ name }, arguments{ std::move(arguments) }
 		{
 		}
 
 	public:
 		virtual ExpressionType etype() const final override;
-		virtual std::string string() const final override;
 		virtual FunctionCallExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -30,4 +32,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_FUNCTIONCALLEXPRESSION_H
+#endif

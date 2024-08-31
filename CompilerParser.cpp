@@ -15,9 +15,8 @@
 #include "StringExpression.h"
 #include "ArgumentExpression.h"
 #include "FileManager.h"
-#include "Utility.h"
 #include "CommandLineOptions.h"
-#include "Log.h"
+#include "Symbol.h"
 
 #include <format>
 
@@ -40,13 +39,8 @@ namespace hz
 			case DOTHOOK: return parse_hook_statement(enclosing_function);
 			case DOTUNHOOK: return parse_unhook_statement(enclosing_function);
 
-#pragma message("TODO: better handling of when to try expression statement parsing")
+			// if nothing else worked, try to fall back on parsing any expression followed by a semicolon
 			default: return parse_expression_statement(enclosing_function);
-
-			/*default:
-			{
-				Log::error(std::format("({}) unexpected statement type", peek().line));
-			} break;*/
 		}
 	}
 
@@ -118,7 +112,7 @@ namespace hz
 		consume(TokenType::LBRACE);
 
 		auto assembly = fetch_until(TokenType::RBRACE);
-		auto assembler_parser = new AssemblerParser{ std::move(assembly), _current_file };
+		auto assembler_parser = new AssemblerParser{ std::move(assembly), _file_manager->_current_file };
 		auto commands = assembler_parser->parse();
 
 		consume(TokenType::RBRACE);
@@ -277,18 +271,18 @@ namespace hz
 		return arguments;
 	}
 
-	ReturnType CompilerParser::parse_type_specifier()
+	TypeSpecifier CompilerParser::parse_type_specifier()
 	{
 		const auto current_token = peek();
 
-		if (!_type_map.contains(current_token.type))
+		if (!_type_specifier_map.contains(current_token.type))
 		{
 			_error_reporter->post_error(std::format("unrecognized type specifier `{}`", current_token.value), current_token);
 			consume(current_token.type);
-			return ReturnType::NVR;
+			return TypeSpecifier::NVR;
 		}
 
-		auto type_specifier = _type_map.at(peek().type);
+		auto type_specifier = _type_specifier_map.at(peek().type);
 		consume(peek().type);
 		return type_specifier;
 	}
@@ -313,7 +307,8 @@ namespace hz
 
 
 		// inform the parser of the function argument count (arity)
-		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->arity = arguments.size();
+		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->arity 
+			= static_cast<std::uint8_t>(arguments.size());
 
 
 		auto body = parse_compound_statement(name_token.value);
@@ -339,7 +334,7 @@ namespace hz
 #pragma message("TODO: unordered map for name -> functions")
 		if (auto it = std::find_if(program.begin(), program.end(), [&](auto function)
 			{
-				return (AS_FUNCTION(function)->name == "main");
+				return (AS_FUNCTION_NODE(function)->name == "main");
 			}); it != std::end(program))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
@@ -359,6 +354,7 @@ namespace hz
 			return program;
 		}
 
-		Log::error("no main() function was defined");
+		_error_reporter->post_error("no main() function was defined", NULL_TOKEN);
+		return {};
 	}
 }

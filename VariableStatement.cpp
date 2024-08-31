@@ -1,20 +1,17 @@
 #include "VariableStatement.h"
 #include "Allocator.h"
+#include "Allocation.h"
 #include "Parser.h"
 #include "Evaluator.h"
 
-#include <format>
+// Haze VariableStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType VariableStatement::stype() const
     {
         return StatementType::VARIABLE;
-    }
-
-    std::string VariableStatement::string() const
-    {
-        return std::format("variable declaration ({} = {})", name, value ? value->string() : "undefined");
     }
 
     VariableStatement* VariableStatement::copy() const

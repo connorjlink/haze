@@ -1,5 +1,6 @@
 #include "HazeEmitter.h"
-#include "Log.h"
+#include "InstructionCommand.h"
+#include "ErrorReporter.h"
 
 #include <format>
 

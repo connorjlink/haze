@@ -6,6 +6,8 @@
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Parser.h"
+#include "ErrorReporter.h"
+#include "Statement.h"
 
 #include <format>
 

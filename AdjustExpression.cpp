@@ -4,23 +4,19 @@
 #include "Context.h"
 #include "Evaluator.h"
 #include "Generator.h"
-#include "Allocator.h"
 #include "Allocation.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
+
+// Haze AdjustExpression.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	ExpressionType AdjustExpression::etype() const
 	{
 		return ExpressionType::ADJUST;
-	}
-
-	std::string AdjustExpression::string() const
-	{
-		const auto operation = increment ? "increment" : "decrement";
-		return std::format("{} expression", operation);
 	}
 
 	AdjustExpression* AdjustExpression::copy() const
@@ -91,6 +87,7 @@ namespace hz
 			return integer_literal_expression;
 		}
 
-		Log::error("Adjustment expresion target must be an integer literal or identifier");
+		_error_reporter->post_error("adjustment expression target must result in a modifiable l-value", target->_token);
+		return nullptr;
 	}
 }

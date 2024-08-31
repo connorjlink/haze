@@ -4,6 +4,9 @@
 #include <fstream>
 #include <filesystem>
 
+// Haze File.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	ToolchainType File::ttype() const

@@ -4,23 +4,19 @@
 #include "Allocation.h"
 #include "Allocator.h"
 #include "Evaluator.h"
-#include "Utility.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
 #include <variant>
+
+// Haze ForStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType ForStatement::stype() const
 	{
 		return StatementType::FOR;
-	}
-
-	std::string ForStatement::string() const
-	{
-		return std::format("for statement ({}; {}; {}) \n[\n{}\n]\n", 
-			initialization->string(), condition->string(), expression->string(), body->string());
 	}
 
 	ForStatement* ForStatement::copy() const
@@ -97,7 +93,8 @@ namespace hz
 		if (condition->ntype() == NodeType::EXPRESSION &&
 			condition->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			Log::error("'for' loop conditions must evaluate to an integer");
+			_error_reporter->post_error("`for` loop conditions must result in an r-value", condition_evaluated->_token);
+			return nullptr;
 		}
 
 		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)

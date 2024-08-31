@@ -1,21 +1,17 @@
 #include "PrintStatement.h"
 #include "Expression.h"
-#include "Evaluator.h"
 #include "Allocation.h"
 #include "Generator.h"
+#include "Evaluator.h"
 
-#include <format>
+// Haze PrintStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType PrintStatement::stype() const
 	{
 		return StatementType::PRINT;
-	}
-
-	std::string PrintStatement::string() const
-	{
-		return std::format("print statement");
 	}
 
 	PrintStatement* PrintStatement::copy() const
@@ -41,7 +37,7 @@ namespace hz
 	Node* PrintStatement::evaluate(Context* context) const
 	{
 		const auto value = harvest(message->evaluate(context));
-		context->print(std::format("{}", format(value)));
+		context->print(format(value));
 		return nullptr;
 	}
 }

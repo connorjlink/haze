@@ -29,8 +29,6 @@ ErrorReporter* hz::_error_reporter;
 JobManager* hz::_job_manager;
 FileManager* hz::_file_manager;
 CommandLineOptions* hz::_options;
-std::string hz::_current_file;
-
 //namespace mqtt
 //{
 //	const int message::DFLT_QOS = 0;
@@ -52,16 +50,14 @@ int main(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 
 	_file_manager = new FileManager{};
-	_current_file = "";
-
 	
 	for (auto& filepath : command_line_parser.files())
 	{
 		try
 		{
 			_file_manager->open_file(filepath);
+			_file_manager->_current_file = filepath;
 			const auto& file = _file_manager->get_file(filepath);
-			_current_file = filepath;
 
 			switch (file.ttype())
 			{
@@ -87,7 +83,7 @@ int main(int argc, char** argv)
 			_toolchain->init(filepath);
 		}
 		
-		catch (std::exception)
+		catch (std::exception e)
 		{
 			_toolchain->panic();
 		}

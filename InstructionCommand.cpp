@@ -1,26 +1,10 @@
 #include "InstructionCommand.h"
 #include "Disassembler.h"
 #include "Generator.h"
-#include "Log.h"
-
-#include <array>
-#include <format>
+#include "ErrorReporter.h"
 
 // Haze InstructionCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.
-
-namespace
-{
-	std::array<std::uint8_t, 3> extract(std::uint32_t bytes)
-	{
-		return
-		{
-			static_cast<std::uint8_t>((bytes & 0xFF0000) >> 16),
-			static_cast<std::uint8_t>((bytes & 0xFF00) >> 8),
-			static_cast<std::uint8_t>((bytes & 0xFF) >> 0),
-		};
-	}
-}
 
 namespace hz
 {
@@ -61,14 +45,6 @@ namespace hz
 		return CommandType::INSTRUCTION;
 	}
 
-	std::string InstructionCommand::string() const
-	{
-		const auto data = bytes();
-		const auto bytes = extract(data);
-
-		return std::format("{} ; #{:02X} {:02X} {:02X}", Disassembler::disassemble_instruction(data), bytes[0], bytes[1], bytes[2]);
-	}
-
 	InstructionCommand* InstructionCommand::copy() const
 	{
 		return new InstructionCommand{ *this };
@@ -104,6 +80,7 @@ namespace hz
 
 	Node* InstructionCommand::evaluate(Context* context) const
 	{
-		Log::error("Instruction assembly commands cannot be evaluated in an interpreted context");
+		_error_reporter->post_error("unsupported interpreter command type `instruction`", _token);
+		return nullptr;
 	}
 }

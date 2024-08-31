@@ -3,7 +3,8 @@
 
 #include "Expression.h"
 
-#include <string>
+// Haze IdentifierExpression.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -13,14 +14,13 @@ namespace hz
 		std::string name;
 
 	public:
-		IdentifierExpression(std::string name, Token token)
-			: Expression{ token }, name { std::move(name) }
+		IdentifierExpression(const std::string& name, Token token)
+			: Expression{ token }, name { name }
 		{
 		}
 
 	public:
 		virtual ExpressionType etype() const final override;
-		virtual std::string string() const final override;
 		virtual IdentifierExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;
@@ -28,4 +28,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_IDENTIFIEREXPRESSION_H
+#endif

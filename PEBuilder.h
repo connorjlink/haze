@@ -2,7 +2,6 @@
 #define HAZE_PEBUILDER_H
 
 #include "Constants.h"
-#include "BinaryUtilities.h"
 
 #include <string>
 #include <vector>

@@ -3,6 +3,9 @@
 
 #include "Statement.h"
 
+// Haze HookStatement.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class HookStatement : public Statement
@@ -19,7 +22,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual HookStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

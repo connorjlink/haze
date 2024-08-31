@@ -1,13 +1,14 @@
 #ifndef HAZE_ERRORCONTEXT_H
 #define HAZE_ERRORCONTEXT_H
 
-#include <string>
+#include "Error.h"
+#include "Token.h"
+
 #include <vector>
 #include <cstdlib>
 
-#include "Error.h"
-#include "ErrorType.h"
-#include "Token.h"
+// Haze ErrorContext.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

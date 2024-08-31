@@ -4,6 +4,9 @@
 #include <string>
 #include <unordered_map>
 
+// Haze OptionType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	enum class OptionType

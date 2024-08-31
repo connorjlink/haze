@@ -3,6 +3,9 @@
 #include <format>
 #include <chrono>
 
+// Haze HookClient.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	HookClient::HookClient(const std::string& ip, const std::string& port, const std::string& id)

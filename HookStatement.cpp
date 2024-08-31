@@ -4,17 +4,14 @@
 
 #include <format>
 
+// Haze HookStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	StatementType HookStatement::stype() const
 	{
 		return StatementType::HOOK;
-	}
-
-	std::string HookStatement::string() const
-	{
-		const auto prefix = hook ? "" : "un";
-		return std::format("{}hook statement", prefix);
 	}
 
 	HookStatement* HookStatement::copy() const

@@ -1,8 +1,8 @@
 #ifndef HAZE_X86BUILDER_H
 #define HAZE_X86BUILDER_H
 
-#include "Constants.h"
 #include "InstructionEncoding.h"
+#include "Constants.h"
 
 #include <cstdint>
 

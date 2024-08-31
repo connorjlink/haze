@@ -4,7 +4,8 @@
 #include <string>
 #include <string_view>
 
-#include "Log.h"
+// Haze HookTopicBuilder.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

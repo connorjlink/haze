@@ -6,24 +6,18 @@
 #include "ErrorReporter.h"
 #include "LinkerType.h"
 
-#include <string>
-#include <vector>
 #include <cstdint>
+
+// Haze Linker.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	class Linker
 	{
 	public:
-		Linker(const std::string& filepath)
-		{
-			_error_reporter->open_context(filepath, "linking");
-		}
-
-		virtual ~Linker()
-		{
-			_error_reporter->close_context();
-		}
+		Linker(const std::string&);
+		virtual ~Linker();
 
 	public:
 		virtual LinkerType ltype() const = 0;

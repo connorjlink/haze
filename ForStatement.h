@@ -3,7 +3,9 @@
 
 #include "Statement.h"
 #include "Expression.h"
-#include "Context.h"
+
+// Haze ForStatement.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -23,7 +25,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual ForStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

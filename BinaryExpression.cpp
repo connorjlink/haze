@@ -3,23 +3,22 @@
 #include "StringExpression.h"
 #include "IdentifierExpression.h"
 #include "Allocation.h"
-#include "Allocator.h"
-#include "Log.h"
 #include "Generator.h"
 #include "Evaluator.h"
 #include "ErrorReporter.h"
 
 #include <format>
 
-#define MULTIPLICATION_ERROR do { Log::error("machine code generation is unsupported for runtime multiplication"); } while (0)
+// Haze BinaryExpression.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace
 {
 	using namespace hz;
 
-	void generate_error(std::string context, Token token)
+	void generate_error(std::string op, Token token)
 	{
-		_error_reporter->post_error(std::format("invalid {} in a compiled context", context), token);
+		_error_reporter->post_error(std::format("unsupported compiler binary operator `{}`", op), token);
 	}
 }
 
@@ -64,49 +63,6 @@ namespace hz
 	{
 		return BinaryExpressionType::LESS;
 	}
-
-
-
-	std::string PlusBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} + {})", left->string(), right->string());
-	}
-
-	std::string MinusBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} - {})", left->string(), right->string());
-	}
-
-	std::string TimesBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} * {})", left->string(), right->string());
-	}
-
-	std::string AssignBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} = {})", left->string(), right->string());
-	}
-
-	std::string EqualityBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} == {})", left->string(), right->string());
-	}
-
-	std::string InequalityBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} != {})", left->string(), right->string());
-	}
-
-	std::string GreaterBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} > {})", left->string(), right->string());
-	}
-
-	std::string LessBinaryExpression::string() const
-	{
-		return std::format("binary expression ({} < {})", left->string(), right->string());
-	}
-
 
 
 	PlusBinaryExpression* PlusBinaryExpression::copy() const
@@ -388,7 +344,8 @@ namespace hz
 
 					else
 					{
-						MULTIPLICATION_ERROR;
+						_error_reporter->post_error("unsupported compiler code generation for multiplication", right_optimized->_token);
+						return nullptr;
 					}
 				}
 
@@ -421,7 +378,8 @@ namespace hz
 
 					else
 					{
-						MULTIPLICATION_ERROR;
+						_error_reporter->post_error("unsupported compiler code generation for multiplication", left_optimized->_token);
+						return nullptr;
 					}
 				}
 
@@ -594,7 +552,7 @@ namespace hz
 		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
 			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must evaluate to an integer", _token);
+			_error_reporter->post_error("binary expression operands must result in an integer", _token);
 		}
 
 		return new IntegerLiteralExpression
@@ -612,7 +570,7 @@ namespace hz
 		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
 			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must evaluate to an integer", _token);
+			_error_reporter->post_error("binary expression operands must result in an integer", _token);
 		}
 
 		return new IntegerLiteralExpression
@@ -630,7 +588,7 @@ namespace hz
 		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
 			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must evaluate to an integer", _token);
+			_error_reporter->post_error("binary expression operands must result in an integer", _token);
 		}
 
 		return new IntegerLiteralExpression
@@ -648,7 +606,7 @@ namespace hz
 		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
 			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must evaluate to an integer", _token);
+			_error_reporter->post_error("binary expression operands must result in an integer", _token);
 		}
 
 		return new IntegerLiteralExpression

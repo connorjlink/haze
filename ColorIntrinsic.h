@@ -18,7 +18,6 @@ namespace hz
 
 	public:
 		virtual IntrinsicType itype() const final override;
-		virtual std::string string() const final override;
 		virtual ColorIntrinsic* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Intrinsic* optimize() final override;

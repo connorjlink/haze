@@ -1,7 +1,10 @@
 #include "Job.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <format>
+
+// Haze Job.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -12,7 +15,8 @@ namespace hz
 			return std::chrono::duration_cast<std::chrono::microseconds>(_stop_time - _start_time);
 		}
 
-		Log::error("undefined job duration stop time");
+		_error_reporter->post_error("undefined job duration stop time", NULL_TOKEN);
+		return std::chrono::microseconds{ 0 };
 	}
 
 	void Job::end()

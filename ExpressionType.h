@@ -1,6 +1,12 @@
 #ifndef HAZE_EXPRESSIONTYPE_H
 #define HAZE_EXPRESSIONTYPE_H
 
+#include <string_view>
+#include <unordered_map>
+
+// Haze ExpressionType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 #define AS_EXPRESSION(x) static_cast<Expression*>(x)
 
 #define AS_INTEGER_LITERAL_EXPRESSION(x) static_cast<IntegerLiteralExpression*>(x)
@@ -22,6 +28,17 @@ namespace hz
 		ADJUST,
 		STRING,
 		ARGUMENT,
+	};
+
+	static const std::unordered_map<ExpressionType, std::string_view> _expression_type_map
+	{
+		{ ExpressionType::INTEGER_LITERAL, "integer literal" },
+		{ ExpressionType::IDENTIFIER, "identifier" },
+		{ ExpressionType::FUNCTION_CALL, "function call" },
+		{ ExpressionType::BINARY, "binary" },
+		{ ExpressionType::ADJUST, "adjustment" },
+		{ ExpressionType::STRING, "string" },
+		{ ExpressionType::ARGUMENT, "argument" },
 	};
 }
 

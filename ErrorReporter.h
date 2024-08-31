@@ -1,14 +1,17 @@
 #ifndef HAZE_ERRORREPORTER_H
 #define HAZE_ERRORREPORTER_H
 
+#include "ErrorContext.h"
+#include "Token.h"
+
 #include <string>
 #include <unordered_map>
 #include <utility>
 #include <list>
 #include <stack>
 
-#include "ErrorContext.h"
-#include "Token.h"
+// Haze ErrorReporter.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

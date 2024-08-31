@@ -3,8 +3,10 @@
 
 #include "ErrorType.h"
 
-#include <string>
 #include <cstdint>
+
+// Haze Error.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -26,8 +28,8 @@ namespace hz
 		std::string format() const;
 
 	public:
-		Error(TokenPosition position, std::string erroring_line, std::string message, ErrorType severity)
-			: _position{ position }, _erroring_line { std::move(erroring_line) }, _message{ std::move(message) }, _severity{ severity }
+		Error(TokenPosition position, const std::string& erroring_line, const std::string& message, ErrorType severity)
+			: _position{ position }, _erroring_line { erroring_line }, _message{ message }, _severity{ severity }
 		{
 		}
 	};

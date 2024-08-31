@@ -1,15 +1,13 @@
 #include "ArgumentExpression.h"
 
+// Haze ArgumentExpression.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	ExpressionType ArgumentExpression::etype() const
 	{
 		return ExpressionType::ARGUMENT;
-	}
-
-	std::string ArgumentExpression::string() const
-	{
-		return "argument expression";
 	}
 
 	ArgumentExpression* ArgumentExpression::copy() const
@@ -24,6 +22,7 @@ namespace hz
 
 	Expression* ArgumentExpression::optimize()
 	{
+		// No optimizations possible for an argument expression
 		return nullptr;
 	}
 

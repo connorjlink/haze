@@ -6,6 +6,9 @@
 
 #include <vector>
 
+// Haze InlineAsmStatement.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class AssemblerParser;
@@ -24,7 +27,6 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual InlineAsmStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;

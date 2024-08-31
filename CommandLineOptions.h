@@ -9,6 +9,9 @@
 
 #include <cstdint>
 
+// Haze CommandLineOptions.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	struct CommandLineOptions

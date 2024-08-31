@@ -2,7 +2,6 @@
 #define HAZE_CONSTANTS_H
 
 #include <vector>
-#include <limits>
 #include <cstdint>
 
 // Haze Constants.h

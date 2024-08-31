@@ -1,25 +1,20 @@
 #include "WhileStatement.h"
-
 #include "Allocation.h"
-#include "Allocator.h"
-
-#include "Utility.h"
-#include "Log.h"
+#include "Evaluator.h"
+#include "Generator.h"
+#include "RandomUtility.h"
+#include "ErrorReporter.h"
 
 #include <format>
-#include "Evaluator.h"
+
+// Haze WhileStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType WhileStatement::stype() const
 	{
 		return StatementType::WHILE;
-	}
-
-	std::string WhileStatement::string() const
-	{
-		return std::format("while statement ({}) \n[\n{}\n]\n", 
-			condition->string(), body->string());
 	}
 
 	WhileStatement* WhileStatement::copy() const
@@ -29,9 +24,8 @@ namespace hz
 
 	void WhileStatement::generate(Allocation*)
 	{
-#pragma message("TODO: code generation for while")
 		// we need to force allocate this one :(
-		auto condition_allocation = _allocator->allocate_static(DC, true);
+		ManagedStaticAllocation condition_allocation{ DC, true };
 
 		// 3 digits of randomness for now
 		const auto loop_uuid = hz::generate(3);
@@ -43,13 +37,14 @@ namespace hz
 
 		body->generate();
 
-		condition->generate(condition_allocation);
+		condition->generate(condition_allocation.allocation);
 		
 		// unfortunately our processor's limitation also mean we need to force this mess, too :(
-		auto temp_allocation = _allocator->allocate_static(condition_allocation->reg, true);
+		ManagedStaticAllocation temp{ condition_allocation.allocation->read(), true };
+#pragma message("TODO: code generation for while")
 
 		// TODO: finish while statement codegen here!
-		_generator->make_brnz(start_label, condition_allocation->reg);
+		_generator->make_brnz(start_label, condition_allocation.allocation->read());
 	}
 
 	Statement* WhileStatement::optimize()
@@ -82,13 +77,13 @@ namespace hz
 		
 		if (AS_EXPRESSION(condition_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			Log::error("'while' loop conditions must evaluate to an integer");
+			_error_reporter->post_error("`while` loop conditions must evaluate to an r-value", condition->_token);
+			return nullptr;
 		}
 
 		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
 		{
 			body->evaluate(context);
-
 			condition_evaluated = condition->evaluate(context);
 		}
 

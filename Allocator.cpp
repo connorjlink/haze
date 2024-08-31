@@ -40,7 +40,7 @@ namespace hz
 
 	DynamicAllocation* Allocator::allocate_dynamic(std::uint32_t bytes, bool free)
 	{
-		for (auto i = 0; i < heap_ledger.size(); i++)
+		for (auto i = 0u; i < heap_ledger.size(); i++)
 		{
 			bool available = true;
 			for (auto j = i; j < bytes; j++)

@@ -3,6 +3,9 @@
 
 #include "Emitter.h"
 
+// Haze HazeEmitter.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class HazeEmitter : public Emitter

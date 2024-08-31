@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 
+#include <string>
 #include <array>
 #include <cstdint>
 
