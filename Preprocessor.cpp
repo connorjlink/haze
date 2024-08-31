@@ -1,14 +1,15 @@
 #include "Preprocessor.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 #include <regex>
 #include <fstream>
-#include <sstream>
-#include <iostream>
 #include <cctype>
 #include <format>
 #include <filesystem>
 #include <ranges>
+
+// Haze Preprocessor.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace
 {
@@ -37,7 +38,7 @@ namespace
         }
     }
 
-    constexpr auto ws = " \t\n\r";
+    static constexpr auto ws = " \t\n\r";
 
     // Thanks https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring :)
     // trim from end of string (right)
@@ -74,14 +75,16 @@ namespace hz
 
             if (filepath == parent_filepath)
             {
-                Log::error(std::format("file include recursion of {} is unsupported", filepath));
+                _error_reporter->post_error(std::format("invalid recursive include of `{}`", filepath), NULL_TOKEN);
+                break;
             }
 
             std::ifstream file(filepath);
 
             if (!file.good())
             {
-                Log::error(std::format("could not open file {} for reading", filepath));
+                _error_reporter->post_error(std::format("could not open file `{}` for reading", filepath), NULL_TOKEN);
+                break;
             }
 
             const auto size = std::filesystem::file_size(filepath); //bytes
@@ -115,7 +118,8 @@ namespace hz
                     return (m.name == macro.name);
                 }) != std::end(defined_macros))
             {
-                Log::error(std::format("macro {} is multiply defined", macro.name));
+                _error_reporter->post_error(std::format("invalid duplicate definition of macro {}", macro.name), NULL_TOKEN);
+                break;
             }
 
             defined_macros.emplace_back(macro);
@@ -150,13 +154,15 @@ namespace hz
                     return false;
                 }) == defined_macros.end())
             {
-                Log::error(std::format("macro {} is undefined", macro.name));
+                _error_reporter->post_error(std::format("macro `{}` is undefined", macro.name), NULL_TOKEN);
+                break;
             }
 
             if (defined_macro.args.size() != args_delim.size())
             {
-                Log::error(std::format("invokation of macro {} had {} arguments but expected {}",
-                    defined_macro.name, args_delim.size(), defined_macro.args.size()));
+                _error_reporter->post_error(std::format("macro `{}` was defined with {} arguments but called with {}", 
+                    defined_macro.name, args_delim.size(), defined_macro.args.size()), NULL_TOKEN);
+                break;
             }
 
             if (!args_delim.empty())

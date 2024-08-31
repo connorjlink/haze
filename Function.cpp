@@ -3,28 +3,25 @@
 #include "Allocator.h"
 #include "IdentifierExpression.h"
 #include "ArgumentExpression.h"
-#include "Utility.h"
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Parser.h"
-#include "Log.h"
 
 #include <format>
-#include <cassert>
 
 // Haze Function.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	Function::Function(std::string name, TypeSpecifier return_type, std::vector<Expression*>&& arguments, Statement* body, Token token)
+		: Node{ token }, name{ std::move(name) }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+	{
+	}
+
 	NodeType Function::ntype() const
 	{
 		return NodeType::FUNCTION;
-	}
-
-	std::string Function::string() const
-	{
-		return std::format("function ({}())", name);
 	}
 
 	Function* Function::copy() const
@@ -61,7 +58,7 @@ namespace hz
 
 			_generator->make_pull(static_cast<Register>(arity - i - 1));
 			// NOTE: this will not support recursion for now ;(
-			// all arguments of of ->etype() == ExpressionType::ARGUMENT
+			// all arguments are of ->etype() == ExpressionType::ARGUMENT
 			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
 				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation = new StaticAllocation{ reg, false };
 		}
@@ -103,7 +100,7 @@ namespace hz
 	{
 		if (name == "main")
 		{
-			DISCARD body->evaluate(context);
+			body->evaluate(context);
 			return nullptr;
 		}
 
@@ -111,20 +108,13 @@ namespace hz
 		{
 			const auto arguments_evaluated = context->pop_arguments();
 
-			if (arguments.size() != arguments_evaluated.size())
-			{
-				// NOTE: this theoretically should never fire since we actually check 
-				// the argument count during function call expression parsing
-				Log::error(std::format("Function {} expected {} but got {} during evaluation", name, arguments.size(), arguments_evaluated.size()));
-			}
-
 			for (auto i = 0; i < arguments.size(); i++)
 			{
 				const auto argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
 				context->define_variable(argument_name, harvest(arguments_evaluated[i]));
 			}
 
-			DISCARD body->evaluate(context);
+			body->evaluate(context);
 			return nullptr;
 		}
 	}

@@ -10,10 +10,11 @@
 #include "InterpreterToolchain.h"
 #include "ErrorReporter.h"
 #include "Parser.h"
-//#include "Hook.h"
 
-#include <fstream>
 #include <exception>
+
+// Haze Main.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 using namespace hz;
 
@@ -35,7 +36,6 @@ std::string hz::_current_file;
 //	const int message::DFLT_QOS = 0;
 //	const bool message::DFLT_RETAINED = true;
 //}
-
 
 
 int main(int argc, char** argv)

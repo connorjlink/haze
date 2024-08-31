@@ -1,6 +1,4 @@
-
 function nvr main = ()
 {
-	print(5);
 	return 1;
 }

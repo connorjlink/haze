@@ -9,19 +9,14 @@
 #include "ErrorReporter.h"
 #include "Log.h"
 
-#include <format>
-
+// Haze ReturnStatement.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	StatementType ReturnStatement::stype() const
 	{
 		return StatementType::RETURN;
-	}
-
-	std::string ReturnStatement::string() const
-	{
-		return std::format("return ({})", value->string());
 	}
 
 	ReturnStatement* ReturnStatement::copy() const

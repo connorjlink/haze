@@ -244,12 +244,15 @@ namespace hz
 		const auto writeconsole_descriptor = make_import_descriptor(CALC(writeconsole_int_va), CALC(kernel32_va), CALC(writeconsole_iat_va));
 		const auto exitprocess_descriptor = make_import_descriptor(CALC(exitprocess_int_va), CALC(kernel32_va), CALC(exitprocess_iat_va));
 		const auto messageboxa_descriptor = make_import_descriptor(CALC(messageboxa_int_va), CALC(user32_va), CALC(messageboxa_iat_va));
+		const auto wnsprintfa_descriptor = make_import_descriptor(CALC(wnsprintfa_int_va), CALC(shlwapi_va), CALC(wnsprintfa_iat_va));
+
 
 		std::copy(getstdhandle_descriptor.begin(), getstdhandle_descriptor.end(), head + (length * 0));
 		std::copy(writeconsole_descriptor.begin(), writeconsole_descriptor.end(), head + (length * 1));
 		std::copy(exitprocess_descriptor.begin(), exitprocess_descriptor.end(), head + (length * 2));
 		std::copy(messageboxa_descriptor.begin(), messageboxa_descriptor.end(), head + (length * 3));
-		std::copy(dummy_descriptor.begin(), dummy_descriptor.end(), head + (length * 4));
+		std::copy(wnsprintfa_descriptor.begin(), wnsprintfa_descriptor.end(), head + (length * 4));
+		std::copy(dummy_descriptor.begin(), dummy_descriptor.end(), head + (length * 5));
 
 
 
@@ -270,9 +273,13 @@ namespace hz
 
 		auto messageboxa_int_iat = BinaryUtilities::range32(base + messageboxa_va);
 		messageboxa_int_iat.append_range(BinaryUtilities::range32(0x00000000));
-		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_iat_va);
 		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_int_va);
+		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_iat_va);
 
+		auto wnsprintfa_int_iat = BinaryUtilities::range32(base + wnsprintfa_va);
+		wnsprintfa_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		std::copy(wnsprintfa_int_iat.begin(), wnsprintfa_int_iat.end(), head + wnsprintfa_int_va);
+		std::copy(wnsprintfa_int_iat.begin(), wnsprintfa_int_iat.end(), head + wnsprintfa_iat_va);
 
 		// NOTE: format is hint, name
 		// ignoring hint addresses and using only by-name imports for now
@@ -294,6 +301,10 @@ namespace hz
 		messageboxa.append_range(BinaryUtilities::range_string("MessageBoxA")); // from user32.dll
 		std::copy(messageboxa.begin(), messageboxa.end(), head + messageboxa_va);
 
+		auto wnsprintfa = BinaryUtilities::range16(0x0000);
+		wnsprintfa.append_range(BinaryUtilities::range_string("wnsprintfA")); // from shlwapi.dll
+		std::copy(wnsprintfa.begin(), wnsprintfa.end(), head + wnsprintfa_va);
+		
 		
 		// dll name imports
 		const auto kernel32 = BinaryUtilities::range_string("kernel32.dll");
@@ -301,6 +312,9 @@ namespace hz
 
 		const auto user32 = BinaryUtilities::range_string("user32.dll");
 		std::copy(user32.begin(), user32.end(), head + user32_va);
+
+		const auto shlwapi = BinaryUtilities::range_string("shlwapi.dll");
+		std::copy(shlwapi.begin(), shlwapi.end(), head + shlwapi_va);
 
 
 		return out;
@@ -316,6 +330,9 @@ namespace hz
 
 		const auto output_string = BinaryUtilities::range_string("Program output: ");
 		PUT(output_string);
+
+		const auto format_string = BinaryUtilities::range_string("%d\n");
+		PUT(format_string);
 
 		return out;
 	}

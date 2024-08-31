@@ -1,12 +1,12 @@
 #ifndef HAZE_LEXER_H
 #define HAZE_LEXER_H
 
+#include "Token.h"
+
 #include <string>
 #include <vector>
 
-#include "Token.h"
-
-// Haze Lexer.h
+// Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
@@ -34,4 +34,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_LEXER_H
+#endif

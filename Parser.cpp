@@ -1,39 +1,25 @@
 #include "Parser.h"
-#include "Log.h"
 #include "Token.h"
 #include "Allocator.h"
-#include "Utility.h"
-
 #include "CompilerParser.h"
-
 #include "CompoundStatement.h"
 #include "VariableStatement.h"
 #include "ReturnStatement.h"
-
 #include "IntegerLiteralExpression.h"
 #include "IdentifierExpression.h"
 #include "FunctionCallExpression.h"
 #include "BinaryExpression.h"
-
 #include "DotDefineCommand.h"
 
-#include <iostream>
 #include <format>
-
-#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) Log::error("term must evaluate to a constant expression")
 
 namespace
 {
-	enum
-	{
-		TL_PROGRAM,
-		TL_FUNCTION,
-		TL_STATEMENT,
-	};
+	using namespace hz;
 
-	bool is_binary_operator(hz::TokenType type)
+	bool is_binary_operator(TokenType type)
 	{
-		return hz::_binary_expression_map.contains(type);
+		return _binary_expression_map.contains(type);
 	}
 }
 
@@ -178,12 +164,17 @@ namespace hz
 
 	Node* Parser::parse_dotdefine_command()
 	{
-		DISCARD consume(TokenType::DOTDEFINE);
+		consume(TokenType::DOTDEFINE);
 		const auto identifier_expression = parse_identifier_expression();
-		DISCARD consume(TokenType::EQUALS);
+		consume(TokenType::EQUALS);
 
 		const auto value_expression = parse_expression();
-		ASSERT_IS_INTEGER_LITERAL(value_expression);
+
+		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			_error_reporter->post_error("definitions must evaluate to a constant expression");
+			return nullptr;
+		}
 
 		const auto identifier = identifier_expression->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
@@ -217,10 +208,9 @@ namespace hz
 	{
 		const auto name_token = consume(TokenType::IDENTIFIER);
 
-		DISCARD consume(TokenType::LPAREN);
-		// TODO: verify that we are a compiler or interpreter parser before doing this!
+		consume(TokenType::LPAREN);
 		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
-		DISCARD consume(TokenType::RPAREN);
+		consume(TokenType::RPAREN);
 
 		if (!symbol_table.contains(name_token.value))
 		{
@@ -228,11 +218,21 @@ namespace hz
 			return nullptr;
 		}
 
-		if (auto symbol = symbol_table.at(name_token.value);
-			symbol->ytype() != SymbolType::FUNCTION)
+		auto symbol = symbol_table.at(name_token.value);
+
+		if (symbol->ytype() != SymbolType::FUNCTION)
 		{
 			_error_reporter->post_error(std::format("symbol `{}` is a {} but was referenced as a function", 
 				name_token.value, _symbol_map.at(symbol->ytype())), name_token);
+			return nullptr;
+		}
+
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		if (function_symbol->arity != arguments.size())
+		{
+			_error_reporter->post_error(std::format("function `{}` was defined with {} arguments but called with {}",
+				name_token.value, function_symbol->arity, arguments.size()), name_token);
 			return nullptr;
 		}
 
@@ -241,15 +241,16 @@ namespace hz
 
 	Expression* Parser::parse_parenthesis_expression()
 	{
-		DISCARD consume(TokenType::LPAREN);
+		consume(TokenType::LPAREN);
 		const auto expression = parse_expression();
-		DISCARD consume(TokenType::RPAREN);
+		consume(TokenType::RPAREN);
+
 		return expression;
 	}
 
 	AdjustExpression* Parser::parse_increment_expression()
 	{
-		DISCARD consume(TokenType::TILDE);
+		consume(TokenType::TILDE);
 		
 		if (peek().type == TokenType::IDENTIFIER)
 		{
@@ -263,12 +264,13 @@ namespace hz
 			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
 		}
 
-		Log::error("Increment expresion target must be an integer literal or identifier");
+		_error_reporter->post_error("increment target must evaluate to a modifiable l-value", peek());
+		return nullptr;
 	}
 
 	AdjustExpression* Parser::parse_decrement_expression()
 	{
-		DISCARD consume(TokenType::EXCLAMATION);
+		consume(TokenType::EXCLAMATION);
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
@@ -282,60 +284,57 @@ namespace hz
 			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
 		}
 
-		Log::error("Decrement expresion target must be an integer literal or identifier");
+		_error_reporter->post_error("decrement target must evaluate to a modifiable l-value", peek());
+		return nullptr;
 	}
 
 
 	Expression* Parser::parse_generic_expression()
 	{
-		Expression* expression = nullptr;
-
 		using enum TokenType;
 		switch (peek().type)
 		{
 			case LPAREN:
 			{
-				expression = parse_parenthesis_expression();
+				return parse_parenthesis_expression();
 			} break;
 
 			case INT:
 			{
-				expression = parse_integerliteral_expression();
+				return parse_integerliteral_expression();
 			} break;
 			
 			case STRING:
 			{
-				expression = parse_string_expression();
+				return parse_string_expression();
 			} break;
 
 			case IDENTIFIER:
 			{
 				if (lookahead().type == LPAREN)
 				{
-					expression = parse_functioncall_expression();
-					break;
+					return parse_functioncall_expression();
 				}
 
-				expression = parse_identifier_expression();
+				return parse_identifier_expression();
 			} break;
 
 			case TILDE:
 			{
-				expression = parse_increment_expression();
+				return parse_increment_expression();
 			} break;
 
 			case EXCLAMATION:
 			{
-				expression = parse_decrement_expression();
+				return parse_decrement_expression();
 			} break;
 
 			default:
 			{
 				_error_reporter->post_error(std::format("expected an expression but got `{}`", peek().value), peek());
+				return nullptr;
 			} break;
 		}
-
-		return expression;
 	}
 
 	Expression* Parser::parse_expression_optimized()

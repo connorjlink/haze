@@ -87,7 +87,7 @@ namespace hz
 
 		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
 		{
-			DISCARD body->evaluate(context);
+			body->evaluate(context);
 
 			condition_evaluated = condition->evaluate(context);
 		}

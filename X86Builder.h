@@ -1,7 +1,8 @@
 #ifndef HAZE_X86BUILDER_H
 #define HAZE_X86BUILDER_H
 
-#include "InstructionCommand.h"
+#include "Constants.h"
+#include "InstructionEncoding.h"
 
 #include <cstdint>
 
@@ -29,6 +30,17 @@ namespace hz
 	public:
 		static std::uint8_t modrm(std::uint8_t, std::uint8_t, std::uint8_t);
 		static std::uint8_t modrm_rr(Register source, Register destination);
+
+	public:
+		static std::uint8_t sib(std::uint8_t, std::uint8_t, std::uint8_t);
+
+	public:
+		static byterange push_r(std::uint8_t);
+		static byterange push_i(std::uint8_t);
+		static byterange push_m(std::uint32_t);
+
+	public:
+		static byterange pop_r(std::uint8_t);
 	};
 }
 

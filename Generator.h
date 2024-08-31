@@ -1,12 +1,10 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
-#include "InstructionCommand.h"
 #include "Linkable.h"
 #include "ErrorReporter.h"
 
 #include <string>
-#include <array>
 #include <vector>
 #include <cstdint>
 
@@ -16,6 +14,7 @@
 namespace hz
 {
 	class Parser;
+	class InstructionCommand;
 
 	class Generator
 	{
@@ -63,16 +62,8 @@ namespace hz
 		void image(std::vector<InstructionCommand*>&&, std::uint32_t);
 
 	public:
-		Generator(std::vector<Node*>&& program, const std::string& filepath)
-			: program{ std::move(program) }, linkables{}, current_function{ -1 }
-		{
-			_error_reporter->open_context(filepath, "generating");
-		}
-
-		~Generator()
-		{
-			_error_reporter->close_context();
-		}
+		Generator(std::vector<Node*>&&, const std::string&);
+		~Generator();
 
 	public:
 		std::vector<Linkable> generate();

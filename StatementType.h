@@ -30,6 +30,7 @@ namespace hz
 		PRINT,
 		HOOK,
 		NONE, // TODO: this is the NullStatement, let's fix that later
+		EXIT,
 	};
 }
 

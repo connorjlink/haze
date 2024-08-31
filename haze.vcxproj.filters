@@ -254,7 +254,7 @@
     <ClCompile Include="HazeEvaluator.cpp">
       <Filter>Source Files\Evaluator</Filter>
     </ClCompile>
-    <ClCompile Include="Utility.cpp">
+    <ClCompile Include="RandomUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandLineParser.cpp">
@@ -280,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="X86Builder.cpp">
       <Filter>Source Files\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="ExitStatement.cpp">
+      <Filter>Source Files\Statement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,7 +322,7 @@
     <ClInclude Include="Allocation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
+    <ClInclude Include="RandomUtility.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Linkable.h">
@@ -570,6 +573,15 @@
     </ClInclude>
     <ClInclude Include="ArchitectureType.h">
       <Filter>Source Files\Argument</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionEncoding.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitStatement.h">
+      <Filter>Source Files\Statement</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeSpecifier.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

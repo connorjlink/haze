@@ -12,8 +12,8 @@ namespace hz
 
 		const auto opcode = instruction.opcode;
 
-		const auto dst = unmap(instruction.dst);
-		const auto src = unmap(instruction.src);
+		const auto dst = _register_map.at(instruction.dst);
+		const auto src = _register_map.at(instruction.src);
 
 		const auto imm = instruction.imm;
 		const auto mem = instruction.mem;

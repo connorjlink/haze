@@ -155,14 +155,11 @@ namespace hz
 			
 
 			// push [0x4013FF]
-			PUT(BinaryUtilities::range8(0x68)); // non-dereferencing?
-			//PUT(BinaryUtilities::range8(0xFF));
-			//PUT(BinaryUtilities::range8(0x35));
-			PUT(BinaryUtilities::range32(0x004033FF));
+			PUT(X86Builder::push_m(0x004033FF));
 
 
 			// push esi
-			PUT(BinaryUtilities::range8(0x56));
+			PUT(X86Builder::push_r(X86Builder::ESI));
 
 			// call WriteConsole()
 			PUT(BinaryUtilities::range8(0xFF));
@@ -370,8 +367,36 @@ namespace hz
 		// old exit process proc address
 		/*PUT(BinaryUtilities::range8(0x70));
 		PUT(BinaryUtilities::range8(0x20));
-		PUT(BinaryUtilities::range8(0x40));
+		PUT(BinaryUtilities::range8(0x40));z`
 		PUT(BinaryUtilities::range8(0x00));*/
+
+		PUT(X86Builder::push_i(0x65));
+		
+		/*
+		0:  b8 65 00 00 00          mov    eax,0x65
+		5:  a3 40 30 40 00          mov    ds:0x403040,eax
+		a:  68 40 30 40 00          push   0x403040 
+*/
+
+		//PUT(BinaryUtilities::range8(0xB8));
+		//PUT(BinaryUtilities::range32(0x00000065));
+
+		//PUT(BinaryUtilities::range8(0xA3));
+		//PUT(BinaryUtilities::range32(0x00403340));
+
+		//PUT(X86Builder::push_m(0x00403340));
+
+		// format string
+		PUT(X86Builder::push_m(0x0040305F));
+
+		PUT(X86Builder::push_i(0x0F));
+
+		// output string
+		PUT(X86Builder::push_m(0x004033F0));
+
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x15));
+		PUT(BinaryUtilities::range32(PROCEDURE_BASE + wnsprintfa_iat_va));
 
 		PUT(build_stop(201));
 
@@ -411,11 +436,7 @@ namespace hz
 		PUT(BinaryUtilities::range8(77));
 
 		// push string (copyright logo)
-		PUT(BinaryUtilities::range8(0x68));
-		PUT(BinaryUtilities::range8(0x00));
-		PUT(BinaryUtilities::range8(0x30));
-		PUT(BinaryUtilities::range8(0x40));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(X86Builder::push_m(0x00403000));
 
 		// push eax
 		PUT(BinaryUtilities::range8(0x50));

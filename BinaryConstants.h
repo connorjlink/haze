@@ -37,34 +37,44 @@ namespace hz
 #define PROCEDURE(x) (PROCEDURE_BASE + x)
 
 	// GetStdHandle()
-	inline const auto getstdhandle_int_va = 0x70;
-	inline const auto getstdhandle_iat_va = 0x80;
+	inline const auto getstdhandle_int_va = 0xA0;
+	inline const auto getstdhandle_iat_va = 0xB0;
 
 	// WriteConsole()
-	inline const auto writeconsole_int_va = 0x90;
-	inline const auto writeconsole_iat_va = 0xA0;
+	inline const auto writeconsole_int_va = 0xC0;
+	inline const auto writeconsole_iat_va = 0xD0;
 
 	// ExitProcess()
-	inline const auto exitprocess_int_va = 0xB0;
-	inline const auto exitprocess_iat_va = 0xC0;
+	inline const auto exitprocess_int_va = 0xE0;
+	inline const auto exitprocess_iat_va = 0xF0;
 
 	// MessageBoxA()
-	inline const auto messageboxa_int_va = 0xD0;
-	inline const auto messageboxa_iat_va = 0xE0;
+	inline const auto messageboxa_int_va = 0x100;
+	inline const auto messageboxa_iat_va = 0x110;
 
 
+	// wsprintf()
+	inline const auto wnsprintfa_int_va = 0x120;
+	inline const auto wnsprintfa_iat_va = 0x130;
+
+
+	// dll name pointers
 	inline const auto kernel32_pointer = 0x150;
 	inline const auto user32_pointer = 0x160;
+	inline const auto shlwapi_pointer = 0x170;
+
 
 	// function name strings
 	inline const auto getstdhandle_va = 0x180;
 	inline const auto writeconsole_va = 0x190;
 	inline const auto exitprocess_va = 0x1A0;
 	inline const auto messageboxa_va = 0x1B0;
+	inline const auto wnsprintfa_va = 0x1C0;
 
 	// dll name strings
-	inline const auto kernel32_va = 0x1C0;
-	inline const auto user32_va = 0x1D0;
+	inline const auto kernel32_va = 0x1D0;
+	inline const auto user32_va = 0x1E0;
+	inline const auto shlwapi_va = 0x1F0;
 }
 
 #endif 

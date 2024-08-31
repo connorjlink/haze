@@ -10,14 +10,14 @@ namespace hz
 {
 	enum OptimizationType : std::uint32_t
 	{
-		OPTIMIZE_AST,
-		OPTIMIZE_LTO,
+		AST,
+		LTO,
 	};
 
 	static const std::unordered_map<std::string, OptimizationType> _optimization_map
 	{
-		{ "ast", OptimizationType::OPTIMIZE_AST },
-		{ "lto", OptimizationType::OPTIMIZE_LTO },
+		{ "ast", OptimizationType::AST },
+		{ "lto", OptimizationType::LTO },
 	};
 }
 

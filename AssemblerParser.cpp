@@ -25,7 +25,7 @@ namespace hz
 
 		if (const auto it_operand = registers.find(peek().type); it_operand != std::end(registers))
 		{
-			DISCARD consume(peek().type);
+			consume(peek().type);
 			return it_operand->second;
 		}
 
@@ -35,12 +35,12 @@ namespace hz
 	//TODO: roll this function and parse_immediate() below it into a "nice" macro to reduce code duplication
 	Expression* AssemblerParser::parse_address()
 	{
-		DISCARD consume(TokenType::AMPERSAND);
+		consume(TokenType::AMPERSAND);
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
 			auto label_command_token = peek();
-			DISCARD consume(TokenType::IDENTIFIER);
+			consume(TokenType::IDENTIFIER);
 
 			return new IdentifierExpression{ label_command_token.value, label_command_token };
 		}
@@ -56,12 +56,12 @@ namespace hz
 
 	Expression* AssemblerParser::parse_immediate()
 	{
-		DISCARD consume(TokenType::POUND);
+		consume(TokenType::POUND);
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
 			const auto label_command_token = peek();
-			DISCARD consume(TokenType::IDENTIFIER);
+			consume(TokenType::IDENTIFIER);
 
 			return new IdentifierExpression{ label_command_token.value, label_command_token };
 		}
@@ -77,7 +77,7 @@ namespace hz
 
 	Node* AssemblerParser::parse_dotorg_command()
 	{
-		DISCARD consume(TokenType::DOTORG);
+		consume(TokenType::DOTORG);
 
 		const auto address_expression = parse_address();
 		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
@@ -88,7 +88,7 @@ namespace hz
 	Node* AssemblerParser::parse_label_command()
 	{
 		const auto identifier_expression = parse_identifier_expression();
-		DISCARD consume(TokenType::COLON);
+		consume(TokenType::COLON);
 
 		const auto identifier = identifier_expression->name;
 
@@ -129,7 +129,7 @@ namespace hz
 				const auto move_token = consume(TokenType::MOVE);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				return new InstructionCommand{ move_token, MOVE, operand1, operand2 };
@@ -140,7 +140,7 @@ namespace hz
 				const auto load_token = consume(TokenType::LOAD);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_address();
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
@@ -156,7 +156,7 @@ namespace hz
 				const auto copy_token = consume(TokenType::COPY);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_immediate();
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
@@ -174,9 +174,9 @@ namespace hz
 			{
 				const auto save_token = consume(TokenType::SAVE);
 
-				DISCARD consume(TokenType::AMPERSAND);
+				consume(TokenType::AMPERSAND);
 				const auto operand1 = parse_address();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
@@ -192,7 +192,7 @@ namespace hz
 				const auto iadd_token = consume(TokenType::IADD);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				return new InstructionCommand{ iadd_token, IADD, operand1, operand2 };
@@ -203,7 +203,7 @@ namespace hz
 				const auto isub_token = consume(TokenType::ISUB);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				return new InstructionCommand{ isub_token, ISUB, operand1, operand2 };
@@ -214,7 +214,7 @@ namespace hz
 				const auto band_token = consume(TokenType::BAND);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				return new InstructionCommand{ band_token, BAND, operand1, operand2 };
@@ -225,7 +225,7 @@ namespace hz
 				const auto bior_token = consume(TokenType::BIOR);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				return new InstructionCommand{ bior_token, BIOR, operand1, operand2 };
@@ -236,7 +236,7 @@ namespace hz
 				const auto bxor_token = consume(TokenType::BXOR);
 
 				const auto operand1 = parse_register();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				return new InstructionCommand{ bxor_token, BXOR, operand1, operand2 };
@@ -283,7 +283,7 @@ namespace hz
 				const auto brnz_token = consume(TokenType::BRNZ);
 
 				const auto operand1 = parse_address();
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)

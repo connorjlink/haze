@@ -16,7 +16,7 @@ namespace hz
 
 		auto identifier = parse_identifier_expression();
 
-		DISCARD consume(TokenType::EQUALS);
+		consume(TokenType::EQUALS);
 
 		Intrinsic* intrinsic = nullptr;
 

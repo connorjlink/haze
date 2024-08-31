@@ -3,10 +3,10 @@
 #include "Allocation.h"
 #include "Parser.h"
 #include "Symbol.h"
-#include "Utility.h"
 #include "IdentifierExpression.h"
 #include "Linkable.h"
 #include "LabelCommand.h"
+#include "ErrorReporter.h"
 
 #include <format>
 #include <algorithm>
@@ -17,6 +17,18 @@
 
 namespace hz
 {
+	Generator::Generator(std::vector<Node*>&& program, const std::string& filepath)
+		: program{ std::move(program) }, linkables{}, current_function{ -1 }
+	{
+		_error_reporter->open_context(filepath, "generating");
+	}
+
+	Generator::~Generator()
+	{
+		_error_reporter->close_context();
+	}
+
+
 	void Generator::begin_function(std::string name)
 	{
 		current_function++;

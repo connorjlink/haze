@@ -1,11 +1,13 @@
 #ifndef HAZE_DISASSEMBLER_H
 #define HAZE_DISASSEMBLER_H
 
-#include <cstdint>
-#include <string>
-#include <array>
-
 #include "Constants.h"
+
+#include <array>
+#include <cstdint>
+
+// Haze Disassembler.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -17,4 +19,4 @@ namespace hz
     };
 }
 
-#endif //HAZE_DISASSEMBLER_H
+#endif

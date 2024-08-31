@@ -2,12 +2,15 @@
 #define HAZE_SIMULATOR_H
 
 #include "Constants.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
-#include <cstdint>
 #include <array>
 #include <vector>
 #include <format>
+#include <cstdint>
+
+// Haze Simulator.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -26,6 +29,7 @@ namespace hz
 	private:
 		std::array<byte, HALF_DWORD_MAX> ram;
 		std::array<byte, HALF_DWORD_MAX> rom;
+
 	private:
 		int opcode, operand1, operand2, immediate, memory;
 
@@ -45,7 +49,7 @@ namespace hz
 				return;
 			}
 
-			Log::error(std::format("Object code of length {} bytes exceeds the maximum ROM size of {} bytes", bytes.size(), rom.size()));
+			_error_reporter->post_uncorrectable(std::format("object code length {} bytes exceeds the ROM capacity of {} bytes", bytes.size(), rom.size()), NULL_TOKEN);
 		}
 
 	private:
@@ -57,4 +61,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_SIMULATOR_H
+#endif

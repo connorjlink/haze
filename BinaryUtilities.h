@@ -6,6 +6,11 @@
 #include <string>
 #include <cstdint>
 
+// Haze BinaryUtilities.h
+// (c) Connor J. Link. All Rights Reserved.
+
+#define PUT(x) out.append_range(x)
+
 namespace hz
 {
 	class BinaryUtilities

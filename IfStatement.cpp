@@ -128,14 +128,14 @@ namespace hz
 
 		if (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
 		{
-			DISCARD if_body->evaluate(context);
+			if_body->evaluate(context);
 		}
 
 		else
 		{
 			if (else_body != nullptr)
 			{
-				DISCARD else_body->evaluate(context);
+				else_body->evaluate(context);
 			}
 		}
 

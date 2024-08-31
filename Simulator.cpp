@@ -1,13 +1,13 @@
 #include "Simulator.h"
 #include "InstructionCommand.h"
 #include "Disassembler.h"
-#include "ErrorReporter.h"
-#include "Log.h"
 #include "Token.h"
+#include "Log.h"
 
 #include <iostream>
-#include <format>
 
+// Haze Simulator.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

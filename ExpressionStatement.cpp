@@ -43,7 +43,7 @@ namespace hz
 	Node* ExpressionStatement::evaluate(Context* context) const
 	{
 #pragma message("TODO: is it alright to discard here???")
-		DISCARD expression->evaluate(context);
+		expression->evaluate(context);
 		return nullptr;
 	}
 }

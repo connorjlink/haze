@@ -43,6 +43,7 @@
     <ClCompile Include="ErrorContext.cpp" />
     <ClCompile Include="ErrorReporter.cpp" />
     <ClCompile Include="Evaluator.cpp" />
+    <ClCompile Include="ExitStatement.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileManager.cpp" />
@@ -105,8 +106,11 @@
     <ClCompile Include="StringExpression.cpp" />
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Toolchain.cpp" />
-    <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="RandomUtility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClInclude Include="ExitStatement.h" />
+    <ClInclude Include="InstructionEncoding.h" />
+    <ClInclude Include="TypeSpecifier.h" />
     <ClInclude Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Builder.cpp" />
@@ -216,7 +220,7 @@
     <ClInclude Include="Token.h" />
     <ClInclude Include="Toolchain.h" />
     <ClInclude Include="ToolchainType.h" />
-    <ClInclude Include="Utility.h" />
+    <ClInclude Include="RandomUtility.h" />
     <ClInclude Include="Validator.h" />
     <ClInclude Include="VariableStatement.h" />
     <ClInclude Include="WhileStatement.h" />

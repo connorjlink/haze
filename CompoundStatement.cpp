@@ -2,25 +2,11 @@
 #include "Allocator.h"
 #include "Utility.h"
 
-#include <format>
-
 namespace hz
 {
     StatementType CompoundStatement::stype() const
     {
         return StatementType::COMPOUND;
-    }
-
-    std::string CompoundStatement::string() const
-    {
-        std::string substatements_string = "";
-
-        for (auto substatement : substatements)
-        {
-            substatements_string += std::format("\t{}\n", substatement->string());
-        }
-
-        return std::format("compound statement \n[\n{}]\n", substatements_string);
     }
 
     CompoundStatement* CompoundStatement::copy() const
@@ -49,7 +35,8 @@ namespace hz
         {
             if (substatement != nullptr)
             {
-                if (auto substatement_optimized = substatement->optimize())
+                if (auto substatement_optimized = substatement->optimize();
+                    substatement_optimized != nullptr)
                 {
                     substatements_optimized.emplace_back(AS_STATEMENT(substatement_optimized));
                     did_optimize = true;
@@ -74,7 +61,7 @@ namespace hz
     {
         for (auto& substatement : substatements)
         {
-            DISCARD substatement->evaluate(context);
+            substatement->evaluate(context);
         }
 
         return nullptr;

@@ -90,7 +90,7 @@ namespace hz
 
 	Node* ForStatement::evaluate(Context* context) const
 	{
-		DISCARD initialization->evaluate(context);
+		initialization->evaluate(context);
 
 		auto condition_evaluated = condition->evaluate(context);
 
@@ -102,8 +102,8 @@ namespace hz
 
 		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
 		{
-			DISCARD body->evaluate(context);
-			DISCARD expression->evaluate(context);
+			body->evaluate(context);
+			expression->evaluate(context);
 
 			condition_evaluated = condition->evaluate(context);
 		}

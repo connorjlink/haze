@@ -30,7 +30,7 @@ namespace hz
 
 		if (!force)
 		{
-			Log::error(std::format("static allocation failed with exclusion register {}", unmap(exclude)));
+			Log::error(std::format("static allocation failed with exclusion register {}", _register_map.at(exclude)));
 		}
 
 		auto new_reg = static_cast<Register>((exclude + 1) % R3);

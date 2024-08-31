@@ -4,8 +4,6 @@
 #include "NodeType.h"
 #include "Token.h"
 
-#include <string>
-
 // Haze Node.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -30,7 +28,6 @@ namespace hz
 
     public:
         virtual NodeType ntype() const = 0;
-        virtual std::string string() const = 0;
         virtual Node* copy() const = 0;
         virtual void generate(Allocation* = nullptr) = 0;
         virtual Node* optimize() = 0;

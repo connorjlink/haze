@@ -4,6 +4,7 @@
 #include "LabelCommand.h"
 #include "Utility.h"
 #include "Emitter.h"
+#include "CommandLineOptions.h"
 #include "Log.h"
 
 namespace 
@@ -192,7 +193,7 @@ namespace hz
 		{
 			if (symbol->was_referenced)
 			{
-				if constexpr (OPTIMIZE_LTO)
+				if (_options->_optimization & OptimizationType::LTO)
 				{
 					while (optimize());
 				}

@@ -5,6 +5,9 @@
 #include <format>
 #include <cstdlib>
 
+// Haze Log.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 #define stream std::cerr
 
 namespace hz

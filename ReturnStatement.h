@@ -6,6 +6,9 @@
 #include "Expression.h"
 #include "Context.h"
 
+// Haze ReturnStatement.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class ReturnStatement : public Statement
@@ -23,11 +26,10 @@ namespace hz
 
 	public:
 		virtual StatementType stype() const final override;
-		virtual std::string string() const final override;
 		virtual ReturnStatement* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;
-		virtual Node* evaluate(Context* context) const;
+		virtual Node* evaluate(Context*) const final override;
 	};
 }
 

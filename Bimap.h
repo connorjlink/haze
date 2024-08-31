@@ -28,10 +28,9 @@ namespace hz
 	public:
 		std::optional<U> at(const T& value) const
 		{
-			if (auto it = _forward.find(value);
-				it != _forward.end())
+			if (_forward.contains(value))
 			{
-				return { it->second };
+				return { _forward.at(value) };
 			}
 
 			return std::nullopt;
@@ -39,10 +38,9 @@ namespace hz
 
 		std::optional<T> at(const U& value) const
 		{
-			if (auto it = _backward.find(value);
-				it != _backward.end())
+			if (_backward.contains(value))
 			{
-				return { it->second };
+				return { _backward.at(value) };
 			}
 
 			return std::nullopt;

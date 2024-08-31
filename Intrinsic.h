@@ -2,8 +2,10 @@
 #define HAZE_INTRINSIC_H
 
 #include "Node.h"
-
 #include "IntrinsicType.h"
+
+// Haze Intrinsic.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

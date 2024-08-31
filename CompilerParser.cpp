@@ -16,6 +16,7 @@
 #include "ArgumentExpression.h"
 #include "FileManager.h"
 #include "Utility.h"
+#include "CommandLineOptions.h"
 #include "Log.h"
 
 #include <format>
@@ -75,16 +76,16 @@ namespace hz
 
 		if (peek().type == TokenType::EQUALS)
 		{
-			DISCARD consume(TokenType::EQUALS);
+			consume(TokenType::EQUALS);
 
 			const auto value = parse_expression();
 			
-			DISCARD consume(TokenType::SEMICOLON);
+			consume(TokenType::SEMICOLON);
 
 			return new VariableStatement{ type, identifier_token.value, value, nullptr, value->_token };
 		}
 
-		DISCARD consume(TokenType::SEMICOLON);
+		consume(TokenType::SEMICOLON);
 
 		return new VariableStatement{ type, identifier_token.value, nullptr, nullptr, identifier_token };
 	}
@@ -95,7 +96,7 @@ namespace hz
 
 		auto statements = parse_statements(enclosing_function);
 
-		DISCARD consume(TokenType::RBRACE);
+		consume(TokenType::RBRACE);
 
 		return new CompoundStatement{ std::move(statements), lbrace_token };
 	}
@@ -106,7 +107,7 @@ namespace hz
 
 		const auto expression = parse_expression();
 
-		DISCARD consume(TokenType::SEMICOLON);
+		consume(TokenType::SEMICOLON);
 
 		return new ReturnStatement{ enclosing_function, expression, nullptr, return_token };
 	}
@@ -114,25 +115,25 @@ namespace hz
 	Statement* CompilerParser::parse_inline_asm_statement(std::string enclosing_function)
 	{
 		const auto asm_token = consume(TokenType::ASM);
-		DISCARD consume(TokenType::LBRACE);
+		consume(TokenType::LBRACE);
 
 		auto assembly = fetch_until(TokenType::RBRACE);
 		auto assembler_parser = new AssemblerParser{ std::move(assembly), _current_file };
 		auto commands = assembler_parser->parse();
 
-		DISCARD consume(TokenType::RBRACE);
+		consume(TokenType::RBRACE);
 
 		return new InlineAsmStatement{ std::move(commands), assembler_parser, asm_token };
 	}
 
 	Statement* CompilerParser::parse_while_statement(std::string enclosing_function)
 	{
-		DISCARD consume(TokenType::WHILE);
-		DISCARD consume(TokenType::LPAREN);
+		consume(TokenType::WHILE);
+		consume(TokenType::LPAREN);
 
 		auto condition = parse_expression();
 
-		DISCARD consume(TokenType::RPAREN);
+		consume(TokenType::RPAREN);
 
 		auto body = parse_statement(enclosing_function);
 
@@ -141,17 +142,17 @@ namespace hz
 
 	Statement* CompilerParser::parse_for_statement(std::string enclosing_function)
 	{
-		DISCARD consume(TokenType::FOR);
-		DISCARD consume(TokenType::LPAREN);
+		consume(TokenType::FOR);
+		consume(TokenType::LPAREN);
 
 		auto initialization = parse_variabledeclaration_statement(enclosing_function);
 		auto condition = parse_expression();
 
-		DISCARD consume(TokenType::SEMICOLON);
+		consume(TokenType::SEMICOLON);
 
 		auto expression = parse_expression();
 
-		DISCARD consume(TokenType::RPAREN);
+		consume(TokenType::RPAREN);
 
 		auto body = parse_statement(enclosing_function);
 
@@ -160,19 +161,19 @@ namespace hz
 
 	Statement* CompilerParser::parse_if_statement(std::string enclosing_function)
 	{
-		DISCARD consume(TokenType::IF);
-		DISCARD consume(TokenType::LPAREN);
+		consume(TokenType::IF);
+		consume(TokenType::LPAREN);
 
 		auto condition = parse_expression();
 
-		DISCARD consume(TokenType::RPAREN);
+		consume(TokenType::RPAREN);
 
 		auto if_body = parse_statement(enclosing_function);
 		Statement* else_body = nullptr;
 
 		if (peek().type == TokenType::ELSE)
 		{
-			DISCARD consume(TokenType::ELSE);
+			consume(TokenType::ELSE);
 			else_body = parse_statement(enclosing_function);
 		}
 		
@@ -181,13 +182,13 @@ namespace hz
 
 	Statement* CompilerParser::parse_print_statement(std::string enclosing_function)
 	{
-		DISCARD consume(TokenType::PRINT);
-		DISCARD consume(TokenType::LPAREN);
+		consume(TokenType::PRINT);
+		consume(TokenType::LPAREN);
 
 		auto expression = parse_expression();
 
-		DISCARD consume(TokenType::RPAREN);
-		DISCARD consume(TokenType::SEMICOLON);
+		consume(TokenType::RPAREN);
+		consume(TokenType::SEMICOLON);
 
 		return new PrintStatement{ expression, expression->_token };
 	}
@@ -209,7 +210,7 @@ namespace hz
 	Statement* CompilerParser::parse_expression_statement(std::string enclosing_function)
 	{
 		auto expression = parse_expression();
-		DISCARD consume(TokenType::SEMICOLON);
+		consume(TokenType::SEMICOLON);
 
 		if (expression != nullptr)
 		{
@@ -263,11 +264,11 @@ namespace hz
 
 			if (peek().type != TokenType::RPAREN)
 			{
-				DISCARD consume(TokenType::COMMA);
+				consume(TokenType::COMMA);
 
 				if (peek().type == TokenType::RPAREN)
 				{
-					_error_reporter->post_error("expected another function argument", peek());
+					_error_reporter->post_error("expected another argument but got `)`", peek());
 					break;
 				}
 			}
@@ -278,20 +279,23 @@ namespace hz
 
 	ReturnType CompilerParser::parse_type_specifier()
 	{
-		if (!_type_map.contains(peek().type))
+		const auto current_token = peek();
+
+		if (!_type_map.contains(current_token.type))
 		{
-			_error_reporter->post_error(std::format("unrecognized type specifier `{}`", peek().value), peek());
+			_error_reporter->post_error(std::format("unrecognized type specifier `{}`", current_token.value), current_token);
+			consume(current_token.type);
 			return ReturnType::NVR;
 		}
 
 		auto type_specifier = _type_map.at(peek().type);
-		DISCARD consume(peek().type);
+		consume(peek().type);
 		return type_specifier;
 	}
 
 	Node* CompilerParser::parse_function()
 	{
-		DISCARD consume(TokenType::FUNCTION);
+		consume(TokenType::FUNCTION);
 
 		auto return_type = parse_type_specifier();
 
@@ -301,11 +305,11 @@ namespace hz
 		add_symbol(SymbolType::FUNCTION, name_token.value, lookbehind());
 		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->return_type = return_type;
 
-		DISCARD consume(TokenType::EQUALS);
+		consume(TokenType::EQUALS);
 
-		DISCARD consume(TokenType::LPAREN);
+		consume(TokenType::LPAREN);
 		auto arguments = parse_arguments(true);
-		DISCARD consume(TokenType::RPAREN);
+		consume(TokenType::RPAREN);
 
 
 		// inform the parser of the function argument count (arity)
@@ -339,9 +343,9 @@ namespace hz
 			}); it != std::end(program))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
-			DISCARD reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
+			reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
 
-			if constexpr (OPTIMIZE_AST)
+			if (_options->_optimization & OptimizationType::AST)
 			{
 				for (auto& node : program)
 				{

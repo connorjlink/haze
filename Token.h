@@ -1,7 +1,7 @@
 #ifndef HAZE_TOKEN_H
 #define HAZE_TOKEN_H
 
-#include <string>
+#include <string_view>
 #include <cstdint>
 
 #include "Bimap.h"
@@ -57,14 +57,15 @@ namespace hz
 		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, CALL, EXIT, PUSH, PULL, BRNZ, BOOL, STOP,
 
 		PRINT,
+
 		STRING,
 
 		END,
 	};
 
-#define S(x) std::string{ x }
+#define S(x) std::string_view{ x }
 
-	static const Bimap<std::string, TokenType> _token_map
+	static const Bimap<std::string_view, TokenType> _token_map
 	{
 		bimap_t{ S(";"), TokenType::SEMICOLON },
 		bimap_t{ S(":"), TokenType::COLON },
@@ -129,7 +130,9 @@ namespace hz
 		bimap_t{ S("stop"), TokenType::STOP },
 		
 		bimap_t{ S("print"), TokenType::PRINT },
+
 		bimap_t{ S("[string literal]"), TokenType::STRING },
+		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },
 		
 		bimap_t{ S("eof"), TokenType::END },
 	};
@@ -141,7 +144,9 @@ namespace hz
 		std::int16_t line, column;
 	};
 
-	static auto NULL_TOKEN = Token{ TokenType::END, "", -1, -1 };
+	// NOTE: intentionally not marked const to avoid errors about dropping qualifiers
+	// could make certain inward-facing Token fields mutable, but this feels cleaner
+	inline static auto NULL_TOKEN = Token{ TokenType::END, "", -1, -1 };
 }
 
 #endif

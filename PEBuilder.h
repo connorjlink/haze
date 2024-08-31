@@ -11,8 +11,6 @@
 // Haze PEBuilder.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define PUT(x) out.append_range(x)
-
 namespace hz
 {
 	class PEBuilder
@@ -23,7 +21,6 @@ namespace hz
 
 	private:
 		byterange make_import_descriptor(std::uint32_t, std::uint32_t, std::uint32_t);
-		byterange make_import();
 
 	private:
 		byterange dos_header();

@@ -2,7 +2,7 @@
 #define HAZE_LINKABLE_H
 
 #include "Symbol.h"
-#include "InstructionCommand.h"
+#include "Command.h"
 
 #include <vector>
 #include <cstdint>

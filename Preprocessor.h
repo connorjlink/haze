@@ -2,8 +2,10 @@
 #define HAZE_PREPROCESSOR_H
 
 #include <string>
-#include <string_view>
 #include <vector>
+
+// Haze Preprocessor.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -40,4 +42,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_PREPROCESSOR_H
+#endif
