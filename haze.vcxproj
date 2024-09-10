@@ -43,6 +43,7 @@
     <ClCompile Include="ErrorContext.cpp" />
     <ClCompile Include="ErrorReporter.cpp" />
     <ClCompile Include="Evaluator.cpp" />
+    <ClCompile Include="ExecutionContext.cpp" />
     <ClCompile Include="ExitStatement.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
     <ClCompile Include="File.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="PrintStatement.cpp" />
     <ClCompile Include="ReturnStatement.cpp" />
+    <ClCompile Include="Scope.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Statement.cpp" />
     <ClCompile Include="StringExpression.cpp" />
@@ -109,8 +111,12 @@
     <ClCompile Include="Toolchain.cpp" />
     <ClCompile Include="RandomUtility.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
     <ClInclude Include="InstructionEncoding.h" />
+    <ClInclude Include="IntermediateCommand.h" />
+    <ClInclude Include="IntermediateType.h" />
+    <ClInclude Include="Scope.h" />
     <ClInclude Include="TypeSpecifier.h" />
     <ClInclude Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
@@ -229,6 +235,7 @@
     <ClInclude Include="X86Emitter.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="chatgpt_cdecl_example.md" />
     <None Include="common.hz" />
     <None Include="fibonacci.hzi" />
     <None Include="README.md" />

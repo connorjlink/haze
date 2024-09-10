@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	InstructionCommand::InstructionCommand(std::uint32_t bytes, Token token)
+	/*InstructionCommand::InstructionCommand(std::uint32_t bytes, Token token)
 		: Command{ token }
 	{
 		mem = bytes & 0xFFFF;
@@ -17,9 +17,9 @@ namespace hz
 		dst = static_cast<Register>((bytes & (0x0C << 16)) >> 18);
 		opcode = static_cast<Opcode>((bytes & (0xF0 << 16)) >> 20);
 		marked_for_deletion = false;
-	}
+	}*/
 
-	InstructionCommand::InstructionCommand(Token token, Opcode opcode, Register dst, Register src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
+	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, Register src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
 		: Command{ token }, opcode{ opcode }, dst{ dst }, src{ src }, imm{ imm }, mem{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 		embedded_object_code = {};
@@ -54,22 +54,24 @@ namespace hz
 	{
 		switch (opcode)
 		{
-			case MOVE: _generator->make_move(dst, src); break;
-			case LOAD: _generator->make_load(dst, mem); break;
-			case COPY: _generator->make_copy(dst, imm); break;
-			case SAVE: _generator->make_save(mem, src); break;
-			case IADD: _generator->make_iadd(dst, src); break;
-			case ISUB: _generator->make_isub(dst, src); break;
-			case BAND: _generator->make_band(dst, src); break;
-			case BIOR: _generator->make_bior(dst, src); break;
-			case BXOR: _generator->make_bxor(dst, src); break;
-			case CALL: _generator->make_call(mem);      break;
-			case EXIT: _generator->make_exit();         break;
-			case PUSH: _generator->make_push(src);      break;
-			case PULL: _generator->make_pull(dst);      break;
-			case BRNZ: _generator->make_brnz(mem, src); break;
-			case BOOL: _generator->make_bool(src);      break;
-			case STOP: _generator->make_stop();         break;
+			case Opcode::MOVE: _generator->make_move(dst, src); break;
+			case Opcode::LOAD: _generator->make_load(dst, mem); break;
+			case Opcode::COPY: _generator->make_copy(dst, imm); break;
+			case Opcode::SAVE: _generator->make_save(mem, src); break;
+			case Opcode::IADD: _generator->make_iadd(dst, src); break;
+			case Opcode::ISUB: _generator->make_isub(dst, src); break;
+			case Opcode::BAND: _generator->make_band(dst, src); break;
+			case Opcode::BIOR: _generator->make_bior(dst, src); break;
+			case Opcode::BXOR: _generator->make_bxor(dst, src); break;
+			case Opcode::CALL: _generator->make_call(mem);      break;
+			case Opcode::EXIT: _generator->make_exit();         break;
+			case Opcode::PUSH: _generator->make_push(src);      break;
+			case Opcode::PULL: _generator->make_pull(dst);      break;
+			case Opcode::MAKE: _generator->make_make(src);      break;
+			case Opcode::TAKE: _generator->make_take(dst);      break;
+			case Opcode::BRNZ: _generator->make_brnz(mem, src); break;
+			case Opcode::BOOL: _generator->make_bool(src);      break;
+			case Opcode::STOP: _generator->make_stop();         break;
 		}
 	}
 

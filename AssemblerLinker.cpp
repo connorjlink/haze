@@ -75,8 +75,8 @@ namespace hz
 
 					if (!instruction_command->marked_for_deletion)
 					{
-						if (instruction_command->opcode == CALL ||
-							instruction_command->opcode == BRNZ)
+						if (instruction_command->opcode == Opcode::CALL ||
+							instruction_command->opcode == Opcode::BRNZ)
 						{
 							auto label_symbol = AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, instruction_command->branch_target, NULL_TOKEN));
 

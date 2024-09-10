@@ -20,6 +20,8 @@ namespace hz
 		{
 		}
 
+		virtual ~Intrinsic() = default;
+
 	public:
 		virtual NodeType ntype() const final override;
 		virtual IntrinsicType itype() const = 0;

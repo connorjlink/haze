@@ -3,13 +3,36 @@
 
 #include <string_view>
 #include <unordered_map>
+#include <cstdint>
 
 // Haze InstructionEncoding.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-    enum Opcode
+    enum class Opcode
+    {
+        MOVE,
+        LOAD,
+        COPY,
+        SAVE,
+        IADD,
+        ISUB,
+        BAND,
+        BIOR,
+        BXOR,
+        CALL,
+        EXIT,
+        PUSH, // data
+        PULL, // data
+        MAKE, // args
+        TAKE, // args
+        BRNZ,
+        BOOL,
+        STOP,
+    };
+
+    enum HazeOpcode
     {
         MOVE = 0x0,
         LOAD = 0x1,
@@ -22,7 +45,7 @@ namespace hz
         BXOR = 0x8,
         CALL = 0x9,
         EXIT = 0xA,
-        PUSH = 0xB,
+        PUSH = 0xB, 
         PULL = 0xC,
         BRNZ = 0xD,
         BOOL = 0xE,
@@ -36,9 +59,9 @@ namespace hz
         R2 = 0b010,
         R3 = 0b011,
         DC = 0b100,
-        ARGUMENTS = 0b101,
-        RETURNS = 0b110, // alias for return values "fake stack"
     };
+
+    using register_t = std::int32_t;
 
     static const std::unordered_map<Register, std::string_view> _register_map =
     {

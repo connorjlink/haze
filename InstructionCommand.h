@@ -15,7 +15,7 @@ namespace hz
     {
     public:
         Opcode opcode;
-        Register dst, src;
+        register_t dst, src;
         std::uint8_t imm;
         std::uint32_t mem;
         bool marked_for_deletion;
@@ -27,9 +27,9 @@ namespace hz
 
     public:
         InstructionCommand() = delete;
-        explicit InstructionCommand(std::uint32_t, Token);
-        InstructionCommand(Token, Opcode, Register, Register, std::uint8_t = 0, std::uint32_t = 0, std::string = "");
-        std::uint32_t bytes() const;
+        //explicit InstructionCommand(std::uint32_t, Token);
+        InstructionCommand(Token, Opcode, register_t, register_t, std::uint8_t = 0, std::uint32_t = 0, std::string = "");
+        //std::uint32_t bytes() const;
 
     public:
         virtual CommandType ctype() const final override;

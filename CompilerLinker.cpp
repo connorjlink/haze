@@ -13,11 +13,6 @@ namespace
 {
 	using namespace hz;
 
-	std::uint8_t make_opcode(Opcode opcode, Register operand1, Register operand2)
-	{
-		return ((opcode & 0b1111) << 4) | ((operand1 & 0b11) << 2) | ((operand2 & 0b11) << 0);
-	}
-
 	std::vector<Command*> gather(const std::vector<Command*>& function)
 	{
 		std::vector<Command*> commands;

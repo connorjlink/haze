@@ -63,6 +63,15 @@
     <Filter Include="Source Files\Binary">
       <UniqueIdentifier>{8a997064-5801-4141-9767-107e0064d213}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Intermediate">
+      <UniqueIdentifier>{8f35d445-db7b-466a-ba17-2a252026b433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Types">
+      <UniqueIdentifier>{1ba08e6a-fbd1-4f84-8cf0-36c6d701bd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Example Files">
+      <UniqueIdentifier>{c544c3b4-6538-433a-8e74-ebec2fcf0e5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -286,6 +295,12 @@
     </ClCompile>
     <ClCompile Include="Linker.cpp">
       <Filter>Source Files\Linker</Filter>
+    </ClCompile>
+    <ClCompile Include="Scope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutionContext.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -586,6 +601,18 @@
     <ClInclude Include="TypeSpecifier.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scope.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutionContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermediateCommand.h">
+      <Filter>Source Files\Intermediate</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermediateType.h">
+      <Filter>Source Files\Intermediate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -634,5 +661,6 @@
     <None Include="test.hzb">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="chatgpt_cdecl_example.md" />
   </ItemGroup>
 </Project>

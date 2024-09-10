@@ -138,7 +138,7 @@ namespace hz
 				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new InstructionCommand{ move_token, MOVE, operand1, operand2 };
+				return new InstructionCommand{ move_token, Opcode::MOVE, operand1, operand2 };
 			} break;
 
 			case TokenType::LOAD:
@@ -151,10 +151,10 @@ namespace hz
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ load_token, LOAD, operand1, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
-				return new InstructionCommand{ load_token, LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
+				return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
 			} break;
 
 			case TokenType::COPY:
@@ -167,13 +167,13 @@ namespace hz
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ copy_token, COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
 				const auto value = AS_INTEGER_LITERAL_EXPRESSION(operand2)->value;
 				ASSERT_IN_RANGE(value, 0, DWORD_MAX - 1);
 
-				return new InstructionCommand{ copy_token, COPY, operand1, DC, static_cast<std::uint8_t>(value) };
+				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<std::uint8_t>(value) };
 			} break;
 
 			case TokenType::SAVE:
@@ -187,10 +187,10 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ save_token, SAVE, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ save_token, SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			case TokenType::IADD:
@@ -201,7 +201,7 @@ namespace hz
 				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new InstructionCommand{ iadd_token, IADD, operand1, operand2 };
+				return new InstructionCommand{ iadd_token, Opcode::IADD, operand1, operand2 };
 			} break;
 
 			case TokenType::ISUB:
@@ -212,7 +212,7 @@ namespace hz
 				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new InstructionCommand{ isub_token, ISUB, operand1, operand2 };
+				return new InstructionCommand{ isub_token, Opcode::ISUB, operand1, operand2 };
 			} break;
 
 			case TokenType::BAND:
@@ -223,7 +223,7 @@ namespace hz
 				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new InstructionCommand{ band_token, BAND, operand1, operand2 };
+				return new InstructionCommand{ band_token, Opcode::BAND, operand1, operand2 };
 			} break;
 
 			case TokenType::BIOR:
@@ -234,7 +234,7 @@ namespace hz
 				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new InstructionCommand{ bior_token, BIOR, operand1, operand2 };
+				return new InstructionCommand{ bior_token, Opcode::BIOR, operand1, operand2 };
 			} break;
 
 			case TokenType::BXOR:
@@ -245,7 +245,7 @@ namespace hz
 				consume(TokenType::COMMA);
 				const auto operand2 = parse_register();
 
-				return new InstructionCommand{ bxor_token, BXOR, operand1, operand2 };
+				return new InstructionCommand{ bxor_token, Opcode::BXOR, operand1, operand2 };
 			} break;
 
 			case TokenType::CALL:
@@ -255,17 +255,17 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ call_token, CALL, DC, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ call_token, CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			case TokenType::EXIT:
 			{
 				const auto exit_token = consume(TokenType::EXIT);
 
-				return new InstructionCommand{ exit_token, EXIT, DC, DC };
+				return new InstructionCommand{ exit_token, Opcode::EXIT, DC, DC };
 			} break;
 
 			case TokenType::PUSH:
@@ -273,7 +273,7 @@ namespace hz
 				const auto push_token = consume(TokenType::PUSH);
 				const auto operand1 = parse_register();
 
-				return new InstructionCommand{ push_token, PUSH, DC, operand1 };
+				return new InstructionCommand{ push_token, Opcode::PUSH, DC, operand1 };
 			} break;
 
 			case TokenType::PULL:
@@ -281,7 +281,7 @@ namespace hz
 				const auto pull_token = consume(TokenType::PULL);
 				const auto operand1 = parse_register();
 
-				return new InstructionCommand{ pull_token, PULL, operand1, DC };
+				return new InstructionCommand{ pull_token, Opcode::PULL, operand1, DC };
 			} break;
 
 			case TokenType::BRNZ:
@@ -294,10 +294,10 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ brnz_token, BRNZ, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ brnz_token, BRNZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
 			} break;
 
 			case TokenType::BOOL:
@@ -305,14 +305,14 @@ namespace hz
 				const auto bool_token = consume(TokenType::BOOL);
 				const auto operand1 = parse_register();
 
-				return new InstructionCommand{ bool_token, BOOL, DC, operand1  };
+				return new InstructionCommand{ bool_token, Opcode::BOOL, DC, operand1  };
 			} break;
 
 			case TokenType::STOP:
 			{
 				const auto stop_token = consume(TokenType::STOP);
 
-				return new InstructionCommand{ stop_token, STOP, DC, DC };
+				return new InstructionCommand{ stop_token, Opcode::STOP, DC, DC };
 			} break;
 
 			default:
