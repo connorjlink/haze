@@ -6,8 +6,9 @@
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Parser.h"
-#include "ErrorReporter.h"
 #include "Statement.h"
+#include "Symbol.h"
+#include "ErrorReporter.h"
 
 #include <format>
 
@@ -85,7 +86,7 @@ namespace hz
 		//	}
 		//}
 
-		_generator->make_exit();
+		_generator->make_exit(0);
 	}
 
 	Function* Function::optimize()

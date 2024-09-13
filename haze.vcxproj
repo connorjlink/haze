@@ -80,6 +80,7 @@
     <ClCompile Include="InstructionCommand.cpp" />
     <ClCompile Include="InstructionValidator.cpp" />
     <ClCompile Include="IntegerLiteralExpression.cpp" />
+    <ClCompile Include="IntermediateCommand.cpp" />
     <ClCompile Include="InterpreterParser.cpp" />
     <ClCompile Include="InterpreterToolchain.cpp" />
     <ClCompile Include="Intrinsic.cpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Toolchain.cpp" />
     <ClCompile Include="RandomUtility.cpp" />
+    <ClCompile Include="Validator.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
     <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
@@ -117,10 +119,12 @@
     <ClInclude Include="IntermediateCommand.h" />
     <ClInclude Include="IntermediateType.h" />
     <ClInclude Include="Scope.h" />
+    <ClInclude Include="Test.h" />
     <ClInclude Include="TypeSpecifier.h" />
     <ClInclude Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Builder.cpp" />
+    <ClCompile Include="X86BuilderValidator.cpp" />
     <ClCompile Include="X86Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +236,7 @@
     <ClInclude Include="VariableStatement.h" />
     <ClInclude Include="WhileStatement.h" />
     <ClInclude Include="X86Builder.h" />
+    <ClInclude Include="X86BuilderValidator.h" />
     <ClInclude Include="X86Emitter.h" />
   </ItemGroup>
   <ItemGroup>

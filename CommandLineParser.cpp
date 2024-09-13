@@ -1,5 +1,6 @@
 #include "CommandLineParser.h"
 #include "JobManager.h"
+#include "CommandLineOptions.h"
 #include "ErrorReporter.h"
 
 #include <vector>

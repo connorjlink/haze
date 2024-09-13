@@ -3,6 +3,7 @@
 #include "Allocation.h"
 #include "Parser.h"
 #include "Evaluator.h"
+#include "Symbol.h"
 
 // Haze VariableStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -2,7 +2,6 @@
 #include "Token.h"
 #include "Allocator.h"
 #include "CompilerParser.h"
-#include "CompoundStatement.h"
 #include "VariableStatement.h"
 #include "ReturnStatement.h"
 #include "IntegerLiteralExpression.h"
@@ -12,6 +11,7 @@
 #include "StringExpression.h"
 #include "BinaryExpression.h"
 #include "DotDefineCommand.h"
+#include "Symbol.h"
 #include "ErrorReporter.h"
 
 #include <format>

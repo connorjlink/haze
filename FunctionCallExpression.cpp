@@ -3,6 +3,7 @@
 #include "Allocation.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "Symbol.h"
 #include "ErrorReporter.h"
 
 #include <format>

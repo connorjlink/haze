@@ -8,18 +8,18 @@
 
 namespace hz
 {
-	/*InstructionCommand::InstructionCommand(std::uint32_t bytes, Token token)
+	InstructionCommand::InstructionCommand(Token token, std::uint32_t bytes)
 		: Command{ token }
 	{
 		mem = bytes & 0xFFFF;
 		imm = (bytes & 0xFF00) >> 8;
-		src = static_cast<Register>((bytes & (0x03 << 16)) >> 16);
-		dst = static_cast<Register>((bytes & (0x0C << 16)) >> 18);
+		src = ((bytes & (0x03 << 16)) >> 16);
+		dst = ((bytes & (0x0C << 16)) >> 18);
 		opcode = static_cast<Opcode>((bytes & (0xF0 << 16)) >> 20);
 		marked_for_deletion = false;
-	}*/
+	}
 
-	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, Register src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
+	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
 		: Command{ token }, opcode{ opcode }, dst{ dst }, src{ src }, imm{ imm }, mem{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 		embedded_object_code = {};
@@ -27,7 +27,7 @@ namespace hz
 	}
 
 
-	std::uint32_t InstructionCommand::bytes() const
+	/*std::uint32_t InstructionCommand::bytes() const
 	{
 		std::uint32_t instruction{};
 
@@ -38,7 +38,7 @@ namespace hz
 		instruction |= opcode << 20;
 
 		return instruction;
-	}
+	}*/
 
 	CommandType InstructionCommand::ctype() const
 	{
@@ -64,7 +64,7 @@ namespace hz
 			case Opcode::BIOR: _generator->make_bior(dst, src); break;
 			case Opcode::BXOR: _generator->make_bxor(dst, src); break;
 			case Opcode::CALL: _generator->make_call(mem);      break;
-			case Opcode::EXIT: _generator->make_exit();         break;
+			case Opcode::EXIT: _generator->make_exit(src);      break;
 			case Opcode::PUSH: _generator->make_push(src);      break;
 			case Opcode::PULL: _generator->make_pull(dst);      break;
 			case Opcode::MAKE: _generator->make_make(src);      break;

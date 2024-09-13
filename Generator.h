@@ -11,6 +11,7 @@
 
 namespace hz
 {
+	class Node;
 	class Parser;
 	class InstructionCommand;
 
@@ -61,11 +62,11 @@ namespace hz
 
 	public:
 		// position a new function argument for the next call
-		void make_argument(register_t, variable_t);
+		void make_argument(register_t);
 		// pull a function argument during call from those prepared
-		void take_argument(register_t);
+		void take_argument(register_t, std::int32_t);
 		// link execution to a user-defined function
-		void call_function(std::string);
+		void call_function(const std::string&);
 		// return from a call to a `nvr` function
 		void make_return();
 		// return from a call to a value-typed function
@@ -79,7 +80,7 @@ namespace hz
 
 	public:
 		// { condition, if body, else body }
-		void make_ifnz(register_t, std::vector<IntermediateCommand*>, std::vector<IntermediateCommand*>);
+		void make_ifnz(register_t, const std::vector<IntermediateCommand*>&);
 
 		void make_move(register_t, register_t);
 		void make_load(register_t, std::uint32_t);

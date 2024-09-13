@@ -3,12 +3,14 @@
 
 #include "ErrorContext.h"
 #include "Token.h"
+#include "Test.h"
 
 #include <string>
 #include <unordered_map>
 #include <utility>
 #include <list>
 #include <stack>
+#include <format>
 
 // Haze ErrorReporter.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -18,10 +20,25 @@ namespace hz
 	class ErrorReporter
 	{
 	private:
-		static constexpr auto MAX_ERRORS = 5;
+		static constexpr auto MAX_ERRORS = 1;
+
+	private:
+		std::int32_t _error_count;
+
+	private:
+		void validate_error_count()
+		{
+			if (_error_count > MAX_ERRORS)
+			{
+				post_uncorrectable(std::format("compilation stopped because of excessive errors ({})", MAX_ERRORS), NULL_TOKEN);
+			}
+		}
 
 	public:
-		bool _had_error;
+		bool had_error() const
+		{
+			return _error_count > 0;
+		}
 
 	private:
 		std::unordered_map<std::string, std::list<ErrorContext>> _open_contexts;
@@ -35,7 +52,7 @@ namespace hz
 		void close_all_contexts();
 
 	public:
-		void open_context(const std::string&, const std::string&);
+		TestParameters open_context(const std::string&, const std::string&);
 		void close_context();
 
 	public:
@@ -49,9 +66,16 @@ namespace hz
 		void post_uncorrectable(const std::string&, Token);
 
 	public:
+		void post_information(ErrorContext*, const std::string&, const std::string&, Token);
+		void post_warning(ErrorContext*, const std::string&, const std::string&, Token);
+		void post_error(ErrorContext*, const std::string&, const std::string&, Token);
+		[[noreturn]]
+		void post_uncorrectable(ErrorContext*, const std::string&, const std::string&, Token);
+
+	public:
 		ErrorReporter()
 		{
-			_had_error = false;
+			_error_count = 0;
 
 			_open_contexts = {};
 			_closed_contexts = {};

@@ -5,8 +5,8 @@ namespace hz
 {
 	enum class IntermediateType
 	{
-		BEGIN_SCOPE,
-		END_SCOPE,
+		ENTER_SCOPE,
+		LEAVE_SCOPE,
 		LOCAL_VARIABLE,
 		GLOBAL_VARIABLE,
 		BINARY_ADD,
@@ -18,8 +18,12 @@ namespace hz
 		MAKE_ARGUMENT,
 		TAKE_ARGUMENT,
 		CALL_FUNCTION,
-		MAKE_RETURN,
+		VOID_RETURN,
+		VALUE_RETURN,
+		JOURNAL_ENTRY,
+		JOURNAL_LEAVE,
 		IF_NOT_ZERO,
+		GOTO,
 	};
 }
 

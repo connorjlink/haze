@@ -7,6 +7,7 @@
 #include "CompilerLinker.h"
 #include "Constants.h"
 #include "CommandLineOptions.h"
+#include "ErrorContext.h"
 
 #include <fstream>
 #include <format>
@@ -49,7 +50,7 @@ namespace hz
 		auto image = common_link(entrypoint);
 		auto executable = common_emit(std::move(image), _filepath);
 
-		if (!_error_reporter->_had_error)
+		if (!_error_reporter->had_error())
 		{
 			common_finalize(std::move(executable), _filepath);
 		}

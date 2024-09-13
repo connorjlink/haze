@@ -1,9 +1,6 @@
 #ifndef HAZE_LINKABLE_H
 #define HAZE_LINKABLE_H
 
-#include "Symbol.h"
-#include "Command.h"
-
 #include <vector>
 #include <cstdint>
 
@@ -12,6 +9,10 @@
 
 namespace hz
 {
+	class Symbol;
+	class Command;
+	class IntermediateCommand;
+
 	class Linkable
 	{
 	public:
@@ -19,12 +20,14 @@ namespace hz
 		Symbol* symbol;
 		// object code for the function
 		std::vector<Command*> commands;
+		// ir code of the function
+		std::vector<IntermediateCommand*> ir;
 		// entry point of the function 
 		std::uint32_t offset;
 
 	public:
-		Linkable(Symbol* symbol, std::vector<Command*>&& object_code, std::uint32_t offset)
-			: symbol{ symbol }, commands{ std::move(object_code) }, offset{ offset }
+		Linkable(Symbol* symbol, std::vector<Command*>&& commands, std::vector<IntermediateCommand*>&& ir, std::uint32_t offset)
+			: symbol{ symbol }, commands{ std::move(commands) }, ir{ std::move(ir) }, offset{ offset }
 		{
 		}
 	};

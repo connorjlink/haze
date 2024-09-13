@@ -302,6 +302,15 @@
     <ClCompile Include="ExecutionContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IntermediateCommand.cpp">
+      <Filter>Source Files\Intermediate</Filter>
+    </ClCompile>
+    <ClCompile Include="X86BuilderValidator.cpp">
+      <Filter>Source Files\Validator</Filter>
+    </ClCompile>
+    <ClCompile Include="Validator.cpp">
+      <Filter>Source Files\Validator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -612,6 +621,12 @@
     </ClInclude>
     <ClInclude Include="IntermediateType.h">
       <Filter>Source Files\Intermediate</Filter>
+    </ClInclude>
+    <ClInclude Include="X86BuilderValidator.h">
+      <Filter>Source Files\Validator</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Source Files\Validator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

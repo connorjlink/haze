@@ -11,7 +11,7 @@ namespace
 {
 	using namespace hz;
 
-	std::vector<std::uint8_t> haze_instruction(HazeOpcode opcode, Register destination, Register source, std::uint8_t imm, std::uint32_t mem)
+	std::vector<std::uint8_t> haze_instruction(HazeOpcode opcode, register_t destination, register_t source, std::uint8_t imm, std::uint32_t mem)
 	{
 		std::vector<std::uint8_t> result;
 
@@ -52,89 +52,99 @@ namespace hz
 		return EmitterType::HAZE;
 	}
 
-	byterange HazeEmitter::emit_move(Register destination, Register source)
+	byterange HazeEmitter::emit_move(register_t destination, register_t source)
 	{
 		return haze_instruction(MOVE, destination, source, 0x00, 0x000);
 	}
 
-	byterange HazeEmitter::emit_load(Register destination, std::uint32_t address)
+	byterange HazeEmitter::emit_load(register_t destination, std::uint32_t address)
 	{
 		return haze_instruction(LOAD, destination, DC, 0x00, address);
 	}
 
-	byterange HazeEmitter::emit_copy(Register destination, std::uint8_t immediate)
+	byterange HazeEmitter::emit_copy(register_t destination, std::uint8_t immediate)
 	{
 		return haze_instruction(COPY, destination, DC, immediate, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_save(std::uint32_t address, Register source)
+	byterange HazeEmitter::emit_save(std::uint32_t address, register_t source)
 	{
 		return haze_instruction(SAVE, DC, source, 0x00, address);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_iadd(Register destination, Register source)
+	byterange HazeEmitter::emit_iadd(register_t destination, register_t source)
 	{
 		return haze_instruction(IADD, destination, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_isub(Register destination, Register source)
+	byterange HazeEmitter::emit_isub(register_t destination, register_t source)
 	{
 		return haze_instruction(ISUB, destination, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_band(Register destination, Register source)
+	byterange HazeEmitter::emit_band(register_t destination, register_t source)
 	{
 		return haze_instruction(BAND, destination, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_bior(Register destination, Register source)
+	byterange HazeEmitter::emit_bior(register_t destination, register_t source)
 	{
 		return haze_instruction(BIOR, destination, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_bxor(Register destination, Register source)
+	byterange HazeEmitter::emit_bxor(register_t destination, register_t source)
 	{
 		return haze_instruction(BXOR, destination, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_call(std::uint32_t address)
+	byterange HazeEmitter::emit_call(std::uint32_t address)
 	{
 		return haze_instruction(CALL, DC, DC, 0x00, address);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_exit()
+	byterange HazeEmitter::emit_exit()
 	{
 		return haze_instruction(EXIT, DC, DC, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_push(Register source)
+	byterange HazeEmitter::emit_push(register_t source)
 	{
 		return haze_instruction(PUSH, DC, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_pull(Register destination)
+	byterange HazeEmitter::emit_pull(register_t destination)
 	{
 		return haze_instruction(PULL, destination, DC, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_brnz(std::uint32_t address, Register source)
+	byterange HazeEmitter::emit_make(register_t source)
+	{
+		return {};
+	}
+
+	byterange HazeEmitter::emit_take(register_t destination)
+	{
+		return {};
+	}
+
+	byterange HazeEmitter::emit_brnz(std::uint32_t address, register_t source)
 	{
 		return haze_instruction(BRNZ, DC, source, 0x00, address);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_bool(Register source)
+	byterange HazeEmitter::emit_bool(register_t source)
 	{
 		return haze_instruction(BOOL, DC, source, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit_stop()
+	byterange HazeEmitter::emit_stop()
 	{
 		return haze_instruction(STOP, DC, DC, 0x00, 0x0000);
 	}
 
-	std::vector<std::uint8_t> HazeEmitter::emit()
+	byterange HazeEmitter::emit()
 	{
-		std::vector<std::uint8_t> result{};
+		byterange result{};
 
 		for (auto instruction_command : image)
 		{

@@ -3,21 +3,21 @@
 
 namespace hz
 {
-	bool InstructionValidator::validate_constructor()
-	{
-		return false;
-	}
-
-	bool InstructionValidator::validate_bytes()
-	{
-		return false;
-	}
-
 	InstructionValidator::InstructionValidator()
 	{
-		add_test(Test{ "Instruction()", std::bind(&validate_constructor) });
-		add_test(Test{ ".bytes()", std::bind(&validate_bytes) });
+		add_test(Test{ "Instruction()", validate_constructor });
+		add_test(Test{ ".bytes()", validate_bytes });
 
 		auto tests = test_count();
+	}
+
+	bool InstructionValidator::validate_constructor(TestParameters parameters)
+	{
+		return false;
+	}
+
+	bool InstructionValidator::validate_bytes(TestParameters parameters)
+	{
+		return false;
 	}
 }

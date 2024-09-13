@@ -1,39 +1,30 @@
 #ifndef HAZE_VALIDATOR_H
 #define HAZE_VALIDATOR_H
 
+#include "Test.h"
+#include "ErrorContext.h"
+
 #include <string>
 #include <vector>
 #include <functional>
 
+// Haze Validator.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
-    struct Test
-    {
-        std::string name;
-        std::function<bool()> test;
-    };
-
     class Validator
     {
     private:
-        std::vector<Test> tests;
-        static inline std::size_t num_tests = 0;
+        std::vector<Test> _tests;
+        static inline std::size_t _num_tests = 0;
 
     protected:
-        std::size_t test_count() const
-        {
-            return num_tests;
-        }
+        std::size_t test_count() const;
+        void add_test(const Test&);
 
-        void add_test(const Test& test)
-        {
-            tests.emplace_back(test);
-            num_tests++;
-        }
-
-
-        //Method to get the tests variable
-		
+    public:
+        void run_tests() const;
     };
 }
 

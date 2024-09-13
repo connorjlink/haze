@@ -35,14 +35,14 @@ namespace hz
 
 
 	// done
-	byterange X86Emitter::emit_move(Register destination, Register source)
+	byterange X86Emitter::emit_move(register_t destination, register_t source)
 	{
 		// mov r/m32, r32
 		return { 0x89, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_load(Register destination, std::uint32_t address)
+	byterange X86Emitter::emit_load(register_t destination, std::uint32_t address)
 	{
 		byterange out{};
 
@@ -57,7 +57,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_copy(Register destination, std::uint8_t immediate)
+	byterange X86Emitter::emit_copy(register_t destination, std::uint8_t immediate)
 	{
 		// mov r/m32, imm32
 		byterange out{};
@@ -68,13 +68,23 @@ namespace hz
 		return out;
 	}
 
-	byterange emit_print(std::uint32_t text_pointer)
+	/*byterange emit_print(std::uint32_t text_pointer)
+	{
+		return {};
+	}*/
+
+	byterange X86Emitter::emit_make(register_t source)
+	{
+		return {};
+	}
+
+	byterange X86Emitter::emit_take(register_t destination)
 	{
 		return {};
 	}
 
 	// done
-	byterange X86Emitter::emit_save(std::uint32_t address, Register source)
+	byterange X86Emitter::emit_save(std::uint32_t address, register_t source)
 	{
 		byterange out{};
 
@@ -137,7 +147,7 @@ namespace hz
 			PUT(BinaryUtilities::range8(2));
 
 			// move [0x4013FF], r/m32
-			if (source == X86Builder::EAX)
+			if (source == EAX)
 			{
 				PUT(BinaryUtilities::range8(0xA3));
 				PUT(BinaryUtilities::range32(0x004033FF));
@@ -157,7 +167,7 @@ namespace hz
 
 
 			// push esi
-			PUT(X86Builder::push_r(X86Builder::ESI));
+			PUT(X86Builder::push_r(ESI));
 
 			// call WriteConsole()
 			PUT(BinaryUtilities::range8(0xFF));
@@ -177,35 +187,35 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_iadd(Register destination, Register source)
+	byterange X86Emitter::emit_iadd(register_t destination, register_t source)
 	{
 		// add r/m32, r32
 		return { 0x01, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_isub(Register destination, Register source)
+	byterange X86Emitter::emit_isub(register_t destination, register_t source)
 	{
 		// sub r/m32, r32
 		return { 0x29, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_band(Register destination, Register source)
+	byterange X86Emitter::emit_band(register_t destination, register_t source)
 	{
 		// and r/m32, r32
 		return { 0x21, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_bior(Register destination, Register source)
+	byterange X86Emitter::emit_bior(register_t destination, register_t source)
 	{
 		// or r/m32, r32
 		return { 0x09, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_bxor(Register destination, Register source)
+	byterange X86Emitter::emit_bxor(register_t destination, register_t source)
 	{
 		// xor r/m32, r32
 		return { 0x31, X86Builder::modrm_rr(destination, source) };
@@ -236,7 +246,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_push(Register source)
+	byterange X86Emitter::emit_push(register_t source)
 	{
 		// NOTE: old format--clobbers the stack pointer register so the `ret` goes bad :(
 		// push r32
@@ -256,7 +266,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_pull(Register destination)
+	byterange X86Emitter::emit_pull(register_t destination)
 	{
 		// NOTE: even if putting data at [esp+0x4], this is still fine to do
 		// Since we first would pop the return value and increment, 
@@ -277,7 +287,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_brnz(std::uint32_t address, Register source)
+	byterange X86Emitter::emit_brnz(std::uint32_t address, register_t source)
 	{
 		// NOTE: old format before using relative jump addresses
 		
@@ -310,7 +320,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_bool(Register source)
+	byterange X86Emitter::emit_bool(register_t source)
 	{
 		byterange out{};
 
@@ -472,22 +482,22 @@ namespace hz
 			{
 				switch (instruction_command->opcode)
 				{
-					case MOVE: result.append_range(emit_move(instruction_command->dst, instruction_command->src)); break;
-					case LOAD: result.append_range(emit_load(instruction_command->dst, instruction_command->mem)); break;
-					case COPY: result.append_range(emit_copy(instruction_command->dst, instruction_command->imm)); break;
-					case SAVE: result.append_range(emit_save(instruction_command->mem, instruction_command->src)); break;
-					case IADD: result.append_range(emit_iadd(instruction_command->dst, instruction_command->src)); break;
-					case ISUB: result.append_range(emit_isub(instruction_command->dst, instruction_command->src)); break;
-					case BAND: result.append_range(emit_band(instruction_command->dst, instruction_command->src)); break;
-					case BIOR: result.append_range(emit_bior(instruction_command->dst, instruction_command->src)); break;
-					case BXOR: result.append_range(emit_bxor(instruction_command->dst, instruction_command->src)); break;
-					case CALL: result.append_range(emit_call(instruction_command->mem)); break;
-					case EXIT: result.append_range(emit_exit()); break;
-					case PUSH: result.append_range(emit_push(instruction_command->src)); break;
-					case PULL: result.append_range(emit_pull(instruction_command->dst)); break;
-					case BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
-					case BOOL: result.append_range(emit_bool(instruction_command->src)); break;
-					case STOP: result.append_range(emit_stop()); break;
+					case Opcode::MOVE: result.append_range(emit_move(instruction_command->dst, instruction_command->src)); break;
+					case Opcode::LOAD: result.append_range(emit_load(instruction_command->dst, instruction_command->mem)); break;
+					case Opcode::COPY: result.append_range(emit_copy(instruction_command->dst, instruction_command->imm)); break;
+					case Opcode::SAVE: result.append_range(emit_save(instruction_command->mem, instruction_command->src)); break;
+					case Opcode::IADD: result.append_range(emit_iadd(instruction_command->dst, instruction_command->src)); break;
+					case Opcode::ISUB: result.append_range(emit_isub(instruction_command->dst, instruction_command->src)); break;
+					case Opcode::BAND: result.append_range(emit_band(instruction_command->dst, instruction_command->src)); break;
+					case Opcode::BIOR: result.append_range(emit_bior(instruction_command->dst, instruction_command->src)); break;
+					case Opcode::BXOR: result.append_range(emit_bxor(instruction_command->dst, instruction_command->src)); break;
+					case Opcode::CALL: result.append_range(emit_call(instruction_command->mem)); break;
+					case Opcode::EXIT: result.append_range(emit_exit()); break;
+					case Opcode::PUSH: result.append_range(emit_push(instruction_command->src)); break;
+					case Opcode::PULL: result.append_range(emit_pull(instruction_command->dst)); break;
+					case Opcode::BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
+					case Opcode::BOOL: result.append_range(emit_bool(instruction_command->src)); break;
+					case Opcode::STOP: result.append_range(emit_stop()); break;
 				}
 			}
 		}

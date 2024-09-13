@@ -1,8 +1,6 @@
 #ifndef HAZE_COMMANDLINEPARSER_H
 #define HAZE_COMMANDLINEPARSER_H
 
-#include "CommandLineOptions.h"
-
 #include <string>
 #include <vector>
 

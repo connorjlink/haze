@@ -6,6 +6,7 @@
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "ErrorReporter.h"
+#include "Symbol.h"
 
 #include <format>
 

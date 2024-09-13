@@ -5,6 +5,7 @@
 #include "Emitter.h"
 #include "CommandLineOptions.h"
 #include "ErrorReporter.h"
+#include "Symbol.h"
 
 // Haze CompilerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -84,7 +85,7 @@ namespace hz
 
 	bool CompilerLinker::optimize()
 	{
-		for (auto& [symbol, function, offset] : linkables)
+		for (auto& [symbol, function, ir, offset] : linkables)
 		{
 			for (auto i = 0; i < function.size(); i++)
 			{
@@ -112,7 +113,7 @@ namespace hz
 
 							auto i0 = AS_INSTRUCTION_COMMAND(c0);
 
-							if (i0->opcode == MOVE &&
+							if (i0->opcode == Opcode::MOVE &&
 								i0->src == i0->dst)
 							{
 								i0->marked_for_deletion = true;
@@ -131,11 +132,11 @@ namespace hz
 
 								auto i1 = AS_INSTRUCTION_COMMAND(c1);
 
-								if ((i0->opcode == PUSH && i0->src == r &&  //push r
-									 i1->opcode == PULL && i1->dst == r) || //pull r
+								if ((i0->opcode == Opcode::PUSH && i0->src == r &&  //push r
+									 i1->opcode == Opcode::PULL && i1->dst == r) || //pull r
 
-									(i0->opcode == PULL && i0->dst == r &&  //pull r
-									 i1->opcode == PUSH && i1->src == r))   //push r
+									(i0->opcode == Opcode::PULL && i0->dst == r &&  //pull r
+									 i1->opcode == Opcode::PUSH && i1->src == r))   //push r
 								{
 									//These instructions are entirely redundant
 									i0->marked_for_deletion = true;
@@ -144,11 +145,11 @@ namespace hz
 									return true;
 								}
 
-								else if ((i0->opcode == SAVE && i0->src == r &&  //save &x, r
-										  i1->opcode == LOAD && i1->dst == r) || //load r, &x
+								else if ((i0->opcode == Opcode::SAVE && i0->src == r &&  //save &x, r
+										  i1->opcode == Opcode::LOAD && i1->dst == r) || //load r, &x
 
-										 (i0->opcode == LOAD && i0->dst == r &&  //load r, &x
-										  i1->opcode == SAVE && i1->src == r))   //save &x, r
+										 (i0->opcode == Opcode::LOAD && i0->dst == r &&  //load r, &x
+										  i1->opcode == Opcode::SAVE && i1->src == r))   //save &x, r
 								{
 									if (i0->mem == i1->mem)
 									{
@@ -187,7 +188,7 @@ namespace hz
 		std::uint32_t address_tracker = 0;
 
 		// resolve the length of each instruction to compute each label's address
-		for (auto& [symbol, function, offset] : linkables)
+		for (auto& [symbol, function, ir, offset] : linkables)
 		{
 			if (symbol->was_referenced)
 			{
@@ -233,7 +234,7 @@ namespace hz
 			}
 		}
 
-		for (auto& [symbol, function, offset] : linkables)
+		for (auto& [symbol, function, ir, offset] : linkables)
 		{
 			// reset the address tracker to be used again
 			address_tracker = 0;
@@ -259,7 +260,7 @@ namespace hz
 
 										if (!patching_instruction->marked_for_deletion)
 										{
-											if (patching_instruction->opcode == BRNZ)
+											if (patching_instruction->opcode == Opcode::BRNZ)
 											{
 												if (patching_instruction->branch_target == label->identifier)
 												{
@@ -298,7 +299,7 @@ namespace hz
 								// Should be able to call the current function recursively...
 								if (instruction->branch_target == symbol->name)
 								{
-									if (instruction->opcode == CALL)
+									if (instruction->opcode == Opcode::CALL)
 									{
 										// compute the absolute address of the jump
 										const auto branch_target = offset;
@@ -330,7 +331,7 @@ namespace hz
 			}
 		}
 
-		for (auto& [symbol, function, offset] : linkables)
+		for (auto& [symbol, function, ir, offset] : linkables)
 		{
 			for (auto i = 0; i < function.size(); i++)
 			{

@@ -5,6 +5,7 @@
 #include "Generator.h"
 #include "Evaluator.h"
 #include "IntegerLiteralExpression.h"
+#include "Symbol.h"
 #include "ErrorReporter.h"
 
 // Haze ReturnStatement.cpp

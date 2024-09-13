@@ -3,6 +3,7 @@
 #include "LabelCommand.h"
 #include "Parser.h"
 #include "Constants.h"
+#include "Symbol.h"
 
 // Haze AssemblerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.

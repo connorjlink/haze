@@ -3,10 +3,10 @@
 #include "Allocation.h"
 #include "Parser.h"
 #include "Symbol.h"
-#include "IdentifierExpression.h"
 #include "Linkable.h"
 #include "LabelCommand.h"
 #include "ErrorReporter.h"
+#include "IntermediateCommand.h"
 
 #include <format>
 #include <algorithm>
@@ -18,7 +18,7 @@
 namespace hz
 {
 	Generator::Generator(std::vector<Node*>&& program, const std::string& filepath)
-		: _program{ std::move(program) }, _linkables{}, _current_function{ -1 }
+		: _program{ std::move(program) }, _current_function{ -1 }
 	{
 		_error_reporter->open_context(filepath, "generating");
 	}
@@ -33,7 +33,7 @@ namespace hz
 	{
 		_current_function++;
 
-		const auto linkable = Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, 0 };
+		const auto linkable = Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 };
 		_linkables.emplace_back(linkable);
 	}
 
@@ -43,51 +43,116 @@ namespace hz
 	}
 
 #define ENCODE(x) _linkables[_current_function].commands.emplace_back(x)
-#define COMPOSE(x)
+#define COMPOSE(x) _linkables[_current_function].ir.emplace_back(x)
+
 	void Generator::begin_scope()
 	{
-		
+		auto command = new EnterScopeCommand{};
+		COMPOSE(command);
 	}
 
 	void Generator::end_scope()
 	{
-		
+		auto command = new LeaveScopeCommand{};
+		COMPOSE(command);
 	}
 
 	void Generator::make_local(register_t location, variable_t value)
 	{
-		
+		auto command = new LocalVariableCommand{ location, value };
+		COMPOSE(command);
 	}
 
 	void Generator::make_global(register_t location, variable_t value)
 	{
-		
+		auto command = new GlobalVariableCommand{ location, value };
+		COMPOSE(command);
 	}
 
 	void Generator::make_add(register_t lhs, register_t rhs, register_t destination)
 	{
-		
+		auto command = new AddCommand{ lhs, rhs, destination };
+		COMPOSE(command);
 	}
 
 	void Generator::make_subtract(register_t lhs, register_t rhs, register_t destination)
 	{
-
+		auto command = new SubtractCommand{ lhs, rhs, destination };
+		COMPOSE(command);
 	}
 
 	void Generator::make_bitor(register_t lhs, register_t rhs, register_t destination)
 	{
-
+		auto command = new BitorCommand{ lhs, rhs, destination };
+		COMPOSE(command);
 	}
 
 	void Generator::make_bitand(register_t lhs, register_t rhs, register_t destination)
 	{
-
+		auto command = new BitandCommand{ lhs, rhs, destination };
+		COMPOSE(command);
 	}
 
 	void Generator::make_bitxor(register_t lhs, register_t rhs, register_t destination)
 	{
-
+		auto command = new BitxorCommand{ lhs, rhs, destination };
+		COMPOSE(command);
 	}
+
+	void Generator::make_copy(register_t destination, register_t source)
+	{
+		auto command = new CopyCommand{ destination, source };
+		COMPOSE(command);
+	}
+
+	void Generator::make_argument(register_t location)
+	{
+		auto command = new MakeArgumentCommand{ location };
+		COMPOSE(command);
+	}
+
+	void Generator::take_argument(register_t location, std::int32_t offset)
+	{
+		auto command = new TakeArgumentCommand{ location, offset };
+		COMPOSE(command);
+	}
+
+	void Generator::call_function(const std::string& function)
+	{
+		auto command = new CallFunctionCommand{ function };
+		COMPOSE(command);
+	}
+
+	void Generator::make_return()
+	{
+		auto command = new VoidReturnCommand{};
+		COMPOSE(command);
+	}
+
+	void Generator::make_return(register_t value)
+	{
+		auto command = new ValueReturnCommand{ value };
+		COMPOSE(command);
+	}
+
+	void Generator::journal_entry()
+	{
+		auto command = new JournalEntryCommand{};
+		COMPOSE(command);
+	}
+
+	void Generator::journal_leave()
+	{
+		auto command = new JournalLeaveCommand{};
+		COMPOSE(command);
+	}
+
+	void Generator::make_ifnz(register_t value, const std::vector<IntermediateCommand*>& code)
+	{
+		auto command = new IfNotZeroCommand{ value, code };
+		COMPOSE(command);
+	}
+
 
 
 	void Generator::make_move(register_t destination, register_t source)
@@ -238,7 +303,7 @@ namespace hz
 
 	std::uint32_t Generator::write_pointer() const
 	{
-		return static_cast<std::uint32_t>(linkables[current_function].commands.size());
+		return static_cast<std::uint32_t>(_linkables[_current_function].commands.size());
 	}
 
 	void Generator::image(std::vector<InstructionCommand*>&& object_code, std::uint32_t approximate_size)
@@ -248,18 +313,18 @@ namespace hz
 		dummy_command->embedded_object_code = std::move(object_code);
 		dummy_command->approximate_embedded_size = approximate_size;
 
-		linkables[current_function].commands.emplace_back(dummy_command);
+		_linkables[_current_function].commands.emplace_back(dummy_command);
 	}
 
 	std::vector<Linkable> Generator::generate()
 	{
-		for (auto function : program)
+		for (auto function : _program)
 		{
 			function->generate();
 		}
 
 		// Reorders the functions so `main` is first since it's the entrypoint
-		std::ranges::partition(linkables, [](auto& linkable)
+		std::ranges::partition(_linkables, [](auto& linkable)
 		{
 			if (linkable.symbol->name == "main")
 			{
@@ -271,6 +336,6 @@ namespace hz
 			return false;
 		});
 
-		return linkables;	
+		return _linkables;	
 	}
 }

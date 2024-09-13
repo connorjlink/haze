@@ -125,6 +125,8 @@ namespace hz
 		const auto subsystem = BinaryUtilities::range16(0x0003); //  /SUBSYSTEM:CONSOLE
 		const auto directory_count = BinaryUtilities::range32(0x00000010); // max 16
 
+#pragma message("TODO: support growing the stack here to make overflowing at fixed 16k frame size harder!")
+
 		byterange out{};
 
 		PUT(magic);

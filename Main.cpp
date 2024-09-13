@@ -8,8 +8,10 @@
 #include "CompilerToolchain.h"
 #include "AssemblerToolchain.h"
 #include "InterpreterToolchain.h"
-#include "ErrorReporter.h"
+#include "CommandLineOptions.h"
 #include "Parser.h"
+#include "X86BuilderValidator.h"
+#include "ErrorReporter.h"
 
 #include <exception>
 
@@ -50,7 +52,19 @@ int main(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 
 	_file_manager = new FileManager{};
-	
+
+
+	auto validators = std::vector<Validator*>
+	{
+		new X86BuilderValidator{},
+	};
+
+	for (auto validator : validators)
+	{
+		validator->run_tests();
+	}
+
+
 	for (auto& filepath : command_line_parser.files())
 	{
 		try
