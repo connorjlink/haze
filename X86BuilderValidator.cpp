@@ -69,6 +69,18 @@ namespace hz
 		auto test3 = Test{ "push_r()", validate_push_r };
 		test3.attach(parameters3);
 		add_test(test3);
+
+		//push 8-bit immediate encoding synthesis
+		auto parameters4 = _error_reporter->open_context(_FILENAME, "validating push_i()");
+		auto test4 = Test{ "push_i()", validate_push_i };
+		test4.attach(parameters4);
+		add_test(test4);
+
+		//push 32-bit immediate (memory effective address) encoding synthesis
+		auto parameters5 = _error_reporter->open_context(_FILENAME, "validating push_m()");
+		auto test5 = Test{ "push_m()", validate_push_m };
+		test5.attach(parameters5);
+		add_test(test5);
 	}
 
 
@@ -208,4 +220,79 @@ namespace hz
 
 		return had_error;
 	}
+
+	bool X86BuilderValidator::validate_push_i(TestParameters parameters)
+	{
+		auto had_error = false;
+
+		// 0x00 - 0
+		auto case0 = X86Builder::push_i(0x00);
+		byterange expected0 = { 0x6A, 0x00 };
+		VALIDATE_CONVERT("push_i(0x00)", expected0, case0);
+
+		// 0x11 - +17
+		auto case1 = X86Builder::push_i(0x11);
+		byterange expected1 = { 0x6A, 0x11 };
+		VALIDATE_CONVERT("push_i(0x11)", expected1, case1);
+
+		// 0x7F - +127
+		auto case2 = X86Builder::push_i(0x7F);
+		byterange expected2 = { 0x6A, 0x7F };
+		VALIDATE_CONVERT("push_i(0x7F)", expected2, case2);
+
+		// 0x80 - -128
+		auto case3 = X86Builder::push_i(0x80);
+		byterange expected3 = { 0x6A, 0x80 };
+		VALIDATE_CONVERT("push_i(0x80)", expected3, case3);
+
+		// 0xBB - -69
+		auto case4 = X86Builder::push_i(0xBB);
+		byterange expected4 = { 0x6A, 0xBB };
+		VALIDATE_CONVERT("push_i(0xBB)", expected4, case4);
+
+		// 0xFF - -1
+		auto case5 = X86Builder::push_i(0xFF);
+		byterange expected5 = { 0x6A, 0xFF };
+		VALIDATE_CONVERT("push_i(0xFF)", expected5, case5);
+
+		return had_error;
+	}
+
+	bool X86BuilderValidator::validate_push_m(TestParameters parameters)
+	{
+		auto had_error = false;
+
+		// 0x00000000 - 0
+		auto case0 = X86Builder::push_m(0x00000000);
+		byterange expected0 = { 0x68, 0x00, 0x00, 0x00, 0x00 };
+		VALIDATE_CONVERT("push_m(0x00000000)", expected0, case0);
+
+		// 0x000000FF - 255
+		auto case1 = X86Builder::push_m(0x000000FF);
+		byterange expected1 = { 0x68, 0xFF, 0x00, 0x00, 0x00 };
+		VALIDATE_CONVERT("push_m(0x000000FF)", expected1, case1);
+
+		// 0x0000FF00 - 65280
+		auto case2 = X86Builder::push_m(0x0000FF00);
+		byterange expected2 = { 0x68, 0x00, 0xFF, 0x00, 0x00 };
+		VALIDATE_CONVERT("push_m(0x0000FF00)", expected2, case2);
+
+		// 0x00FF0000 - 16711680
+		auto case3 = X86Builder::push_m(0x00FF0000);
+		byterange expected3 = { 0x68, 0x00, 0x00, 0xFF, 0x00 };
+		VALIDATE_CONVERT("push_m(0x00FF0000)", expected3, case3);
+
+		// 0xFF000000 - -16777216
+		auto case4 = X86Builder::push_m(0xFF000000);
+		byterange expected4 = { 0x68, 0x00, 0x00, 0x00, 0xFF };
+		VALIDATE_CONVERT("push_m(0xFF000000)", expected4, case4);
+
+		// 0x12345678 - 305419896
+		auto case5 = X86Builder::push_m(0x12345678);
+		byterange expected5 = { 0x68, 0x78, 0x56, 0x34, 0x12 };
+		VALIDATE_CONVERT("push_m(0x12345678)", expected5, case5);
+
+		return had_error;
+	}
+
 }
