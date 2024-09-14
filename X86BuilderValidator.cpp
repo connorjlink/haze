@@ -2,6 +2,7 @@
 #include "X86Builder.h"
 #include "ErrorReporter.h"
 
+#include <string>
 #include <format>
 
 // Haze X86BuilderValidator.cpp
@@ -10,15 +11,35 @@
 // `x` is the error context
 // `v` is the expected value
 // `e` is the variable against which to compare
-#define VALIDATE(x, v, e) if (e != v) \
+#define VALIDATE_IMPL(x, v, e, a, b, p) if (e != v) \
 { \
-	_error_reporter->post_error(std::format("{} != 0x{:02X} (actually 0x{:02X})", x, v, e), NULL_TOKEN); \
+	_error_reporter->post_error(parameters.context, parameters.file, \
+		std::format(x " != {} (actually " p, a, b), NULL_TOKEN); \
 	had_error = true; \
 }
+
+#define VALIDATE(x, v, e) VALIDATE_IMPL(x, v, e, v, e, "0x{:02X})")
+#define VALIDATE_CONVERT(x, v, e) VALIDATE_IMPL(x, v, e, ::bytestring(v), ::bytestring(e), "{})")
 
 namespace
 {
 	constexpr auto _FILENAME = "X86Builder.cpp";
+
+	using namespace hz;
+
+	std::string bytestring(byterange bytes)
+	{
+		std::string result = "{ ";
+
+		for (auto byte : bytes)
+		{
+			result += std::format("0x{:02X}, ", byte);
+		}
+
+		result = result.substr(0, result.length() - 2);
+
+		return result + " }";
+	}
 }
 
 namespace hz
@@ -26,15 +47,15 @@ namespace hz
 	X86BuilderValidator::X86BuilderValidator()
 	{
 		//generic mod/rm byte encoding synthesis
-		auto context0 = _error_reporter->open_context(_FILENAME, "validating modrm()");
+		auto parameters0 = _error_reporter->open_context(_FILENAME, "validating modrm()");
 		auto test0 = Test{ "modrm()", validate_modrm };
-		test0.attach(context0);
+		test0.attach(parameters0);
 		add_test(test0);
 
 		//reg/reg-specific mod/rm byte encoding synthesis
-		auto context1 = _error_reporter->open_context(_FILENAME, "validating modrm_rr()");
+		auto parameters1 = _error_reporter->open_context(_FILENAME, "validating modrm_rr()");
 		auto test1 = Test{ "modrm_rr()", validate_modrm_rr };
-		test1.attach(context1);
+		test1.attach(parameters1);
 		add_test(test1);
 
 		//generic sib byte encoding synthesis
@@ -42,6 +63,12 @@ namespace hz
 		auto test2 = Test{ "sib()", validate_sib };
 		test2.attach(parameters2);
 		add_test(test2);
+
+		//push 32-bit register encoding synthesis
+		auto parameters3 = _error_reporter->open_context(_FILENAME, "validating push_r()");
+		auto test3 = Test{ "push_r()", validate_push_r };
+		test3.attach(parameters3);
+		add_test(test3);
 	}
 
 
@@ -141,6 +168,43 @@ namespace hz
 		// 0x74 - esp, esi
 		auto case5 = X86Builder::sib(0b01, ESI, ESP);
 		VALIDATE("sib(0b01, ESI, ESP)", 0x74, case5);
+
+		return had_error;
+	}
+
+	bool X86BuilderValidator::validate_push_r(TestParameters parameters)
+	{
+		auto had_error = false;
+
+		// 0x50 - eax
+		auto case0 = X86Builder::push_r(EAX);
+		byterange expected0 = { 0x50 };
+		VALIDATE_CONVERT("push_r(EAX)", expected0, case0);
+
+		// 0x51 - ecx
+		auto case1 = X86Builder::push_r(ECX);
+		byterange expected1 = { 0x51 };
+		VALIDATE_CONVERT("push_r(ECX)", expected1, case1);
+
+		// 0x53 - ebx
+		auto case2 = X86Builder::push_r(EBX);
+		byterange expected2 = { 0x53 };
+		VALIDATE_CONVERT("push_r(EBX)", expected2, case2);
+
+		// 0x54 - esp
+		auto case3 = X86Builder::push_r(ESP);
+		byterange expected3 = { 0x54 };
+		VALIDATE_CONVERT("push_r(ESP)", expected3, case3);
+
+		// 0x56 - esi
+		auto case4 = X86Builder::push_r(ESI);
+		byterange expected4 = { 0x56 };
+		VALIDATE_CONVERT("push_r(ESI)", expected4, case4);
+
+		// 0x57 - edi
+		auto case5 = X86Builder::push_r(EDI);
+		byterange expected5 = { 0x57 };
+		VALIDATE_CONVERT("push_r(EDI)", expected5, case5);
 
 		return had_error;
 	}
