@@ -8,7 +8,7 @@
 #include "ErrorReporter.h"
 #include "SymbolType.h"
 
-#include <format>
+import std;
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

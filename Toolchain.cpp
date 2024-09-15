@@ -6,8 +6,10 @@
 #include "ErrorReporter.h"
 #include "Log.h"
 
+import std;
 
-#include <cstdlib>
+// Haze Toolchain.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

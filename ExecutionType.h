@@ -4,6 +4,9 @@
 #include <string>
 #include <unordered_map>
 
+// Haze ExecutionType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	enum class ExecutionType

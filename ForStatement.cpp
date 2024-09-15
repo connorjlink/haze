@@ -6,8 +6,7 @@
 #include "Evaluator.h"
 #include "ErrorReporter.h"
 
-#include <format>
-#include <variant>
+import std;
 
 // Haze ForStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

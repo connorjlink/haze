@@ -2,8 +2,7 @@
 #include "X86Builder.h"
 #include "ErrorReporter.h"
 
-#include <string>
-#include <format>
+import std;
 
 // Haze X86BuilderValidator.cpp
 // (c) Connor J. Link. All Rights Reserved.

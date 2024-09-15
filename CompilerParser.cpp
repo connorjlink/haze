@@ -18,7 +18,7 @@
 #include "CommandLineOptions.h"
 #include "Symbol.h"
 
-#include <format>
+import std;
 
 namespace hz
 {

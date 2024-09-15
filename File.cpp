@@ -1,8 +1,7 @@
 #include "File.h"
 #include "ErrorReporter.h"
 
-#include <fstream>
-#include <filesystem>
+import std;
 
 // Haze File.cpp
 // (c) Connor J. Link. All Rights Reserved.

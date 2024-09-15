@@ -2,7 +2,7 @@
 #include "InstructionCommand.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze HazeEmitter.cpp
 // (c) Connor J. Link. All Rights Reserved.

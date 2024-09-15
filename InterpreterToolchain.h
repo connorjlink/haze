@@ -3,6 +3,9 @@
 
 #include "Toolchain.h"
 
+// Haze InterpreterToolchain.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class InterpreterToolchain : public Toolchain

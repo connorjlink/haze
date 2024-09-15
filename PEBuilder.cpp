@@ -4,7 +4,7 @@
 #include "BinaryConstants.h"
 #include "ErrorReporter.h"
 
-#include <fstream>
+import std;
 
 // Haze PEBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.

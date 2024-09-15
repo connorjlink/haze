@@ -72,6 +72,9 @@
     <Filter Include="Example Files">
       <UniqueIdentifier>{c544c3b4-6538-433a-8e74-ebec2fcf0e5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Register">
+      <UniqueIdentifier>{40b958de-7eb1-4f01-b42e-3d4e7cf47798}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -93,12 +96,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Disassembler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Linkable.cpp">
@@ -311,6 +308,18 @@
     <ClCompile Include="Validator.cpp">
       <Filter>Source Files\Validator</Filter>
     </ClCompile>
+    <ClCompile Include="Allocation.cpp">
+      <Filter>Source Files\Register</Filter>
+    </ClCompile>
+    <ClCompile Include="Allocator.cpp">
+      <Filter>Source Files\Register</Filter>
+    </ClCompile>
+    <ClCompile Include="StackAllocator.cpp">
+      <Filter>Source Files\Register</Filter>
+    </ClCompile>
+    <ClCompile Include="HeapAllocator.cpp">
+      <Filter>Source Files\Register</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -341,12 +350,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Disassembler.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocation.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="RandomUtility.h">
@@ -627,6 +630,24 @@
     </ClInclude>
     <ClInclude Include="Test.h">
       <Filter>Source Files\Validator</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorState.h">
+      <Filter>Source Files\Error</Filter>
+    </ClInclude>
+    <ClInclude Include="StackAllocator.h">
+      <Filter>Source Files\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocation.h">
+      <Filter>Source Files\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>Source Files\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="AllocationType.h">
+      <Filter>Source Files\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="HeapAllocator.h">
+      <Filter>Source Files\Register</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

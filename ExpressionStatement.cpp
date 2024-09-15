@@ -1,8 +1,6 @@
 #include "ExpressionStatement.h"
 #include "Allocation.h"
 
-#include <format>
-
 // Haze ExpressionStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
 

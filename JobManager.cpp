@@ -1,7 +1,7 @@
 #include "JobManager.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze JobManager.cpp
 // (c) Connor J. Link. All Rights Reserved.

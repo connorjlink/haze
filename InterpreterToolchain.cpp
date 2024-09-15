@@ -3,6 +3,12 @@
 #include "InterpreterParser.h"
 #include "HazeEvaluator.h"
 #include "ErrorReporter.h"
+#include "ErrorState.h"
+
+import std;
+
+// Haze InterpreterToolchain.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -22,7 +28,17 @@ namespace hz
 
 		const auto evaluate_task = _job_manager->begin_job("evaluating");
 		const auto evaluator = new HazeEvaluator{ std::move(declarators), _filepath };
-		evaluator->evaluate();
+		
+		if (setjmp(_jump_state) == 0)
+		{
+			evaluator->evaluate();
+		}
+
+		else
+		{
+			_error_reporter->post_information("exit condition encountered", NULL_TOKEN);
+		}
+
 		_job_manager->end_job(evaluate_task);
 
 		_error_reporter->close_context();

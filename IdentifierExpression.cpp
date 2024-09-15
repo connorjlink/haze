@@ -8,7 +8,7 @@
 #include "ErrorReporter.h"
 #include "Symbol.h"
 
-#include <format>
+import std;
 
 // Haze IdentifierExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

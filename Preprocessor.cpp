@@ -1,12 +1,7 @@
 #include "Preprocessor.h"
 #include "ErrorReporter.h"
 
-#include <regex>
-#include <fstream>
-#include <cctype>
-#include <format>
-#include <filesystem>
-#include <ranges>
+import std;
 
 // Haze Preprocessor.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,6 +1,6 @@
 #include "ErrorContext.h"
 
-#include <format>
+import std;
 
 // Haze ErrorContext.cpp
 // (c) Connor J. Link. All Rights Reserved.

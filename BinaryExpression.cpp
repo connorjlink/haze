@@ -7,7 +7,7 @@
 #include "Evaluator.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze BinaryExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

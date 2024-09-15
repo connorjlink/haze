@@ -5,7 +5,7 @@
 #include "RandomUtility.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze WhileStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -25,7 +25,7 @@ namespace hz
 	void WhileStatement::generate(Allocation*)
 	{
 		// we need to force allocate this one :(
-		ManagedStaticAllocation condition_allocation{ DC, true };
+		AutoStackAllocation condition_allocation{};
 
 		// 3 digits of randomness for now
 		const auto loop_uuid = hz::generate(3);
@@ -37,10 +37,10 @@ namespace hz
 
 		body->generate();
 
-		condition->generate(condition_allocation.allocation);
+		condition->generate(condition_allocation);
 		
 		// unfortunately our processor's limitation also mean we need to force this mess, too :(
-		ManagedStaticAllocation temp{ condition_allocation.allocation->read(), true };
+		AutoStackAllocation temp{ condition_allocation.allocation };
 #pragma message("TODO: code generation for while")
 
 		// TODO: finish while statement codegen here!

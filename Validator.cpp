@@ -2,11 +2,10 @@
 #include "ErrorReporter.h"
 #include "Log.h"
 
-#include <format>
+import std;
 
 // Haze Validator.cpp
 // (c) Connor J. Link. All Rights Reserved.
-
 
 namespace hz
 {

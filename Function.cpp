@@ -10,7 +10,7 @@
 #include "Symbol.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze Function.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,9 +1,7 @@
 #include "CommandLineOptions.h"
 #include "Log.h"
 
-#include <iostream>
-#include <format>
-#include <cstdlib>
+import std;
 
 // Haze Log.cpp
 // (c) Connor J. Link. All Rights Reserved.

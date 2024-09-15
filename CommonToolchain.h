@@ -1,12 +1,14 @@
 #ifndef HAZE_COMMONTOOLCHAIN_H
 #define HAZE_COMMONTOOLCHAIN_H
 
-#include "Linkable.h"
 #include "Constants.h"
 
 #include <string>
 #include <vector>
 #include <cstdint>
+
+// Haze CommonToolchain.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

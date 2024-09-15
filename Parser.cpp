@@ -14,7 +14,10 @@
 #include "Symbol.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
+
+// Haze Parser.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace
 {

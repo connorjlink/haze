@@ -8,6 +8,9 @@
 #include <string>
 #include <unordered_map>
 
+// Haze ToolchainType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	enum class ToolchainType

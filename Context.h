@@ -1,13 +1,16 @@
 #ifndef HAZE_CONTEXT_H
 #define HAZE_CONTEXT_H
 
+//#include "Hook.h"
+
 #include <string>
 #include <vector>
 #include <stack>
 #include <variant>
 #include <unordered_map>
 
-//#include "Hook.h"
+// Haze Context.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {	
@@ -35,6 +38,7 @@ namespace hz
 
 	private:
 		//Hook _hook;
+		bool _executing = true;
 
 	public:
 		void define_variable(std::string, variable_t);
@@ -57,6 +61,7 @@ namespace hz
 
 	public:
 		void print(const std::string& message);
+		void exit(variable_t);
 
 	public:
 		Context()

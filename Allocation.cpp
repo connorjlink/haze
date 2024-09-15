@@ -5,22 +5,66 @@
 #include "IdentifierExpression.h"
 #include "Log.h"
 
-#include <format>
+import std;
+
+// Haze Allocation.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	Allocation::Type StaticAllocation::atype() const
+	AllocationType StackAllocation::atype() const
 	{
-		return Allocation::Type::STATIC;
+		return AllocationType::STACK;
 	}
 
-	Allocation::Type DynamicAllocation::atype() const
+	AllocationType AutoStackAllocationImpl::atype() const
 	{
-		return Allocation::Type::DYNAMIC;
+		return AllocationType::STACK_AUTO;
+	}
+
+	AllocationType AutoStackAllocation::atype() const
+	{
+		return AllocationType::STACK_AUTO;
+	}
+
+	AllocationType HeapAllocation::atype() const
+	{
+		return AllocationType::HEAP;
+	}
+
+	AllocationType AutoHeapAllocationImpl::atype() const
+	{
+		return AllocationType::HEAP_AUTO;
+	}
+
+	AllocationType AutoHeapAllocation::atype() const
+	{
+		return AllocationType::HEAP_AUTO;
 	}
 
 
-	StaticAllocation::~StaticAllocation()
+	StackAllocation::StackAllocation()
+	{
+		allocation = _stack_allocator->allocate();
+	}
+
+	AutoStackAllocationImpl::~AutoStackAllocationImpl()
+	{
+		_stack_allocator->release(allocation);
+	}
+
+	AutoStackAllocation::AutoStackAllocation()
+	{
+		_source = new AutoStackAllocationImpl{};
+	}
+
+	AutoStackAllocation::~AutoStackAllocation()
+	{
+		delete _source;
+	}
+
+
+	/*StaticAllocation::~StaticAllocation()
 	{
 		if (was_forced)
 		{
@@ -141,5 +185,5 @@ namespace hz
 	ManagedDynamicAllocation::~ManagedDynamicAllocation()
 	{
 		delete allocation;
-	}
+	}*/
 }

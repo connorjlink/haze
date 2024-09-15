@@ -9,8 +9,10 @@
 #include "CommandLineOptions.h"
 #include "ErrorContext.h"
 
-#include <fstream>
-#include <format>
+import std;
+
+// Haze CompilerToolchain.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

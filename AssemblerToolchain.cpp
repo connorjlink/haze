@@ -8,6 +8,9 @@
 #include "CommonToolchain.h"
 #include "ErrorReporter.h"
 
+// Haze AssemblerToolchain.cpp
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	ToolchainType AssemblerToolchain::ttype() const

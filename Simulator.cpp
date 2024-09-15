@@ -4,7 +4,7 @@
 #include "Token.h"
 #include "Log.h"
 
-#include <iostream>
+import std;
 
 // Haze Simulator.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -16,7 +16,7 @@ namespace hz
 		VERBOSE,
 	};
 
-	static const std::unordered_map<std::string, VerbosityType> _verbosity__type_map
+	static const std::unordered_map<std::string, VerbosityType> _verbosity_type_map
 	{
 		{ "quiet", VerbosityType::QUIET },
 		{ "normal", VerbosityType::NORMAL },

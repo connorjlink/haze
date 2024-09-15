@@ -2,8 +2,6 @@
 #include "InstructionEncoding.h"
 #include "Generator.h"
 
-#include <format>
-
 // Haze NullStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -21,6 +19,7 @@ namespace hz
 
 	void NullStatement::generate(Allocation*)
 	{
+		// Generate a `nop` instructio
 		_generator->make_move(R0, R0);
 	}
 

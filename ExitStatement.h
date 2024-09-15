@@ -12,12 +12,12 @@ namespace hz
 
 	class ExitStatement : public Statement
 	{
-	public:
-		Expression* code;
+	private:
+		Expression* _code;
 
 	public:
 		ExitStatement(Expression* code, Token token)
-			: Statement{ token }, code{ code }
+			: Statement{ token }, _code{ code }
 		{
 		}
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-// Haze Lexer.cpp
+// Haze Lexer.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

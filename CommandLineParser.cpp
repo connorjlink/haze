@@ -3,8 +3,7 @@
 #include "CommandLineOptions.h"
 #include "ErrorReporter.h"
 
-#include <vector>
-#include <ranges>
+import std;
 
 // Haze CommandLineParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -89,13 +88,13 @@ namespace hz
 
 					case VERBOSITY:
 					{
-						if (!_verbosity__type_map.contains(value))
+						if (!_verbosity_type_map.contains(value))
 						{
 							_error_reporter->post_warning(std::format("unrecognized verbosity type {}", value), NULL_TOKEN);
 							continue;
 						}
 
-						_options->_verbosity = _verbosity__type_map.at(value);
+						_options->_verbosity = _verbosity_type_map.at(value);
 					} break;
 
 					case EXECUTION:

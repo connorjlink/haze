@@ -9,6 +9,9 @@
 #include <vector>
 #include <unordered_map>
 
+// Haze Toolchain.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Toolchain

@@ -13,7 +13,7 @@
 #include "X86BuilderValidator.h"
 #include "ErrorReporter.h"
 
-#include <exception>
+import std;
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.

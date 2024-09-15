@@ -30,6 +30,7 @@
     <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClInclude Include="AllocationType.h" />
     <ClInclude Include="ArchitectureType.h" />
     <ClCompile Include="ArgumentExpression.cpp" />
     <ClCompile Include="AssemblerLinker.cpp" />
@@ -59,6 +60,7 @@
     <ClCompile Include="ForStatement.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
     <ClCompile Include="HazeEvaluator.cpp" />
+    <ClCompile Include="HeapAllocator.cpp" />
     <ClCompile Include="Hook.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -122,6 +124,7 @@
     <ClCompile Include="ReturnStatement.cpp" />
     <ClCompile Include="Scope.cpp" />
     <ClCompile Include="Simulator.cpp" />
+    <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Statement.cpp" />
     <ClCompile Include="StringExpression.cpp" />
     <ClCompile Include="Symbol.cpp" />
@@ -129,11 +132,14 @@
     <ClCompile Include="RandomUtility.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClInclude Include="ErrorState.h" />
     <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
+    <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />
     <ClInclude Include="IntermediateCommand.h" />
     <ClInclude Include="IntermediateType.h" />
+    <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Scope.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="TypeSpecifier.h" />
@@ -387,6 +393,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -406,6 +413,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <BuildStlModules>true</BuildStlModules>
+      <DisableSpecificWarnings>4530;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -426,6 +435,7 @@
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -444,6 +454,7 @@
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -477,6 +488,8 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <OpenMPSupport>true</OpenMPSupport>
+      <BuildStlModules>true</BuildStlModules>
+      <DisableSpecificWarnings>4530;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -503,7 +516,7 @@
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv84</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
@@ -513,6 +526,8 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <OpenMPSupport>true</OpenMPSupport>
+      <BuildStlModules>true</BuildStlModules>
+      <DisableSpecificWarnings>4530;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

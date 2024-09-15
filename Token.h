@@ -1,10 +1,10 @@
 #ifndef HAZE_TOKEN_H
 #define HAZE_TOKEN_H
 
+#include "Bimap.h"
+
 #include <string_view>
 #include <cstdint>
-
-#include "Bimap.h"
 
 // Haze Token.h
 // (c) Connor J. Link. All Rights Reserved.

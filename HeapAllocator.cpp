@@ -1,9 +1,9 @@
-﻿#include "Scope.h"
+#include "HeapAllocator.h"
 
-// Haze Scope.cpp
+// Haze HeapAllocator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	
+
 }

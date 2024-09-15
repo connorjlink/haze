@@ -3,6 +3,9 @@
 
 #include "Toolchain.h"
 
+// Haze AssemblerToolchain.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class AssemblerToolchain : public Toolchain

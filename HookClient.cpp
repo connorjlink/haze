@@ -1,7 +1,6 @@
 #include "HookClient.h"
 
-#include <format>
-#include <chrono>
+import std;
 
 // Haze HookClient.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -12,9 +12,7 @@
 #include "Simulator.h"
 #include "PEBuilder.h"
 
-#include <fstream>
-#include <filesystem>
-#include <format>
+import std;
 
 // Haze CommonToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

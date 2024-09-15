@@ -8,9 +8,7 @@
 #include "ErrorReporter.h"
 #include "IntermediateCommand.h"
 
-#include <format>
-#include <algorithm>
-#include <cstdlib>
+import std;
 
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -4,6 +4,9 @@
 #include "SymbolType.h"
 #include "Function.h"
 
+// Haze Symbol.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class Allocation;

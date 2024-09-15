@@ -1,7 +1,7 @@
 #include "HookTopicBuilder.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze HookTopicBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.

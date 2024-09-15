@@ -2,98 +2,124 @@
 #define HAZE_ALLOCATION_H
 
 #include "InstructionCommand.h"
+#include "AllocationType.h"
+#include "StackAllocator.h"
+#include "HeapAllocator.h"
 
 #include <cstdint>
-
-#define AS_STATIC_ALLOCATION(x) static_cast<StaticAllocation*>(x)
-#define AS_DYNAMIC_ALLOCATION(x) static_cast<DynamicAllocation*>(x)
 
 namespace hz
 {
 	class Allocation
 	{
-	protected:
-		enum class Type
-		{
-			STATIC,
-			DYNAMIC,
-		};
-
 	public:
-		virtual Allocation::Type atype() const = 0;
-
 		virtual ~Allocation()
 		{
 		}
 
-		virtual Register read() = 0;
-		virtual void write(std::uint8_t) = 0;
-		virtual void copy(Allocation*) const = 0;
+	public:
+		virtual AllocationType atype() const = 0;
+		virtual register_t read() const = 0;
+		virtual void write(std::uint8_t) const = 0;
+		virtual void copy_into(Allocation*) const = 0;
 	};
 
-	class StaticAllocation : public Allocation
+	class StackAllocation : public Allocation
 	{
 	public:
-		Register reg;
-		bool was_forced;
+		register_t allocation;
 
 	public:
-		StaticAllocation(Register reg, bool was_forced)
-			: reg{ reg }, was_forced{ was_forced }
-		{
-		}
+		virtual AllocationType atype() const override;
+		virtual register_t read() const final override;
+		virtual void write(std::uint8_t) const final override;
+		virtual void copy_into(Allocation*) const final override;
 
 	public:
-		virtual Allocation::Type atype() const final override;
-
-		virtual ~StaticAllocation() final override;
-
-		virtual Register read() final override;
-		virtual void write(std::uint8_t) final override;
-		virtual void copy(Allocation*) const final override;
+		StackAllocation();
 	};
 
-	class DynamicAllocation : public Allocation
+	class AutoStackAllocationImpl : public StackAllocation
+	{
+	public:
+		using StackAllocation::StackAllocation;
+
+	public:
+		virtual AllocationType atype() const final override;
+
+	public:
+		~AutoStackAllocationImpl();
+	};
+
+	class AutoStackAllocation
+	{
+	private:
+		AutoStackAllocationImpl* _source;
+
+	public:
+		AllocationType atype() const;
+		register_t read() const;
+		void write(std::uint8_t) const;
+		void copy_into(Allocation*) const;
+
+	public:
+		AutoStackAllocation();
+		~AutoStackAllocation();
+	};
+
+	class HeapAllocation : public Allocation
 	{
 	public:
 		std::uint32_t address;
-		bool need_free;
+		std::uint32_t bytes;
 
 	public:
-		DynamicAllocation(std::uint32_t address, bool need_free = false)
-			: address{ address }, need_free{ need_free }
+		virtual AllocationType atype() const override;
+		virtual register_t read() const final override;
+		virtual void write(std::uint8_t) const final override;
+		virtual void copy_into(Allocation*) const final override;
+
+	public:
+		HeapAllocation(std::uint32_t bytes)
+			: bytes{ bytes }
 		{
+			address = _heap_allocator->allocate(bytes);
 		}
-
-	public:
-		virtual Allocation::Type atype() const final override;
-
-		virtual ~DynamicAllocation() final override;
-
-		virtual Register read() final override;
-		virtual void write(std::uint8_t) final override;
-		virtual void copy(Allocation*) const final override;
 	};
 
-
-	class ManagedStaticAllocation
+	class AutoHeapAllocationImpl : public HeapAllocation
 	{
 	public:
-		StaticAllocation* allocation;
+		virtual AllocationType atype() const final override;
 
 	public:
-		ManagedStaticAllocation(Register = DC, bool = false);
-		~ManagedStaticAllocation();
+		~AutoHeapAllocationImpl()
+		{
+			_heap_allocator->release(address, bytes);
+		}
 	};
 
-	class ManagedDynamicAllocation
+	class AutoHeapAllocation
 	{
 	public:
-		DynamicAllocation* allocation;
+		AutoHeapAllocationImpl* _source;
 
 	public:
-		ManagedDynamicAllocation(std::uint32_t = 1, bool = true);
-		~ManagedDynamicAllocation();
+		AllocationType atype() const;
+		register_t read() const;
+		void write(std::uint8_t) const;
+		void copy_into(Allocation*) const;
+
+	public:
+		AutoHeapAllocation()
+		{
+			_source = new AutoHeapAllocationImpl{};
+		}
+		
+		~AutoHeapAllocation()
+		{
+			delete _source;
+		}
 	};
 }
 

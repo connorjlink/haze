@@ -3,6 +3,9 @@
 
 #include "Intrinsic.h"
 
+// Haze ColorIntrinsic.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class ColorIntrinsic : public Intrinsic

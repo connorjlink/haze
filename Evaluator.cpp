@@ -3,10 +3,9 @@
 #include "StringExpression.h"
 #include "ErrorReporter.h"
 
-#include <format>
-#include <variant>
+import std;
 
-// Haze ArgumentExpression.cpp
+// Haze Evaluator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

@@ -1,5 +1,11 @@
 #include "Context.h"
 #include "ErrorReporter.h"
+#include "ErrorState.h"
+
+import std;
+
+// Haze Context.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -60,5 +66,30 @@ namespace hz
 	void Context::print(const std::string& message)
 	{
 		_error_reporter->post_information(message, NULL_TOKEN);
+	}
+
+	void Context::exit(variable_t value)
+	{
+		switch (value.index())
+		{
+			case 0: 
+			{
+				auto int_value = std::get<0>(value);
+				_error_reporter->post_information(std::format("exited with code `{}`", int_value), NULL_TOKEN);
+			} break;
+
+			case 1:
+			{
+				auto string_value = std::get<1>(value);
+				_error_reporter->post_information(std::format("exited with message `{}`", string_value), NULL_TOKEN);
+			} break;
+
+			default:
+			{
+				_error_reporter->post_error("invalid type for `exit`", NULL_TOKEN);
+			} break;
+		}
+
+		std::longjmp(_jump_state, 1);
 	}
 }

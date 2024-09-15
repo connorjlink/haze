@@ -1,6 +1,7 @@
 #include "ColorIntrinsic.h"
 
-#include <format>
+// Haze ColorIntrinsic.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

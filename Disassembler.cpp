@@ -2,7 +2,10 @@
 #include "InstructionCommand.h"
 #include "Constants.h"
 
-#include <format>
+import std;
+
+// Haze Disassembler.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

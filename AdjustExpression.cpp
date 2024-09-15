@@ -7,7 +7,7 @@
 #include "Allocation.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze AdjustExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -27,17 +27,15 @@ namespace hz
 	void AdjustExpression::generate(Allocation* allocation)
 	{
 		target->generate(allocation);
-		ManagedStaticAllocation temp{ allocation->read(), true };
-		_generator->make_copy(temp.allocation->read(), 1);
 
 		if (increment)
 		{
-			_generator->make_iadd(allocation->read(), temp.allocation->read());
+			_generator->make_increment(allocation->read());
 		}
 
 		else
 		{
-			_generator->make_isub(allocation->read(), temp.allocation->read());
+			_generator->make_decrement(allocation->read());
 		}
 	}
 

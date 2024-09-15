@@ -1,7 +1,7 @@
 #include "Lexer.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.

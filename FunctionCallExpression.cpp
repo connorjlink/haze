@@ -6,7 +6,7 @@
 #include "Symbol.h"
 #include "ErrorReporter.h"
 
-#include <format>
+import std;
 
 // Haze FunctionCallExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
