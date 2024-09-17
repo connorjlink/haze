@@ -25,6 +25,27 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation*)
 	{
+		/*
+			_generator->journal_leave();
+
+			using enum TypeSpecifier;
+			switch (return_type)
+			{
+				case NVR:
+				{
+					_generator->make_return();
+				} break;
+
+				case BYTE:
+				{
+					AutoStackAllocation temp{};
+					_generator->make_immediate(temp.source()->read(), 0);
+					_generator->make_return(temp.source()->read());
+				} break;
+			}
+		*/
+#pragma message("TODO: redo the return statement generation to ensure journal_leave() is called for an epilogue")
+
 		if (value == nullptr)
 		{
 			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type != TypeSpecifier::NVR)
@@ -33,12 +54,14 @@ namespace hz
 				return;
 			}
 
-			value = new IntegerLiteralExpression{ 0, _token };
+			_generator->make_return();
 		}
 
-		ManagedStaticAllocation temp{};
-		value->generate(temp.allocation);
-		_generator->make_push(temp.allocation->read());
+
+
+		AutoStackAllocation temp{};
+		value->generate(temp.source());
+		_generator->make_return(temp.source()->read());
 	}
 
 	Statement* ReturnStatement::optimize()

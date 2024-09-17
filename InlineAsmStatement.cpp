@@ -2,6 +2,7 @@
 #include "AssemblerLinker.h"
 #include "FileManager.h"
 #include "Generator.h"
+#include "Emitter.h"
 
 // Haze InlineAsmStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -21,13 +22,17 @@ namespace hz
 	void InlineAsmStatement::generate(Allocation*)
 	{
 		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser, _file_manager->_current_file };
-		auto object_code = linker->link(_generator->write_pointer());
+		auto commands = linker->link(_generator->write_pointer());
+		
+		auto emitter = Emitter::from_architecture(std::move(commands), _file_manager->_current_file);
+		auto object_code = emitter->emit();
 
-		_generator->image(std::move(object_code), AS_ASSEMBLER_LINKER(linker)->approximate_size());
+		_generator->inline_assembly(std::move(object_code), linker->approximate_size());
 	}
 
 	Statement* InlineAsmStatement::optimize()
 	{
+		// No optimizations performed for inline assembly
 		return nullptr;
 	}
 

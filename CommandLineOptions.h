@@ -7,8 +7,6 @@
 #include "OptimizationType.h"
 #include "OptionType.h"
 
-import std;
-
 // Haze CommandLineOptions.h
 // (c) Connor J. Link. All Rights Reserved.
 

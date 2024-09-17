@@ -22,7 +22,10 @@ namespace hz
 		std::vector<InstructionCommand*> image;
 
 	public:
-		Emitter(std::vector<InstructionCommand*>&& image, const std::string& filepath);
+		static Emitter* from_architecture(std::vector<InstructionCommand*>&&, const std::string&);
+
+	public:
+		Emitter(std::vector<InstructionCommand*>&&, const std::string&);
 		virtual ~Emitter();
 
 	public:

@@ -1,17 +1,15 @@
-#include "Allocator.h"
 #include "Context.h"
-#include "CommandLineParser.h"
-#include "Emitter.h"
 #include "JobManager.h"
 #include "FileManager.h"
-#include "Linker.h"
 #include "CompilerToolchain.h"
 #include "AssemblerToolchain.h"
 #include "InterpreterToolchain.h"
 #include "CommandLineOptions.h"
-#include "Parser.h"
+#include "CommandLineParser.h"
 #include "X86BuilderValidator.h"
 #include "ErrorReporter.h"
+#include "HeapAllocator.h"
+#include "StackAllocator.h"
 
 import std;
 
@@ -20,27 +18,30 @@ import std;
 
 using namespace hz;
 
-Allocator* hz::_allocator;
-Generator* hz::_generator;
-Parser* hz::_parser;
 Context* hz::_context;
 Toolchain* hz::_toolchain;
-Emitter* hz::_emitter;
-Linker* hz::_linker;
-ErrorReporter* hz::_error_reporter;
+
 JobManager* hz::_job_manager;
 FileManager* hz::_file_manager;
+
 CommandLineOptions* hz::_options;
+ErrorReporter* hz::_error_reporter;
+
+HeapAllocator* hz::_heap_allocator;
+StackAllocator* hz::_stack_allocator;
+
+// NOTE: used for the MQTT client hook
 //namespace mqtt
 //{
 //	const int message::DFLT_QOS = 0;
 //	const bool message::DFLT_RETAINED = true;
 //}
 
-
 int main(int argc, char** argv)
 {
-	_allocator = new Allocator{};
+	_heap_allocator = new HeapAllocator{};
+	_stack_allocator = new StackAllocator{};
+
 	_context = new Context{};
 
 	_error_reporter = new ErrorReporter{};

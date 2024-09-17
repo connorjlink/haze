@@ -2,8 +2,7 @@
 #define HAZE_X86BUILDER_H
 
 #include "Constants.h"
-
-#include <cstdint>
+#include "InstructionEncoding.h"
 
 // Haze X86Builder.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -11,7 +10,7 @@
 namespace hz
 {
 	// registers
-	enum
+	enum : register_t
 	{
 		EAX = 0,
 		ECX,
@@ -63,6 +62,10 @@ namespace hz
 	public:
 		static byterange xor_rr(std::uint8_t, std::uint8_t);
 		static byterange xor_ri(std::uint8_t, std::int32_t);
+
+	public:
+		static byterange inc_r(std::uint8_t);
+		static byterange dec_r(std::uint8_t);
 	};
 }
 

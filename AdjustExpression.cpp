@@ -30,12 +30,12 @@ namespace hz
 
 		if (increment)
 		{
-			_generator->make_increment(allocation->read());
+			_generator->compute_increment(allocation->read(), allocation->read());
 		}
 
 		else
 		{
-			_generator->make_decrement(allocation->read());
+			_generator->compute_decrement(allocation->read(), allocation->read());
 		}
 	}
 

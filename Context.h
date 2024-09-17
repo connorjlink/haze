@@ -61,7 +61,7 @@ namespace hz
 
 	public:
 		void print(const std::string& message);
-		void exit(variable_t);
+		void exit_program(variable_t);
 
 	public:
 		Context()

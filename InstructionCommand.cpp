@@ -52,7 +52,7 @@ namespace hz
 
 	void InstructionCommand::generate(Allocation*)
 	{
-		switch (opcode)
+		/*switch (opcode)
 		{
 			case Opcode::MOVE: _generator->make_move(dst, src); break;
 			case Opcode::LOAD: _generator->make_load(dst, mem); break;
@@ -72,7 +72,7 @@ namespace hz
 			case Opcode::BRNZ: _generator->make_brnz(mem, src); break;
 			case Opcode::BOOL: _generator->make_bool(src);      break;
 			case Opcode::STOP: _generator->make_stop();         break;
-		}
+		}*/
 	}
 
 	InstructionCommand* InstructionCommand::optimize()

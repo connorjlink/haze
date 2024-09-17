@@ -24,12 +24,7 @@ namespace hz
 		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
 		// This is done here by simply emitting the corresponding instruction with dummy values
 		// and checking its length. So, make a temporary emitter object here to do so.
-		using enum ArchitectureType;
-		switch (_options->_architecture)
-		{
-			case HAZE: _emitter = new HazeEmitter{ {}, "" }; break;
-			case X86: _emitter = new X86Emitter{ {}, "" }; break;
-		}
+		_emitter = Emitter::from_architecture({}, "");
 
 		const auto link_task = _job_manager->begin_job("linking");
 		// begin writing commands at $8000 for haze
@@ -45,12 +40,7 @@ namespace hz
 		const auto emit_task = _job_manager->begin_job("emitting");
 
 		// NOTE: this is the *actual* machine code emitter
-		using enum ArchitectureType;
-		switch (_options->_architecture)
-		{
-			case HAZE: _emitter = new HazeEmitter{ std::move(image), filepath }; break;
-			case X86: _emitter = new X86Emitter{ std::move(image), filepath }; break;
-		}
+		_emitter = Emitter::from_architecture(std::move(image), filepath);
 
 		auto executable = _emitter->emit();
 		_job_manager->end_job(emit_task);

@@ -87,6 +87,40 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class MemoryReadCommand : public IntermediateCommand
+	{
+	private:
+		register_t _destination;
+		std::uint32_t _pointer;
+
+	public:
+		MemoryReadCommand(register_t destination, std::uint32_t pointer)
+			: _destination{ destination }, _pointer{ pointer }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class MemoryWriteCommand : public IntermediateCommand
+	{
+	private:
+		std::uint32_t _pointer;
+		register_t _source;
+
+	public:
+		MemoryWriteCommand(std::uint32_t pointer, register_t source)
+			: _pointer{ pointer }, _source{ source }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class AddCommand : public IntermediateCommand
 	{
 	private:
@@ -167,6 +201,38 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class IncrementCommand : public IntermediateCommand
+	{
+	private:
+		register_t _destination, _source;
+
+	public:
+		IncrementCommand(register_t destination, register_t source)
+			: _destination{ destination }, _source{ source }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class DecrementCommand : public IntermediateCommand
+	{
+	private:
+		register_t _destination, _source;
+
+	public:
+		DecrementCommand(register_t destination, register_t source)
+			: _destination{ destination }, _source{ source }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class CopyCommand : public IntermediateCommand
 	{
 	private:
@@ -175,6 +241,23 @@ namespace hz
 	public:
 		CopyCommand(register_t source, register_t destination)
 			: _source{ source }, _destination{ destination }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class MakeImmediateCommand : public IntermediateCommand
+	{
+	private:
+		register_t _destination;
+		std::uint32_t _source;
+
+	public:
+		MakeImmediateCommand(register_t destination, std::uint32_t source)
+			: _destination{ destination }, _source{ source }
 		{
 		}
 
@@ -315,6 +398,72 @@ namespace hz
 	public:
 		GotoCommand(std::int32_t target)
 			: _target{ target }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class MakeMessageCommand : public IntermediateCommand
+	{
+	private:
+		std::uint32_t _pointer;
+		std::string _message;
+		
+	public:
+		MakeMessageCommand(std::uint32_t pointer, const std::string& message)
+			: _pointer{ pointer }, _message{ message }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class PrintMessageCommand : public IntermediateCommand
+	{
+	private:
+		std::uint32_t _pointer;
+
+	public:
+		PrintMessageCommand(std::uint32_t pointer)
+			: _pointer{ pointer }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class ExitProgramCommand : public IntermediateCommand
+	{
+	private:
+		register_t _code;
+
+	public:
+		ExitProgramCommand(register_t code)
+			: _code{ code }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class InlineAssemblyCommand : public IntermediateCommand
+	{
+	private:
+		byterange _code;
+		std::uint32_t _approximate_size;
+
+	public:
+		InlineAssemblyCommand(byterange&& code, std::uint32_t approximate_size)
+			: _code{ std::move(code) }, _approximate_size{ approximate_size }
 		{
 		}
 

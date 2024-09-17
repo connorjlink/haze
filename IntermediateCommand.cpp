@@ -53,7 +53,7 @@ namespace hz
 	{
 		byterange out{};
 
-
+#pragma message("TODO: local variable code generation")
 		return out;
 	}
 
@@ -67,6 +67,36 @@ namespace hz
 	{
 		byterange out{};
 
+#pragma message("TODO: GLOBAL VARIABLE CODE GENERATION")
+		return out;
+	}
+
+
+	IntermediateType MemoryReadCommand::itype() const
+	{
+		return IntermediateType::MEMORY_READ;
+	}
+
+	byterange MemoryReadCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: memory read command code generation")
+
+		return out;
+	}
+
+
+	IntermediateType MemoryWriteCommand::itype() const
+	{
+		return IntermediateType::MEMORY_WRITE;
+	}
+
+	byterange MemoryWriteCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: memory write command code generation")
 
 		return out;
 	}
@@ -74,7 +104,7 @@ namespace hz
 
 	IntermediateType AddCommand::itype() const
 	{
-		return IntermediateType::BINARY_ADD;
+		return IntermediateType::ADD;
 	}
 
 	byterange AddCommand::emit() const
@@ -93,7 +123,7 @@ namespace hz
 
 	IntermediateType SubtractCommand::itype() const
 	{
-		return IntermediateType::BINARY_SUBTRACT;
+		return IntermediateType::SUBTRACT;
 	}
 
 	byterange SubtractCommand::emit() const
@@ -112,7 +142,7 @@ namespace hz
 
 	IntermediateType BitorCommand::itype() const
 	{
-		return IntermediateType::BINARY_BITOR;
+		return IntermediateType::BITOR;
 	}
 
 	byterange BitorCommand::emit() const
@@ -131,7 +161,7 @@ namespace hz
 
 	IntermediateType BitandCommand::itype() const
 	{
-		return IntermediateType::BINARY_BITAND;
+		return IntermediateType::BITAND;
 	}
 
 	byterange BitandCommand::emit() const
@@ -150,7 +180,7 @@ namespace hz
 
 	IntermediateType BitxorCommand::itype() const
 	{
-		return IntermediateType::BINARY_BITXOR;
+		return IntermediateType::BITXOR;
 	}
 
 	byterange BitxorCommand::emit() const
@@ -167,9 +197,47 @@ namespace hz
 	}
 
 
+	IntermediateType IncrementCommand::itype() const
+	{
+		return IntermediateType::INCREMENT;
+	}
+
+	byterange IncrementCommand::emit() const
+	{
+		// mov destination, source
+		// inc destination
+
+		byterange out{};
+
+		PUT(X86Builder::mov_rr(_destination, _source));
+		PUT(X86Builder::inc_r(_destination));
+
+		return out;
+	}
+
+
+	IntermediateType DecrementCommand::itype() const
+	{
+		return IntermediateType::DECREMENT;
+	}
+
+	byterange DecrementCommand::emit() const
+	{
+		// mov destination, source
+		// dec destination
+
+		byterange out{};
+
+		PUT(X86Builder::mov_rr(_destination, _source));
+		PUT(X86Builder::dec_r(_destination));
+
+		return out;
+	}
+
+
 	IntermediateType CopyCommand::itype() const
 	{
-		return IntermediateType::UNARY_COPY;
+		return IntermediateType::COPY;
 	}
 
 	byterange CopyCommand::emit() const
@@ -179,6 +247,21 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::mov_rr(_destination, _source));
+
+		return out;
+	}
+
+
+	IntermediateType MakeImmediateCommand::itype() const
+	{
+		return IntermediateType::MAKE_IMMEDIATE;
+	}
+
+	byterange MakeImmediateCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: code generation for immediate command!")
 
 		return out;
 	}
@@ -295,7 +378,7 @@ namespace hz
 	{
 		byterange out{};
 
-
+#pragma message("TODO: code generation for ifnz!")
 		return out;
 	}
 
@@ -309,7 +392,64 @@ namespace hz
 	{
 		byterange out{};
 
+#pragma message("TODO: code generation for goto!")
 
 		return out;
+	}
+
+
+	IntermediateType MakeMessageCommand::itype() const
+	{
+		return IntermediateType::MAKE_MESSAGE;
+	}
+
+	byterange MakeMessageCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: make message code generation")
+
+		return out;
+	}
+
+	
+	IntermediateType PrintMessageCommand::itype() const
+	{
+		return IntermediateType::PRINT_MESSAGE;
+	}
+
+	byterange PrintMessageCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: make print message code generation!")
+
+		return out;
+	}
+
+
+	IntermediateType ExitProgramCommand::itype() const
+	{
+		return IntermediateType::EXIT_PROGRAM;
+	}
+
+	byterange ExitProgramCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: exit program command code generation")
+
+		return out;
+	}
+
+
+	IntermediateType InlineAssemblyCommand::itype() const
+	{
+		return IntermediateType::INLINE_ASSEMBLY;
+	}
+
+	byterange InlineAssemblyCommand::emit() const
+	{
+		return _code;
 	}
 }

@@ -18,8 +18,8 @@ namespace hz
 
 	void ExpressionStatement::generate(Allocation*)
 	{
-		ManagedStaticAllocation temp{};
-		expression->generate(temp.allocation);
+		AutoStackAllocation temp{};
+		expression->generate(temp.source());
 	}
 
 	Statement* ExpressionStatement::optimize()

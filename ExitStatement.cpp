@@ -4,7 +4,7 @@
 #include "Expression.h"
 #include "Context.h"
 #include "Evaluator.h"
-#include "RegisterAllocator.h"
+#include "StackAllocator.h"
 
 // Haze ExitStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -23,9 +23,9 @@ namespace hz
 
 	void ExitStatement::generate(Allocation*)
 	{
-		auto allocation = new AutoStackAllocation{};
-		_code->generate(allocation);
-		_generator->make_exit(allocation->allocation);
+		AutoStackAllocation temp{};
+		_code->generate(temp.source());
+		_generator->exit_program(temp.source()->read());
 	}
 
 	Statement* ExitStatement::optimize()
@@ -42,7 +42,8 @@ namespace hz
 	Node* ExitStatement::evaluate(Context* context) const
 	{
 		auto value = _code->evaluate(context);
-		context->exit(harvest(value));
+		context->exit_program(harvest(value));
+		return nullptr;
 	}
 
 }

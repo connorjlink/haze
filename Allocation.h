@@ -5,6 +5,7 @@
 #include "AllocationType.h"
 #include "StackAllocator.h"
 #include "HeapAllocator.h"
+#include "Context.h"
 
 #include <cstdint>
 
@@ -20,8 +21,23 @@ namespace hz
 	public:
 		virtual AllocationType atype() const = 0;
 		virtual register_t read() const = 0;
-		virtual void write(std::uint8_t) const = 0;
+		virtual void write(variable_t) const = 0;
 		virtual void copy_into(Allocation*) const = 0;
+	};
+
+	class ObserverAllocation : public Allocation
+	{
+	public:
+		register_t allocation;
+
+	public:
+		virtual AllocationType atype() const final override;
+		virtual register_t read() const final override;
+		virtual void write(variable_t) const final override;
+		virtual void copy_into(Allocation*) const final override;
+
+	public:
+		ObserverAllocation(register_t);
 	};
 
 	class StackAllocation : public Allocation
@@ -32,7 +48,7 @@ namespace hz
 	public:
 		virtual AllocationType atype() const override;
 		virtual register_t read() const final override;
-		virtual void write(std::uint8_t) const final override;
+		virtual void write(variable_t) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
 	public:
@@ -57,10 +73,10 @@ namespace hz
 		AutoStackAllocationImpl* _source;
 
 	public:
-		AllocationType atype() const;
-		register_t read() const;
-		void write(std::uint8_t) const;
-		void copy_into(Allocation*) const;
+		decltype(_source) source() const
+		{
+			return _source;
+		}
 
 	public:
 		AutoStackAllocation();
@@ -76,15 +92,11 @@ namespace hz
 	public:
 		virtual AllocationType atype() const override;
 		virtual register_t read() const final override;
-		virtual void write(std::uint8_t) const final override;
+		virtual void write(variable_t) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
 	public:
-		HeapAllocation(std::uint32_t bytes)
-			: bytes{ bytes }
-		{
-			address = _heap_allocator->allocate(bytes);
-		}
+		HeapAllocation(std::uint32_t);
 	};
 
 	class AutoHeapAllocationImpl : public HeapAllocation
@@ -93,10 +105,8 @@ namespace hz
 		virtual AllocationType atype() const final override;
 
 	public:
-		~AutoHeapAllocationImpl()
-		{
-			_heap_allocator->release(address, bytes);
-		}
+		using HeapAllocation::HeapAllocation;
+		~AutoHeapAllocationImpl();
 	};
 
 	class AutoHeapAllocation
@@ -105,21 +115,14 @@ namespace hz
 		AutoHeapAllocationImpl* _source;
 
 	public:
-		AllocationType atype() const;
-		register_t read() const;
-		void write(std::uint8_t) const;
-		void copy_into(Allocation*) const;
+		decltype(_source) source() const
+		{
+			return _source;
+		}
 
 	public:
-		AutoHeapAllocation()
-		{
-			_source = new AutoHeapAllocationImpl{};
-		}
-		
-		~AutoHeapAllocation()
-		{
-			delete _source;
-		}
+		AutoHeapAllocation(std::uint32_t);
+		~AutoHeapAllocation();
 	};
 }
 

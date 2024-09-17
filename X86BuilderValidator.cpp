@@ -4,6 +4,8 @@
 
 import std;
 
+#pragma message("TODO: use __COUNTER__ instead for easy deduplication of tests")
+
 // Haze X86BuilderValidator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 

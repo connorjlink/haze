@@ -37,14 +37,13 @@ namespace hz
 
 		body->generate();
 
-		condition->generate(condition_allocation);
+		condition->generate(condition_allocation.source());
 		
-		// unfortunately our processor's limitation also mean we need to force this mess, too :(
-		AutoStackAllocation temp{ condition_allocation.allocation };
+		AutoStackAllocation temp{};
 #pragma message("TODO: code generation for while")
 
 		// TODO: finish while statement codegen here!
-		_generator->make_brnz(start_label, condition_allocation.allocation->read());
+		//_generator->make_brnz(start_label, condition_allocation.source()->read());
 	}
 
 	Statement* WhileStatement::optimize()

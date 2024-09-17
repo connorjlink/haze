@@ -370,4 +370,22 @@ namespace hz
 
 		return out;
 	}
+
+	byterange X86Builder::inc_r(std::uint8_t source)
+	{
+		byterange out{};
+
+		PUT(BinaryUtilities::range8(0x40 | source));
+
+		return out;
+	}
+
+	byterange X86Builder::dec_r(std::uint8_t source)
+	{
+		byterange out{};
+
+		PUT(BinaryUtilities::range8(0x48 | source));
+
+		return out;
+	}
 }

@@ -21,11 +21,10 @@ namespace hz
 
 	void PrintStatement::generate(Allocation*)
 	{
-		ManagedStaticAllocation temp{};
-		message->generate(temp.allocation);
-		// NOTE: $1111 is the screen buffer address
-		// it is flushed once per clock cycle
-		_generator->make_save(0x1111, temp.allocation->read());
+		AutoStackAllocation temp{};
+		message->generate(temp.source());
+#pragma message("TODO: ensure that make_message() is called when generating string literals")
+		_generator->print_message(temp.source()->read());
 	}
 
 	Statement* PrintStatement::optimize()

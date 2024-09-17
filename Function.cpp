@@ -2,12 +2,15 @@
 #include "Generator.h"
 #include "Allocator.h"
 #include "IdentifierExpression.h"
+#include "IntegerLiteralExpression.h"
 #include "ArgumentExpression.h"
+#include "ReturnStatement.h"
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Parser.h"
 #include "Statement.h"
 #include "Symbol.h"
+#include "X86Builder.h"
 #include "ErrorReporter.h"
 
 import std;
@@ -35,58 +38,50 @@ namespace hz
 	void Function::generate(Allocation*)
 	{
 		_generator->begin_function(name);
+		_generator->journal_entry();
 
-
-		// TODO: support argument inputs here!
 		const auto arity = arguments.size();
 
-		//if (arity > 0)
-		//{
-		//	for (auto i = 0; i < arity; i++)
-		//	{
-		//		_generator->make_push(static_cast<Register>(i));
-		//	}
-		//}
-		
+#pragma message("TODO: function argument pulling using take_argument()")
 
-		if (arity > 4)
+		// create a register allocation for every one of our arguments
+		std::vector<AutoStackAllocation> argument_allocations{ arity };
+
+		for (auto i = 0; i < arity; i++)
 		{
-			_error_reporter->post_uncorrectable(std::format("invalid argument count for function {}", name), NULL_TOKEN);
-		}
+			// NOTE: the 0-th local variable is stored at [ebp - 4]
+#pragma message("TODO: use a different size other than 4 for non-32-bit values (custom types)")
+			_generator->take_argument(argument_allocations[i].source()->read(), (i + 1) * 4);
 
-
-		for (int i = 0; i < arity; i++)
-		{
-			auto reg = static_cast<Register>(i);
-
-			_generator->make_pull(static_cast<Register>(arity - i - 1));
-			// NOTE: this will not support recursion for now ;(
+			// TODO: does this support recursion properly
 			// all arguments are of ->etype() == ExpressionType::ARGUMENT
 			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
-				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation = new StaticAllocation{ reg, false };
+				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation 
+					= argument_allocations[i].source();
 		}
-
 
 		body->generate();
+		// NOTE: opting to generate the function epilogue for every single return statement
 
 		// in case there was no return statement, a default return value of 0 is provided
-		if constexpr (0)
+#pragma message("TODO: figure out if there was not a return statement")
+		if constexpr (false)
 		{
-			ManagedStaticAllocation temp{};
-			_generator->make_copy(temp.allocation->read(), 0);
-			_generator->make_push(temp.allocation->read());
+			_error_reporter->post_warning("implicit function return generated", body->_token);
+			
+			Expression* return_value = nullptr;
+
+			using enum TypeSpecifier;
+			switch (return_type)
+			{
+				case BYTE: return_value = new IntegerLiteralExpression{ 0, NULL_TOKEN }; break;
+				default: _error_reporter->post_error("invalid return type", _token); return;
+			}
+
+			auto implicit_return = new ReturnStatement{ name, return_value, new ObserverAllocation{ EAX }, NULL_TOKEN};
+			// NOTE: generating a statement, so no need to pass an allocation
+			implicit_return->generate(nullptr);
 		}
-		
-
-		//if (arity > 0)
-		//{
-		//	for (auto i = arity - 1; i >= 0; i--)
-		//	{
-		//		_generator->make_pull(static_cast<Register>(i));
-		//	}
-		//}
-
-		_generator->make_exit(0);
 	}
 
 	Function* Function::optimize()

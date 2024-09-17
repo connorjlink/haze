@@ -27,7 +27,7 @@ namespace hz
 	{
 #pragma message("TODO: for loop code generation for compiler")
 		// we need to force allocate this one :(
-		auto condition_allocation = _allocator->allocate_static(DC, true);
+		AutoStackAllocation condition_allocation{};
 
 		// TODO: finish for statement generation
 	}

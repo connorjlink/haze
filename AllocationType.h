@@ -5,6 +5,8 @@ namespace hz
 {
 	enum class AllocationType
 	{
+		OBSERVER,
+
 		STACK,
 		STACK_AUTO,
 

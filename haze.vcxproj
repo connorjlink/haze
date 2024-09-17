@@ -51,6 +51,7 @@
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ErrorContext.cpp" />
     <ClCompile Include="ErrorReporter.cpp" />
+    <ClCompile Include="ErrorState.cpp" />
     <ClCompile Include="Evaluator.cpp" />
     <ClCompile Include="ExecutionContext.cpp" />
     <ClCompile Include="ExitStatement.cpp" />

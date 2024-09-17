@@ -68,7 +68,7 @@ namespace hz
 		_error_reporter->post_information(message, NULL_TOKEN);
 	}
 
-	void Context::exit(variable_t value)
+	void Context::exit_program(variable_t value)
 	{
 		switch (value.index())
 		{

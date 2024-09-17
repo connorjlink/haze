@@ -1,28 +1,29 @@
 #include "Allocation.h"
-
 #include "Allocator.h"
 #include "Generator.h"
 #include "IdentifierExpression.h"
-#include "Log.h"
+#include "ErrorReporter.h"
 
 import std;
 
 // Haze Allocation.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+#define UNSUPPORTED_OPERATION(x) _error_reporter->post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
+
 namespace hz
 {
+	AllocationType ObserverAllocation::atype() const
+	{
+		return AllocationType::OBSERVER;
+	}
+
 	AllocationType StackAllocation::atype() const
 	{
 		return AllocationType::STACK;
 	}
 
 	AllocationType AutoStackAllocationImpl::atype() const
-	{
-		return AllocationType::STACK_AUTO;
-	}
-
-	AllocationType AutoStackAllocation::atype() const
 	{
 		return AllocationType::STACK_AUTO;
 	}
@@ -37,11 +38,11 @@ namespace hz
 		return AllocationType::HEAP_AUTO;
 	}
 
-	AllocationType AutoHeapAllocation::atype() const
+	
+	ObserverAllocation::ObserverAllocation(register_t source)
 	{
-		return AllocationType::HEAP_AUTO;
+		allocation = source;
 	}
-
 
 	StackAllocation::StackAllocation()
 	{
@@ -61,6 +62,112 @@ namespace hz
 	AutoStackAllocation::~AutoStackAllocation()
 	{
 		delete _source;
+	}
+
+	HeapAllocation::HeapAllocation(std::uint32_t bytes)
+		: bytes{ bytes }
+	{
+		address = _heap_allocator->allocate(bytes);
+	}
+
+	AutoHeapAllocationImpl::~AutoHeapAllocationImpl()
+	{
+		_heap_allocator->release(address, bytes);
+	}
+
+	AutoHeapAllocation::AutoHeapAllocation(std::uint32_t bytes)
+	{
+		_source = new AutoHeapAllocationImpl{ bytes };
+	}
+
+	AutoHeapAllocation::~AutoHeapAllocation()
+	{
+		delete _source;
+	}
+
+
+	register_t ObserverAllocation::read() const
+	{
+		return allocation;
+	}
+
+	void ObserverAllocation::write(variable_t value) const
+	{
+		UNSUPPORTED_OPERATION(__FUNCTION__);
+	}
+
+	void ObserverAllocation::copy_into(Allocation* allocation) const
+	{
+		UNSUPPORTED_OPERATION(__FUNCTION__);
+	}
+
+
+	register_t StackAllocation::read() const
+	{
+		return allocation;
+	}
+
+	void StackAllocation::write(variable_t value) const
+	{
+		switch (auto v = value.index())
+		{
+			// only integers are supported for now
+			case 0:
+			{
+				const auto int_value = std::get<0>(value);
+				_generator->make_immediate(allocation, int_value);
+			} break;
+
+			default:
+			{
+				_error_reporter->post_error(std::format("invalid stack allocation write type variant `{}`", v), NULL_TOKEN);
+			} break;
+		}
+	}
+
+	void StackAllocation::copy_into(Allocation* destination) const
+	{
+		using enum AllocationType;
+		switch (destination->atype())
+		{
+			case OBSERVER:
+			{
+				_error_reporter->post_error("cannot modify constant allocation type `observer`", NULL_TOKEN);
+			} break;
+
+			// NOTE: StackAllocation and AutoStackAllocationImpl are transitive
+			case STACK: [[fallthrough]];
+			case STACK_AUTO:
+			{
+				auto stack_allocation = static_cast<StackAllocation*>(destination);
+				_generator->make_copy(stack_allocation->allocation, allocation);
+			} break;
+
+			// NOTE: HeapAllocation and AutoHeapAllocationImpl are transitive
+			case HEAP: [[fallthrough]];
+			case HEAP_AUTO:
+			{
+				auto heap_allocation = static_cast<HeapAllocation*>(destination);
+				AutoStackAllocation temp{};
+				_generator->memory_write(heap_allocation->address, temp.source()->read());
+			} break;
+		}
+	}
+
+
+	register_t HeapAllocation::read() const
+	{
+		UNSUPPORTED_OPERATION(__FUNCTION__);
+	}
+
+	void HeapAllocation::write(variable_t value) const
+	{
+		UNSUPPORTED_OPERATION(__FUNCTION__);
+	}
+
+	void HeapAllocation::copy_into(Allocation* destination) const
+	{
+		UNSUPPORTED_OPERATION(__FUNCTION__);
 	}
 
 

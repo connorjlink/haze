@@ -19,8 +19,7 @@ namespace hz
 
 	void NullStatement::generate(Allocation*)
 	{
-		// Generate a `nop` instructio
-		_generator->make_move(R0, R0);
+		// No code generated for a no-op
 	}
 
 	Statement* NullStatement::optimize()

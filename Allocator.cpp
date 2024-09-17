@@ -23,7 +23,7 @@ namespace hz
 	}
 
 
-	StaticAllocation* Allocator::allocate_static(Register exclude, bool force)
+	/*StaticAllocation* Allocator::allocate_static(Register exclude, bool force)
 	{
 		if (auto reg = find_register(exclude); reg.has_value())
 		{
@@ -66,5 +66,5 @@ namespace hz
 		}
 
 		Log::error(std::format("could not allocate {} contiguous bytes on the available heap", bytes));
-	}
+	}*/
 }

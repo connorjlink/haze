@@ -32,11 +32,11 @@ namespace hz
 
 	Node* StringExpression::evaluate(Context* context) const
 	{
+		// NOTE: old method--could be more efficient since we technically a copy of `this` is not actually needed
 		// HACK: const_cast is pretty terrible to use 
 		// but it's probably OK here since we know that the caller will not mutate this
 		//return const_cast<StringExpression*>(this);
 
-#pragma message("TODO: is this the same as just returning the current object???")
 		return copy();
 	}
 }

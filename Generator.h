@@ -44,21 +44,35 @@ namespace hz
 		void make_global(register_t, variable_t);
 
 	public:
+		// destination = memory[pointer]
+		void memory_read(register_t, std::uint32_t);
+		// memory[pointer] = source
+		void memory_write(std::uint32_t, register_t);
+
+	public:
 		// NOTE: all math operations are { LHS, RHS, destination }
 		// destination = lhs + rhs
-		void make_add(register_t, register_t, register_t);
+		void compute_add(register_t, register_t, register_t);
 		// destination = lhs - rhs
-		void make_subtract(register_t, register_t, register_t);
+		void compute_subtract(register_t, register_t, register_t);
 		// destination = lhs | rhs
-		void make_bitor(register_t, register_t, register_t);
+		void compute_bitor(register_t, register_t, register_t);
 		// destination = lhs & rhs
-		void make_bitand(register_t, register_t, register_t);
+		void compute_bitand(register_t, register_t, register_t);
 		// destination = lhs ^ rhs
-		void make_bitxor(register_t, register_t, register_t);
+		void compute_bitxor(register_t, register_t, register_t);
+
+	public:
+		// destination = source + 1
+		void compute_increment(register_t, register_t);
+		// destination = source - 1
+		void compute_decrement(register_t, register_t);
 
 	public:
 		// destination = source
 		void make_copy(register_t, register_t);
+		// destination = source
+		void make_immediate(register_t, std::uint32_t);
 
 	public:
 		// position a new function argument for the next call
@@ -72,47 +86,38 @@ namespace hz
 		// return from a call to a value-typed function
 		void make_return(register_t);
 
-	private:
+	public:
 		// declare a function prologue
 		void journal_entry();
 		// declare a function epilogue
 		void journal_leave();
 
 	public:
-		// { condition, if body, else body }
-		void make_ifnz(register_t, const std::vector<IntermediateCommand*>&);
-
-		void make_move(register_t, register_t);
-		void make_load(register_t, std::uint32_t);
-		void make_copy(register_t, std::uint8_t);
-		void make_save(std::uint32_t, register_t);
-		void make_iadd(register_t, register_t);
-		void make_isub(register_t, register_t);
-		void make_band(register_t, register_t);
-		void make_bior(register_t, register_t);
-		void make_bxor(register_t, register_t);
-		void make_call(std::string);
-		void make_call(std::uint32_t);
-		void make_exit(register_t);
-		void make_push(register_t);
-		void make_pull(register_t);
-		void make_make(register_t);
-		void make_take(register_t);
-		void make_brnz(std::string, register_t);
-		void make_brnz(std::uint32_t, register_t);
-		void make_bool(register_t);
-		void make_stop();
+		// { condition, index to which to jump }
+		void check_ifnz(register_t, std::int32_t);
+		// index to which to jump
+		void goto_command(std::int32_t);
 
 	public:
-		void make_raw(InstructionCommand*);
+		// memory[pointer] = message
+		void make_message(std::uint32_t, std::string);
+		// print(pointer)
+		void print_message(std::uint32_t);
+
+	public:
+		// exit(code)
+		void exit_program(register_t);
+
+	public:
+		// { assembly code, bytecount }
+		void inline_assembly(byterange&&, std::uint32_t);
+
 
 	public:
 		std::uint32_t write_pointer() const;
 
 	public:
-		void image(std::vector<InstructionCommand*>&&, std::uint32_t);
-
-	public:
+		// ast, filepath
 		Generator(std::vector<Node*>&&, const std::string&);
 		~Generator();
 

@@ -23,14 +23,16 @@ namespace hz
     void VariableStatement::generate(Allocation*)
     {
         // Make some space on the heap and notify the parser
-        allocation = _allocator->allocate_dynamic();
+#pragma message("TODO: support local and global variables here!")
+        // also will need to support byte sizes other than 4
+        allocation = new HeapAllocation{ 4 };
         AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN))->allocation = allocation;
 
         if (value)
         {
-            ManagedStaticAllocation temp{};
-            value->generate(temp.allocation);
-        	allocation->copy(temp.allocation); 
+            AutoStackAllocation temp{};
+            value->generate(temp.source());
+        	allocation->copy_into(temp.source()); 
         }
     }
 

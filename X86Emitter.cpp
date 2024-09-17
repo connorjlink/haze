@@ -252,30 +252,25 @@ namespace hz
 		// push r32
 		//return { BYTE(0x50 | source) };
 
-#pragma message("TODO: have to figure out how to pass both return values and parameters")
-
-		byterange out{};
+		// NOTE: newer format--used before switching to CodeBuilder generic codegenerator frontend
+		//byterange out{};
 
 		// mov DWORD PTR [esp+0x4], r32
-		PUT(BinaryUtilities::range8(0x89));
-		PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, source, 0b100)));
-		PUT(BinaryUtilities::range8(0x24));
-		PUT(BinaryUtilities::range8(0x04));
+		//PUT(BinaryUtilities::range8(0x89));
+		//PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, source, 0b100)));
+		//PUT(BinaryUtilities::range8(0x24));
+		//PUT(BinaryUtilities::range8(0x04));
 
-		return out;
+		//return out;
+
+		return X86Builder::push_r(source);
 	}
 
 	// done
 	byterange X86Emitter::emit_pull(register_t destination)
 	{
-		// NOTE: even if putting data at [esp+0x4], this is still fine to do
-		// Since we first would pop the return value and increment, 
-		// another pop will point to the desired return value.
-		
-		// pop r32
-		return { static_cast<byte>(0x58 | static_cast<byte>(destination)) };
-
-		//PEBuilder::bytes_t out{};
+		// NOTE: newer format--used before switching to CodeBuilder generic codegenerator frontend
+		//byterange out{};
 
 		// mov r32, DWORD PTR [esp-0x4]
 		//PUT(PEBuilder::make8(0x8b));
@@ -284,6 +279,13 @@ namespace hz
 		//PUT(PEBuilder::make8(0xFC));
 
 		//return out;
+		
+		// NOTE: even if putting data at [esp+0x4], this is still fine to do
+		// Since we first would pop the return value and increment, 
+		// another pop will point to the desired return value.
+		
+		// pop r32
+		return { static_cast<byte>(0x58 | static_cast<byte>(destination)) };
 	}
 
 	// done
@@ -314,7 +316,6 @@ namespace hz
 		PUT(BinaryUtilities::range8(0x0F));
 		PUT(BinaryUtilities::range8(0x85));
 		PUT(BinaryUtilities::range32(address));
-
 
 		return out;
 	}

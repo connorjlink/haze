@@ -5,6 +5,10 @@
 
 namespace hz
 {
+	// GLOBALS
+	Linker* _linker;
+	// GLOBALS
+
 	Linker::Linker(const std::string& filepath)
 	{
 		_error_reporter->open_context(filepath, "linking");

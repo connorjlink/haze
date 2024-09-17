@@ -31,6 +31,11 @@ namespace
 
 namespace hz
 {
+	// GLOBALS
+	Parser* _parser;
+	// GLOBALS
+
+
 	Parser::Parser(const std::vector<Token>& tokens, const std::string& filepath)
 		: cursor{ 0 }, tokens{ tokens }
 	{

@@ -320,6 +320,9 @@
     <ClCompile Include="HeapAllocator.cpp">
       <Filter>Source Files\Register</Filter>
     </ClCompile>
+    <ClCompile Include="ErrorState.cpp">
+      <Filter>Source Files\Error</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">

@@ -109,22 +109,22 @@ namespace hz
 
 	void PlusBinaryExpression::generate(Allocation* received_allocation)
 	{
-		ManagedStaticAllocation temp{};
+		AutoStackAllocation temp{};
 
 		left->generate(received_allocation);
-		right->generate(temp.allocation);
+		right->generate(temp.source());
 
-		_generator->make_iadd(received_allocation->read(), temp.allocation->read());
+		_generator->compute_add(received_allocation->read(),  received_allocation->read(), temp.source()->read());
 	}
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
 	{
-		ManagedStaticAllocation temp{};
+		AutoStackAllocation temp{};
 
 		left->generate(received_allocation);
-		right->generate(temp.allocation);
+		right->generate(temp.source());
 
-		_generator->make_isub(received_allocation->read(), temp.allocation->read());
+		_generator->compute_subtract(received_allocation->read(), received_allocation->read(), temp.source()->read());
 	}
 
 	void TimesBinaryExpression::generate(Allocation*)

@@ -35,13 +35,13 @@ namespace hz
 			case SymbolType::VARIABLE:
 			{
 				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, _token));
-				allocation->copy(variable_symbol->allocation);
+				allocation->copy_into(variable_symbol->allocation);
 			} break;
 
 			case SymbolType::ARGUMENT:
 			{
 				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, _token));
-				allocation->copy(argument_symbol->allocation);
+				allocation->copy_into(argument_symbol->allocation);
 			} break;
 
 			default:

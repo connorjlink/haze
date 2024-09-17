@@ -4,7 +4,7 @@
 #include <string>
 #include <string_view>
 
-#include <mqtt/client.h>
+//#include <mqtt/client.h>
 
 // Haze HookClient.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -21,8 +21,8 @@ namespace hz
 	class HookClient
 	{
 	private:
-		mqtt::client _client;
-		mqtt::connect_options _options;
+		//mqtt::client _client;
+		//mqtt::connect_options _options;
 
 	public:
 		void connect();
