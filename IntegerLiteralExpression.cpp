@@ -1,6 +1,8 @@
 #include "IntegerLiteralExpression.h"
 #include "Allocation.h"
 #include "Constants.h"
+#include "CommandLineOptions.h"
+#include "Generator.h"
 #include "ErrorReporter.h"
 
 import std;
@@ -22,12 +24,29 @@ namespace hz
 
     void IntegerLiteralExpression::generate(Allocation* allocation)
     {
-        if (value > WORD_MAX - 1)
+        using enum ArchitectureType;
+        switch (_options->_architecture)
         {
-            _error_reporter->post_warning(std::format("integer literal {} out of range", value), _token);
+            case HAZE:
+            {
+                if (value > WORD_MAX - 1)
+                {
+                    _error_reporter->post_warning(std::format("integer literal {} out of range", value), _token);
+                    return;
+                }
+            } break;
+
+            case X86:
+            {
+                if (value > x86::DWORD_MAX)
+                {
+                    _error_reporter->post_warning(std::format("integer literal {} out of range", value), _token);
+                    return;
+                }
+            } break;
         }
 
-        allocation->write(static_cast<std::uint8_t>(value));
+        _generator->make_immediate(allocation->read(), value);
     }
 
     Expression* IntegerLiteralExpression::optimize()

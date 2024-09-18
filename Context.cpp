@@ -1,6 +1,5 @@
 #include "Context.h"
 #include "ErrorReporter.h"
-#include "ErrorState.h"
 
 import std;
 
@@ -90,6 +89,6 @@ namespace hz
 			} break;
 		}
 
-		std::longjmp(_jump_state, 1);
+		throw std::exception();
 	}
 }

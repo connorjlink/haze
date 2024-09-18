@@ -2,6 +2,7 @@
 #include "ErrorReporter.h"
 #include "Allocation.h"
 #include "Generator.h"
+#include "RuntimeAllocator.h"
 
 // Haze StringExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -20,8 +21,12 @@ namespace hz
 
 	void StringExpression::generate(Allocation* allocation)
 	{
-		_error_reporter->post_error("unsupported compiler expression type `string`", _token);
-		_generator->make_copy(allocation->read(), 0xEE);
+		// add an extra byte for the null terminator byte
+		const auto bytes = message.length() + 1;
+
+		const auto address = _runtime_allocator->allocate(static_cast<std::uint32_t>(bytes));
+		_generator->make_message(address, message);
+		_generator->make_immediate(allocation->read(), address);
 	}
 
 	Expression* StringExpression::optimize()

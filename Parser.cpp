@@ -179,9 +179,6 @@ namespace hz
 			consume(peek().type);
 		}
 
-#pragma message("TODO: why is the EOF token being added again?")
-		tokens.emplace_back(TokenType::END, "eof", peek().line, peek().column);
-
 		return tokens;
 	}
 
@@ -216,9 +213,23 @@ namespace hz
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
-#pragma message("TODO: replace stoi with <charconv>")
+		// NOTE: old usage
+		//const auto integer_value = std::stoul(integer_literal_token.value);
+		
 		const auto integer_literal_token = consume(TokenType::INT);
-		return new IntegerLiteralExpression{ std::stoul(integer_literal_token.value), integer_literal_token };
+
+		const auto& integer_string = integer_literal_token.value;
+
+		std::uint32_t integer_value{};
+		auto [ptr, ec] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
+
+		if (ec != std::errc())
+		{
+			_error_reporter->post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
+			return nullptr;
+		}
+
+		return new IntegerLiteralExpression{ integer_value, integer_literal_token };
 	}
 
 	StringExpression* Parser::parse_string_expression()

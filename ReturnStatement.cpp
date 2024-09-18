@@ -6,6 +6,7 @@
 #include "Evaluator.h"
 #include "IntegerLiteralExpression.h"
 #include "Symbol.h"
+#include "X86Builder.h"
 #include "ErrorReporter.h"
 
 // Haze ReturnStatement.cpp
@@ -25,27 +26,9 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation*)
 	{
-		/*
-			_generator->journal_leave();
-
-			using enum TypeSpecifier;
-			switch (return_type)
-			{
-				case NVR:
-				{
-					_generator->make_return();
-				} break;
-
-				case BYTE:
-				{
-					AutoStackAllocation temp{};
-					_generator->make_immediate(temp.source()->read(), 0);
-					_generator->make_return(temp.source()->read());
-				} break;
-			}
-		*/
-#pragma message("TODO: redo the return statement generation to ensure journal_leave() is called for an epilogue")
-
+		_generator->end_scope();
+		
+		// when value==nullptr, expect no return value ONLY from nvr function
 		if (value == nullptr)
 		{
 			if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type != TypeSpecifier::NVR)
@@ -54,10 +37,9 @@ namespace hz
 				return;
 			}
 
+			// no parameters return 
 			_generator->make_return();
 		}
-
-
 
 		AutoStackAllocation temp{};
 		value->generate(temp.source());

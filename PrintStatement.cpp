@@ -3,6 +3,7 @@
 #include "Allocation.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "ErrorReporter.h"
 
 // Haze PrintStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -23,8 +24,14 @@ namespace hz
 	{
 		AutoStackAllocation temp{};
 		message->generate(temp.source());
-#pragma message("TODO: ensure that make_message() is called when generating string literals")
-		_generator->print_message(temp.source()->read());
+
+		using enum ExpressionType;
+		switch (message->etype())
+		{
+			case STRING: _generator->print_message(temp.source()->read()); break;
+			case INTEGER_LITERAL: _generator->print_number(temp.source()->read()); break;
+			default: _error_reporter->post_error("unsupported compiler print expression type", message->_token); return;
+		}
 	}
 
 	Statement* PrintStatement::optimize()

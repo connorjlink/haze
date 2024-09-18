@@ -11,53 +11,66 @@
 namespace hz
 {
 	StatementType VariableStatement::stype() const
-    {
-        return StatementType::VARIABLE;
-    }
+	{
+		return StatementType::VARIABLE;
+	}
 
-    VariableStatement* VariableStatement::copy() const
-    {
-        return new VariableStatement{ *this };
-    }
+	VariableStatement* VariableStatement::copy() const
+	{
+		return new VariableStatement{ *this };
+	}
 
-    void VariableStatement::generate(Allocation*)
-    {
-        // Make some space on the heap and notify the parser
-#pragma message("TODO: support local and global variables here!")
-        // also will need to support byte sizes other than 4
-        allocation = new HeapAllocation{ 4 };
-        AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN))->allocation = allocation;
+	void VariableStatement::generate(Allocation*)
+	{
+		// NOTE: old method
+		// Make some space on the heap and notify the parser
+		// also will need to support byte sizes other than 4
+		/*allocation = new HeapAllocation{ 4 };
+		AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN))->allocation = allocation;
 
-        if (value)
-        {
-            AutoStackAllocation temp{};
-            value->generate(temp.source());
-        	allocation->copy_into(temp.source()); 
-        }
-    }
+		if (value)
+		{
+			AutoStackAllocation temp{};
+			value->generate(temp.source());
+			temp.source()->copy_into(allocation);
+		}*/
 
-    Statement* VariableStatement::optimize()
-    {
-        if (auto value_optimized = value->optimize())
-        {
-	        return new VariableStatement{ type, name, AS_EXPRESSION(value_optimized), allocation, _token };
-        }
 
-        return nullptr;
-    }
+		if (value)
+		{
+			AutoStackAllocation temp{};
+			value->generate(temp.source());
+			_generator->make_local(name, temp.source()->read());
+		}
 
-    Node* VariableStatement::evaluate(Context* context) const
-    {
-        if (value)
-        {
-            context->define_variable(name, harvest(value->evaluate(context)));
-        }
+		else
+		{
+			_generator->make_local(name);
+		}
+	}
 
-        else
-        {
-            context->define_variable(name, variable_t{ 0u });
-        }
+	Statement* VariableStatement::optimize()
+	{
+		if (auto value_optimized = value->optimize())
+		{
+			return new VariableStatement{ type, name, AS_EXPRESSION(value_optimized), allocation, _token };
+		}
 
-        return nullptr;
-    }
+		return nullptr;
+	}
+
+	Node* VariableStatement::evaluate(Context* context) const
+	{
+		if (value)
+		{
+			context->define_variable(name, harvest(value->evaluate(context)));
+		}
+
+		else
+		{
+			context->define_variable(name, variable_t{ 0u });
+		}
+
+		return nullptr;
+	}
 }

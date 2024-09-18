@@ -1,4 +1,5 @@
 #include "ArgumentExpression.h"
+#include "ErrorReporter.h"
 
 // Haze ArgumentExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,7 +18,7 @@ namespace hz
 
 	void ArgumentExpression::generate(Allocation*)
 	{
-#pragma message("TODO: compiler code generation for argument expression")
+		_error_reporter->post_error("unsupported compiler expression type `argument`", _token);
 	}
 
 	Expression* ArgumentExpression::optimize()

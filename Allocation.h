@@ -40,6 +40,22 @@ namespace hz
 		ObserverAllocation(register_t);
 	};
 
+	class AutoObserverAllocation
+	{
+	private:
+		ObserverAllocation* _source;
+
+	public:
+		decltype (_source) source() const
+		{
+			return _source;
+		}
+
+	public:
+		AutoObserverAllocation(register_t);
+		~AutoObserverAllocation();
+	};
+
 	class StackAllocation : public Allocation
 	{
 	public:

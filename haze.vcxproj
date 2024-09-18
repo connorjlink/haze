@@ -51,7 +51,6 @@
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ErrorContext.cpp" />
     <ClCompile Include="ErrorReporter.cpp" />
-    <ClCompile Include="ErrorState.cpp" />
     <ClCompile Include="Evaluator.cpp" />
     <ClCompile Include="ExecutionContext.cpp" />
     <ClCompile Include="ExitStatement.cpp" />
@@ -123,6 +122,7 @@
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="PrintStatement.cpp" />
     <ClCompile Include="ReturnStatement.cpp" />
+    <ClCompile Include="RuntimeAllocator.cpp" />
     <ClCompile Include="Scope.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
@@ -133,13 +133,13 @@
     <ClCompile Include="RandomUtility.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
-    <ClInclude Include="ErrorState.h" />
     <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />
     <ClInclude Include="IntermediateCommand.h" />
     <ClInclude Include="IntermediateType.h" />
+    <ClInclude Include="RuntimeAllocator.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Scope.h" />
     <ClInclude Include="Test.h" />

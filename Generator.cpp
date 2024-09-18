@@ -5,8 +5,9 @@
 #include "Symbol.h"
 #include "Linkable.h"
 #include "LabelCommand.h"
-#include "ErrorReporter.h"
 #include "IntermediateCommand.h"
+#include "RuntimeAllocator.h"
+#include "ErrorReporter.h"
 
 import std;
 
@@ -60,10 +61,17 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_local(register_t location, variable_t value)
+	void Generator::make_local(const std::string& name, register_t location)
 	{
-		auto command = new LocalVariableCommand{ location, value };
-		COMPOSE(command);
+		//auto command = new LocalVariableCommand{ location, value };
+		//COMPOSE(command);
+		static_assert(false);
+	}
+
+	void Generator::make_local(const std::string& name)
+	{
+		_runtime_allocator->define_local()
+		static_assert(false);
 	}
 
 	void Generator::make_global(register_t location, variable_t value)
@@ -168,18 +176,6 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::journal_entry()
-	{
-		auto command = new JournalEntryCommand{};
-		COMPOSE(command);
-	}
-
-	void Generator::journal_leave()
-	{
-		auto command = new JournalLeaveCommand{};
-		COMPOSE(command);
-	}
-
 	void Generator::goto_command(std::int32_t index)
 	{
 		auto command = new GotoCommand{ index };
@@ -188,8 +184,7 @@ namespace hz
 
 	void Generator::check_ifnz(register_t value, std::int32_t index)
 	{
-#pragma message("TODO: fix the if not zero to jump to a specific three-address-code region!")
-		auto command = new IfNotZeroCommand{ value, {} };
+		auto command = new IfNotZeroCommand{ value, index };
 		COMPOSE(command);
 	}
 
@@ -210,7 +205,6 @@ namespace hz
 		auto command = new ExitProgramCommand{ code };
 		COMPOSE(command);
 	}
-
 
 
 	std::uint32_t Generator::write_pointer() const

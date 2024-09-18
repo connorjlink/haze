@@ -97,6 +97,52 @@ namespace hz
 	}
 
 
+	byterange X86Builder::mov_rm(std::uint8_t destination, std::uint32_t pointer)
+	{
+		byterange out{};
+
+		if (destination == EAX)
+		{
+			// A1 --> MOV EAX, moffs32*
+			PUT(BinaryUtilities::range8(0xA1));
+			PUT(BinaryUtilities::range32(pointer));
+		}
+
+		else
+		{
+			// 8B /r --> MOV r32, r/m32
+			PUT(BinaryUtilities::range8(0x8B));
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, destination, 0b101)));
+			PUT(BinaryUtilities::range32(pointer));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::mov_rm(std::uint32_t pointer, std::uint8_t source)
+	{
+		byterange out{};
+
+		if (source == EAX)
+		{
+			// A3 --> MOV moffs32*, EAX
+			PUT(BinaryUtilities::range8(0xA3));
+			PUT(BinaryUtilities::range32(pointer));
+		}
+		
+		else
+		{
+			// 89 /r --> MOV r/m32,r32
+			PUT(BinaryUtilities::range8(0x89));
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, source, 0b101)));
+			PUT(BinaryUtilities::range32(pointer));
+		}
+
+
+		return out;
+	}
+
+
 	byterange X86Builder::add_rr(std::uint8_t destination, std::uint8_t source)
 	{
 		byterange out{};
@@ -371,10 +417,12 @@ namespace hz
 		return out;
 	}
 
+
 	byterange X86Builder::inc_r(std::uint8_t source)
 	{
 		byterange out{};
 
+		// 40+ rd --> INC r32
 		PUT(BinaryUtilities::range8(0x40 | source));
 
 		return out;
@@ -384,7 +432,54 @@ namespace hz
 	{
 		byterange out{};
 
+		// 48+rd --> DEC r32
 		PUT(BinaryUtilities::range8(0x48 | source));
+
+		return out;
+	}
+
+
+	byterange X86Builder::test_rr(std::uint8_t lhs, std::uint8_t rhs)
+	{
+		byterange out{};
+
+		// 85 /r --> TEST r/m32, r32
+		PUT(BinaryUtilities::range8(0x85));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(lhs, rhs)));
+
+		return out;
+	}
+
+	byterange X86Builder::cmp_rr(std::uint8_t lhs, std::uint8_t rhs)
+	{
+		byterange out{};
+
+		// 39 /r --> CMP r/m32, r32
+		PUT(BinaryUtilities::range8(0x39));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(lhs, rhs)));
+
+		return out;
+	}
+
+
+	byterange X86Builder::call(std::uint32_t address)
+	{
+		byterange out{};
+
+		// FF /2 --> CALL r/m32
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x15));
+		PUT(BinaryUtilities::range32(address));
+
+		return out;
+	}
+
+	byterange X86Builder::ret()
+	{
+		byterange out{};
+
+		// C3 --> RET
+		PUT(BinaryUtilities::range8(0xC3));
 
 		return out;
 	}

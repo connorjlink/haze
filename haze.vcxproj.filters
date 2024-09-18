@@ -72,7 +72,7 @@
     <Filter Include="Example Files">
       <UniqueIdentifier>{c544c3b4-6538-433a-8e74-ebec2fcf0e5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Register">
+    <Filter Include="Source Files\Memory">
       <UniqueIdentifier>{40b958de-7eb1-4f01-b42e-3d4e7cf47798}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -309,19 +309,19 @@
       <Filter>Source Files\Validator</Filter>
     </ClCompile>
     <ClCompile Include="Allocation.cpp">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Allocator.cpp">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClCompile>
     <ClCompile Include="StackAllocator.cpp">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClCompile>
     <ClCompile Include="HeapAllocator.cpp">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorState.cpp">
-      <Filter>Source Files\Error</Filter>
+    <ClCompile Include="RuntimeAllocator.cpp">
+      <Filter>Source Files\Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -634,23 +634,23 @@
     <ClInclude Include="Test.h">
       <Filter>Source Files\Validator</Filter>
     </ClInclude>
-    <ClInclude Include="ErrorState.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
     <ClInclude Include="StackAllocator.h">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Allocation.h">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Allocator.h">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClInclude>
     <ClInclude Include="AllocationType.h">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
     </ClInclude>
     <ClInclude Include="HeapAllocator.h">
-      <Filter>Source Files\Register</Filter>
+      <Filter>Source Files\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="RuntimeAllocator.h">
+      <Filter>Source Files\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -670,9 +670,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="test.hzi">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="test.hz">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="sample.hzs">
@@ -701,5 +698,8 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="chatgpt_cdecl_example.md" />
+    <None Include="test.hz">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

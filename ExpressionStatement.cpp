@@ -24,19 +24,16 @@ namespace hz
 
 	Statement* ExpressionStatement::optimize()
 	{
-		auto expression_optimized = AS_EXPRESSION(expression->optimize());
-
-		if (expression_optimized == nullptr)
+		if (auto expression_optimized = AS_EXPRESSION(expression->optimize()))
 		{
-			return nullptr;
+			return new ExpressionStatement{ expression_optimized, _token };
 		}
 
-		return new ExpressionStatement{ expression_optimized, _token };
+		return nullptr;
 	}
 
 	Node* ExpressionStatement::evaluate(Context* context) const
 	{
-#pragma message("TODO: is it alright to discard here???")
 		expression->evaluate(context);
 		return nullptr;
 	}

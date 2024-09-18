@@ -32,36 +32,30 @@ namespace hz
 		const auto begin_else_label = std::format("begin_else_{:03d}", uuid);
 		const auto end_else_label = std::format("end_else_{:03d}", uuid);
 
-#pragma message("TODO: if statement code generation!")
-		// scoping so that the if body can use our condition register
+		_generator->label(begin_if_label);
+
+		// scoping so that the if body can re-use the condition register
 		{
 			AutoStackAllocation condition_allocation{};
-
 			condition->generate(condition_allocation.source());
 
-			//_generator->make_bool(condition_allocation.source()->read());
-			//_generator->make_brnz(begin_else_label, condition_allocation.source()->read());
+			_generator->check_ifz(condition_allocation.source()->read(), begin_else_label);
 		}
-
-		_generator->label(begin_if_label);
 
 		if_body->generate();
 
 		if (else_body != nullptr)
 		{
-			AutoStackAllocation temp{};
-			_generator->make_copy(temp.source()->read(), 1);
-			//_generator->make_brnz(end_else_label, temp.source()->read());
+			_generator->goto_command(end_else_label);
 		}
-		
+
 		_generator->label(begin_else_label);
 
 		if (else_body != nullptr)
 		{
 			else_body->generate();
+			_generator->label(end_else_label);
 		}
-
-		_generator->label(end_else_label);
 	}
 
 	Statement* IfStatement::optimize()

@@ -2,6 +2,7 @@
 #define HAZE_CONSTANTS_H
 
 #include <vector>
+#include <limits>
 #include <cstdint>
 
 // Haze Constants.h
@@ -23,6 +24,13 @@ namespace hz
 	inline static constexpr auto HALF_DWORD_MAX = DWORD_MAX / 2;
 	inline static constexpr auto QUARTER_WORD_MAX = HALF_WORD_MAX / 2;
 	inline static constexpr auto QUARTER_DWORD_MAX = HALF_DWORD_MAX / 2;
+
+	namespace x86
+	{
+		inline static constexpr auto BYTE_MAX = std::numeric_limits<byte>::max();
+		inline static constexpr auto WORD_MAX = std::numeric_limits<word>::max();
+		inline static constexpr auto DWORD_MAX = std::numeric_limits<dword>::max();
+	}
 }
 
 #endif //HAZE_CONSTANTS_H

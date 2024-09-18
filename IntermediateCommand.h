@@ -10,6 +10,9 @@ namespace hz
 {
 	class IntermediateCommand
 	{
+	private:
+		std::int32_t _self_address;
+
 	public:
 		virtual ~IntermediateCommand() = default;
 
@@ -39,15 +42,6 @@ namespace hz
 
 	class LeaveScopeCommand : public IntermediateCommand
 	{
-	private:
-		std::int32_t _bytes;
-
-	public:
-		LeaveScopeCommand(std::int32_t bytes = 0x1000)
-			: _bytes{ bytes }
-		{
-		}
-
 	public:
 		virtual IntermediateType itype() const final override;
 		virtual byterange emit() const final override;
@@ -344,44 +338,17 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
-	class JournalEntryCommand : public IntermediateCommand
-	{
-	private:
-		std::int32_t _bytes;
-		// TODO: support dynamically resizable function stack frames
-
-	public:
-		JournalEntryCommand(std::int32_t bytes = 0x1000)
-			: _bytes{ bytes }
-		{
-		}
-
-	public:
-		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-
-	class JournalLeaveCommand : public IntermediateCommand
-	{
-	public:
-		JournalLeaveCommand() = default;
-
-	public:
-		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-
 	class IfNotZeroCommand : public IntermediateCommand
 	{
 	private:
 		// location storing the value to compare
 		register_t _value;
 		// conditional code
-		std::vector<IntermediateCommand*> _code;
+		std::int32_t _index;
 
 	public:
-		IfNotZeroCommand(register_t value, const std::vector<IntermediateCommand*>& code)
-			: _value{ value }, _code{ code }
+		IfNotZeroCommand(register_t value, std::int32_t index)
+			: _value{ value }, _index{ index }
 		{
 		}
 

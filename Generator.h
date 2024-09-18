@@ -33,13 +33,19 @@ namespace hz
 
 	public:
 		// push a new empty scope with a unique local variable set
+		// also used to declare a function prologue
 		void begin_scope();
 		// pop the most recent scope and clean up all local variables' storage
+		// also used to declare a function epilogue
 		void end_scope();
 
 	public:
 		// push a new variable private to the current scope
-		void make_local(register_t, variable_t);
+		void make_local(const std::string&, register_t);
+		// push a new undefined variable private to the current scope
+		void make_local(const std::string&);
+
+	public:
 		// push a new variable public to the entire program
 		void make_global(register_t, variable_t);
 
@@ -71,7 +77,7 @@ namespace hz
 	public:
 		// destination = source
 		void make_copy(register_t, register_t);
-		// destination = source
+		// destination = immediate
 		void make_immediate(register_t, std::uint32_t);
 
 	public:
@@ -87,16 +93,22 @@ namespace hz
 		void make_return(register_t);
 
 	public:
-		// declare a function prologue
-		void journal_entry();
-		// declare a function epilogue
-		void journal_leave();
+		// { condition, index to which to jump }
+		void check_ifnz(register_t, std::int32_t);
+		// { condition, label to which to jump }
+		void check_ifnz(register_t, const std::string&);
 
 	public:
 		// { condition, index to which to jump }
-		void check_ifnz(register_t, std::int32_t);
+		void check_ifz(register_t, std::int32_t);
+		// { condition, label to which to jump }
+		void check_ifz(register_t, const std::string&);
+
+	public:
 		// index to which to jump
 		void goto_command(std::int32_t);
+		// label to which to jump
+		void goto_command(const std::string&);
 
 	public:
 		// memory[pointer] = message
@@ -105,8 +117,16 @@ namespace hz
 		void print_message(std::uint32_t);
 
 	public:
+		// print(integer)
+		void print_number(std::uint32_t);
+
+	public:
 		// exit(code)
 		void exit_program(register_t);
+
+	public:
+		// { assembly code }
+		void raw_binary(byterange&&);
 
 	public:
 		// { assembly code, bytecount }

@@ -4,6 +4,7 @@
 #include "Allocation.h"
 #include "Allocator.h"
 #include "Evaluator.h"
+#include "RandomUtility.h"
 #include "ErrorReporter.h"
 
 import std;
@@ -25,11 +26,30 @@ namespace hz
 
 	void ForStatement::generate(Allocation*)
 	{
-#pragma message("TODO: for loop code generation for compiler")
-		// we need to force allocate this one :(
-		AutoStackAllocation condition_allocation{};
+		// 3 digits of randomness for now
+		const auto uuid = hz::generate(3);
 
-		// TODO: finish for statement generation
+		const auto begin_for_label = std::format("begin_for_{:03d}", uuid);
+		const auto end_for_label = std::format("end_for_{:03d}", uuid);
+
+		initialization->generate();
+
+		_generator->label(begin_for_label);
+
+		// scoping so that the for body can re-use the condition register
+		{
+			AutoStackAllocation condition_allocation{};
+			condition->generate(condition_allocation.source());
+
+			_generator->check_ifnz(condition_allocation.source()->read(), end_for_label);
+		}
+
+		body->generate();
+		expression->generate();
+
+		_generator->goto_command(begin_for_label);
+
+		_generator->label(end_for_label);
 	}
 
 	Statement* ForStatement::optimize()

@@ -18,6 +18,8 @@ namespace hz
 
     void CompoundStatement::generate(Allocation*)
     {
+        _generator->begin_scope();
+
         for (auto substatement : substatements)
         {
             if (substatement != nullptr)
@@ -25,6 +27,8 @@ namespace hz
                 substatement->generate();
             }
         }
+
+        _generator->end_scope();
     }
 
     Statement* CompoundStatement::optimize()

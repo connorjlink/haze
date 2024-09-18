@@ -44,6 +44,16 @@ namespace hz
 		allocation = source;
 	}
 
+	AutoObserverAllocation::AutoObserverAllocation(register_t source)
+	{
+		_source = new ObserverAllocation{ source };
+	}
+
+	AutoObserverAllocation::~AutoObserverAllocation()
+	{
+		delete _source;
+	}
+
 	StackAllocation::StackAllocation()
 	{
 		allocation = _stack_allocator->allocate();

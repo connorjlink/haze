@@ -37,6 +37,10 @@ namespace hz
 			return;
 		}
 
+		// NOTE: equivalent to -->
+		// push esp
+		_generator->make_argument(ESP);
+
 		for (auto argument : arguments)
 		{
 			argument->generate(allocation);
@@ -46,8 +50,17 @@ namespace hz
 		// Placeholder call address before we hot-patch in the correct target during linking
 		_generator->call_function(name);
 
-		// Return values always come in the EAX register
+		// Return values always come from the EAX register
 		_generator->make_copy(allocation->read(), EAX);
+
+
+#pragma message("TODO: find the actual size of each argument to know how much to change it by")
+
+		const auto arguments_bytes = arguments.size() * 4;
+
+		// NOTE: equivalent to -->
+		// pop esp
+		_generator->raw_binary(X86Builder::pop_r(ESP));
 	}
 
 	Expression* FunctionCallExpression::optimize()

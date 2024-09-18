@@ -3,7 +3,6 @@
 #include "InterpreterParser.h"
 #include "HazeEvaluator.h"
 #include "ErrorReporter.h"
-#include "ErrorState.h"
 
 import std;
 
@@ -29,14 +28,15 @@ namespace hz
 		const auto evaluate_task = _job_manager->begin_job("evaluating");
 		const auto evaluator = new HazeEvaluator{ std::move(declarators), _filepath };
 		
-		if (setjmp(_jump_state) == 0)
+		try
 		{
 			evaluator->evaluate();
 		}
 
-		else
+		catch (std::exception)
 		{
 			_error_reporter->post_information("exit condition encountered", NULL_TOKEN);
+
 		}
 
 		_job_manager->end_job(evaluate_task);

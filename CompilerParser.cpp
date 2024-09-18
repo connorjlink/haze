@@ -112,6 +112,8 @@ namespace hz
 		consume(TokenType::LBRACE);
 
 		auto assembly = fetch_until(TokenType::RBRACE);
+		assembly.emplace_back(TokenType::END, "eof", peek().line, peek().column);
+
 		auto assembler_parser = new AssemblerParser{ std::move(assembly), _file_manager->_current_file };
 		auto commands = assembler_parser->parse();
 

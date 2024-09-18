@@ -1,5 +1,6 @@
 #include "IntermediateCommand.h"
 #include "BinaryUtilities.h"
+#include "BinaryConstants.h"
 #include "X86Builder.h"
 
 namespace hz
@@ -13,7 +14,10 @@ namespace hz
 	{
 		// push ebp
 		// mov ebp, esp
-		// sub esp, (# of bytes)
+		// sub esp, N
+
+		// NOTE: equivalent to -->
+		// enter N, 0
 
 		byterange out{};
 
@@ -32,12 +36,15 @@ namespace hz
 
 	byterange LeaveScopeCommand::emit() const
 	{
-		// add esp, (# of bytes)
+		// mov esp, ebp
 		// pop ebp
+		
+		// NOTE: equivalent to -->
+		// leave
 
 		byterange out{};
 
-		PUT(X86Builder::add_ri(ESP, _bytes));
+		PUT(X86Builder::mov_rr(ESP, EBP));
 		PUT(X86Builder::pop_r(EBP));
 
 		return out;
@@ -79,9 +86,11 @@ namespace hz
 
 	byterange MemoryReadCommand::emit() const
 	{
+		// mov destination, [pointer]
+
 		byterange out{};
 
-#pragma message("TODO: memory read command code generation")
+		PUT(X86Builder::mov_rm(_destination, _pointer));
 
 		return out;
 	}
@@ -310,7 +319,7 @@ namespace hz
 	{
 		byterange out{};
 
-
+#pragma message("TODO: function call command")
 		return out;
 	}
 
@@ -322,7 +331,11 @@ namespace hz
 
 	byterange VoidReturnCommand::emit() const
 	{
+		// ret
+
 		byterange out{};
+
+		PUT(X86Builder::ret());
 
 		return out;
 	}
@@ -335,35 +348,15 @@ namespace hz
 
 	byterange ValueReturnCommand::emit() const
 	{
+		// mov eax, location
+		// ret
+
 		byterange out{};
 
-		return out;
-	}
-
-
-	IntermediateType JournalEntryCommand::itype() const
-	{
-		return IntermediateType::JOURNAL_ENTRY;
-	}
-
-	byterange JournalEntryCommand::emit() const
-	{
-		byterange out{};
-
-
-		return out;
-	}
-
-
-	IntermediateType JournalLeaveCommand::itype() const
-	{
-		return IntermediateType::JOURNAL_LEAVE;
-	}
-
-	byterange JournalLeaveCommand::emit() const
-	{
-		byterange out{};
-
+		// NOTE: this will clobber anything currently in the EAX register
+		// but this should be OK since they are locals anyway
+		PUT(X86Builder::mov_rr(EAX, _location));
+		PUT(X86Builder::ret());
 
 		return out;
 	}
@@ -376,9 +369,19 @@ namespace hz
 
 	byterange IfNotZeroCommand::emit() const
 	{
+		// test eax, eax
+		// je skip
+		// { code... }
+		//skip:
+
+		byterange code{};
+
+
 		byterange out{};
 
-#pragma message("TODO: code generation for ifnz!")
+		PUT(X86Builder::test_rr(_value, _value));
+
+
 		return out;
 	}
 
@@ -435,9 +438,13 @@ namespace hz
 
 	byterange ExitProgramCommand::emit() const
 	{
+		// push 0
+		// call [0x402068] (ExitProcess)
+
 		byterange out{};
 
-#pragma message("TODO: exit program command code generation")
+		PUT(X86Builder::push_r(_code));
+		PUT(X86Builder::call(PROCEDURE_BASE + exitprocess_iat_va));
 
 		return out;
 	}

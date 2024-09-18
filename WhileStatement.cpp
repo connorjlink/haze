@@ -24,26 +24,27 @@ namespace hz
 
 	void WhileStatement::generate(Allocation*)
 	{
-		// we need to force allocate this one :(
-		AutoStackAllocation condition_allocation{};
-
 		// 3 digits of randomness for now
-		const auto loop_uuid = hz::generate(3);
+		const auto uuid = hz::generate(3);
 
-		const auto start_label = std::format("start_while_{:02d}", loop_uuid);
-		const auto end_label = std::format("end_while_{:02d}", loop_uuid);
+		const auto begin_while_label = std::format("begin_while_{:03d}", uuid);
+		const auto end_while_label = std::format("end_while_{:03d}", uuid);
 
-		_generator->label(start_label);
+		_generator->label(begin_while_label);
+
+		// scoping so that the while body can re-use the condition register
+		{
+			AutoStackAllocation condition_allocation{};
+			condition->generate(condition_allocation.source());
+
+			_generator->check_ifz(condition_allocation.source()->read(), end_while_label);
+		}
 
 		body->generate();
 
-		condition->generate(condition_allocation.source());
-		
-		AutoStackAllocation temp{};
-#pragma message("TODO: code generation for while")
+		_generator->goto_command(begin_while_label);
 
-		// TODO: finish while statement codegen here!
-		//_generator->make_brnz(start_label, condition_allocation.source()->read());
+		_generator->label(end_while_label);
 	}
 
 	Statement* WhileStatement::optimize()

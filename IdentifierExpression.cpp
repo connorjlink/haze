@@ -27,7 +27,12 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		auto type = _parser->query_symbol_type(name, _token);
+		const auto type = _parser->query_symbol_type(name, _token);
+
+		// TODO: restructure this with our new setup
+		//1.) arguments are passed through the stack with its own second
+		//2.) local variables are stored on the stack so new logic is needed to compute offsets
+		static_assert(false);
 
 		using enum SymbolType;
 		switch (type)
@@ -35,13 +40,13 @@ namespace hz
 			case SymbolType::VARIABLE:
 			{
 				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, _token));
-				allocation->copy_into(variable_symbol->allocation);
+				variable_symbol->allocation->copy_into(allocation);
 			} break;
 
 			case SymbolType::ARGUMENT:
 			{
 				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, _token));
-				allocation->copy_into(argument_symbol->allocation);
+				argument_symbol->allocation->copy_into(allocation);
 			} break;
 
 			default:
