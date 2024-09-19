@@ -1,8 +1,6 @@
 #ifndef HAZE_HEAPALLOCATOR_H
 #define HAZE_HEAPALLOCATOR_H
 
-#include <cstdint>
-
 namespace hz
 {
 	class HeapAllocator

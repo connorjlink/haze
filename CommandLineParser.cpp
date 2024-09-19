@@ -1,9 +1,9 @@
+import std;
+
 #include "CommandLineParser.h"
 #include "JobManager.h"
 #include "CommandLineOptions.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze CommandLineParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

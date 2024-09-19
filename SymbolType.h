@@ -1,17 +1,14 @@
 #ifndef HAZE_SYMBOLTYPE_H
 #define HAZE_SYMBOLTYPE_H
 
+// Haze SymbolType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 #define AS_FUNCTION_SYMBOL(x) static_cast<FunctionSymbol*>(x)
 #define AS_ARGUMENT_SYMBOL(x) static_cast<ArgumentSymbol*>(x)
 #define AS_VARIABLE_SYMBOL(x) static_cast<VariableSymbol*>(x)
 #define AS_DEFINE_SYMBOL(x) static_cast<DefineSymbol*>(x)
 #define AS_LABEL_SYMBOL(x) static_cast<LabelSymbol*>(x)
-
-#include <string>
-#include <unordered_map>
-
-// Haze SymbolType.h
-// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

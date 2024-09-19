@@ -1,3 +1,5 @@
+import std;
+
 #include "BinaryExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "StringExpression.h"
@@ -6,8 +8,6 @@
 #include "Generator.h"
 #include "Evaluator.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze BinaryExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

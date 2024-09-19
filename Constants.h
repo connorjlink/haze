@@ -1,10 +1,6 @@
 #ifndef HAZE_CONSTANTS_H
 #define HAZE_CONSTANTS_H
 
-#include <vector>
-#include <limits>
-#include <cstdint>
-
 // Haze Constants.h
 // (c) Connor J. Link. All Rights Reserved.
 

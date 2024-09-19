@@ -1,11 +1,13 @@
+import std;
+
 #include "CompilerLinker.h"
 #include "Command.h"
 #include "InstructionCommand.h"
 #include "LabelCommand.h"
 #include "Emitter.h"
 #include "CommandLineOptions.h"
-#include "ErrorReporter.h"
 #include "Symbol.h"
+#include "ErrorReporter.h"
 
 // Haze CompilerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.

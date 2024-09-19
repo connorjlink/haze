@@ -4,8 +4,6 @@
 #include "Statement.h"
 #include "Command.h"
 
-#include <vector>
-
 // Haze InlineAsmStatement.h
 // (c) Connor J. Link. All Rights Reserved.
 

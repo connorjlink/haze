@@ -1,3 +1,5 @@
+import std;
+
 #include "ExitStatement.h"
 #include "Generator.h"
 #include "Allocation.h"

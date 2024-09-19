@@ -1,10 +1,10 @@
+import std;
+
 #include "Allocation.h"
 #include "Allocator.h"
 #include "Generator.h"
 #include "IdentifierExpression.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Allocation.cpp
 // (c) Connor J. Link. All Rights Reserved.

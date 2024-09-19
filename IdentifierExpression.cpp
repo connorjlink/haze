@@ -1,3 +1,5 @@
+import std;
+
 #include "IdentifierExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "StringExpression.h"
@@ -5,10 +7,8 @@
 #include "Allocator.h"
 #include "Allocation.h"
 #include "Evaluator.h"
-#include "ErrorReporter.h"
 #include "Symbol.h"
-
-import std;
+#include "ErrorReporter.h"
 
 // Haze IdentifierExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -27,12 +27,8 @@ namespace hz
 
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
-		const auto type = _parser->query_symbol_type(name, _token);
-
-		// TODO: restructure this with our new setup
-		//1.) arguments are passed through the stack with its own second
-		//2.) local variables are stored on the stack so new logic is needed to compute offsets
-		static_assert(false);
+		// NOTE: old method
+		/*const auto type = _parser->query_symbol_type(name, _token);
 
 		using enum SymbolType;
 		switch (type)
@@ -53,7 +49,9 @@ namespace hz
 			{
 				_error_reporter->post_error("invalid identifier symbol type", _token);
 			} break;
-		}
+		}*/
+
+		_generator->read_local(allocation->read(), name);
 	}
 
 	Expression* IdentifierExpression::optimize()

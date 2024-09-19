@@ -1,10 +1,10 @@
+import std;
+
 #include "InterpreterToolchain.h"
 #include "JobManager.h"
 #include "InterpreterParser.h"
 #include "HazeEvaluator.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze InterpreterToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

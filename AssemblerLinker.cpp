@@ -1,3 +1,5 @@
+import std;
+
 #include "AssemblerLinker.h"
 #include "DotOrgCommand.h"
 #include "LabelCommand.h"

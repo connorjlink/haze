@@ -3,9 +3,6 @@
 
 #include "Token.h"
 
-#include <string>
-#include <vector>
-
 // Haze Lexer.h
 // (c) Connor J. Link. All Rights Reserved.
 

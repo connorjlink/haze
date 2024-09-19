@@ -25,11 +25,17 @@ namespace hz
 		std::vector<Linkable> _linkables;
 		std::int32_t _current_function;
 
+	private:
+		std::unordered_map<std::uint32_t, std::uint32_t> _string_length_map;
+
 	public:
 		void begin_function(std::string);
 
 	public:
 		void label(const std::string&);
+
+	public:
+		void register_branch(IntermediateCommand*, const std::string&);
 
 	public:
 		// push a new empty scope with a unique local variable set
@@ -41,9 +47,11 @@ namespace hz
 
 	public:
 		// push a new variable private to the current scope
-		void make_local(const std::string&, register_t);
+		void write_local(const std::string&, register_t);
 		// push a new undefined variable private to the current scope
-		void make_local(const std::string&);
+		void write_local(const std::string&);
+		// read a defined local variable into a target register
+		void read_local(register_t, const std::string&);
 
 	public:
 		// push a new variable public to the entire program

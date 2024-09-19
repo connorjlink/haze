@@ -1,9 +1,6 @@
 #ifndef HAZE_COMMANDLINEPARSER_H
 #define HAZE_COMMANDLINEPARSER_H
 
-#include <string>
-#include <vector>
-
 // Haze CommandLineParser.h
 // (c) Connor J. Link. All Rights Reserved.
 

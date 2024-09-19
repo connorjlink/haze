@@ -3,8 +3,6 @@
 
 #include "ToolchainType.h"
 
-#include <string>
-
 // Haze File.h
 // (c) Connor J. Link. All Rights Reserved.
 

@@ -1,10 +1,10 @@
+import std;
+
 #include "InterpreterParser.h"
 #include "IntegerLiteralExpression.h"
 #include "IdentifierExpression.h"
 #include "ColorIntrinsic.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze InterpreterParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

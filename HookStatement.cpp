@@ -1,8 +1,8 @@
+import std;
+
 #include "HookStatement.h"
 #include "Context.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze HookStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,3 +1,5 @@
+import std;
+
 #include "Statement.h"
 
 // Haze Statement.cpp

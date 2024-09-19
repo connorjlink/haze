@@ -1,3 +1,5 @@
+import std;
+
 #include "AssemblerToolchain.h"
 #include "JobManager.h"
 #include "AssemblerParser.h"

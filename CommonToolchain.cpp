@@ -1,3 +1,5 @@
+import std;
+
 #include "CommonToolchain.h"
 #include "JobManager.h"
 #include "Linker.h"
@@ -8,11 +10,9 @@
 #include "HazeEmitter.h"
 #include "X86Emitter.h"
 #include "CommandLineOptions.h"
-#include "ErrorReporter.h"
 #include "Simulator.h"
 #include "PEBuilder.h"
-
-import std;
+#include "ErrorReporter.h"
 
 // Haze CommonToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

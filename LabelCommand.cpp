@@ -1,3 +1,5 @@
+import std;
+
 #include "LabelCommand.h"
 #include "ErrorReporter.h"
 

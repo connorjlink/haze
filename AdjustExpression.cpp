@@ -1,3 +1,5 @@
+import std;
+
 #include "AdjustExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "IdentifierExpression.h"
@@ -6,8 +8,6 @@
 #include "Generator.h"
 #include "Allocation.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze AdjustExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

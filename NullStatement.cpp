@@ -1,3 +1,5 @@
+import std;
+
 #include "NullStatement.h"
 #include "InstructionEncoding.h"
 #include "Generator.h"

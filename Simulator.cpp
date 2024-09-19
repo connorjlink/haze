@@ -1,10 +1,10 @@
+import std;
+
 #include "Simulator.h"
 #include "InstructionCommand.h"
 #include "Disassembler.h"
 #include "Token.h"
 #include "Log.h"
-
-import std;
 
 // Haze Simulator.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,3 +1,5 @@
+import std;
+
 #include "CompilerParser.h"
 #include "AssemblerParser.h"
 #include "VariableStatement.h"
@@ -11,14 +13,15 @@
 #include "PrintStatement.h"
 #include "HookStatement.h"
 #include "NullStatement.h"
-#include "ErrorReporter.h"
 #include "StringExpression.h"
 #include "ArgumentExpression.h"
 #include "FileManager.h"
 #include "CommandLineOptions.h"
 #include "Symbol.h"
+#include "ErrorReporter.h"
 
-import std;
+// Haze CompilerParser.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

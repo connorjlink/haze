@@ -1,9 +1,6 @@
 #ifndef HAZE_ARCHITECTURETYPE_H
 #define HAZE_ARCHITECTURETYPE_H
 
-#include <string>
-#include <unordered_map>
-
 // Haze ArchitectureType.h
 // (c) Connor J. Link. All Rights Reserved.
 

@@ -1,3 +1,5 @@
+import std;
+
 #include "DotDefineCommand.h"
 #include "ErrorReporter.h"
 

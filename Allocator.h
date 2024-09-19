@@ -4,9 +4,8 @@
 #include "Constants.h"
 #include "Generator.h"
 
-#include <array>
-#include <cstdint>
-#include <optional>
+// Haze Allocator.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

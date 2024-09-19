@@ -1,9 +1,9 @@
+import std;
+
 #include "Evaluator.h"
 #include "IntegerLiteralExpression.h"
 #include "StringExpression.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Evaluator.cpp
 // (c) Connor J. Link. All Rights Reserved.

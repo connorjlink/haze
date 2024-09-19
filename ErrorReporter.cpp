@@ -1,9 +1,7 @@
+import std;
+
 #include "ErrorReporter.h"
 #include "Toolchain.h"
-
-#include <format>
-
-#include "Test.h"
 
 // Haze ErrorReporter.cpp
 // (c) Connor J. Link. All Rights Reserved.

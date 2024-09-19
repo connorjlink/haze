@@ -1,3 +1,5 @@
+import std;
+
 #include "Generator.h"
 #include "Allocator.h"
 #include "Allocation.h"
@@ -8,8 +10,6 @@
 #include "IntermediateCommand.h"
 #include "RuntimeAllocator.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -24,6 +24,7 @@ namespace hz
 	Generator::Generator(std::vector<Node*>&& program, const std::string& filepath)
 		: _program{ std::move(program) }, _current_function{ -1 }
 	{
+		_string_length_map = {};
 		_error_reporter->open_context(filepath, "generating");
 	}
 
@@ -61,17 +62,19 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_local(const std::string& name, register_t location)
+	void hz::Generator::write_local(const std::string&name, register_t source)
 	{
-		//auto command = new LocalVariableCommand{ location, value };
-		//COMPOSE(command);
-		static_assert(false);
+		_runtime_allocator->define_local(name, source);
 	}
 
-	void Generator::make_local(const std::string& name)
+	void hz::Generator::write_local(const std::string&name)
 	{
-		_runtime_allocator->define_local()
-		static_assert(false);
+		_runtime_allocator->define_local(name);
+	}
+
+	void Generator::read_local(register_t destination, const std::string& name)
+	{
+		_runtime_allocator->read_local(destination, name);
 	}
 
 	void Generator::make_global(register_t location, variable_t value)
@@ -176,28 +179,66 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::goto_command(std::int32_t index)
-	{
-		auto command = new GotoCommand{ index };
-		COMPOSE(command);
-	}
-
 	void Generator::check_ifnz(register_t value, std::int32_t index)
 	{
 		auto command = new IfNotZeroCommand{ value, index };
 		COMPOSE(command);
 	}
 
+	void Generator::check_ifnz(register_t value, const std::string& label)
+	{
+		auto command = new IfNotZeroCommand{ value, 0xCCCCCCCC };
+		register_branch(command, label);
+		COMPOSE(command);
+	}
+
+	void Generator::check_ifz(register_t value, std::int32_t index)
+	{
+		auto command = new IfZeroCommand{ value, index };
+		COMPOSE(command);
+	}
+
+	void Generator::check_ifz(register_t value, const std::string& label)
+	{
+		auto command = new IfZeroCommand{ value, 0xCCCCCC };
+		register_branch(command, label);
+		COMPOSE(command);
+	}
+
+	void Generator::goto_command(std::int32_t index)
+	{
+		auto command = new GotoCommand{ index };
+		COMPOSE(command);
+	}
+
+	void Generator::goto_command(const std::string& label)
+	{
+		auto command = new GotoCommand{ 0xCCCCCCCC };
+		register_branch(command, label);
+		COMPOSE(command);
+	}
+
 	void Generator::make_message(std::uint32_t pointer, std::string message)
 	{
+		// including an extra byte for the implicit NULL terminator
+		const auto length = message.length() + 1;
+
+		_string_length_map[pointer] = length;
+
 		auto command = new MakeMessageCommand{ pointer, message };
 		COMPOSE(command);
 	}
 
 	void Generator::print_message(std::uint32_t pointer)
 	{
-		auto command = new PrintMessageCommand{ pointer };
-		COMPOSE(command);
+		if (_string_length_map.contains(pointer))
+		{
+			auto command = new PrintMessageCommand{ pointer, _string_length_map.at(pointer) };
+			COMPOSE(command);
+			return;
+		}
+
+		_error_reporter->post_error(std::format("undefined string pointer `{:08X}`", pointer), NULL_TOKEN);
 	}
 
 	void Generator::exit_program(register_t code)
@@ -225,7 +266,7 @@ namespace hz
 			function->generate();
 		}
 
-		// Reorders the functions so `main` is first since it's the entrypoint
+		// Reorder defined functions so `main` is first since it's the entrypoint
 		std::ranges::partition(_linkables, [](auto& linkable)
 		{
 			if (linkable.symbol->name == "main")

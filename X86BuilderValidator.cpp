@@ -1,8 +1,8 @@
-﻿#include "X86BuilderValidator.h"
+﻿import std;
+
+#include "X86BuilderValidator.h"
 #include "X86Builder.h"
 #include "ErrorReporter.h"
-
-import std;
 
 #pragma message("TODO: use __COUNTER__ instead for easy deduplication of tests")
 
@@ -264,32 +264,32 @@ namespace hz
 		auto had_error = false;
 
 		// 0x00000000 - 0
-		auto case0 = X86Builder::push_m(0x00000000);
+		auto case0 = X86Builder::push_ea(0x00000000);
 		byterange expected0 = { 0x68, 0x00, 0x00, 0x00, 0x00 };
 		VALIDATE_CONVERT("push_m(0x00000000)", expected0, case0);
 
 		// 0x000000FF - 255
-		auto case1 = X86Builder::push_m(0x000000FF);
+		auto case1 = X86Builder::push_ea(0x000000FF);
 		byterange expected1 = { 0x68, 0xFF, 0x00, 0x00, 0x00 };
 		VALIDATE_CONVERT("push_m(0x000000FF)", expected1, case1);
 
 		// 0x0000FF00 - 65280
-		auto case2 = X86Builder::push_m(0x0000FF00);
+		auto case2 = X86Builder::push_ea(0x0000FF00);
 		byterange expected2 = { 0x68, 0x00, 0xFF, 0x00, 0x00 };
 		VALIDATE_CONVERT("push_m(0x0000FF00)", expected2, case2);
 
 		// 0x00FF0000 - 16711680
-		auto case3 = X86Builder::push_m(0x00FF0000);
+		auto case3 = X86Builder::push_ea(0x00FF0000);
 		byterange expected3 = { 0x68, 0x00, 0x00, 0xFF, 0x00 };
 		VALIDATE_CONVERT("push_m(0x00FF0000)", expected3, case3);
 
 		// 0xFF000000 - -16777216
-		auto case4 = X86Builder::push_m(0xFF000000);
+		auto case4 = X86Builder::push_ea(0xFF000000);
 		byterange expected4 = { 0x68, 0x00, 0x00, 0x00, 0xFF };
 		VALIDATE_CONVERT("push_m(0xFF000000)", expected4, case4);
 
 		// 0x12345678 - 305419896
-		auto case5 = X86Builder::push_m(0x12345678);
+		auto case5 = X86Builder::push_ea(0x12345678);
 		byterange expected5 = { 0x68, 0x78, 0x56, 0x34, 0x12 };
 		VALIDATE_CONVERT("push_m(0x12345678)", expected5, case5);
 

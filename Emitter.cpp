@@ -1,3 +1,5 @@
+import std;
+
 #include "Emitter.h"
 #include "HazeEmitter.h"
 #include "X86Emitter.h"

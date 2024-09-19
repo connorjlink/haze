@@ -1,3 +1,5 @@
+import std;
+
 #include "ColorIntrinsic.h"
 
 // Haze ColorIntrinsic.cpp

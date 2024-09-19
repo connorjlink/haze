@@ -1,6 +1,9 @@
 ﻿#ifndef HAZE_INTERMEDIATETYPE_H
 #define HAZE_INTERMEDIATETYPE_H
 
+// Haze IntermediateType.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	enum class IntermediateType

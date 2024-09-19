@@ -1,3 +1,5 @@
+import std;
+
 #include "IfStatement.h"
 #include "IntegerLiteralExpression.h"
 #include "Allocation.h"
@@ -5,8 +7,6 @@
 #include "Generator.h"
 #include "RandomUtility.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze IfStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

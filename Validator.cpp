@@ -1,8 +1,8 @@
-#include "Validator.h"
-#include "ErrorReporter.h"
-#include "Log.h"
-
 import std;
+
+#include "Validator.h"
+#include "Log.h"
+#include "ErrorReporter.h"
 
 // Haze Validator.cpp
 // (c) Connor J. Link. All Rights Reserved.

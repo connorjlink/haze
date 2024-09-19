@@ -1,3 +1,5 @@
+import std;
+
 #include "DotOrgCommand.h"
 #include "ErrorReporter.h"
 

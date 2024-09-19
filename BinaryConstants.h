@@ -32,9 +32,13 @@ namespace hz
 	inline static constexpr auto IMAGE_SIZE = 0x4000;
 
 
-	inline static constexpr auto PROCEDURE_BASE = 0x402000;
-
+	inline static constexpr auto PROCEDURE_BASE = 0x00402000;
 #define PROCEDURE(x) (PROCEDURE_BASE + x)
+
+	inline static constexpr auto STDOUT_HANDLE = 0x004032F0;
+
+	inline static constexpr auto COPYRIGHT_LOGO = 0x00403000;
+
 
 	// GetStdHandle()
 	inline const auto getstdhandle_int_va = 0xA0;

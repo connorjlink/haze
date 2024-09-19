@@ -1,9 +1,6 @@
 #ifndef HAZE_HAZEEVALUATOR_H
 #define HAZE_HAZEEVALUATOR_H
 
-#include <string>
-#include <vector>
-
 // Haze HazeEvaluator.h
 // (c) Connor J. Link. All Rights Reserved.
 

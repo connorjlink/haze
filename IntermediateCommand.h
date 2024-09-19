@@ -6,6 +6,9 @@
 #include "InstructionEncoding.h"
 #include "IntermediateType.h"
 
+// Haze IntermediateCommand.h
+// (c) Connor J. Link. All Rights Reserved.
+
 namespace hz
 {
 	class IntermediateCommand
@@ -357,6 +360,25 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class IfZeroCommand : public IntermediateCommand
+	{
+	private:
+		// location storing the value to compare
+		register_t _value;
+		// conditional code
+		std::int32_t _index;
+
+	public:
+		IfZeroCommand(register_t value, std::int32_t index)
+			: _value{ value }, _index{ index }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class GotoCommand : public IntermediateCommand
 	{
 	private:
@@ -394,10 +416,11 @@ namespace hz
 	{
 	private:
 		std::uint32_t _pointer;
+		std::uint32_t _length;
 
 	public:
-		PrintMessageCommand(std::uint32_t pointer)
-			: _pointer{ pointer }
+		PrintMessageCommand(std::uint32_t pointer, std::uint32_t length)
+			: _pointer{ pointer }, _length{ length }
 		{
 		}
 

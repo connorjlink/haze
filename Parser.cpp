@@ -1,3 +1,5 @@
+import std;
+
 #include "Parser.h"
 #include "Token.h"
 #include "Allocator.h"
@@ -13,8 +15,6 @@
 #include "DotDefineCommand.h"
 #include "Symbol.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Parser.cpp
 // (c) Connor J. Link. All Rights Reserved.

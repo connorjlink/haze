@@ -1,3 +1,5 @@
+import std;
+
 #include "ForStatement.h"
 #include "IntegerLiteralExpression.h"
 #include "NullStatement.h"
@@ -6,8 +8,6 @@
 #include "Evaluator.h"
 #include "RandomUtility.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze ForStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

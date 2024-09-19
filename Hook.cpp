@@ -1,3 +1,5 @@
+import std;
+
 #include "Hook.h"
 #include "ErrorReporter.h"
 

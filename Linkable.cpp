@@ -1,3 +1,5 @@
+import std;
+
 #include "Linkable.h"
 
 // Haze Linkable.cpp

@@ -3,8 +3,6 @@
 
 #include "Statement.h"
 
-#include <vector>
-
 // Haze CompoundStatement.h
 // (c) Connor J. Link. All Rights Reserved.
 

@@ -1,8 +1,7 @@
+import std;
+
 #include "Allocator.h"
 #include "Allocation.h"
-#include "Log.h"
-
-import std;
 
 // Haze Allocator.cpp
 // (c) Connor J. Link. All Rights Reserved.

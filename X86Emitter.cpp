@@ -1,3 +1,5 @@
+import std;
+
 #include "X86Emitter.h"
 #include "X86Builder.h"
 #include "PEBuilder.h"
@@ -163,7 +165,7 @@ namespace hz
 			
 
 			// push [0x4013FF]
-			PUT(X86Builder::push_m(0x004033FF));
+			PUT(X86Builder::push_ea(0x004033FF));
 
 
 			// push esi
@@ -396,12 +398,12 @@ namespace hz
 		//PUT(X86Builder::push_m(0x00403340));
 
 		// format string
-		PUT(X86Builder::push_m(0x0040305F));
+		PUT(X86Builder::push_ea(0x0040305F));
 
 		PUT(X86Builder::push_i(0x0F));
 
 		// output string
-		PUT(X86Builder::push_m(0x004033F0));
+		PUT(X86Builder::push_ea(0x004033F0));
 
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
@@ -418,53 +420,51 @@ namespace hz
 		byterange out{};
 
 		// push STD_OUTPUT_HANDLE
-		PUT(BinaryUtilities::range8(0x68));
+		{
+			PUT(BinaryUtilities::range8(0x68));
 
-
-		// NOTE: this is some hackery so we can avoid including <windows.h> 
-		// since it is a MASSIVE header file and we really don't need anything from it.
-		// See the following link for more info:
-		// https://learn.microsoft.com/en-us/windows/console/getstdhandle
+			// NOTE: this is some hackery so we can avoid including <windows.h> 
+			// since it is a MASSIVE header file and we really don't need anything from it.
+			// See the following link for more info:
+			// https://learn.microsoft.com/en-us/windows/console/getstdhandle
 #define DWORD std::uint32_t
 #define STD_OUTPUT_HANDLE ((DWORD)-11)
-		PUT(BinaryUtilities::range32(STD_OUTPUT_HANDLE));
+			PUT(BinaryUtilities::range32(STD_OUTPUT_HANDLE));
 #undef STD_OUTPUT_HANDLE
 #undef DWORD
-
+		}
 
 		// call GetStdHandle
-		PUT(BinaryUtilities::range8(0xFF));
-		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + getstdhandle_iat_va));
+		PUT(X86Builder::call(PROCEDURE(getstdhandle_iat_va)));
+		// NOTE: old method
 		//PUT(BinaryUtilities::range32(0x402080));
 
 		// handle is stored in eax
+		
+		// mov [STDOUT_HANDLE], eax
+		PUT(X86Builder::mov_mr(STDOUT_HANDLE, EAX));
+
 		// mov esi, eax
-		PUT(BinaryUtilities::range8(0x89));
-		PUT(BinaryUtilities::range8(0xC6));
+		PUT(X86Builder::mov_rr(ESI, EAX));
 
 		// push NULL
-		PUT(BinaryUtilities::range8(0x6A));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(X86Builder::push_i(0x00));
 
 		// push NULL
-		PUT(BinaryUtilities::range8(0x6A));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(X86Builder::push_i(0x00));
 
 		// push length (77 bytes)
-		PUT(BinaryUtilities::range8(0x6A));
-		PUT(BinaryUtilities::range8(77));
+		PUT(X86Builder::push_i(77));
 
 		// push string (copyright logo)
-		PUT(X86Builder::push_m(0x00403000));
+		PUT(X86Builder::push_ea(COPYRIGHT_LOGO));
 
 		// push eax
-		PUT(BinaryUtilities::range8(0x50));
+		PUT(X86Builder::push_r(EAX));
 
 		// call WriteConsoleA
-		PUT(BinaryUtilities::range8(0xFF));
-		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
+		PUT(X86Builder::call(PROCEDURE(writeconsole_iat_va)));
+		// NOTE: old method
 		//PUT(BinaryUtilities::range32(0x4020A0));
 
 		return out;

@@ -1,3 +1,5 @@
+import std;
+
 #include "BinaryUtilities.h"
 
 // Haze BinaryUtilities.cpp

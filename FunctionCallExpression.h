@@ -3,9 +3,6 @@
 
 #include "Expression.h"
 
-#include <string>
-#include <vector>
-
 // Haze FunctionCallExpression.h
 // (c) Connor J. Link. All Rights Reserved.
 

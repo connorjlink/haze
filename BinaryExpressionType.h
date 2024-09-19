@@ -3,8 +3,6 @@
 
 #include "Token.h"
 
-#include <unordered_map>
-
 // Haze BinaryExpressionType.h
 // (c) Connor J. Link. All Rights Reserved.
 

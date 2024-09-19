@@ -1,10 +1,10 @@
+import std;
+
 #include "PEBuilder.h"
 #include "X86Emitter.h"
 #include "BinaryUtilities.h"
 #include "BinaryConstants.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze PEBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.

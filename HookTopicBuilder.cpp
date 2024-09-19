@@ -1,14 +1,14 @@
+import std;
+
 #include "HookTopicBuilder.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze HookTopicBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	constexpr std::string_view project(Project _project)
+	constexpr std::string project(Project _project)
 	{
 		using enum Project;
 		switch (_project)
@@ -24,7 +24,7 @@ namespace hz
 		}
 	}
 
-	constexpr std::string_view subproject(Subproject _subproject)
+	constexpr std::string subproject(Subproject _subproject)
 	{
 		using enum Subproject;
 		switch (_subproject)
@@ -46,7 +46,7 @@ namespace hz
 		}
 	}
 
-	constexpr std::string_view datapoint(Datapoint _datapoint)
+	constexpr std::string datapoint(Datapoint _datapoint)
 	{
 		using enum Datapoint;
 		switch (_datapoint)
@@ -69,7 +69,7 @@ namespace hz
 		}
 	}
 
-	constexpr std::string_view operation(Operation _operation)
+	constexpr std::string operation(Operation _operation)
 	{
 		using enum Operation;
 		switch (_operation)

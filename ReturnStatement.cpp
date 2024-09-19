@@ -1,4 +1,6 @@
-﻿#include "ReturnStatement.h"
+﻿import std;
+
+#include "ReturnStatement.h"
 #include "Function.h"
 #include "Parser.h"
 #include "Allocation.h"

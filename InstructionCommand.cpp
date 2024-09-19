@@ -1,3 +1,5 @@
+import std;
+
 #include "InstructionCommand.h"
 #include "Disassembler.h"
 #include "Generator.h"

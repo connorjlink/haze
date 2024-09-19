@@ -1,3 +1,5 @@
+import std;
+
 #include "Function.h"
 #include "Generator.h"
 #include "Allocator.h"
@@ -12,8 +14,6 @@
 #include "Symbol.h"
 #include "X86Builder.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Function.cpp
 // (c) Connor J. Link. All Rights Reserved.

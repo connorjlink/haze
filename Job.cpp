@@ -1,7 +1,7 @@
+import std;
+
 #include "Job.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Job.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,8 +1,8 @@
+import std;
+
 #include "Disassembler.h"
 #include "InstructionCommand.h"
 #include "Constants.h"
-
-import std;
 
 // Haze Disassembler.cpp
 // (c) Connor J. Link. All Rights Reserved.

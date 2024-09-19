@@ -1,11 +1,11 @@
+import std;
+
 #include "WhileStatement.h"
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Generator.h"
 #include "RandomUtility.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze WhileStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

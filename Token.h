@@ -3,9 +3,6 @@
 
 #include "Bimap.h"
 
-#include <string_view>
-#include <cstdint>
-
 // Haze Token.h
 // (c) Connor J. Link. All Rights Reserved.
 

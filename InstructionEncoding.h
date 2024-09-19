@@ -1,10 +1,6 @@
 #ifndef HAZE_INSTRUCTIONENCODING_H
 #define HAZE_INSTRUCTIONENCODING_H
 
-#include <string_view>
-#include <unordered_map>
-#include <cstdint>
-
 // Haze InstructionEncoding.h
 // (c) Connor J. Link. All Rights Reserved.
 

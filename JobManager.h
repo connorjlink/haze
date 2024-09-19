@@ -3,8 +3,6 @@
 
 #include "Job.h"
 
-#include <vector>
-
 // Haze JobManager.h
 // (c) Connor J. Link. All Rights Reserved.
 

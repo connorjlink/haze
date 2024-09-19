@@ -1,3 +1,5 @@
+import std;
+
 #include "Intrinsic.h"
 
 // Haze Intrinsic.cpp

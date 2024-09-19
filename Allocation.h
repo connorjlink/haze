@@ -7,7 +7,8 @@
 #include "HeapAllocator.h"
 #include "Context.h"
 
-#include <cstdint>
+// Haze Allocation.h
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {

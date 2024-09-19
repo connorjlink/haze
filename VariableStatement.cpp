@@ -1,3 +1,5 @@
+import std;
+
 #include "VariableStatement.h"
 #include "Allocator.h"
 #include "Allocation.h"
@@ -40,12 +42,12 @@ namespace hz
 		{
 			AutoStackAllocation temp{};
 			value->generate(temp.source());
-			_generator->make_local(name, temp.source()->read());
+			_generator->write_local(name, temp.source()->read());
 		}
 
 		else
 		{
-			_generator->make_local(name);
+			_generator->write_local(name);
 		}
 	}
 

@@ -1,9 +1,6 @@
 #ifndef HAZE_EXECUTIONTYPE_H
 #define HAZE_EXECUTIONTYPE_H
 
-#include <string>
-#include <unordered_map>
-
 // Haze ExecutionType.h
 // (c) Connor J. Link. All Rights Reserved.
 

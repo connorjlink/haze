@@ -1,9 +1,6 @@
 #ifndef HAZE_TEST_H
 #define HAZE_TEST_H
 
-#include <string>
-#include <functional>
-
 // Haze Test.h
 // (c) Connor J. Link. All Rights Reserved.
 

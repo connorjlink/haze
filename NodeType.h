@@ -1,9 +1,6 @@
 #ifndef HAZE_NODETYPE_H
 #define HAZE_NODETYPE_H
 
-#include <string>
-#include <unordered_map>
-
 // Haze NodeType.h
 // (c) Connor J. Link. All Rights Reserved.
 

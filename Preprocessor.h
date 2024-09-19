@@ -1,9 +1,6 @@
 #ifndef HAZE_PREPROCESSOR_H
 #define HAZE_PREPROCESSOR_H
 
-#include <string>
-#include <vector>
-
 // Haze Preprocessor.h
 // (c) Connor J. Link. All Rights Reserved.
 

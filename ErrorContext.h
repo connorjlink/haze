@@ -4,9 +4,6 @@
 #include "Error.h"
 #include "Token.h"
 
-#include <vector>
-#include <cstdlib>
-
 // Haze ErrorContext.h
 // (c) Connor J. Link. All Rights Reserved.
 

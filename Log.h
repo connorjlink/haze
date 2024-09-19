@@ -3,8 +3,6 @@
 
 #include "ErrorType.h"
 
-#include <string_view>
-
 // Haze Log.h
 // (c) Connor J. Link. All Rights Reserved.
 

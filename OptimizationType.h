@@ -1,10 +1,6 @@
 #ifndef HAZE_OPTIMIZATIONTYPE_H
 #define HAZE_OPTIMIZATIONTYPE_H
 
-#include <string>
-#include <unordered_map>
-#include <cstdint>
-
 // Haze OptimizationType.h
 // (c) Connor J. Link. All Rights Reserved.
 

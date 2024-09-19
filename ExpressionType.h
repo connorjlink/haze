@@ -1,9 +1,6 @@
 #ifndef HAZE_EXPRESSIONTYPE_H
 #define HAZE_EXPRESSIONTYPE_H
 
-#include <string_view>
-#include <unordered_map>
-
 // Haze ExpressionType.h
 // (c) Connor J. Link. All Rights Reserved.
 

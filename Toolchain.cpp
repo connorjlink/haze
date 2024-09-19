@@ -1,12 +1,12 @@
+import std;
+
 #include "Toolchain.h"
 #include "JobManager.h"
 #include "FileManager.h"
 #include "Preprocessor.h"
 #include "Lexer.h"
-#include "ErrorReporter.h"
 #include "Log.h"
-
-import std;
+#include "ErrorReporter.h"
 
 // Haze Toolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -57,6 +57,6 @@ namespace hz
 	void Toolchain::panic()
 	{
 		Log::raw(_error_reporter->generate_report());
-		std::exit(EXIT_FAILURE);
+		std::exit(1);
 	}
 }

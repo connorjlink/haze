@@ -1,6 +1,6 @@
-#include "HookClient.h"
-
 import std;
+
+#include "HookClient.h"
 
 // Haze HookClient.cpp
 // (c) Connor J. Link. All Rights Reserved.

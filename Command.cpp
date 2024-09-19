@@ -1,3 +1,5 @@
+import std;
+
 #include "Command.h"
 
 // Haze Command.cpp

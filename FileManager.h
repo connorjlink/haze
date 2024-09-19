@@ -3,9 +3,6 @@
 
 #include "File.h"
 
-#include <string>
-#include <unordered_map>
-
 // Haze FileManager.h
 // (c) Connor J. Link. All Rights Reserved.
 

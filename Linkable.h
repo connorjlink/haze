@@ -1,9 +1,6 @@
 #ifndef HAZE_LINKABLE_H
 #define HAZE_LINKABLE_H
 
-#include <vector>
-#include <cstdint>
-
 // Haze Linkable.h
 // (c) Connor J. Link. All Rights Reserved.
 

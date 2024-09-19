@@ -1,3 +1,5 @@
+import std;
+
 #include "X86Builder.h"
 #include "BinaryUtilities.h"
 
@@ -45,7 +47,7 @@ namespace hz
 	}
 
 	// non-dereferencing
-	byterange X86Builder::push_m(std::uint32_t address)
+	byterange hz::X86Builder::push_ea(std::uint32_t address)
 	{
 		byterange out{};
 

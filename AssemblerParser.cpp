@@ -1,3 +1,5 @@
+import std;
+
 #include "AssemblerParser.h"
 #include "DotOrgCommand.h"
 #include "LabelCommand.h"
@@ -7,8 +9,6 @@
 #include "Constants.h"
 #include "ErrorReporter.h"
 #include "SymbolType.h"
-
-import std;
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

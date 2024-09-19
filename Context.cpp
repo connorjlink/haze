@@ -1,7 +1,7 @@
+import std;
+
 #include "Context.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze Context.cpp
 // (c) Connor J. Link. All Rights Reserved.

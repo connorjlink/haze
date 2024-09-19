@@ -1,3 +1,5 @@
+import std;
+
 #include "Context.h"
 #include "JobManager.h"
 #include "FileManager.h"
@@ -10,8 +12,6 @@
 #include "ErrorReporter.h"
 #include "HeapAllocator.h"
 #include "StackAllocator.h"
-
-import std;
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -121,5 +121,5 @@ int main(int argc, char** argv)
 	};
 	Simulator sim{ std::move(rom) };*/
 
-	return EXIT_SUCCESS;
+	return 0;
 }

@@ -1,3 +1,5 @@
+import std;
+
 #include "Symbol.h"
 
 // Haze Symbol.cpp

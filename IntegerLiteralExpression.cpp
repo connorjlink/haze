@@ -1,11 +1,11 @@
+import std;
+
 #include "IntegerLiteralExpression.h"
 #include "Allocation.h"
 #include "Constants.h"
 #include "CommandLineOptions.h"
 #include "Generator.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze IntegerLiteralExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

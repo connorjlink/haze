@@ -4,10 +4,6 @@
 #include "Token.h"
 #include "ParserType.h"
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
 

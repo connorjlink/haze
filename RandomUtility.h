@@ -1,8 +1,6 @@
 #ifndef HAZE_RANDOMUTILITY_H
 #define HAZE_RANDOMUTILITY_H
 
-#include <random>
-
 // Haze RandomUtility.h
 // (c) Connor J. Link. All Rights Reserved.
 

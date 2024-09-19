@@ -1,11 +1,6 @@
 #ifndef HAZE_BIMAP_H
 #define HAZE_BIMAP_H
 
-#include <string>
-#include <optional>
-#include <unordered_map>
-#include <type_traits>
-
 // Haze Bimap.h
 // (c) Connor J. Link. All Rights Reserved.
 

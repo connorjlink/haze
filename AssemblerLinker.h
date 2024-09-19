@@ -5,8 +5,6 @@
 #include "AssemblerParser.h"
 #include "InstructionCommand.h"
 
-#include <format>
-
 // Haze AssemblerLinker.h
 // (c) Connor J. Link. All Rights Reserved.
 

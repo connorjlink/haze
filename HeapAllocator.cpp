@@ -1,3 +1,5 @@
+import std;
+
 #include "HeapAllocator.h"
 
 // Haze HeapAllocator.cpp

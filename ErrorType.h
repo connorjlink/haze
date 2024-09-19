@@ -1,9 +1,6 @@
 #ifndef HAZE_ERRORTYPE_H
 #define HAZE_ERRORTYPE_H
 
-#include <string>
-#include <unordered_map>
-
 // Haze ErrorType.h
 // (c) Connor J. Link. All Rights Reserved.
 

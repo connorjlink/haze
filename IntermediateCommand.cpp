@@ -1,7 +1,12 @@
+import std;
+
 #include "IntermediateCommand.h"
 #include "BinaryUtilities.h"
 #include "BinaryConstants.h"
 #include "X86Builder.h"
+
+// Haze IntermediateCommand.cpp
+// (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
@@ -380,6 +385,29 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
+#pragma message("TODO: ifnz")
+
+		return out;
+	}
+
+	IntermediateType IfNotZeroCommand::itype() const
+	{
+		return IntermediateType::IF_NOT_ZERO;
+	}
+
+	byterange IfNotZeroCommand::emit() const
+	{
+		// test eax, eax
+		// je skip
+		// { code... }
+		//skip:
+
+		byterange code{};
+
+
+		byterange out{};
+
+		PUT(X86Builder::test_rr(_value, _value));
 
 
 		return out;
@@ -426,6 +454,32 @@ namespace hz
 		byterange out{};
 
 #pragma message("TODO: make print message code generation!")
+
+		return out;
+	}
+
+
+	IntermediateType PrintMessageCommand::itype() const
+	{
+		return IntermediateType::PRINT_MESSAGE;
+	}
+
+	byterange PrintMessageCommand::emit() const
+	{
+		// WriteConsoleA(STDHANDLE, &string, strlen, NULL, NULL)
+		// push NULL
+		// push NULL
+		// push strlen
+		// push &string
+		// push [0x004033F0] ; provided console stdout handle
+
+		byterange out{};
+
+		PUT(X86Builder::push_i(0x00));
+		PUT(X86Builder::push_i(0x00));
+		PUT(X86Builder::push_i(_length));
+		PUT(X86Builder::push_ea(_pointer));
+		PUT(X86Builder::push_m(0x004033F0));
 
 		return out;
 	}

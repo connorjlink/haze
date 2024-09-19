@@ -6,8 +6,6 @@
 #include "ErrorReporter.h"
 #include "LinkerType.h"
 
-#include <cstdint>
-
 // Haze Linker.h
 // (c) Connor J. Link. All Rights Reserved.
 

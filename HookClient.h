@@ -1,9 +1,6 @@
 #ifndef HAZE_HOOKCLIENT_H
 #define HAZE_HOOKCLIENT_H
 
-#include <string>
-#include <string_view>
-
 //#include <mqtt/client.h>
 
 // Haze HookClient.h

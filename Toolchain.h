@@ -5,10 +5,6 @@
 #include "FileManager.h"
 #include "Token.h"
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-
 // Haze Toolchain.h
 // (c) Connor J. Link. All Rights Reserved.
 

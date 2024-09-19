@@ -1,8 +1,10 @@
+import std;
+
 #include "StringExpression.h"
-#include "ErrorReporter.h"
 #include "Allocation.h"
 #include "Generator.h"
 #include "RuntimeAllocator.h"
+#include "ErrorReporter.h"
 
 // Haze StringExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

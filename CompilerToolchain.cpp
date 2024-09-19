@@ -1,15 +1,15 @@
+import std;
+
 #include "CompilerToolchain.h"
 #include "JobManager.h"
 #include "CompilerParser.h"
 #include "Generator.h"
-#include "ErrorReporter.h"
 #include "CommonToolchain.h"
 #include "CompilerLinker.h"
 #include "Constants.h"
 #include "CommandLineOptions.h"
 #include "ErrorContext.h"
-
-import std;
+#include "ErrorReporter.h"
 
 // Haze CompilerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

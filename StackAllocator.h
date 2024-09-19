@@ -1,11 +1,9 @@
-#ifndef HAZE_REGISTERALLOCATOR_H
-#define HAZE_REGISTERALLOCATOR_H
+#ifndef HAZE_STACKALLOCATOR_H
+#define HAZE_STACKALLOCATOR_H
 
 #include "InstructionEncoding.h"
 
-#include <set>
-
-// Haze RegisterAllocator.h
+// Haze StackAllocator.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

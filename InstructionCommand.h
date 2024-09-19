@@ -4,8 +4,6 @@
 #include "Command.h"
 #include "InstructionEncoding.h"
 
-#include <cstdint>
-
 // Haze InstructionCommand.h
 // (c) Connor J. Link. All Rights Reserved.
 

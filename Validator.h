@@ -4,10 +4,6 @@
 #include "Test.h"
 #include "ErrorContext.h"
 
-#include <string>
-#include <vector>
-#include <functional>
-
 // Haze Validator.h
 // (c) Connor J. Link. All Rights Reserved.
 

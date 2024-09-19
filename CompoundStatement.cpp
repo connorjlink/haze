@@ -1,4 +1,6 @@
-﻿#include "CompoundStatement.h"
+﻿import std;
+
+#include "CompoundStatement.h"
 #include "Allocator.h"
 
 // Haze CompoundStatement.cpp

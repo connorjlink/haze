@@ -1,11 +1,6 @@
 #ifndef HAZE_JOB_H
 #define HAZE_JOB_H
 
-#include <string>
-#include <chrono>
-
-#include <cstdint>
-
 // Haze Job.h
 // (c) Connor J. Link. All Rights Reserved.
 

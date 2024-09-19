@@ -1,3 +1,5 @@
+import std;
+
 #include "FunctionCallExpression.h"
 #include "Parser.h"
 #include "Allocation.h"
@@ -6,8 +8,6 @@
 #include "Symbol.h"
 #include "ErrorReporter.h"
 #include "X86Builder.h"
-
-import std;
 
 // Haze FunctionCallExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

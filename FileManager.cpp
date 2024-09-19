@@ -1,7 +1,7 @@
+import std;
+
 #include "FileManager.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze FileManager.cpp
 // (c) Connor J. Link. All Rights Reserved.

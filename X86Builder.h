@@ -40,6 +40,8 @@ namespace hz
 		// push immediate
 		static byterange push_i(std::uint8_t);
 		// push effective address
+		static byterange push_ea(std::uint32_t);
+		// push DWORD PTR
 		static byterange push_m(std::uint32_t);
 
 	public:
@@ -56,7 +58,7 @@ namespace hz
 		// mov destination, [pointer]
 		static byterange mov_rm(std::uint8_t, std::uint32_t);
 		// mov [pointer], source
-		static byterange mov_rm(std::uint32_t, std::uint8_t);
+		static byterange mov_mr(std::uint32_t, std::uint8_t);
 
 	public:
 		// add destination, source

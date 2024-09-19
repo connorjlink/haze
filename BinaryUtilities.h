@@ -3,9 +3,6 @@
 
 #include "Constants.h"
 
-#include <string>
-#include <cstdint>
-
 // Haze BinaryUtilities.h
 // (c) Connor J. Link. All Rights Reserved.
 

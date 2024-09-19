@@ -3,8 +3,6 @@
 
 #include "ErrorType.h"
 
-#include <cstdint>
-
 // Haze Error.h
 // (c) Connor J. Link. All Rights Reserved.
 

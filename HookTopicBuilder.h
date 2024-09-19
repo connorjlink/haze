@@ -1,9 +1,6 @@
 #ifndef HAZE_HOOKTOPICBUILDER_H
 #define HAZE_HOOKTOPICBUILDER_H
 
-#include <string>
-#include <string_view>
-
 // Haze HookTopicBuilder.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -60,10 +57,10 @@ namespace hz
 		BROADCAST
 	};
 
-	constexpr std::string_view project(Project);
-	constexpr std::string_view subproject(Subproject);
-	constexpr std::string_view datapoint(Datapoint);
-	constexpr std::string_view operation(Operation);
+	constexpr std::string project(Project);
+	constexpr std::string subproject(Subproject);
+	constexpr std::string datapoint(Datapoint);
+	constexpr std::string operation(Operation);
 
 	std::string build_topic(Project, Subproject, Datapoint, Operation);
 }

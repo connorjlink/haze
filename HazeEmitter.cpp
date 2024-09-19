@@ -1,8 +1,8 @@
+import std;
+
 #include "HazeEmitter.h"
 #include "InstructionCommand.h"
 #include "ErrorReporter.h"
-
-import std;
 
 // Haze HazeEmitter.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,3 +1,5 @@
+import std;
+
 #include "RandomUtility.h"
 
 // Haze RandomUtility.cpp

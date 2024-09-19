@@ -4,9 +4,6 @@
 #include "Node.h"
 #include "TypeSpecifier.h"
 
-#include <string>
-#include <vector>
-
 // Haze Function.h
 // (c) Connor J. Link. All Rights Reserved.
 

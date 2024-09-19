@@ -1,3 +1,5 @@
+import std;
+
 #include "Linker.h"
 
 // Haze Linker.cpp
