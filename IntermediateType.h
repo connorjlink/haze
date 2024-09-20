@@ -8,6 +8,7 @@ namespace hz
 {
 	enum class IntermediateType
 	{
+		BRANCH_LABEL,
 		ENTER_SCOPE,
 		LEAVE_SCOPE,
 		LOCAL_VARIABLE,

@@ -134,7 +134,7 @@ namespace hz
 
 	byterange HazeEmitter::emit_bool(register_t source)
 	{
-		return haze_instruction(BOOL, DC, source, 0x00, 0x0000);
+		return haze_instruction(LNEG, DC, source, 0x00, 0x0000);
 	}
 
 	byterange HazeEmitter::emit_stop()
@@ -152,23 +152,23 @@ namespace hz
 			{
 				switch (instruction_command->opcode)
 				{
-					case Opcode::MOVE: result.append_range(emit_move(convert_register(instruction_command->dst), convert_register(instruction_command->src))); break;
-					case Opcode::LOAD: result.append_range(emit_load(convert_register(instruction_command->dst), convert_register(instruction_command->mem))); break;
-					case Opcode::COPY: result.append_range(emit_copy(convert_register(instruction_command->dst), convert_register(instruction_command->imm))); break;
-					case Opcode::SAVE: result.append_range(emit_save(convert_register(instruction_command->mem), convert_register(instruction_command->src))); break;
-					case Opcode::IADD: result.append_range(emit_iadd(convert_register(instruction_command->dst), convert_register(instruction_command->src))); break;
-					case Opcode::ISUB: result.append_range(emit_isub(convert_register(instruction_command->dst), convert_register(instruction_command->src))); break;
-					case Opcode::BAND: result.append_range(emit_band(convert_register(instruction_command->dst), convert_register(instruction_command->src))); break;
-					case Opcode::BIOR: result.append_range(emit_bior(convert_register(instruction_command->dst), convert_register(instruction_command->src))); break;
-					case Opcode::BXOR: result.append_range(emit_bxor(convert_register(instruction_command->dst), convert_register(instruction_command->src))); break;
-					case Opcode::CALL: result.append_range(emit_call(convert_register(instruction_command->mem))); break;
+					case Opcode::MOVE: result.append_range(emit_move(convert_register(instruction_command->destination), convert_register(instruction_command->source))); break;
+					case Opcode::LOAD: result.append_range(emit_load(convert_register(instruction_command->destination), convert_register(instruction_command->address))); break;
+					case Opcode::COPY: result.append_range(emit_copy(convert_register(instruction_command->destination), convert_register(instruction_command->immediate))); break;
+					case Opcode::SAVE: result.append_range(emit_save(convert_register(instruction_command->address), convert_register(instruction_command->source))); break;
+					case Opcode::IADD: result.append_range(emit_iadd(convert_register(instruction_command->destination), convert_register(instruction_command->source))); break;
+					case Opcode::ISUB: result.append_range(emit_isub(convert_register(instruction_command->destination), convert_register(instruction_command->source))); break;
+					case Opcode::BAND: result.append_range(emit_band(convert_register(instruction_command->destination), convert_register(instruction_command->source))); break;
+					case Opcode::BIOR: result.append_range(emit_bior(convert_register(instruction_command->destination), convert_register(instruction_command->source))); break;
+					case Opcode::BXOR: result.append_range(emit_bxor(convert_register(instruction_command->destination), convert_register(instruction_command->source))); break;
+					case Opcode::CALL: result.append_range(emit_call(convert_register(instruction_command->address))); break;
 					case Opcode::EXIT: result.append_range(emit_exit()); break;
-					case Opcode::PUSH: result.append_range(emit_push(convert_register(instruction_command->src))); break;
-					case Opcode::PULL: result.append_range(emit_pull(convert_register(instruction_command->dst))); break;
-					case Opcode::MAKE: result.append_range(emit_make(convert_register(instruction_command->src))); break;
-					case Opcode::TAKE: result.append_range(emit_take(convert_register(instruction_command->dst))); break;
-					case Opcode::BRNZ: result.append_range(emit_brnz(convert_register(instruction_command->mem), convert_register(instruction_command->src))); break;
-					case Opcode::BOOL: result.append_range(emit_bool(convert_register(instruction_command->src))); break;
+					case Opcode::PUSH: result.append_range(emit_push(convert_register(instruction_command->source))); break;
+					case Opcode::PULL: result.append_range(emit_pull(convert_register(instruction_command->destination))); break;
+					case Opcode::MAKE: result.append_range(emit_make(convert_register(instruction_command->source))); break;
+					case Opcode::TAKE: result.append_range(emit_take(convert_register(instruction_command->destination))); break;
+					case Opcode::BRNZ: result.append_range(emit_brnz(convert_register(instruction_command->address), convert_register(instruction_command->source))); break;
+					case Opcode::BOOL: result.append_range(emit_bool(convert_register(instruction_command->source))); break;
 					case Opcode::STOP: result.append_range(emit_stop()); break;
 
 					default: 

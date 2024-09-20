@@ -3,6 +3,7 @@ import std;
 #include "IntermediateCommand.h"
 #include "BinaryUtilities.h"
 #include "BinaryConstants.h"
+#include "Generator.h"
 #include "X86Builder.h"
 
 // Haze IntermediateCommand.cpp
@@ -10,6 +11,21 @@ import std;
 
 namespace hz
 {
+	IntermediateType BranchLabelCommand::itype() const
+	{
+		return IntermediateType::BRANCH_LABEL;
+	}
+
+	byterange BranchLabelCommand::emit() const
+	{
+		//label:
+
+		_generator->resolve_branch_target_real(_label, _generator->resolve_origin());
+
+		return {};
+	}
+
+
 	IntermediateType EnterScopeCommand::itype() const
 	{
 		return IntermediateType::ENTER_SCOPE;
@@ -324,6 +340,7 @@ namespace hz
 	{
 		byterange out{};
 
+		const auto target = _generator->query_branch_target(_function);
 #pragma message("TODO: function call command")
 		return out;
 	}
@@ -375,16 +392,15 @@ namespace hz
 	byterange IfNotZeroCommand::emit() const
 	{
 		// test eax, eax
-		// je skip
-		// { code... }
-		//skip:
+		// je index
 
-		byterange code{};
-
+		const auto origin = _generator->resolve_origin();
+		const auto target = _index;
 
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
+		//PUT(X86Builder::je(_gener))
 #pragma message("TODO: ifnz codegen")
 
 		return out;

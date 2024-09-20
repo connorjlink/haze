@@ -13,6 +13,7 @@ import std;
 #include "PrintStatement.h"
 #include "HookStatement.h"
 #include "NullStatement.h"
+#include "ExitStatement.h"
 #include "StringExpression.h"
 #include "ArgumentExpression.h"
 #include "FileManager.h"
@@ -105,6 +106,15 @@ namespace hz
 		const auto expression = parse_expression();
 
 		consume(TokenType::SEMICOLON);
+
+		// NOTE: special case for `main()`:
+		// return statements are really an exit from the entire program
+		// this is because we don't internally bootstrap-wrap `main()` with `_main()`
+		// like many real C implementations do (e.g., VC++)
+		if (enclosing_function == "main")
+		{
+			return new ExitStatement{ expression, expression->_token };
+		}
 
 		return new ReturnStatement{ enclosing_function, expression, nullptr, return_token };
 	}

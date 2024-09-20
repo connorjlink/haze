@@ -9,11 +9,15 @@
 // Haze Generator.h
 // (c) Connor J. Link. All Rights Reserved.
 
+#define UNSUPPORTED_OPERATION(x) _error_reporter->post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
+
 namespace hz
 {
 	class Node;
 	class Parser;
 	class InstructionCommand;
+
+	using index_t = std::int32_t;
 
 	class Generator
 	{
@@ -35,7 +39,12 @@ namespace hz
 		void label(const std::string&);
 
 	public:
+		// associate a command object with its branch target label
 		void register_branch(IntermediateCommand*, const std::string&);
+		// discover the IntermediateCommand index of a particular label
+		index_t query_branch_target(const std::string&);
+		// set the real binary code offset of a particular label
+		void resolve_branch_target_real(const std::string&, std::uint32_t);
 
 	public:
 		// push a new empty scope with a unique local variable set
@@ -142,7 +151,13 @@ namespace hz
 
 
 	public:
-		std::uint32_t write_pointer() const;
+		// get the current index for Command generation
+		index_t resolve_origin_old() const;
+		// get the current index for IntermediateCommand generation
+		index_t resolve_origin() const;
+
+	public:
+
 
 	public:
 		// ast, filepath

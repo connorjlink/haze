@@ -44,7 +44,7 @@ namespace hz
         PUSH = 0xB, 
         PULL = 0xC,
         BRNZ = 0xD,
-        BOOL = 0xE,
+        LNEG = 0xE,
         STOP = 0xF,
     };
 

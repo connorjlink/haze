@@ -44,12 +44,24 @@ namespace hz
 
 	void Generator::label(const std::string& identifier)
 	{
-		_linkables[_current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
+		UNSUPPORTED_OPERATION(__FUNCTION__);
+		//_linkables[_current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
 	}
 
 	void Generator::register_branch(IntermediateCommand* command, const std::string& label)
 	{
 #pragma message("TODO branch target registration")
+	}
+
+	index_t Generator::query_branch_target(const std::string& label)
+	{
+#pragma message("TODO: query branch target index resolution")
+		return {};
+	}
+
+	void Generator::resolve_branch_target_real(const std::string&, std::uint32_t)
+	{
+#pragma message("TODO: real branch target resolution")
 	}
 
 #define ENCODE(x) _linkables[_current_function].commands.emplace_back(x)
@@ -169,6 +181,7 @@ namespace hz
 	void Generator::call_function(const std::string& function)
 	{
 		auto command = new CallFunctionCommand{ function };
+		register_branch(command, function);
 		COMPOSE(command);
 	}
 
@@ -259,10 +272,17 @@ namespace hz
 	}
 
 
-	std::uint32_t Generator::write_pointer() const
+	index_t Generator::resolve_origin_old() const
 	{
-		return static_cast<std::uint32_t>(_linkables[_current_function].commands.size());
+		UNSUPPORTED_OPERATION(__FUNCTION__);
+		//return static_cast<index_t>(_linkables[_current_function].commands.size());
 	}
+
+	index_t Generator::resolve_origin() const
+	{
+		return static_cast<index_t>(_linkables[_current_function].ir.size());
+	}
+
 
 	void Generator::raw_binary(byterange&& object_code)
 	{
@@ -291,8 +311,9 @@ namespace hz
 		{
 			if (linkable.symbol->name == "main")
 			{
+				// NOTE: old method
 				// put a stop instruction at the end of main
-				*(linkable.commands.end() - 1) = (new InstructionCommand{ NULL_TOKEN, Opcode::STOP, DC, DC });
+				//*(linkable.commands.end() - 1) = (new InstructionCommand{ NULL_TOKEN, Opcode::STOP, DC, DC });
 				return true;
 			}
 

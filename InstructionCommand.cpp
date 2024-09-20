@@ -13,16 +13,16 @@ namespace hz
 	InstructionCommand::InstructionCommand(Token token, std::uint32_t bytes)
 		: Command{ token }
 	{
-		mem = bytes & 0xFFFF;
-		imm = (bytes & 0xFF00) >> 8;
-		src = ((bytes & (0x03 << 16)) >> 16);
-		dst = ((bytes & (0x0C << 16)) >> 18);
+		address = bytes & 0xFFFF;
+		immediate = (bytes & 0xFF00) >> 8;
+		source = ((bytes & (0x03 << 16)) >> 16);
+		destination = ((bytes & (0x0C << 16)) >> 18);
 		opcode = static_cast<Opcode>((bytes & (0xF0 << 16)) >> 20);
 		marked_for_deletion = false;
 	}
 
 	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
-		: Command{ token }, opcode{ opcode }, dst{ dst }, src{ src }, imm{ imm }, mem{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
+		: Command{ token }, opcode{ opcode }, destination{ dst }, source{ src }, immediate{ imm }, address{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 		embedded_object_code = {};
 		approximate_embedded_size = 0;

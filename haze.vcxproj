@@ -58,6 +58,7 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="ForStatement.cpp" />
+    <ClCompile Include="HazeBuilder.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
     <ClCompile Include="HazeEvaluator.cpp" />
     <ClCompile Include="HeapAllocator.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="VariableStatement.cpp" />
     <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
+    <ClInclude Include="HazeBuilder.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />
     <ClInclude Include="IntermediateCommand.h" />

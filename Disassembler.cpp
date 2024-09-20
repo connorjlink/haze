@@ -15,11 +15,11 @@ namespace hz
 
 		const auto opcode = instruction.opcode;
 
-		const auto dst = _register_map.at(static_cast<Register>(instruction.dst));
-		const auto src = _register_map.at(static_cast<Register>(instruction.src));
+		const auto dst = _register_map.at(static_cast<Register>(instruction.destination));
+		const auto src = _register_map.at(static_cast<Register>(instruction.source));
 
-		const auto imm = instruction.imm;
-		const auto mem = instruction.mem;
+		const auto imm = instruction.immediate;
+		const auto mem = instruction.address;
 
 		switch (opcode)
 		{

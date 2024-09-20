@@ -140,7 +140,7 @@ namespace hz
 				}
 			} break;
 
-			case BOOL:
+			case LNEG:
 			{
 				//bool reg
 				register_file[operand2] = !(static_cast<bool>(register_file[operand2]));

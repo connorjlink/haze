@@ -13,9 +13,9 @@ namespace hz
     {
     public:
         Opcode opcode;
-        register_t dst, src;
-        std::uint8_t imm;
-        std::uint32_t mem;
+        register_t destination, source;
+        std::uint8_t immediate;
+        std::uint32_t address;
         bool marked_for_deletion;
         std::string branch_target;
 

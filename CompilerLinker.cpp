@@ -51,21 +51,21 @@ namespace
 		using enum Opcode;
 		switch (instruction->opcode)
 		{
-			case MOVE: length = _emitter->emit_move(instruction->dst, instruction->src).size(); break;
-			case LOAD: length = _emitter->emit_load(instruction->dst, instruction->mem).size(); break;
-			case COPY: length = _emitter->emit_copy(instruction->dst, instruction->imm).size(); break;
-			case SAVE: length = _emitter->emit_save(instruction->mem, instruction->src).size(); break;
-			case IADD: length = _emitter->emit_iadd(instruction->dst, instruction->src).size(); break;
-			case ISUB: length = _emitter->emit_isub(instruction->dst, instruction->src).size(); break;
-			case BAND: length = _emitter->emit_band(instruction->dst, instruction->src).size(); break;
-			case BIOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
-			case BXOR: length = _emitter->emit_bior(instruction->dst, instruction->src).size(); break;
-			case CALL: length = _emitter->emit_call(instruction->mem).size(); break;
+			case MOVE: length = _emitter->emit_move(instruction->destination, instruction->source).size(); break;
+			case LOAD: length = _emitter->emit_load(instruction->destination, instruction->address).size(); break;
+			case COPY: length = _emitter->emit_copy(instruction->destination, instruction->immediate).size(); break;
+			case SAVE: length = _emitter->emit_save(instruction->address, instruction->source).size(); break;
+			case IADD: length = _emitter->emit_iadd(instruction->destination, instruction->source).size(); break;
+			case ISUB: length = _emitter->emit_isub(instruction->destination, instruction->source).size(); break;
+			case BAND: length = _emitter->emit_band(instruction->destination, instruction->source).size(); break;
+			case BIOR: length = _emitter->emit_bior(instruction->destination, instruction->source).size(); break;
+			case BXOR: length = _emitter->emit_bior(instruction->destination, instruction->source).size(); break;
+			case CALL: length = _emitter->emit_call(instruction->address).size(); break;
 			case EXIT: length = _emitter->emit_exit().size(); break;
-			case PUSH: length = _emitter->emit_push(instruction->src).size(); break;
-			case PULL: length = _emitter->emit_pull(instruction->dst).size(); break;
-			case BRNZ: length = _emitter->emit_brnz(instruction->mem, instruction->src).size(); break;
-			case BOOL: length = _emitter->emit_bool(instruction->src).size(); break;
+			case PUSH: length = _emitter->emit_push(instruction->source).size(); break;
+			case PULL: length = _emitter->emit_pull(instruction->destination).size(); break;
+			case BRNZ: length = _emitter->emit_brnz(instruction->address, instruction->source).size(); break;
+			case BOOL: length = _emitter->emit_bool(instruction->source).size(); break;
 			case STOP: length = _emitter->emit_stop().size(); break;
 		}
 
@@ -116,7 +116,7 @@ namespace hz
 							auto i0 = AS_INSTRUCTION_COMMAND(c0);
 
 							if (i0->opcode == Opcode::MOVE &&
-								i0->src == i0->dst)
+								i0->source == i0->destination)
 							{
 								i0->marked_for_deletion = true;
 								_global_pass++;
@@ -134,11 +134,11 @@ namespace hz
 
 								auto i1 = AS_INSTRUCTION_COMMAND(c1);
 
-								if ((i0->opcode == Opcode::PUSH && i0->src == r &&  //push r
-									 i1->opcode == Opcode::PULL && i1->dst == r) || //pull r
+								if ((i0->opcode == Opcode::PUSH && i0->source == r &&  //push r
+									 i1->opcode == Opcode::PULL && i1->destination == r) || //pull r
 
-									(i0->opcode == Opcode::PULL && i0->dst == r &&  //pull r
-									 i1->opcode == Opcode::PUSH && i1->src == r))   //push r
+									(i0->opcode == Opcode::PULL && i0->destination == r &&  //pull r
+									 i1->opcode == Opcode::PUSH && i1->source == r))   //push r
 								{
 									//These instructions are entirely redundant
 									i0->marked_for_deletion = true;
@@ -147,13 +147,13 @@ namespace hz
 									return true;
 								}
 
-								else if ((i0->opcode == Opcode::SAVE && i0->src == r &&  //save &x, r
-										  i1->opcode == Opcode::LOAD && i1->dst == r) || //load r, &x
+								else if ((i0->opcode == Opcode::SAVE && i0->source == r &&  //save &x, r
+										  i1->opcode == Opcode::LOAD && i1->destination == r) || //load r, &x
 
-										 (i0->opcode == Opcode::LOAD && i0->dst == r &&  //load r, &x
-										  i1->opcode == Opcode::SAVE && i1->src == r))   //save &x, r
+										 (i0->opcode == Opcode::LOAD && i0->destination == r &&  //load r, &x
+										  i1->opcode == Opcode::SAVE && i1->source == r))   //save &x, r
 								{
-									if (i0->mem == i1->mem)
+									if (i0->address == i1->address)
 									{
 										//These instructions are entirely redundant
 										i0->marked_for_deletion = true;
@@ -275,7 +275,7 @@ namespace hz
 													// compute the relative address
 													const auto distance = branch_target - branch_start - resolve_instruction_length(patching_instruction);
 
-													patching_instruction->mem = distance;
+													patching_instruction->address = distance;
 
 													// NOTE: absolute addressing only works for brnz
 													//const auto branch_target = base_pointer + label->offset;
@@ -314,7 +314,7 @@ namespace hz
 
 										// NOTE: call only works with relative addressing
 										//const auto call_target = branch_target - address_tracker + length + length - base_pointer;
-										instruction->mem = distance;
+										instruction->address = distance;
 									}
 
 								}

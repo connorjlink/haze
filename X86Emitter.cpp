@@ -483,21 +483,21 @@ namespace hz
 			{
 				switch (instruction_command->opcode)
 				{
-					case Opcode::MOVE: result.append_range(emit_move(instruction_command->dst, instruction_command->src)); break;
-					case Opcode::LOAD: result.append_range(emit_load(instruction_command->dst, instruction_command->mem)); break;
-					case Opcode::COPY: result.append_range(emit_copy(instruction_command->dst, instruction_command->imm)); break;
-					case Opcode::SAVE: result.append_range(emit_save(instruction_command->mem, instruction_command->src)); break;
-					case Opcode::IADD: result.append_range(emit_iadd(instruction_command->dst, instruction_command->src)); break;
-					case Opcode::ISUB: result.append_range(emit_isub(instruction_command->dst, instruction_command->src)); break;
-					case Opcode::BAND: result.append_range(emit_band(instruction_command->dst, instruction_command->src)); break;
-					case Opcode::BIOR: result.append_range(emit_bior(instruction_command->dst, instruction_command->src)); break;
-					case Opcode::BXOR: result.append_range(emit_bxor(instruction_command->dst, instruction_command->src)); break;
-					case Opcode::CALL: result.append_range(emit_call(instruction_command->mem)); break;
+					case Opcode::MOVE: result.append_range(emit_move(instruction_command->destination, instruction_command->source)); break;
+					case Opcode::LOAD: result.append_range(emit_load(instruction_command->destination, instruction_command->address)); break;
+					case Opcode::COPY: result.append_range(emit_copy(instruction_command->destination, instruction_command->immediate)); break;
+					case Opcode::SAVE: result.append_range(emit_save(instruction_command->address, instruction_command->source)); break;
+					case Opcode::IADD: result.append_range(emit_iadd(instruction_command->destination, instruction_command->source)); break;
+					case Opcode::ISUB: result.append_range(emit_isub(instruction_command->destination, instruction_command->source)); break;
+					case Opcode::BAND: result.append_range(emit_band(instruction_command->destination, instruction_command->source)); break;
+					case Opcode::BIOR: result.append_range(emit_bior(instruction_command->destination, instruction_command->source)); break;
+					case Opcode::BXOR: result.append_range(emit_bxor(instruction_command->destination, instruction_command->source)); break;
+					case Opcode::CALL: result.append_range(emit_call(instruction_command->address)); break;
 					case Opcode::EXIT: result.append_range(emit_exit()); break;
-					case Opcode::PUSH: result.append_range(emit_push(instruction_command->src)); break;
-					case Opcode::PULL: result.append_range(emit_pull(instruction_command->dst)); break;
-					case Opcode::BRNZ: result.append_range(emit_brnz(instruction_command->mem, instruction_command->src)); break;
-					case Opcode::BOOL: result.append_range(emit_bool(instruction_command->src)); break;
+					case Opcode::PUSH: result.append_range(emit_push(instruction_command->source)); break;
+					case Opcode::PULL: result.append_range(emit_pull(instruction_command->destination)); break;
+					case Opcode::BRNZ: result.append_range(emit_brnz(instruction_command->address, instruction_command->source)); break;
+					case Opcode::BOOL: result.append_range(emit_bool(instruction_command->source)); break;
 					case Opcode::STOP: result.append_range(emit_stop()); break;
 				}
 			}

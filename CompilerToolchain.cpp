@@ -57,6 +57,7 @@ namespace hz
 			common_finalize(std::move(executable), _filepath);
 		}
 
+		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);
 		_error_reporter->close_context();
 	}
 }

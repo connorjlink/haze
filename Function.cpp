@@ -38,7 +38,6 @@ namespace hz
 	void Function::generate(Allocation*)
 	{
 		_generator->begin_function(name);
-		_generator->begin_scope();
 
 		const auto arity = arguments.size();
 

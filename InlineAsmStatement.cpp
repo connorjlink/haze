@@ -24,7 +24,7 @@ namespace hz
 	void InlineAsmStatement::generate(Allocation*)
 	{
 		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser, _file_manager->_current_file };
-		auto commands = linker->link(_generator->write_pointer());
+		auto commands = linker->link(_generator->resolve_origin());
 		
 		auto emitter = Emitter::from_architecture(std::move(commands), _file_manager->_current_file);
 		auto object_code = emitter->emit();

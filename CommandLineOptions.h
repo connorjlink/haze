@@ -14,9 +14,13 @@ namespace hz
 {
 	struct CommandLineOptions
 	{
+		// --architecture=
 		ArchitectureType _architecture = ArchitectureType::HAZE;
+		// --verbosity=
 		VerbosityType _verbosity = VerbosityType::NORMAL;
+		// --execution=
 		ExecutionType _execution = ExecutionType::COMPILE;
+
 		// bit flags by optimization category of OptimizationType
 		std::uint32_t _optimization{};
 	};

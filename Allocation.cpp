@@ -9,8 +9,6 @@ import std;
 // Haze Allocation.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define UNSUPPORTED_OPERATION(x) _error_reporter->post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
-
 namespace hz
 {
 	AllocationType ObserverAllocation::atype() const

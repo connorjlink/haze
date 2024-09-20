@@ -13,8 +13,8 @@ namespace hz
 {
 	class IntermediateCommand
 	{
-	private:
-		std::int32_t _self_address;
+	public:
+		std::int32_t offset;
 
 	public:
 		virtual ~IntermediateCommand() = default;
@@ -24,6 +24,22 @@ namespace hz
 		virtual byterange emit() const = 0;
 	};
 
+
+	class BranchLabelCommand : public IntermediateCommand
+	{
+	private:
+		std::string _label;
+
+	public:
+		BranchLabelCommand(const std::string& label)
+			: _label{ label }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
 
 	class EnterScopeCommand : public IntermediateCommand
 	{
