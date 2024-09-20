@@ -126,7 +126,7 @@ namespace hz
 
 	public:
 		// print(integer)
-		void print_number(std::uint32_t);
+		void print_number(register_t);
 
 	public:
 		// exit(code)

@@ -27,6 +27,8 @@ namespace hz
 		inline static constexpr auto WORD_MAX = std::numeric_limits<word>::max();
 		inline static constexpr auto DWORD_MAX = std::numeric_limits<dword>::max();
 	}
+
+	inline static constexpr auto TEMP_ADDRESS = 0x0C0C0C0C;
 }
 
 #endif //HAZE_CONSTANTS_H

@@ -385,20 +385,20 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
-#pragma message("TODO: ifnz")
+#pragma message("TODO: ifnz codegen")
 
 		return out;
 	}
 
-	IntermediateType IfNotZeroCommand::itype() const
+	IntermediateType IfZeroCommand::itype() const
 	{
-		return IntermediateType::IF_NOT_ZERO;
+		return IntermediateType::IF_ZERO;
 	}
 
-	byterange IfNotZeroCommand::emit() const
+	byterange IfZeroCommand::emit() const
 	{
 		// test eax, eax
-		// je skip
+		// jne skip
 		// { code... }
 		//skip:
 
@@ -408,6 +408,7 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
+#pragma message("TODO: ifz codegen")
 
 
 		return out;
@@ -451,21 +452,6 @@ namespace hz
 
 	byterange PrintMessageCommand::emit() const
 	{
-		byterange out{};
-
-#pragma message("TODO: make print message code generation!")
-
-		return out;
-	}
-
-
-	IntermediateType PrintMessageCommand::itype() const
-	{
-		return IntermediateType::PRINT_MESSAGE;
-	}
-
-	byterange PrintMessageCommand::emit() const
-	{
 		// WriteConsoleA(STDHANDLE, &string, strlen, NULL, NULL)
 		// push NULL
 		// push NULL
@@ -481,7 +467,21 @@ namespace hz
 		PUT(X86Builder::push_ea(_pointer));
 		PUT(X86Builder::push_m(0x004033F0));
 
+#pragma message("TODO: finish printMessage codegen")
+
 		return out;
+	}
+
+
+	IntermediateType PrintNumberCommand::itype() const
+	{
+		return IntermediateType::PRINT_NUMBER;
+	}
+
+	byterange PrintNumberCommand::emit() const
+	{
+#pragma message("TODO: print number codegen")
+		return {};
 	}
 
 

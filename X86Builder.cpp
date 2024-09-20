@@ -47,12 +47,22 @@ namespace hz
 	}
 
 	// non-dereferencing
-	byterange hz::X86Builder::push_ea(std::uint32_t address)
+	byterange X86Builder::push_ea(std::uint32_t address)
 	{
 		byterange out{};
 
 		PUT(BinaryUtilities::range8(0x68)); 
 		PUT(BinaryUtilities::range32(address));
+
+		return out;
+	}
+
+	// dereferencing
+	byterange X86Builder::push_m(std::uint32_t address)
+	{
+		byterange out{};
+
+#pragma message("TODO: push_m() codegen!")
 
 		return out;
 	}
@@ -121,7 +131,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::mov_rm(std::uint32_t pointer, std::uint8_t source)
+	byterange X86Builder::mov_mr(std::uint32_t pointer, std::uint8_t source)
 	{
 		byterange out{};
 

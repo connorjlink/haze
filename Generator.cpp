@@ -47,6 +47,11 @@ namespace hz
 		_linkables[_current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
 	}
 
+	void Generator::register_branch(IntermediateCommand* command, const std::string& label)
+	{
+#pragma message("TODO branch target registration")
+	}
+
 #define ENCODE(x) _linkables[_current_function].commands.emplace_back(x)
 #define COMPOSE(x) _linkables[_current_function].ir.emplace_back(x)
 
@@ -187,7 +192,7 @@ namespace hz
 
 	void Generator::check_ifnz(register_t value, const std::string& label)
 	{
-		auto command = new IfNotZeroCommand{ value, 0xCCCCCCCC };
+		auto command = new IfNotZeroCommand{ value, TEMP_ADDRESS };
 		register_branch(command, label);
 		COMPOSE(command);
 	}
@@ -200,7 +205,7 @@ namespace hz
 
 	void Generator::check_ifz(register_t value, const std::string& label)
 	{
-		auto command = new IfZeroCommand{ value, 0xCCCCCC };
+		auto command = new IfZeroCommand{ value, TEMP_ADDRESS };
 		register_branch(command, label);
 		COMPOSE(command);
 	}
@@ -213,7 +218,7 @@ namespace hz
 
 	void Generator::goto_command(const std::string& label)
 	{
-		auto command = new GotoCommand{ 0xCCCCCCCC };
+		auto command = new GotoCommand{ TEMP_ADDRESS };
 		register_branch(command, label);
 		COMPOSE(command);
 	}
@@ -223,7 +228,7 @@ namespace hz
 		// including an extra byte for the implicit NULL terminator
 		const auto length = message.length() + 1;
 
-		_string_length_map[pointer] = length;
+		_string_length_map[pointer] = static_cast<std::uint32_t>(length);
 
 		auto command = new MakeMessageCommand{ pointer, message };
 		COMPOSE(command);
@@ -241,6 +246,12 @@ namespace hz
 		_error_reporter->post_error(std::format("undefined string pointer `{:08X}`", pointer), NULL_TOKEN);
 	}
 
+	void Generator::print_number(register_t value)
+	{
+		auto command = new PrintNumberCommand{ value };
+		COMPOSE(command);
+	}
+
 	void Generator::exit_program(register_t code)
 	{
 		auto command = new ExitProgramCommand{ code };
@@ -253,11 +264,20 @@ namespace hz
 		return static_cast<std::uint32_t>(_linkables[_current_function].commands.size());
 	}
 
+	void Generator::raw_binary(byterange&& object_code)
+	{
+		const auto approximate_length = static_cast<std::uint32_t>(object_code.size());
+
+		// emplacing a bitstream is basically the same as compiled inline assembly
+		inline_assembly(std::move(object_code), approximate_length);
+	}
+
 	void Generator::inline_assembly(byterange&& object_code, std::uint32_t approximate_size)
 	{
 		auto command = new InlineAssemblyCommand{ std::move(object_code), approximate_size };
 		COMPOSE(command);
 	}
+
 
 	std::vector<Linkable> Generator::generate()
 	{

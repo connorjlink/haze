@@ -429,6 +429,22 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class PrintNumberCommand : public IntermediateCommand
+	{
+	private:
+		register_t _value;
+
+	public:
+		PrintNumberCommand(register_t value)
+			: _value{ value }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class ExitProgramCommand : public IntermediateCommand
 	{
 	private:
