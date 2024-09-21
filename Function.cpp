@@ -48,14 +48,17 @@ namespace hz
 
 		for (auto i = 0; i < arity; i++)
 		{
+			auto argument_expression = AS_ARGUMENT_EXPRESSION(arguments[i]);
+
 			// NOTE: the 0-th local variable is stored at [ebp - 4]
 #pragma message("TODO: use a different size other than 4 for non-32-bit values (custom types)")
-			_generator->take_argument(argument_allocations[i].source()->read(), (i + 1) * 4);
+			_generator->take_argument(argument_expression->identifier->name, 
+				argument_allocations[i].source()->read(), (i + 2) * 4);
 
 			// TODO: does this support recursion properly
 			// all arguments are of ->etype() == ExpressionType::ARGUMENT
 			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
-				AS_ARGUMENT_EXPRESSION(arguments[i])->identifier->name, NULL_TOKEN))->allocation 
+				argument_expression->identifier->name, NULL_TOKEN))->allocation 
 					= argument_allocations[i].source();
 		}
 

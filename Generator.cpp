@@ -5,6 +5,7 @@ import std;
 #include "Parser.h"
 #include "Symbol.h"
 #include "Expression.h"
+#include "ArgumentExpression.h"
 #include "Linkable.h"
 #include "LabelCommand.h"
 #include "IntermediateCommand.h"
@@ -79,14 +80,19 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void hz::Generator::write_local(const std::string&name, register_t source)
+	void Generator::define_local(const std::string& name, register_t source)
 	{
 		_runtime_allocator->define_local(name, source);
 	}
 
-	void hz::Generator::write_local(const std::string&name)
+	void Generator::define_local(const std::string& name)
 	{
 		_runtime_allocator->define_local(name);
+	}
+
+	void Generator::destroy_local(const std::string& name)
+	{
+		_runtime_allocator->destroy_local(name);
 	}
 
 	void Generator::read_local(register_t destination, const std::string& name)
@@ -166,15 +172,17 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_argument(register_t location)
+	void Generator::make_argument(const std::string& name, register_t location)
 	{
 		auto command = new MakeArgumentCommand{ location };
+		define_local(name, location);
 		COMPOSE(command);
 	}
 
-	void Generator::take_argument(register_t location, std::int32_t offset)
+	void Generator::take_argument(const std::string& name, register_t location, std::int32_t offset)
 	{
 		auto command = new TakeArgumentCommand{ location, offset };
+		define_local(name, location);
 		COMPOSE(command);
 	}
 
@@ -191,10 +199,12 @@ namespace hz
 
 		if (arguments.size() != 0)
 		{
-			for (auto argument : arguments)
+			for (auto expression : arguments)
 			{
-				argument->generate(allocation);
-				make_argument(allocation->read());
+				auto argument_expression = AS_ARGUMENT_EXPRESSION(expression);
+
+				expression->generate(allocation);
+				make_argument(argument_expression->identifier->name, allocation->read());
 			}
 		}
 

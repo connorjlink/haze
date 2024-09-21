@@ -263,10 +263,10 @@ namespace hz
 
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
-		if (function_symbol->arity != arguments.size())
+		if (function_symbol->arity() != arguments.size())
 		{
 			_error_reporter->post_error(std::format("function `{}` was defined with {} arguments but called with {}",
-				name_token.value, function_symbol->arity, arguments.size()), name_token);
+				name_token.value, function_symbol->arity(), arguments.size()), name_token);
 			return nullptr;
 		}
 

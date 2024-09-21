@@ -1,6 +1,7 @@
 import std;
 
 #include "FunctionCallExpression.h"
+#include "ArgumentExpression.h"
 #include "Parser.h"
 #include "Allocation.h"
 #include "Generator.h"
@@ -26,9 +27,10 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, name, _token, true));
+		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, name, _token, true);
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
-		const auto defined_arity = symbol->arity;
+		const auto defined_arity = function_symbol->arity();
 		const auto called_arity = arguments.size();
 
 		if (defined_arity != called_arity)
@@ -37,8 +39,24 @@ namespace hz
 			return;
 		}
 
+		arguments_t argument_expressions{};
+
+		for (auto i = 0; i < arguments.size(); i++)
+		{
+			auto corresponding_argument = function_symbol->arguments[i];
+			auto argument_expression = AS_ARGUMENT_EXPRESSION(corresponding_argument);
+
+			// TODO: figure out how to generate each of the arguments before calling
+			// i.e., arguments[i]->generate(some_allocation);
+			static_assert(false);
+
+#pragma message("TODO: resolve the real type used for each argument expression")
+			argument_expressions.emplace_back(new ArgumentExpression
+				{ TypeSpecifier::BYTE, argument_expression->identifier, argument_expression->_token });
+		}
+
 		// will emit a placeholder call address before hot-patching in the correct target during linking
-		_generator->call_function(name, arguments, allocation);
+		_generator->call_function(name, std::move(argument_expressions), allocation);
 	}
 
 	Expression* FunctionCallExpression::optimize()

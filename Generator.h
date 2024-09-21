@@ -57,9 +57,11 @@ namespace hz
 
 	public:
 		// push a new variable private to the current scope
-		void write_local(const std::string&, register_t);
+		void define_local(const std::string&, register_t);
 		// push a new undefined variable private to the current scope
-		void write_local(const std::string&);
+		void define_local(const std::string&);
+		// delete a previously defined local variable from the current scope
+		void destroy_local(const std::string&);
 		// read a defined local variable into a target register
 		void read_local(register_t, const std::string&);
 
@@ -100,9 +102,9 @@ namespace hz
 
 	public:
 		// position a new function argument for the next call
-		void make_argument(register_t);
+		void make_argument(const std::string&, register_t);
 		// pull a function argument during call from those prepared
-		void take_argument(register_t, std::int32_t);
+		void take_argument(const std::string&, register_t, std::int32_t);
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function

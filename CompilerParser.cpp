@@ -323,11 +323,9 @@ namespace hz
 		auto arguments = parse_arguments(true);
 		consume(TokenType::RPAREN);
 
-
-		// inform the parser of the function argument count (arity)
-		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->arity 
-			= static_cast<std::uint8_t>(arguments.size());
-
+		// inform the parser of the function arguments
+		// creates a local copy of them for future reference
+		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->arguments = arguments;
 
 		auto body = parse_compound_statement(name_token.value);
 

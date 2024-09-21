@@ -12,6 +12,7 @@ import std;
 #include "ErrorReporter.h"
 #include "HeapAllocator.h"
 #include "StackAllocator.h"
+#include "RuntimeAllocator.h"
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -41,6 +42,7 @@ int main(int argc, char** argv)
 {
 	_heap_allocator = new HeapAllocator{};
 	_stack_allocator = new StackAllocator{};
+	_runtime_allocator = new RuntimeAllocator{};
 
 	_context = new Context{};
 

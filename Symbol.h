@@ -35,12 +35,19 @@ namespace hz
 
 	public:
 		TypeSpecifier return_type;
-		std::uint8_t arity;
+		// all stored as ArgumentExpresion under the hood
+		std::vector<Expression*> arguments;
 		std::uint32_t locals_count;
 
 	public:
+		auto arity() const
+		{
+			return arguments.size();
+		}
+
+	public:
 		FunctionSymbol(std::string name, TypeSpecifier return_type = static_cast<TypeSpecifier>(0))
-			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arity{ 0 }, locals_count{ 0 }
+			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arguments{}, locals_count{ 0 }
 		{
 		}
 

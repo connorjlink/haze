@@ -40,6 +40,16 @@ namespace hz
 						penultimate->marked_for_deletion = true;
 					}
 				}
+
+				for (auto i = 0; i < _ir.size() - 1; i++)
+				{
+					if (_ir[i + 0]->itype() == IntermediateType::ENTER_SCOPE &&
+						_ir[i + 1]->itype() == IntermediateType::LEAVE_SCOPE)
+					{
+						_ir[i + 0]->marked_for_deletion = true;
+						_ir[i + 1]->marked_for_deletion = true;
+					}
+				}
 			}
 		}
 

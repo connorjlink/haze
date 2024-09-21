@@ -56,7 +56,7 @@ namespace hz
 
 	void Toolchain::panic()
 	{
-		Log::raw(_error_reporter->generate_report());
+		shut_down();
 		std::exit(1);
 	}
 }

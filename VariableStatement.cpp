@@ -42,12 +42,12 @@ namespace hz
 		{
 			AutoStackAllocation temp{};
 			value->generate(temp.source());
-			_generator->write_local(name, temp.source()->read());
+			_generator->define_local(name, temp.source()->read());
 		}
 
 		else
 		{
-			_generator->write_local(name);
+			_generator->define_local(name);
 		}
 	}
 
