@@ -1,4 +1,9 @@
+function byte foo = ()
+{
+	return 1;
+}
+
 function nvr main = ()
 {
-	return 2;
+	return foo();
 }

@@ -30,7 +30,10 @@ namespace hz
             }
         }
 
-        _generator->end_scope();
+        // NOTE: old method
+        // per updated standards, it is now considered UB not to return from a non-nvr function
+        // this means there is no reason to emit a duplicate stack-frame-destroy command
+        // _generator->end_scope();
     }
 
     Statement* CompoundStatement::optimize()

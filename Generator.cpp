@@ -1,14 +1,15 @@
 import std;
 
 #include "Generator.h"
-#include "Allocator.h"
 #include "Allocation.h"
 #include "Parser.h"
 #include "Symbol.h"
+#include "Expression.h"
 #include "Linkable.h"
 #include "LabelCommand.h"
 #include "IntermediateCommand.h"
 #include "RuntimeAllocator.h"
+#include "X86Builder.h"
 #include "ErrorReporter.h"
 
 // Haze Generator.cpp
@@ -44,8 +45,7 @@ namespace hz
 
 	void Generator::label(const std::string& identifier)
 	{
-		UNSUPPORTED_OPERATION(__FUNCTION__);
-		//_linkables[_current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
+		_linkables[_current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
 	}
 
 	void Generator::register_branch(IntermediateCommand* command, const std::string& label)
@@ -183,6 +183,32 @@ namespace hz
 		auto command = new CallFunctionCommand{ function };
 		register_branch(command, function);
 		COMPOSE(command);
+	}
+
+	void Generator::call_function(const std::string& function, const arguments_t& arguments, Allocation* allocation)
+	{
+#pragma message("TODO: verify if EAX is being used before the function call")
+
+		if (arguments.size() != 0)
+		{
+			for (auto argument : arguments)
+			{
+				argument->generate(allocation);
+				make_argument(allocation->read());
+			}
+		}
+
+		auto command = new CallFunctionCommand{ function };
+		register_branch(command, function);
+		COMPOSE(command);
+
+		// return values always come through the EAX register
+		make_copy(allocation->read(), EAX);
+
+		// ideally we want to generate a:
+		//    add esp, N (total local variable bytes)
+#pragma message("TODO: find the actual size of each argument to know how much to change it by")
+		const auto arguments_bytes = arguments.size() * 4;
 	}
 
 	void Generator::make_return()

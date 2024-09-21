@@ -326,6 +326,9 @@
     <ClCompile Include="HazeBuilder.cpp">
       <Filter>Source Files\Binary</Filter>
     </ClCompile>
+    <ClCompile Include="IntermediateOptimizer.cpp">
+      <Filter>Source Files\Intermediate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -657,6 +660,9 @@
     </ClInclude>
     <ClInclude Include="HazeBuilder.h">
       <Filter>Source Files\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermediateOptimizer.h">
+      <Filter>Source Files\Intermediate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

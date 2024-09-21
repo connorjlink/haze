@@ -98,6 +98,7 @@
     <ClCompile Include="InstructionValidator.cpp" />
     <ClCompile Include="IntegerLiteralExpression.cpp" />
     <ClCompile Include="IntermediateCommand.cpp" />
+    <ClCompile Include="IntermediateOptimizer.cpp" />
     <ClCompile Include="InterpreterParser.cpp" />
     <ClCompile Include="InterpreterToolchain.cpp" />
     <ClCompile Include="Intrinsic.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />
     <ClInclude Include="IntermediateCommand.h" />
+    <ClInclude Include="IntermediateOptimizer.h" />
     <ClInclude Include="IntermediateType.h" />
     <ClInclude Include="RuntimeAllocator.h" />
     <ClInclude Include="StackAllocator.h" />

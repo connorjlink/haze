@@ -4,6 +4,7 @@ import std;
 #include "BinaryUtilities.h"
 #include "BinaryConstants.h"
 #include "Generator.h"
+#include "Parser.h"
 #include "X86Builder.h"
 
 // Haze IntermediateCommand.cpp
@@ -291,7 +292,7 @@ namespace hz
 	{
 		byterange out{};
 
-#pragma message("TODO: code generation for immediate command!")
+		PUT(X86Builder::mov_ri(_destination, _immediate));
 
 		return out;
 	}
@@ -342,6 +343,18 @@ namespace hz
 
 		const auto target = _generator->query_branch_target(_function);
 #pragma message("TODO: function call command")
+
+		PUT(X86Builder::call(target));
+
+		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		// only need to clean up the stack frame if one was created in the first place
+		if (function_symbol->locals_count != 0)
+		{
+			PUT(X86Builder::add_ri(ESP, 0x1000));
+		}
+
 		return out;
 	}
 
@@ -377,7 +390,14 @@ namespace hz
 
 		// NOTE: this will clobber anything currently in the EAX register
 		// but this should be OK since they are locals anyway
-		PUT(X86Builder::mov_rr(EAX, _location));
+
+#pragma message("TODO: clean this up so the intermediate command is not responsible for optimization")
+		
+		if (_location != EAX)
+		{
+			PUT(X86Builder::mov_rr(EAX, _location));
+		}
+		
 		PUT(X86Builder::ret());
 
 		return out;
@@ -508,13 +528,13 @@ namespace hz
 
 	byterange ExitProgramCommand::emit() const
 	{
-		// push 0
+		// push code
 		// call [0x402068] (ExitProcess)
 
 		byterange out{};
 
 		PUT(X86Builder::push_r(_code));
-		PUT(X86Builder::call(PROCEDURE_BASE + exitprocess_iat_va));
+		PUT(X86Builder::call(PROCEDURE(exitprocess_iat_va)));
 
 		return out;
 	}

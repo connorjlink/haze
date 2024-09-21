@@ -15,6 +15,7 @@ namespace hz
 	{
 	public:
 		std::int32_t offset;
+		bool marked_for_deletion = false;
 
 	public:
 		virtual ~IntermediateCommand() = default;
@@ -248,12 +249,12 @@ namespace hz
 
 	class CopyCommand : public IntermediateCommand
 	{
-	private:
-		register_t _source, _destination;
+	public:
+		register_t _destination, _source;
 
 	public:
-		CopyCommand(register_t source, register_t destination)
-			: _source{ source }, _destination{ destination }
+		CopyCommand(register_t destination, register_t source)
+			: _destination{ destination }, _source{ source }
 		{
 		}
 
@@ -266,11 +267,11 @@ namespace hz
 	{
 	private:
 		register_t _destination;
-		std::uint32_t _source;
+		std::uint32_t _immediate;
 
 	public:
-		MakeImmediateCommand(register_t destination, std::uint32_t source)
-			: _destination{ destination }, _source{ source }
+		MakeImmediateCommand(register_t destination, std::uint32_t immediate)
+			: _destination{ destination }, _immediate{ immediate }
 		{
 		}
 

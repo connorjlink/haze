@@ -36,10 +36,11 @@ namespace hz
 	public:
 		TypeSpecifier return_type;
 		std::uint8_t arity;
+		std::uint32_t locals_count;
 
 	public:
 		FunctionSymbol(std::string name, TypeSpecifier return_type = static_cast<TypeSpecifier>(0))
-			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arity{ 0 }
+			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arity{ 0 }, locals_count{ 0 }
 		{
 		}
 

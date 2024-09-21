@@ -61,6 +61,10 @@ namespace hz
 		static byterange mov_mr(std::uint32_t, std::uint8_t);
 
 	public:
+		// mov destination, immediate
+		static byterange mov_ri(std::uint8_t, std::uint32_t);
+
+	public:
 		// add destination, source
 		static byterange add_rr(std::uint8_t, std::uint8_t);
 		// add destination, immediate

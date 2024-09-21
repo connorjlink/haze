@@ -8,6 +8,7 @@ import std;
 #include "CompilerLinker.h"
 #include "Constants.h"
 #include "CommandLineOptions.h"
+#include "IntermediateOptimizer.h"
 #include "ErrorContext.h"
 #include "ErrorReporter.h"
 
@@ -36,7 +37,40 @@ namespace hz
 		auto linkables = _generator->generate();
 		_job_manager->end_job(generate_task);
 
+		for (auto& linkable : linkables)
+		{
+			auto optimizer = new IntermediateOptimizer{ linkable.symbol->name, std::move(linkable.ir) };
+			auto ir_optimized = optimizer->optimize();
 
+			linkable.ir = std::move(ir_optimized);
+		}
+
+		byterange out{};
+
+		for (auto& linkable : linkables)
+		{
+			for (auto command : linkable.ir)
+			{
+				out.append_range(command->emit());
+			}
+		}
+
+		for (auto byte : out)
+		{
+			std::print("{:02X} ", byte);
+		}
+
+
+		if (_error_reporter->had_error())
+		{
+			//common_finalize(std::move(executable), _filepath);
+			return;
+		}
+
+		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);
+		_error_reporter->close_context();
+
+#if 0
 		_linker = new CompilerLinker{ std::move(linkables), _filepath };
 
 		auto entrypoint = HALF_DWORD_MAX;
@@ -59,5 +93,6 @@ namespace hz
 
 		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);
 		_error_reporter->close_context();
+#endif
 	}
 }

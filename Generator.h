@@ -16,6 +16,7 @@ namespace hz
 	class Node;
 	class Parser;
 	class InstructionCommand;
+	class Allocation;
 
 	using index_t = std::int32_t;
 
@@ -104,6 +105,8 @@ namespace hz
 		void take_argument(register_t, std::int32_t);
 		// link execution to a user-defined function
 		void call_function(const std::string&);
+		// link execution to a user-defined function
+		void call_function(const std::string&, const arguments_t&, Allocation*);
 		// return from a call to a `nvr` function
 		void make_return();
 		// return from a call to a value-typed function

@@ -28,8 +28,6 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation*)
 	{
-		_generator->end_scope();
-		
 		// when value==nullptr, expect no return value ONLY from nvr function
 		if (value == nullptr)
 		{
@@ -39,12 +37,18 @@ namespace hz
 				return;
 			}
 
-			// no parameters return 
+			// NOTE: no parameters return 
+			// simply destroy the stack frame and return
+			_generator->end_scope();
 			_generator->make_return();
 		}
 
+		// first generate the return value
 		AutoStackAllocation temp{};
 		value->generate(temp.source());
+
+		// then destroy the stack frame and return the value
+		_generator->end_scope();
 		_generator->make_return(temp.source()->read());
 	}
 

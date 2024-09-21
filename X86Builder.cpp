@@ -155,6 +155,26 @@ namespace hz
 	}
 
 
+	byterange X86Builder::mov_ri(std::uint8_t destination, std::uint32_t immediate)
+	{
+		byterange out{};
+
+		if (immediate >= 0 && immediate <= 0xFF)
+		{
+			PUT(BinaryUtilities::range8(0xB0 | destination));
+			PUT(BinaryUtilities::range8(immediate));
+		}
+
+		else
+		{
+			PUT(BinaryUtilities::range8(0xB8 | destination));
+			PUT(BinaryUtilities::range32(immediate));
+		}
+
+		return out;
+	}
+
+
 	byterange X86Builder::add_rr(std::uint8_t destination, std::uint8_t source)
 	{
 		byterange out{};
@@ -193,7 +213,7 @@ namespace hz
 			{
 				// 80 /0 ib --> ADD r/m8, imm8
 				PUT(BinaryUtilities::range8(0x80));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b000, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b000)));
 				PUT(BinaryUtilities::range8(value));
 			}
 
@@ -201,7 +221,7 @@ namespace hz
 			{
 				// 81 /0 id --> ADD r/m32, imm32
 				PUT(BinaryUtilities::range8(0x81));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b000, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b000)));
 				PUT(BinaryUtilities::range32(value));
 			}
 		}
@@ -248,7 +268,7 @@ namespace hz
 			{
 				// 80 /5 ib --> SUB r/m8, imm8
 				PUT(BinaryUtilities::range8(0x80));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b101, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b101)));
 				PUT(BinaryUtilities::range8(value));
 			}
 
@@ -256,7 +276,7 @@ namespace hz
 			{
 				// 81 /5 id --> SUB r/m32, imm32
 				PUT(BinaryUtilities::range8(0x81));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b101, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b101)));
 				PUT(BinaryUtilities::range32(value));
 			}
 		}
@@ -303,7 +323,7 @@ namespace hz
 			{
 				// 80 /1 ib --> OR r/m8, imm8
 				PUT(BinaryUtilities::range8(0x80));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b001, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b001)));
 				PUT(BinaryUtilities::range8(value));
 			}
 
@@ -311,7 +331,7 @@ namespace hz
 			{
 				// 81 /1 id --> OR r/m32, imm32
 				PUT(BinaryUtilities::range8(0x81));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b001, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b001)));
 				PUT(BinaryUtilities::range32(value));
 			}
 		}
@@ -358,7 +378,7 @@ namespace hz
 			{
 				// 80 /4 ib --> AND r/m8, imm8
 				PUT(BinaryUtilities::range8(0x80));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b100, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b100)));
 				PUT(BinaryUtilities::range8(value));
 			}
 
@@ -366,7 +386,7 @@ namespace hz
 			{
 				// 81 /4 id --> AND r/m32, imm32
 				PUT(BinaryUtilities::range8(0x81));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b100, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b100)));
 				PUT(BinaryUtilities::range32(value));
 			}
 		}
@@ -413,7 +433,7 @@ namespace hz
 			{
 				// 80 /6 ib --> XOR r/m8, imm8
 				PUT(BinaryUtilities::range8(0x80));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b110, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b110)));
 				PUT(BinaryUtilities::range8(value));
 			}
 
@@ -421,7 +441,7 @@ namespace hz
 			{
 				// 81 /6 id --> XOR r/m32, imm32
 				PUT(BinaryUtilities::range8(0x81));
-				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(0b110, destination)));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, 0b110)));
 				PUT(BinaryUtilities::range32(value));
 			}
 		}

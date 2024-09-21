@@ -72,12 +72,15 @@ namespace hz
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
 		add_symbol(SymbolType::VARIABLE, identifier_token.value, lookbehind());
 
+		auto function_symbol = reference_symbol(SymbolType::FUNCTION, enclosing_function, peek());
+		AS_FUNCTION_SYMBOL(function_symbol)->locals_count++;
+
 		if (peek().type == TokenType::EQUALS)
 		{
 			consume(TokenType::EQUALS);
 
 			const auto value = parse_expression();
-			
+	
 			consume(TokenType::SEMICOLON);
 
 			return new VariableStatement{ type, identifier_token.value, value, nullptr, value->_token };
