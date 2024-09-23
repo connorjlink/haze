@@ -11,6 +11,11 @@ import std;
 
 namespace hz
 {
+	ParserType InterpreterParser::ptype() const
+	{
+		return ParserType::INTERPRETER;
+	}
+
 	Intrinsic* InterpreterParser::parse_intrinsic()
 	{
 		const auto intrinsic_token = consume(TokenType::INTRINSIC);

@@ -24,11 +24,11 @@ namespace hz
 		}
 
 	public:
-		virtual ExpressionType etype() const final override;
-		virtual ArgumentExpression* copy() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context* context) const final override;
+		virtual ExpressionType etype() const override;
+		virtual ArgumentExpression* copy() const override;
+		virtual void generate(Allocation*) override;
+		virtual Expression* optimize() override;
+		virtual Node* evaluate(Context* context) const override;
 	}; 
 }
 

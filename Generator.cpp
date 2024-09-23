@@ -195,15 +195,13 @@ namespace hz
 
 	void Generator::call_function(const std::string& function, const arguments_t& arguments, Allocation* allocation)
 	{
-#pragma message("TODO: verify if EAX is being used before the function call")
-
 		if (arguments.size() != 0)
 		{
 			for (auto expression : arguments)
 			{
 				auto argument_expression = AS_ARGUMENT_EXPRESSION(expression);
+				argument_expression->generate(allocation);
 
-				expression->generate(allocation);
 				make_argument(argument_expression->identifier->name, allocation->read());
 			}
 		}
@@ -211,9 +209,6 @@ namespace hz
 		auto command = new CallFunctionCommand{ function };
 		register_branch(command, function);
 		COMPOSE(command);
-
-		// return values always come through the EAX register
-		make_copy(allocation->read(), EAX);
 
 		// ideally we want to generate a:
 		//    add esp, N (total local variable bytes)

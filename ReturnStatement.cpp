@@ -6,6 +6,7 @@
 #include "Allocation.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "ArgumentExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "Symbol.h"
 #include "X86Builder.h"
@@ -28,6 +29,9 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation*)
 	{
+		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token);
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
 		// when value==nullptr, expect no return value ONLY from nvr function
 		if (value == nullptr)
 		{
@@ -43,11 +47,34 @@ namespace hz
 			_generator->make_return();
 		}
 
-		// first generate the return value
+		// now, figure out how to return the value
+		// NOTE: if there were arguments to the function, one of those allocations can be re-used
+
+		if (function_symbol->arity() != 0)
+		{
+			const auto argument_expression = AS_ARGUMENT_EXPRESSION(function_symbol->arguments[0]);
+			const auto identifier = argument_expression->identifier;
+
+			const auto symbol = _parser->reference_symbol(SymbolType::ARGUMENT, identifier->name, _token);
+			const auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
+
+			const auto allocation = argument_symbol->allocation;
+
+			value->generate(allocation);
+
+			// then destroy the stack frame
+			_generator->end_scope();
+			_generator->make_return(allocation->read());
+
+			return;
+		}
+
+		// if no arguments, make new allocation
 		AutoStackAllocation temp{};
+		// generate the return value
 		value->generate(temp.source());
 
-		// then destroy the stack frame and return the value
+		// then destroy the stack frame
 		_generator->end_scope();
 		_generator->make_return(temp.source()->read());
 	}

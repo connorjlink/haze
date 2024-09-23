@@ -48,7 +48,7 @@ namespace hz
 	}
 
 
-	void Parser::add_symbol(SymbolType type, std::string name, Token& location)
+	void Parser::add_symbol(SymbolType type, const std::string& name, Token& location)
 	{
 		// does the symbol already exist in the registry?
 		if (symbol_table.contains(name))
@@ -75,7 +75,7 @@ namespace hz
 	}
 
 
-	SymbolType Parser::query_symbol_type(std::string name, Token& location)
+	SymbolType Parser::query_symbol_type(const std::string& name, Token& location)
 	{
 		if (!symbol_table.contains(name))
 		{
@@ -86,7 +86,7 @@ namespace hz
 		return symbol_table.at(name)->ytype();
 	}
 
-	Symbol* Parser::reference_symbol(SymbolType type, std::string name, Token& location, bool mark_visited)
+	Symbol* Parser::reference_symbol(SymbolType type, const std::string& name, Token& location, bool mark_visited)
 	{
 		if (!_symbol_map.contains(type))
 		{
@@ -115,6 +115,11 @@ namespace hz
 		}
 
 		return symbol;
+	}
+
+	bool Parser::has_symbol(const std::string& name)
+	{
+		return symbol_table.contains(name);
 	}
 
 	Token& Parser::lookbehind()

@@ -10,7 +10,7 @@ namespace hz
 {
 	class CompoundStatement : public Statement
 	{
-	private:
+	public:
 		std::vector<Statement*> substatements;
 
 	public:

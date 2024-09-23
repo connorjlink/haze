@@ -114,7 +114,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_add(received_allocation->read(),  received_allocation->read(), temp.source()->read());
+		_generator->compute_add(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
@@ -124,7 +124,8 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_subtract(received_allocation->read(), received_allocation->read(), temp.source()->read());
+		_generator->compute_subtract(received_allocation->read(), temp.source()->read(), received_allocation->read());
+
 	}
 
 	void TimesBinaryExpression::generate(Allocation*)

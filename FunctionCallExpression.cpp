@@ -1,6 +1,7 @@
 import std;
 
 #include "FunctionCallExpression.h"
+#include "FunctionArgumentExpression.h"
 #include "ArgumentExpression.h"
 #include "Parser.h"
 #include "Allocation.h"
@@ -46,13 +47,9 @@ namespace hz
 			auto corresponding_argument = function_symbol->arguments[i];
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(corresponding_argument);
 
-			// TODO: figure out how to generate each of the arguments before calling
-			// i.e., arguments[i]->generate(some_allocation);
-			static_assert(false);
-
 #pragma message("TODO: resolve the real type used for each argument expression")
-			argument_expressions.emplace_back(new ArgumentExpression
-				{ TypeSpecifier::BYTE, argument_expression->identifier, argument_expression->_token });
+			argument_expressions.emplace_back(new FunctionArgumentExpression
+				{ TypeSpecifier::BYTE, argument_expression->identifier, arguments[i], argument_expression->_token });
 		}
 
 		// will emit a placeholder call address before hot-patching in the correct target during linking

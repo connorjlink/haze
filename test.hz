@@ -1,9 +1,6 @@
-function byte foo = (byte a)
-{
-	return a;
-}
-
 function nvr main = ()
 {
-	return foo(1);
+	byte a = 1;
+	byte b = 2;
+	return a + b;
 }

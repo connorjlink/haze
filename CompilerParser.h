@@ -13,6 +13,9 @@ namespace hz
 
     class CompilerParser : public Parser
     {
+    public:
+        std::unordered_map<std::string, std::string> _function_label_map;
+
     private:
         Statement* parse_statement(std::string);
         std::vector<Statement*> parse_statements(std::string);
@@ -44,6 +47,7 @@ namespace hz
         std::vector<Node*> parse_functions();
 
     public:
+        virtual ParserType ptype() const override;
         virtual std::vector<Node*> parse() override;
 
     public:

@@ -13,12 +13,22 @@ namespace hz
 	{
 		std::vector<IntermediateCommand*> out{};
 
-
 		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
+		// the main function does not require a stack frame
+		if (function_symbol->name == "main")
+		{
+			auto first = *_ir.begin();
+
+			if (first->itype() == IntermediateType::ENTER_SCOPE)
+			{
+				first->marked_for_deletion = true;
+			}
+		}
+
 		// if there are no local variables, there is no need to push a stack frame
-		if (function_symbol->locals_count == 0)
+		/*if (function_symbol->locals_count == 0)
 		{
 			if (_ir.size() >= 2)
 			{
@@ -28,15 +38,15 @@ namespace hz
 
 				if (first->itype() == IntermediateType::ENTER_SCOPE)
 				{
-					first->marked_for_deletion = true;
-
 					if (last->itype() == IntermediateType::LEAVE_SCOPE)
 					{
+						first->marked_for_deletion = true;
 						last->marked_for_deletion = true;
 					}
 
 					else if (penultimate->itype() == IntermediateType::LEAVE_SCOPE)
 					{
+						first->marked_for_deletion = true;
 						penultimate->marked_for_deletion = true;
 					}
 				}
@@ -51,7 +61,7 @@ namespace hz
 					}
 				}
 			}
-		}
+		}*/
 
 
 		for (auto& command : _ir)

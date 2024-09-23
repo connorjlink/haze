@@ -30,11 +30,12 @@ namespace hz
 		std::unordered_map<std::string, Symbol*> symbol_table;
 
 	protected:
-		void add_symbol(SymbolType, std::string, Token&);
+		void add_symbol(SymbolType, const std::string&, Token&);
 
 	public:
-		SymbolType query_symbol_type(std::string, Token&);
-		Symbol* reference_symbol(SymbolType, std::string, Token&, bool = false);
+		SymbolType query_symbol_type(const std::string&, Token&);
+		Symbol* reference_symbol(SymbolType, const std::string&, Token&, bool = false);
+		bool has_symbol(const std::string&);
 
 	protected:
 		Token& lookbehind();
@@ -79,6 +80,7 @@ namespace hz
 		Expression* parse_infix_expression(Expression*, Precedence);
 
 	public:
+		virtual ParserType ptype() const = 0;
 		virtual std::vector<Node*> parse() = 0;
 
 	public:

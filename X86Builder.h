@@ -37,10 +37,10 @@ namespace hz
 	public:
 		// push source
 		static byterange push_r(std::uint8_t);
-		// push immediate
-		static byterange push_i(std::uint8_t);
-		// push effective address
-		static byterange push_ea(std::uint32_t);
+		// push imm8
+		static byterange push_i8(std::uint8_t);
+		// push imm32
+		static byterange push_i32(std::uint32_t);
 		// push DWORD PTR
 		static byterange push_m(std::uint32_t);
 
@@ -51,8 +51,12 @@ namespace hz
 	public:
 		// mov destination, source
 		static byterange mov_rr(std::uint8_t, std::uint8_t);
+
+	public:
 		// mov destination, [source + offset]
 		static byterange mov_ro(std::uint8_t, std::int32_t);
+		// mov [source + offset], destination
+		static byterange mov_or(std::int32_t, std::uint8_t);
 
 	public:
 		// mov destination, [pointer]

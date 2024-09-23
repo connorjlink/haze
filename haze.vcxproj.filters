@@ -329,6 +329,12 @@
     <ClCompile Include="IntermediateOptimizer.cpp">
       <Filter>Source Files\Intermediate</Filter>
     </ClCompile>
+    <ClCompile Include="FunctionArgumentExpression.cpp">
+      <Filter>Source Files\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpressionUtility.cpp">
+      <Filter>Source Files\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -663,6 +669,12 @@
     </ClInclude>
     <ClInclude Include="IntermediateOptimizer.h">
       <Filter>Source Files\Intermediate</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionArgumentExpression.h">
+      <Filter>Source Files\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpressionUtility.h">
+      <Filter>Source Files\Expression</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

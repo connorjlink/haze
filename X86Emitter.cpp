@@ -165,7 +165,7 @@ namespace hz
 			
 
 			// push [0x4013FF]
-			PUT(X86Builder::push_ea(0x004033FF));
+			PUT(X86Builder::push_i32(0x004033FF));
 
 
 			// push esi
@@ -381,7 +381,7 @@ namespace hz
 		PUT(BinaryUtilities::range8(0x40));z`
 		PUT(BinaryUtilities::range8(0x00));*/
 
-		PUT(X86Builder::push_i(0x65));
+		PUT(X86Builder::push_i8(0x65));
 		
 		/*
 		0:  b8 65 00 00 00          mov    eax,0x65
@@ -398,12 +398,12 @@ namespace hz
 		//PUT(X86Builder::push_m(0x00403340));
 
 		// format string
-		PUT(X86Builder::push_ea(0x0040305F));
+		PUT(X86Builder::push_i32(0x0040305F));
 
-		PUT(X86Builder::push_i(0x0F));
+		PUT(X86Builder::push_i8(0x0F));
 
 		// output string
-		PUT(X86Builder::push_ea(0x004033F0));
+		PUT(X86Builder::push_i32(0x004033F0));
 
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
@@ -448,16 +448,16 @@ namespace hz
 		PUT(X86Builder::mov_rr(ESI, EAX));
 
 		// push NULL
-		PUT(X86Builder::push_i(0x00));
+		PUT(X86Builder::push_i8(0x00));
 
 		// push NULL
-		PUT(X86Builder::push_i(0x00));
+		PUT(X86Builder::push_i8(0x00));
 
 		// push length (77 bytes)
-		PUT(X86Builder::push_i(77));
+		PUT(X86Builder::push_i8(77));
 
 		// push string (copyright logo)
-		PUT(X86Builder::push_ea(COPYRIGHT_LOGO));
+		PUT(X86Builder::push_i32(COPYRIGHT_LOGO));
 
 		// push eax
 		PUT(X86Builder::push_r(EAX));

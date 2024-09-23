@@ -18,6 +18,11 @@ import std;
 
 namespace hz
 {
+	ParserType AssemblerParser::ptype() const
+	{
+		return ParserType::ASSEMBLER;
+	}
+
 	Register AssemblerParser::parse_register()
 	{
 		static const std::unordered_map<TokenType, Register> registers

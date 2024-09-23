@@ -6,10 +6,12 @@ import std;
 #include "IdentifierExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "ArgumentExpression.h"
+#include "CompoundStatement.h"
 #include "ReturnStatement.h"
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Parser.h"
+#include "CompilerParser.h"
 #include "Statement.h"
 #include "Symbol.h"
 #include "X86Builder.h"
@@ -39,9 +41,18 @@ namespace hz
 	{
 		_generator->begin_function(name);
 
+		// ensure each function implicitly has its own scope block
+		if (body->stype() != StatementType::COMPOUND)
+		{
+			body = new CompoundStatement{ { body }, body->_token };
+		}
+
 		const auto arity = arguments.size();
 
-#pragma message("TODO: function argument pulling using take_argument()")
+		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, name, _token);
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		_generator->begin_scope();
 
 		// create a register allocation for every one of our arguments
 		std::vector<AutoStackAllocation> argument_allocations{ arity };
@@ -63,8 +74,23 @@ namespace hz
 		}
 
 		body->generate();
-		// NOTE: opting to generate the function epilogue for every single return statement
 
+		// NOTE: old method
+		//_generator->end_scope();
+
+		if (_parser->ptype() == ParserType::COMPILER)
+		{
+			_generator->label(AS_COMPILER_PARSER(_parser)->_function_label_map.at(name));
+		}
+
+		else
+		{
+			_error_reporter->post_error(std::format("[internal error] invalid parser type `{}`", _parser_type_map.at(_parser->ptype())), _token);
+			return;
+		}
+		
+
+		// NOTE: opting to generate the function epilogue for every single return statement
 		// in case there was no return statement, a default return value of 0 is provided
 #pragma message("TODO: figure out if there was not a return statement")
 		if constexpr (false)

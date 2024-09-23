@@ -21,6 +21,7 @@ namespace hz
 		std::vector<Node*> parse_declarators();
 
 	public:
+		virtual ParserType ptype() const final override;
 		virtual std::vector<Node*> parse() final override;
 
 	public:

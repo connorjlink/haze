@@ -393,11 +393,12 @@ namespace hz
 
 #pragma message("TODO: clean this up so the intermediate command is not responsible for optimization")
 		
-		if (_location != EAX)
+		/*if (_location != EAX)
 		{
 			PUT(X86Builder::mov_rr(EAX, _location));
-		}
+		}*/
 		
+		//PUT(X86Bioldd)
 		PUT(X86Builder::ret());
 
 		return out;
@@ -497,10 +498,10 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::push_i(0x00));
-		PUT(X86Builder::push_i(0x00));
-		PUT(X86Builder::push_i(_length));
-		PUT(X86Builder::push_ea(_pointer));
+		PUT(X86Builder::push_i8(0x00));
+		PUT(X86Builder::push_i8(0x00));
+		PUT(X86Builder::push_i8(_length));
+		PUT(X86Builder::push_i32(_pointer));
 		PUT(X86Builder::push_m(0x004033F0));
 
 #pragma message("TODO: finish printMessage codegen")

@@ -55,9 +55,11 @@
     <ClCompile Include="ExecutionContext.cpp" />
     <ClCompile Include="ExitStatement.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
+    <ClCompile Include="ExpressionUtility.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="ForStatement.cpp" />
+    <ClCompile Include="FunctionArgumentExpression.cpp" />
     <ClCompile Include="HazeBuilder.cpp" />
     <ClCompile Include="HazeEmitter.cpp" />
     <ClCompile Include="HazeEvaluator.cpp" />
@@ -137,6 +139,8 @@
     <ClCompile Include="VariableStatement.cpp" />
     <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
+    <ClInclude Include="ExpressionUtility.h" />
+    <ClInclude Include="FunctionArgumentExpression.h" />
     <ClInclude Include="HazeBuilder.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />

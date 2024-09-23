@@ -24,6 +24,12 @@ namespace hz
 			_ledger.erase(allocation);
 		}
 
+	public:
+		bool is_available(register_t allocation)
+		{
+			return _ledger.contains(allocation);
+		}
+
 	private:
 		register_t find_register() const
 		{

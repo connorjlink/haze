@@ -19,6 +19,7 @@ import std;
 #include "FileManager.h"
 #include "CommandLineOptions.h"
 #include "Symbol.h"
+#include "RandomUtility.h"
 #include "ErrorReporter.h"
 
 // Haze CompilerParser.cpp
@@ -26,6 +27,11 @@ import std;
 
 namespace hz
 {
+	ParserType CompilerParser::ptype() const
+	{
+		return ParserType::COMPILER;
+	}
+
 	Statement* CompilerParser::parse_statement(std::string enclosing_function)
 	{
 		using enum TokenType;
@@ -312,6 +318,12 @@ namespace hz
 		auto return_type = parse_type_specifier();
 
 		auto name_token = consume(TokenType::IDENTIFIER);
+
+
+		// 3 digits of randomness for now
+		const auto uuid = hz::generate(3);
+		const auto end_function_label = std::format("end_function_{:03d}", uuid);
+		_function_label_map[name_token.value] = end_function_label;
 
 		//TODO: implement a more efficient way of modifying the return type than this mess
 		add_symbol(SymbolType::FUNCTION, name_token.value, lookbehind());

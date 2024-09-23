@@ -31,28 +31,30 @@ namespace hz
 
 	byterange X86Builder::push_r(std::uint8_t source)
 	{
+		// 50+rd --> PUSH r32
 		const auto reg = source & 0b111;
-
 		return { static_cast<std::uint8_t>(0x50 | reg) };
 	}
 
-	byterange X86Builder::push_i(std::uint8_t source)
+	// is implicitly sign-extended to push a total of 4 bytes to the stack
+	byterange X86Builder::push_i8(std::uint8_t immediate)
 	{
 		byterange out{};
 
+		// 6A --> PUSH imm8
 		PUT(BinaryUtilities::range8(0x6A));
-		PUT(BinaryUtilities::range8(source));
+		PUT(BinaryUtilities::range8(immediate));
 
 		return out;
 	}
-
-	// non-dereferencing
-	byterange X86Builder::push_ea(std::uint32_t address)
+	
+	byterange X86Builder::push_i32(std::uint32_t immediate)
 	{
 		byterange out{};
 
+		// 68 --> PUSH imm32
 		PUT(BinaryUtilities::range8(0x68)); 
-		PUT(BinaryUtilities::range32(address));
+		PUT(BinaryUtilities::range32(immediate));
 
 		return out;
 	}
@@ -62,7 +64,10 @@ namespace hz
 	{
 		byterange out{};
 
-#pragma message("TODO: push_m() codegen!")
+		// FF /6 --> PUSH r/m32
+		PUT(BinaryUtilities::range8(0xFF));
+		PUT(BinaryUtilities::range8(0x35));
+		PUT(BinaryUtilities::range32(address));
 
 		return out;
 	}
@@ -70,8 +75,8 @@ namespace hz
 
 	byterange X86Builder::pop_r(std::uint8_t destination)
 	{
+		// 58+ rd --> POP r32
 		const auto reg = destination & 0b111;
-
 		return { static_cast<std::uint8_t>(0x58 | reg) };
 	}
 
@@ -81,11 +86,13 @@ namespace hz
 	{
 		byterange out{};
 
+		// 89 /r --> MOV r/m32, r32
 		PUT(BinaryUtilities::range8(0x89));
 		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, source)));
 
 		return out;
 	}
+
 
 	byterange X86Builder::mov_ro(std::uint8_t destination, std::int32_t offset)
 	{
@@ -104,6 +111,14 @@ namespace hz
 			PUT(BinaryUtilities::range8(X86Builder::modrm(0b10, destination, EBP)));
 			PUT(BinaryUtilities::range32(offset));
 		}
+
+		return out;
+	}
+
+	byterange X86Builder::mov_or(std::int32_t offset, std::uint8_t destination)
+	{
+		byterange out{};
+
 
 		return out;
 	}
