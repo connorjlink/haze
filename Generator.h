@@ -34,6 +34,9 @@ namespace hz
 		std::unordered_map<std::uint32_t, std::uint32_t> _string_length_map;
 
 	public:
+		const std::string& current_function() const;
+
+	public:
 		void begin_function(std::string);
 
 	public:
@@ -60,6 +63,8 @@ namespace hz
 		void define_local(const std::string&, register_t);
 		// push a new undefined variable private to the current scope
 		void define_local(const std::string&);
+		// resolve a local by attaching a name to an existing stack allocation
+		void attach_local(const std::string&, std::int32_t);
 		// delete a previously defined local variable from the current scope
 		void destroy_local(const std::string&);
 		// read a defined local variable into a target register
@@ -71,9 +76,15 @@ namespace hz
 
 	public:
 		// destination = memory[pointer]
-		void memory_read(register_t, std::uint32_t);
+		void heap_read(register_t, std::uint32_t);
 		// memory[pointer] = source
-		void memory_write(std::uint32_t, register_t);
+		void heap_write(std::uint32_t, register_t);
+
+	public:
+		// destination = stack[ebp + offset]
+		void stack_read(register_t, std::int32_t);
+		// stack[ebp + offset] = source
+		void stack_write(std::int32_t, register_t);
 
 	public:
 		// NOTE: all math operations are { LHS, RHS, destination }

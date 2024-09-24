@@ -157,7 +157,7 @@ namespace hz
 			{
 				auto heap_allocation = static_cast<HeapAllocation*>(destination);
 				AutoStackAllocation temp{};
-				_generator->memory_write(heap_allocation->address, temp.source()->read());
+				_generator->heap_write(heap_allocation->address, temp.source()->read());
 			} break;
 		}
 	}

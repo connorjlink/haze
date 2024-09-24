@@ -11,7 +11,8 @@ namespace hz
 	class RuntimeAllocator
 	{
 	private:
-		std::unordered_map<std::string, register_t> _locals;
+		// map of (function -> (map of variables -> offset))
+		std::unordered_map<std::string, std::unordered_map<std::string, std::int32_t>> _locals_offsets;
 
 	public:
 		std::uint32_t allocate(std::uint32_t bytes);
@@ -19,6 +20,7 @@ namespace hz
 	public:
 		void define_local(const std::string&);
 		void define_local(const std::string&, register_t);
+		void attach_local(const std::string&, std::int32_t);
 
 	public:
 		void destroy_local(const std::string&);
@@ -28,7 +30,7 @@ namespace hz
 
 	public:
 		RuntimeAllocator()
-			: _locals{}
+			: _locals_offsets{}
 		{
 		}
 	};

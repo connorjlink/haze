@@ -36,6 +36,15 @@ namespace hz
 	}
 
 
+	const std::string& Generator::current_function() const
+	{
+		auto linkable = _linkables[_current_function];
+		auto symbol = linkable.symbol;
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		return function_symbol->name;
+	}
+
 	void Generator::begin_function(std::string name)
 	{
 		_current_function++;
@@ -90,6 +99,11 @@ namespace hz
 		_runtime_allocator->define_local(name);
 	}
 
+	void Generator::attach_local(const std::string& name, std::int32_t offset)
+	{
+		_runtime_allocator->attach_local(name, offset);
+	}
+
 	void Generator::destroy_local(const std::string& name)
 	{
 		_runtime_allocator->destroy_local(name);
@@ -106,15 +120,27 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::memory_read(register_t destination, std::uint32_t pointer)
+	void Generator::heap_read(register_t destination, std::uint32_t pointer)
 	{
-		auto command = new MemoryReadCommand{ destination, pointer };
+		auto command = new HeapReadCommand{ destination, pointer };
 		COMPOSE(command);
 	}
 
-	void Generator::memory_write(std::uint32_t pointer, register_t source)
+	void Generator::heap_write(std::uint32_t pointer, register_t source)
 	{
-		auto command = new MemoryWriteCommand{ pointer, source };
+		auto command = new HeapWriteCommand{ pointer, source };
+		COMPOSE(command);
+	}
+
+	void Generator::stack_read(register_t destination, std::int32_t offset)
+	{
+		auto command = new StackReadCommand{ destination, offset };
+		COMPOSE(command);
+	}
+
+	void Generator::stack_write(std::int32_t offset, register_t source)
+	{
+		auto command = new StackWriteCommand{ offset, source };
 		COMPOSE(command);
 	}
 
@@ -174,15 +200,19 @@ namespace hz
 
 	void Generator::make_argument(const std::string& name, register_t location)
 	{
+		// NOTE: old method
+		//define_local(name, location);
+		
 		auto command = new MakeArgumentCommand{ location };
-		define_local(name, location);
 		COMPOSE(command);
 	}
 
 	void Generator::take_argument(const std::string& name, register_t location, std::int32_t offset)
 	{
+		// NOTE: old method
+		//define_local(name, location);
+
 		auto command = new TakeArgumentCommand{ location, offset };
-		define_local(name, location);
 		COMPOSE(command);
 	}
 
@@ -195,25 +225,17 @@ namespace hz
 
 	void Generator::call_function(const std::string& function, const arguments_t& arguments, Allocation* allocation)
 	{
-		if (arguments.size() != 0)
+		for (auto expression : arguments)
 		{
-			for (auto expression : arguments)
-			{
-				auto argument_expression = AS_ARGUMENT_EXPRESSION(expression);
-				argument_expression->generate(allocation);
+			auto argument_expression = AS_ARGUMENT_EXPRESSION(expression);
+			argument_expression->generate(allocation);
 
-				make_argument(argument_expression->identifier->name, allocation->read());
-			}
+			make_argument(argument_expression->identifier->name, allocation->read());
 		}
 
 		auto command = new CallFunctionCommand{ function };
 		register_branch(command, function);
 		COMPOSE(command);
-
-		// ideally we want to generate a:
-		//    add esp, N (total local variable bytes)
-#pragma message("TODO: find the actual size of each argument to know how much to change it by")
-		const auto arguments_bytes = arguments.size() * 4;
 	}
 
 	void Generator::make_return()

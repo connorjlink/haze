@@ -16,8 +16,9 @@ namespace hz
 		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
+		// NOTE: old method
 		// the main function does not require a stack frame
-		if (function_symbol->name == "main")
+		/*if (function_symbol->name == "main")
 		{
 			auto first = *_ir.begin();
 
@@ -25,8 +26,9 @@ namespace hz
 			{
 				first->marked_for_deletion = true;
 			}
-		}
+		}*/
 
+		// NOTE: old method
 		// if there are no local variables, there is no need to push a stack frame
 		/*if (function_symbol->locals_count == 0)
 		{

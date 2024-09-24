@@ -98,6 +98,7 @@ namespace hz
 	{
 		byterange out{};
 
+		// 8B /r --> MOV r32, r/m32
 		PUT(BinaryUtilities::range8(0x8B));
 
 		if (offset >= 0 && offset <= 0xFF)
@@ -119,6 +120,20 @@ namespace hz
 	{
 		byterange out{};
 
+		// 89 /r --> MOV r/m32, r32
+		PUT(BinaryUtilities::range8(0x89));
+
+		if (offset >= 0x00 && offset <= 0xFF)
+		{
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, destination, EBP)));
+			PUT(BinaryUtilities::range8(offset));
+		}
+
+		else
+		{
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b10, destination, EBP)));
+			PUT(BinaryUtilities::range32(offset));
+		}
 
 		return out;
 	}
@@ -174,7 +189,9 @@ namespace hz
 	{
 		byterange out{};
 
-		if (immediate >= 0 && immediate <= 0xFF)
+		// NOTE: old method
+		//if (immediate >= 0 && immediate <= 0xFF)
+		if (false)
 		{
 			PUT(BinaryUtilities::range8(0xB0 | destination));
 			PUT(BinaryUtilities::range8(immediate));
@@ -185,6 +202,20 @@ namespace hz
 			PUT(BinaryUtilities::range8(0xB8 | destination));
 			PUT(BinaryUtilities::range32(immediate));
 		}
+
+		return out;
+	}
+
+
+	byterange X86Builder::mov_mi(std::uint8_t base, std::uint8_t offset, std::uint32_t immediate)
+	{
+		byterange out{};
+
+		// C7 /0 --> MOV r/m32, imm32
+		PUT(BinaryUtilities::range8(0xC7));
+		PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, 0b000, base)));
+		PUT(BinaryUtilities::range8(offset));
+		PUT(BinaryUtilities::range32(immediate));
 
 		return out;
 	}
@@ -527,6 +558,27 @@ namespace hz
 
 		// C3 --> RET
 		PUT(BinaryUtilities::range8(0xC3));
+
+		return out;
+	}
+
+	byterange X86Builder::ret(std::uint16_t immediate)
+	{
+		byterange out{};
+
+		// C2 iw --> RET imm16
+		PUT(BinaryUtilities::range8(0xC2));
+		PUT(BinaryUtilities::range16(immediate));
+
+		return out;
+	}
+
+	byterange X86Builder::leave()
+	{
+		byterange out{};
+
+		// C9 --> LEAVE
+		PUT(BinaryUtilities::range8(0xC9));
 
 		return out;
 	}

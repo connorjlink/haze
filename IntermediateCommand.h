@@ -101,14 +101,14 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
-	class MemoryReadCommand : public IntermediateCommand
+	class HeapReadCommand : public IntermediateCommand
 	{
 	private:
 		register_t _destination;
 		std::uint32_t _pointer;
 
 	public:
-		MemoryReadCommand(register_t destination, std::uint32_t pointer)
+		HeapReadCommand(register_t destination, std::uint32_t pointer)
 			: _destination{ destination }, _pointer{ pointer }
 		{
 		}
@@ -118,15 +118,49 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
-	class MemoryWriteCommand : public IntermediateCommand
+	class HeapWriteCommand : public IntermediateCommand
 	{
 	private:
 		std::uint32_t _pointer;
 		register_t _source;
 
 	public:
-		MemoryWriteCommand(std::uint32_t pointer, register_t source)
+		HeapWriteCommand(std::uint32_t pointer, register_t source)
 			: _pointer{ pointer }, _source{ source }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class StackReadCommand : public IntermediateCommand
+	{
+	private:
+		register_t _destination;
+		std::int32_t _offset;
+
+	public:
+		StackReadCommand(register_t destination, std::int32_t offset)
+			: _destination{ destination }, _offset{ offset }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class StackWriteCommand : public IntermediateCommand
+	{
+	private:
+		std::int32_t _offset;
+		register_t _source;
+
+	public:
+		StackWriteCommand(std::int32_t offset, register_t source)
+			: _offset{ offset }, _source{ source }
 		{
 		}
 
@@ -318,12 +352,13 @@ namespace hz
 
 	class CallFunctionCommand : public IntermediateCommand
 	{
-	private:
-		std::string _function;
+	public:
+		std::string function;
+		std::uint32_t offset;
 
 	public:
 		CallFunctionCommand(const std::string& function)
-			: _function{ function }
+			: function{ function }, offset{ 0 }
 		{
 		}
 

@@ -30,6 +30,8 @@
     <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="X86Instruction.cpp" />
+    <ClCompile Include="X86Linker.cpp" />
     <ClInclude Include="AllocationType.h" />
     <ClInclude Include="ArchitectureType.h" />
     <ClCompile Include="ArgumentExpression.cpp" />
@@ -157,6 +159,9 @@
     <ClCompile Include="X86Builder.cpp" />
     <ClCompile Include="X86BuilderValidator.cpp" />
     <ClCompile Include="X86Emitter.cpp" />
+    <ClInclude Include="X86Instruction.h" />
+    <ClInclude Include="X86InstructionType.h" />
+    <ClInclude Include="X86Linker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdjustExpression.h" />

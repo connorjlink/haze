@@ -50,24 +50,25 @@ namespace hz
 		// now, figure out how to return the value
 		// NOTE: if there were arguments to the function, one of those allocations can be re-used
 
-		if (function_symbol->arity() != 0)
-		{
-			const auto argument_expression = AS_ARGUMENT_EXPRESSION(function_symbol->arguments[0]);
-			const auto identifier = argument_expression->identifier;
+#pragma message("TODO: debug this to be able to share allocation with one of those from the function itself?")
+		//if (function_symbol->arity() != 0)
+		//{
+		//	const auto argument_expression = AS_ARGUMENT_EXPRESSION(function_symbol->arguments[0]);
+		//	const auto identifier = argument_expression->identifier;
 
-			const auto symbol = _parser->reference_symbol(SymbolType::ARGUMENT, identifier->name, _token);
-			const auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
+		//	const auto symbol = _parser->reference_symbol(SymbolType::ARGUMENT, identifier->name, _token);
+		//	const auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
 
-			const auto allocation = argument_symbol->allocation;
+		//	const auto allocation = argument_symbol->allocation;
 
-			value->generate(allocation);
+		//	value->generate(allocation);
 
-			// then destroy the stack frame
-			_generator->end_scope();
-			_generator->make_return(allocation->read());
+		//	// then destroy the stack frame
+		//	_generator->end_scope();
+		//	_generator->make_return(allocation->read());
 
-			return;
-		}
+		//	return;
+		//}
 
 		// if no arguments, make new allocation
 		AutoStackAllocation temp{};

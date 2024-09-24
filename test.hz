@@ -1,6 +1,10 @@
-function nvr main = ()
+function byte foo = (byte x, byte y, byte z)
 {
-	byte a = 1;
-	byte b = 2;
-	return a + b;
+	byte w = x + y;
+	return w - z;
+}
+
+function byte main = ()
+{
+	return foo(3, 2, 1);
 }

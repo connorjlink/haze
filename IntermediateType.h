@@ -4,6 +4,8 @@
 // Haze IntermediateType.h
 // (c) Connor J. Link. All Rights Reserved.
 
+#define AS_CALL_FUNCTION_COMMAND(x) static_cast<CallFunctionCommand*>(x)
+
 namespace hz
 {
 	enum class IntermediateType
@@ -13,8 +15,10 @@ namespace hz
 		LEAVE_SCOPE,
 		LOCAL_VARIABLE,
 		GLOBAL_VARIABLE,
-		MEMORY_READ,
-		MEMORY_WRITE,
+		HEAP_READ,
+		HEAP_WRITE,
+		STACK_READ,
+		STACK_WRITE,
 		ADD,
 		SUBTRACT,
 		BITOR,

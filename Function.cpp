@@ -54,8 +54,19 @@ namespace hz
 
 		_generator->begin_scope();
 
+		auto current_argument = 0;
+		for (auto argument : arguments)
+		{
+			auto argument_expression = AS_ARGUMENT_EXPRESSION(argument);
+			_generator->attach_local(argument_expression->identifier->name, ((current_argument + 2) * 4));
+
+			current_argument++;
+		}
+
+
+		// NOTE: old method
 		// create a register allocation for every one of our arguments
-		std::vector<AutoStackAllocation> argument_allocations{ arity };
+		/*std::vector<AutoStackAllocation> argument_allocations{arity};
 
 		for (auto i = 0; i < arity; i++)
 		{
@@ -63,6 +74,7 @@ namespace hz
 
 			// NOTE: the 0-th local variable is stored at [ebp - 4]
 #pragma message("TODO: use a different size other than 4 for non-32-bit values (custom types)")
+
 			_generator->take_argument(argument_expression->identifier->name, 
 				argument_allocations[i].source()->read(), (i + 2) * 4);
 
@@ -71,7 +83,7 @@ namespace hz
 			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
 				argument_expression->identifier->name, NULL_TOKEN))->allocation 
 					= argument_allocations[i].source();
-		}
+		}*/
 
 		body->generate();
 

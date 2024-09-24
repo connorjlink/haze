@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 			_toolchain->init(filepath);
 		}
 		
-		catch (std::exception e)
+		catch (std::invalid_argument e)
 		{
 			_toolchain->panic();
 		}

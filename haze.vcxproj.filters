@@ -75,6 +75,9 @@
     <Filter Include="Source Files\Memory">
       <UniqueIdentifier>{40b958de-7eb1-4f01-b42e-3d4e7cf47798}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Assembly">
+      <UniqueIdentifier>{2b124717-431d-4075-8412-b790d2bca9eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -334,6 +337,12 @@
     </ClCompile>
     <ClCompile Include="ExpressionUtility.cpp">
       <Filter>Source Files\Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="X86Instruction.cpp">
+      <Filter>Source Files\Assembly</Filter>
+    </ClCompile>
+    <ClCompile Include="X86Linker.cpp">
+      <Filter>Source Files\Assembly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -675,6 +684,15 @@
     </ClInclude>
     <ClInclude Include="ExpressionUtility.h">
       <Filter>Source Files\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="X86Instruction.h">
+      <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="X86InstructionType.h">
+      <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="X86Linker.h">
+      <Filter>Source Files\Assembly</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

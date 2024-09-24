@@ -39,7 +39,7 @@ namespace hz
 		// sub esp, N
 
 		// NOTE: equivalent to -->
-		// enter N, 0
+		// enter 0, N (size of local variables)
 
 		byterange out{};
 
@@ -66,8 +66,10 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(ESP, EBP));
-		PUT(X86Builder::pop_r(EBP));
+		/*PUT(X86Builder::mov_rr(ESP, EBP));
+		PUT(X86Builder::pop_r(EBP));*/
+
+		PUT(X86Builder::leave());
 
 		return out;
 	}
@@ -81,6 +83,8 @@ namespace hz
 	byterange LocalVariableCommand::emit() const
 	{
 		byterange out{};
+
+
 
 #pragma message("TODO: local variable code generation")
 		return out;
@@ -101,12 +105,12 @@ namespace hz
 	}
 
 
-	IntermediateType MemoryReadCommand::itype() const
+	IntermediateType HeapReadCommand::itype() const
 	{
-		return IntermediateType::MEMORY_READ;
+		return IntermediateType::HEAP_READ;
 	}
 
-	byterange MemoryReadCommand::emit() const
+	byterange HeapReadCommand::emit() const
 	{
 		// mov destination, [pointer]
 
@@ -118,16 +122,50 @@ namespace hz
 	}
 
 
-	IntermediateType MemoryWriteCommand::itype() const
+	IntermediateType HeapWriteCommand::itype() const
 	{
-		return IntermediateType::MEMORY_WRITE;
+		return IntermediateType::HEAP_WRITE;
 	}
 
-	byterange MemoryWriteCommand::emit() const
+	byterange HeapWriteCommand::emit() const
+	{
+		// mov [pointer], destination
+
+		byterange out{};
+
+		PUT(X86Builder::mov_mr(_pointer, _source));
+
+		return out;
+	}
+
+
+	IntermediateType StackReadCommand::itype() const
+	{
+		return IntermediateType::STACK_READ;
+	}
+
+	byterange StackReadCommand::emit() const
 	{
 		byterange out{};
 
-#pragma message("TODO: memory write command code generation")
+		// mov destination, [ebp + offset]
+		PUT(X86Builder::mov_ro(_destination, _offset));
+
+		return out;
+	}
+
+
+	IntermediateType StackWriteCommand::itype() const
+	{
+		return IntermediateType::STACK_WRITE;
+	}
+
+	byterange StackWriteCommand::emit() const
+	{
+		byterange out{};
+
+		// mov [ebp + offset], destination
+		PUT(X86Builder::mov_or(_offset, _source));
 
 		return out;
 	}
@@ -140,13 +178,28 @@ namespace hz
 
 	byterange AddCommand::emit() const
 	{
-		// mov destination, lhs
-		// add destination, rhs
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::add_rr(_destination, _rhs));
+		if (_destination == _lhs)
+		{
+			// NOTE: the lhs is already in the destination register, so add rhs directly
+			// add destination, rhs
+			PUT(X86Builder::add_rr(_destination, _rhs));
+		}
+
+		else if (_destination == _rhs)
+		{
+			// NOTE: the rhs is already in the destination register, so add lhs directly
+			PUT(X86Builder::add_rr(_destination, _lhs));
+		}
+
+		else
+		{
+			// mov destination, lhs
+			// add destination, rhs
+			PUT(X86Builder::mov_rr(_destination, _lhs));
+			PUT(X86Builder::add_rr(_destination, _rhs));
+		}
 
 		return out;
 	}
@@ -159,13 +212,27 @@ namespace hz
 
 	byterange SubtractCommand::emit() const
 	{
-		// mov destination, lhs
-		// sub destination, rhs
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::sub_rr(_destination, _rhs));
+		if (_destination == _lhs)
+		{
+			// NOTE: the lhs is already in the destination register, so sub rhs directly
+			// sub destination, rhs
+			PUT(X86Builder::sub_rr(_destination, _rhs));
+		}
+		
+		// NOTE: since subtraction is anti-commutative swapping operand order here is less efficient than just moving
+		/*else if (_destination == _rhs)
+		{
+		}*/
+
+		else
+		{
+			// mov destination, lhs
+			// sub destination, rhs
+			PUT(X86Builder::mov_rr(_destination, _lhs));
+			PUT(X86Builder::sub_rr(_destination, _rhs));
+		}
 
 		return out;
 	}
@@ -178,13 +245,28 @@ namespace hz
 
 	byterange BitorCommand::emit() const
 	{
-		// mov destination, lhs
-		// or destination, rhs
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::or_rr(_destination, _rhs));
+		if (_destination == _lhs)
+		{
+			// NOTE: the lhs is already in the destination register, so or rhs directly
+			// or destination, rhs
+			PUT(X86Builder::or_rr(_destination, _rhs));
+		}
+
+		else if (_destination == _rhs)
+		{
+			// NOTE: the rhs is already in the destination register, so add lhs directly
+			PUT(X86Builder::or_rr(_destination, _lhs));
+		}
+
+		else
+		{
+			// mov destination, lhs
+			// or destination, rhs
+			PUT(X86Builder::mov_rr(_destination, _lhs));
+			PUT(X86Builder::or_rr(_destination, _rhs));
+		}
 
 		return out;
 	}
@@ -197,13 +279,28 @@ namespace hz
 
 	byterange BitandCommand::emit() const
 	{
-		// mov destination, lhs
-		// and destination, rhs
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::and_rr(_destination, _rhs));
+		if (_destination == _lhs)
+		{
+			// NOTE: the lhs is already in the destination register, so and rhs directly
+			// and destination, rhs
+			PUT(X86Builder::and_rr(_destination, _rhs));
+		}
+
+		else if (_destination == _rhs)
+		{
+			// NOTE: the rhs is already in the destination register, so and lhs directly
+			PUT(X86Builder::and_rr(_destination, _lhs));
+		}
+
+		else
+		{
+			// mov destination, lhs
+			// and destination, rhs
+			PUT(X86Builder::mov_rr(_destination, _lhs));
+			PUT(X86Builder::and_rr(_destination, _rhs));
+		}
 
 		return out;
 	}
@@ -216,13 +313,28 @@ namespace hz
 
 	byterange BitxorCommand::emit() const
 	{
-		// mov destination, lhs
-		// xor destination, rhs
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::xor_rr(_destination, _rhs));
+		if (_destination == _lhs)
+		{
+			// NOTE: the lhs is already in the destination register, so xor rhs directly
+			// xor destination, rhs
+			PUT(X86Builder::xor_rr(_destination, _rhs));
+		}
+
+		else if (_destination == _rhs)
+		{
+			// NOTE: the rhs is already in the destination register, so xor lhs directly
+			PUT(X86Builder::xor_rr(_destination, _lhs));
+		}
+
+		else
+		{
+			// mov destination, lhs
+			// xor destination, rhs
+			PUT(X86Builder::mov_rr(_destination, _lhs));
+			PUT(X86Builder::xor_rr(_destination, _rhs));
+		}
 
 		return out;
 	}
@@ -235,12 +347,15 @@ namespace hz
 
 	byterange IncrementCommand::emit() const
 	{
-		// mov destination, source
-		// inc destination
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _source));
+		if (_destination != _source)
+		{
+			// mov destination, source
+			PUT(X86Builder::mov_rr(_destination, _source));
+		}
+
+		// inc destination
 		PUT(X86Builder::inc_r(_destination));
 
 		return out;
@@ -254,12 +369,15 @@ namespace hz
 
 	byterange DecrementCommand::emit() const
 	{
-		// mov destination, source
-		// dec destination
-
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _source));
+		if (_destination != _source)
+		{
+			// mov destination, source
+			PUT(X86Builder::mov_rr(_destination, _source));
+		}
+
+		// dec destination
 		PUT(X86Builder::dec_r(_destination));
 
 		return out;
@@ -273,11 +391,14 @@ namespace hz
 
 	byterange CopyCommand::emit() const
 	{
-		// mov destination, src
 
 		byterange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _source));
+		if (_destination != _source)
+		{
+			// mov destination, src
+			PUT(X86Builder::mov_rr(_destination, _source));
+		}
 
 		return out;
 	}
@@ -341,19 +462,13 @@ namespace hz
 	{
 		byterange out{};
 
-		const auto target = _generator->query_branch_target(_function);
-#pragma message("TODO: function call command")
+		// NOTE: old method
+		//const auto target = _generator->query_branch_target(function);
 
-		PUT(X86Builder::call(target));
-
-		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
-		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
-
-		// only need to clean up the stack frame if one was created in the first place
-		if (function_symbol->locals_count != 0)
-		{
-			PUT(X86Builder::add_ri(ESP, 0x1000));
-		}
+		PUT(X86Builder::call(offset));
+#pragma message("TODO: function call command target linking")
+#pragma message("TODO: is it necessary to adjust ESP here?")
+		//PUT(X86Builder::add_ri(ESP, 0x1000));
 
 		return out;
 	}
@@ -370,7 +485,25 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::ret());
+		const auto& current_function = _generator->current_function();
+
+		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
+		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		const auto arity = function_symbol->arity();
+
+		if (arity == 0)
+		{
+			PUT(X86Builder::ret());
+		}
+
+		else
+		{
+#pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
+			// pop all arguments pushed by the caller
+			const auto bytes = arity * 4;
+			PUT(X86Builder::ret(bytes));
+		}
 
 		return out;
 	}
@@ -388,18 +521,34 @@ namespace hz
 
 		byterange out{};
 
+		// NOTE: old method
 		// NOTE: this will clobber anything currently in the EAX register
 		// but this should be OK since they are locals anyway
 
-#pragma message("TODO: clean this up so the intermediate command is not responsible for optimization")
-		
 		/*if (_location != EAX)
 		{
 			PUT(X86Builder::mov_rr(EAX, _location));
 		}*/
 		
-		//PUT(X86Bioldd)
-		PUT(X86Builder::ret());
+		const auto& current_function = _generator->current_function();
+
+		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
+		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		const auto arity = function_symbol->arity();
+
+		if (arity == 0)
+		{
+			PUT(X86Builder::ret());
+		}
+
+		else
+		{
+#pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
+			// pop all arguments pushed by the caller
+			const auto bytes = arity * 4;
+			PUT(X86Builder::ret(bytes));
+		}
 
 		return out;
 	}
@@ -412,7 +561,7 @@ namespace hz
 
 	byterange IfNotZeroCommand::emit() const
 	{
-		// test eax, eax
+		// test value, value
 		// je index
 
 		const auto origin = _generator->resolve_origin();
@@ -434,7 +583,7 @@ namespace hz
 
 	byterange IfZeroCommand::emit() const
 	{
-		// test eax, eax
+		// test value, value
 		// jne skip
 		// { code... }
 		//skip:
