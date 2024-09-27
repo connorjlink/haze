@@ -86,7 +86,7 @@ namespace hz
 		return symbol_table.at(name)->ytype();
 	}
 
-	Symbol* Parser::reference_symbol(SymbolType type, const std::string& name, Token& location, bool mark_visited)
+	Symbol* Parser::reference_symbol(SymbolType type, const std::string& name, const Token& location, bool mark_visited)
 	{
 		if (!_symbol_map.contains(type))
 		{

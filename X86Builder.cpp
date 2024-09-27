@@ -540,7 +540,7 @@ namespace hz
 	}
 
 
-	byterange X86Builder::call(std::uint32_t address)
+	byterange X86Builder::call_absolute(std::uint32_t address)
 	{
 		byterange out{};
 
@@ -548,6 +548,100 @@ namespace hz
 		PUT(BinaryUtilities::range8(0xFF));
 		PUT(BinaryUtilities::range8(0x15));
 		PUT(BinaryUtilities::range32(address));
+
+		return out;
+	}
+
+	byterange X86Builder::call_relative(std::uint32_t displacement)
+	{
+		byterange out{};
+
+		// E8 cd --> CALL rel32
+		PUT(BinaryUtilities::range8(0xE8));
+		PUT(BinaryUtilities::range32(displacement));
+
+		return out;
+	}
+
+	byterange X86Builder::jmp_relative(std::uint32_t displacement)
+	{
+		byterange out{};
+
+		// E9 cd --> JMP rel32
+		PUT(BinaryUtilities::range8(0xE9));
+		PUT(BinaryUtilities::range32(displacement));
+
+		return out;
+	}
+
+	byterange X86Builder::je_relative(std::uint32_t displacement)
+	{
+		byterange out{};
+
+		// 0F 84 cw/cd --> JE rel16/32
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x84));
+		PUT(BinaryUtilities::range32(displacement));
+
+		return out;
+	}
+
+	byterange X86Builder::jne_relative(std::uint32_t displacement)
+	{
+		byterange out{};
+
+		// 0F 85 cw/cd --> JNE rel16/32
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x85));
+		PUT(BinaryUtilities::range32(displacement));
+
+		return out;
+	}
+
+	byterange X86Builder::sete(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 94 --> SETE r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x94));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::setl(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 9C --> SETL r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x9C));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::setg(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 9F --> SETG r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x9F));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::movzx(std::uint8_t destination, std::uint8_t source)
+	{
+		byterange out{};
+
+		// 0F B6 /r --> MOVZX r32, r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0xB6));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, source)));
 
 		return out;
 	}

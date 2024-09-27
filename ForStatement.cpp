@@ -34,14 +34,14 @@ namespace hz
 
 		initialization->generate();
 
-		_generator->label(begin_for_label);
+		_generator->branch_label(begin_for_label);
 
 		// scoping so that the for body can re-use the condition register
 		{
 			AutoStackAllocation condition_allocation{};
 			condition->generate(condition_allocation.source());
 
-			_generator->check_ifnz(condition_allocation.source()->read(), end_for_label);
+			_generator->check_ifnz(end_for_label, condition_allocation.source()->read());
 		}
 
 		body->generate();
@@ -49,7 +49,7 @@ namespace hz
 
 		_generator->goto_command(begin_for_label);
 
-		_generator->label(end_for_label);
+		_generator->branch_label(end_for_label);
 	}
 
 	Statement* ForStatement::optimize()

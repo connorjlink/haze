@@ -5,6 +5,7 @@ import std;
 #include "BinaryConstants.h"
 #include "Generator.h"
 #include "Parser.h"
+#include "CompilerParser.h"
 #include "X86Builder.h"
 
 // Haze IntermediateCommand.cpp
@@ -21,7 +22,7 @@ namespace hz
 	{
 		//label:
 
-		_generator->resolve_branch_target_real(_label, _generator->resolve_origin());
+		_generator->resolve_branch_target_real(label, _generator->resolve_origin());
 
 		return {};
 	}
@@ -45,7 +46,17 @@ namespace hz
 
 		PUT(X86Builder::push_r(EBP));
 		PUT(X86Builder::mov_rr(EBP, ESP));
-		PUT(X86Builder::sub_ri(ESP, _bytes));
+
+		const auto& current_function = _generator->current_function();
+
+		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		if (function_symbol->locals_count > 0)
+		{
+			// set up a fixed-size stack frame of 4096 bytes
+			PUT(X86Builder::sub_ri(ESP, _bytes));
+		}
 
 		return out;
 	}
@@ -66,10 +77,32 @@ namespace hz
 
 		byterange out{};
 
+		// NOTE: old method
 		/*PUT(X86Builder::mov_rr(ESP, EBP));
 		PUT(X86Builder::pop_r(EBP));*/
 
 		PUT(X86Builder::leave());
+		
+		const auto& current_function = _generator->current_function();
+
+		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
+		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		const auto arity = function_symbol->arity();
+
+		if (arity == 0)
+		{
+			PUT(X86Builder::ret());
+		}
+
+		else
+		{
+#pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
+			// pop all arguments pushed by the caller
+			const auto bytes = arity * 4;
+			PUT(X86Builder::ret(bytes));
+		}
+
 
 		return out;
 	}
@@ -170,10 +203,15 @@ namespace hz
 		return out;
 	}
 
-
-	IntermediateType AddCommand::itype() const
+	IntermediateType BinaryCommand::itype() const
 	{
-		return IntermediateType::ADD;
+		return IntermediateType::BINARY;
+	}
+
+
+	BinaryCommandType AddCommand::btype() const
+	{
+		return BinaryCommandType::ADD;
 	}
 
 	byterange AddCommand::emit() const
@@ -205,9 +243,9 @@ namespace hz
 	}
 
 
-	IntermediateType SubtractCommand::itype() const
+	BinaryCommandType SubtractCommand::btype() const
 	{
-		return IntermediateType::SUBTRACT;
+		return BinaryCommandType::SUBTRACT;
 	}
 
 	byterange SubtractCommand::emit() const
@@ -238,9 +276,9 @@ namespace hz
 	}
 
 
-	IntermediateType BitorCommand::itype() const
+	BinaryCommandType BitorCommand::btype() const
 	{
-		return IntermediateType::BITOR;
+		return BinaryCommandType::BITOR;
 	}
 
 	byterange BitorCommand::emit() const
@@ -272,9 +310,9 @@ namespace hz
 	}
 
 
-	IntermediateType BitandCommand::itype() const
+	BinaryCommandType BitandCommand::btype() const
 	{
-		return IntermediateType::BITAND;
+		return BinaryCommandType::BITAND;
 	}
 
 	byterange BitandCommand::emit() const
@@ -306,9 +344,9 @@ namespace hz
 	}
 
 
-	IntermediateType BitxorCommand::itype() const
+	BinaryCommandType BitxorCommand::btype() const
 	{
-		return IntermediateType::BITXOR;
+		return BinaryCommandType::BITXOR;
 	}
 
 	byterange BitxorCommand::emit() const
@@ -335,6 +373,75 @@ namespace hz
 			PUT(X86Builder::mov_rr(_destination, _lhs));
 			PUT(X86Builder::xor_rr(_destination, _rhs));
 		}
+
+		return out;
+	}
+
+
+	BinaryCommandType EqualityCommand::btype() const
+	{
+		return BinaryCommandType::EQUALITY;
+	}
+
+	byterange EqualityCommand::emit() const
+	{
+		// cmp lhs, rhs
+		// sete destination
+		// movzx destination, destination
+
+		byterange out{};
+
+		PUT(X86Builder::cmp_rr(_lhs, _rhs));
+		PUT(X86Builder::sete(_destination));
+		PUT(X86Builder::movzx(_destination, _destination));
+
+		return out;
+	}
+
+
+	BinaryCommandType LessCommand::btype() const
+	{
+		return BinaryCommandType::LESS;
+	}
+
+	byterange LessCommand::emit() const
+	{
+		// NOTE: comparison is for two SIGNED integers
+		// use set(above|below) for unsigned comparisons
+
+		// cmp lhs, rhs
+		// setl destination
+		// movzx destination, destination
+
+		byterange out{};
+
+		PUT(X86Builder::cmp_rr(_lhs, _rhs));
+		PUT(X86Builder::setl(_destination));
+		PUT(X86Builder::movzx(_destination, _destination));
+
+		return out;
+	}
+
+
+	BinaryCommandType GreaterCommand::btype() const
+	{
+		return BinaryCommandType::GREATER;
+	}
+
+	byterange GreaterCommand::emit() const
+	{
+		// NOTE: comparison is for two SIGNED integers
+		// use set(above|below) for unsigned comparisons
+
+		// cmp lhs, rhs
+		// setg destination
+		// movzx destination, destination
+
+		byterange out{};
+
+		PUT(X86Builder::cmp_rr(_lhs, _rhs));
+		PUT(X86Builder::setg(_destination));
+		PUT(X86Builder::movzx(_destination, _destination));
 
 		return out;
 	}
@@ -453,9 +560,15 @@ namespace hz
 	}
 
 
-	IntermediateType CallFunctionCommand::itype() const
+	IntermediateType BranchCommand::itype() const
 	{
-		return IntermediateType::CALL_FUNCTION;
+		return IntermediateType::BRANCH;
+	}
+
+
+	BranchCommandType CallFunctionCommand::btype() const
+	{
+		return BranchCommandType::CALL_FUNCTION;
 	}
 
 	byterange CallFunctionCommand::emit() const
@@ -465,27 +578,34 @@ namespace hz
 		// NOTE: old method
 		//const auto target = _generator->query_branch_target(function);
 
-		PUT(X86Builder::call(offset));
-#pragma message("TODO: function call command target linking")
-#pragma message("TODO: is it necessary to adjust ESP here?")
+		// NOTE: old method
+		// now, the callee is responsible for popping function parameters
+		// which is done by `ret imm16` instead of manually `sub`-bing here
 		//PUT(X86Builder::add_ri(ESP, 0x1000));
+
+		PUT(X86Builder::call_relative(target_offset));
 
 		return out;
 	}
 
 
-	IntermediateType VoidReturnCommand::itype() const
+	BranchCommandType VoidReturnCommand::btype() const
 	{
-		return IntermediateType::VOID_RETURN;
+		return BranchCommandType::VOID_RETURN;
 	}
 
 	byterange VoidReturnCommand::emit() const
 	{
+		// NOTE: old method
 		// ret
+
+		// jmp end_function_label
 
 		byterange out{};
 
-		const auto& current_function = _generator->current_function();
+		// NOTE: old methood
+		// tearing down the stack frame is now done in `LeaveScopeCommand`
+		/*const auto& current_function = _generator->current_function();
 
 		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
 		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
@@ -503,21 +623,26 @@ namespace hz
 			// pop all arguments pushed by the caller
 			const auto bytes = arity * 4;
 			PUT(X86Builder::ret(bytes));
-		}
+		}*/
+
+		PUT(X86Builder::jmp_relative(target_offset));
 
 		return out;
 	}
 
 
-	IntermediateType ValueReturnCommand::itype() const
+	BranchCommandType ValueReturnCommand::btype() const
 	{
-		return IntermediateType::VALUE_RETURN;
+		return BranchCommandType::VALUE_RETURN;
 	}
 
 	byterange ValueReturnCommand::emit() const
 	{
+		// NOTE: old method
 		// mov eax, location
 		// ret
+
+		// jmp end_function_label
 
 		byterange out{};
 
@@ -530,7 +655,9 @@ namespace hz
 			PUT(X86Builder::mov_rr(EAX, _location));
 		}*/
 		
-		const auto& current_function = _generator->current_function();
+		// NOTE: old method
+		// now this is done when tearing down the stack frame in `LeaveScopeCommand`
+		/*const auto& current_function = _generator->current_function();
 
 		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
 		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
@@ -548,69 +675,64 @@ namespace hz
 			// pop all arguments pushed by the caller
 			const auto bytes = arity * 4;
 			PUT(X86Builder::ret(bytes));
-		}
+		}*/
+
+		PUT(X86Builder::jmp_relative(target_offset));
 
 		return out;
 	}
 
 
-	IntermediateType IfNotZeroCommand::itype() const
+	BranchCommandType IfNotZeroCommand::btype() const
 	{
-		return IntermediateType::IF_NOT_ZERO;
+		return BranchCommandType::IF_NOT_ZERO;
 	}
 
 	byterange IfNotZeroCommand::emit() const
 	{
 		// test value, value
-		// je index
-
-		const auto origin = _generator->resolve_origin();
-		const auto target = _index;
+		// jne target_offset
 
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
-		//PUT(X86Builder::je(_gener))
-#pragma message("TODO: ifnz codegen")
+		PUT(X86Builder::jne_relative(target_offset));
 
 		return out;
 	}
 
-	IntermediateType IfZeroCommand::itype() const
+
+	BranchCommandType IfZeroCommand::btype() const
 	{
-		return IntermediateType::IF_ZERO;
+		return BranchCommandType::IF_ZERO;
 	}
 
 	byterange IfZeroCommand::emit() const
 	{
 		// test value, value
-		// jne skip
-		// { code... }
-		//skip:
-
-		byterange code{};
-
+		// je target_offset
 
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
-#pragma message("TODO: ifz codegen")
-
+		PUT(X86Builder::je_relative(target_offset));
 
 		return out;
 	}
 
 
-	IntermediateType GotoCommand::itype() const
+	BranchCommandType GotoCommand::btype() const
 	{
-		return IntermediateType::GOTO;
+		return BranchCommandType::GOTO;
 	}
 
 	byterange GotoCommand::emit() const
 	{
+		// jmp target_offset
+
 		byterange out{};
 
-#pragma message("TODO: code generation for goto!")
+		PUT(X86Builder::jmp_relative(target_offset));
 
 		return out;
 	}
@@ -638,12 +760,13 @@ namespace hz
 
 	byterange PrintMessageCommand::emit() const
 	{
-		// WriteConsoleA(STDHANDLE, &string, strlen, NULL, NULL)
+		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL)
 		// push NULL
 		// push NULL
 		// push strlen
 		// push &string
-		// push [0x004033F0] ; provided console stdout handle
+		// push [0x004032F0] ; provided console stdout handle
+		// call [WriteConsole]
 
 		byterange out{};
 
@@ -651,9 +774,8 @@ namespace hz
 		PUT(X86Builder::push_i8(0x00));
 		PUT(X86Builder::push_i8(_length));
 		PUT(X86Builder::push_i32(_pointer));
-		PUT(X86Builder::push_m(0x004033F0));
-
-#pragma message("TODO: finish printMessage codegen")
+		PUT(X86Builder::push_m(STDOUT_HANDLE));
+		PUT(X86Builder::call_absolute(PROCEDURE(writeconsole_iat_va)));
 
 		return out;
 	}
@@ -666,8 +788,51 @@ namespace hz
 
 	byterange PrintNumberCommand::emit() const
 	{
-#pragma message("TODO: print number codegen")
-		return {};
+		// wnsprintfA(buffer, 0xF, "%d\n", _value)
+		// push value
+		// push format_string
+		// push buffer_size
+		// push buffer
+		// call [wnsprintfA]
+
+		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL)
+		// push NULL
+		// push NULL
+		// push strlen
+		// push &string
+		// push [0x4032F0] ; provided console stdout handle
+		// call [WriteConsole]
+
+		byterange out{};
+
+		PUT(X86Builder::push_r(EAX));
+
+		// print --> "Program output: "
+		// HACK: TEMP
+		PUT(X86Builder::push_i8(0x00));
+		PUT(X86Builder::push_i8(0x00));
+		PUT(X86Builder::push_i8(16));
+		PUT(X86Builder::push_i32(PROGRAM_OUTPUT_STRING));
+		PUT(X86Builder::push_m(STDOUT_HANDLE));
+		PUT(X86Builder::call_absolute(PROCEDURE(writeconsole_iat_va)));
+		// HACK: TEMP
+
+		PUT(X86Builder::pop_r(EAX));
+
+		PUT(X86Builder::push_r(_value));
+		PUT(X86Builder::push_i32(NUMBER_FORMAT_STRING));
+		PUT(X86Builder::push_i8(PRINT_BUFFER_SIZE));
+		PUT(X86Builder::push_i32(PRINT_BUFFER));
+		PUT(X86Builder::call_absolute(PROCEDURE(wnsprintfa_iat_va)));
+
+		PUT(X86Builder::push_i8(0x00));
+		PUT(X86Builder::push_i8(0x00));
+		PUT(X86Builder::push_i8(PRINT_BUFFER_SIZE));
+		PUT(X86Builder::push_i32(PRINT_BUFFER));
+		PUT(X86Builder::push_m(STDOUT_HANDLE));
+		PUT(X86Builder::call_absolute(PROCEDURE(writeconsole_iat_va)));
+
+		return out;
 	}
 
 
@@ -679,12 +844,12 @@ namespace hz
 	byterange ExitProgramCommand::emit() const
 	{
 		// push code
-		// call [0x402068] (ExitProcess)
+		// call [ExitProcess]
 
 		byterange out{};
 
 		PUT(X86Builder::push_r(_code));
-		PUT(X86Builder::call(PROCEDURE(exitprocess_iat_va)));
+		PUT(X86Builder::call_absolute(PROCEDURE(exitprocess_iat_va)));
 
 		return out;
 	}

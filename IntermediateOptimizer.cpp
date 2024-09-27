@@ -28,6 +28,16 @@ namespace hz
 			}
 		}*/
 
+		if (function_symbol->name == "main")
+		{
+			auto penultimate = *(_ir.end() - 2);
+			auto last = *(_ir.end() - 1);
+
+			penultimate->marked_for_deletion = true;
+			last->marked_for_deletion = true;
+		}
+
+
 		// NOTE: old method
 		// if there are no local variables, there is no need to push a stack frame
 		/*if (function_symbol->locals_count == 0)

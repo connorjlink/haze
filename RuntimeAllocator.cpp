@@ -113,4 +113,18 @@ namespace hz
 		const auto offset = _locals_offsets[current_function].at(name);
 		_generator->stack_read(destination, offset);
 	}
+
+	void RuntimeAllocator::update_local(const std::string& name, register_t source)
+	{
+		const auto& current_function = _generator->current_function();
+
+		if (!_locals_offsets[current_function].contains(name))
+		{
+			::not_defined_error(name, NULL_TOKEN);
+			return;
+		}
+
+		const auto offset = _locals_offsets[current_function].at(name);
+		_generator->stack_write(offset, source);
+	}
 }

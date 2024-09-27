@@ -344,6 +344,9 @@
     <ClCompile Include="X86Linker.cpp">
       <Filter>Source Files\Assembly</Filter>
     </ClCompile>
+    <ClCompile Include="CommonErrors.cpp">
+      <Filter>Source Files\Error</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -694,6 +697,15 @@
     <ClInclude Include="X86Linker.h">
       <Filter>Source Files\Assembly</Filter>
     </ClInclude>
+    <ClInclude Include="BranchCommandType.h">
+      <Filter>Source Files\Intermediate</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryCommandType.h">
+      <Filter>Source Files\Intermediate</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonErrors.h">
+      <Filter>Source Files\Error</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -743,5 +755,6 @@
     <None Include="test.hz">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="fibonacci.hz" />
   </ItemGroup>
 </Project>

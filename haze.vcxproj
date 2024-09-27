@@ -30,6 +30,7 @@
     <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="X86Instruction.cpp" />
     <ClCompile Include="X86Linker.cpp" />
     <ClInclude Include="AllocationType.h" />
@@ -139,6 +140,9 @@
     <ClCompile Include="RandomUtility.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClInclude Include="BinaryCommandType.h" />
+    <ClInclude Include="BranchCommandType.h" />
+    <ClInclude Include="CommonErrors.h" />
     <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitStatement.h" />
     <ClInclude Include="ExpressionUtility.h" />
@@ -284,6 +288,7 @@
   <ItemGroup>
     <None Include="chatgpt_cdecl_example.md" />
     <None Include="common.hz" />
+    <None Include="fibonacci.hz" />
     <None Include="fibonacci.hzi" />
     <None Include="README.md" />
     <None Include="sample.hzi" />

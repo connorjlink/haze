@@ -15,6 +15,7 @@ import std;
 #include "Statement.h"
 #include "Symbol.h"
 #include "X86Builder.h"
+#include "CommonErrors.h"
 #include "ErrorReporter.h"
 
 // Haze Function.cpp
@@ -39,6 +40,8 @@ namespace hz
 
 	void Function::generate(Allocation*)
 	{
+		
+
 		_generator->begin_function(name);
 
 		// ensure each function implicitly has its own scope block
@@ -87,17 +90,24 @@ namespace hz
 
 		body->generate();
 
+		//_generator->branch_label();
+
 		// NOTE: old method
 		//_generator->end_scope();
 
 		if (_parser->ptype() == ParserType::COMPILER)
 		{
-			_generator->label(AS_COMPILER_PARSER(_parser)->_function_label_map.at(name));
+			auto compiler_parser = AS_COMPILER_PARSER(_parser);
+
+			const auto end_function_label = compiler_parser->_function_label_map.at(name);
+			_generator->branch_label(end_function_label);
+
+			_generator->end_scope();
 		}
 
 		else
 		{
-			_error_reporter->post_error(std::format("[internal error] invalid parser type `{}`", _parser_type_map.at(_parser->ptype())), _token);
+			CommonErrors::invalid_parser_type(_parser->ptype(), _token);
 			return;
 		}
 		

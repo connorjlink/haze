@@ -17,6 +17,9 @@ namespace hz
 		byterange build_stop(std::uint8_t);
 
 	public:
+		static byterange emit_init();
+
+	public:
 		virtual byterange emit_move(register_t, register_t) final override;
 		virtual byterange emit_load(register_t, std::uint32_t) final override;
 		virtual byterange emit_copy(register_t, std::uint8_t) final override;

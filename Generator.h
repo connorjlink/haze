@@ -28,7 +28,6 @@ namespace hz
 
 	private:
 		std::vector<Linkable> _linkables;
-		std::int32_t _current_function;
 
 	private:
 		std::unordered_map<std::uint32_t, std::uint32_t> _string_length_map;
@@ -40,7 +39,11 @@ namespace hz
 		void begin_function(std::string);
 
 	public:
-		void label(const std::string&);
+		// NOTE: old method
+		void label_command(const std::string&);
+
+	public:
+		void branch_label(const std::string&);
 
 	public:
 		// associate a command object with its branch target label
@@ -48,7 +51,7 @@ namespace hz
 		// discover the IntermediateCommand index of a particular label
 		index_t query_branch_target(const std::string&);
 		// set the real binary code offset of a particular label
-		void resolve_branch_target_real(const std::string&, std::uint32_t);
+		void resolve_branch_target_real(const std::string&, std::int32_t);
 
 	public:
 		// push a new empty scope with a unique local variable set
@@ -69,6 +72,9 @@ namespace hz
 		void destroy_local(const std::string&);
 		// read a defined local variable into a target register
 		void read_local(register_t, const std::string&);
+		// update a local variable with the contents of another register (re-assignment)
+		void update_local(const std::string&, register_t);
+
 
 	public:
 		// push a new variable public to the entire program
@@ -100,6 +106,18 @@ namespace hz
 		void compute_bitxor(register_t, register_t, register_t);
 
 	public:
+		// destination = lhs == rhs
+		void compute_compare(register_t, register_t, register_t);
+		// destination = lhs < rhs
+		void compute_less(register_t, register_t, register_t);
+		// destination = lhs > rhs
+		void compute_greater(register_t, register_t, register_t);
+
+	private:
+		// destination = (bool)source
+		void compute_bool(register_t, register_t);
+
+	public:
 		// destination = source + 1
 		void compute_increment(register_t, register_t);
 		// destination = source - 1
@@ -109,7 +127,7 @@ namespace hz
 		// destination = source
 		void make_copy(register_t, register_t);
 		// destination = immediate
-		void make_immediate(register_t, std::uint32_t);
+		void make_immediate(register_t, std::int32_t);
 
 	public:
 		// position a new function argument for the next call
@@ -121,24 +139,28 @@ namespace hz
 		// link execution to a user-defined function
 		void call_function(const std::string&, const arguments_t&, Allocation*);
 		// return from a call to a `nvr` function
-		void make_return();
+		void make_return(const std::string&);
+		// return from a call to a `nvr` function
+		void make_return(std::int32_t);
 		// return from a call to a value-typed function
-		void make_return(register_t);
+		void make_return(const std::string&, register_t);
+		// return from a call to a value-typed function
+		void make_return(std::int32_t, register_t);
 
 	public:
-		// { condition, index to which to jump }
-		void check_ifnz(register_t, std::int32_t);
-		// { condition, label to which to jump }
-		void check_ifnz(register_t, const std::string&);
+		// { target_offset, condition }
+		void check_ifnz(std::int32_t, register_t);
+		// { label, condition }
+		void check_ifnz(const std::string&, register_t);
 
 	public:
-		// { condition, index to which to jump }
-		void check_ifz(register_t, std::int32_t);
-		// { condition, label to which to jump }
-		void check_ifz(register_t, const std::string&);
+		// { target_offset, condition }
+		void check_ifz(std::int32_t, register_t);
+		// { label, condition }
+		void check_ifz(const std::string&, register_t);
 
 	public:
-		// index to which to jump
+		// target_offset
 		void goto_command(std::int32_t);
 		// label to which to jump
 		void goto_command(const std::string&);

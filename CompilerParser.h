@@ -17,26 +17,26 @@ namespace hz
         std::unordered_map<std::string, std::string> _function_label_map;
 
     private:
-        Statement* parse_statement(std::string);
-        std::vector<Statement*> parse_statements(std::string);
+        Statement* parse_statement(const std::string&);
+        std::vector<Statement*> parse_statements(const std::string&);
 
     protected:
-        Statement* parse_null_statement(std::string);
-        Statement* parse_variabledeclaration_statement(std::string);
-        Statement* parse_compound_statement(std::string);
-        Statement* parse_return_statement(std::string);
-        Statement* parse_inline_asm_statement(std::string);
-        Statement* parse_while_statement(std::string);
-        Statement* parse_for_statement(std::string);
-        Statement* parse_if_statement(std::string);
-        Statement* parse_expression_statement(std::string);
+        Statement* parse_null_statement(const std::string&);
+        Statement* parse_variabledeclaration_statement(const std::string&);
+        Statement* parse_compound_statement(const std::string&);
+        Statement* parse_return_statement(const std::string&);
+        Statement* parse_inline_asm_statement(const std::string&);
+        Statement* parse_while_statement(const std::string&);
+        Statement* parse_for_statement(const std::string&);
+        Statement* parse_if_statement(const std::string&);
+        Statement* parse_expression_statement(const std::string&);
 
     // interpreter-specific functionality
     // but it needs to interface with statements, so we include it in the compiler as well
     private:
-        Statement* parse_print_statement(std::string);
-        Statement* parse_hook_statement(std::string);
-        Statement* parse_unhook_statement(std::string);
+        Statement* parse_print_statement(const std::string&);
+        Statement* parse_hook_statement(const std::string&);
+        Statement* parse_unhook_statement(const std::string&);
 
     public:
         TypeSpecifier parse_type_specifier();

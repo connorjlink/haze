@@ -115,7 +115,7 @@ namespace hz
 			// call WriteConsole()
 			PUT(BinaryUtilities::range8(0xFF));
 			PUT(BinaryUtilities::range8(0x15));
-			PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
+			PUT(BinaryUtilities::range32(PROCEDURE(writeconsole_iat_va)));
 
 
 			// Convert our one? digit to ascii
@@ -415,7 +415,7 @@ namespace hz
 	}
 
 
-	byterange emit_init()
+	byterange X86Emitter::emit_init()
 	{
 		byterange out{};
 
@@ -435,7 +435,7 @@ namespace hz
 		}
 
 		// call GetStdHandle
-		PUT(X86Builder::call(PROCEDURE(getstdhandle_iat_va)));
+		PUT(X86Builder::call_absolute(PROCEDURE(getstdhandle_iat_va)));
 		// NOTE: old method
 		//PUT(BinaryUtilities::range32(0x402080));
 
@@ -463,7 +463,7 @@ namespace hz
 		PUT(X86Builder::push_r(EAX));
 
 		// call WriteConsoleA
-		PUT(X86Builder::call(PROCEDURE(writeconsole_iat_va)));
+		PUT(X86Builder::call_absolute(PROCEDURE(writeconsole_iat_va)));
 		// NOTE: old method
 		//PUT(BinaryUtilities::range32(0x4020A0));
 

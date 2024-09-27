@@ -9,6 +9,8 @@ import std;
 #include "Constants.h"
 #include "CommandLineOptions.h"
 #include "IntermediateOptimizer.h"
+#include "X86Linker.h"
+#include "X86Emitter.h"
 #include "ErrorContext.h"
 #include "ErrorReporter.h"
 
@@ -45,33 +47,33 @@ namespace hz
 			linkable.ir = std::move(ir_optimized);
 		}
 
-		byterange out{};
-
+		// NOTE: old method;
+		/*byterange out{};
 		for (auto& linkable : linkables)
 		{
 			for (auto command : linkable.ir)
 			{
 				out.append_range(command->emit());
 			}
-		}
+		}*/
 
-		for (auto byte : out)
+		auto linker = new X86Linker{ std::move(linkables) };
+		auto executable = X86Emitter::emit_init();
+		executable.append_range(linker->link());
+
+		/*for (auto byte : out)
 		{
 			std::print("{:02X} ", byte);
-		}
+		}*/
 
 
-		if (_error_reporter->had_error())
+		/*if (_error_reporter->had_error())
 		{
-			//common_finalize(std::move(executable), _filepath);
+			common_finalize(std::move(executable), _filepath);
 			return;
-		}
+		}*/
 
-		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);
-		_error_reporter->close_context();
-
-#if 0
-		_linker = new CompilerLinker{ std::move(linkables), _filepath };
+		//_linker = new CompilerLinker{ std::move(linkables), _filepath };
 
 		auto entrypoint = HALF_DWORD_MAX;
 
@@ -83,8 +85,8 @@ namespace hz
 		}
 
 		// shared environment with Assembler/Compiler
-		auto image = common_link(entrypoint);
-		auto executable = common_emit(std::move(image), _filepath);
+		/*auto image = common_link(entrypoint);
+		auto executable = common_emit(std::move(image), _filepath);*/
 
 		if (!_error_reporter->had_error())
 		{
@@ -93,6 +95,5 @@ namespace hz
 
 		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);
 		_error_reporter->close_context();
-#endif
 	}
 }

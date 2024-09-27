@@ -32,14 +32,14 @@ namespace hz
 		const auto begin_else_label = std::format("begin_else_{:03d}", uuid);
 		const auto end_else_label = std::format("end_else_{:03d}", uuid);
 
-		_generator->label(begin_if_label);
+		_generator->branch_label(begin_if_label);
 
 		// scoping so that the if body can re-use the condition register
 		{
 			AutoStackAllocation condition_allocation{};
 			condition->generate(condition_allocation.source());
 
-			_generator->check_ifz(condition_allocation.source()->read(), begin_else_label);
+			_generator->check_ifz(begin_else_label, condition_allocation.source()->read());
 		}
 
 		if_body->generate();
@@ -49,12 +49,12 @@ namespace hz
 			_generator->goto_command(end_else_label);
 		}
 
-		_generator->label(begin_else_label);
+		_generator->branch_label(begin_else_label);
 
 		if (else_body != nullptr)
 		{
 			else_body->generate();
-			_generator->label(end_else_label);
+			_generator->branch_label(end_else_label);
 		}
 	}
 

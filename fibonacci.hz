@@ -1,0 +1,22 @@
+function nvr foo = (byte iterations)
+{
+	byte n0 = 0;
+	byte n1 = 1;
+
+	byte iteration = 0;
+	while (iteration < iterations)
+	{
+		print(n0);
+		byte n2 = n0 + n1;
+		n0 = n1;
+		n1 = n2;
+
+		iteration = iteration + 1;
+	}
+}
+
+function byte main = ()
+{
+	foo(20);
+	return 0;
+}

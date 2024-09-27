@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include "Context.h"
 #include "InstructionEncoding.h"
+#include "BranchCommandType.h"
+#include "BinaryCommandType.h"
 #include "IntermediateType.h"
 
 // Haze IntermediateCommand.h
@@ -15,6 +17,7 @@ namespace hz
 	{
 	public:
 		std::int32_t offset;
+		std::uint8_t size;
 		bool marked_for_deletion = false;
 
 	public:
@@ -28,12 +31,12 @@ namespace hz
 
 	class BranchLabelCommand : public IntermediateCommand
 	{
-	private:
-		std::string _label;
+	public:
+		std::string label;
 
 	public:
 		BranchLabelCommand(const std::string& label)
-			: _label{ label }
+			: label{ label }
 		{
 		}
 
@@ -169,83 +172,99 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
-	class AddCommand : public IntermediateCommand
+	class BinaryCommand : public IntermediateCommand
 	{
-	private:
+	protected:
 		register_t _lhs, _rhs, _destination;
 
 	public:
-		AddCommand(register_t lhs, register_t rhs, register_t destination)
+		BinaryCommand(register_t lhs, register_t rhs, register_t destination)
 			: _lhs{ lhs }, _rhs{ rhs }, _destination{ destination }
 		{
 		}
 
 	public:
 		virtual IntermediateType itype() const final override;
+		virtual BinaryCommandType btype() const = 0;
+	};
+
+	class AddCommand : public BinaryCommand
+	{
+	public:
+		using BinaryCommand::BinaryCommand;
+
+	public:
+		virtual BinaryCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class SubtractCommand : public IntermediateCommand
+	class SubtractCommand : public BinaryCommand
 	{
-	private:
-		register_t _lhs, _rhs, _destination;
+	public:
+		using BinaryCommand::BinaryCommand;
 
 	public:
-		SubtractCommand(register_t lhs, register_t rhs, register_t destination)
-			: _lhs{ lhs }, _rhs{ rhs }, _destination{ destination }
-		{
-		}
-
-	public:
-		virtual IntermediateType itype() const final override;
+		virtual BinaryCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class BitorCommand : public IntermediateCommand
+	class BitorCommand : public BinaryCommand
 	{
-	private:
-		register_t _lhs, _rhs, _destination;
+	public:
+		using BinaryCommand::BinaryCommand;
 
 	public:
-		BitorCommand(register_t lhs, register_t rhs, register_t destination)
-			: _lhs{ lhs }, _rhs{ rhs }, _destination{ destination }
-		{
-		}
-
-	public:
-		virtual IntermediateType itype() const final override;
+		virtual BinaryCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class BitandCommand : public IntermediateCommand
+	class BitandCommand : public BinaryCommand
 	{
-	private:
-		register_t _lhs, _rhs, _destination;
+	public:
+		using BinaryCommand::BinaryCommand;
 
 	public:
-		BitandCommand(register_t lhs, register_t rhs, register_t destination)
-			: _lhs{ lhs }, _rhs{ rhs }, _destination{ destination }
-		{
-		}
-
-	public:
-		virtual IntermediateType itype() const final override;
+		virtual BinaryCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class BitxorCommand : public IntermediateCommand
+	class BitxorCommand : public BinaryCommand
 	{
-	private:
-		register_t _lhs, _rhs, _destination;
+	public:
+		using BinaryCommand::BinaryCommand;
 
 	public:
-		BitxorCommand(register_t lhs, register_t rhs, register_t destination)
-			: _lhs{ lhs }, _rhs{ rhs }, _destination{ destination }
-		{
-		}
+		virtual BinaryCommandType btype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class EqualityCommand : public BinaryCommand
+	{
+	public:
+		using BinaryCommand::BinaryCommand;
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual BinaryCommandType btype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class LessCommand : public BinaryCommand
+	{ 
+	public:
+		using BinaryCommand::BinaryCommand;
+
+	public:
+		virtual BinaryCommandType btype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class GreaterCommand : public BinaryCommand
+	{
+	public:
+		using BinaryCommand::BinaryCommand;
+
+	public:
+		virtual BinaryCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
@@ -301,10 +320,10 @@ namespace hz
 	{
 	private:
 		register_t _destination;
-		std::uint32_t _immediate;
+		std::int32_t _immediate;
 
 	public:
-		MakeImmediateCommand(register_t destination, std::uint32_t immediate)
+		MakeImmediateCommand(register_t destination, std::int32_t immediate)
 			: _destination{ destination }, _immediate{ immediate }
 		{
 		}
@@ -350,100 +369,137 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
-	class CallFunctionCommand : public IntermediateCommand
+	class BranchCommand : public IntermediateCommand
 	{
 	public:
-		std::string function;
-		std::uint32_t offset;
+		// jump destination
+		std::string label;
+		std::int32_t target_offset;
 
 	public:
-		CallFunctionCommand(const std::string& function)
-			: function{ function }, offset{ 0 }
+		BranchCommand(const std::string& label)
+			: label{ label }, target_offset{ TEMP_ADDRESS }
+		{
+		}
+
+		BranchCommand(std::int32_t target_offset)
+			: target_offset{ target_offset }
 		{
 		}
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual BranchCommandType btype() const = 0;
 	};
 
-	class VoidReturnCommand : public IntermediateCommand
+	class CallFunctionCommand : public BranchCommand
 	{
 	public:
-		VoidReturnCommand() = default;
+		CallFunctionCommand(const std::string& label)
+			: BranchCommand{ label }
+		{
+		}
+
+		CallFunctionCommand(std::int32_t target_offset)
+			: BranchCommand{ target_offset }
+		{
+		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual BranchCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class ValueReturnCommand : public IntermediateCommand
+	class VoidReturnCommand : public BranchCommand
+	{
+	public:
+		using BranchCommand::BranchCommand;
+
+	public:
+		virtual BranchCommandType btype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class ValueReturnCommand : public BranchCommand
 	{
 	private:
 		register_t _location;
 
 	public:
-		ValueReturnCommand(register_t location)
-			: _location{ location }
+		ValueReturnCommand(const std::string& label, register_t location)
+			: BranchCommand{ label }, _location { location }
+		{
+		}
+
+		ValueReturnCommand(std::int32_t target_offset, register_t location)
+			: BranchCommand{ target_offset }, _location{ location }
 		{
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual BranchCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class IfNotZeroCommand : public IntermediateCommand
+	class IfNotZeroCommand : public BranchCommand
 	{
 	private:
 		// location storing the value to compare
 		register_t _value;
-		// conditional code
-		std::int32_t _index;
 
 	public:
-		IfNotZeroCommand(register_t value, std::int32_t index)
-			: _value{ value }, _index{ index }
+		IfNotZeroCommand(const std::string& label, register_t value)
+			: BranchCommand{ label }, _value{ value }
+		{
+		}
+
+		IfNotZeroCommand(std::int32_t target_offset, register_t value)
+			: BranchCommand{ target_offset }, _value{ value }
 		{
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual BranchCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class IfZeroCommand : public IntermediateCommand
+	class IfZeroCommand : public BranchCommand
 	{
 	private:
 		// location storing the value to compare
 		register_t _value;
-		// conditional code
-		std::int32_t _index;
 
 	public:
-		IfZeroCommand(register_t value, std::int32_t index)
-			: _value{ value }, _index{ index }
+		IfZeroCommand(const std::string& label, register_t value)
+			: BranchCommand{ label }, _value{ value }
+		{
+		}
+
+		IfZeroCommand(std::int32_t target_offset, register_t value)
+			: BranchCommand{ target_offset }, _value{ value }
 		{
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual BranchCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 
-	class GotoCommand : public IntermediateCommand
+	class GotoCommand : public BranchCommand
 	{
-	private:
-		std::int32_t _target;
-
 	public:
-		GotoCommand(std::int32_t target)
-			: _target{ target }
+		GotoCommand(const std::string& label)
+			: BranchCommand{ label }
+		{
+		}
+
+		GotoCommand(std::int32_t target_offset)
+			: BranchCommand{ target_offset }
 		{
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual BranchCommandType btype() const final override;
 		virtual byterange emit() const final override;
 	};
 

@@ -32,7 +32,7 @@ namespace hz
 		return ParserType::COMPILER;
 	}
 
-	Statement* CompilerParser::parse_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_statement(const std::string& enclosing_function)
 	{
 		using enum TokenType;
 		switch (peek().type)
@@ -54,7 +54,7 @@ namespace hz
 		}
 	}
 
-	std::vector<Statement*> CompilerParser::parse_statements(std::string enclosing_function)
+	std::vector<Statement*> CompilerParser::parse_statements(const std::string& enclosing_function)
 	{
 		std::vector<Statement*> statements;
 
@@ -66,13 +66,13 @@ namespace hz
 		return statements;
 	}
 
-	Statement* CompilerParser::parse_null_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_null_statement(const std::string& enclosing_function)
 	{
 		const auto semicolon_token = consume(TokenType::SEMICOLON);
 		return new NullStatement{ semicolon_token };
 	}
 
-	Statement* CompilerParser::parse_variabledeclaration_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_variabledeclaration_statement(const std::string& enclosing_function)
 	{
 		const auto type = parse_type_specifier();
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
@@ -97,7 +97,7 @@ namespace hz
 		return new VariableStatement{ type, identifier_token.value, nullptr, nullptr, identifier_token };
 	}
 
-	Statement* CompilerParser::parse_compound_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_compound_statement(const std::string& enclosing_function)
 	{
 		const auto lbrace_token = consume(TokenType::LBRACE);
 
@@ -108,7 +108,7 @@ namespace hz
 		return new CompoundStatement{ std::move(statements), lbrace_token };
 	}
 
-	Statement* CompilerParser::parse_return_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_return_statement(const std::string& enclosing_function)
 	{
 		const auto return_token = consume(TokenType::RETURN);
 
@@ -116,19 +116,27 @@ namespace hz
 
 		consume(TokenType::SEMICOLON);
 
+		auto symbol = reference_symbol(SymbolType::FUNCTION, enclosing_function, return_token);
+
+
 		// NOTE: special case for `main()`:
 		// return statements are really an exit from the entire program
 		// this is because we don't internally bootstrap-wrap `main()` with `_main()`
 		// like many real C implementations do (e.g., VC++)
 		if (enclosing_function == "main")
 		{
+			if (expression == nullptr)
+			{
+				_error_reporter->post_error("non-nvr function `main()` must specify a return value", return_token);
+			}
+
 			return new ExitStatement{ expression, expression->_token };
 		}
 
 		return new ReturnStatement{ enclosing_function, expression, nullptr, return_token };
 	}
 
-	Statement* CompilerParser::parse_inline_asm_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_inline_asm_statement(const std::string& enclosing_function)
 	{
 		const auto asm_token = consume(TokenType::ASM);
 		consume(TokenType::LBRACE);
@@ -144,7 +152,7 @@ namespace hz
 		return new InlineAsmStatement{ std::move(commands), assembler_parser, asm_token };
 	}
 
-	Statement* CompilerParser::parse_while_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_while_statement(const std::string& enclosing_function)
 	{
 		consume(TokenType::WHILE);
 		consume(TokenType::LPAREN);
@@ -158,7 +166,7 @@ namespace hz
 		return new WhileStatement{ condition, body, condition->_token };
 	}
 
-	Statement* CompilerParser::parse_for_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_for_statement(const std::string& enclosing_function)
 	{
 		consume(TokenType::FOR);
 		consume(TokenType::LPAREN);
@@ -177,7 +185,7 @@ namespace hz
 		return new ForStatement{ initialization, condition, expression, body, initialization->_token };
 	}
 
-	Statement* CompilerParser::parse_if_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_if_statement(const std::string& enclosing_function)
 	{
 		consume(TokenType::IF);
 		consume(TokenType::LPAREN);
@@ -198,7 +206,7 @@ namespace hz
 		return new IfStatement{ condition, if_body, else_body, condition->_token };
 	}
 
-	Statement* CompilerParser::parse_print_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_print_statement(const std::string& enclosing_function)
 	{
 		consume(TokenType::PRINT);
 		consume(TokenType::LPAREN);
@@ -211,21 +219,21 @@ namespace hz
 		return new PrintStatement{ expression, expression->_token };
 	}
 
-	Statement* CompilerParser::parse_hook_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_hook_statement(const std::string& enclosing_function)
 	{
 		const auto dothook_token = consume(TokenType::DOTHOOK);
 
 		return new HookStatement{ true, dothook_token };
 	}
 
-	Statement* CompilerParser::parse_unhook_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_unhook_statement(const std::string& enclosing_function)
 	{
 		const auto dotunhook_token = consume(TokenType::DOTUNHOOK);
 
 		return new HookStatement{ false, dotunhook_token };
 	}
 
-	Statement* CompilerParser::parse_expression_statement(std::string enclosing_function)
+	Statement* CompilerParser::parse_expression_statement(const std::string& enclosing_function)
 	{
 		auto expression = parse_expression();
 		consume(TokenType::SEMICOLON);

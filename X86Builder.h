@@ -116,7 +116,29 @@ namespace hz
 
 	public:
 		// call [pointer]
-		static byterange call(std::uint32_t);
+		static byterange call_absolute(std::uint32_t);
+		// call disp32
+		static byterange call_relative(std::uint32_t);
+
+	public:
+		// jmp disp32
+		static byterange jmp_relative(std::uint32_t);
+		// je disp32
+		static byterange je_relative(std::uint32_t);
+		// jne disp32
+		static byterange jne_relative(std::uint32_t);
+
+	public:
+		// sete destination
+		static byterange sete(std::uint8_t);
+		// setl destination
+		static byterange setl(std::uint8_t);
+		// setg destination
+		static byterange setg(std::uint8_t);
+
+	public:
+		// movzx destination, source
+		static byterange movzx(std::uint8_t, std::uint8_t);
 
 	public:
 		// ret

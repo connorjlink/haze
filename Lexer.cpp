@@ -10,11 +10,19 @@ import std;
 
 namespace
 {
-	// used to continue parsing until reaching the end of a string literal
+	// used to continue lexing until reaching the end of a string literal
 	// NOTE: this method does not work if there are escape code \" characters embedded within!
 	int isquoted(int c)
 	{
 		return c != '"';
+	}
+
+	// used to continue lexing until reaching a word boundary
+	// NOTE: this method is naive and only checks for whitespace characters
+	int nisspace(int c)
+	{
+		// NOTE: boolean NOT is the intended behavior here
+		return !std::isspace(c);
 	}
 
 
@@ -60,7 +68,9 @@ namespace hz
 
 
 			using enum TokenType;
-			const auto& current = _input[i];
+
+			const auto& current = _input[i + 0];
+			const auto& next = _input[i + 1];
 
 			if (current == ' ' || current == '\n' || current == '\r' || current == '\t')
 			{
@@ -140,13 +150,32 @@ namespace hz
 
 			else if (current == '"')
 			{
+				// skip opening quote
 				i++;
 
 				const auto lexeme = rest(::isquoted);
 
+				// skip closing quote
 				i++;
 
 				APPEND_TOKEN(STRING, lexeme);
+			}
+
+			else if (current == '=')
+			{
+				if (next == '=')
+				{
+					const auto lexeme = "==";
+					APPEND_TOKEN(EQUALSEQUALS, lexeme);
+					
+					i++;
+				}
+				
+				else
+				{
+					const auto lexeme = "=";
+					APPEND_TOKEN(EQUALS, lexeme);
+				}
 			}
 
 			else
@@ -157,13 +186,13 @@ namespace hz
 
 				if (search.has_value())
 				{
-					APPEND_TOKEN(search.value(), std::string{ current });
+					APPEND_TOKEN(search.value(), current_string);
 				}
 
 				else
 				{
-					_error_reporter->post_error(std::format("unexpected character `{}`", current),
-						::error_token(std::string{ current }, _line, _column));
+					_error_reporter->post_error(std::format("unexpected token `{}`", current_string),
+						::error_token(current_string, _line, _column));
 				}
 			}
 		}

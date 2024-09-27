@@ -30,15 +30,35 @@ namespace hz
 		using enum ExpressionType;
 		switch (message->etype())
 		{
-			case STRING: _generator->print_message(temp.source()->read()); break;
-			case INTEGER_LITERAL: _generator->print_number(temp.source()->read()); break;
-			default: _error_reporter->post_error("unsupported compiler print expression type", message->_token); return;
+			case STRING:
+			{
+				_generator->print_message(temp.source()->read());
+			} break;
+
+			case INTEGER_LITERAL:
+			{
+				_generator->print_number(temp.source()->read());
+			} break;
+
+			case IDENTIFIER:
+			{
+				_generator->print_number(temp.source()->read());
+			} break;
+
+			default:
+			{
+				_error_reporter->post_error("unsupported compiler print expression type", message->_token);
+			} break;
 		}
 	}
 
 	Statement* PrintStatement::optimize()
 	{
-		// No optimizations possible for a print statement
+		if (auto message_optimized = message->optimize())
+		{
+			return new PrintStatement{ AS_EXPRESSION_NODE(message_optimized), _token };
+		}
+		
 		return nullptr;
 	}
 

@@ -16,6 +16,9 @@ import std;
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+#define ENCODE(x) _linkables[_linkables.size() - 1].commands.emplace_back(x)
+#define COMPOSE(x) _linkables[_linkables.size() - 1].ir.emplace_back(x)
+
 namespace hz
 {
 	// GLOBALS
@@ -24,7 +27,7 @@ namespace hz
 
 
 	Generator::Generator(std::vector<Node*>&& program, const std::string& filepath)
-		: _program{ std::move(program) }, _current_function{ -1 }
+		: _program{ std::move(program) }
 	{
 		_string_length_map = {};
 		_error_reporter->open_context(filepath, "generating");
@@ -38,24 +41,28 @@ namespace hz
 
 	const std::string& Generator::current_function() const
 	{
-		auto linkable = _linkables[_current_function];
-		auto symbol = linkable.symbol;
-		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+		const auto& linkable = _linkables[_linkables.size() - 1];
+		const auto symbol = linkable.symbol;
+		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		return function_symbol->name;
 	}
 
 	void Generator::begin_function(std::string name)
 	{
-		_current_function++;
-
 		const auto linkable = Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 };
 		_linkables.emplace_back(linkable);
 	}
 
-	void Generator::label(const std::string& identifier)
+	void Generator::label_command(const std::string& identifier)
 	{
-		_linkables[_current_function].commands.emplace_back(new LabelCommand{ identifier, NULL_TOKEN });
+		_linkables[_linkables.size() - 1].commands.emplace_back(new LabelCommand{identifier, NULL_TOKEN});
+	}
+
+	void Generator::branch_label(const std::string& label)
+	{
+		auto command = new BranchLabelCommand{ label };
+		COMPOSE(command);
 	}
 
 	void Generator::register_branch(IntermediateCommand* command, const std::string& label)
@@ -69,13 +76,10 @@ namespace hz
 		return {};
 	}
 
-	void Generator::resolve_branch_target_real(const std::string&, std::uint32_t)
+	void Generator::resolve_branch_target_real(const std::string&, std::int32_t)
 	{
 #pragma message("TODO: real branch target resolution")
 	}
-
-#define ENCODE(x) _linkables[_current_function].commands.emplace_back(x)
-#define COMPOSE(x) _linkables[_current_function].ir.emplace_back(x)
 
 	void Generator::begin_scope()
 	{
@@ -112,6 +116,11 @@ namespace hz
 	void Generator::read_local(register_t destination, const std::string& name)
 	{
 		_runtime_allocator->read_local(destination, name);
+	}
+
+	void Generator::update_local(const std::string& name, register_t source)
+	{
+		_runtime_allocator->update_local(name, source);
 	}
 
 	void Generator::make_global(register_t location, variable_t value)
@@ -174,6 +183,24 @@ namespace hz
 		COMPOSE(command);
 	}
 
+	void Generator::compute_compare(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new EqualityCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
+	void Generator::compute_less(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new LessCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
+	void Generator::compute_greater(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new GreaterCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
 	void Generator::compute_increment(register_t destination, register_t source)
 	{
 		auto command = new IncrementCommand{ destination, source };
@@ -192,9 +219,9 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_immediate(register_t destination, std::uint32_t source)
+	void Generator::make_immediate(register_t destination, std::int32_t immediate)
 	{
-		auto command = new MakeImmediateCommand{ destination, source };
+		auto command = new MakeImmediateCommand{ destination, immediate };
 		COMPOSE(command);
 	}
 
@@ -238,54 +265,67 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_return()
+	void Generator::make_return(const std::string& label)
 	{
-		auto command = new VoidReturnCommand{};
+		auto command = new VoidReturnCommand{ label };
 		COMPOSE(command);
 	}
 
-	void Generator::make_return(register_t value)
+	void Generator::make_return(std::int32_t target_offset)
 	{
-		auto command = new ValueReturnCommand{ value };
+		auto command = new VoidReturnCommand{ target_offset };
 		COMPOSE(command);
 	}
 
-	void Generator::check_ifnz(register_t value, std::int32_t index)
+	void Generator::make_return(const std::string& label, register_t value)
 	{
-		auto command = new IfNotZeroCommand{ value, index };
+		auto command = new ValueReturnCommand{ label, value };
 		COMPOSE(command);
 	}
 
-	void Generator::check_ifnz(register_t value, const std::string& label)
+	void Generator::make_return(std::int32_t target_offset, register_t value)
 	{
-		auto command = new IfNotZeroCommand{ value, TEMP_ADDRESS };
-		register_branch(command, label);
+		auto command = new ValueReturnCommand{ target_offset, value };
 		COMPOSE(command);
 	}
 
-	void Generator::check_ifz(register_t value, std::int32_t index)
+	void Generator::check_ifnz(std::int32_t target_offset, register_t value)
 	{
-		auto command = new IfZeroCommand{ value, index };
+		auto command = new IfNotZeroCommand{ target_offset, value };
 		COMPOSE(command);
 	}
 
-	void Generator::check_ifz(register_t value, const std::string& label)
+	void Generator::check_ifnz(const std::string& label, register_t value)
 	{
-		auto command = new IfZeroCommand{ value, TEMP_ADDRESS };
-		register_branch(command, label);
+		auto command = new IfNotZeroCommand{ label, value };
+		// NOTE: old method
+		//register_branch(command, label);
 		COMPOSE(command);
 	}
 
-	void Generator::goto_command(std::int32_t index)
+	void Generator::check_ifz(std::int32_t target_offset, register_t value)
 	{
-		auto command = new GotoCommand{ index };
+		auto command = new IfZeroCommand{ target_offset, value };
+		COMPOSE(command);
+	}
+
+	void Generator::check_ifz(const std::string& label, register_t value)
+	{
+		auto command = new IfZeroCommand{ label, value };
+		// NOTE: old method
+		//register_branch(command, label);
+		COMPOSE(command);
+	}
+
+	void Generator::goto_command(std::int32_t target_offset)
+	{
+		auto command = new GotoCommand{ target_offset };
 		COMPOSE(command);
 	}
 
 	void Generator::goto_command(const std::string& label)
 	{
-		auto command = new GotoCommand{ TEMP_ADDRESS };
-		register_branch(command, label);
+		auto command = new GotoCommand{ label };
 		COMPOSE(command);
 	}
 
@@ -328,12 +368,12 @@ namespace hz
 	index_t Generator::resolve_origin_old() const
 	{
 		UNSUPPORTED_OPERATION(__FUNCTION__);
-		//return static_cast<index_t>(_linkables[_current_function].commands.size());
+		//return static_cast<index_t>(_linkables[_linkables.size() - 1].commands.size());
 	}
 
 	index_t Generator::resolve_origin() const
 	{
-		return static_cast<index_t>(_linkables[_current_function].ir.size());
+		return static_cast<index_t>(_linkables[_linkables.size() - 1].ir.size());
 	}
 
 

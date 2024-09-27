@@ -7,6 +7,7 @@ import std;
 #include "Allocation.h"
 #include "Generator.h"
 #include "Evaluator.h"
+#include "CommonErrors.h"
 #include "ErrorReporter.h"
 
 // Haze BinaryExpression.cpp
@@ -125,7 +126,6 @@ namespace hz
 		right->generate(temp.source());
 
 		_generator->compute_subtract(received_allocation->read(), temp.source()->read(), received_allocation->read());
-
 	}
 
 	void TimesBinaryExpression::generate(Allocation*)
@@ -133,14 +133,31 @@ namespace hz
 		::generate_error("multiplication", _token);
 	}
 
-	void AssignBinaryExpression::generate(Allocation*)
+	void AssignBinaryExpression::generate(Allocation* received_allocation)
 	{
-		::generate_error("assignment", _token);
+		if (left->etype() == ExpressionType::IDENTIFIER)
+		{
+			auto identifier_expression = AS_IDENTIFIER_EXPRESSION(left);
+
+			right->generate(received_allocation);
+			// figure out how to assign the lhs
+			_generator->update_local(identifier_expression->name, received_allocation->read());
+		}
+
+		else
+		{
+			CommonErrors::must_be_lvalue("the left-hand side of an assignment expression", left->_token);
+		}
 	}
 
-	void EqualityBinaryExpression::generate(Allocation*)
+	void EqualityBinaryExpression::generate(Allocation* received_allocation)
 	{
-		::generate_error("comparison", _token);
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_compare(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void InequalityBinaryExpression::generate(Allocation*)
@@ -148,14 +165,24 @@ namespace hz
 		::generate_error("comparison", _token);
 	}
 
-	void GreaterBinaryExpression::generate(Allocation*)
+	void GreaterBinaryExpression::generate(Allocation* received_allocation)
 	{
-		::generate_error("comparison", _token);
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_greater(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
-	void LessBinaryExpression::generate(Allocation*)
+	void LessBinaryExpression::generate(Allocation* received_allocation)
 	{
-		::generate_error("comparison", _token);
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_less(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 

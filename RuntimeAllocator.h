@@ -29,6 +29,9 @@ namespace hz
 		void read_local(register_t, const std::string&);
 
 	public:
+		void update_local(const std::string&, register_t);
+
+	public:
 		RuntimeAllocator()
 			: _locals_offsets{}
 		{

@@ -37,7 +37,14 @@ namespace hz
 
 	inline static constexpr auto STDOUT_HANDLE = 0x004032F0;
 
+	inline static constexpr auto PRINT_BUFFER = 0x004033F0;
+	inline static constexpr auto PRINT_BUFFER_SIZE = 0xF;
+
 	inline static constexpr auto COPYRIGHT_LOGO = 0x00403000;
+
+	inline static constexpr auto PROGRAM_OUTPUT_STRING = 0x0040304E;
+
+	inline static constexpr auto NUMBER_FORMAT_STRING = 0x0040305F;
 
 
 	// GetStdHandle()
