@@ -11,21 +11,21 @@ namespace hz
 	class Log
 	{
 	private:
-		static void print(std::string_view, std::string_view);
+		static void print(const std::string&, const std::string&);
 
 	public:
-		static void raw(std::string_view);
+		static void raw(const std::string&);
 
 	public:
-		static void with_severity(std::string_view, ErrorType);
+		static void with_severity(const std::string&, ErrorType);
 
 	public:
-		static void output(std::string_view);
-		static void info(std::string_view);
-		static void warning(std::string_view);
+		static void output(const std::string&);
+		static void info(const std::string&);
+		static void warning(const std::string&);
 		[[noreturn]]
-		static void error(std::string_view);
-		static void uncorrectable(std::string_view);
+		static void error(const std::string&);
+		static void uncorrectable(const std::string&);
 	};
 }
 

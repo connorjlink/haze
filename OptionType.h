@@ -14,7 +14,7 @@ namespace hz
 		OPTIMIZATION,
 	};
 
-	static const std::unordered_map<std::string, OptionType> _option_map
+	static const std::unordered_map<std::string_view, OptionType> _option_map
 	{
 		{ "architecture", OptionType::ARCHITECTURE },
 		{ "verbosity", OptionType::VERBOSITY },

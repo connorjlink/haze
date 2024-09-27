@@ -15,12 +15,13 @@ namespace hz
 	{
 	public:
 		std::string name;
-		bool was_referenced;
-		TypeSpecifier type;
 
 	public:
-		Symbol(std::string name)
-			: name{ std::move(name) }, was_referenced{ false }, type{ TypeSpecifier::BYTE }
+		bool was_referenced;
+
+	public:
+		Symbol(const std::string& name)
+			: name{ name }, was_referenced{ false }
 		{
 		}
 
@@ -46,8 +47,8 @@ namespace hz
 		}
 
 	public:
-		FunctionSymbol(std::string name, TypeSpecifier return_type = static_cast<TypeSpecifier>(0))
-			: Symbol{ std::move(name) }, entrypoint{ 0 }, return_type{}, arguments{}, locals_count{ 0 }
+		FunctionSymbol(const std::string& name, TypeSpecifier return_type = static_cast<TypeSpecifier>(0))
+			: Symbol{ name }, entrypoint{ 0 }, return_type{}, arguments{}, locals_count{ 0 }
 		{
 		}
 
@@ -59,10 +60,11 @@ namespace hz
 	{
 	public:
 		Allocation* allocation;
+		TypeSpecifier type_specifier;
 
 	public:
-		ArgumentSymbol(std::string name)
-			: Symbol{ std::move(name) }, allocation{ nullptr }
+		ArgumentSymbol(const std::string& name, TypeSpecifier type_specifier)
+			: Symbol{ name }, allocation{ nullptr }, type_specifier{ type_specifier }
 		{
 		}
 
@@ -74,10 +76,11 @@ namespace hz
 	{
 	public:
 		Allocation* allocation;
+		TypeSpecifier type_specifier;
 
 	public:
-		VariableSymbol(std::string name, Allocation* allocation)
-			: Symbol{ std::move(name) }, allocation{ allocation }
+		VariableSymbol(const std::string& name, Allocation* allocation, TypeSpecifier type_specifier)
+			: Symbol{ name }, allocation{ allocation }, type_specifier{ type_specifier }
 		{
 		}
 
@@ -91,8 +94,8 @@ namespace hz
 		std::uint32_t value;
 
 	public:
-		DefineSymbol(std::string name, std::uint32_t value)
-			: Symbol{ std::move(name) }, value{ value }
+		DefineSymbol(const std::string& name, std::uint32_t value)
+			: Symbol{ name }, value{ value }
 		{
 		}
 
@@ -106,8 +109,8 @@ namespace hz
 		std::uint32_t address;
 
 	public:
-		LabelSymbol(std::string name, std::uint32_t address)
-			: Symbol{ std::move(name) }, address{ address }
+		LabelSymbol(const std::string& name, std::uint32_t address)
+			: Symbol{ name }, address{ address }
 		{
 		}
 

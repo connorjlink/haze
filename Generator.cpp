@@ -48,10 +48,9 @@ namespace hz
 		return function_symbol->name;
 	}
 
-	void Generator::begin_function(std::string name)
+	void Generator::begin_function(const std::string& name)
 	{
-		const auto linkable = Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 };
-		_linkables.emplace_back(linkable);
+		_linkables.emplace_back(Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 });
 	}
 
 	void Generator::label_command(const std::string& identifier)
@@ -63,22 +62,6 @@ namespace hz
 	{
 		auto command = new BranchLabelCommand{ label };
 		COMPOSE(command);
-	}
-
-	void Generator::register_branch(IntermediateCommand* command, const std::string& label)
-	{
-#pragma message("TODO branch target registration")
-	}
-
-	index_t Generator::query_branch_target(const std::string& label)
-	{
-#pragma message("TODO: query branch target index resolution")
-		return {};
-	}
-
-	void Generator::resolve_branch_target_real(const std::string&, std::int32_t)
-	{
-#pragma message("TODO: real branch target resolution")
 	}
 
 	void Generator::begin_scope()
@@ -201,6 +184,12 @@ namespace hz
 		COMPOSE(command);
 	}
 
+	void Generator::compute_bool(register_t destination, register_t source)
+	{
+		auto command = new BoolCommand{ destination, source };
+		COMPOSE(command);
+	}
+
 	void Generator::compute_increment(register_t destination, register_t source)
 	{
 		auto command = new IncrementCommand{ destination, source };
@@ -246,7 +235,6 @@ namespace hz
 	void Generator::call_function(const std::string& function)
 	{
 		auto command = new CallFunctionCommand{ function };
-		register_branch(command, function);
 		COMPOSE(command);
 	}
 
@@ -261,7 +249,6 @@ namespace hz
 		}
 
 		auto command = new CallFunctionCommand{ function };
-		register_branch(command, function);
 		COMPOSE(command);
 	}
 

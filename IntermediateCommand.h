@@ -172,6 +172,22 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class BoolCommand : public IntermediateCommand
+	{
+	private:
+		register_t _destination, _source;
+
+	public:
+		BoolCommand(register_t destination, register_t source)
+			: _destination{ destination }, _source{ source }
+		{
+		}
+
+	public:
+		virtual IntermediateType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class BinaryCommand : public IntermediateCommand
 	{
 	protected:

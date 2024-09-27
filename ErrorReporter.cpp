@@ -51,12 +51,12 @@ namespace hz
 	}
 
 
-	void ErrorReporter::post_information(const std::string& message, Token token)
+	void ErrorReporter::post_information(const std::string& message, const Token& token)
 	{
 		post_information(_active_contexts.top(), _active_files.top(), message, token);
 	}
 
-	void ErrorReporter::post_information(ErrorContext* context, const std::string& file, const std::string& message, Token token)
+	void ErrorReporter::post_information(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
 		if (context != nullptr)
 		{
@@ -68,12 +68,12 @@ namespace hz
 	}
 
 
-	void ErrorReporter::post_warning(const std::string& message, Token token)
+	void ErrorReporter::post_warning(const std::string& message, const Token& token)
 	{
 		post_warning(_active_contexts.top(), _active_files.top(), message, token);
 	}
 
-	void ErrorReporter::post_warning(ErrorContext* context, const std::string& file, const std::string& message, Token token)
+	void ErrorReporter::post_warning(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
 		if (context != nullptr)
 		{
@@ -85,12 +85,12 @@ namespace hz
 	}
 
 
-	void ErrorReporter::post_error(const std::string& message, Token token)
+	void ErrorReporter::post_error(const std::string& message, const Token& token)
 	{
 		post_error(_active_contexts.top(), _active_files.top(), message, token);
 	}
 
-	void ErrorReporter::post_error(ErrorContext* context, const std::string& file, const std::string& message, Token token)
+	void ErrorReporter::post_error(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
 		_error_count++;
 		validate_error_count();
@@ -105,14 +105,15 @@ namespace hz
 	}
 
 
-	void ErrorReporter::post_uncorrectable(const std::string& message, Token token)
+	void ErrorReporter::post_uncorrectable(const std::string& message, const Token& token)
 	{
 		post_uncorrectable(_active_contexts.top(), _active_files.top(), message, token);
 	}
 
-	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::string& file, const std::string& message, Token token)
+	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
 		_error_count++;
+		// not checking validating the error count here since that would be recursive!
 
 		if (context != nullptr)
 		{

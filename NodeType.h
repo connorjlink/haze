@@ -22,7 +22,7 @@ namespace hz
         INTRINSIC,
     };
 
-    static const std::unordered_map<NodeType, std::string> _node_map
+    static const std::unordered_map<NodeType, std::string_view> _node_map
     {
         { NodeType::FUNCTION, "function" },
         { NodeType::STATEMENT, "statement" },

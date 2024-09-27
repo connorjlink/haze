@@ -10,27 +10,27 @@ import std;
 
 namespace hz
 {
-	void Log::print(std::string_view context, std::string_view message)
+	void Log::print(const std::string& context, const std::string& message)
 	{
 		stream << std::format("{}: {}\n", context, message);
 	}
 
-	void Log::raw(std::string_view message)
+	void Log::raw(const std::string& message)
 	{
 		stream << message;
 	}
 
-	void Log::with_severity(std::string_view message, ErrorType severity)
+	void Log::with_severity(const std::string& message, ErrorType severity)
 	{
 		print(_error_type_map.at(severity), message);
 	}
 	
-	void Log::output(std::string_view message)
+	void Log::output(const std::string& message)
 	{
 		print(_error_type_map.at(ErrorType::OUTPUT), message);
 	}
 
-	void Log::info(std::string_view message)
+	void Log::info(const std::string& message)
 	{
 		if (_options->_verbosity == VerbosityType::VERBOSE)
 		{
@@ -38,7 +38,7 @@ namespace hz
 		}
 	}
 
-	void Log::warning(std::string_view message)
+	void Log::warning(const std::string& message)
 	{
 		if (_options->_verbosity == VerbosityType::VERBOSE ||
 			_options->_verbosity == VerbosityType::NORMAL)
@@ -47,7 +47,7 @@ namespace hz
 		}
 	}
 
-	void Log::error(std::string_view message)
+	void Log::error(const std::string& message)
 	{
 		if (_options->_verbosity == VerbosityType::VERBOSE ||
 			_options->_verbosity == VerbosityType::NORMAL ||
@@ -57,7 +57,7 @@ namespace hz
 		}
 	}
 
-	void Log::uncorrectable(std::string_view message)
+	void Log::uncorrectable(const std::string& message)
 	{
 		print(_error_type_map.at(ErrorType::UNCORRECTABLE), message);
 	}

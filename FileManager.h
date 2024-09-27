@@ -14,15 +14,12 @@ namespace hz
 		std::unordered_map<std::string, File> _files;
 
 	public:
-		std::string _current_file;
-
-	public:
 		void open_file(const std::string&);
 		File& get_file(const std::string&);
 
 	public:
 		FileManager()
-			: _files{}, _current_file{ "" }
+			: _files{}
 		{
 		}
 	};

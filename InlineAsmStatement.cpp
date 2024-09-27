@@ -5,6 +5,7 @@ import std;
 #include "FileManager.h"
 #include "Generator.h"
 #include "Emitter.h"
+#include "CommonErrors.h"
 
 // Haze InlineAsmStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -23,10 +24,10 @@ namespace hz
 
 	void InlineAsmStatement::generate(Allocation*)
 	{
-		auto linker = new AssemblerLinker{ std::move(commands), assembler_parser, _file_manager->_current_file };
+		auto linker = new AssemblerLinker{ std::move(_commands), _assembler_parser, _enclosing_file };
 		auto commands = linker->link(_generator->resolve_origin());
 		
-		auto emitter = Emitter::from_architecture(std::move(commands), _file_manager->_current_file);
+		auto emitter = Emitter::from_architecture(std::move(commands), _enclosing_file);
 		auto object_code = emitter->emit();
 
 		_generator->inline_assembly(std::move(object_code), linker->approximate_size());
@@ -40,7 +41,7 @@ namespace hz
 
 	Node* InlineAsmStatement::evaluate(Context* context) const
 	{
-		_error_reporter->post_error("unsupported interpreter statement type `asm`", _token);
+		CommonErrors::unsupported_statement("interpreter", "asm", _token);
 		return nullptr;
 	}
 }

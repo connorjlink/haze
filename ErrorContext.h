@@ -24,7 +24,7 @@ namespace hz
 		std::size_t error_count() const;
 
 	public:
-		void post(ErrorType, const std::string&, const std::string&, Token);
+		void post(ErrorType, const std::string&, const std::string&, const Token&);
 
 	public:
 		ErrorContext(const std::string& task)

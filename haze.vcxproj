@@ -39,7 +39,6 @@
     <ClCompile Include="AssemblerLinker.cpp" />
     <ClCompile Include="AssemblerParser.cpp" />
     <ClCompile Include="AssemblerToolchain.cpp" />
-    <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="ColorIntrinsic.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandLineParser.cpp" />

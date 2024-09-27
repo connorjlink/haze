@@ -144,12 +144,12 @@ namespace hz
 		auto assembly = fetch_until(TokenType::RBRACE);
 		assembly.emplace_back(TokenType::END, "eof", peek().line, peek().column);
 
-		auto assembler_parser = new AssemblerParser{ std::move(assembly), _file_manager->_current_file };
+		auto assembler_parser = new AssemblerParser{ std::move(assembly), _filepath };
 		auto commands = assembler_parser->parse();
 
 		consume(TokenType::RBRACE);
 
-		return new InlineAsmStatement{ std::move(commands), assembler_parser, asm_token };
+		return new InlineAsmStatement{ std::move(commands), assembler_parser, _filepath, asm_token };
 	}
 
 	Statement* CompilerParser::parse_while_statement(const std::string& enclosing_function)
@@ -277,7 +277,7 @@ namespace hz
 				auto identifier = parse_identifier_expression();
 
 				add_symbol(SymbolType::ARGUMENT, identifier->name, lookbehind());
-				AS_ARGUMENT_SYMBOL(reference_symbol(SymbolType::ARGUMENT, identifier->name, peek(), false))->type = type_specifier;
+				AS_ARGUMENT_SYMBOL(reference_symbol(SymbolType::ARGUMENT, identifier->name, peek(), false))->type_specifier = type_specifier;
 
 				arguments.emplace_back(new ArgumentExpression{ type_specifier, identifier, identifier->_token });
 			}

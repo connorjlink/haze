@@ -284,9 +284,6 @@
     <ClCompile Include="PEBuilder.cpp">
       <Filter>Source Files\Binary</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryUtilities.cpp">
-      <Filter>Source Files\Binary</Filter>
-    </ClCompile>
     <ClCompile Include="ExitStatement.cpp">
       <Filter>Source Files\Statement</Filter>
     </ClCompile>

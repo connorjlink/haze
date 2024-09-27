@@ -37,7 +37,7 @@ namespace hz
 
 
 	Parser::Parser(const std::vector<Token>& tokens, const std::string& filepath)
-		: cursor{ 0 }, tokens{ tokens }
+		: cursor{ 0 }, tokens{ tokens }, _filepath{ filepath }
 	{
 		_error_reporter->open_context(filepath, "parsing");
 	}
@@ -62,8 +62,8 @@ namespace hz
 		switch (type)
 		{
 			case FUNCTION: symbol_table[name] = new FunctionSymbol{ name }; break;
-			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name }; break;
-			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr }; break;
+			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name, TypeSpecifier::BYTE }; break;
+			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr, TypeSpecifier::BYTE }; break;
 			case DEFINE: symbol_table[name] = new DefineSymbol{ name, 0 }; break;
 			case LABEL: symbol_table[name] = new LabelSymbol{ name, 0 }; break;
 
@@ -156,7 +156,7 @@ namespace hz
 			return current;
 		}
 
-		auto convert = [&](auto v)
+		auto convert = [&](auto v) -> std::string_view
 		{
 			const auto item = _token_map.at(v);
 
@@ -166,7 +166,7 @@ namespace hz
 			}
 
 			_error_reporter->post_error("invalid token", current);
-			return std::string_view{ "[error]" };
+			return { "[error]" };
 		};
 
 		_error_reporter->post_error(std::format("expected token `{}` but got `{}`", 

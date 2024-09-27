@@ -18,13 +18,13 @@ namespace hz
 		std::unordered_map<std::string, std::int32_t> branches;
 
 		// the first function starts at address 0
-		auto address_tracker = 0;
+		std::int32_t address_tracker = 0;
 
 		for (auto& linkable : _linkables)
 		{
 			linkable.offset = address_tracker;
 
-			for (auto& command : linkable.ir)
+			for (auto command : linkable.ir)
 			{
 				using enum IntermediateType;
 				switch (command->itype())
@@ -43,7 +43,7 @@ namespace hz
 						// The binary is wrong, but is at least of the correct 
 						// length for future label/target address resolution
 						const auto code = command->emit();
-						const auto size = code.size();
+						const auto size = static_cast<std::int32_t>(code.size());
 
 						command->offset = address_tracker;
 						command->size = size;

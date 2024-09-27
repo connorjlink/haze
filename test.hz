@@ -1,4 +1,4 @@
-function nvr foo = (byte iterations)
+function nvr fib = (byte iterations)
 {
 	byte n0 = 0;
 	byte n1 = 1;
@@ -15,33 +15,8 @@ function nvr foo = (byte iterations)
 	}
 }
 
-function byte bar = (byte powers)
-{
-	byte n = 1;
-
-	byte power = 0;
-	while (power < powers)
-	{
-		print(n);
-		n = n + n;
-		power = power + 1;
-	}
-
-	byte toSubtract = 1;
-
-	power = power + 1;
-
-	while (power > 0)
-	{
-		print(n);
-		toSubtract = toSubtract + toSubtract;
-		n = n - toSubtract;
-		power = power - 1;
-	}
-}
-
 function byte main = ()
 {
-	bar(20);
+	fib(20);
 	return 0;
 }

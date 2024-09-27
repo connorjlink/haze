@@ -60,8 +60,8 @@ namespace hz
 		if (!outfile.good())
 		{
 			_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
-			goto file_error;
 		}
+
 
 		outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());
 		outfile.close();
@@ -86,8 +86,7 @@ namespace hz
 				sim.run();
 			} break;
 		}
-
-		file_error:
+		
 		_job_manager->end_job(finalize_task);
 	}
 }

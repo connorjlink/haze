@@ -36,7 +36,7 @@ namespace hz
 		const std::string& current_function() const;
 
 	public:
-		void begin_function(std::string);
+		void begin_function(const std::string&);
 
 	public:
 		// NOTE: old method
@@ -44,14 +44,6 @@ namespace hz
 
 	public:
 		void branch_label(const std::string&);
-
-	public:
-		// associate a command object with its branch target label
-		void register_branch(IntermediateCommand*, const std::string&);
-		// discover the IntermediateCommand index of a particular label
-		index_t query_branch_target(const std::string&);
-		// set the real binary code offset of a particular label
-		void resolve_branch_target_real(const std::string&, std::int32_t);
 
 	public:
 		// push a new empty scope with a unique local variable set

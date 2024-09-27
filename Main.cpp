@@ -73,7 +73,6 @@ int main(int argc, char** argv)
 		try
 		{
 			_file_manager->open_file(filepath);
-			_file_manager->_current_file = filepath;
 			const auto& file = _file_manager->get_file(filepath);
 
 			switch (file.ttype())

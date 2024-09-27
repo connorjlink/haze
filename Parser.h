@@ -26,6 +26,9 @@ namespace hz
 		std::size_t cursor;
 		std::vector<Token> tokens;
 
+	protected:
+		const std::string& _filepath;
+
 	private:
 		std::unordered_map<std::string, Symbol*> symbol_table;
 

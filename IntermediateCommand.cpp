@@ -20,10 +20,7 @@ namespace hz
 
 	byterange BranchLabelCommand::emit() const
 	{
-		//label:
-
-		_generator->resolve_branch_target_real(label, _generator->resolve_origin());
-
+		// No binary code is generated for a label
 		return {};
 	}
 
@@ -99,7 +96,7 @@ namespace hz
 		{
 #pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
 			// pop all arguments pushed by the caller
-			const auto bytes = arity * 4;
+			const auto bytes = static_cast<std::uint16_t>(arity * 4);
 			PUT(X86Builder::ret(bytes));
 		}
 
@@ -202,6 +199,28 @@ namespace hz
 
 		return out;
 	}
+
+
+	IntermediateType BoolCommand::itype() const
+	{
+		return IntermediateType::BOOL;
+	}
+
+	byterange BoolCommand::emit() const
+	{
+		// test source, source
+		// sete destination
+		// movzx destination, destination
+
+		byterange out{};
+
+		PUT(X86Builder::test_rr(_source, _source));
+		PUT(X86Builder::sete(_destination));
+		PUT(X86Builder::movzx(_destination, _source));
+
+		return out;
+	}
+
 
 	IntermediateType BinaryCommand::itype() const
 	{

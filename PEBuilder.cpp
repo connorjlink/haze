@@ -4,6 +4,7 @@ import std;
 #include "X86Emitter.h"
 #include "BinaryUtilities.h"
 #include "BinaryConstants.h"
+#include "JobManager.h"
 #include "ErrorReporter.h"
 
 // Haze PEBuilder.cpp

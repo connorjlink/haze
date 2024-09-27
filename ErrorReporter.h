@@ -13,7 +13,7 @@ namespace hz
 	class ErrorReporter
 	{
 	private:
-		static constexpr auto MAX_ERRORS = 1;
+		static constexpr auto MAX_ERRORS = 5;
 
 	private:
 		std::int32_t _error_count;
@@ -52,18 +52,18 @@ namespace hz
 		std::string generate_report();
 
 	public:
-		void post_information(const std::string&, Token);
-		void post_warning(const std::string&, Token);
-		void post_error(const std::string&, Token);
+		void post_information(const std::string&, const Token&);
+		void post_warning(const std::string&, const Token&);
+		void post_error(const std::string&, const Token&);
 		[[noreturn]]
-		void post_uncorrectable(const std::string&, Token);
+		void post_uncorrectable(const std::string&, const Token&);
 
 	public:
-		void post_information(ErrorContext*, const std::string&, const std::string&, Token);
-		void post_warning(ErrorContext*, const std::string&, const std::string&, Token);
-		void post_error(ErrorContext*, const std::string&, const std::string&, Token);
+		void post_information(ErrorContext*, const std::string&, const std::string&, const Token&);
+		void post_warning(ErrorContext*, const std::string&, const std::string&, const Token&);
+		void post_error(ErrorContext*, const std::string&, const std::string&, const Token&);
 		[[noreturn]]
-		void post_uncorrectable(ErrorContext*, const std::string&, const std::string&, Token);
+		void post_uncorrectable(ErrorContext*, const std::string&, const std::string&, const Token&);
 
 	public:
 		ErrorReporter()
