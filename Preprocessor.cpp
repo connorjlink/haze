@@ -8,15 +8,8 @@ import std;
 
 namespace
 {
-	std::vector<std::string> split(std::string text, char delimiter)
+	std::vector<std::string> split(const std::string& text, char delimiter)
 	{
-#pragma message("TODO: once compiler support improves, use this more efficient form")
-		/*return text
-			| std::ranges::split(delimiter)
-			| std::ranges::views::transform([](std::string&& str)
-				{ return std::string_view(&*str.begin(), std::ranges::distance(str)); })
-			| std::ranges::to<std::vector<std::string>>();*/
-
 		std::vector<std::string> result{};
 
 		std::stringstream input{ text };

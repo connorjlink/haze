@@ -76,6 +76,33 @@ namespace hz
 		}*/
 
 
+		if (_ir.size() >= 2)
+		{
+			const auto size = _ir.size();
+
+			for (auto i = 0; i < size; i++)
+			{
+				auto c0 = _ir[i + 0];
+
+				// TODO: one byte optimizations
+
+				if (i < size - 1)
+				{
+					auto c1 = _ir[i + 1];
+
+					// TODO: two byte optimizations
+
+					if (i < size - 2)
+					{
+						auto c2 = _ir[i + 2];
+
+						// TODO: three byte optimizations
+					}
+				}
+			}
+		}
+
+
 		for (auto& command : _ir)
 		{
 			using enum IntermediateType;

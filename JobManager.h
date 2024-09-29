@@ -14,7 +14,7 @@ namespace hz
 		std::vector<Job> _jobs;
 
 	public:
-		std::uint32_t begin_job(std::string);
+		std::uint32_t begin_job(const std::string&);
 		void end_job(std::uint32_t);
 
 	public:

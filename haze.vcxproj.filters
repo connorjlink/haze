@@ -344,6 +344,9 @@
     <ClCompile Include="CommonErrors.cpp">
       <Filter>Source Files\Error</Filter>
     </ClCompile>
+    <ClCompile Include="BinaryUtilities.cpp">
+      <Filter>Source Files\Binary</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -702,6 +705,9 @@
     </ClInclude>
     <ClInclude Include="CommonErrors.h">
       <Filter>Source Files\Error</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

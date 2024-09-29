@@ -380,6 +380,7 @@ namespace hz
 		std::copy(code.begin(), code.end(), head + CODE_OFFSET);
 		std::copy(imports.begin(), imports.end(), head + IMPORTS_OFFSET);
 		std::copy(data.begin(), data.end(), head + DATA_OFFSET);
+
 	}
 
 	void PEBuilder::export_exe(const std::string& filepath)

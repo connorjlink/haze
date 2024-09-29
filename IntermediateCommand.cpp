@@ -30,7 +30,7 @@ namespace hz
 		return IntermediateType::ENTER_SCOPE;
 	}
 
-	byterange EnterScopeCommand::emit() const
+	constexpr byterange EnterScopeCommand::_emit(std::uint32_t locals_count, std::int32_t bytes) const
 	{
 		// push ebp
 		// mov ebp, esp
@@ -44,19 +44,31 @@ namespace hz
 		PUT(X86Builder::push_r(EBP));
 		PUT(X86Builder::mov_rr(EBP, ESP));
 
+		if (locals_count > 0)
+		{
+			// set up a fixed-size stack frame of 4096 bytes
+			PUT(X86Builder::sub_ri(ESP, bytes));
+		}
+
+		return out;
+	}
+
+	byterange EnterScopeCommand::emit() const
+	{
 		const auto& current_function = _generator->current_function();
 
 		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
-		if (function_symbol->locals_count > 0)
-		{
-			// set up a fixed-size stack frame of 4096 bytes
-			PUT(X86Builder::sub_ri(ESP, _bytes));
-		}
+		const auto locals_count = function_symbol->locals_count;
 
-		return out;
+		return _emit(locals_count, _bytes);
 	}
+
+	/*constexpr std::int32_t EnterScopeCommand::bytes() const
+	{
+		return _emit(1, 0).size();
+	}*/
 
 
 	IntermediateType LeaveScopeCommand::itype() const
@@ -412,6 +424,27 @@ namespace hz
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::sete(_destination));
+		PUT(X86Builder::movzx(_destination, _destination));
+
+		return out;
+	}
+
+
+	BinaryCommandType InequalityCommand::btype() const
+	{
+		return BinaryCommandType::INEQUALITY;
+	}
+
+	byterange InequalityCommand::emit() const
+	{
+		// cmp lhs, rhs
+		// setne destination
+		// movzx destination, destination
+
+		byterange out{};
+
+		PUT(X86Builder::cmp_rr(_lhs, _rhs));
+		PUT(X86Builder::setne(_destination));
 		PUT(X86Builder::movzx(_destination, _destination));
 
 		return out;

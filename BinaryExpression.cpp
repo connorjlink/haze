@@ -157,12 +157,17 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_compare(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		_generator->compute_equality(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
-	void InequalityBinaryExpression::generate(Allocation*)
+	void InequalityBinaryExpression::generate(Allocation* received_allocation)
 	{
-		::generate_error("comparison", _token);
+		AutoStackAllocation temp{};
+		
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_inequality(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void GreaterBinaryExpression::generate(Allocation* received_allocation)

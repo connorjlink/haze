@@ -131,6 +131,8 @@ namespace hz
 	public:
 		// sete destination
 		static byterange sete(std::uint8_t);
+		// setne destination
+		static byterange setne(std::uint8_t);
 		// setl destination
 		static byterange setl(std::uint8_t);
 		// setg destination

@@ -23,8 +23,8 @@ namespace hz
 	class Generator
 	{
 	private:
-		//Imported from the parser in the constructor
-		std::vector<Node*> _program;
+		// Imported from the parser in the constructor
+		const std::vector<Node*>& _program;
 
 	private:
 		std::vector<Linkable> _linkables;
@@ -99,7 +99,9 @@ namespace hz
 
 	public:
 		// destination = lhs == rhs
-		void compute_compare(register_t, register_t, register_t);
+		void compute_equality(register_t, register_t, register_t);
+		// destination = lhs != rhs
+		void compute_inequality(register_t, register_t, register_t);
 		// destination = lhs < rhs
 		void compute_less(register_t, register_t, register_t);
 		// destination = lhs > rhs
@@ -191,7 +193,7 @@ namespace hz
 
 	public:
 		// ast, filepath
-		Generator(std::vector<Node*>&&, const std::string&);
+		Generator(const std::vector<Node*>&, const std::string&);
 		~Generator();
 
 	public:

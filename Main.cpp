@@ -57,15 +57,20 @@ int main(int argc, char** argv)
 	_file_manager = new FileManager{};
 
 
-	auto validators = std::vector<Validator*>
+	const auto test_task = _job_manager->begin_job("unit testing");
 	{
-		new X86BuilderValidator{},
-	};
+		auto validators = std::vector<Validator*>
+		{
+			new X86BuilderValidator{},
+		};
 
-	for (auto validator : validators)
-	{
-		validator->run_tests();
+		for (auto validator : validators)
+		{
+			validator->run_tests();
+		}
 	}
+	_job_manager->end_job(test_task);
+	
 
 
 	for (auto& filepath : command_line_parser.files())

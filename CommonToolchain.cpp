@@ -44,27 +44,31 @@ namespace hz
 
 		auto executable = _emitter->emit();
 		_job_manager->end_job(emit_task);
+
 		return executable;
 	}
 
-	void common_finalize(std::vector<std::uint8_t>&& executable, const std::string& filepath)
+	void common_finalize(const std::vector<std::uint8_t>& executable, const std::string& filepath)
 	{
 		const auto finalize_task = _job_manager->begin_job("finalizing");
 
 		const auto fullpath = std::filesystem::path(filepath);
 		const auto filename = fullpath.stem().string();
-		const auto filepath_out = std::format("{}.hzb", filename);
 
-		auto outfile = std::ofstream(filepath_out, std::ios::out | std::ios::binary);
-
-		if (!outfile.good())
+		if (_options->_raw_output)
 		{
-			_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
+			const auto filepath_out = std::format("{}.hzb", filename);
+
+			auto outfile = std::ofstream(filepath_out, std::ios::out | std::ios::binary);
+
+			if (!outfile.good())
+			{
+				_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
+			}
+
+			outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());
+			outfile.close();
 		}
-
-
-		outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());
-		outfile.close();
 
 		using enum ExecutionType;
 		switch (_options->_execution)
@@ -75,13 +79,13 @@ namespace hz
 				// later on compiling multiple files into one .exe is desired
 				const auto exefile = std::format("{}.exe", filename);
 
-				auto pe_builder = new PEBuilder{ std::move(executable) };
+				auto pe_builder = new PEBuilder{ executable };
 				pe_builder->export_exe(exefile);
 			} break;
 
 			case SIMULATE:
 			{
-				Simulator sim{ std::move(executable) };
+				Simulator sim{ executable };
 				sim.reset();
 				sim.run();
 			} break;

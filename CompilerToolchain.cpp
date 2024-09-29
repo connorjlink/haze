@@ -35,17 +35,20 @@ namespace hz
 
 
 		const auto generate_task = _job_manager->begin_job("generating");
-		_generator = new Generator{ std::move(ast), _filepath };
+		_generator = new Generator{ ast, _filepath };
 		auto linkables = _generator->generate();
 		_job_manager->end_job(generate_task);
 
+
+		const auto optimize_task = _job_manager->begin_job("optimizing");
 		for (auto& linkable : linkables)
 		{
-			auto optimizer = new IntermediateOptimizer{ linkable.symbol->name, std::move(linkable.ir) };
+			auto optimizer = new IntermediateOptimizer{ linkable.symbol->name, linkable.ir };
 			auto ir_optimized = optimizer->optimize();
 
 			linkable.ir = std::move(ir_optimized);
 		}
+		_job_manager->end_job(optimize_task);
 
 		// NOTE: old method;
 		/*byterange out{};
@@ -57,14 +60,18 @@ namespace hz
 			}
 		}*/
 
-		auto linker = new X86Linker{ std::move(linkables) };
+		const auto link_task = _job_manager->begin_job("linking");
+		auto linker = new X86Linker{ linkables };
 		auto executable = X86Emitter::emit_init();
-		executable.append_range(linker->link());
+		auto out = linker->link();
+		executable.append_range(out);
+		_job_manager->end_job(link_task);
 
-		/*for (auto byte : out)
+		for (auto byte : out)
 		{
 			std::print("{:02X} ", byte);
-		}*/
+		}
+		std::println();
 
 
 		/*if (_error_reporter->had_error())
@@ -90,7 +97,7 @@ namespace hz
 
 		if (!_error_reporter->had_error())
 		{
-			common_finalize(std::move(executable), _filepath);
+			common_finalize(executable, _filepath);
 		}
 
 		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);

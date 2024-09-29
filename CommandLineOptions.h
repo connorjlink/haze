@@ -21,6 +21,9 @@ namespace hz
 		// --execution=
 		ExecutionType _execution = ExecutionType::COMPILE;
 
+		// --output=raw
+		bool _raw_output = false;
+
 		// bit flags by optimization category of OptimizationType
 		std::uint32_t _optimization{};
 	};

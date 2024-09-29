@@ -26,8 +26,8 @@ namespace hz
 	// GLOBALS
 
 
-	Generator::Generator(std::vector<Node*>&& program, const std::string& filepath)
-		: _program{ std::move(program) }
+	Generator::Generator(const std::vector<Node*>& program, const std::string& filepath)
+		: _program{ program }
 	{
 		_string_length_map = {};
 		_error_reporter->open_context(filepath, "generating");
@@ -166,9 +166,15 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::compute_compare(register_t lhs, register_t rhs, register_t destination)
+	void Generator::compute_equality(register_t lhs, register_t rhs, register_t destination)
 	{
 		auto command = new EqualityCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
+	void Generator::compute_inequality(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new InequalityCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 

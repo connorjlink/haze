@@ -9,12 +9,12 @@ namespace hz
 	class Preprocessor
 	{
 	private:
-		std::string code;
+		std::string& code;
 		std::string parent_filepath;
 
 	public:
-		Preprocessor(std::string&& code, const std::string& parent_filepath)
-			: code{ std::move(code) }, parent_filepath{ parent_filepath }
+		Preprocessor(std::string& code, const std::string& parent_filepath)
+			: code{ code }, parent_filepath{ parent_filepath }
 		{
 		}
 

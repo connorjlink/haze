@@ -178,6 +178,23 @@ namespace hz
 				}
 			}
 
+			else if (current == '!')
+			{
+				if (next == '=')
+				{
+					const auto lexeme = "!=";
+					APPEND_TOKEN(EXCLAMATIONEQUALS, lexeme);
+
+					i++;
+				}
+
+				else
+				{
+					const auto lexeme = "!";
+					APPEND_TOKEN(EXCLAMATION, lexeme);
+				}
+			}
+
 			else
 			{
 				const auto current_string = std::string{ current };

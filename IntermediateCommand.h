@@ -26,6 +26,10 @@ namespace hz
 	public:
 		virtual IntermediateType itype() const = 0;
 		virtual byterange emit() const = 0;
+		virtual constexpr std::int32_t bytes() const
+		{
+			return -1;
+		}
 	};
 
 
@@ -58,9 +62,13 @@ namespace hz
 		{
 		}
 
+	private:
+		constexpr byterange _emit(std::uint32_t, std::int32_t) const;
+
 	public:
 		virtual IntermediateType itype() const final override;
 		virtual byterange emit() const final override;
+		//virtual constexpr std::int32_t bytes() const final override;
 	};
 
 	class LeaveScopeCommand : public IntermediateCommand
@@ -255,6 +263,16 @@ namespace hz
 	};
 
 	class EqualityCommand : public BinaryCommand
+	{
+	public:
+		using BinaryCommand::BinaryCommand;
+
+	public:
+		virtual BinaryCommandType btype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class InequalityCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;

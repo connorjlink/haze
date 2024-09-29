@@ -11,11 +11,11 @@ namespace hz
 	class X86Linker
 	{
 	private:
-		std::vector<Linkable> _linkables;
-
+		std::vector<Linkable>& _linkables;
+		
 	public:
-		X86Linker(std::vector<Linkable>&& linkables)
-			: _linkables{ std::move(linkables) }
+		X86Linker(std::vector<Linkable>& linkables)
+			: _linkables{ linkables }
 		{
 		}
 

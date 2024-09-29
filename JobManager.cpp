@@ -8,10 +8,10 @@ import std;
 
 namespace hz
 {
-	std::uint32_t JobManager::begin_job(std::string task)
+	std::uint32_t JobManager::begin_job(const std::string& task)
 	{
 		static std::uint32_t uuid = 0;
-		_jobs.emplace_back(Job{ std::move(task), uuid });
+		_jobs.emplace_back(Job{ task, uuid });
 		return uuid++;
 	}
 

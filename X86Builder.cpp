@@ -610,6 +610,18 @@ namespace hz
 		return out;
 	}
 
+	byterange X86Builder::setne(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 95 --> SETNE r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x95));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
 	byterange X86Builder::setl(std::uint8_t destination)
 	{
 		byterange out{};

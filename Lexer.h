@@ -11,15 +11,15 @@ namespace hz
 	class Lexer
 	{
 	private:
-		std::string _input;
+		const std::string& _input;
 		std::int32_t _character;
 
 	private:
 		std::int16_t _line, _column;
 
 	public:
-		Lexer(std::string&& input)
-			: _input{ std::move(input) }, _character{ -1 }
+		Lexer(const std::string& input)
+			: _input{ input }, _character{ -1 }
 		{
 			// NOTE: line and column default value is 1, not 0 for better debug messaging
 			_line = 1;

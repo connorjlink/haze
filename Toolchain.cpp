@@ -28,13 +28,13 @@ namespace hz
 
 
 		const auto preprocess_task = _job_manager->begin_job("preprocessing");
-		const auto preprocessor = new Preprocessor{ std::move(source), _filepath };
+		const auto preprocessor = new Preprocessor{ source, _filepath };
 		auto source_processed = preprocessor->preprocess();
 		_job_manager->end_job(preprocess_task);
 
 
 		const auto lex_task = _job_manager->begin_job("lexing");
-		const auto lexer = new Lexer{ std::move(source_processed) };
+		const auto lexer = new Lexer{ source_processed };
 		_tokens[_filepath] = lexer->lex();
 		_job_manager->end_job(lex_task);
 

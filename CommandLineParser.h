@@ -12,7 +12,7 @@ namespace hz
 		std::vector<std::string> _filepaths;
 
 	public:
-		const std::vector<std::string>& files() const
+		const decltype(_filepaths)& files() const
 		{
 			return _filepaths;
 		}

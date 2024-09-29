@@ -38,12 +38,12 @@ namespace hz
 		byterange data_section();
 
 	private:
-		byterange _code_section;
+		const byterange& _code_section;
 		byterange _binary;
 
 	public:
-		PEBuilder(byterange&& executable)
-			: _code_section{ std::move(executable) }, _binary{}
+		PEBuilder(const byterange& executable)
+			: _code_section{ executable }, _binary{}
 		{
 		}
 

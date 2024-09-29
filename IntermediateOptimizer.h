@@ -12,11 +12,13 @@ namespace hz
 	{
 	private:
 		std::string _function;
-		std::vector<IntermediateCommand*> _ir;
+
+	private:
+		const std::vector<IntermediateCommand*>& _ir;
 
 	public:
-		IntermediateOptimizer(const std::string& function, std::vector<IntermediateCommand*>&& ir)
-			: _function{ function }, _ir { std::move(ir) }
+		IntermediateOptimizer(const std::string& function, const std::vector<IntermediateCommand*>& ir)
+			: _function{ function }, _ir{ ir }
 		{
 		}
 

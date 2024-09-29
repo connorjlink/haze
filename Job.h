@@ -27,8 +27,8 @@ namespace hz
 		std::string format() const;
 
 	public:
-		Job(std::string task, std::uint32_t uuid)
-			: _task{ std::move(task) }, _uuid(uuid)
+		Job(const std::string& task, std::uint32_t uuid)
+			: _task{ task }, _uuid(uuid)
 		{
 			_start_time = std::chrono::high_resolution_clock::now();
 			_stop_time = std::chrono::high_resolution_clock::time_point::min();
