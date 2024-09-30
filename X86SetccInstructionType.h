@@ -8,7 +8,16 @@ namespace hz
 {
 	enum class X86SetccInstructionType
 	{
-
+		SETE,
+		SETNE,
+		SETL,
+		SETLE,
+		SETG,
+		SETGE,
+		SETA,
+		SETAE,
+		SETB,
+		SETBE,
 	};
 }
 

@@ -539,6 +539,39 @@ namespace hz
 		return out;
 	}
 
+	byterange X86Builder::cmp_ri(std::uint8_t lhs, std::int32_t immediate)
+	{
+		byterange out{};
+
+		if (lhs == EAX)
+		{
+			// 3D id --> CMP EAX, imm32
+			PUT(BinaryUtilities::range8(0x3D));
+			PUT(BinaryUtilities::range32(immediate));
+		}
+
+		else
+		{
+			if (immediate >= -0x80 && immediate <= 0x7F)
+			{
+				// 83 /7 ib --> CMP r/m32, imm8
+				PUT(BinaryUtilities::range8(0x83));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(lhs, 0b111)));
+				PUT(BinaryUtilities::range8(immediate));
+			}
+
+			else
+			{
+				// 81 /7 id --> CMP r/m32, imm32
+				PUT(BinaryUtilities::range8(0x81));
+				PUT(BinaryUtilities::range8(X86Builder::modrm_rr(lhs, 0b111)));
+				PUT(BinaryUtilities::range32(immediate));
+			}
+		}
+		
+		return out;
+	}
+
 
 	byterange X86Builder::call_absolute(std::uint32_t address)
 	{
@@ -552,7 +585,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::call_relative(std::uint32_t displacement)
+	byterange X86Builder::call_relative(std::int32_t displacement)
 	{
 		byterange out{};
 
@@ -563,42 +596,249 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::jmp_relative(std::uint32_t displacement)
+	byterange X86Builder::jmp_relative(std::int32_t displacement)
 	{
 		byterange out{};
 
-		// E9 cd --> JMP rel32
-		PUT(BinaryUtilities::range8(0xE9));
-		PUT(BinaryUtilities::range32(displacement));
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			//EB cb --> JMP rel8
+			PUT(BinaryUtilities::range8(0xEB));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// E9 cd --> JMP rel32
+			PUT(BinaryUtilities::range8(0xE9));
+			PUT(BinaryUtilities::range32(displacement));
+		}
 
 		return out;
 	}
 
-	byterange X86Builder::je_relative(std::uint32_t displacement)
+	byterange X86Builder::je_relative(std::int32_t displacement)
 	{
 		byterange out{};
 
-		// 0F 84 cw/cd --> JE rel16/32
-		PUT(BinaryUtilities::range8(0x0F));
-		PUT(BinaryUtilities::range8(0x84));
-		PUT(BinaryUtilities::range32(displacement));
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 74 cb --> JE rel8
+			PUT(BinaryUtilities::range8(0x74));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 84 cw/cd --> JE rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x84));
+			PUT(BinaryUtilities::range32(displacement));
+		}
 
 		return out;
 	}
 
-	byterange X86Builder::jne_relative(std::uint32_t displacement)
+	byterange X86Builder::jne_relative(std::int32_t displacement)
 	{
 		byterange out{};
 
-		// 0F 85 cw/cd --> JNE rel16/32
-		PUT(BinaryUtilities::range8(0x0F));
-		PUT(BinaryUtilities::range8(0x85));
-		PUT(BinaryUtilities::range32(displacement));
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 75 cb --> JNE rel8
+			PUT(BinaryUtilities::range8(0x75));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 85 cw/cd --> JNE rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x85));
+			PUT(BinaryUtilities::range32(displacement));
+		}
 
 		return out;
 	}
 
-	byterange X86Builder::sete(std::uint8_t destination)
+	byterange X86Builder::jl_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 7C cb --> JL rel8
+			PUT(BinaryUtilities::range8(0x7C));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 8C cw/cd --> JL rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x8C));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::jle_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 7E cb --> JLE rel8
+			PUT(BinaryUtilities::range8(0x7E));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 8E cw/cd --> JLE rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x8E));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::jg_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 7F cb --> JG rel8
+			PUT(BinaryUtilities::range8(0x7F));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 8F cw/cd --> JG rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x8F));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::jge_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 7D cb --> JGE rel8
+			PUT(BinaryUtilities::range8(0x7D));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 8D cw/cd --> JGE rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x8D));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::ja_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 77 cb --> JA rel8
+			PUT(BinaryUtilities::range8(0x77));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 87 cw/cd --> JA rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x87));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::jae_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 73 cb --> JAE rel8
+			PUT(BinaryUtilities::range8(0x73));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 83 cw/cd --> JAE rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x83));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::jb_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 72 cb --> JB rel8
+			PUT(BinaryUtilities::range8(0x72));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 82 cw/cd	JB rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x82));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::jbe_relative(std::int32_t displacement)
+	{
+		byterange out{};
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			// 76 cb --> JBE rel8
+			PUT(BinaryUtilities::range8(0x76));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			// 0F 86 cw/cd --> JBE rel16/32
+			PUT(BinaryUtilities::range8(0x0F));
+			PUT(BinaryUtilities::range8(0x86));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+
+	byterange X86Builder::sete_r(std::uint8_t destination)
 	{
 		byterange out{};
 
@@ -610,7 +850,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::setne(std::uint8_t destination)
+	byterange X86Builder::setne_r(std::uint8_t destination)
 	{
 		byterange out{};
 
@@ -622,7 +862,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::setl(std::uint8_t destination)
+	byterange X86Builder::setl_r(std::uint8_t destination)
 	{
 		byterange out{};
 
@@ -634,7 +874,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::setg(std::uint8_t destination)
+	byterange X86Builder::setg_r(std::uint8_t destination)
 	{
 		byterange out{};
 

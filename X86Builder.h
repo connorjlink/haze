@@ -105,30 +105,60 @@ namespace hz
 		static byterange test_rr(std::uint8_t, std::uint8_t);
 		// cmp lhs, rhs
 		static byterange cmp_rr(std::uint8_t, std::uint8_t);
+		// cmp lhs, imm32
+		static byterange cmp_ri(std::uint8_t, std::int32_t);
 
 	public:
 		// call [pointer]
 		static byterange call_absolute(std::uint32_t);
 		// call disp32
-		static byterange call_relative(std::uint32_t);
+		static byterange call_relative(std::int32_t);
 
 	public:
 		// jmp disp32
-		static byterange jmp_relative(std::uint32_t);
+		static byterange jmp_relative(std::int32_t);
 		// je disp32
-		static byterange je_relative(std::uint32_t);
+		static byterange je_relative(std::int32_t);
 		// jne disp32
-		static byterange jne_relative(std::uint32_t);
+		static byterange jne_relative(std::int32_t);
+		// jl disp32
+		static byterange jl_relative(std::int32_t);
+		// jle disp32
+		static byterange jle_relative(std::int32_t);
+		// jg disp32
+		static byterange jg_relative(std::int32_t);
+		// jge disp32
+		static byterange jge_relative(std::int32_t);
+		// ja disp32
+		static byterange ja_relative(std::int32_t);
+		// jae disp32
+		static byterange jae_relative(std::int32_t);
+		// jb disp32
+		static byterange jb_relative(std::int32_t);
+		// jbe disp32
+		static byterange jbe_relative(std::int32_t);
 
 	public:
 		// sete destination
-		static byterange sete(std::uint8_t);
+		static byterange sete_r(std::uint8_t);
 		// setne destination
-		static byterange setne(std::uint8_t);
+		static byterange setne_r(std::uint8_t);
 		// setl destination
-		static byterange setl(std::uint8_t);
+		static byterange setl_r(std::uint8_t);
+		// setle destination
+		static byterange setle_r(std::uint8_t);
 		// setg destination
-		static byterange setg(std::uint8_t);
+		static byterange setg_r(std::uint8_t);
+		// setge destination
+		static byterange setge_r(std::uint8_t);
+		// seta destination
+		static byterange seta_r(std::uint8_t);
+		// setae destination
+		static byterange setae_r(std::uint8_t);
+		// setb destination
+		static byterange setb_r(std::uint8_t);
+		// setbe destination
+		static byterange setbe_r(std::uint8_t);
 
 	public:
 		// movzx destination, source

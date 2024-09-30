@@ -119,6 +119,23 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class X86AndInstruction : public X86Instruction
+	{
+	private:
+		X86Operand* _destination;
+		X86Operand* _source;
+
+	public:
+		X86AndInstruction(X86Operand* destination, X86Operand* source)
+			: _destination{ destination }, _source{ source }
+		{
+		}
+
+	public:
+		virtual X86InstructionType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class X86OrInstruction : public X86Instruction
 	{
 	private:
@@ -221,7 +238,7 @@ namespace hz
 
 	class X86JccInstruction : public X86Instruction
 	{
-	private:
+	protected:
 		const std::string& _label;
 		std::int32_t _displacement;
 
@@ -237,6 +254,16 @@ namespace hz
 	};
 
 	class X86CallInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86ApiCallInstruction : public X86JccInstruction
 	{
 	public:
 		using X86JccInstruction::X86JccInstruction;
@@ -276,9 +303,89 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class X86JlInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JleInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JgInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JgeInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JaInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JaeInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JbInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86JbeInstruction : public X86JccInstruction
+	{
+	public:
+		using X86JccInstruction::X86JccInstruction;
+
+	public:
+		virtual X86JccInstructionType jtype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class X86SetccInstruction : public X86Instruction
 	{
-	private:
+	protected:
 		X86Operand* _operand;
 		
 	public:
@@ -289,7 +396,7 @@ namespace hz
 
 	public:
 		virtual X86InstructionType itype() const final override;
-		virtual X86SetccInstructionType stype() const;
+		virtual X86SetccInstructionType stype() const = 0;
 	};
 
 	class X86SeteInstruction : public X86SetccInstruction
@@ -322,7 +429,67 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class X86SetleInstruction : public X86SetccInstruction
+	{
+	public:
+		using X86SetccInstruction::X86SetccInstruction;
+
+	public:
+		virtual X86SetccInstructionType stype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class X86SetgInstruction : public X86SetccInstruction
+	{
+	public:
+		using X86SetccInstruction::X86SetccInstruction;
+
+	public:
+		virtual X86SetccInstructionType stype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86SetgeInstruction : public X86SetccInstruction
+	{
+	public:
+		using X86SetccInstruction::X86SetccInstruction;
+
+	public:
+		virtual X86SetccInstructionType stype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86SetaInstruction : public X86SetccInstruction
+	{
+	public:
+		using X86SetccInstruction::X86SetccInstruction;
+
+	public:
+		virtual X86SetccInstructionType stype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86SetaeInstruction : public X86SetccInstruction
+	{
+	public:
+		using X86SetccInstruction::X86SetccInstruction;
+
+	public:
+		virtual X86SetccInstructionType stype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86SetbInstruction : public X86SetccInstruction
+	{
+	public:
+		using X86SetccInstruction::X86SetccInstruction;
+
+	public:
+		virtual X86SetccInstructionType stype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class X86SetbeInstruction : public X86SetccInstruction
 	{
 	public:
 		using X86SetccInstruction::X86SetccInstruction;

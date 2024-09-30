@@ -8,10 +8,19 @@ namespace hz
 {
 	enum class X86JccInstructionType
 	{
+		API_CALL,
 		CALL,
 		JMP,
 		JE,
 		JNE,
+		JL,
+		JLE,
+		JG,
+		JGE,
+		JA,
+		JAE,
+		JB,
+		JBE,
 	};
 }
 
