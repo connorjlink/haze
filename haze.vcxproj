@@ -34,6 +34,7 @@
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="X86Instruction.cpp" />
     <ClCompile Include="X86Linker.cpp" />
+    <ClCompile Include="X86Operand.cpp" />
     <ClInclude Include="AllocationType.h" />
     <ClInclude Include="ArchitectureType.h" />
     <ClCompile Include="ArgumentExpression.cpp" />
@@ -166,7 +167,12 @@
     <ClCompile Include="X86Emitter.cpp" />
     <ClInclude Include="X86Instruction.h" />
     <ClInclude Include="X86InstructionType.h" />
+    <ClInclude Include="X86JccInstructionType.h" />
     <ClInclude Include="X86Linker.h" />
+    <ClInclude Include="X86Operand.h" />
+    <ClInclude Include="X86OperandType.h" />
+    <ClInclude Include="X86Register.h" />
+    <ClInclude Include="X86SetccInstructionType.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdjustExpression.h" />

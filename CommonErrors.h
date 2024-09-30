@@ -12,6 +12,9 @@ namespace hz
 	class CommonErrors
 	{
 	public:
+		static void unsupported_instruction_format(const std::string&, const std::string&);
+
+	public:
 		static void invalid_parser_type(ParserType, const Token&);
 
 	public:

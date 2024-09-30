@@ -9,6 +9,11 @@ import std;
 
 namespace hz
 {
+	void CommonErrors::unsupported_instruction_format(const std::string& instruction, const std::string& format)
+	{
+		_error_reporter->post_error(std::format("unsupported instruction format `{}` for `{}`", format, instruction), NULL_TOKEN);
+	}
+
 	void CommonErrors::invalid_parser_type(ParserType ptype, const Token& token)
 	{
 		_error_reporter->post_error(std::format("[internal compiler error] invalid parser type `{}`", _parser_type_map.at(ptype)), token);

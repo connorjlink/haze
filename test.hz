@@ -1,48 +1,15 @@
-function byte tri = (byte n)
+function byte fib = (byte n)
 {
-	byte sum = 0;
-
-	while (n > 0)
-	{
-		sum = sum + n;
-		n = n - 1;
-	}
-
-	return sum;
-}
-
-function byte foo = (byte x)
-{
-	byte temp = tri(x);
-	temp = temp + x;
-	return temp;
-}
-
-function byte bar = (byte i)
-{
-	if (i == 0)
+	if (n == 0)
 	{
 		return 0;
 	}
 
-	byte a = i - 1;
-	byte z = bar(a);
-	return z + i;
+	return n + fib(n - 1);
 }
 
 function byte main = ()
 {
-	byte w = 0;
-	while (w < 10)
-	{
-		byte g = bar(w);
-		byte h = tri(w);
-
-		print(g);
-		print(h);
-
-		w = w + 1;
-	}
-	
+	fib(10);
 	return 0;
 }

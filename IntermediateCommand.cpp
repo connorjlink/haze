@@ -191,7 +191,7 @@ namespace hz
 		byterange out{};
 
 		// mov destination, [ebp + offset]
-		PUT(X86Builder::mov_ro(_destination, _offset));
+		PUT(X86Builder::mov_rbo(_destination, _offset));
 
 		return out;
 	}
@@ -207,7 +207,7 @@ namespace hz
 		byterange out{};
 
 		// mov [ebp + offset], destination
-		PUT(X86Builder::mov_or(_offset, _source));
+		PUT(X86Builder::mov_obr(_offset, _source));
 
 		return out;
 	}
@@ -228,7 +228,7 @@ namespace hz
 
 		PUT(X86Builder::test_rr(_source, _source));
 		PUT(X86Builder::sete(_destination));
-		PUT(X86Builder::movzx(_destination, _source));
+		PUT(X86Builder::movzx_rr(_destination, _source));
 
 		return out;
 	}
@@ -424,7 +424,7 @@ namespace hz
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::sete(_destination));
-		PUT(X86Builder::movzx(_destination, _destination));
+		PUT(X86Builder::movzx_rr(_destination, _destination));
 
 		return out;
 	}
@@ -445,7 +445,7 @@ namespace hz
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::setne(_destination));
-		PUT(X86Builder::movzx(_destination, _destination));
+		PUT(X86Builder::movzx_rr(_destination, _destination));
 
 		return out;
 	}
@@ -469,7 +469,7 @@ namespace hz
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::setl(_destination));
-		PUT(X86Builder::movzx(_destination, _destination));
+		PUT(X86Builder::movzx_rr(_destination, _destination));
 
 		return out;
 	}
@@ -493,7 +493,7 @@ namespace hz
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::setg(_destination));
-		PUT(X86Builder::movzx(_destination, _destination));
+		PUT(X86Builder::movzx_rr(_destination, _destination));
 
 		return out;
 	}
@@ -606,7 +606,7 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::mov_ro(_location, _offset));
+		PUT(X86Builder::mov_rbo(_location, _offset));
 
 		return out;
 	}

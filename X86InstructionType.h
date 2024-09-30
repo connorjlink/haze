@@ -8,7 +8,31 @@ namespace hz
 {
 	enum class X86InstructionType
 	{
+		PUSH,
+		POP,
 
+		MOV,
+		MOVZX,
+
+		ADD,
+		SUB,
+		OR,
+		AND,
+		XOR,
+
+		INC,
+		DEC,
+
+		TEST,
+		CMP,
+
+		JCC,
+
+		SETCC,
+
+		RET,
+		
+		LEAVE,
 	};
 }
 

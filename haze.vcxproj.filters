@@ -78,6 +78,9 @@
     <Filter Include="Source Files\Assembly">
       <UniqueIdentifier>{2b124717-431d-4075-8412-b790d2bca9eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Target">
+      <UniqueIdentifier>{8790601f-e233-46a3-ba7b-c2891b0a8a4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -346,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="BinaryUtilities.cpp">
       <Filter>Source Files\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="X86Operand.cpp">
+      <Filter>Source Files\Assembly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -708,6 +714,21 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X86Operand.h">
+      <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="X86OperandType.h">
+      <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="X86Register.h">
+      <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="X86JccInstructionType.h">
+      <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="X86SetccInstructionType.h">
+      <Filter>Source Files\Assembly</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

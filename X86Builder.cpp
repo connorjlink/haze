@@ -94,7 +94,7 @@ namespace hz
 	}
 
 
-	byterange X86Builder::mov_ro(std::uint8_t destination, std::int32_t offset)
+	byterange X86Builder::mov_rbo(std::uint8_t destination, std::int32_t offset)
 	{
 		byterange out{};
 
@@ -116,7 +116,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::mov_or(std::int32_t offset, std::uint8_t destination)
+	byterange X86Builder::mov_obr(std::int32_t offset, std::uint8_t destination)
 	{
 		byterange out{};
 
@@ -207,7 +207,7 @@ namespace hz
 	}
 
 
-	byterange X86Builder::mov_mi(std::uint8_t base, std::uint8_t offset, std::uint32_t immediate)
+	byterange X86Builder::mov_bdi(std::uint8_t base, std::uint8_t offset, std::uint32_t immediate)
 	{
 		byterange out{};
 
@@ -646,7 +646,7 @@ namespace hz
 		return out;
 	}
 
-	byterange X86Builder::movzx(std::uint8_t destination, std::uint8_t source)
+	byterange X86Builder::movzx_rr(std::uint8_t destination, std::uint8_t source)
 	{
 		byterange out{};
 

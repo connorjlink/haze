@@ -3,25 +3,13 @@
 
 #include "Constants.h"
 #include "InstructionEncoding.h"
+#include "X86Register.h"
 
 // Haze X86Builder.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	// registers
-	enum : register_t
-	{
-		EAX = 0,
-		ECX,
-		EDX,
-		EBX,
-		ESP,
-		EBP,
-		ESI,
-		EDI,
-	};
-
 	class X86Builder
 	{
 	public:
@@ -53,10 +41,14 @@ namespace hz
 		static byterange mov_rr(std::uint8_t, std::uint8_t);
 
 	public:
-		// mov destination, [source + offset]
-		static byterange mov_ro(std::uint8_t, std::int32_t);
-		// mov [source + offset], destination
-		static byterange mov_or(std::int32_t, std::uint8_t);
+		// mov destination, [base + displacement]
+		static byterange mov_rbd(std::uint8_t, std::uint8_t, std::int32_t);
+		// mov [base + displacement], destination
+		static byterange mov_bdr(std::uint8_t, std::int32_t, std::uint8_t);
+		// mov destination, [EBP + displacement]
+		static byterange mov_rbo(std::uint8_t, std::int32_t);
+		// mov [EBP + displacement], destination
+		static byterange mov_obr(std::int32_t, std::uint8_t);
 
 	public:
 		// mov destination, [pointer]
@@ -69,8 +61,8 @@ namespace hz
 		static byterange mov_ri(std::uint8_t, std::uint32_t);
 
 	public:
-		// mov [base + offset], immediate
-		static byterange mov_mi(std::uint8_t, std::uint8_t, std::uint32_t);
+		// mov [base + displacement], immediate
+		static byterange mov_bdi(std::uint8_t, std::int32_t, std::uint32_t);
 
 	public:
 		// add destination, source
@@ -140,7 +132,7 @@ namespace hz
 
 	public:
 		// movzx destination, source
-		static byterange movzx(std::uint8_t, std::uint8_t);
+		static byterange movzx_rr(std::uint8_t, std::uint8_t);
 
 	public:
 		// ret
