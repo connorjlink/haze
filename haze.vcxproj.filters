@@ -81,6 +81,9 @@
     <Filter Include="Source Files\Target">
       <UniqueIdentifier>{8790601f-e233-46a3-ba7b-c2891b0a8a4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Platform">
+      <UniqueIdentifier>{75155f9f-2629-426e-aaab-3d1c281eea39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="X86Operand.cpp">
       <Filter>Source Files\Assembly</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>Source Files\Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -640,9 +646,6 @@
     <ClInclude Include="ExitStatement.h">
       <Filter>Source Files\Statement</Filter>
     </ClInclude>
-    <ClInclude Include="TypeSpecifier.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scope.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -729,6 +732,30 @@
     </ClInclude>
     <ClInclude Include="X86SetccInstructionType.h">
       <Filter>Source Files\Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeSpecifier.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeQualifier.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeSignedness.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeStorage.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeType.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="IntTypeType.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformVariables.h">
+      <Filter>Source Files\Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

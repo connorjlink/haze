@@ -862,16 +862,16 @@ namespace hz
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
-		case REGISTER:
-		{
-			auto register_operand = AS_REGISTER_OPERAND(_operand);
-			return X86Builder::seta_r(register_operand->_register);
-		} break;
+			case REGISTER:
+			{
+				auto register_operand = AS_REGISTER_OPERAND(_operand);
+				return X86Builder::seta_r(register_operand->_register);
+			} break;
 
-		default:
-		{
-			CommonErrors::unsupported_instruction_format("seta", _operand_type_map.at(_operand->otype()));
-		} break;
+			default:
+			{
+				CommonErrors::unsupported_instruction_format("seta", _operand_type_map.at(_operand->otype()));
+			} break;
 		}
 	}
 

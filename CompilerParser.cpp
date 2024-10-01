@@ -307,14 +307,14 @@ namespace hz
 	{
 		const auto current_token = peek();
 
-		if (!_type_specifier_map.contains(current_token.type))
+		if (!_type_specifier_token_map.contains(current_token.type))
 		{
 			_error_reporter->post_error(std::format("unrecognized type specifier `{}`", current_token.value), current_token);
 			consume(current_token.type);
 			return TypeSpecifier::NVR;
 		}
 
-		auto type_specifier = _type_specifier_map.at(peek().type);
+		auto type_specifier = _type_specifier_token_map.at(peek().type);
 		consume(peek().type);
 		return type_specifier;
 	}

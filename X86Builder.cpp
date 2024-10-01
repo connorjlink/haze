@@ -94,6 +94,50 @@ namespace hz
 	}
 
 
+	byterange X86Builder::mov_rbd(std::uint8_t destination, std::uint8_t base, std::int32_t displacement)
+	{
+		byterange out{};
+
+		// 8B /r --> MOV r32, r/m32
+		PUT(BinaryUtilities::range8(0x8B));
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, destination, base)));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b10, destination, base)));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
+	byterange X86Builder::mov_bdr(std::uint8_t base, std::int32_t displacement, std::uint8_t source)
+	{
+		byterange out{};
+
+		// 89 /r --> MOV r/m32, r32
+		PUT(BinaryUtilities::range8(0x89));
+
+		if (displacement >= -0x80 && displacement <= 0x7F)
+		{
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, source, base)));
+			PUT(BinaryUtilities::range8(displacement));
+		}
+
+		else
+		{
+			PUT(BinaryUtilities::range8(X86Builder::modrm(0b10, source, base)));
+			PUT(BinaryUtilities::range32(displacement));
+		}
+
+		return out;
+	}
+
 	byterange X86Builder::mov_rbo(std::uint8_t destination, std::int32_t offset)
 	{
 		byterange out{};
@@ -207,14 +251,14 @@ namespace hz
 	}
 
 
-	byterange X86Builder::mov_bdi(std::uint8_t base, std::uint8_t offset, std::uint32_t immediate)
+	byterange X86Builder::mov_bdi(std::uint8_t base, std::int8_t displacement, std::uint32_t immediate)
 	{
 		byterange out{};
 
 		// C7 /0 --> MOV r/m32, imm32
 		PUT(BinaryUtilities::range8(0xC7));
 		PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, 0b000, base)));
-		PUT(BinaryUtilities::range8(offset));
+		PUT(BinaryUtilities::range8(displacement));
 		PUT(BinaryUtilities::range32(immediate));
 
 		return out;
@@ -874,6 +918,18 @@ namespace hz
 		return out;
 	}
 
+	byterange X86Builder::setle_r(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 9E --> SETLE r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x9E));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
 	byterange X86Builder::setg_r(std::uint8_t destination)
 	{
 		byterange out{};
@@ -881,6 +937,66 @@ namespace hz
 		// 0F 9F --> SETG r/m8
 		PUT(BinaryUtilities::range8(0x0F));
 		PUT(BinaryUtilities::range8(0x9F));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::setge_r(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 9D --> SETGE r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x9D));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::seta_r(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 97 --> SETA r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x97));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::setae_r(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 93 --> SETAE r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x93));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::setb_r(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 92 --> SETB r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x92));
+		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
+
+		return out;
+	}
+
+	byterange X86Builder::setbe_r(std::uint8_t destination)
+	{
+		byterange out{};
+
+		// 0F 96 --> SETBE r/m8
+		PUT(BinaryUtilities::range8(0x0F));
+		PUT(BinaryUtilities::range8(0x96));
 		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(destination, destination)));
 
 		return out;

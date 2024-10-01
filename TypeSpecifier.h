@@ -11,13 +11,34 @@ namespace hz
     enum class TypeSpecifier
     {
         BYTE,
-        NVR,
+        WORD,
+        DWORD,
+        QWORD,
+        STRING,
+        STRUCT,
+        NVR, // "void"
     };
 
-    static const std::unordered_map<TokenType, TypeSpecifier> _type_specifier_map
+    static const std::unordered_map<TokenType, TypeSpecifier> _type_specifier_token_map
     {
         { TokenType::BYTE, TypeSpecifier::BYTE },
+        { TokenType::WORD, TypeSpecifier::WORD },
+        { TokenType::DWORD, TypeSpecifier::DWORD },
+        { TokenType::QWORD, TypeSpecifier::QWORD },
+        { TokenType::STRING, TypeSpecifier::STRING },
+        { TokenType::STRUCT, TypeSpecifier::STRUCT },
         { TokenType::NVR, TypeSpecifier::NVR },
+    };
+
+    static const std::unordered_map<TypeSpecifier, std::string> _type_specifier_map
+    {
+        { TypeSpecifier::BYTE, "byte" },
+        { TypeSpecifier::WORD, "word" },
+        { TypeSpecifier::DWORD, "dword" },
+        { TypeSpecifier::QWORD, "qword" },
+        { TypeSpecifier::STRING, "string" },
+        { TypeSpecifier::STRUCT, "struct" },
+        { TypeSpecifier::NVR, "nvr" },
     };
 }
 

@@ -43,8 +43,15 @@ namespace hz
 		TILDE, EXCLAMATION,
 
 		FUNCTION,
+
 		BYTE,
+		WORD,
+		DWORD,
+		QWORD,
+		STRING,
+		STRUCT,
 		NVR,
+
 		RETURN,
 		WHILE,
 		FOR,

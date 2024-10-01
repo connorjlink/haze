@@ -43,7 +43,7 @@ namespace hz
 	public:
 		// mov destination, [base + displacement]
 		static byterange mov_rbd(std::uint8_t, std::uint8_t, std::int32_t);
-		// mov [base + displacement], destination
+		// mov [base + displacement], source
 		static byterange mov_bdr(std::uint8_t, std::int32_t, std::uint8_t);
 		// mov destination, [EBP + displacement]
 		static byterange mov_rbo(std::uint8_t, std::int32_t);
@@ -61,8 +61,8 @@ namespace hz
 		static byterange mov_ri(std::uint8_t, std::uint32_t);
 
 	public:
-		// mov [base + displacement], immediate
-		static byterange mov_bdi(std::uint8_t, std::int32_t, std::uint32_t);
+		// mov [base + disp8], imm32
+		static byterange mov_bdi(std::uint8_t, std::int8_t, std::uint32_t);
 
 	public:
 		// add destination, source

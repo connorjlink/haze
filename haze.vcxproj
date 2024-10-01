@@ -32,6 +32,7 @@
     <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
+    <ClCompile Include="Type.cpp" />
     <ClCompile Include="X86Instruction.cpp" />
     <ClCompile Include="X86Linker.cpp" />
     <ClCompile Include="X86Operand.cpp" />
@@ -154,12 +155,19 @@
     <ClInclude Include="IntermediateCommand.h" />
     <ClInclude Include="IntermediateOptimizer.h" />
     <ClInclude Include="IntermediateType.h" />
+    <ClInclude Include="IntTypeType.h" />
+    <ClInclude Include="PlatformVariables.h" />
     <ClInclude Include="RuntimeAllocator.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Scope.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Type.h" />
+    <ClInclude Include="TypeQualifier.h" />
+    <ClInclude Include="TypeSignedness.h" />
     <ClInclude Include="TypeSpecifier.h" />
+    <ClInclude Include="TypeStorage.h" />
+    <ClInclude Include="TypeType.h" />
     <ClInclude Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Builder.cpp" />
