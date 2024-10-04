@@ -39,8 +39,16 @@ namespace hz
         Statement* parse_unhook_statement(const std::string&);
 
     public:
-        TypeSpecifier parse_type_specifier();
         std::vector<Expression*> parse_arguments(bool);
+
+    public:
+        Type* parse_type();
+
+    public:
+        TypeQualifier parse_type_qualifier(bool = false);
+        TypeSignedness parse_type_signedness(bool = false);
+        TypeSpecifier parse_type_specifier(bool = false);
+        TypeStorage parse_type_storage(bool = false);
 
     public:
         Node* parse_function();

@@ -9,6 +9,7 @@
 #define AS_VARIABLE_SYMBOL(x) static_cast<VariableSymbol*>(x)
 #define AS_DEFINE_SYMBOL(x) static_cast<DefineSymbol*>(x)
 #define AS_LABEL_SYMBOL(x) static_cast<LabelSymbol*>(x)
+#define AS_STRUCT_SYMBOL(x) static_cast<StructSymbol*>(x)
 
 namespace hz
 {
@@ -19,6 +20,7 @@ namespace hz
 		VARIABLE,
 		DEFINE,
 		LABEL,
+		STRUCT,
 	};
 
 	static const std::unordered_map<SymbolType, std::string_view> _symbol_map
@@ -28,6 +30,7 @@ namespace hz
 		{ SymbolType::VARIABLE, "variable" },
 		{ SymbolType::DEFINE, "define" },
 		{ SymbolType::LABEL, "label" },
+		{ SymbolType::STRUCT, "struct" },
 	};
 }
 

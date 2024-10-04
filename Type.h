@@ -28,6 +28,7 @@ namespace hz
 
 	public:
 		virtual TypeType ttype() const = 0;
+		virtual std::uint16_t size() const = 0;
 	};
 
 	class IntType : public Type
@@ -44,6 +45,7 @@ namespace hz
 
 	public:
 		virtual TypeType ttype() const final override;
+		virtual std::uint16_t size() const final override;
 	};
 
 	class StructType : public Type
@@ -59,21 +61,20 @@ namespace hz
 
 	public:
 		virtual TypeType ttype() const final override;
+		virtual std::uint16_t size() const final override;
 	};
 
 	class StringType : public Type
 	{
 	public:
-		platform_address_size address;
-
-	public:
-		StringType(TypeQualifier qualifier, TypeStorage storage, platform_address_size address)
-			: Type{ qualifier, storage }, address{ address }
+		StringType(TypeQualifier qualifier, TypeStorage storage)
+			: Type{ qualifier, storage }
 		{
 		}
 
 	public:
 		virtual TypeType ttype() const final override;
+		virtual std::uint16_t size() const final override;
 	};
 }
 

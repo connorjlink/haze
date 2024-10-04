@@ -30,6 +30,14 @@ namespace hz
         { TokenType::NVR, TypeSpecifier::NVR },
     };
 
+    static const std::unordered_map<TypeSpecifier, IntTypeType> _type_specifier_int_map
+    {
+        { TypeSpecifier::BYTE, IntTypeType::INT8 },
+        { TypeSpecifier::WORD, IntTypeType::INT16 },
+        { TypeSpecifier::DWORD, IntTypeType::INT32 },
+        { TypeSpecifier::QWORD, IntTypeType::INT64 },
+    };
+
     static const std::unordered_map<TypeSpecifier, std::string> _type_specifier_map
     {
         { TypeSpecifier::BYTE, "byte" },

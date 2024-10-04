@@ -212,8 +212,7 @@ namespace hz
 
 	IdentifierExpression* Parser::parse_identifier_expression()
 	{
-		const auto name_token = consume(TokenType::IDENTIFIER);
-		return new IdentifierExpression{ name_token.value, name_token };
+		return parse_identifier();
 	}
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
@@ -459,5 +458,11 @@ namespace hz
 		} while (true);
 
 		return left;
+	}
+
+	IdentifierExpression* Parser::parse_identifier()
+	{
+		const auto name_token = consume(TokenType::IDENTIFIER);
+		return new IdentifierExpression{ name_token.value, name_token };
 	}
 }

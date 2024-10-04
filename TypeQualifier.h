@@ -12,6 +12,12 @@ namespace hz
 		MUTABLE,
 	};
 
+	static const std::unordered_map<TokenType, TypeQualifier> _type_qualifier_token_map
+	{
+		{ TokenType::IMMUTABLE, TypeQualifier::IMMUTABLE },
+		{ TokenType::MUTABLE, TypeQualifier::MUTABLE },
+	};
+
 	static const std::unordered_map<TypeQualifier, std::string> _type_qualifier_map
 	{
 		{ TypeQualifier::IMMUTABLE, "immutable" },

@@ -31,4 +31,9 @@ namespace hz
 	{
 		return SymbolType::LABEL;
 	}
+
+	SymbolType StructSymbol::ytype() const
+	{
+		return SymbolType::STRUCT;
+	}
 }

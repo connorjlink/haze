@@ -25,6 +25,9 @@ namespace hz
 		static void must_be_constexpr(const std::string&, const Token&);
 
 	public:
+		static void invalid_type(const std::string&, const Token&);
+
+	public:
 		static void unsupported_statement(const std::string&, const std::string&, const Token&);
 		static void unsupported_expression(const std::string&, const std::string&, const Token&);
 	};

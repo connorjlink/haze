@@ -34,6 +34,11 @@ namespace hz
 		_error_reporter->post_error(std::format("{} must evaluate to a constant expression", message), token);
 	}
 
+	void CommonErrors::invalid_type(const std::string& component, const Token& token)
+	{
+		_error_reporter->post_error(std::format("invalid type {} `{}`", component, token.value), token);
+	}
+
 	void CommonErrors::unsupported_statement(const std::string& source, const std::string& type, const Token& token)
 	{
 		_error_reporter->post_error(std::format("unsupported {} statement type `{}`", source, type), token);

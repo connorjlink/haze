@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	enum class TypeType
+	enum class TypeType : std::uint16_t
 	{
 		INT,
 		STRUCT,

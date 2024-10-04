@@ -83,6 +83,9 @@ namespace hz
 		Expression* parse_infix_expression(Expression*, Precedence);
 
 	public:
+		IdentifierExpression* parse_identifier();
+
+	public:
 		virtual ParserType ptype() const = 0;
 		virtual std::vector<Node*> parse() = 0;
 

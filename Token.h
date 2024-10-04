@@ -44,6 +44,15 @@ namespace hz
 
 		FUNCTION,
 
+		IMMUTABLE,
+		MUTABLE,
+
+		UNSIGNED,
+		SIGNED,
+
+		VALUE,
+		PTR,
+
 		BYTE,
 		WORD,
 		DWORD,
@@ -70,8 +79,6 @@ namespace hz
 		MOVE, LOAD, SAVE, COPY, IADD, ISUB, BAND, BIOR, BXOR, CALL, EXIT, PUSH, PULL, BRNZ, BOOL, STOP,
 
 		PRINT,
-
-		STRING,
 
 		END,
 	};
@@ -102,6 +109,15 @@ namespace hz
 		bimap_t{ S("~"), TokenType::TILDE },
 		bimap_t{ S("!"), TokenType::EXCLAMATION },
 		
+		bimap_t{ S("immutable"), TokenType::IMMUTABLE },
+		bimap_t{ S("mutable"), TokenType::MUTABLE },
+
+		bimap_t{ S("unsigned"), TokenType::UNSIGNED },
+		bimap_t{ S("signed"), TokenType::SIGNED },
+
+		bimap_t{ S("value"), TokenType::VALUE },
+		bimap_t{ S("ptr"), TokenType::PTR },
+
 		bimap_t{ S("function"), TokenType::FUNCTION },
 		bimap_t{ S("byte"), TokenType::BYTE },
 		bimap_t{ S("nvr"), TokenType::NVR},
@@ -144,7 +160,7 @@ namespace hz
 		
 		bimap_t{ S("print"), TokenType::PRINT },
 
-		bimap_t{ S("[string literal]"), TokenType::STRING },
+		bimap_t{ S("string"), TokenType::STRING },
 		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },
 		
 		bimap_t{ S("eof"), TokenType::END },

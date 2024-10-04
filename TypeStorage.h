@@ -12,6 +12,12 @@ namespace hz
 		PTR,
 	};
 
+	static const std::unordered_map<TokenType, TypeStorage> _type_storage_token_map
+	{
+		{ TokenType::VALUE, TypeStorage::VALUE },
+		{ TokenType::PTR, TypeStorage::PTR },
+	};
+
 	static const std::unordered_map<TypeStorage, std::string> _type_storage_map
 	{
 		{ TypeStorage::VALUE, "value" },

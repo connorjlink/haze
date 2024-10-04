@@ -20,7 +20,10 @@ import std;
 #include "CommandLineOptions.h"
 #include "Symbol.h"
 #include "RandomUtility.h"
+#include "Type.h"
+#include "HeapAllocator.h"
 #include "ErrorReporter.h"
+#include "CommonErrors.h"
 
 // Haze CompilerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -303,20 +306,124 @@ namespace hz
 		return arguments;
 	}
 
-	TypeSpecifier CompilerParser::parse_type_specifier()
+	TypeQualifier CompilerParser::parse_type_qualifier(bool is_mandatory)
 	{
-		const auto current_token = peek();
+		const auto& current_token = peek();
 
-		if (!_type_specifier_token_map.contains(current_token.type))
+		auto qualifier = TypeQualifier::IMMUTABLE;
+		if (_type_qualifier_token_map.contains(current_token.type))
 		{
-			_error_reporter->post_error(std::format("unrecognized type specifier `{}`", current_token.value), current_token);
-			consume(current_token.type);
-			return TypeSpecifier::NVR;
+			qualifier = _type_qualifier_token_map.at(current_token.type);
 		}
 
-		auto type_specifier = _type_specifier_token_map.at(peek().type);
-		consume(peek().type);
-		return type_specifier;
+		else if (is_mandatory)
+		{
+			CommonErrors::invalid_type("qualifier", current_token);
+		}
+
+		consume(current_token.type);
+
+		return qualifier;
+	}
+
+	TypeSignedness CompilerParser::parse_type_signedness(bool is_mandatory)
+	{
+		const auto& current_token = peek();
+
+		auto signedness = TypeSignedness::UNSIGNED;
+		if (_type_signedness_token_map.contains(current_token.type))
+		{
+			signedness = _type_signedness_token_map.at(current_token.type);
+		}
+
+		else if (is_mandatory)
+		{
+			CommonErrors::invalid_type("signedness", current_token);
+		}
+
+		consume(current_token.type);
+
+		return signedness;
+	}
+
+	TypeSpecifier CompilerParser::parse_type_specifier(bool is_mandatory)
+	{
+		const auto& current_token = peek();
+
+		auto specifier = TypeSpecifier::NVR;
+		if (_type_specifier_token_map.contains(current_token.type))
+		{
+			specifier = _type_specifier_token_map.at(current_token.type);
+		}
+
+		else if (is_mandatory)
+		{
+			CommonErrors::invalid_type("specifier", current_token);
+		}
+
+		consume(current_token.type);
+
+		return specifier;
+	}
+
+	TypeStorage CompilerParser::parse_type_storage(bool is_mandatory)
+	{
+		const auto& current_token = peek();
+
+		auto storage = TypeStorage::VALUE;
+		if (_type_storage_token_map.contains(current_token.type))
+		{
+			storage = _type_storage_token_map.at(current_token.type);
+		}
+
+		else if (is_mandatory)
+		{
+			CommonErrors::invalid_type("storage", current_token);
+		}
+
+		consume(current_token.type);
+
+		return storage;
+	}
+
+	Type* CompilerParser::parse_type()
+	{
+		// default is `const` but can be overriden
+		const auto qualifier = parse_type_qualifier();
+
+		// default is `unsigned` if integer by can be overriden
+		const auto signedness = parse_type_signedness();
+
+		// type specifier is mandatory
+		const auto specifier = parse_type_specifier(true);
+
+		// default is `value` but can be overriden
+		const auto storage = parse_type_storage();
+
+	
+		using enum TypeSpecifier;
+		switch (specifier)
+		{
+			case BYTE: [[fallthrough]];
+			case WORD: [[fallthrough]];
+			case DWORD: [[fallthrough]];
+			case QWORD:
+			{
+				auto int_type = _type_specifier_int_map.at(specifier);
+				return new IntType{ qualifier, signedness, int_type, storage };
+			} break;
+
+			case STRUCT:
+			{
+				const auto tag = parse_identifier();
+				return new StructType{ qualifier, tag->name, storage };
+			} break;
+
+			case STRING:
+			{
+				return new StringType{ qualifier, storage };
+			} break;
+		}
 	}
 
 	Node* CompilerParser::parse_function()

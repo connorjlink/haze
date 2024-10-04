@@ -359,6 +359,9 @@
     <ClCompile Include="Type.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
+    <ClCompile Include="StructMember.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -756,6 +759,9 @@
     </ClInclude>
     <ClInclude Include="PlatformVariables.h">
       <Filter>Source Files\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="StructMember.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

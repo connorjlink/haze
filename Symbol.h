@@ -2,6 +2,7 @@
 #define HAZE_SYMBOL_H
 
 #include "SymbolType.h"
+#include "StructMember.h"
 #include "Function.h"
 
 // Haze Symbol.h
@@ -111,6 +112,21 @@ namespace hz
 	public:
 		LabelSymbol(const std::string& name, std::uint32_t address)
 			: Symbol{ name }, address{ address }
+		{
+		}
+
+	public:
+		virtual SymbolType ytype() const final override;
+	};
+
+	class StructSymbol : public Symbol
+	{
+	public:
+		std::unordered_map<std::string, StructMember> members;
+
+	public:
+		StructSymbol(const std::string& name)
+			: Symbol{ name }, members{}
 		{
 		}
 
