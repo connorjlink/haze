@@ -28,6 +28,7 @@ namespace hz
 		FUNCTION_ARGUMENT, // NOTE: is similar to argument, but used when passing arguments 
 						   // back to the code generator for function calls. Adds an extra
 						   // "parameter" Expression* to represent the value passed
+		STRUCT_MEMBER_DECLARATION,
 	};
 
 	static const std::unordered_map<ExpressionType, std::string_view> _expression_type_map

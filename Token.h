@@ -53,6 +53,8 @@ namespace hz
 		VALUE,
 		PTR,
 
+		STRUCT,
+
 		BYTE,
 		WORD,
 		DWORD,
@@ -117,6 +119,8 @@ namespace hz
 
 		bimap_t{ S("value"), TokenType::VALUE },
 		bimap_t{ S("ptr"), TokenType::PTR },
+
+		bimap_t{ S("struct"), TokenType::STRUCT },
 
 		bimap_t{ S("function"), TokenType::FUNCTION },
 		bimap_t{ S("byte"), TokenType::BYTE },

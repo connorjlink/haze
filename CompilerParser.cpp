@@ -16,6 +16,7 @@ import std;
 #include "ExitStatement.h"
 #include "StringExpression.h"
 #include "ArgumentExpression.h"
+#include "StructMemberDeclarationExpression.h"
 #include "FileManager.h"
 #include "CommandLineOptions.h"
 #include "Symbol.h"
@@ -246,6 +247,29 @@ namespace hz
 			return new ExpressionStatement{ expression, expression->_token };
 		}
 
+		return nullptr;
+	}
+
+	Expression* CompilerParser::parse_struct_member_declaration_statement(const std::string& enclosing_function)
+	{
+		const auto type = parse_type();
+		const auto name = parse_identifier();
+
+		consume(TokenType::COMMA);
+
+		return StructMemberDeclarationExpression{ type, name, name->_token };
+	}
+
+	std::vector<Expression*> CompilerParser::parse_struct_member_declaration_statements()
+	{
+		std::vector<Expression*> out{};
+
+
+		return out;
+	}
+
+	Statement* CompilerParser::parse_struct_declaration_statement(const std::string& enclosing_function)
+	{
 		return nullptr;
 	}
 

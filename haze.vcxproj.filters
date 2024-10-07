@@ -362,6 +362,9 @@
     <ClCompile Include="StructMember.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StructMemberDeclarationExpression.cpp">
+      <Filter>Source Files\Expression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -762,6 +765,9 @@
     </ClInclude>
     <ClInclude Include="StructMember.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructMemberDeclarationExpression.h">
+      <Filter>Source Files\Expression</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
