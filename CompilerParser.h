@@ -32,8 +32,8 @@ namespace hz
         Statement* parse_expression_statement(const std::string&);
 
     private:
-        Expression* parse_struct_member_declaration_statement(const std::string&);
-        std::vector<Expression*> parse_struct_member_declaration_statements();
+        Expression* parse_member_declaration_statement(const std::string&);
+        std::vector<Expression*> parse_member_declaration_statements();
 
     public:
         Statement* parse_struct_declaration_statement(const std::string&);

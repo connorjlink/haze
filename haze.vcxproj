@@ -33,7 +33,7 @@
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="StructMember.cpp" />
-    <ClCompile Include="StructMemberDeclarationExpression.cpp" />
+    <ClCompile Include="MemberDeclarationExpression.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="X86Instruction.cpp" />
     <ClCompile Include="X86Linker.cpp" />
@@ -163,7 +163,7 @@
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Scope.h" />
     <ClInclude Include="StructMember.h" />
-    <ClInclude Include="StructMemberDeclarationExpression.h" />
+    <ClInclude Include="MemberDeclarationExpression.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Type.h" />

@@ -250,17 +250,17 @@ namespace hz
 		return nullptr;
 	}
 
-	Expression* CompilerParser::parse_struct_member_declaration_statement(const std::string& enclosing_function)
+	Expression* CompilerParser::parse_member_declaration_statement(const std::string& enclosing_function)
 	{
 		const auto type = parse_type();
 		const auto name = parse_identifier();
 
 		consume(TokenType::COMMA);
 
-		return StructMemberDeclarationExpression{ type, name, name->_token };
+		return MemberDeclarationExpression{ type, name, name->_token };
 	}
 
-	std::vector<Expression*> CompilerParser::parse_struct_member_declaration_statements()
+	std::vector<Expression*> CompilerParser::parse_member_declaration_statements()
 	{
 		std::vector<Expression*> out{};
 

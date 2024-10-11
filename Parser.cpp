@@ -117,6 +117,54 @@ namespace hz
 		return symbol;
 	}
 
+	FunctionSymbol* Parser::reference_function(const std::string& name, const Token& location, bool mark_visited)
+	{
+		auto symbol = reference_symbol(SymbolType::FUNCTION, name, location, mark_visited);
+		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+
+		return function_symbol;
+	}
+
+	ArgumentSymbol* Parser::reference_argument(const std::string& name, const Token& location, bool mark_visited)
+	{
+		auto symbol = reference_symbol(SymbolType::ARGUMENT, name, location, mark_visited);
+		auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
+
+		return argument_symbol;
+	}
+
+	VariableSymbol* Parser::reference_variable(const std::string& name, const Token& location, bool mark_visited)
+	{
+		auto symbol = reference_symbol(SymbolType::VARIABLE, name, location, mark_visited);
+		auto variable_symbol = AS_VARIABLE_SYMBOL(symbol);
+
+		return variable_symbol;
+	}
+
+	DefineSymbol* Parser::reference_define(const std::string& name, const Token& location, bool mark_visited)
+	{
+		auto symbol = reference_symbol(SymbolType::DEFINE, name, location, mark_visited);
+		auto define_symbol = AS_DEFINE_SYMBOL(symbol);
+
+		return define_symbol;
+	}
+
+	LabelSymbol* Parser::reference_label(const std::string& name, const Token& location, bool mark_visited)
+	{
+		auto symbol = reference_symbol(SymbolType::LABEL, name, location, mark_visited);
+		auto label_symbol = AS_LABEL_SYMBOL(symbol);
+
+		return label_symbol;
+	}
+
+	StructSymbol* Parser::reference_struct(const std::string& name, const Token& location, bool mark_visited)
+	{
+		auto symbol = reference_symbol(SymbolType::STRUCT, name, location, mark_visited);
+		auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
+
+		return struct_symbol;
+	}
+
 	bool Parser::has_symbol(const std::string& name)
 	{
 		return symbol_table.contains(name);
