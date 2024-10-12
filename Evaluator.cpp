@@ -3,6 +3,7 @@ import std;
 #include "Evaluator.h"
 #include "IntegerLiteralExpression.h"
 #include "StringExpression.h"
+#include "CommonErrors.h"
 #include "ErrorReporter.h"
 
 // Haze Evaluator.cpp
@@ -10,9 +11,16 @@ import std;
 
 namespace hz
 {
-	variable_t harvest(Node* node)
+	Variable* harvest(Node* node)
 	{
-		if (node->ntype() == NodeType::EXPRESSION)
+		if (node->ntype() != NodeType::EXPRESSION)
+		{
+			//_error_reporter
+			CommonErrors::invalid_generic_type("node")
+		}
+
+
+		/*if (node->ntype() == NodeType::EXPRESSION)
 		{
 			auto expression = AS_EXPRESSION(node);
 
@@ -35,7 +43,7 @@ namespace hz
 		}
 
 		_error_reporter->post_error(std::format("invalid harvest node type `{}`", _node_map.at(node->ntype())), NULL_TOKEN);
-		return { (std::uint32_t)-1 };
+		return { (std::uint32_t)-1 };*/
 	}
 
 	Node* unharvest(variable_t value)
@@ -53,8 +61,8 @@ namespace hz
 		}
 	}
 
-	std::string format(variable_t value)
+	std::string format(Variable* value)
 	{
-		return std::visit([](auto&& arg) { return std::format("{}", arg); }, value);
+		return value->format();
 	}
 }

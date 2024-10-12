@@ -9,9 +9,9 @@
 
 namespace hz
 {
-	variable_t harvest(Node*);
-	Node* unharvest(variable_t);
-	std::string format(variable_t);
+	Variable* harvest(Node*);
+	Node* unharvest(Variable*);
+	std::string format(Variable*);
 }
 
 #endif

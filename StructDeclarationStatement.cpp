@@ -10,7 +10,7 @@ namespace hz
 {
 	std::uint16_t StructDeclarationStatement::members_size() const
 	{
-		auto sum = 0u;
+		auto sum = std::uint16_t{ 0 };
 
 		for (auto member : members)
 		{
@@ -18,6 +18,12 @@ namespace hz
 		}
 
 		return sum;
+	}
+
+	std::uint16_t StructDeclarationStatement::struct_size() const
+	{
+#pragma message("TODO: compute actual struct bytes size. Alignment?")
+		return -1;
 	}
 
 	StatementType StructDeclarationStatement::stype() const

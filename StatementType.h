@@ -33,6 +33,23 @@ namespace hz
 		EXIT,
 		STRUCT,
 	};
+
+	static const std::unordered_map<StatementType, std::string> _statement_type_map
+	{
+		{ StatementType::COMPOUND, "compound" },
+		{ StatementType::VARIABLE, "variable" },
+		{ StatementType::RETURN, "return" },
+		{ StatementType::INLINEASM, "asm" },
+		{ StatementType::WHILE, "while" },
+		{ StatementType::FOR, "for" },
+		{ StatementType::IF, "if" },
+		{ StatementType::EXPRESSION, "expression" },
+		{ StatementType::PRINT, "print" },
+		{ StatementType::HOOK, "hook" },
+		{ StatementType::NONE, "null" },
+		{ StatementType::EXIT, "exit" },
+		{ StatementType::STRUCT, "struct" },
+	};
 }
 
 #endif

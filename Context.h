@@ -2,6 +2,7 @@
 #define HAZE_CONTEXT_H
 
 //#include "Hook.h"
+#include "Variable.h"
 
 // Haze Context.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -15,39 +16,33 @@ namespace hz
 	class Expression;
 
 
-	using variable_t = std::variant<std::uint32_t, std::string>;
-
-	// TODO: scope these types further in (within Context?)
-	using arguments_t = std::vector<Expression*>;
-	using return_t = variable_t;
-
 	class Context
 	{
 	private:
-		std::unordered_map<std::string, variable_t> _variables;
+		std::unordered_map<std::string, Variable*> _variables;
 		std::vector<Function*> _functions;
 
-		std::stack<return_t> _returns;
-		std::stack<arguments_t> _arguments;
+		std::stack<Variable*> _returns;
+		std::stack<std::vector<Expression*>> _arguments;
 
 	private:
 		//Hook _hook;
 		bool _executing = true;
 
 	public:
-		void define_variable(std::string, variable_t);
+		void define_variable(std::string, Variable*);
 		const decltype(_variables)& variables() const;
 
 		void define_function(Function*);
 		const decltype(_functions)& functions() const;
 
 	public:
-		void push_return(return_t);
-		return_t pop_return();
+		void push_return(Variable*);
+		Variable* pop_return();
 
 	public:
-		void push_arguments(arguments_t);
-		arguments_t pop_arguments();
+		void push_arguments(const std::vector<Expression*>&);
+		std::vector<Expression*> pop_arguments();
 
 	public:
 		void hook();
@@ -55,7 +50,7 @@ namespace hz
 
 	public:
 		void print(const std::string& message);
-		void exit_program(variable_t);
+		void exit_program(Variable*);
 
 	public:
 		Context()

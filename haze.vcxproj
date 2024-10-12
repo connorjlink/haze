@@ -32,10 +32,12 @@
     <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
+    <ClCompile Include="ExitProgramException.cpp" />
     <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
     <ClCompile Include="Type.cpp" />
+    <ClCompile Include="Variable.cpp" />
     <ClCompile Include="X86Instruction.cpp" />
     <ClCompile Include="X86Linker.cpp" />
     <ClCompile Include="X86Operand.cpp" />
@@ -149,6 +151,7 @@
     <ClInclude Include="BranchCommandType.h" />
     <ClInclude Include="CommonErrors.h" />
     <ClInclude Include="ExecutionContext.h" />
+    <ClInclude Include="ExitProgramException.h" />
     <ClInclude Include="ExitStatement.h" />
     <ClInclude Include="ExpressionUtility.h" />
     <ClInclude Include="FunctionArgumentExpression.h" />
@@ -174,6 +177,8 @@
     <ClInclude Include="TypeSpecifier.h" />
     <ClInclude Include="TypeStorage.h" />
     <ClInclude Include="TypeType.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="VariableType.h" />
     <ClInclude Include="VerbosityType.h" />
     <ClCompile Include="WhileStatement.cpp" />
     <ClCompile Include="X86Builder.cpp" />

@@ -19,6 +19,7 @@ namespace hz
 
 	public:
 		std::uint16_t members_size() const;
+		std::uint16_t struct_size() const;
 
 	public:
 		StructDeclarationStatement(IdentifierExpression* identifier, std::vector<MemberDeclarationExpression*>&& members, const Token& token)

@@ -33,14 +33,14 @@ namespace hz
 			{
 				if (val->ntype() != NodeType::COMMAND)
 				{
-					if (!_node_map.contains(val->ntype()))
+					if (!_node_type_map.contains(val->ntype()))
 					{
 						_error_reporter->post_error("unrecognized node type", NULL_TOKEN);
 					}
 
 					else
 					{
-						_error_reporter->post_error(std::format("invalid node type `{}`", _node_map.at(val->ntype())), NULL_TOKEN);
+						_error_reporter->post_error(std::format("invalid node type `{}`", _node_type_map.at(val->ntype())), NULL_TOKEN);
 					}
 
 					return true;

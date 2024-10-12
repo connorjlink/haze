@@ -84,6 +84,9 @@
     <Filter Include="Source Files\Platform">
       <UniqueIdentifier>{75155f9f-2629-426e-aaab-3d1c281eea39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Variable">
+      <UniqueIdentifier>{8b8ddd9f-aa15-422d-8dfb-abed14db704f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -367,6 +370,12 @@
     </ClCompile>
     <ClCompile Include="StructDeclarationStatement.cpp">
       <Filter>Source Files\Statement</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable.cpp">
+      <Filter>Source Files\Variable</Filter>
+    </ClCompile>
+    <ClCompile Include="ExitProgramException.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -774,6 +783,15 @@
     </ClInclude>
     <ClInclude Include="StructDeclarationStatement.h">
       <Filter>Source Files\Statement</Filter>
+    </ClInclude>
+    <ClInclude Include="Variable.h">
+      <Filter>Source Files\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableType.h">
+      <Filter>Source Files\Variable</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitProgramException.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -67,10 +67,16 @@ namespace hz
 		_error_reporter->post_information(message, NULL_TOKEN);
 	}
 
-	void Context::exit_program(variable_t value)
+	void Context::exit_program(Variable* value)
 	{
-		switch (value.index())
+		using enum VariableType;
+		switch (value->vtype())
 		{
+			case BYTE:
+			{
+
+			} break; 
+
 			case 0: 
 			{
 				auto int_value = std::get<0>(value);

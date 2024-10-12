@@ -31,7 +31,7 @@ namespace hz
 		STRUCT_MEMBER_DECLARATION,
 	};
 
-	static const std::unordered_map<ExpressionType, std::string_view> _expression_type_map
+	static const std::unordered_map<ExpressionType, std::string> _expression_type_map
 	{
 		{ ExpressionType::INTEGER_LITERAL, "integer literal" },
 		{ ExpressionType::IDENTIFIER, "identifier" },
