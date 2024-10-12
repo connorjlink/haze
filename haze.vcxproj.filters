@@ -365,6 +365,9 @@
     <ClCompile Include="MemberDeclarationExpression.cpp">
       <Filter>Source Files\Expression</Filter>
     </ClCompile>
+    <ClCompile Include="StructDeclarationStatement.cpp">
+      <Filter>Source Files\Statement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -768,6 +771,9 @@
     </ClInclude>
     <ClInclude Include="MemberDeclarationExpression.h">
       <Filter>Source Files\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="StructDeclarationStatement.h">
+      <Filter>Source Files\Statement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

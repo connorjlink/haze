@@ -16,7 +16,7 @@ import std;
 #include "ExitStatement.h"
 #include "StringExpression.h"
 #include "ArgumentExpression.h"
-#include "StructMemberDeclarationExpression.h"
+#include "MemberDeclarationExpression.h"
 #include "FileManager.h"
 #include "CommandLineOptions.h"
 #include "Symbol.h"
@@ -250,27 +250,42 @@ namespace hz
 		return nullptr;
 	}
 
-	Expression* CompilerParser::parse_member_declaration_statement(const std::string& enclosing_function)
+	MemberDeclarationExpression* CompilerParser::parse_member_declaration_statement(const std::string& enclosing_function)
 	{
 		const auto type = parse_type();
 		const auto name = parse_identifier();
 
 		consume(TokenType::COMMA);
 
-		return MemberDeclarationExpression{ type, name, name->_token };
+		return new MemberDeclarationExpression{ type, name, name->_token };
 	}
 
-	std::vector<Expression*> CompilerParser::parse_member_declaration_statements()
+	std::vector<MemberDeclarationExpression*> CompilerParser::parse_member_declaration_statements(const std::string& enclosing_function)
 	{
-		std::vector<Expression*> out{};
+		std::vector<MemberDeclarationExpression*> out{};
 
+		while (peek().type != TokenType::RBRACE)
+		{
+			const auto member_declaration = parse_member_declaration_statement();
+			out.emplace_back(member_declaration);
+		}
 
 		return out;
 	}
 
 	Statement* CompilerParser::parse_struct_declaration_statement(const std::string& enclosing_function)
 	{
-		return nullptr;
+		consume(TokenType::STRUCT);
+
+		const auto identifier = parse_identifier();
+
+		consume(TokenType::LBRACE);
+
+		const auto member_declarations = parse_member_declaration_statements();
+
+		consume(TokenType::RBRACE);
+
+		return new StructDeclarationStatement{ identifier, member_declarations };
 	}
 
 	// is_definition controls whether we are a function definition or call

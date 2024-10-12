@@ -179,7 +179,7 @@ namespace hz
 
 	// NOTE: intentionally not marked const to avoid errors about dropping qualifiers
 	// could make certain inward-facing Token fields mutable, but this feels cleaner
-	inline static auto NULL_TOKEN = Token{ TokenType::END, "", -1, -1 };
+	inline static const auto NULL_TOKEN = Token{ TokenType::END, "", -1, -1 };
 }
 
 #endif

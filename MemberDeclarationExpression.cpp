@@ -7,6 +7,11 @@ import std;
 
 namespace hz
 {
+	std::uint16_t MemberDeclarationExpression::member_size() const
+	{
+		return type->size();
+	}
+
 	ExpressionType MemberDeclarationExpression::etype() const
 	{
 		return ExpressionType::STRUCT_MEMBER_DECLARATION;
@@ -28,7 +33,7 @@ namespace hz
 		return nullptr;
 	}
 
-	Node* MemberDeclarationExpression::evaluate(Context* context) const
+	Node* MemberDeclarationExpression::evaluate(Context*) const
 	{
 		// No interpreter evaluation for a struct member declaration
 		return nullptr;

@@ -18,7 +18,10 @@ namespace hz
 		IdentifierExpression* identifier;
 
 	public:
-		MemberDeclarationExpression(Type* type, IdentifierExpression* identifier, Token token)
+		std::uint16_t member_size() const;
+
+	public:
+		MemberDeclarationExpression(Type* type, IdentifierExpression* identifier, const Token& token)
 			: Expression{ token }, type{ type }, identifier{ identifier }
 		{
 		}

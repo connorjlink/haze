@@ -32,6 +32,7 @@
     <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
+    <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
     <ClCompile Include="Type.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="RuntimeAllocator.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Scope.h" />
+    <ClInclude Include="StructDeclarationStatement.h" />
     <ClInclude Include="StructMember.h" />
     <ClInclude Include="MemberDeclarationExpression.h" />
     <ClInclude Include="Test.h" />
