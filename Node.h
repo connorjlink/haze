@@ -21,7 +21,7 @@ namespace hz
         Token _token;
 
     public:
-        Node(Token token)
+        Node(const Token& token)
             : _token{ token }
         {
         }

@@ -9,17 +9,17 @@
 
 namespace hz
 {
-	enum class TypeSpecifier;
+	class Type;
 
 	class ArgumentExpression : public Expression
 	{
 	public:
-		TypeSpecifier type_specifier;
+		Type* type;
 		IdentifierExpression* identifier;
 
 	public:
-		ArgumentExpression(TypeSpecifier type_specifier, IdentifierExpression* identifier, Token token)
-			: Expression{ token }, type_specifier { type_specifier }, identifier{ identifier }
+		ArgumentExpression(Type* type, IdentifierExpression* identifier, Token token)
+			: Expression{ token }, type{ type }, identifier{ identifier }
 		{
 		}
 

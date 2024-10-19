@@ -11,15 +11,6 @@ namespace hz
 	class Variable
 	{
 	public:
-		std::string identifier;
-
-	public:
-		Variable(const std::string& identifier)
-			: identifier{ identifier }
-		{
-		}
-
-	public:
 		virtual VariableType vtype() const = 0;
 		virtual std::string format() const = 0;
 	};
@@ -30,8 +21,8 @@ namespace hz
 		std::uint8_t value;
 
 	public:
-		UnsignedByteVariable(const std::string& identifier, std::uint8_t value)
-			: Variable{ identifier }, value{ value }
+		UnsignedByteVariable(std::uint8_t value)
+			: value{ value }
 		{
 		}
 
@@ -46,8 +37,8 @@ namespace hz
 		std::int8_t value;
 
 	public:
-		SignedByteVariable(const std::string& identifier, std::int8_t value)
-			: Variable{ identifier }, value{ value }
+		SignedByteVariable(std::int8_t value)
+			: value{ value }
 		{
 		}
 
@@ -62,8 +53,8 @@ namespace hz
 		std::uint16_t value;
 
 	public:
-		UnsignedWordVariable(const std::string& identifier, std::uint16_t value)
-			: Variable{ identifier }, value{ value }
+		UnsignedWordVariable(std::uint16_t value)
+			: value{ value }
 		{
 		}
 
@@ -78,8 +69,8 @@ namespace hz
 		std::int16_t value;
 
 	public:
-		SignedWordVariable(const std::string& identifier, std::int16_t value)
-			: Variable{ identifier }, value{ value }
+		SignedWordVariable(std::int16_t value)
+			: value{ value }
 		{
 		}
 
@@ -94,8 +85,8 @@ namespace hz
 		std::uint32_t value;
 
 	public:
-		UnsignedDoubleWordVariable(const std::string& identifier, std::uint32_t value)
-			: Variable{ identifier }, value{ value }
+		UnsignedDoubleWordVariable(std::uint32_t value)
+			: value{ value }
 		{
 		}
 
@@ -110,8 +101,8 @@ namespace hz
 		std::int32_t value;
 
 	public:
-		SignedDoubleWordVariable(const std::string& identifier, std::int32_t value)
-			: Variable{ identifier }, value{ value }
+		SignedDoubleWordVariable(std::int32_t value)
+			: value{ value }
 		{
 		}
 
@@ -126,8 +117,8 @@ namespace hz
 		std::uint64_t value;
 
 	public:
-		UnsignedQuadWordVariable(const std::string& identifier, std::uint64_t value)
-			: Variable{ identifier }, value{ value }
+		UnsignedQuadWordVariable(std::uint64_t value)
+			: value{ value }
 		{
 		}
 
@@ -142,8 +133,8 @@ namespace hz
 		std::int64_t value;
 
 	public:
-		SignedQuadWordVariable(const std::string& identifier, std::int64_t value)
-			: Variable{ identifier }, value{ value }
+		SignedQuadWordVariable(std::int64_t value)
+			: value{ value }
 		{
 		}
 
@@ -158,8 +149,8 @@ namespace hz
 		std::string value;
 
 	public:
-		StringVariable(const std::string& identifier, const std::string& value)
-			: Variable{ identifier }, value{ value }
+		StringVariable(const std::string& value)
+			: value{ value }
 		{
 		}
 
@@ -174,8 +165,8 @@ namespace hz
 		std::string tag;
 
 	public:
-		StructVariable(const std::string& identifier, const std::string& tag)
-			: Variable{ identifier }, tag{ tag }
+		StructVariable(const std::string& tag)
+			: tag{ tag }
 		{
 		}
 

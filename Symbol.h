@@ -36,7 +36,7 @@ namespace hz
 		std::uint32_t entrypoint;
 
 	public:
-		TypeSpecifier return_type;
+		Type* return_type;
 		// all stored as ArgumentExpresion under the hood
 		std::vector<Expression*> arguments;
 		std::uint32_t locals_count;
@@ -48,9 +48,12 @@ namespace hz
 		}
 
 	public:
-		FunctionSymbol(const std::string& name, TypeSpecifier return_type = static_cast<TypeSpecifier>(0))
-			: Symbol{ name }, entrypoint{ 0 }, return_type{}, arguments{}, locals_count{ 0 }
+		FunctionSymbol(const std::string& name, Type* return_type)
+			: Symbol{ name }, return_type{ return_type }
 		{
+			entrypoint = { 0 };
+			arguments = {};
+			locals_count = { 0 };
 		}
 
 	public:
@@ -61,11 +64,11 @@ namespace hz
 	{
 	public:
 		Allocation* allocation;
-		TypeSpecifier type_specifier;
+		Type* type;
 
 	public:
-		ArgumentSymbol(const std::string& name, TypeSpecifier type_specifier)
-			: Symbol{ name }, allocation{ nullptr }, type_specifier{ type_specifier }
+		ArgumentSymbol(const std::string& name, Type* type)
+			: Symbol{ name }, allocation{ nullptr }, type{ type }
 		{
 		}
 
@@ -77,11 +80,11 @@ namespace hz
 	{
 	public:
 		Allocation* allocation;
-		TypeSpecifier type_specifier;
+		Type* type;
 
 	public:
-		VariableSymbol(const std::string& name, Allocation* allocation, TypeSpecifier type_specifier)
-			: Symbol{ name }, allocation{ allocation }, type_specifier{ type_specifier }
+		VariableSymbol(const std::string& name, Allocation* allocation, Type* type)
+			: Symbol{ name }, allocation{ allocation }, type{ type }
 		{
 		}
 

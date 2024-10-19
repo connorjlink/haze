@@ -7,6 +7,7 @@
 #include "BranchCommandType.h"
 #include "BinaryCommandType.h"
 #include "IntermediateType.h"
+#include "CommonErrors.h"
 
 // Haze IntermediateCommand.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -82,10 +83,10 @@ namespace hz
 	{
 	private:
 		register_t _location;
-		variable_t _value;
+		Variable* _value;
 
 	public:
-		LocalVariableCommand(register_t location, variable_t value)
+		LocalVariableCommand(register_t location, Variable* value)
 			: _location{ location }, _value{ value }
 		{
 		}
@@ -99,10 +100,10 @@ namespace hz
 	{
 	private:
 		register_t _location;
-		variable_t _value;
+		Variable* _value;
 
 	public:
-		GlobalVariableCommand(register_t location, variable_t value)
+		GlobalVariableCommand(register_t location, Variable* value)
 			: _location{ location }, _value{ value }
 		{
 		}
@@ -357,9 +358,27 @@ namespace hz
 		std::int32_t _immediate;
 
 	public:
-		MakeImmediateCommand(register_t destination, std::int32_t immediate)
-			: _destination{ destination }, _immediate{ immediate }
+		MakeImmediateCommand(register_t destination, IntegerLiteral immediate)
+			: _destination{ destination }
 		{
+			using enum IntegerLiteralType;
+			switch (immediate.type)
+			{
+				case UBYTE: _immediate = immediate.storage.ubyte; break;
+				case SBYTE: _immediate = immediate.storage.sbyte; break;
+
+				case UWORD: _immediate = immediate.storage.uword; break;
+				case SWORD: _immediate = immediate.storage.sword; break;
+
+				case UDWORD: _immediate = immediate.storage.udword; break;
+				case SDWORD: _immediate = immediate.storage.sdword; break;
+
+				// since x86 is building 32-bit, 64-bit immediates are not supported for now
+				default:
+				{
+					CommonErrors::invalid_generic_type("integer literal", _integer_literal_type_map.at(immediate.type));
+				} break;
+			}
 		}
 
 	public:

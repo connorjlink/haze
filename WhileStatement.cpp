@@ -5,6 +5,8 @@ import std;
 #include "Evaluator.h"
 #include "Generator.h"
 #include "RandomUtility.h"
+#include "IntegerLiteralExpression.h"
+#include "CommonErrors.h"
 #include "ErrorReporter.h"
 
 // Haze WhileStatement.cpp
@@ -77,11 +79,12 @@ namespace hz
 		
 		if (AS_EXPRESSION(condition_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("`while` loop conditions must evaluate to an r-value", condition->_token);
+			CommonErrors::must_be_rvalue("`while` loop conditions", condition->_token);
 			return nullptr;
 		}
 
-		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
+		const auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated);
+		while (integer_literal->value.is_nonzero())
 		{
 			body->evaluate(context);
 			condition_evaluated = condition->evaluate(context);

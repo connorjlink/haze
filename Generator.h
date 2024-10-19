@@ -70,7 +70,7 @@ namespace hz
 
 	public:
 		// push a new variable public to the entire program
-		void make_global(register_t, variable_t);
+		void make_global(register_t, Variable*);
 
 	public:
 		// destination = memory[pointer]
@@ -121,7 +121,7 @@ namespace hz
 		// destination = source
 		void make_copy(register_t, register_t);
 		// destination = immediate
-		void make_immediate(register_t, std::int32_t);
+		void make_immediate(register_t, IntegerLiteral);
 
 	public:
 		// position a new function argument for the next call
@@ -131,7 +131,7 @@ namespace hz
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function
-		void call_function(const std::string&, const arguments_t&, Allocation*);
+		void call_function(const std::string&, const std::vector<Expression*>&, Allocation*);
 		// return from a call to a `nvr` function
 		void make_return(const std::string&);
 		// return from a call to a `nvr` function

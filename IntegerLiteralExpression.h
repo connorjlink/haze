@@ -2,6 +2,7 @@
 #define HAZE_INTEGERLITERALEXPRESSION_H
 
 #include "Expression.h"
+#include "IntegerLiteral.h"
 
 // Haze IntegerLiteralExpression.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -11,10 +12,10 @@ namespace hz
     class IntegerLiteralExpression : public Expression
     {
     public:
-        std::uint32_t value;
+        IntegerLiteral* value;
 
     public:
-        IntegerLiteralExpression(std::uint32_t value, Token token)
+        IntegerLiteralExpression(IntegerLiteral* value, Token token)
             : Expression{ token }, value{ value }
         {
         }

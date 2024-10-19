@@ -19,17 +19,31 @@ namespace hz
 {
 	enum class VariableType
 	{
-		SBYTE, UBYTE,
+		UBYTE, SBYTE,
 
-		SWORD, UWORD,
+		UWORD, SWORD,
 
-		SDWORD, UDWORD,
+		UDWORD, SDWORD,
 
-		SQWORD, UQWORD,
+		UQWORD, SQWORD,
 
 		STRING,
 
 		STRUCT,
+	};
+
+	static const std::unordered_map<VariableType, std::string> _variable_type_map
+	{
+		{ VariableType::UBYTE, "unsigned byte" },
+		{ VariableType::SBYTE, "signed byte" },
+		{ VariableType::UWORD, "unsigned word" },
+		{ VariableType::SWORD, "signed word" },
+		{ VariableType::UDWORD, "unsigned double word" },
+		{ VariableType::SDWORD, "signed double word" },
+		{ VariableType::UQWORD, "unsigned quad word" },
+		{ VariableType::SQWORD, "signed quad word" },
+		{ VariableType::STRING, "string" },
+		{ VariableType::STRUCT, "struct" },
 	};
 }
 

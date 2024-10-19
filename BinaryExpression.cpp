@@ -203,13 +203,13 @@ namespace hz
 			right_optimized = AS_EXPRESSION(right->copy());
 
 			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
+				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 1)
 			{
 				return right_optimized;
 			}
 
 			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
+					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value.is_zero())
 			{
 				return left_optimized;
 			}
@@ -217,6 +217,8 @@ namespace hz
 			else if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 					 right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
+
+
 				return new IntegerLiteralExpression
 				{
 					AS_INTEGER_LITERAL_EXPRESSION(left)->value + AS_INTEGER_LITERAL_EXPRESSION(right)->value,
@@ -277,7 +279,7 @@ namespace hz
 			right_optimized = AS_EXPRESSION(right->copy());
 
 			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 0)
+				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value.is_zero())
 			{
 				//(0 - x) simplifies to -x
 				AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value *= -1;
@@ -285,7 +287,7 @@ namespace hz
 			}
 
 			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value == 0)
+					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value.is_zero())
 			{
 				return left_optimized;
 			}
@@ -356,7 +358,7 @@ namespace hz
 				auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
 				auto result = left_optimized;
 
-				if (left_value == 0)
+				if (left_value.is_zero())
 				{
 					AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
 				}
@@ -481,7 +483,46 @@ namespace hz
 
 	Expression* LessBinaryExpression::optimize()
 	{
-		return nullptr;
+		const auto left_optimized = AS_EXPRESSION(left->optimize());
+		const auto right_optimized = AS_EXPRESSION(right->optimize());
+
+		if (!left_optimized && !right_optimized)
+		{
+
+		}
+
+		else
+		{
+			if (!left_optimized)
+			{
+				return new LessBinaryExpression
+				{
+					AS_EXPRESSION(left->copy()),
+					right_optimized,
+					_token,
+				};
+			}
+
+			else if (!right_optimized)
+			{
+				return new LessBinaryExpression
+				{
+					left_optimized,
+					AS_EXPRESSION(right->copy()),
+					_token,
+				};
+			}
+
+			else
+			{
+				return new LessBinaryExpression
+				{
+					left_optimized,
+					right_optimized,
+					_token,
+				};
+			}
+		}
 	}
 
 
@@ -494,9 +535,12 @@ namespace hz
 		if (AS_EXPRESSION(left_evaluated)->etype() == ExpressionType::INTEGER_LITERAL &&
 			AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::INTEGER_LITERAL)
 		{
+			const auto left_evaluated_variable = node_to_variable(left_evaluated);
+			const auto right_evaluated_variable = node_to_variable(right_evaluated);
+
 			return new IntegerLiteralExpression
 			{ 
-				std::get<std::uint32_t>(harvest(left_evaluated)) + std::get<std::uint32_t>(harvest(right_evaluated)),
+				std::get<std::uint32_t>(node_to_variable(left_evaluated)) + std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 				_token,
 			};
 		}
@@ -507,8 +551,8 @@ namespace hz
 			return new StringExpression
 			{
 				std::format("{}{}",
-					std::get<std::string>(harvest(left_evaluated)),
-					std::get<std::string>(harvest(right_evaluated))),
+					std::get<std::string>(node_to_variable(left_evaluated)),
+					std::get<std::string>(node_to_variable(right_evaluated))),
 				_token,
 			};
 		}
@@ -529,7 +573,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<std::uint32_t>(harvest(left_evaluated)) - std::get<std::uint32_t>(harvest(right_evaluated)),
+			std::get<std::uint32_t>(node_to_variable(left_evaluated)) - std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 			_token,
 		};
 	}
@@ -547,7 +591,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<std::uint32_t>(harvest(left_evaluated)) * std::get<std::uint32_t>(harvest(right_evaluated)),
+			std::get<std::uint32_t>(node_to_variable(left_evaluated)) * std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 			_token,
 		};
 	}
@@ -566,7 +610,7 @@ namespace hz
 			AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::IDENTIFIER)
 		{
 			context->define_variable(
-				AS_IDENTIFIER_EXPRESSION(left_evaluated)->name, harvest(right_evaluated));
+				AS_IDENTIFIER_EXPRESSION(left_evaluated)->name, node_to_variable(right_evaluated));
 		}
 
 		else
@@ -590,7 +634,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<std::uint32_t>(harvest(left_evaluated)) == std::get<std::uint32_t>(harvest(right_evaluated)),
+			std::get<std::uint32_t>(node_to_variable(left_evaluated)) == std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 			_token,
 		};
 	}
@@ -608,7 +652,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<std::uint32_t>(harvest(left_evaluated)) != std::get<std::uint32_t>(harvest(right_evaluated)),
+			std::get<std::uint32_t>(node_to_variable(left_evaluated)) != std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 			_token,
 		};
 	}
@@ -626,7 +670,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<std::uint32_t>(harvest(left_evaluated)) > std::get<std::uint32_t>(harvest(right_evaluated)),
+			std::get<std::uint32_t>(node_to_variable(left_evaluated)) > std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 			_token,
 		};
 	}
@@ -644,7 +688,7 @@ namespace hz
 
 		return new IntegerLiteralExpression
 		{ 
-			std::get<std::uint32_t>(harvest(left_evaluated)) < std::get<std::uint32_t>(harvest(right_evaluated)),
+			std::get<std::uint32_t>(node_to_variable(left_evaluated)) < std::get<std::uint32_t>(node_to_variable(right_evaluated)),
 			_token,
 		};
 	}

@@ -12,7 +12,7 @@ namespace hz
 	class Expression : public Node
 	{
 	public:
-		Expression(Token token)
+		Expression(const Token& token)
 			: Node{ token }
 		{
 		}

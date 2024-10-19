@@ -116,7 +116,7 @@ namespace hz
 			return nullptr;
 		}
 
-		while (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
+		while (std::get<std::uint32_t>(node_to_variable(condition_evaluated)) != 0)
 		{
 			body->evaluate(context);
 			expression->evaluate(context);

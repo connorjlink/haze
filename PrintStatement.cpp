@@ -64,7 +64,7 @@ namespace hz
 
 	Node* PrintStatement::evaluate(Context* context) const
 	{
-		const auto value = harvest(message->evaluate(context));
+		const auto value = node_to_variable(message->evaluate(context));
 		context->print(format(value));
 		return nullptr;
 	}

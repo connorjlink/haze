@@ -24,28 +24,6 @@ namespace hz
 
     void IntegerLiteralExpression::generate(Allocation* allocation)
     {
-        using enum ArchitectureType;
-        switch (_options->_architecture)
-        {
-            case HAZE:
-            {
-                if (value > WORD_MAX - 1)
-                {
-                    _error_reporter->post_warning(std::format("integer literal {} out of range", value), _token);
-                    return;
-                }
-            } break;
-
-            case X86:
-            {
-                if (value > x86::DWORD_MAX)
-                {
-                    _error_reporter->post_warning(std::format("integer literal {} out of range", value), _token);
-                    return;
-                }
-            } break;
-        }
-
         _generator->make_immediate(allocation->read(), value);
     }
 

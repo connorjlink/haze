@@ -81,7 +81,7 @@ namespace hz
 				integer_literal_expression->value--;
 			}
 
-			context->define_variable(identifier_expression->name, harvest(integer_literal_expression));
+			context->define_variable(identifier_expression->name, node_to_variable(integer_literal_expression));
 			return integer_literal_expression;
 		}
 

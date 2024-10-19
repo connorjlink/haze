@@ -65,7 +65,7 @@ namespace hz
 	{
 		if (value)
 		{
-			context->define_variable(name, harvest(value->evaluate(context)));
+			context->define_variable(name, node_to_variable(value->evaluate(context)));
 		}
 
 		else

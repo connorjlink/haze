@@ -9,6 +9,7 @@ import std;
 #include "Linkable.h"
 #include "LabelCommand.h"
 #include "IntermediateCommand.h"
+#include "IntegerLiteral.h"
 #include "RuntimeAllocator.h"
 #include "X86Builder.h"
 #include "ErrorReporter.h"
@@ -106,7 +107,7 @@ namespace hz
 		_runtime_allocator->update_local(name, source);
 	}
 
-	void Generator::make_global(register_t location, variable_t value)
+	void Generator::make_global(register_t location, Variable* value)
 	{
 		auto command = new GlobalVariableCommand{ location, value };
 		COMPOSE(command);
@@ -214,7 +215,7 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_immediate(register_t destination, std::int32_t immediate)
+	void Generator::make_immediate(register_t destination, IntegerLiteral immediate)
 	{
 		auto command = new MakeImmediateCommand{ destination, immediate };
 		COMPOSE(command);
@@ -244,7 +245,7 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::call_function(const std::string& function, const arguments_t& arguments, Allocation* allocation)
+	void Generator::call_function(const std::string& function, const std::vector<Expression*>& arguments, Allocation* allocation)
 	{
 		for (auto expression : arguments)
 		{

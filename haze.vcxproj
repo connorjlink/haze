@@ -33,6 +33,7 @@
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="ExitProgramException.cpp" />
+    <ClCompile Include="IntegerLiteral.cpp" />
     <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
@@ -158,6 +159,8 @@
     <ClInclude Include="HazeBuilder.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />
+    <ClInclude Include="IntegerLiteral.h" />
+    <ClInclude Include="IntegerLiteralType.h" />
     <ClInclude Include="IntermediateCommand.h" />
     <ClInclude Include="IntermediateOptimizer.h" />
     <ClInclude Include="IntermediateType.h" />

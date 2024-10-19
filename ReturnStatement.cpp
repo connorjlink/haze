@@ -107,7 +107,7 @@ namespace hz
 
 	Node* ReturnStatement::evaluate(Context* context) const
 	{
-		context->push_return(harvest(value->evaluate(context)));
+		context->push_return(node_to_variable(value->evaluate(context)));
 		return nullptr;
 	}
 }

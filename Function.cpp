@@ -159,7 +159,7 @@ namespace hz
 			for (auto i = 0; i < arguments.size(); i++)
 			{
 				const auto argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
-				context->define_variable(argument_name, harvest(arguments_evaluated[i]));
+				context->define_variable(argument_name, node_to_variable(arguments_evaluated[i]));
 			}
 
 			body->evaluate(context);

@@ -44,7 +44,7 @@ namespace hz
 	Node* ExitStatement::evaluate(Context* context) const
 	{
 		auto value = _code->evaluate(context);
-		context->exit_program(harvest(value));
+		context->exit_program(node_to_variable(value));
 		return nullptr;
 	}
 

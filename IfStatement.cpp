@@ -118,7 +118,7 @@ namespace hz
 			return nullptr;
 		}
 
-		if (std::get<std::uint32_t>(harvest(condition_evaluated)) != 0)
+		if (std::get<std::uint32_t>(node_to_variable(condition_evaluated)) != 0)
 		{
 			if_body->evaluate(context);
 		}
