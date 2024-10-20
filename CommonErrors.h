@@ -42,7 +42,8 @@ namespace hz
 		static void invalid_type(const std::string&, const Token&);
 
 	public:
-		static void arithmetic_type_mismatch(IntegerLiteralType, IntegerLiteralType);
+		static void integer_size_mismatch(IntegerLiteralType, IntegerLiteralType, const Token&);
+		static void invalid_binary_expression(ExpressionType, ExpressionType, BinaryExpressionType, const Token&);
 
 	public:
 		static void unsupported_statement(const std::string&, const std::string&, const Token&);

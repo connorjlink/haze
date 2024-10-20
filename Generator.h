@@ -90,12 +90,18 @@ namespace hz
 		void compute_add(register_t, register_t, register_t);
 		// destination = lhs - rhs
 		void compute_subtract(register_t, register_t, register_t);
+		// destination = lhs * rhs
+		void compute_multiplication(register_t, register_t, register_t);
 		// destination = lhs | rhs
 		void compute_bitor(register_t, register_t, register_t);
-		// destination = lhs & rhs
-		void compute_bitand(register_t, register_t, register_t);
 		// destination = lhs ^ rhs
 		void compute_bitxor(register_t, register_t, register_t);
+		// destination = lhs & rhs
+		void compute_bitand(register_t, register_t, register_t);
+		// destination = lhs << rhs
+		void compute_bitlshift(register_t, register_t, register_t);
+		// destination = lhs >> rhs
+		void compute_bitrshift(register_t, register_t, register_t);
 
 	public:
 		// destination = lhs == rhs

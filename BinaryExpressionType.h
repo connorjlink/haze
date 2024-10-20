@@ -14,6 +14,13 @@ namespace hz
 		MINUS,
 		TIMES,
 
+		OR,
+		XOR,
+		AND,
+
+		LSHIFT,
+		RSHIFT,
+
 		ASSIGN,
 
 		EQUALITY,

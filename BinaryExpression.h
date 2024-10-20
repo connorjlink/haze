@@ -68,6 +68,71 @@ namespace hz
 		virtual Node* evaluate(Context*) const final override;
 	};
 
+	class OrBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual OrBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class XorBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual XorBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class AndBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual AndBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class LeftShiftBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual LeftShiftBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
+	class RightShiftBinaryExpression : public BinaryExpression
+	{
+	public:
+		using BinaryExpression::BinaryExpression;
+
+	public:
+		virtual BinaryExpressionType btype() const final override;
+		virtual RightShiftBinaryExpression* copy() const final override;
+		virtual void generate(Allocation*) final override;
+		virtual Expression* optimize() final override;
+		virtual Node* evaluate(Context*) const final override;
+	};
+
 	class AssignBinaryExpression : public BinaryExpression
 	{
 	public:

@@ -4,15 +4,6 @@
 // Haze IntegerLiteralType.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define AS_UNSIGNED_BYTE(x) static_cast<UnsignedByteIntegerLiteral&>(x)
-#define AS_SIGNED_BYTE(x) static_cast<SignedByteIntegerLiteral&>(x)
-#define AS_UNSIGNED_WORD(x) static_cast<UnsignedWordIntegerLiteral&>(x)
-#define AS_SIGNED_WORD(x) static_cast<SignedWordIntegerLiteral&>(x)
-#define AS_UNSIGNED_DOUBLE_WORD(x) static_cast<UnsignedDoubleWordIntegerLiteral&>(x)
-#define AS_SIGNED_DOUBLE_WORD(x) static_cast<SignedDoubleWordIntegerLiteral&>(x)
-#define AS_UNSIGNED_QUAD_WORD(x) static_cast<UnsignedQuadWordIntegerLiteral&>(x)
-#define AS_SIGNED_QUAD_WORD(x) static_cast<SignedQuadWordIntegerLiteral&>(x)
-
 #define AS_UNSIGNED_BYTE_INTEGER_LITERAL(x) static_cast<UnsignedByteIntegerLiteral*>(x)
 #define AS_SIGNED_BYTE_INTEGER_LITERAL(x) static_cast<SignedByteIntegerLiteral*>(x)
 #define AS_UNSIGNED_WORD_INTEGER_LITERAL(x) static_cast<UnsignedWordIntegerLiteral*>(x)

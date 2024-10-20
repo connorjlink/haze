@@ -13,6 +13,29 @@ import std;
 // Haze BinaryExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+#define UBYTE(x) UnsignedByteIntegerLiteral{ x }
+#define SBYTE(x) SignedByteIntegerLiteral{ x }
+#define UWORD(x) UnsignedWordIntegerLiteral{ x }
+#define SWORD(x) SignedWordIntegerLiteral{ x }
+#define UDWORD(x) UnsignedDoubleWordIntegerLiteral{ x }
+#define SDWORD(x) SignedDoubleWordIntegerLiteral{ x }
+#define UQWORD(x) UnsignedQuadWordIntegerLiteral{ x }
+#define SQWORD(x) SignedQuadWordIntegerLiteral{ x }
+
+#define UNSIGNED_BYTE_CAST(x) *AS_UNSIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_BYTE_CAST(x) *AS_SIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define UNSIGNED_WORD_CAST(x) *AS_UNSIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_WORD_CAST(x) *AS_SIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define UNSIGNED_DOUBLE_WORD_CAST(x) *AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_DOUBLE_WORD_CAST(x) *AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define UNSIGNED_QUAD_WORD_CAST(x) *AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_QUAD_WORD_CAST(x) *AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+
+#define VALUE_OF(x) AS_INTEGER_LITERAL_EXPRESSION(x)->value
+#define MESSAGE_OF(x) AS_STRING_EXPRESSION(x)->message
+
+#define TEST_VALUE_EQUALS(x, y) integer_literal_raw(VALUE_OF(x)->equals(VALUE_OF(x)->from_value(y)))
+
 namespace
 {
 	using namespace hz;
@@ -20,6 +43,25 @@ namespace
 	void generate_error(std::string op, Token token)
 	{
 		_error_reporter->post_error(std::format("unsupported compiler binary operator `{}`", op), token);
+	}
+
+	const IntegerLiteral& match_type(IntegerLiteral* matchee, std::uint64_t value)
+	{
+		using enum IntegerLiteralType;
+		switch (matchee->itype())
+		{
+			case UBYTE: return UnsignedByteIntegerLiteral{ value };
+			case SBYTE: return SignedByteIntegerLiteral{ value };
+
+			case UWORD: return UnsignedWordIntegerLiteral{ value };
+			case SWORD: return SignedWordIntegerLiteral{ value };
+
+			case UDWORD: return UnsignedDoubleWordIntegerLiteral{ value };
+			case SDWORD: return SignedDoubleWordIntegerLiteral{ value };
+
+			case UQWORD: return UnsignedQuadWordIntegerLiteral{ value };
+			case SQWORD: return SignedQuadWordIntegerLiteral{ value };
+		}
 	}
 }
 
@@ -38,6 +80,31 @@ namespace hz
 	BinaryExpressionType TimesBinaryExpression::btype() const
 	{
 		return BinaryExpressionType::TIMES;
+	}
+
+	BinaryExpressionType OrBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::OR;
+	}
+
+	BinaryExpressionType XorBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::XOR;
+	}
+
+	BinaryExpressionType AndBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::AND;
+	}
+
+	BinaryExpressionType LeftShiftBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::LSHIFT;
+	}
+
+	BinaryExpressionType RightShiftBinaryExpression::btype() const
+	{
+		return BinaryExpressionType::RSHIFT;
 	}
 
 	BinaryExpressionType AssignBinaryExpression::btype() const
@@ -79,6 +146,31 @@ namespace hz
 	TimesBinaryExpression* TimesBinaryExpression::copy() const
 	{
 		return new TimesBinaryExpression{ *this };
+	}
+
+	OrBinaryExpression* OrBinaryExpression::copy() const
+	{
+		return new OrBinaryExpression{ *this };
+	}
+
+	XorBinaryExpression* XorBinaryExpression::copy() const
+	{
+		return new XorBinaryExpression{ *this };
+	}
+
+	AndBinaryExpression* AndBinaryExpression::copy() const
+	{
+		return new AndBinaryExpression{ *this };
+	}
+
+	LeftShiftBinaryExpression* LeftShiftBinaryExpression::copy() const
+	{
+		return new LeftShiftBinaryExpression{ *this };
+	}
+
+	RightShiftBinaryExpression* RightShiftBinaryExpression::copy() const
+	{
+		return new RightShiftBinaryExpression{ *this };
 	}
 
 	AssignBinaryExpression* AssignBinaryExpression::copy() const
@@ -128,9 +220,64 @@ namespace hz
 		_generator->compute_subtract(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
-	void TimesBinaryExpression::generate(Allocation*)
+	void TimesBinaryExpression::generate(Allocation* received_allocation)
 	{
-		::generate_error("multiplication", _token);
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_multiplication(received_allocation->read(), temp.source()->read(), received_allocation->read());
+	}
+
+	void OrBinaryExpression::generate(Allocation* received_allocation)
+	{
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_bitor(received_allocation->read(), temp.source()->read(), received_allocation->read());
+	}
+
+	void XorBinaryExpression::generate(Allocation* received_allocation)
+	{
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_bitxor(received_allocation->read(), temp.source()->read(), received_allocation->read());
+	}
+
+	void AndBinaryExpression::generate(Allocation* received_allocation)
+	{
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_bitand(received_allocation->read(), temp.source()->read(), received_allocation->read());
+	}
+
+	void LeftShiftBinaryExpression::generate(Allocation* received_allocation)
+	{
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_bitlshift(received_allocation->read(), temp.source()->read(), received_allocation->read());
+	}
+
+	void RightShiftBinaryExpression::generate(Allocation* received_allocation)
+	{
+		AutoStackAllocation temp{};
+
+		left->generate(received_allocation);
+		right->generate(temp.source());
+
+		_generator->compute_bitrshift(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void AssignBinaryExpression::generate(Allocation* received_allocation)
@@ -146,7 +293,7 @@ namespace hz
 
 		else
 		{
-			CommonErrors::must_be_lvalue("the left-hand side of an assignment expression", left->_token);
+			CommonErrors::must_be_lvalue("the left-hand operand of an assignment expression", left->_token);
 		}
 	}
 
@@ -203,13 +350,13 @@ namespace hz
 			right_optimized = AS_EXPRESSION(right->copy());
 
 			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value == 1)
+				TEST_VALUE_EQUALS(left_optimized, 0))
 			{
 				return right_optimized;
 			}
 
 			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value.is_zero())
+					 TEST_VALUE_EQUALS(right_optimized, 0))
 			{
 				return left_optimized;
 			}
@@ -217,18 +364,25 @@ namespace hz
 			else if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 					 right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
+				const auto left_value = VALUE_OF(left_optimized);
+				const auto right_value = VALUE_OF(right_optimized);
 
+				if (left_value->itype() != right_value->itype())
+				{
+					CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+					return nullptr;
+				}
 
 				return new IntegerLiteralExpression
 				{
-					AS_INTEGER_LITERAL_EXPRESSION(left)->value + AS_INTEGER_LITERAL_EXPRESSION(right)->value,
+					left_value->plus(right_value),
 					_token,
 				};
 			}
 
 			else
 			{
-				//return new PlusBinaryExpression{ left_optimized, right_optimized };
+				// Neither side could be optimized
 				return nullptr;
 			}
 		}
@@ -251,7 +405,6 @@ namespace hz
 				{ 
 					left_optimized, 
 					AS_EXPRESSION(right->copy()),
-					
 					_token,
 				};
 			}
@@ -279,15 +432,15 @@ namespace hz
 			right_optimized = AS_EXPRESSION(right->copy());
 
 			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-				AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value.is_zero())
+				TEST_VALUE_EQUALS(left_optimized, 0))
 			{
 				//(0 - x) simplifies to -x
-				AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value *= -1;
+				VALUE_OF(right_optimized) = VALUE_OF(right_optimized)->times(VALUE_OF(right_optimized)->from_value(-1));
 				return right_optimized;
 			}
 
 			else if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
-					 AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value.is_zero())
+					 TEST_VALUE_EQUALS(right_optimized, 0))
 			{
 				return left_optimized;
 			}
@@ -295,9 +448,18 @@ namespace hz
 			else if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
 					 right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
+				const auto left_value = VALUE_OF(left_optimized);
+				const auto right_value = VALUE_OF(right_optimized);
+
+				if (left_value->itype() != right_value->itype())
+				{
+					CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+					return nullptr;
+				}
+
 				return new IntegerLiteralExpression
 				{
-					AS_INTEGER_LITERAL_EXPRESSION(left)->value - AS_INTEGER_LITERAL_EXPRESSION(right)->value,
+					left_value->minus(right_value),
 					_token,
 				};
 			}
@@ -355,15 +517,15 @@ namespace hz
 
 			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 			{
-				auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
+				auto left_value = VALUE_OF(left_optimized);
 				auto result = left_optimized;
 
-				if (left_value.is_zero())
+				if (integer_literal_equals(left_value, 0))
 				{
-					AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
+					left_value->assign(left_value->from_value(0));
 				}
 
-				else if (left_value == 1)
+				else if (integer_literal_equals(left_value, 1))
 				{
 					delete result;
 					result = right_optimized;
@@ -373,8 +535,8 @@ namespace hz
 				{
 					if (right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 					{
-						AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
-							AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
+						auto right_value = VALUE_OF(right_optimized);
+						VALUE_OF(result)->assign(left_value->times(right_value));
 					}
 
 					else
@@ -392,12 +554,12 @@ namespace hz
 				auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
 				auto result = right_optimized;
 
-				if (right_value == 0)
+				if (integer_literal_equals(right_value, 0))
 				{
-					AS_INTEGER_LITERAL_EXPRESSION(result)->value = 0;
+					right_value->assign(right_value->from_value(0));
 				}
 
-				else if (right_value == 1)
+				else if (integer_literal_equals(right_value, 1))
 				{
 					delete result;
 					result = left_optimized;
@@ -407,8 +569,8 @@ namespace hz
 				{
 					if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL)
 					{
-						AS_INTEGER_LITERAL_EXPRESSION(result)->value *= 
-							AS_INTEGER_LITERAL_EXPRESSION(left_optimized)->value;
+						auto left_value = VALUE_OF(left_optimized);
+						VALUE_OF(result)->assign(right_value->times(left_value));
 					}
 
 					else
@@ -459,6 +621,31 @@ namespace hz
 				};
 			}
 		}
+	}
+
+	Expression* OrBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* XorBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* AndBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* LeftShiftBinaryExpression::optimize()
+	{
+		return nullptr;
+	}
+
+	Expression* RightShiftBinaryExpression::optimize()
+	{
+		return nullptr;
 	}
 
 	Expression* AssignBinaryExpression::optimize()
@@ -529,167 +716,412 @@ namespace hz
 
 	Node* PlusBinaryExpression::evaluate(Context* context) const
 	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
 
-		if (AS_EXPRESSION(left_evaluated)->etype() == ExpressionType::INTEGER_LITERAL &&
-			AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::INTEGER_LITERAL)
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
 		{
-			const auto left_evaluated_variable = node_to_variable(left_evaluated);
-			const auto right_evaluated_variable = node_to_variable(right_evaluated);
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
 
 			return new IntegerLiteralExpression
-			{ 
-				std::get<std::uint32_t>(node_to_variable(left_evaluated)) + std::get<std::uint32_t>(node_to_variable(right_evaluated)),
+			{
+				left_value->plus(right_value),
 				_token,
 			};
 		}
 
-		else if (AS_EXPRESSION(left_evaluated)->etype() == ExpressionType::STRING &&
-				 AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::STRING)
+		else if (left_evaluated->etype() == ExpressionType::STRING &&
+				 right_evaluated->etype() == ExpressionType::STRING)
 		{
+			const auto& left_message = MESSAGE_OF(left_evaluated);
+			const auto& right_message = MESSAGE_OF(right_evaluated);
+
 			return new StringExpression
 			{
-				std::format("{}{}",
-					std::get<std::string>(node_to_variable(left_evaluated)),
-					std::get<std::string>(node_to_variable(right_evaluated))),
+				std::format("{}{}", left_message, right_message),
 				_token,
 			};
-		}
-
-		_error_reporter->post_uncorrectable("both operands of a binary expression must evaluate to integers", NULL_TOKEN);
-	}
-
-	Node* MinusBinaryExpression::evaluate(Context* context) const
-	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
-
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
-		{
-			_error_reporter->post_error("binary expression operands must evaluate to an integer", _token);
-		}
-
-		return new IntegerLiteralExpression
-		{ 
-			std::get<std::uint32_t>(node_to_variable(left_evaluated)) - std::get<std::uint32_t>(node_to_variable(right_evaluated)),
-			_token,
-		};
-	}
-
-	Node* TimesBinaryExpression::evaluate(Context* context) const
-	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
-
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
-		{
-			_error_reporter->post_error("binary expression operands must evaluate to an integer", _token);
-		}
-
-		return new IntegerLiteralExpression
-		{ 
-			std::get<std::uint32_t>(node_to_variable(left_evaluated)) * std::get<std::uint32_t>(node_to_variable(right_evaluated)),
-			_token,
-		};
-	}
-
-	Node* AssignBinaryExpression::evaluate(Context* context) const
-	{
-		const auto left_evaluated = left;
-		const auto right_evaluated = right->evaluate(context);
-
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::IDENTIFIER)
-		{
-			_error_reporter->post_error("the left-hand operand of an assignment must result in a modifiable l-value", left->_token);
-		}
-
-		if (AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() == ExpressionType::IDENTIFIER)
-		{
-			context->define_variable(
-				AS_IDENTIFIER_EXPRESSION(left_evaluated)->name, node_to_variable(right_evaluated));
 		}
 
 		else
 		{
-			_error_reporter->post_error("the right-hand operand of an assignment must result in an r-value", right->_token);
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* MinusBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_evaluated)->value;
+			const auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_evaluated)->value;
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->minus(right_value),
+				_token,
+			};
 		}
 
-		return nullptr;
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* TimesBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = AS_INTEGER_LITERAL_EXPRESSION(left_evaluated)->value;
+			const auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_evaluated)->value;
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->times(right_value),
+				_token,
+			};
+		}
+
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* OrBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->bitwiseor(right_value),
+				_token,
+			};
+		}
+
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* XorBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->bitwisexor(right_value),
+				_token,
+			};
+		}
+
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* AndBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->bitwiseand(right_value),
+				_token,
+			};
+		}
+
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* LeftShiftBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->bitwiselshift(right_value),
+				_token,
+			};
+		}
+
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* RightShiftBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
+		{
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->bitwisershift(right_value),
+				_token,
+			};
+		}
+
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
+	}
+
+	Node* AssignBinaryExpression::evaluate(Context* context) const
+	{
+		const auto left_evaluated = AS_EXPRESSION(left);
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
+
+		if (left_evaluated->etype() != ExpressionType::IDENTIFIER)
+		{
+			CommonErrors::must_be_lvalue("the left-hand operand of an assignment expression", left->_token);
+			return nullptr;
+		}
+
+		if (right_evaluated->etype() == ExpressionType::INTEGER_LITERAL ||
+			right_evaluated->etype() == ExpressionType::IDENTIFIER)
+		{
+			context->define_variable(AS_IDENTIFIER_EXPRESSION(left_evaluated)->name, 
+				node_to_variable(right_evaluated));
+			return left_evaluated;
+		}
+
+		else
+		{
+			CommonErrors::must_be_rvalue("the right-hand operand of an assignment expression", right->_token);
+			return nullptr;
+		}
 	}
 
 	Node* EqualityBinaryExpression::evaluate(Context* context) const
 	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
 
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must result in an integer", _token);
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->equals(right_value),
+				_token,
+			};
 		}
 
-		return new IntegerLiteralExpression
-		{ 
-			std::get<std::uint32_t>(node_to_variable(left_evaluated)) == std::get<std::uint32_t>(node_to_variable(right_evaluated)),
-			_token,
-		};
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
 	}
 
 	Node* InequalityBinaryExpression::evaluate(Context* context) const
 	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
 
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must result in an integer", _token);
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->notequals(right_value),
+				_token,
+			};
 		}
 
-		return new IntegerLiteralExpression
-		{ 
-			std::get<std::uint32_t>(node_to_variable(left_evaluated)) != std::get<std::uint32_t>(node_to_variable(right_evaluated)),
-			_token,
-		};
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
 	}
 
 	Node* GreaterBinaryExpression::evaluate(Context* context) const
 	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
 
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must result in an integer", _token);
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->greater(right_value),
+				_token,
+			};
 		}
 
-		return new IntegerLiteralExpression
-		{ 
-			std::get<std::uint32_t>(node_to_variable(left_evaluated)) > std::get<std::uint32_t>(node_to_variable(right_evaluated)),
-			_token,
-		};
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
 	}
 
 	Node* LessBinaryExpression::evaluate(Context* context) const
 	{
-		const auto left_evaluated = left->evaluate(context);
-		const auto right_evaluated = right->evaluate(context);
+		const auto left_evaluated = AS_EXPRESSION(left->evaluate(context));
+		const auto right_evaluated = AS_EXPRESSION(right->evaluate(context));
 
-		if (AS_EXPRESSION(left_evaluated)->etype() != ExpressionType::INTEGER_LITERAL ||
-			AS_EXPRESSION(right_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		if (left_evaluated->etype() == ExpressionType::INTEGER_LITERAL &&
+			right_evaluated->etype() == ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("binary expression operands must result in an integer", _token);
+			const auto left_value = VALUE_OF(left_evaluated);
+			const auto right_value = VALUE_OF(right_evaluated);
+
+			if (left_value->itype() != right_value->itype())
+			{
+				CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+				return nullptr;
+			}
+
+			return new IntegerLiteralExpression
+			{
+				left_value->less(right_value),
+				_token,
+			};
 		}
 
-		return new IntegerLiteralExpression
-		{ 
-			std::get<std::uint32_t>(node_to_variable(left_evaluated)) < std::get<std::uint32_t>(node_to_variable(right_evaluated)),
-			_token,
-		};
+		else
+		{
+			CommonErrors::invalid_binary_expression(left_evaluated->etype(), right_evaluated->etype(), btype(), _token);
+			return nullptr;
+		}
 	}
 }
