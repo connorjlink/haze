@@ -46,7 +46,7 @@ namespace hz
 
 		byterange out{};
 
-		PUT(BinaryUtilities::range16(value));
+		PUT(bin::range16(value));
 
 		return out;
 	}
@@ -56,8 +56,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(MOVE, destination, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(MOVE, destination, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -66,8 +66,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(LOAD, destination, DC)));
-		PUT(BinaryUtilities::range16(address));
+		PUT(bin::range8(opcode(LOAD, destination, DC)));
+		PUT(bin::range16(address));
 
 		return out;
 	}
@@ -76,7 +76,7 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(COPY, destination, DC)));
+		PUT(bin::range8(opcode(COPY, destination, DC)));
 		PUT(imm_mem(immediate, 0x0000));
 
 		return out;
@@ -86,8 +86,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(IADD, destination, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(IADD, destination, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -96,8 +96,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(ISUB, destination, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(ISUB, destination, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -106,8 +106,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(BAND, destination, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(BAND, destination, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -116,8 +116,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(BIOR, destination, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(BIOR, destination, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -126,8 +126,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(BXOR, destination, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(BXOR, destination, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -136,8 +136,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(CALL, DC, DC)));
-		PUT(BinaryUtilities::range16(address));
+		PUT(bin::range8(opcode(CALL, DC, DC)));
+		PUT(bin::range16(address));
 
 		return out;
 	}
@@ -146,8 +146,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(EXIT, DC, DC)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(EXIT, DC, DC)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -156,8 +156,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(PUSH, source, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(PUSH, source, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -166,8 +166,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(PULL, destination, destination)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(PULL, destination, destination)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -176,8 +176,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(BRNZ, source, source)));
-		PUT(BinaryUtilities::range16(address));
+		PUT(bin::range8(opcode(BRNZ, source, source)));
+		PUT(bin::range16(address));
 
 		return out;
 	}
@@ -186,8 +186,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(LNEG, source, source)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(LNEG, source, source)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}
@@ -196,8 +196,8 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(opcode(STOP, DC, DC)));
-		PUT(BinaryUtilities::range16(0x0000));
+		PUT(bin::range8(opcode(STOP, DC, DC)));
+		PUT(bin::range16(0x0000));
 
 		return out;
 	}

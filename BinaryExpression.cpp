@@ -13,29 +13,6 @@ import std;
 // Haze BinaryExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define UBYTE(x) UnsignedByteIntegerLiteral{ x }
-#define SBYTE(x) SignedByteIntegerLiteral{ x }
-#define UWORD(x) UnsignedWordIntegerLiteral{ x }
-#define SWORD(x) SignedWordIntegerLiteral{ x }
-#define UDWORD(x) UnsignedDoubleWordIntegerLiteral{ x }
-#define SDWORD(x) SignedDoubleWordIntegerLiteral{ x }
-#define UQWORD(x) UnsignedQuadWordIntegerLiteral{ x }
-#define SQWORD(x) SignedQuadWordIntegerLiteral{ x }
-
-#define UNSIGNED_BYTE_CAST(x) *AS_UNSIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define SIGNED_BYTE_CAST(x) *AS_SIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define UNSIGNED_WORD_CAST(x) *AS_UNSIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define SIGNED_WORD_CAST(x) *AS_SIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define UNSIGNED_DOUBLE_WORD_CAST(x) *AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define SIGNED_DOUBLE_WORD_CAST(x) *AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define UNSIGNED_QUAD_WORD_CAST(x) *AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define SIGNED_QUAD_WORD_CAST(x) *AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-
-#define VALUE_OF(x) AS_INTEGER_LITERAL_EXPRESSION(x)->value
-#define MESSAGE_OF(x) AS_STRING_EXPRESSION(x)->message
-
-#define TEST_VALUE_EQUALS(x, y) integer_literal_raw(VALUE_OF(x)->equals(VALUE_OF(x)->from_value(y)))
-
 namespace
 {
 	using namespace hz;
@@ -50,17 +27,17 @@ namespace
 		using enum IntegerLiteralType;
 		switch (matchee->itype())
 		{
-			case UBYTE: return UnsignedByteIntegerLiteral{ value };
-			case SBYTE: return SignedByteIntegerLiteral{ value };
+			case UBYTE: return UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(value) };
+			case SBYTE: return SignedByteIntegerLiteral{ static_cast<std::int8_t>(value) };
 
-			case UWORD: return UnsignedWordIntegerLiteral{ value };
-			case SWORD: return SignedWordIntegerLiteral{ value };
+			case UWORD: return UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(value) };
+			case SWORD: return SignedWordIntegerLiteral{ static_cast<std::int16_t>(value) };
 
-			case UDWORD: return UnsignedDoubleWordIntegerLiteral{ value };
-			case SDWORD: return SignedDoubleWordIntegerLiteral{ value };
+			case UDWORD: return UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(value)};
+			case SDWORD: return SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(value) };
 
-			case UQWORD: return UnsignedQuadWordIntegerLiteral{ value };
-			case SQWORD: return SignedQuadWordIntegerLiteral{ value };
+			case UQWORD: return UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(value) };
+			case SQWORD: return SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(value) };
 		}
 	}
 }
@@ -675,7 +652,7 @@ namespace hz
 
 		if (!left_optimized && !right_optimized)
 		{
-
+			static_assert(false);
 		}
 
 		else
@@ -710,6 +687,8 @@ namespace hz
 				};
 			}
 		}
+
+		return nullptr;
 	}
 
 

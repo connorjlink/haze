@@ -2,9 +2,34 @@
 #define HAZE_INTEGERLITERAL_H
 
 #include "IntegerLiteralType.h"
+#include "CommonErrors.h"
+#include "Token.h"
 
 // Haze IntegerLiteral.h
 // (c) Connor J. Link. All Rights Reserved.
+
+#define UBYTE(x) UnsignedByteIntegerLiteral{ x }
+#define SBYTE(x) SignedByteIntegerLiteral{ x }
+#define UWORD(x) UnsignedWordIntegerLiteral{ x }
+#define SWORD(x) SignedWordIntegerLiteral{ x }
+#define UDWORD(x) UnsignedDoubleWordIntegerLiteral{ x }
+#define SDWORD(x) SignedDoubleWordIntegerLiteral{ x }
+#define UQWORD(x) UnsignedQuadWordIntegerLiteral{ x }
+#define SQWORD(x) SignedQuadWordIntegerLiteral{ x }
+
+#define UNSIGNED_BYTE_CAST(x) *AS_UNSIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_BYTE_CAST(x) *AS_SIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define UNSIGNED_WORD_CAST(x) *AS_UNSIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_WORD_CAST(x) *AS_SIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define UNSIGNED_DOUBLE_WORD_CAST(x) *AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_DOUBLE_WORD_CAST(x) *AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define UNSIGNED_QUAD_WORD_CAST(x) *AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+#define SIGNED_QUAD_WORD_CAST(x) *AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
+
+#define VALUE_OF(x) AS_INTEGER_LITERAL_EXPRESSION(x)->value
+#define MESSAGE_OF(x) AS_STRING_EXPRESSION(x)->message
+
+#define TEST_VALUE_EQUALS(x, y) integer_literal_raw(VALUE_OF(x)->equals(VALUE_OF(x)->from_value(y)))
 
 namespace hz
 {
@@ -325,8 +350,10 @@ namespace hz
 			case UQWORD: return static_cast<_ir_t>(AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value);
 			case SQWORD: return static_cast<_ir_t>(AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value);
 		}
-	}
 
+		CommonErrors::invalid_integer_literal_type(value->itype(), NULL_TOKEN);
+		return -1;
+	}
 
 
 	template<typename T>

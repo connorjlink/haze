@@ -7,6 +7,7 @@
 #include "BranchCommandType.h"
 #include "BinaryCommandType.h"
 #include "IntermediateType.h"
+#include "IntegerLiteral.h"
 #include "CommonErrors.h"
 
 // Haze IntermediateCommand.h
@@ -358,25 +359,25 @@ namespace hz
 		std::int32_t _immediate;
 
 	public:
-		MakeImmediateCommand(register_t destination, IntegerLiteral immediate)
+		MakeImmediateCommand(register_t destination, IntegerLiteral* immediate)
 			: _destination{ destination }
 		{
 			using enum IntegerLiteralType;
-			switch (immediate.type)
+			switch (immediate->itype())
 			{
-				case UBYTE: _immediate = immediate.storage.ubyte; break;
-				case SBYTE: _immediate = immediate.storage.sbyte; break;
+				case UBYTE: _immediate = AS_UNSIGNED_BYTE_INTEGER_LITERAL(immediate)->value; break;
+				case SBYTE: _immediate = AS_SIGNED_BYTE_INTEGER_LITERAL(immediate)->value; break;
 
-				case UWORD: _immediate = immediate.storage.uword; break;
-				case SWORD: _immediate = immediate.storage.sword; break;
+				case UWORD: _immediate = AS_UNSIGNED_WORD_INTEGER_LITERAL(immediate)->value; break;
+				case SWORD: _immediate = AS_SIGNED_WORD_INTEGER_LITERAL(immediate)->value; break;
 
-				case UDWORD: _immediate = immediate.storage.udword; break;
-				case SDWORD: _immediate = immediate.storage.sdword; break;
+				case UDWORD: _immediate = AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(immediate)->value; break;
+				case SDWORD: _immediate = AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(immediate)->value; break;
 
 				// since x86 is building 32-bit, 64-bit immediates are not supported for now
 				default:
 				{
-					CommonErrors::invalid_generic_type("integer literal", _integer_literal_type_map.at(immediate.type));
+					CommonErrors::invalid_integer_literal_type(immediate->itype(), NULL_TOKEN);
 				} break;
 			}
 		}

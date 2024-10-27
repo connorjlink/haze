@@ -88,7 +88,7 @@ namespace hz
 				function->evaluate(context);
 
 				const auto return_value = context->pop_return();
-				return variable_to_node(return_value);
+				return Variable*o_node(return_value);
 			}
 		}
 

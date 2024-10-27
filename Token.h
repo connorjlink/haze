@@ -53,8 +53,6 @@ namespace hz
 		VALUE,
 		PTR,
 
-		STRUCT,
-
 		BYTE,
 		WORD,
 		DWORD,

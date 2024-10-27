@@ -24,13 +24,13 @@ namespace hz
 		byterange out{};
 
 		// push {exit_code}
-		PUT(BinaryUtilities::range8(0x68));
-		PUT(BinaryUtilities::range32(exit_code));
+		PUT(bin::range8(0x68));
+		PUT(bin::range32(exit_code));
 
 		// call ExitProcessA
-		PUT(BinaryUtilities::range8(0xFF));
-		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + exitprocess_iat_va));
+		PUT(bin::range8(0xFF));
+		PUT(bin::range8(0x15));
+		PUT(bin::range32(PROCEDURE_BASE + exitprocess_iat_va));
 
 		return out;
 	}
@@ -49,11 +49,11 @@ namespace hz
 		byterange out{};
 
 		// mov r32, r/m32 
-		PUT(BinaryUtilities::range8(0x8B));
+		PUT(bin::range8(0x8B));
 		// mod == 0, so displacement only
 		// r/m == 101, so 32-bit displacement?
-		PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, destination, 0b101))); 
-		PUT(BinaryUtilities::range32(address));
+		PUT(bin::range8(X86Builder::modrm(0b00, destination, 0b101))); 
+		PUT(bin::range32(address));
 
 		return out;
 	}
@@ -64,8 +64,8 @@ namespace hz
 		// mov r/m32, imm32
 		byterange out{};
 
-		PUT(BinaryUtilities::range8(0xB8 | destination));
-		PUT(BinaryUtilities::range32(immediate));
+		PUT(bin::range8(0xB8 | destination));
+		PUT(bin::range32(immediate));
 
 		return out;
 	}
@@ -94,72 +94,72 @@ namespace hz
 		if (address == 0x1111)
 		{
 			// push NULL
-			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(0x00));
+			PUT(bin::range8(0x6A));
+			PUT(bin::range8(0x00));
 
 			// push NULL
-			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(0x00));
+			PUT(bin::range8(0x6A));
+			PUT(bin::range8(0x00));
 
 			// push length (15 bytes)
-			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(16));
+			PUT(bin::range8(0x6A));
+			PUT(bin::range8(16));
 
 			// push string (output info)
-			PUT(BinaryUtilities::range8(0x68));
-			PUT(BinaryUtilities::range32(0x0040304E));
+			PUT(bin::range8(0x68));
+			PUT(bin::range32(0x0040304E));
 
 			// push esi
-			PUT(BinaryUtilities::range8(0x56));
+			PUT(bin::range8(0x56));
 
 			// call WriteConsole()
-			PUT(BinaryUtilities::range8(0xFF));
-			PUT(BinaryUtilities::range8(0x15));
-			PUT(BinaryUtilities::range32(PROCEDURE(writeconsole_iat_va)));
+			PUT(bin::range8(0xFF));
+			PUT(bin::range8(0x15));
+			PUT(bin::range32(PROCEDURE(writeconsole_iat_va)));
 
 
 			// Convert our one? digit to ascii
 
 			// and r/m32, 0xFF
-			PUT(BinaryUtilities::range8(0x81));
-			PUT(BinaryUtilities::range8(X86Builder::modrm(0b11, 0b100, source)));
-			//PUT(BinaryUtilities::range8(0xE0));
-			PUT(BinaryUtilities::range8(0xFF));
-			PUT(BinaryUtilities::range8(0x00));
-			PUT(BinaryUtilities::range8(0x00));
-			PUT(BinaryUtilities::range8(0x00));
+			PUT(bin::range8(0x81));
+			PUT(bin::range8(X86Builder::modrm(0b11, 0b100, source)));
+			//PUT(bin::range8(0xE0));
+			PUT(bin::range8(0xFF));
+			PUT(bin::range8(0x00));
+			PUT(bin::range8(0x00));
+			PUT(bin::range8(0x00));
 
 			// add r/m32, imm8
-			PUT(BinaryUtilities::range8(0x83));
-			PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
-			PUT(BinaryUtilities::range8(0x30));
+			PUT(bin::range8(0x83));
+			PUT(bin::range8(X86Builder::modrm_rr(source, source)));
+			PUT(bin::range8(0x30));
 
 
 
 			// push NULL
-			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(0x00));
+			PUT(bin::range8(0x6A));
+			PUT(bin::range8(0x00));
 
 			// push NULL
-			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(0x00));
+			PUT(bin::range8(0x6A));
+			PUT(bin::range8(0x00));
 
 			// push length (1 byte)
-			PUT(BinaryUtilities::range8(0x6A));
-			PUT(BinaryUtilities::range8(2));
+			PUT(bin::range8(0x6A));
+			PUT(bin::range8(2));
 
 			// move [0x4013FF], r/m32
 			if (source == EAX)
 			{
-				PUT(BinaryUtilities::range8(0xA3));
-				PUT(BinaryUtilities::range32(0x004033FF));
+				PUT(bin::range8(0xA3));
+				PUT(bin::range32(0x004033FF));
 			}
 
 			else
 			{
-				PUT(BinaryUtilities::range8(0x89));
-				PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, source, 0b101)));
-				PUT(BinaryUtilities::range32(0x004033FF));
+				PUT(bin::range8(0x89));
+				PUT(bin::range8(X86Builder::modrm(0b00, source, 0b101)));
+				PUT(bin::range32(0x004033FF));
 			}
 
 			
@@ -172,17 +172,17 @@ namespace hz
 			PUT(X86Builder::push_r(ESI));
 
 			// call WriteConsole()
-			PUT(BinaryUtilities::range8(0xFF));
-			PUT(BinaryUtilities::range8(0x15));
-			PUT(BinaryUtilities::range32(PROCEDURE_BASE + writeconsole_iat_va));
+			PUT(bin::range8(0xFF));
+			PUT(bin::range8(0x15));
+			PUT(bin::range32(PROCEDURE_BASE + writeconsole_iat_va));
 		}
 
 		else
 		{
 			// mov r/m32, r32
-			PUT(BinaryUtilities::range8(0x89));
-			PUT(BinaryUtilities::range8(X86Builder::modrm(0b00, source, 0b101)));
-			PUT(BinaryUtilities::range32(address));
+			PUT(bin::range8(0x89));
+			PUT(bin::range8(X86Builder::modrm(0b00, source, 0b101)));
+			PUT(bin::range32(address));
 		}
 		
 		return out;
@@ -230,12 +230,12 @@ namespace hz
 
 		// TODO: replace with `sub esp, 4`
 		// push imm32 (save some space on the stack for the return value)
-		PUT(BinaryUtilities::range8(0x68));
-		PUT(BinaryUtilities::range32(0xAAAAAAAA)); // temp value
+		PUT(bin::range8(0x68));
+		PUT(bin::range32(0xAAAAAAAA)); // temp value
 
 		// call NEAR
-		PUT(BinaryUtilities::range8(0xE8));
-		PUT(BinaryUtilities::range32(address));
+		PUT(bin::range8(0xE8));
+		PUT(bin::range32(address));
 
 		return out;
 	}
@@ -258,10 +258,10 @@ namespace hz
 		//byterange out{};
 
 		// mov DWORD PTR [esp+0x4], r32
-		//PUT(BinaryUtilities::range8(0x89));
-		//PUT(BinaryUtilities::range8(X86Builder::modrm(0b01, source, 0b100)));
-		//PUT(BinaryUtilities::range8(0x24));
-		//PUT(BinaryUtilities::range8(0x04));
+		//PUT(bin::range8(0x89));
+		//PUT(bin::range8(X86Builder::modrm(0b01, source, 0b100)));
+		//PUT(bin::range8(0x24));
+		//PUT(bin::range8(0x04));
 
 		//return out;
 
@@ -311,13 +311,13 @@ namespace hz
 		byterange out{};
 
 		// test r/m32, r32
-		PUT(BinaryUtilities::range8(0x85));
-		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
+		PUT(bin::range8(0x85));
+		PUT(bin::range8(X86Builder::modrm_rr(source, source)));
 #pragma message("TODO: optimizations for rel8/rel16 jumps which have shorter encoding!")
 		// jne rel32
-		PUT(BinaryUtilities::range8(0x0F));
-		PUT(BinaryUtilities::range8(0x85));
-		PUT(BinaryUtilities::range32(address));
+		PUT(bin::range8(0x0F));
+		PUT(bin::range8(0x85));
+		PUT(bin::range32(address));
 
 		return out;
 	}
@@ -328,12 +328,12 @@ namespace hz
 		byterange out{};
 
 		// test r/m32, r32
-		PUT(BinaryUtilities::range8(0x85));
-		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
+		PUT(bin::range8(0x85));
+		PUT(bin::range8(X86Builder::modrm_rr(source, source)));
 		// sete r/m8
-		PUT(BinaryUtilities::range8(0x0F));
-		PUT(BinaryUtilities::range8(0x94));
-		PUT(BinaryUtilities::range8(X86Builder::modrm_rr(source, source)));
+		PUT(bin::range8(0x0F));
+		PUT(bin::range8(0x94));
+		PUT(bin::range8(X86Builder::modrm_rr(source, source)));
 
 		return out;
 	}
@@ -353,33 +353,33 @@ namespace hz
 
 		byterange out{};
 
-		/*PUT(BinaryUtilities::range8(0x6A));
-		PUT(BinaryUtilities::range8(0x00));
+		/*PUT(bin::range8(0x6A));
+		PUT(bin::range8(0x00));
 
-		PUT(BinaryUtilities::range8(0x68));
-		PUT(BinaryUtilities::range8(0x00));
-		PUT(BinaryUtilities::range8(0x30));
-		PUT(BinaryUtilities::range8(0x40));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(bin::range8(0x68));
+		PUT(bin::range8(0x00));
+		PUT(bin::range8(0x30));
+		PUT(bin::range8(0x40));
+		PUT(bin::range8(0x00));
 
-		PUT(BinaryUtilities::range8(0x68));
-		PUT(BinaryUtilities::range8(0x00));
-		PUT(BinaryUtilities::range8(0x30));
-		PUT(BinaryUtilities::range8(0x40));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(bin::range8(0x68));
+		PUT(bin::range8(0x00));
+		PUT(bin::range8(0x30));
+		PUT(bin::range8(0x40));
+		PUT(bin::range8(0x00));
 
-		PUT(BinaryUtilities::range8(0x6A));
-		PUT(BinaryUtilities::range8(0x00));
+		PUT(bin::range8(0x6A));
+		PUT(bin::range8(0x00));
 
-		PUT(BinaryUtilities::range8(0xFF));
-		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + messageboxa_iat_va));*/
+		PUT(bin::range8(0xFF));
+		PUT(bin::range8(0x15));
+		PUT(bin::range32(PROCEDURE_BASE + messageboxa_iat_va));*/
 
 		// old exit process proc address
-		/*PUT(BinaryUtilities::range8(0x70));
-		PUT(BinaryUtilities::range8(0x20));
-		PUT(BinaryUtilities::range8(0x40));z`
-		PUT(BinaryUtilities::range8(0x00));*/
+		/*PUT(bin::range8(0x70));
+		PUT(bin::range8(0x20));
+		PUT(bin::range8(0x40));z`
+		PUT(bin::range8(0x00));*/
 
 		PUT(X86Builder::push_i8(0x65));
 		
@@ -389,11 +389,11 @@ namespace hz
 		a:  68 40 30 40 00          push   0x403040 
 */
 
-		//PUT(BinaryUtilities::range8(0xB8));
-		//PUT(BinaryUtilities::range32(0x00000065));
+		//PUT(bin::range8(0xB8));
+		//PUT(bin::range32(0x00000065));
 
-		//PUT(BinaryUtilities::range8(0xA3));
-		//PUT(BinaryUtilities::range32(0x00403340));
+		//PUT(bin::range8(0xA3));
+		//PUT(bin::range32(0x00403340));
 
 		//PUT(X86Builder::push_m(0x00403340));
 
@@ -405,9 +405,9 @@ namespace hz
 		// output string
 		PUT(X86Builder::push_i32(0x004033F0));
 
-		PUT(BinaryUtilities::range8(0xFF));
-		PUT(BinaryUtilities::range8(0x15));
-		PUT(BinaryUtilities::range32(PROCEDURE_BASE + wnsprintfa_iat_va));
+		PUT(bin::range8(0xFF));
+		PUT(bin::range8(0x15));
+		PUT(bin::range32(PROCEDURE_BASE + wnsprintfa_iat_va));
 
 		PUT(build_stop(201));
 
@@ -421,7 +421,7 @@ namespace hz
 
 		// push STD_OUTPUT_HANDLE
 		{
-			PUT(BinaryUtilities::range8(0x68));
+			PUT(bin::range8(0x68));
 
 			// NOTE: this is some hackery so we can avoid including <windows.h> 
 			// since it is a MASSIVE header file and we really don't need anything from it.
@@ -429,7 +429,7 @@ namespace hz
 			// https://learn.microsoft.com/en-us/windows/console/getstdhandle
 #define DWORD std::uint32_t
 #define STD_OUTPUT_HANDLE ((DWORD)-11)
-			PUT(BinaryUtilities::range32(STD_OUTPUT_HANDLE));
+			PUT(bin::range32(STD_OUTPUT_HANDLE));
 #undef STD_OUTPUT_HANDLE
 #undef DWORD
 		}
@@ -437,7 +437,7 @@ namespace hz
 		// call GetStdHandle
 		PUT(X86Builder::call_absolute(PROCEDURE(getstdhandle_iat_va)));
 		// NOTE: old method
-		//PUT(BinaryUtilities::range32(0x402080));
+		//PUT(bin::range32(0x402080));
 
 		// handle is stored in eax
 		
@@ -465,7 +465,7 @@ namespace hz
 		// call WriteConsoleA
 		PUT(X86Builder::call_absolute(PROCEDURE(writeconsole_iat_va)));
 		// NOTE: old method
-		//PUT(BinaryUtilities::range32(0x4020A0));
+		//PUT(bin::range32(0x4020A0));
 
 		return out;
 	}

@@ -10,6 +10,13 @@
 namespace hz
 {
 	class Symbol;
+	class FunctionSymbol;
+	class ArgumentSymbol;
+	class VariableSymbol; 
+	class StructSymbol;
+	class DefineSymbol;
+	class LabelSymbol;
+
 	class Node;
 	class Expression;
 	class IdentifierExpression;
@@ -33,7 +40,13 @@ namespace hz
 		std::unordered_map<std::string, Symbol*> symbol_table;
 
 	protected:
-		void add_symbol(SymbolType, const std::string&, Token&);
+		void add_symbol(SymbolType, const std::string&, const Token&);
+		void add_function(const std::string&, const Token&);
+		void add_argument(const std::string&, const Token&);
+		void add_variable(const std::string&, const Token&);
+		void add_define(const std::string&, const Token&);
+		void add_label(const std::string&, const Token&);
+		void add_struct(const std::string&, const Token&);
 
 	public:
 		SymbolType query_symbol_type(const std::string&, Token&);

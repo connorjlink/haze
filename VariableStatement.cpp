@@ -70,7 +70,9 @@ namespace hz
 
 		else
 		{
-			context->define_variable(name, variable_t{ 0u });
+#pragma message("TODO: figure out the size in bytes to create the right variable integer type here")
+			//context->define_variable(name, new Variable{ 0u });
+			static_assert(false);
 		}
 
 		return nullptr;

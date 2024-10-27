@@ -215,7 +215,7 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_immediate(register_t destination, IntegerLiteral immediate)
+	void Generator::make_immediate(register_t destination, IntegerLiteral* immediate)
 	{
 		auto command = new MakeImmediateCommand{ destination, immediate };
 		COMPOSE(command);

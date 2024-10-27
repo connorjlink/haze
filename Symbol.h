@@ -83,8 +83,8 @@ namespace hz
 		Type* type;
 
 	public:
-		VariableSymbol(const std::string& name, Allocation* allocation, Type* type)
-			: Symbol{ name }, allocation{ allocation }, type{ type }
+		VariableSymbol(const std::string& name, Type* type, Allocation* allocation)
+			: Symbol{ name }, type{ type }, allocation{ allocation }
 		{
 		}
 

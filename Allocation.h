@@ -12,6 +12,8 @@
 
 namespace hz
 {
+	class Variable;
+
 	class Allocation
 	{
 	public:
@@ -22,7 +24,7 @@ namespace hz
 	public:
 		virtual AllocationType atype() const = 0;
 		virtual register_t read() const = 0;
-		virtual void write(variable_t) const = 0;
+		virtual void write(Variable*) const = 0;
 		virtual void copy_into(Allocation*) const = 0;
 	};
 
@@ -34,7 +36,7 @@ namespace hz
 	public:
 		virtual AllocationType atype() const final override;
 		virtual register_t read() const final override;
-		virtual void write(variable_t) const final override;
+		virtual void write(Variable*) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
 	public:
@@ -65,7 +67,7 @@ namespace hz
 	public:
 		virtual AllocationType atype() const override;
 		virtual register_t read() const final override;
-		virtual void write(variable_t) const final override;
+		virtual void write(Variable*) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
 	public:
@@ -109,7 +111,7 @@ namespace hz
 	public:
 		virtual AllocationType atype() const override;
 		virtual register_t read() const final override;
-		virtual void write(variable_t) const final override;
+		virtual void write(Variable*) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
 	public:

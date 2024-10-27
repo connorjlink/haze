@@ -65,7 +65,7 @@ namespace hz
 		if (context->variables().contains(name))
 		{
 			const auto value = context->variables().at(name);
-			return variable_to_node(value);
+			return Variable*o_node(value);
 		}
 
 		_error_reporter->post_error(std::format("identifier `{}` is undefined", name), _token);

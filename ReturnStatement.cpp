@@ -42,7 +42,7 @@ namespace hz
 			// when value==nullptr, expect no return value ONLY from nvr function
 			if (value == nullptr)
 			{
-				if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type != TypeSpecifier::NVR)
+				if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type->specifier != TypeSpecifier::NVR)
 				{
 					_error_reporter->post_error("no return value was specified for a non-`nvr` function", _token);
 					return;

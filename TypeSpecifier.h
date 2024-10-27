@@ -2,6 +2,7 @@
 #define HAZE_TYPESPECIFIER_H
 
 #include "Token.h"
+#include "IntTypeType.h"
 
 // Haze TypeSpecifier.h
 // (c) Connor J. Link. All Rights Reserved.

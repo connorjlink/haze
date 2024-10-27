@@ -10,6 +10,8 @@ namespace hz
 	enum class NodeType;
 	enum class StatementType;
 	enum class ExpressionType;
+	enum class BinaryExpressionType;
+	enum class IntegerLiteralType;
 
 	struct Token;
 
@@ -30,6 +32,9 @@ namespace hz
 		static void invalid_node_type(NodeType, const Token&);
 		static void invalid_statement_type(StatementType, const Token&);
 		static void invalid_expression_type(ExpressionType, const Token&);
+
+	public:
+		static void invalid_integer_literal_type(IntegerLiteralType, const Token&);
 
 	public:
 		static void must_be_lvalue(const std::string&, const Token&);

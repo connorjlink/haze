@@ -29,19 +29,19 @@ namespace hz
 				auto& integer_literal = integer_literal_expression->value;
 
 				using enum IntegerLiteralType;
-				switch (integer_literal.type)
+				switch (integer_literal->itype())
 				{
-					case UBYTE: return new UnsignedByteVariable{ integer_literal.storage.ubyte };
-					case SBYTE: return new SignedByteVariable{ integer_literal.storage.sbyte };
+					case UBYTE: return new UnsignedByteVariable{ AS_UNSIGNED_BYTE_INTEGER_LITERAL(integer_literal)->value };
+					case SBYTE: return new SignedByteVariable{ AS_SIGNED_BYTE_INTEGER_LITERAL(integer_literal)->value };
 
-					case UWORD: return new UnsignedWordVariable{ integer_literal.storage.uword };
-					case SWORD: return new SignedWordVariable{ integer_literal.storage.sword };
+					case UWORD: return new UnsignedWordVariable{ AS_UNSIGNED_WORD_INTEGER_LITERAL(integer_literal)->value };
+					case SWORD: return new SignedWordVariable{ AS_SIGNED_BYTE_INTEGER_LITERAL(integer_literal)->value };
 
-					case UDWORD: return new UnsignedDoubleWordVariable{ integer_literal.storage.udword };
-					case SDWORD: return new SignedDoubleWordVariable{ integer_literal.storage.sdword };
+					case UDWORD: return new UnsignedDoubleWordVariable{ AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(integer_literal)->value };
+					case SDWORD: return new SignedDoubleWordVariable{ AS_SIGNED_BYTE_INTEGER_LITERAL(integer_literal)->value };
 
-					case UQWORD: return new UnsignedQuadWordVariable{ integer_literal.storage.uqword };
-					case SQWORD: return new SignedQuadWordVariable{ integer_literal.storage.sqword };
+					case UQWORD: return new UnsignedQuadWordVariable{ AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(integer_literal)->value };
+					case SQWORD: return new SignedQuadWordVariable{ AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(integer_literal)->value };
 				}
 			} break;
 
@@ -92,49 +92,49 @@ namespace hz
 			case UBYTE: 
 			{
 				auto unsigned_byte_variable = AS_UBYTE_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .ubyte = unsigned_byte_variable->value }, IntegerLiteralType::UBYTE }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new UnsignedByteIntegerLiteral{ unsigned_byte_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case SBYTE:
 			{
 				auto signed_byte_variable = AS_SBYTE_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .sbyte = signed_byte_variable->value }, IntegerLiteralType::SBYTE }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new SignedByteIntegerLiteral{ signed_byte_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case UWORD:
 			{
 				auto unsigned_word_variable = AS_UWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .uword = unsigned_word_variable->value }, IntegerLiteralType::UWORD }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new UnsignedWordIntegerLiteral{ unsigned_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case SWORD:
 			{
 				auto signed_word_variable = AS_SWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .sword = signed_word_variable->value }, IntegerLiteralType::SWORD }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new SignedWordIntegerLiteral{ signed_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case UDWORD:
 			{
 				auto unsigned_double_word_variable = AS_UDWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .udword = unsigned_double_word_variable->value }, IntegerLiteralType::UDWORD }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new UnsignedDoubleWordIntegerLiteral{ unsigned_double_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case SDWORD:
 			{
 				auto signed_double_word_variable = AS_SDWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .sdword = signed_double_word_variable->value }, IntegerLiteralType::SDWORD }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new SignedDoubleWordIntegerLiteral{ signed_double_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case UQWORD:
 			{
 				auto unsigned_quad_word_variable = AS_UQWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .uqword = unsigned_quad_word_variable->value }, IntegerLiteralType::UQWORD }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new UnsignedQuadWordIntegerLiteral{ unsigned_quad_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			case SQWORD: 
 			{
 				auto signed_quad_word_variable = AS_SQWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ { { .sqword = signed_quad_word_variable->value }, IntegerLiteralType::SQWORD }, NULL_TOKEN };
+				return new IntegerLiteralExpression{ new SignedQuadWordIntegerLiteral{ signed_quad_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			default:

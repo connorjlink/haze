@@ -17,8 +17,7 @@ namespace hz
 	class Parser;
 	class InstructionCommand;
 	class Allocation;
-
-	using index_t = std::int32_t;
+	class Variable;
 
 	class Generator
 	{
@@ -127,7 +126,7 @@ namespace hz
 		// destination = source
 		void make_copy(register_t, register_t);
 		// destination = immediate
-		void make_immediate(register_t, IntegerLiteral);
+		void make_immediate(register_t, IntegerLiteral*);
 
 	public:
 		// position a new function argument for the next call
@@ -190,9 +189,9 @@ namespace hz
 
 	public:
 		// get the current index for Command generation
-		index_t resolve_origin_old() const;
+		std::int32_t resolve_origin_old() const;
 		// get the current index for IntermediateCommand generation
-		index_t resolve_origin() const;
+		std::int32_t resolve_origin() const;
 
 	public:
 

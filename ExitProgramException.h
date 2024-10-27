@@ -8,10 +8,19 @@ namespace hz
 {
 	class ExitProgramException : public std::exception
 	{
+	private:
+		std::string _message;
+
+	public:
+		ExitProgramException(const std::string& message)
+			: _message{ message }
+		{
+		}
+
 	public:
 		const char* what() const override
 		{
-			return "Haze Executable - `exit()` invoked";
+			return std::format("Haze Executable - `exit()` invoked (code {})", _message).c_str();
 		}
 	};
 }

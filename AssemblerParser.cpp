@@ -60,7 +60,7 @@ namespace hz
 		ASSERT_IS_INTEGER_LITERAL(address_expression);
 
 		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
-		ASSERT_IN_RANGE(address, 0, DWORD_MAX);
+		ASSERT_IN_RANGE(integer_literal_raw(address), 0, DWORD_MAX);
 
 		return new IntegerLiteralExpression{ address, address_expression->_token };
 	}
@@ -81,7 +81,7 @@ namespace hz
 		ASSERT_IS_INTEGER_LITERAL(immediate_expression);
 
 		const auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
-		ASSERT_IN_RANGE(immediate, 0, WORD_MAX);
+		ASSERT_IN_RANGE(integer_literal_raw(immediate), 0, WORD_MAX);
 
 		return new IntegerLiteralExpression{ immediate, immediate_expression->_token };
 	}
@@ -103,7 +103,7 @@ namespace hz
 
 		const auto identifier = identifier_expression->name;
 
-		add_symbol(SymbolType::LABEL, identifier, lookbehind());
+		add_label(identifier, lookbehind());
 		// NOTE: we don't yet know the address since we haven't linked to resolve it yet
 		//AS_LABEL_SYMBOL(reference_symbol(Symbol::Type::LABEL, identifier))->address = 
 
@@ -159,7 +159,7 @@ namespace hz
 					return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
-				return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand2)->value };
+				return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value) };
 			} break;
 
 			case TokenType::COPY:
@@ -175,10 +175,10 @@ namespace hz
 					return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
-				const auto value = AS_INTEGER_LITERAL_EXPRESSION(operand2)->value;
+				const auto value = integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value);
 				ASSERT_IN_RANGE(value, 0, DWORD_MAX - 1);
 
-				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<std::uint8_t>(value) };
+				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, value };
 			} break;
 
 			case TokenType::SAVE:
@@ -195,7 +195,7 @@ namespace hz
 					return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
 			} break;
 
 			case TokenType::IADD:
@@ -263,7 +263,7 @@ namespace hz
 					return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
 			} break;
 
 			case TokenType::EXIT:
@@ -302,7 +302,7 @@ namespace hz
 					return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
-				return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, AS_INTEGER_LITERAL_EXPRESSION(operand1)->value };
+				return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
 			} break;
 
 			case TokenType::BOOL:

@@ -48,7 +48,7 @@ namespace hz
 	}
 
 
-	void Parser::add_symbol(SymbolType type, const std::string& name, Token& location)
+	void Parser::add_symbol(SymbolType type, const std::string& name, const Token& location)
 	{
 		// does the symbol already exist in the registry?
 		if (symbol_table.contains(name))
@@ -61,9 +61,9 @@ namespace hz
 		using enum SymbolType;
 		switch (type)
 		{
-			case FUNCTION: symbol_table[name] = new FunctionSymbol{ name }; break;
-			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name, TypeSpecifier::BYTE }; break;
-			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr, TypeSpecifier::BYTE }; break;
+			case FUNCTION: symbol_table[name] = new FunctionSymbol{ name, nullptr }; break;
+			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name, nullptr }; break;
+			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr, nullptr }; break;
 			case DEFINE: symbol_table[name] = new DefineSymbol{ name, 0 }; break;
 			case LABEL: symbol_table[name] = new LabelSymbol{ name, 0 }; break;
 
@@ -72,6 +72,36 @@ namespace hz
 				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
 			} break;
 		}
+	}
+
+	void Parser::add_function(const std::string& name, const Token& location)
+	{
+		add_symbol(SymbolType::FUNCTION, name, location);
+	}
+
+	void Parser::add_argument(const std::string& name, const Token& location)
+	{
+		add_symbol(SymbolType::ARGUMENT, name, location);
+	}
+
+	void Parser::add_variable(const std::string& name, const Token& location)
+	{
+		add_symbol(SymbolType::VARIABLE, name, location);
+	}
+
+	void Parser::add_define(const std::string& name, const Token& location)
+	{
+		add_symbol(SymbolType::DEFINE, name, location);
+	}
+
+	void Parser::add_label(const std::string& name, const Token& location)
+	{
+		add_symbol(SymbolType::LABEL, name, location);
+	}
+
+	void Parser::add_struct(const std::string& name, const Token& location)
+	{
+		add_symbol(SymbolType::STRUCT, name, location);
 	}
 
 

@@ -84,7 +84,7 @@ namespace hz
 		}
 
 		const auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated);
-		while (integer_literal->value.is_nonzero())
+		while (TEST_VALUE_EQUALS(integer_literal, 0))
 		{
 			body->evaluate(context);
 			condition_evaluated = condition->evaluate(context);

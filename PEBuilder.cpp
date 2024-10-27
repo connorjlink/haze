@@ -26,17 +26,17 @@ namespace hz
 		byterange out{};
 
 		// insert section name char by char
-		PUT(BinaryUtilities::range_string(name));
+		PUT(bin::range_string(name));
 
-		PUT(BinaryUtilities::range32(virtual_size));
-		PUT(BinaryUtilities::range32(virtual_address));
-		PUT(BinaryUtilities::range32(raw_size));
-		PUT(BinaryUtilities::range32(raw_pointer));
+		PUT(bin::range32(virtual_size));
+		PUT(bin::range32(virtual_address));
+		PUT(bin::range32(raw_size));
+		PUT(bin::range32(raw_pointer));
 
 		PUT(pad32);
 		PUT(pad32);
 		PUT(pad32);
-		PUT(BinaryUtilities::range32(characteristics));
+		PUT(bin::range32(characteristics));
 
 		return out;
 	}
@@ -46,11 +46,11 @@ namespace hz
 	{
 		byterange out{};
 
-		PUT(BinaryUtilities::range32(int_pointer));
+		PUT(bin::range32(int_pointer));
 		PUT(pad32);
 		PUT(pad32);
-		PUT(BinaryUtilities::range32(dll_pointer));
-		PUT(BinaryUtilities::range32(iat_pointer));
+		PUT(bin::range32(dll_pointer));
+		PUT(bin::range32(iat_pointer));
 
 		return out;
 	}
@@ -58,7 +58,7 @@ namespace hz
 
 	byterange PEBuilder::dos_header()
 	{
-		const auto magic = BinaryUtilities::range16(0x5A4D);
+		const auto magic = bin::range16(0x5A4D);
 
 		byterange out{};
 
@@ -73,7 +73,7 @@ namespace hz
 
 	byterange PEBuilder::dos_footer()
 	{
-		const auto lfanew = BinaryUtilities::range32(0x00000040);
+		const auto lfanew = bin::range32(0x00000040);
 
 		byterange out{};
 
@@ -88,11 +88,11 @@ namespace hz
 
 	byterange PEBuilder::pe_header()
 	{
-		const auto signature = BinaryUtilities::range32(0x00004550);
-		const auto machine = BinaryUtilities::range16(0x014C);
-		const auto section_count = BinaryUtilities::range16(0x0003);
-		const auto optional_size = BinaryUtilities::range16(0x00E0);
-		const auto characteristics = BinaryUtilities::range16(0x0102);
+		const auto signature = bin::range32(0x00004550);
+		const auto machine = bin::range16(0x014C);
+		const auto section_count = bin::range16(0x0003);
+		const auto optional_size = bin::range16(0x00E0);
+		const auto characteristics = bin::range16(0x0102);
 
 		byterange out{};
 
@@ -112,19 +112,19 @@ namespace hz
 
 	byterange PEBuilder::optional_header()
 	{
-		const auto magic = BinaryUtilities::range16(0x010B);
-		const auto entrypoint = BinaryUtilities::range32(0x00001000);
-		const auto image_base = BinaryUtilities::range32(0x00400000);
+		const auto magic = bin::range16(0x010B);
+		const auto entrypoint = bin::range32(0x00001000);
+		const auto image_base = bin::range32(0x00400000);
 		// VAs will start at 0x00401000
-		const auto section_alignment = BinaryUtilities::range32(0x00001000);
-		const auto file_alignment = BinaryUtilities::range32(0x00000200);
-		const auto major_subsystem = BinaryUtilities::range16(0x0004);
+		const auto section_alignment = bin::range32(0x00001000);
+		const auto file_alignment = bin::range32(0x00000200);
+		const auto major_subsystem = bin::range16(0x0004);
 		// `image size` - need to modify when making changes to the underlying object code
-		const auto image_size = BinaryUtilities::range32(0x00004000); // 16k
-		const auto header_size = BinaryUtilities::range32(0x00000200);
+		const auto image_size = bin::range32(0x00004000); // 16k
+		const auto header_size = bin::range32(0x00000200);
 		//const auto subsystem = PEBuilder::make16(0x0002); // if using GUI
-		const auto subsystem = BinaryUtilities::range16(0x0003); //  /SUBSYSTEM:CONSOLE
-		const auto directory_count = BinaryUtilities::range32(0x00000010); // max 16
+		const auto subsystem = bin::range16(0x0003); //  /SUBSYSTEM:CONSOLE
+		const auto directory_count = bin::range32(0x00000010); // max 16
 
 #pragma message("TODO: support growing the stack here to make overflowing at fixed 16k frame size harder!")
 
@@ -170,7 +170,7 @@ namespace hz
 
 	byterange PEBuilder::data_directories()
 	{
-		const auto imports_va = BinaryUtilities::range32(0x00002000);
+		const auto imports_va = bin::range32(0x00002000);
 
 		byterange out{};
 
@@ -258,28 +258,28 @@ namespace hz
 
 
 
-		auto getstdhandle_int_iat = BinaryUtilities::range32(base + getstdhandle_va);
-		getstdhandle_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		auto getstdhandle_int_iat = bin::range32(base + getstdhandle_va);
+		getstdhandle_int_iat.append_range(bin::range32(0x00000000));
 		std::copy(getstdhandle_int_iat.begin(), getstdhandle_int_iat.end(), head + getstdhandle_int_va);
 		std::copy(getstdhandle_int_iat.begin(), getstdhandle_int_iat.end(), head + getstdhandle_iat_va);
 
-		auto writeconsole_int_iat = BinaryUtilities::range32(base + writeconsole_va);
-		writeconsole_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		auto writeconsole_int_iat = bin::range32(base + writeconsole_va);
+		writeconsole_int_iat.append_range(bin::range32(0x00000000));
 		std::copy(writeconsole_int_iat.begin(), writeconsole_int_iat.end(), head + writeconsole_int_va);
 		std::copy(writeconsole_int_iat.begin(), writeconsole_int_iat.end(), head + writeconsole_iat_va);
 
-		auto exitprocess_int_iat = BinaryUtilities::range32(base + exitprocess_va);
-		exitprocess_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		auto exitprocess_int_iat = bin::range32(base + exitprocess_va);
+		exitprocess_int_iat.append_range(bin::range32(0x00000000));
 		std::copy(exitprocess_int_iat.begin(), exitprocess_int_iat.end(), head + exitprocess_int_va);
 		std::copy(exitprocess_int_iat.begin(), exitprocess_int_iat.end(), head + exitprocess_iat_va);
 
-		auto messageboxa_int_iat = BinaryUtilities::range32(base + messageboxa_va);
-		messageboxa_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		auto messageboxa_int_iat = bin::range32(base + messageboxa_va);
+		messageboxa_int_iat.append_range(bin::range32(0x00000000));
 		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_int_va);
 		std::copy(messageboxa_int_iat.begin(), messageboxa_int_iat.end(), head + messageboxa_iat_va);
 
-		auto wnsprintfa_int_iat = BinaryUtilities::range32(base + wnsprintfa_va);
-		wnsprintfa_int_iat.append_range(BinaryUtilities::range32(0x00000000));
+		auto wnsprintfa_int_iat = bin::range32(base + wnsprintfa_va);
+		wnsprintfa_int_iat.append_range(bin::range32(0x00000000));
 		std::copy(wnsprintfa_int_iat.begin(), wnsprintfa_int_iat.end(), head + wnsprintfa_int_va);
 		std::copy(wnsprintfa_int_iat.begin(), wnsprintfa_int_iat.end(), head + wnsprintfa_iat_va);
 
@@ -287,35 +287,35 @@ namespace hz
 		// ignoring hint addresses and using only by-name imports for now
 
 		// function name imports
-		auto getstdhandle = BinaryUtilities::range16(0x0000);
-		getstdhandle.append_range(BinaryUtilities::range_string("GetStdHandle")); // from kernel32.dll
+		auto getstdhandle = bin::range16(0x0000);
+		getstdhandle.append_range(bin::range_string("GetStdHandle")); // from kernel32.dll
 		std::copy(getstdhandle.begin(), getstdhandle.end(), head + getstdhandle_va);
 
-		auto writeconsole = BinaryUtilities::range16(0x0000);
-		writeconsole.append_range(BinaryUtilities::range_string("WriteConsoleA")); // from kernel32.dll
+		auto writeconsole = bin::range16(0x0000);
+		writeconsole.append_range(bin::range_string("WriteConsoleA")); // from kernel32.dll
 		std::copy(writeconsole.begin(), writeconsole.end(), head + writeconsole_va);
 
-		auto exitprocess = BinaryUtilities::range16(0x0000);
-		exitprocess.append_range(BinaryUtilities::range_string("ExitProcess")); // from kernel32.dll
+		auto exitprocess = bin::range16(0x0000);
+		exitprocess.append_range(bin::range_string("ExitProcess")); // from kernel32.dll
 		std::copy(exitprocess.begin(), exitprocess.end(), head + exitprocess_va);
 
-		auto messageboxa = BinaryUtilities::range16(0x0000);
-		messageboxa.append_range(BinaryUtilities::range_string("MessageBoxA")); // from user32.dll
+		auto messageboxa = bin::range16(0x0000);
+		messageboxa.append_range(bin::range_string("MessageBoxA")); // from user32.dll
 		std::copy(messageboxa.begin(), messageboxa.end(), head + messageboxa_va);
 
-		auto wnsprintfa = BinaryUtilities::range16(0x0000);
-		wnsprintfa.append_range(BinaryUtilities::range_string("wnsprintfA")); // from shlwapi.dll
+		auto wnsprintfa = bin::range16(0x0000);
+		wnsprintfa.append_range(bin::range_string("wnsprintfA")); // from shlwapi.dll
 		std::copy(wnsprintfa.begin(), wnsprintfa.end(), head + wnsprintfa_va);
 		
 		
 		// dll name imports
-		const auto kernel32 = BinaryUtilities::range_string("kernel32.dll");
+		const auto kernel32 = bin::range_string("kernel32.dll");
 		std::copy(kernel32.begin(), kernel32.end(), head + kernel32_va);
 
-		const auto user32 = BinaryUtilities::range_string("user32.dll");
+		const auto user32 = bin::range_string("user32.dll");
 		std::copy(user32.begin(), user32.end(), head + user32_va);
 
-		const auto shlwapi = BinaryUtilities::range_string("shlwapi.dll");
+		const auto shlwapi = bin::range_string("shlwapi.dll");
 		std::copy(shlwapi.begin(), shlwapi.end(), head + shlwapi_va);
 
 
@@ -327,13 +327,13 @@ namespace hz
 	{
 		byterange out{};
 
-		const auto logo_string = BinaryUtilities::range_string("Haze Optimizing Compiler Executable\n(c) Connor J. Link. All Rights Reserved.\n");
+		const auto logo_string = bin::range_string("Haze Optimizing Compiler Executable\n(c) Connor J. Link. All Rights Reserved.\n");
 		PUT(logo_string);
 
-		const auto output_string = BinaryUtilities::range_string("Program output: ");
+		const auto output_string = bin::range_string("Program output: ");
 		PUT(output_string);
 
-		const auto format_string = BinaryUtilities::range_string("%d\n");
+		const auto format_string = bin::range_string("%d\n");
 		PUT(format_string);
 
 		return out;

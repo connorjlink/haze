@@ -10,20 +10,20 @@
 
 namespace hz
 {
-	class BinaryUtilities
+	namespace bin
 	{
-	public:
-		static byterange range8(std::uint8_t);
-		static byterange range16(std::uint16_t);
-		static byterange range32(std::uint32_t);
+		constexpr byterange range8(std::uint8_t);
+		constexpr byterange range16(std::uint16_t);
+		constexpr byterange range32(std::uint32_t);
+		constexpr byterange range64(std::uint64_t);
 
-	public:
-		static byterange range_string(std::string);
-	};
+		constexpr byterange range_string(const std::string&);
+	}
 
-	inline static const auto pad8 = BinaryUtilities::range8(0x0);
-	inline static const auto pad16 = BinaryUtilities::range16(0x0);
-	inline static const auto pad32 = BinaryUtilities::range32(0x0);
+	inline static constexpr auto pad8 = bin::range8(0);
+	inline static constexpr auto pad16 = bin::range16(0);
+	inline static constexpr auto pad32 = bin::range32(0);
+	inline static constexpr auto pad64 = bin::range64(0);
 }
 
 #endif 

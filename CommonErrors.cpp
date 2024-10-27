@@ -5,6 +5,7 @@ import std;
 #include "Node.h"
 #include "Statement.h"
 #include "Expression.h"
+#include "IntegerLiteral.h"
 #include "ErrorReporter.h"
 
 // Haze CommonErrors.cpp
@@ -51,6 +52,11 @@ namespace hz
 	void CommonErrors::invalid_expression_type(ExpressionType etype, const Token& token)
 	{
 		internal_compiler_error(invalid_generic_type("expression", _expression_type_map.at(etype)), token);
+	}
+
+	void CommonErrors::invalid_integer_literal_type(IntegerLiteralType itype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("integer literal", _integer_literal_type_map.at(itype)), token);
 	}
 
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)

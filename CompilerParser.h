@@ -2,7 +2,7 @@
 #define HAZE_COMPILERPARSER_H
 
 #include "Parser.h"
-#include "TypeSpecifier.h"
+#include "Type.h"
 
 // Haze CompilerParser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,6 +10,7 @@
 namespace hz
 {
     class Statement;
+    class MemberDeclarationExpression;
 
     class CompilerParser : public Parser
     {

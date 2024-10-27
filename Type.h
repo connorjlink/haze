@@ -17,6 +17,7 @@ namespace hz
 	class Type
 	{
 	public:
+		TypeSpecifier specifier;
 		TypeQualifier qualifier;
 		TypeStorage storage;
 

@@ -2,6 +2,7 @@
 #define HAZE_FUNCTIONARGUMENTEXPRESSION_H
 
 #include "ArgumentExpression.h"
+#include "Type.h"
 
 // Haze FunctionArgumentExpression.h
 // (c) Connor J. Link. All Rights Reserved.

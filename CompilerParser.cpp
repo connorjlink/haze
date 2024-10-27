@@ -17,6 +17,7 @@ import std;
 #include "StringExpression.h"
 #include "ArgumentExpression.h"
 #include "MemberDeclarationExpression.h"
+#include "StructDeclarationStatement.h"
 #include "FileManager.h"
 #include "CommandLineOptions.h"
 #include "Symbol.h"
@@ -315,13 +316,14 @@ namespace hz
 
 			if (is_definition)
 			{
-				auto type_specifier = parse_type_specifier();
-				auto identifier = parse_identifier_expression();
+				const auto type = parse_type();
+				const auto identifier = parse_identifier_expression();
 
-				add_symbol(SymbolType::ARGUMENT, identifier->name, lookbehind());
-				AS_ARGUMENT_SYMBOL(reference_symbol(SymbolType::ARGUMENT, identifier->name, peek(), false))->type_specifier = type_specifier;
+				add_argument(identifier->name, lookbehind());
+				auto symbol = reference_argument(identifier->name, peek());
+				symbol->type = type;
 
-				arguments.emplace_back(new ArgumentExpression{ type_specifier, identifier, identifier->_token });
+				arguments.emplace_back(new ArgumentExpression{ type, identifier, identifier->_token });
 			}
 
 			else

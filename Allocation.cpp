@@ -99,7 +99,7 @@ namespace hz
 		return allocation;
 	}
 
-	void ObserverAllocation::write(variable_t value) const
+	void ObserverAllocation::write(Variable* value) const
 	{
 		UNSUPPORTED_OPERATION(__FUNCTION__);
 	}
@@ -115,21 +115,32 @@ namespace hz
 		return allocation;
 	}
 
-	void StackAllocation::write(variable_t value) const
+	void StackAllocation::write(Variable* value) const
 	{
-		switch (auto v = value.index())
-		{
-			// only integers are supported for now
-			case 0:
-			{
-				const auto int_value = std::get<0>(value);
-				_generator->make_immediate(allocation, int_value);
-			} break;
+		IntegerLiteral* integer_literal = nullptr;
 
-			default:
-			{
-				_error_reporter->post_error(std::format("invalid stack allocation write type variant `{}`", v), NULL_TOKEN);
-			} break;
+		using enum VariableType;
+		switch (value->vtype())
+		{
+			case UBYTE: integer_literal = new UnsignedByteIntegerLiteral{ AS_UBYTE_VARIABLE(value)->value }; break;
+			case SBYTE: integer_literal = new SignedByteIntegerLiteral{ AS_SBYTE_VARIABLE(value)->value }; break;
+
+			case UWORD: integer_literal = new UnsignedWordIntegerLiteral{ AS_UWORD_VARIABLE(value)->value }; break;
+			case SWORD: integer_literal = new SignedWordIntegerLiteral{ AS_SWORD_VARIABLE(value)->value }; break;
+
+			case UDWORD: integer_literal = new UnsignedDoubleWordIntegerLiteral{ AS_UDWORD_VARIABLE(value)->value }; break;
+			case SDWORD: integer_literal = new SignedDoubleWordIntegerLiteral{ AS_SDWORD_VARIABLE(value)->value }; break;
+
+			case UQWORD: integer_literal = new UnsignedQuadWordIntegerLiteral{ AS_UQWORD_VARIABLE(value)->value }; break;
+			case SQWORD: integer_literal = new SignedQuadWordIntegerLiteral{ AS_SQWORD_VARIABLE(value)->value }; break;
+
+			case STRING: [[falthrough]];
+			case STRUCT: _error_reporter->post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);
+		}
+
+		if (integer_literal != nullptr)
+		{
+			_generator->make_immediate(allocation, integer_literal);
 		}
 	}
 
@@ -168,7 +179,7 @@ namespace hz
 		UNSUPPORTED_OPERATION(__FUNCTION__);
 	}
 
-	void HeapAllocation::write(variable_t value) const
+	void HeapAllocation::write(Variable* value) const
 	{
 		UNSUPPORTED_OPERATION(__FUNCTION__);
 	}

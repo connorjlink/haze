@@ -1,6 +1,7 @@
 import std;
 
 #include "Context.h"
+#include "ExitProgramException.h"
 #include "ErrorReporter.h"
 
 // Haze Context.cpp
@@ -8,7 +9,7 @@ import std;
 
 namespace hz
 {
-	void Context::define_variable(std::string identifier, variable_t value)
+	void Context::define_variable(std::string identifier, Variable* value)
 	{
 		_variables[identifier] = value;
 	}
@@ -28,24 +29,24 @@ namespace hz
 		return _functions;
 	}
 
-	void Context::push_return(return_t value)
+	void Context::push_return(Variable* value)
 	{
 		_returns.emplace(value);
 	}
 
-	return_t Context::pop_return()
+	Variable* Context::pop_return()
 	{
 		const auto value = _returns.top();
 		_returns.pop();
 		return value;
 	}
 
-	void Context::push_arguments(arguments_t arguments)
+	void Context::push_arguments(const std::vector<Expression*>& arguments)
 	{
 		_arguments.emplace(arguments);
 	}
 
-	arguments_t Context::pop_arguments()
+	std::vector<Expression*> Context::pop_arguments()
 	{
 		const auto arguments = _arguments.top();
 		_arguments.pop();
@@ -72,29 +73,17 @@ namespace hz
 		using enum VariableType;
 		switch (value->vtype())
 		{
-			case BYTE:
-			{
-
-			} break; 
-
-			case 0: 
-			{
-				auto int_value = std::get<0>(value);
-				_error_reporter->post_information(std::format("exited with code `{}`", int_value), NULL_TOKEN);
-			} break;
-
-			case 1:
-			{
-				auto string_value = std::get<1>(value);
-				_error_reporter->post_information(std::format("exited with message `{}`", string_value), NULL_TOKEN);
-			} break;
-
-			default:
-			{
-				_error_reporter->post_error("invalid type for `exit`", NULL_TOKEN);
-			} break;
+			case UBYTE: throw ExitProgramException{ AS_UBYTE_VARIABLE(value)->format() };
+			case SBYTE: throw ExitProgramException{ AS_SBYTE_VARIABLE(value)->format() };
+			case UWORD: throw ExitProgramException{ AS_UWORD_VARIABLE(value)->format() };
+			case SWORD: throw ExitProgramException{ AS_SWORD_VARIABLE(value)->format() };
+			case UDWORD: throw ExitProgramException{ AS_UDWORD_VARIABLE(value)->format() };
+			case SDWORD: throw ExitProgramException{ AS_SDWORD_VARIABLE(value)->format() };
+			case UQWORD: throw ExitProgramException{ AS_UQWORD_VARIABLE(value)->format() };
+			case SQWORD: throw ExitProgramException{ AS_SQWORD_VARIABLE(value)->format() };
+		
+			case STRING: throw ExitProgramException{ AS_STRING_VARIABLE(value)->format() };
+			case STRUCT: throw ExitProgramException{ AS_STRUCT_VARIABLE(value)->format() };
 		}
-
-		throw std::exception();
 	}
 }

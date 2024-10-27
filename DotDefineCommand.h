@@ -13,10 +13,10 @@ namespace hz
 	{
 	private:
 		std::string identifier;
-		variable_t value;
+		Variable* value;
 
 	public:
-		DotDefineCommand(std::string identifier, variable_t value, Token token)
+		DotDefineCommand(std::string identifier, Variable* value, Token token)
 			: Command{ token }, identifier{ std::move(identifier) }, value{ value }
 		{
 		}
