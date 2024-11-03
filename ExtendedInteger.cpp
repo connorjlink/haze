@@ -7,6 +7,11 @@ import std;
 
 namespace hz
 {
+	ExtendedInteger::operator bool()
+	{
+		return static_cast<bool>(magnitude);
+	}
+
 	ExtendedInteger& ExtendedInteger::operator=(const ExtendedInteger& rhs)
 	{
 		magnitude = rhs.magnitude;

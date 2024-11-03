@@ -17,7 +17,7 @@ namespace hz
 		constexpr byterange range32(std::uint32_t);
 		constexpr byterange range64(std::uint64_t);
 
-		constexpr byterange range_string(const std::string&);
+		byterange range_string(const std::string&);
 	}
 
 	inline static const auto pad8 = bin::range8(0);

@@ -7,14 +7,15 @@ import std;
 #include "IdentifierExpression.h"
 #include "IntegerLiteralExpression.h"
 #include "Constants.h"
-#include "ErrorReporter.h"
 #include "SymbolType.h"
+#include "ExtendedInteger.h"
+#include "ErrorReporter.h"
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 #define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) { _error_reporter->post_error("term must result in a constant expression", NULL_TOKEN); return nullptr; }
-#define ASSERT_IN_RANGE(x, a, b) if (x < a || x > b - 1) { _error_reporter->post_error(std::format("value {} is outside the its range [0, {}]", x, b - 1), NULL_TOKEN); return nullptr; }
+#define ASSERT_IN_RANGE(x, a, b) if (x < EI(a) || x > EI(b - 1)) { _error_reporter->post_error(std::format("value {} is outside the its range [0, {}]", x.magnitude, b - 1), NULL_TOKEN); return nullptr; }
 
 namespace hz
 {
@@ -176,9 +177,9 @@ namespace hz
 				}
 
 				const auto value = integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value);
-				ASSERT_IN_RANGE(value, 0, DWORD_MAX - 1);
+				ASSERT_IN_RANGE(value, 0, WORD_MAX);
 
-				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, value };
+				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<platform_address_size>(value.magnitude) };
 			} break;
 
 			case TokenType::SAVE:

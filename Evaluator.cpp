@@ -16,6 +16,7 @@ namespace hz
 		if (node->ntype() != NodeType::EXPRESSION)
 		{
 			CommonErrors::invalid_node_type(node->ntype(), NULL_TOKEN);
+			return nullptr;
 		}
 
 		auto expression = AS_EXPRESSION_NODE(node);

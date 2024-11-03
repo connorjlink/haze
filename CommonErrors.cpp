@@ -110,6 +110,26 @@ namespace hz
 			_binary_expression_type_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
 	}
 
+	void CommonErrors::type_qualifier_mismatch(Type*, Expression*, const Token&)
+	{
+#pragma message("TODO: mismatch errors")
+	}
+
+	void CommonErrors::type_specifier_mismatch(Type*, Expression*, const Token&)
+	{
+#pragma message("TODO: mismatch errors")
+	}
+
+	void CommonErrors::type_signedness_mismatch(Type*, Expression*, const Token&)
+	{
+#pragma message("TODO: mismatch errors")
+	}
+
+	void CommonErrors::type_storage_mismatch(Type*, Expression*, const Token&)
+	{
+#pragma message("TODO: mismatch errors")
+	}
+
 	void CommonErrors::unsupported_statement(const std::string& source, const std::string& type, const Token& token)
 	{
 		_error_reporter->post_error(std::format("unsupported {} statement type `{}`", source, type), token);

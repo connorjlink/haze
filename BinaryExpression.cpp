@@ -497,12 +497,12 @@ namespace hz
 				auto left_value = VALUE_OF(left_optimized);
 				auto result = left_optimized;
 
-				if (integer_literal_equals(left_value, 0))
+				if (integer_literal_equals(left_value, EI(0)))
 				{
 					left_value->assign(left_value->from_value(0));
 				}
 
-				else if (integer_literal_equals(left_value, 1))
+				else if (integer_literal_equals(left_value, EI(1)))
 				{
 					delete result;
 					result = right_optimized;
@@ -531,12 +531,12 @@ namespace hz
 				auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
 				auto result = right_optimized;
 
-				if (integer_literal_equals(right_value, 0))
+				if (integer_literal_equals(right_value, EI(0)))
 				{
 					right_value->assign(right_value->from_value(0));
 				}
 
-				else if (integer_literal_equals(right_value, 1))
+				else if (integer_literal_equals(right_value, EI(1)))
 				{
 					delete result;
 					result = left_optimized;

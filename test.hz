@@ -1,15 +1,11 @@
-function byte fib = (byte n)
+function dword tri = (dword n)
 {
-	if (n == 0)
-	{
-		return 0;
-	}
-
-	return n + fib(n - 1);
+	return n + 1ul;
 }
 
-function byte main = ()
+function dword main = ()
 {
-	fib(10);
-	return 0;
+	declare dword v = tri(10ul);
+	print(v);
+	return v;
 }

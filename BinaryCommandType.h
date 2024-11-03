@@ -7,6 +7,7 @@ namespace hz
 	{
 		ADD,
 		SUBTRACT,
+		MULTIPLY,
 		BITOR,
 		BITAND,
 		BITXOR,

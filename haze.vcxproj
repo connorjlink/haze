@@ -33,6 +33,7 @@
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="ExitProgramException.cpp" />
+    <ClCompile Include="ExtendedInteger.cpp" />
     <ClCompile Include="IntegerLiteral.cpp" />
     <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="ExitProgramException.h" />
     <ClInclude Include="ExitStatement.h" />
     <ClInclude Include="ExpressionUtility.h" />
+    <ClInclude Include="ExtendedInteger.h" />
     <ClInclude Include="FunctionArgumentExpression.h" />
     <ClInclude Include="HazeBuilder.h" />
     <ClInclude Include="HeapAllocator.h" />
@@ -325,6 +327,7 @@
     <None Include="sample.hzi" />
     <None Include="std.hzi" />
     <None Include="test.exe" />
+    <None Include="test.hz" />
     <None Include="test.hzb" />
     <None Include="vcpkg.json" />
     <None Include="test.hzi" />
@@ -332,7 +335,7 @@
     <None Include="generated_optimizations.hzs" />
     <None Include="sample.hzs" />
     <None Include="specification.md" />
-    <None Include="test.hz" />
+    <None Include="fib.hz" />
     <None Include="test.hzs" />
     <None Include="vcpkg-configuration.json" />
   </ItemGroup>

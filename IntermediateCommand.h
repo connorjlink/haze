@@ -234,6 +234,16 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class MultiplyCommand : public BinaryCommand
+	{
+	public:
+		using BinaryCommand::BinaryCommand;
+
+	public:
+		virtual BinaryCommandType btype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 	class BitorCommand : public BinaryCommand
 	{
 	public:

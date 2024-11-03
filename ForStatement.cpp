@@ -117,7 +117,7 @@ namespace hz
 
 		auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
 
-		while (integer_literal_raw(integer_literal) != 0)
+		while (integer_literal_raw(integer_literal) != EI(0))
 		{
 			body->evaluate(context);
 			expression->evaluate(context);

@@ -42,13 +42,17 @@ namespace hz
 
 		run();
 
-		shut_down();
+		shut_down(false);
 	}
 
-	void Toolchain::shut_down()
+	void hz::Toolchain::shut_down(bool is_panic)
 	{
 		_job_manager->end_job(_toolchain_task);
-		_job_manager->log();
+		
+		if (!is_panic)
+		{
+			_job_manager->log();
+		}
 
 		_error_reporter->close_all_contexts();
 		Log::raw(_error_reporter->generate_report());
@@ -56,7 +60,7 @@ namespace hz
 
 	void Toolchain::panic()
 	{
-		shut_down();
+		shut_down(true);
 		std::exit(1);
 	}
 }

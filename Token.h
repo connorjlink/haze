@@ -82,6 +82,8 @@ namespace hz
 
 		END,
 
+		DECLARE,
+
 		U8, U16, U32, U64,
 		S8, S16, S32, S64,
 	};
@@ -122,6 +124,11 @@ namespace hz
 		bimap_t{ S("ptr"), TokenType::PTR },
 
 		bimap_t{ S("struct"), TokenType::STRUCT },
+
+		bimap_t{ S("byte"), TokenType::BYTE },
+		bimap_t{ S("word"), TokenType::WORD },
+		bimap_t{ S("dword"), TokenType::DWORD },
+		bimap_t{ S("qword"), TokenType::QWORD },
 
 		bimap_t{ S("function"), TokenType::FUNCTION },
 		bimap_t{ S("byte"), TokenType::BYTE },
@@ -168,6 +175,8 @@ namespace hz
 		bimap_t{ S("string"), TokenType::STRING },
 		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },
 		
+		bimap_t{ S("declare"), TokenType::DECLARE },
+
 		bimap_t{ S("eof"), TokenType::END },
 
 		bimap_t{ S("ub"), TokenType::U8 },

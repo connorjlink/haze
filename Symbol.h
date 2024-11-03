@@ -4,6 +4,7 @@
 #include "SymbolType.h"
 #include "StructMember.h"
 #include "Function.h"
+#include "ExtendedInteger.h"
 
 // Haze Symbol.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -95,11 +96,12 @@ namespace hz
 	class DefineSymbol : public Symbol
 	{
 	public:
-		std::uint32_t value;
+		Type* type;
+		ExtendedInteger value;
 
 	public:
-		DefineSymbol(const std::string& name, std::uint32_t value)
-			: Symbol{ name }, value{ value }
+		DefineSymbol(const std::string& name, Type* type, ExtendedInteger value)
+			: Symbol{ name }, type{ type }, value { value }
 		{
 		}
 
@@ -110,10 +112,10 @@ namespace hz
 	class LabelSymbol : public Symbol
 	{
 	public:
-		std::uint32_t address;
+		platform_address_size address;
 
 	public:
-		LabelSymbol(const std::string& name, std::uint32_t address)
+		LabelSymbol(const std::string& name, platform_address_size address)
 			: Symbol{ name }, address{ address }
 		{
 		}

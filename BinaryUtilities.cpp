@@ -54,38 +54,41 @@ namespace hz
 		return { b0, b1, b2, b3 };
 	}*/
 
-	constexpr byterange bin::range8(std::uint8_t value)
+	namespace bin
 	{
-		return ::range(value);
-	}
-
-	constexpr byterange bin::range16(std::uint16_t value)
-	{
-		return ::range(value);
-	}
-
-	constexpr byterange bin::range32(std::uint32_t value)
-	{
-		return ::range(value);
-	}
-
-	constexpr byterange bin::range64(std::uint64_t value)
-	{
-		return ::range(value);
-	}
-
-	constexpr byterange bin::range_string(const std::string& string)
-	{
-		byterange out{};
-
-		for (auto c : string)
+		constexpr byterange range8(std::uint8_t value)
 		{
-			out.emplace_back(static_cast<std::uint8_t>(c));
+			return ::range(value);
 		}
 
-		// builtin \00 null terminator byte for constant-table strings
-		out.emplace_back(0x00);
+		constexpr byterange range16(std::uint16_t value)
+		{
+			return ::range(value);
+		}
 
-		return out;
+		constexpr byterange range32(std::uint32_t value)
+		{
+			return ::range(value);
+		}
+
+		constexpr byterange range64(std::uint64_t value)
+		{
+			return ::range(value);
+		}
+
+		byterange range_string(const std::string& s)
+		{
+			byterange out{};
+
+			for (auto c : s)
+			{
+				out.emplace_back(static_cast<std::uint8_t>(c));
+			}
+
+			// builtin \00 null terminator byte for constant-table strings
+			out.emplace_back(0x00);
+
+			return out;
+		}
 	}
 }

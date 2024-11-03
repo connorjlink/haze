@@ -43,7 +43,7 @@ namespace hz
 		switch (peek().type)
 		{
 			case LBRACE: return parse_compound_statement(enclosing_function);
-			case BYTE: return parse_variabledeclaration_statement(enclosing_function);
+			case DECLARE: return parse_variabledeclaration_statement(enclosing_function);
 			case SEMICOLON: return parse_null_statement(enclosing_function);
 			case RETURN: return parse_return_statement(enclosing_function);
 			case ASM: return parse_inline_asm_statement(enclosing_function);
@@ -79,12 +79,15 @@ namespace hz
 
 	Statement* CompilerParser::parse_variabledeclaration_statement(const std::string& enclosing_function)
 	{
+		consume(TokenType::DECLARE);
+
 		const auto type = parse_type();
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
-		add_symbol(SymbolType::VARIABLE, identifier_token.value, lookbehind());
 
-		auto function_symbol = reference_symbol(SymbolType::FUNCTION, enclosing_function, peek());
-		AS_FUNCTION_SYMBOL(function_symbol)->locals_count++;
+		add_variable(identifier_token.value, lookbehind());
+
+		auto function_symbol = reference_function(enclosing_function, peek());
+		function_symbol->locals_count++;
 
 		if (peek().type == TokenType::EQUALS)
 		{
@@ -355,14 +358,13 @@ namespace hz
 		if (_type_qualifier_token_map.contains(current_token.type))
 		{
 			qualifier = _type_qualifier_token_map.at(current_token.type);
+			consume(current_token.type);
 		}
 
 		else if (is_mandatory)
 		{
 			CommonErrors::invalid_type("qualifier", current_token);
 		}
-
-		consume(current_token.type);
 
 		return qualifier;
 	}
@@ -375,14 +377,13 @@ namespace hz
 		if (_type_signedness_token_map.contains(current_token.type))
 		{
 			signedness = _type_signedness_token_map.at(current_token.type);
+			consume(current_token.type);
 		}
 
 		else if (is_mandatory)
 		{
 			CommonErrors::invalid_type("signedness", current_token);
 		}
-
-		consume(current_token.type);
 
 		return signedness;
 	}
@@ -395,14 +396,13 @@ namespace hz
 		if (_type_specifier_token_map.contains(current_token.type))
 		{
 			specifier = _type_specifier_token_map.at(current_token.type);
+			consume(current_token.type);
 		}
 
 		else if (is_mandatory)
 		{
 			CommonErrors::invalid_type("specifier", current_token);
 		}
-
-		consume(current_token.type);
 
 		return specifier;
 	}
@@ -415,14 +415,13 @@ namespace hz
 		if (_type_storage_token_map.contains(current_token.type))
 		{
 			storage = _type_storage_token_map.at(current_token.type);
+			consume(current_token.type);
 		}
 
 		else if (is_mandatory)
 		{
 			CommonErrors::invalid_type("storage", current_token);
 		}
-
-		consume(current_token.type);
 
 		return storage;
 	}

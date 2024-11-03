@@ -307,6 +307,21 @@ namespace hz
 	}
 
 
+	BinaryCommandType MultiplyCommand::btype() const
+	{
+		return BinaryCommandType::MULTIPLY;
+	}
+
+	byterange MultiplyCommand::emit() const
+	{
+		byterange out{};
+
+#pragma message("TODO: imul instruction")
+
+		return out;
+	}
+
+
 	BinaryCommandType BitorCommand::btype() const
 	{
 		return BinaryCommandType::BITOR;

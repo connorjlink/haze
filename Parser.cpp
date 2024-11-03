@@ -14,6 +14,8 @@ import std;
 #include "BinaryExpression.h"
 #include "DotDefineCommand.h"
 #include "Symbol.h"
+#include "ExtendedInteger.h"
+#include "CommonErrors.h"
 #include "ErrorReporter.h"
 
 // Haze Parser.cpp
@@ -64,7 +66,7 @@ namespace hz
 			case FUNCTION: symbol_table[name] = new FunctionSymbol{ name, nullptr }; break;
 			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name, nullptr }; break;
 			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr, nullptr }; break;
-			case DEFINE: symbol_table[name] = new DefineSymbol{ name, 0 }; break;
+			case DEFINE: symbol_table[name] = new DefineSymbol{ name, nullptr, ExtendedInteger{} }; break;
 			case LABEL: symbol_table[name] = new LabelSymbol{ name, 0 }; break;
 
 			default:
@@ -268,6 +270,21 @@ namespace hz
 	Node* Parser::parse_dotdefine_command()
 	{
 		consume(TokenType::DOTDEFINE);
+
+		Type* type = nullptr;
+
+		if (ptype() == ParserType::COMPILER)
+		{
+			auto compiler_parser = AS_COMPILER_PARSER(this);
+			type = compiler_parser->parse_type();
+		}
+
+		else
+		{
+			// default to unsigned 16 bits non-compiler workloads
+			type = new IntType{ TypeQualifier::IMMUTABLE, TypeSignedness::UNSIGNED, IntTypeType::INT16, TypeStorage::VALUE };
+		}
+		
 		const auto identifier_expression = parse_identifier_expression();
 		consume(TokenType::EQUALS);
 
@@ -282,8 +299,11 @@ namespace hz
 		const auto identifier = identifier_expression->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
-		add_symbol(SymbolType::DEFINE, identifier, peek());
-		reference_define(identifier, peek())->value = integer_literal_raw(value);
+		add_define(identifier, peek());
+		
+		auto define_symbol = reference_define(identifier, peek());
+		define_symbol->type = type;
+		define_symbol->value = integer_literal_raw(value);
 
 		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
 	}
@@ -318,15 +338,15 @@ namespace hz
 		using enum TokenType;
 		switch (specifier.type)
 		{
-			case U8: integer_literal = new UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(integer_value) };
-			case U16: integer_literal = new UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(integer_value) };
-			case U32: integer_literal = new UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(integer_value) };
-			case U64: integer_literal = new UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(integer_value) };
+			case U8: integer_literal = new UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(integer_value) }; break;
+			case U16: integer_literal = new UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(integer_value) }; break;
+			case U32: integer_literal = new UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(integer_value) }; break;
+			case U64: integer_literal = new UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(integer_value) }; break;
 
-			case S8: integer_literal = new SignedByteIntegerLiteral{ static_cast<std::int8_t>(integer_value) };
-			case S16: integer_literal = new SignedWordIntegerLiteral{ static_cast<std::int16_t>(integer_value) };
-			case S32: integer_literal = new SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(integer_value) };
-			case S64: integer_literal = new SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(integer_value) };
+			case S8: integer_literal = new SignedByteIntegerLiteral{ static_cast<std::int8_t>(integer_value) }; break;
+			case S16: integer_literal = new SignedWordIntegerLiteral{ static_cast<std::int16_t>(integer_value) }; break;
+			case S32: integer_literal = new SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(integer_value) }; break;
+			case S64: integer_literal = new SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(integer_value) }; break;
 
 			default:
 			{
@@ -335,6 +355,7 @@ namespace hz
 			} break;
 		}
 
+		consume(specifier.type);
 
 		return new IntegerLiteralExpression{ integer_literal, integer_literal_token };
 	}

@@ -42,7 +42,7 @@ namespace hz
 
 	public:
 		void init(const std::string&);
-		void shut_down();
+		void shut_down(bool is_panic);
 	};
 
 	extern Toolchain* _toolchain;

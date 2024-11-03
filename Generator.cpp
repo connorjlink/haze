@@ -149,6 +149,12 @@ namespace hz
 		COMPOSE(command);
 	}
 
+	void Generator::compute_multiplication(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new MultiplyCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
 	void Generator::compute_bitor(register_t lhs, register_t rhs, register_t destination)
 	{
 		auto command = new BitorCommand{ lhs, rhs, destination };

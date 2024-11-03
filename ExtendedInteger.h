@@ -4,19 +4,29 @@
 // Haze ExtendedInteger.h
 // (c) Connor J. Link. All Rights Reserved.
 
+#define EI(x) ExtendedInteger{ static_cast<std::uint64_t>(std::abs(x)), x >= 0 }
+
 namespace hz
 {
 	class ExtendedInteger
 	{
-	private:
+	public:
 		std::uint64_t magnitude;
 		bool sign; // true = positive, false = negative
 
 	public:
-		ExtendedInteger(std::uint64_t magnitude, bool is_unsigned)
-			: magnitude{ magnitude }, sign{ is_unsigned }
+		ExtendedInteger()
+			: magnitude{ 0 }, sign{ true }
 		{
 		}
+
+		ExtendedInteger(std::uint64_t magnitude, bool sign)
+			: magnitude{ magnitude }, sign{ sign }
+		{
+		}
+
+	public:
+		operator bool();
 
 	public:
 		ExtendedInteger& operator=(const ExtendedInteger&);

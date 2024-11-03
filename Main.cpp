@@ -13,6 +13,7 @@ import std;
 #include "HeapAllocator.h"
 #include "StackAllocator.h"
 #include "RuntimeAllocator.h"
+#include "ExitProgramException.h"
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -104,8 +105,15 @@ int main(int argc, char** argv)
 			_toolchain->init(filepath);
 		}
 		
-		catch (std::invalid_argument e)
+		catch (ExitProgramException e)
 		{
+			_error_reporter->post_information(e.what(), NULL_TOKEN);
+			_toolchain->shut_down(false);
+		}
+
+		catch (std::exception e)
+		{
+			_error_reporter->post_uncorrectable(e.what(), NULL_TOKEN);
 			_toolchain->panic();
 		}
 	}

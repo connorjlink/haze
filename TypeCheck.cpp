@@ -73,7 +73,8 @@ namespace
 
 					case DEFINE:
 					{
-
+						const auto define_symbol = _parser->reference_define(identifier, expression->_token);
+						return define_symbol->type;
 					} break;
 
 					// this would only be valid if there were a decltype expression
@@ -84,11 +85,12 @@ namespace
 					//	return new StructType{ IMMUTABLE, identifier, PTR };
 					//} break;
 
-					case FUNCTION:
-					{
-						const auto function_symbol = _parser->reference_function(identifier, expression->_token);
-						return function_symbol->return_type;
-					} break;
+					// same for this case
+					//case FUNCTION:
+					//{
+					//	const auto function_symbol = _parser->reference_function(identifier, expression->_token);
+					//	return function_symbol->return_type;
+					//} break;
 
 					default:
 					{
@@ -271,8 +273,10 @@ namespace hz
 					{
 						// no need to check mutability since both are pure r-value integer literals
 
-						static_assert(false);
+						//static_assert(false);
 						//if (reference_string_type->)
+#pragma message("TODO: finish type checking here")
+						return true;
 					} break;
 				}
 			} break;

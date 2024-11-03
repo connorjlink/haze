@@ -53,7 +53,7 @@ namespace hz
 
 			if (check_type(arguments[i], argument_expression->type) == true)
 			{
-				type = arguments[i];
+				type = argument_expression->type;
 			}
 
 			argument_expressions.emplace_back(new FunctionArgumentExpression

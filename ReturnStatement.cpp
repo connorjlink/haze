@@ -31,9 +31,6 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation*)
 	{
-		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token);
-		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
-
 		if (_parser->ptype() == ParserType::COMPILER)
 		{
 			auto compiler_parser = AS_COMPILER_PARSER(_parser);
@@ -55,6 +52,8 @@ namespace hz
 
 			// now, figure out how to return the value
 			// NOTE: if there were arguments to the function, one of those allocations can be re-used
+
+			//auto function_symbol = _parser->reference_function(enclosing_function, _token);
 
 			//#pragma message("TODO: debug this to be able to share allocation with one of those from the function itself?")
 			//if (function_symbol->arity() != 0)

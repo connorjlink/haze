@@ -383,6 +383,9 @@
     <ClCompile Include="TypeCheck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExtendedInteger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -808,6 +811,9 @@
     <ClInclude Include="TypeCheck.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ExtendedInteger.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hz">
@@ -854,9 +860,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="chatgpt_cdecl_example.md" />
-    <None Include="test.hz">
+    <None Include="fib.hz">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="fibonacci.hz" />
+    <None Include="test.hz">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

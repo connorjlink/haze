@@ -39,10 +39,11 @@ namespace hz
 
 				auto percent = [&](auto value)
 				{
-					return static_cast<float>(integer_literal_raw(value) * 100);
+					const auto computed = integer_literal_raw(value) * EI(100);
+					return static_cast<float>(computed.magnitude * (computed.sign ? 1 : -1));
 				};
 
-				intrinsic = new ColorIntrinsic{ std::move(identifier->name), percent(r->value), percent(g->value), percent(b->value), intrinsic_token };
+				intrinsic = new ColorIntrinsic{ identifier->name, percent(r->value), percent(g->value), percent(b->value), intrinsic_token };
 			} break;
 			
 			default:

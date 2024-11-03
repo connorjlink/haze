@@ -17,6 +17,158 @@ namespace
 
 namespace hz
 {
+	ExtendedInteger integer_literal_raw(IntegerLiteral* value)
+	{
+		// for types that are already unsigned, just emplace the value directly
+		// for types that are signed, extract the magnitude and sign separate and emplace
+
+		auto _abs = [&](auto x)
+		{
+			return static_cast<std::uint64_t>(std::abs(x));
+		};
+
+		using enum IntegerLiteralType;
+		switch (value->itype())
+		{
+			case UBYTE:
+			{
+				const auto raw_value = AS_UNSIGNED_BYTE_INTEGER_LITERAL(value)->value;
+				return { raw_value, true };
+			} break;
+
+			case SBYTE:
+			{
+				const auto raw_value = AS_SIGNED_BYTE_INTEGER_LITERAL(value)->value;
+				return { _abs(raw_value), raw_value >= 0 };
+			} break;
+
+			case UWORD:
+			{
+				const auto raw_value = AS_UNSIGNED_WORD_INTEGER_LITERAL(value)->value;
+				return { raw_value, true };
+			} break;
+
+			case SWORD:
+			{
+				const auto raw_value = AS_SIGNED_WORD_INTEGER_LITERAL(value)->value;
+				return { _abs(raw_value), raw_value >= 0 };
+			} break;
+
+			case UDWORD:
+			{
+				const auto raw_value = AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(value)->value;
+				return { raw_value, true };
+			} break;
+
+			case SDWORD:
+			{
+				const auto raw_value = AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(value)->value;
+				return { _abs(raw_value), raw_value >= 0 };
+			} break;
+
+			case UQWORD:
+			{
+				const auto raw_value = AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value;
+				return { raw_value, true };
+			} break;
+
+			case SQWORD:
+			{
+				const auto raw_value = AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value;
+				return { _abs(raw_value), raw_value >= 0 };
+			} break;
+
+			default:
+			{
+				CommonErrors::invalid_integer_literal_type(value->itype(), NULL_TOKEN);
+				return { 1, false }; // -1
+			} break;
+		}
+	}
+
+	bool integer_literal_equals(IntegerLiteral* value, ExtendedInteger comparison)
+	{
+		return integer_literal_compare<std::equal_to<ExtendedInteger>>(value, comparison);
+	}
+
+
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint8_t value)
+	{
+		return new UnsignedByteIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int8_t value)
+	{
+		return new SignedByteIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint16_t value)
+	{
+		return new UnsignedWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int16_t value)
+	{
+		return new SignedWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint32_t value)
+	{
+		return new UnsignedDoubleWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int32_t value)
+	{
+		return new SignedDoubleWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint64_t value)
+	{
+		return new UnsignedQuadWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int64_t value)
+	{
+		return new SignedQuadWordIntegerLiteral{ value };
+	}
+
+
+	Variable* integer_literal_to_variable(IntegerLiteral* value)
+	{
+		using enum IntegerLiteralType;
+		switch (value->itype())
+		{
+			case UBYTE: return new UnsignedByteVariable{ AS_UNSIGNED_BYTE_INTEGER_LITERAL(value)->value };
+			case SBYTE: return new SignedByteVariable{ AS_SIGNED_BYTE_INTEGER_LITERAL(value)->value };
+
+			case UWORD: return new UnsignedWordVariable{ AS_UNSIGNED_WORD_INTEGER_LITERAL(value)->value };
+			case SWORD: return new SignedWordVariable{ AS_SIGNED_WORD_INTEGER_LITERAL(value)->value };
+
+			case UDWORD: return new UnsignedDoubleWordVariable{ AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(value)->value };
+			case SDWORD: return new SignedDoubleWordVariable{ AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(value)->value };
+
+			case UQWORD: return new UnsignedQuadWordVariable{ AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value };
+			case SQWORD: return new SignedQuadWordVariable{ AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value };
+
+			default:
+			{
+				CommonErrors::invalid_integer_literal_type(value->itype(), NULL_TOKEN);
+				return nullptr;
+			} break;
+		}
+	}
+
+
+
 	IntegerLiteralType UnsignedByteIntegerLiteral::itype() const
 	{
 		return IntegerLiteralType::UBYTE;

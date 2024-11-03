@@ -40,8 +40,6 @@ namespace hz
 
 	void Function::generate(Allocation*)
 	{
-		
-
 		_generator->begin_function(name);
 
 		// ensure each function implicitly has its own scope block
