@@ -42,9 +42,9 @@ namespace hz
 			// when value==nullptr, expect no return value ONLY from nvr function
 			if (value == nullptr)
 			{
-				if (AS_FUNCTION_SYMBOL(_parser->reference_symbol(SymbolType::FUNCTION, enclosing_function, _token))->return_type->specifier != TypeSpecifier::NVR)
+				if (_parser->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
 				{
-					_error_reporter->post_error("no return value was specified for a non-`nvr` function", _token);
+					_error_reporter->post_error("no return value was specified for a non-`void` function", _token);
 					return;
 				}
 
@@ -76,16 +76,12 @@ namespace hz
 			//	return;
 			//}
 
-			if (_parser->ptype() == ParserType::COMPILER)
-			{
+			// if no arguments, make new allocation
+			AutoStackAllocation temp{};
+			// generate the return value
+			value->generate(temp.source());
 
-				// if no arguments, make new allocation
-				AutoStackAllocation temp{};
-				// generate the return value
-				value->generate(temp.source());
-
-				_generator->make_return(end_function_label, temp.source()->read());
-			}
+			_generator->make_return(end_function_label, temp.source()->read());
 		}
 
 		else

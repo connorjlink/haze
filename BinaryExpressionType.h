@@ -30,6 +30,23 @@ namespace hz
 		LESS,
 	};
 
+	static const std::unordered_map<BinaryExpressionType, std::string> _binary_expression_type_map
+	{
+		{ BinaryExpressionType::PLUS, "+" },
+		{ BinaryExpressionType::MINUS, "-" },
+		{ BinaryExpressionType::TIMES, "*" },
+		{ BinaryExpressionType::OR, "|" },
+		{ BinaryExpressionType::XOR, "^" },
+		{ BinaryExpressionType::AND, "&" },
+		{ BinaryExpressionType::LSHIFT, "<<" },
+		{ BinaryExpressionType::RSHIFT, ">>" },
+		{ BinaryExpressionType::ASSIGN, "=" },
+		{ BinaryExpressionType::EQUALITY, "==" },
+		{ BinaryExpressionType::INEQUALITY, "!=" },
+		{ BinaryExpressionType::GREATER, ">" },
+		{ BinaryExpressionType::LESS, "<" },
+	};
+
 	static const std::unordered_map<TokenType, BinaryExpressionType> _binary_expression_map
 	{
 		{ TokenType::PLUS,              BinaryExpressionType::PLUS },

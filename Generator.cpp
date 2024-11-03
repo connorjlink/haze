@@ -161,6 +161,18 @@ namespace hz
 		COMPOSE(command);
 	}
 
+	void Generator::compute_bitlshift(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new BitlshiftCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
+	void Generator::compute_bitrshift(register_t lhs, register_t rhs, register_t destination)
+	{
+		auto command = new BitrshiftCommand{ lhs, rhs, destination };
+		COMPOSE(command);
+	}
+
 	void Generator::compute_bitxor(register_t lhs, register_t rhs, register_t destination)
 	{
 		auto command = new BitxorCommand{ lhs, rhs, destination };
@@ -359,15 +371,15 @@ namespace hz
 	}
 
 
-	index_t Generator::resolve_origin_old() const
+	std::int32_t Generator::resolve_origin_old() const
 	{
 		UNSUPPORTED_OPERATION(__FUNCTION__);
 		//return static_cast<index_t>(_linkables[_linkables.size() - 1].commands.size());
 	}
 
-	index_t Generator::resolve_origin() const
+	std::int32_t Generator::resolve_origin() const
 	{
-		return static_cast<index_t>(_linkables[_linkables.size() - 1].ir.size());
+		return static_cast<std::int32_t>(_linkables[_linkables.size() - 1].ir.size());
 	}
 
 

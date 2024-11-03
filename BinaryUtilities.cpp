@@ -12,8 +12,8 @@ namespace
 	template<typename T>
 	constexpr byterange range(T input)
 	{
-		static constexpr auto bitcount = std::numeric_limits<std::uint8_t>::digits();
-		static constexpr auto bytecount = std::numeric_limits<T>::digits() / bitcount;
+		static constexpr auto bitcount = std::numeric_limits<std::uint8_t>::digits;
+		static constexpr auto bytecount = std::numeric_limits<T>::digits / bitcount;
 
 		byterange out{};
 
@@ -21,10 +21,9 @@ namespace
 
 		for (auto i = 0; i < bytecount; i++)
 		{
-
 			const auto result = (input & mask) >> (bitcount * i);
-			out.emplace_back(result);
-			mask << bitcount;
+			out.emplace_back(static_cast<std::uint8_t>(result));
+			mask <<= bitcount;
 		}
 
 		return out;

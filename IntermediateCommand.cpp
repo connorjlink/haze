@@ -409,6 +409,38 @@ namespace hz
 	}
 
 
+	BinaryCommandType BitlshiftCommand::btype() const
+	{
+		return BinaryCommandType::BITLSHIFT;
+	}
+
+	byterange BitlshiftCommand::emit() const
+	{
+		byterange out{};
+
+		PUT(X86Builder::mov_rr(_destination, _lhs));
+		PUT(X86Builder::sal_imm(_destination, _rhs));
+
+		return out;
+	}
+
+
+	BinaryCommandType BitrshiftCommand::btype() const
+	{
+		return BinaryCommandType::BITRSHIFT;
+	}
+
+	byterange BitrshiftCommand::emit() const
+	{
+		byterange out{};
+
+		PUT(X86Builder::mov_rr(_destination, _lhs));
+		PUT(X86Builder::sar_imm(_destination, _rhs));
+		
+		return out;
+	}
+
+
 	BinaryCommandType EqualityCommand::btype() const
 	{
 		return BinaryCommandType::EQUALITY;

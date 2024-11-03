@@ -37,9 +37,9 @@ namespace hz
 				auto g = parse_integerliteral_expression();
 				auto b = parse_integerliteral_expression();
 
-				auto percent = [&](std::uint32_t value)
+				auto percent = [&](auto value)
 				{
-					return static_cast<float>(value * 100);
+					return static_cast<float>(integer_literal_raw(value) * 100);
 				};
 
 				intrinsic = new ColorIntrinsic{ std::move(identifier->name), percent(r->value), percent(g->value), percent(b->value), intrinsic_token };

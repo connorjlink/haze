@@ -49,7 +49,7 @@ namespace hz
 		void add_struct(const std::string&, const Token&);
 
 	public:
-		SymbolType query_symbol_type(const std::string&, Token&);
+		SymbolType query_symbol_type(const std::string&, const Token&);
 
 	public:
 		Symbol* reference_symbol(SymbolType, const std::string&, const Token&, bool = false);

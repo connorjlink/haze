@@ -10,6 +10,8 @@ namespace hz
 		BITOR,
 		BITAND,
 		BITXOR,
+		BITLSHIFT,
+		BITRSHIFT,
 		EQUALITY,
 		INEQUALITY,
 		LESS,

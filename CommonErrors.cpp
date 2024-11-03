@@ -6,6 +6,10 @@ import std;
 #include "Statement.h"
 #include "Expression.h"
 #include "IntegerLiteral.h"
+#include "Command.h"
+#include "BinaryExpressionType.h"
+#include "IntTypeType.h"
+#include "Token.h"
 #include "ErrorReporter.h"
 
 // Haze CommonErrors.cpp
@@ -54,9 +58,24 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("expression", _expression_type_map.at(etype)), token);
 	}
 
+	void CommonErrors::invalid_command_type(CommandType ctype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("command", _command_type_map.at(ctype)), token);
+	}
+
 	void CommonErrors::invalid_integer_literal_type(IntegerLiteralType itype, const Token& token)
 	{
 		internal_compiler_error(invalid_generic_type("integer literal", _integer_literal_type_map.at(itype)), token);
+	}
+
+	void CommonErrors::invalid_int_type(IntTypeType itype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("integer", _int_type_type_map.at(itype)), token);
+	}
+
+	void CommonErrors::invalid_token_type(TokenType ttype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("token", std::string{ _token_map.at(ttype).value() }), token);
 	}
 
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)
@@ -77,6 +96,18 @@ namespace hz
 	void CommonErrors::invalid_type(const std::string& component, const Token& token)
 	{
 		_error_reporter->post_error(std::format("invalid type {} `{}`", component, token.value), token);
+	}
+
+	void CommonErrors::integer_size_mismatch(IntegerLiteralType lhs, IntegerLiteralType rhs, const Token& token)
+	{
+		_error_reporter->post_error(std::format("integer type mismatch between `{}` and `{}`",
+			_integer_literal_type_map.at(lhs), _integer_literal_type_map.at(rhs)), token);
+	}
+
+	void CommonErrors::invalid_binary_expression(ExpressionType lhs, ExpressionType rhs, BinaryExpressionType op, const Token& token)
+	{
+		_error_reporter->post_error(std::format("invalid binary expression `{}` between `{}` and `{}`", 
+			_binary_expression_type_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
 	}
 
 	void CommonErrors::unsupported_statement(const std::string& source, const std::string& type, const Token& token)

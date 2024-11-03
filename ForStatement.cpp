@@ -107,21 +107,23 @@ namespace hz
 	{
 		initialization->evaluate(context);
 
-		auto condition_evaluated = condition->evaluate(context);
+		auto condition_evaluated = AS_EXPRESSION(condition->evaluate(context));
 
-		if (condition->ntype() == NodeType::EXPRESSION &&
-			condition->etype() != ExpressionType::INTEGER_LITERAL)
+		if (condition->etype() != ExpressionType::INTEGER_LITERAL)
 		{
 			_error_reporter->post_error("`for` loop conditions must result in an r-value", condition_evaluated->_token);
 			return nullptr;
 		}
 
-		while (std::get<std::uint32_t>(node_to_variable(condition_evaluated)) != 0)
+		auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
+
+		while (integer_literal_raw(integer_literal) != 0)
 		{
 			body->evaluate(context);
 			expression->evaluate(context);
 
-			condition_evaluated = condition->evaluate(context);
+			condition_evaluated = AS_EXPRESSION(condition->evaluate(context));
+			integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
 		}
 
 		return nullptr;

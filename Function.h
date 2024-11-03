@@ -11,17 +11,18 @@ namespace hz
 {
     class Expression;
     class Statement;
+    class Type;
 
     class Function : public Node
     {
     public:
         std::string name;
-        TypeSpecifier return_type;
+        Type* return_type;
         std::vector<Expression*> arguments;
         Statement* body;
 
     public:
-        Function(std::string, TypeSpecifier, std::vector<Expression*>&&, Statement*, Token);
+        Function(const std::string&, Type*, std::vector<Expression*>&&, Statement*, const Token&);
 
     public:
         virtual NodeType ntype() const final override;

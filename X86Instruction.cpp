@@ -41,6 +41,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("push", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -65,6 +66,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("pop", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -95,6 +97,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -132,6 +135,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -151,6 +155,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -158,6 +163,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -188,6 +194,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -195,6 +202,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -231,6 +239,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -238,6 +247,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -274,6 +284,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -281,6 +292,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -317,6 +329,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -324,6 +337,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -360,6 +374,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -367,6 +382,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -403,6 +419,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -410,6 +427,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -434,6 +452,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("inc", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -458,6 +477,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("dec", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -488,6 +508,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -495,6 +516,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -531,6 +553,7 @@ namespace hz
 					default:
 					{
 						CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(_source->otype()));
+						return {};
 					} break;
 				}
 			} break;
@@ -538,6 +561,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(_destination->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -727,6 +751,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("sete", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -751,6 +776,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setne", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -775,6 +801,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setl", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -799,6 +826,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setle", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -823,6 +851,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setg", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -847,6 +876,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setge", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -871,6 +901,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("seta", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -895,6 +926,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setae", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -919,6 +951,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setb", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}
@@ -943,6 +976,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::unsupported_instruction_format("setbe", _operand_type_map.at(_operand->otype()));
+				return {};
 			} break;
 		}
 	}

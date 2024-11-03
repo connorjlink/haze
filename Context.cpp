@@ -9,7 +9,12 @@ import std;
 
 namespace hz
 {
-	void Context::define_variable(std::string identifier, Variable* value)
+	void Context::declare_variable(const std::string& identifier)
+	{
+		define_variable(identifier, nullptr);
+	}
+
+	void Context::define_variable(const std::string& identifier, Variable* value)
 	{
 		_variables[identifier] = value;
 	}

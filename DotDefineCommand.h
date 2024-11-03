@@ -3,6 +3,7 @@
 
 #include "Command.h"
 #include "Context.h"
+#include "IntegerLiteral.h"
 
 // Haze DotDefineCommand.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -13,11 +14,11 @@ namespace hz
 	{
 	private:
 		std::string identifier;
-		Variable* value;
+		IntegerLiteral* value;
 
 	public:
-		DotDefineCommand(std::string identifier, Variable* value, Token token)
-			: Command{ token }, identifier{ std::move(identifier) }, value{ value }
+		DotDefineCommand(const std::string& identifier, IntegerLiteral* value, Token token)
+			: Command{ token }, identifier{ identifier }, value{ value }
 		{
 		}
 

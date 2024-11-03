@@ -79,7 +79,7 @@ namespace hz
 
 	Statement* CompilerParser::parse_variabledeclaration_statement(const std::string& enclosing_function)
 	{
-		const auto type = parse_type_specifier();
+		const auto type = parse_type();
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
 		add_symbol(SymbolType::VARIABLE, identifier_token.value, lookbehind());
 
@@ -267,7 +267,7 @@ namespace hz
 
 		while (peek().type != TokenType::RBRACE)
 		{
-			const auto member_declaration = parse_member_declaration_statement();
+			const auto member_declaration = parse_member_declaration_statement(enclosing_function);
 			out.emplace_back(member_declaration);
 		}
 
@@ -282,11 +282,11 @@ namespace hz
 
 		consume(TokenType::LBRACE);
 
-		const auto member_declarations = parse_member_declaration_statements();
+		const auto member_declarations = parse_member_declaration_statements(enclosing_function);
 
 		consume(TokenType::RBRACE);
 
-		return new StructDeclarationStatement{ identifier, member_declarations };
+		return new StructDeclarationStatement{ identifier, member_declarations, identifier->_token };
 	}
 
 	// is_definition controls whether we are a function definition or call
@@ -464,6 +464,11 @@ namespace hz
 			{
 				return new StringType{ qualifier, storage };
 			} break;
+
+			default:
+			{
+				return nullptr;
+			} break;
 		}
 	}
 
@@ -471,7 +476,7 @@ namespace hz
 	{
 		consume(TokenType::FUNCTION);
 
-		auto return_type = parse_type_specifier();
+		auto return_type = parse_type();
 
 		auto name_token = consume(TokenType::IDENTIFIER);
 
@@ -483,7 +488,7 @@ namespace hz
 
 		//TODO: implement a more efficient way of modifying the return type than this mess
 		add_symbol(SymbolType::FUNCTION, name_token.value, lookbehind());
-		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->return_type = return_type;
+		reference_function(name_token.value, peek())->return_type = return_type;
 
 		consume(TokenType::EQUALS);
 
@@ -493,7 +498,7 @@ namespace hz
 
 		// inform the parser of the function arguments
 		// creates a local copy of them for future reference
-		AS_FUNCTION_SYMBOL(reference_symbol(SymbolType::FUNCTION, name_token.value, peek()))->arguments = arguments;
+		reference_function(name_token.value, peek())->arguments = arguments;
 
 		auto body = parse_compound_statement(name_token.value);
 

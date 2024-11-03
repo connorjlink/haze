@@ -3,6 +3,7 @@ import std;
 #include "Type.h"
 #include "Symbol.h"
 #include "Parser.h"
+#include "CommonErrors.h"
 
 // Haze Type.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -23,6 +24,12 @@ namespace hz
 			case INT16: return 2;
 			case INT32: return 4;
 			case INT64: return 8;
+
+			default:
+			{
+				CommonErrors::invalid_int_type(int_type, NULL_TOKEN); 
+				return -1;
+			} break;
 		}
 	}
 
@@ -42,7 +49,7 @@ namespace hz
 
 #pragma message("TODO: compute the real size of the struct based on each member's size and offset!")
 
-		return member_count * member_size;
+		return static_cast<std::uint16_t>(member_count * member_size);
 	}
 
 

@@ -23,8 +23,8 @@ import std;
 
 namespace hz
 {
-	Function::Function(std::string name, TypeSpecifier return_type, std::vector<Expression*>&& arguments, Statement* body, Token token)
-		: Node{ token }, name{ std::move(name) }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+	Function::Function(const std::string& name, Type* return_type, std::vector<Expression*>&& arguments, Statement* body, const Token& token)
+		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
 	{
 	}
 
@@ -121,12 +121,13 @@ namespace hz
 			
 			Expression* return_value = nullptr;
 
-			using enum TypeSpecifier;
+#pragma message("TODO: determin fi the return type is valid or not")
+			/*using enum TypeSpecifier;
 			switch (return_type)
 			{
 				case BYTE: return_value = new IntegerLiteralExpression{ 0, NULL_TOKEN }; break;
 				default: _error_reporter->post_error("invalid return type", _token); return;
-			}
+			}*/
 
 			auto implicit_return = new ReturnStatement{ name, return_value, new ObserverAllocation{ EAX }, NULL_TOKEN};
 			// NOTE: generating a statement, so no need to pass an allocation

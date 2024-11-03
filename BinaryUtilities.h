@@ -20,10 +20,10 @@ namespace hz
 		constexpr byterange range_string(const std::string&);
 	}
 
-	inline static constexpr auto pad8 = bin::range8(0);
-	inline static constexpr auto pad16 = bin::range16(0);
-	inline static constexpr auto pad32 = bin::range32(0);
-	inline static constexpr auto pad64 = bin::range64(0);
+	inline static const auto pad8 = bin::range8(0);
+	inline static const auto pad16 = bin::range16(0);
+	inline static const auto pad32 = bin::range32(0);
+	inline static const auto pad64 = bin::range64(0);
 }
 
 #endif 

@@ -81,6 +81,9 @@ namespace hz
 		PRINT,
 
 		END,
+
+		U8, U16, U32, U64,
+		S8, S16, S32, S64,
 	};
 
 #define S(x) std::string_view{ x }
@@ -166,6 +169,16 @@ namespace hz
 		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },
 		
 		bimap_t{ S("eof"), TokenType::END },
+
+		bimap_t{ S("ub"), TokenType::U8 },
+		bimap_t{ S("uw"), TokenType::U16 },
+		bimap_t{ S("ul"), TokenType::U32 },
+		bimap_t{ S("uq"), TokenType::U64 },
+
+		bimap_t{ S("sb"), TokenType::S8 },
+		bimap_t{ S("sw"), TokenType::S16 },
+		bimap_t{ S("sl"), TokenType::S32 },
+		bimap_t{ S("sq"), TokenType::S64 },
 	};
 
 	struct Token

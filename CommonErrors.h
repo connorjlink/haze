@@ -12,6 +12,13 @@ namespace hz
 	enum class ExpressionType;
 	enum class BinaryExpressionType;
 	enum class IntegerLiteralType;
+	enum class CommandType;
+	enum class IntTypeType;
+	enum class TokenType;
+	enum class SymbolType;
+
+	class Type;
+	class Expression;
 
 	struct Token;
 
@@ -32,9 +39,13 @@ namespace hz
 		static void invalid_node_type(NodeType, const Token&);
 		static void invalid_statement_type(StatementType, const Token&);
 		static void invalid_expression_type(ExpressionType, const Token&);
+		static void invalid_command_type(CommandType, const Token&);
 
 	public:
 		static void invalid_integer_literal_type(IntegerLiteralType, const Token&);
+		static void invalid_int_type(IntTypeType, const Token&);
+		static void invalid_token_type(TokenType, const Token&);
+		static void invalid_symbol_type(SymbolType, const Token&);
 
 	public:
 		static void must_be_lvalue(const std::string&, const Token&);
@@ -49,6 +60,12 @@ namespace hz
 	public:
 		static void integer_size_mismatch(IntegerLiteralType, IntegerLiteralType, const Token&);
 		static void invalid_binary_expression(ExpressionType, ExpressionType, BinaryExpressionType, const Token&);
+
+	public:
+		static void type_qualifier_mismatch(Type*, Expression*, const Token&);
+		static void type_specifier_mismatch(Type*, Expression*, const Token&);
+		static void type_signedness_mismatch(Type*, Expression*, const Token&);
+		static void type_storage_mismatch(Type*, Expression*, const Token&);
 
 	public:
 		static void unsupported_statement(const std::string&, const std::string&, const Token&);

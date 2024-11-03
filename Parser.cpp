@@ -105,7 +105,7 @@ namespace hz
 	}
 
 
-	SymbolType Parser::query_symbol_type(const std::string& name, Token& location)
+	SymbolType Parser::query_symbol_type(const std::string& name, const Token& location)
 	{
 		if (!symbol_table.contains(name))
 		{
@@ -283,9 +283,9 @@ namespace hz
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
 		add_symbol(SymbolType::DEFINE, identifier, peek());
-		AS_DEFINE_SYMBOL(reference_symbol(SymbolType::DEFINE, identifier, peek()))->value = value;
+		reference_define(identifier, peek())->value = integer_literal_raw(value);
 
-		return new DotDefineCommand{ identifier, { value }, identifier_expression->_token };
+		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
 	}
 
 	IdentifierExpression* Parser::parse_identifier_expression()
@@ -302,7 +302,7 @@ namespace hz
 
 		const auto& integer_string = integer_literal_token.value;
 
-		std::uint32_t integer_value{};
+		std::int64_t integer_value{};
 		auto [ptr, ec] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
 
 		if (ec != std::errc())
@@ -311,7 +311,32 @@ namespace hz
 			return nullptr;
 		}
 
-		return new IntegerLiteralExpression{ integer_value, integer_literal_token };
+		IntegerLiteral* integer_literal = nullptr;
+
+		const auto specifier = peek();
+		
+		using enum TokenType;
+		switch (specifier.type)
+		{
+			case U8: integer_literal = new UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(integer_value) };
+			case U16: integer_literal = new UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(integer_value) };
+			case U32: integer_literal = new UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(integer_value) };
+			case U64: integer_literal = new UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(integer_value) };
+
+			case S8: integer_literal = new SignedByteIntegerLiteral{ static_cast<std::int8_t>(integer_value) };
+			case S16: integer_literal = new SignedWordIntegerLiteral{ static_cast<std::int16_t>(integer_value) };
+			case S32: integer_literal = new SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(integer_value) };
+			case S64: integer_literal = new SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(integer_value) };
+
+			default:
+			{
+				CommonErrors::invalid_token_type(specifier.type, specifier);
+				integer_literal = nullptr;
+			} break;
+		}
+
+
+		return new IntegerLiteralExpression{ integer_literal, integer_literal_token };
 	}
 
 	StringExpression* Parser::parse_string_expression()

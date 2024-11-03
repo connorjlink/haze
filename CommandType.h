@@ -20,6 +20,14 @@ namespace hz
 		LABEL,
 		INSTRUCTION,
 	};
+
+	static const std::unordered_map<CommandType, std::string> _command_type_map
+	{
+		{ CommandType::DOTORG, ".org" },
+		{ CommandType::DOTDEFINE, ".define" },
+		{ CommandType::LABEL, "label" },
+		{ CommandType::INSTRUCTION, "instruction" },
+	};
 }
 
 #endif

@@ -17,10 +17,17 @@ namespace hz
 {
 	enum class IntegerLiteralType
 	{
-		UBYTE, SBYTE,
-		UWORD, SWORD,
-		UDWORD, SDWORD,
-		UQWORD, SQWORD,
+		UBYTE,
+		SBYTE,
+		
+		UWORD,
+		SWORD,
+
+		UDWORD,
+		SDWORD,
+
+		UQWORD,
+		SQWORD,
 	};
 
 	static const std::unordered_map<IntegerLiteralType, std::string> _integer_literal_type_map

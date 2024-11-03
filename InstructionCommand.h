@@ -2,6 +2,7 @@
 #define HAZE_INSTRUCTION_H
 
 #include "Command.h"
+#include "PlatformVariables.h"
 #include "InstructionEncoding.h"
 
 // Haze InstructionCommand.h
@@ -26,7 +27,7 @@ namespace hz
     public:
         InstructionCommand() = delete;
         InstructionCommand(Token, std::uint32_t);
-        InstructionCommand(Token, Opcode, register_t, register_t, std::uint8_t = 0, std::uint32_t = 0, std::string = "");
+        InstructionCommand(Token, Opcode, register_t, register_t, platform_address_size = 0, platform_address_size = 0, const std::string& = "");
         //std::uint32_t bytes() const;
 
     public:

@@ -13,6 +13,14 @@ namespace hz
 		INT32, // dword
 		INT64, // qword
 	};
+
+	static const std::unordered_map<IntTypeType, std::string> _int_type_type_map
+	{
+		{ IntTypeType::INT8, "byte" },
+		{ IntTypeType::INT16, "word" },
+		{ IntTypeType::INT32, "double word" },
+		{ IntTypeType::INT64, "quad word" },
+	};
 }
 
 #endif

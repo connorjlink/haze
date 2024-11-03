@@ -21,9 +21,12 @@ namespace hz
 		marked_for_deletion = false;
 	}
 
-	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, std::uint8_t imm, std::uint32_t mem, std::string branch_target)
-		: Command{ token }, opcode{ opcode }, destination{ dst }, source{ src }, immediate{ imm }, address{ mem }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
+	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, platform_address_size imm, platform_address_size mem, const std::string& branch_target)
+		: Command{ token }, opcode{ opcode }, destination{ dst }, source{ src }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
+		this->immediate = static_cast<decltype(imm)>(imm);
+		this->address = static_cast<decltype(address)>(mem);
+
 		embedded_object_code = {};
 		approximate_embedded_size = 0;
 	}

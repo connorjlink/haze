@@ -38,6 +38,7 @@
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
     <ClCompile Include="Type.cpp" />
+    <ClCompile Include="TypeCheck.cpp" />
     <ClCompile Include="Variable.cpp" />
     <ClCompile Include="X86Instruction.cpp" />
     <ClCompile Include="X86Linker.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Type.h" />
+    <ClInclude Include="TypeCheck.h" />
     <ClInclude Include="TypeQualifier.h" />
     <ClInclude Include="TypeSignedness.h" />
     <ClInclude Include="TypeSpecifier.h" />

@@ -380,6 +380,9 @@
     <ClCompile Include="IntegerLiteral.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TypeCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -800,6 +803,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="IntegerLiteral.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeCheck.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

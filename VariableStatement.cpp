@@ -6,6 +6,7 @@ import std;
 #include "Parser.h"
 #include "Evaluator.h"
 #include "Symbol.h"
+#include "ErrorReporter.h"
 
 // Haze VariableStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -70,9 +71,65 @@ namespace hz
 
 		else
 		{
-#pragma message("TODO: figure out the size in bytes to create the right variable integer type here")
-			//context->define_variable(name, new Variable{ 0u });
-			static_assert(false);
+			Variable* variable = nullptr;
+
+			using enum TypeType;
+			switch (type->ttype())
+			{
+				case INT:
+				{
+					auto int_variable = AS_INT_TYPE(type);
+					
+					using enum TypeSignedness;
+					using enum IntTypeType;
+					switch (int_variable->int_type)
+					{
+						case INT8:
+						{
+							if (int_variable->signedness == UNSIGNED) variable = new UnsignedByteVariable{ 0 };
+							else variable = new SignedByteVariable{ 0 };
+						} break;
+
+						case INT16:
+						{
+							if (int_variable->signedness == UNSIGNED) variable = new UnsignedWordVariable{ 0 };
+							else variable = new SignedWordVariable{ 0 };
+						} break;
+
+						case INT32:
+						{
+							if (int_variable->signedness == UNSIGNED) variable = new UnsignedDoubleWordVariable{ 0 };
+							else variable = new SignedDoubleWordVariable{ 0 };
+						} break;
+
+						case INT64:
+						{
+							if (int_variable->signedness == UNSIGNED) variable = new UnsignedQuadWordVariable{ 0 };
+							else variable = new SignedQuadWordVariable{ 0 };
+						} break;
+					}
+				} break;
+
+				case STRUCT:
+				{
+					auto struct_type = AS_STRUCT_TYPE(type);
+					variable = new StructVariable{ struct_type->tag };
+				} break;
+
+				case STRING:
+				{
+					_error_reporter->post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					variable = new StringVariable{ "" };
+				} break;
+
+				case VOID: 
+				{
+					_error_reporter->post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					return nullptr;
+				} break;
+			}
+
+			context->define_variable(name, variable);
 		}
 
 		return nullptr;

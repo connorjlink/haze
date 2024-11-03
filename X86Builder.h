@@ -101,6 +101,12 @@ namespace hz
 		static byterange dec_r(std::uint8_t);
 
 	public:
+		// sal destination, immediate
+		static byterange sal_imm(std::uint8_t, std::uint8_t);
+		// sar destination, immediate
+		static byterange sar_imm(std::uint8_t, std::uint8_t);
+
+	public:
 		// test lhs, rhs
 		static byterange test_rr(std::uint8_t, std::uint8_t);
 		// cmp lhs, rhs

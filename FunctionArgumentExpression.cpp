@@ -22,7 +22,7 @@ namespace hz
 	{
 		if (auto value_optimized = value->optimize())
 		{
-			return new FunctionArgumentExpression{ type_specifier, identifier, AS_EXPRESSION_NODE(value_optimized), _token };
+			return new FunctionArgumentExpression{ type, identifier, AS_EXPRESSION_NODE(value_optimized), _token };
 		}
 
 		return nullptr;

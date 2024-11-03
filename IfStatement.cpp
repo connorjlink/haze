@@ -110,15 +110,17 @@ namespace hz
 
 	Node* IfStatement::evaluate(Context* context) const
 	{
-		auto condition_evaluated = condition->evaluate(context);
+		auto condition_evaluated = AS_EXPRESSION(condition->evaluate(context));
 
-		if (AS_EXPRESSION(condition_evaluated)->etype() != ExpressionType::INTEGER_LITERAL)
+		if (condition_evaluated->etype() != ExpressionType::INTEGER_LITERAL)
 		{
 			_error_reporter->post_error("`if` statement conditions must result in an r-value", condition_evaluated->_token);
 			return nullptr;
 		}
 
-		if (std::get<std::uint32_t>(node_to_variable(condition_evaluated)) != 0)
+		auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
+
+		if (integer_literal_raw(integer_literal))
 		{
 			if_body->evaluate(context);
 		}

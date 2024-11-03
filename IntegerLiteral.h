@@ -3,6 +3,8 @@
 
 #include "IntegerLiteralType.h"
 #include "CommonErrors.h"
+#include "PlatformVariables.h"
+#include "Variable.h"
 #include "Token.h"
 
 // Haze IntegerLiteral.h
@@ -330,7 +332,7 @@ namespace hz
 		virtual IntegerLiteral* notequals(IntegerLiteral*) final override;
 	};
 
-	using _ir_t = std::int32_t;
+	using _ir_t = platform_address_size;
 
 	_ir_t integer_literal_raw(IntegerLiteral* value)
 	{
@@ -365,6 +367,94 @@ namespace hz
 	bool integer_literal_equals(IntegerLiteral* value, _ir_t comparison)
 	{
 		return integer_literal_compare<std::equal_to<_ir_t>>(value, comparison);
+	}
+
+	template<typename T>
+		requires (std::is_same_v<T, std::uint8_t> or
+				  std::is_same_v<T, std::int8_t> or
+				  std::is_same_v<T, std::uint16_t> or
+				  std::is_same_v<T, std::int16_t> or
+				  std::is_same_v<T, std::uint32_t> or
+				  std::is_same_v<T, std::int32_t> or
+			      std::is_same_v<T, std::uint64_t> or
+				  std::is_same_v<T, std::int64_t>)
+	IntegerLiteral* make_integer_literal(T value)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint8_t value)
+	{
+		return new UnsignedByteIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int8_t value)
+	{
+		return new SignedByteIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint16_t value)
+	{
+		return new UnsignedWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int16_t value)
+	{
+		return new SignedWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint32_t value)
+	{
+		return new UnsignedDoubleWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int32_t value)
+	{
+		return new SignedDoubleWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::uint64_t value)
+	{
+		return new UnsignedQuadWordIntegerLiteral{ value };
+	}
+
+	template<>
+	IntegerLiteral* make_integer_literal(std::int64_t value)
+	{
+		return new SignedQuadWordIntegerLiteral{ value };
+	}
+
+
+	Variable* integer_literal_to_variable(IntegerLiteral* value)
+	{
+		using enum IntegerLiteralType;
+		switch (value->itype())
+		{
+			case UBYTE: return new UnsignedByteVariable{ AS_UNSIGNED_BYTE_INTEGER_LITERAL(value)->value };
+			case SBYTE: return new SignedByteVariable{ AS_SIGNED_BYTE_INTEGER_LITERAL(value)->value };
+
+			case UWORD: return new UnsignedWordVariable{ AS_UNSIGNED_WORD_INTEGER_LITERAL(value)->value };
+			case SWORD: return new SignedWordVariable{ AS_SIGNED_WORD_INTEGER_LITERAL(value)->value };
+
+			case UDWORD: return new UnsignedDoubleWordVariable{ AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(value)->value };
+			case SDWORD: return new SignedDoubleWordVariable{ AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(value)->value };
+
+			case UQWORD: return new UnsignedQuadWordVariable{ AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value };
+			case SQWORD: return new SignedQuadWordVariable{ AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(value)->value };
+
+			default:
+			{
+				CommonErrors::invalid_integer_literal_type(value->itype(), NULL_TOKEN);
+				return nullptr;
+			} break;
+		}
 	}
 }
 

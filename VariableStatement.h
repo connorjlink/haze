@@ -9,20 +9,20 @@
 
 namespace hz
 {
-	enum class TypeSpecifier;
+	class Type;
 	class Allocation;
 
 	class VariableStatement : public Statement
 	{
 	private:
-		TypeSpecifier type;
+		Type* type;
 		std::string name;
 		Expression* value;
 		Allocation* allocation;
 
 	public:
-		VariableStatement(TypeSpecifier type, std::string name, Expression* value, Allocation* allocation, Token token)
-			: Statement{ token }, type{ type }, name { std::move(name) }, value{ value }, allocation{ allocation }
+		VariableStatement(Type* type, const std::string& name, Expression* value, Allocation* allocation, const Token& token)
+			: Statement{ token }, type{ type }, name { name }, value{ value }, allocation{ allocation }
 		{
 		}
 

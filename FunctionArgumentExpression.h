@@ -15,8 +15,8 @@ namespace hz
 		Expression* value;
 
 	public:
-		FunctionArgumentExpression(TypeSpecifier type_specifier, IdentifierExpression* identifier, Expression* value, Token token)
-			: ArgumentExpression{ type_specifier, identifier, token }, value{ value }
+		FunctionArgumentExpression(Type* type, IdentifierExpression* identifier, Expression* value, Token token)
+			: ArgumentExpression{ type, identifier, token }, value{ value }
 		{
 		}
 

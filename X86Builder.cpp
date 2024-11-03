@@ -560,6 +560,29 @@ namespace hz
 		return out;
 	}
 
+	byterange X86Builder::sal_imm(std::uint8_t destination, std::uint8_t immediate)
+	{
+		byterange out{};
+
+		// C1 /4 ib --> SAL r/m32, imm8
+		PUT(bin::range8(0xC1));
+		PUT(bin::range8(X86Builder::modrm(0b11, 0b100, destination)));
+		PUT(bin::range8(immediate));
+
+		return out;
+	}
+
+	byterange X86Builder::sar_imm(std::uint8_t destination, std::uint8_t immediate)
+	{
+		byterange out{};
+
+		// C1 /7 ib --> SAR r/m32, imm8
+		PUT(bin::range8(0xC1));
+		PUT(bin::range8(X86Builder::modrm(0b11, 0b111, destination)));
+		PUT(bin::range8(immediate));
+
+		return out;
+	}
 
 	byterange X86Builder::test_rr(std::uint8_t lhs, std::uint8_t rhs)
 	{

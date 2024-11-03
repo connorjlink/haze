@@ -647,12 +647,38 @@ namespace hz
 
 	Expression* LessBinaryExpression::optimize()
 	{
-		const auto left_optimized = AS_EXPRESSION(left->optimize());
-		const auto right_optimized = AS_EXPRESSION(right->optimize());
+		auto left_optimized = AS_EXPRESSION(left->optimize());
+		auto right_optimized = AS_EXPRESSION(right->optimize());
 
 		if (!left_optimized && !right_optimized)
 		{
-			static_assert(false);
+			left_optimized = AS_EXPRESSION(left->copy());
+			right_optimized = AS_EXPRESSION(right->copy());
+
+			if (left_optimized->etype() == ExpressionType::INTEGER_LITERAL &&
+				right_optimized->etype() == ExpressionType::INTEGER_LITERAL)
+			{
+				const auto left_value = VALUE_OF(left_optimized);
+				const auto right_value = VALUE_OF(right_optimized);
+
+				if (left_value->itype() != right_value->itype())
+				{
+					CommonErrors::integer_size_mismatch(left_value->itype(), right_value->itype(), _token);
+					return nullptr;
+				}
+
+				return new IntegerLiteralExpression
+				{
+					left_value->less(right_value),
+					_token,
+				};
+			}
+
+			else
+			{
+				// Neither side could be optimized
+				return nullptr;
+			}
 		}
 
 		else

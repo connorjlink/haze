@@ -8,8 +8,10 @@ import std;
 #include "Generator.h"
 #include "Evaluator.h"
 #include "Symbol.h"
-#include "ErrorReporter.h"
 #include "X86Builder.h"
+#include "TypeCheck.h"
+#include "CommonErrors.h"
+#include "ErrorReporter.h"
 
 // Haze FunctionCallExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -40,20 +42,26 @@ namespace hz
 			return;
 		}
 
-		arguments_t argument_expressions{};
+		std::vector<Expression*> argument_expressions{};
 
 		for (auto i = 0; i < arguments.size(); i++)
 		{
 			auto corresponding_argument = function_symbol->arguments[i];
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(corresponding_argument);
 
-#pragma message("TODO: resolve the real type used for each argument expression")
+			Type* type = nullptr;
+
+			if (check_type(arguments[i], argument_expression->type) == true)
+			{
+				type = arguments[i];
+			}
+
 			argument_expressions.emplace_back(new FunctionArgumentExpression
-				{ TypeSpecifier::BYTE, argument_expression->identifier, arguments[i], argument_expression->_token });
+				{ type, argument_expression->identifier, arguments[i], argument_expression->_token });
 		}
 
 		// will emit a placeholder call address before hot-patching in the correct target during linking
-		_generator->call_function(name, std::move(argument_expressions), allocation);
+		_generator->call_function(name, argument_expressions, allocation);
 	}
 
 	Expression* FunctionCallExpression::optimize()
@@ -88,7 +96,7 @@ namespace hz
 				function->evaluate(context);
 
 				const auto return_value = context->pop_return();
-				return Variable*o_node(return_value);
+				return variable_to_node(return_value);
 			}
 		}
 

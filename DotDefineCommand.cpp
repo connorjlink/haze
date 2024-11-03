@@ -1,6 +1,7 @@
 import std;
 
 #include "DotDefineCommand.h"
+#include "CommonErrors.h"
 #include "ErrorReporter.h"
 
 // Haze DotDefineCommand.cpp
@@ -20,17 +21,18 @@ namespace hz
 
 	void DotDefineCommand::generate(Allocation*)
 	{
-		_error_reporter->post_error("unsupported compiler command type `.define`", _token);
+		CommonErrors::invalid_command_type(ctype(), _token);
 	}
 
 	Command* DotDefineCommand::optimize()
 	{
+		// No optimizations possible for a .define command
 		return nullptr;
 	}
 
 	Node* DotDefineCommand::evaluate(Context* context) const
 	{
-		context->define_variable(identifier, value);
+		context->define_variable(identifier, integer_literal_to_variable(value));
 		return nullptr;
 	}
 }

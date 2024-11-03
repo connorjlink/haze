@@ -22,8 +22,8 @@ namespace hz
 		std::uint16_t struct_size() const;
 
 	public:
-		StructDeclarationStatement(IdentifierExpression* identifier, std::vector<MemberDeclarationExpression*>&& members, const Token& token)
-			: Statement{ token }, identifier{ identifier }, members{ std::move(members) }
+		StructDeclarationStatement(IdentifierExpression* identifier, const std::vector<MemberDeclarationExpression*>& members, const Token& token)
+			: Statement{ token }, identifier{ identifier }, members{ members }
 		{
 		}
 

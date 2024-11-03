@@ -30,7 +30,8 @@ namespace hz
 		bool _executing = true;
 
 	public:
-		void define_variable(std::string, Variable*);
+		void declare_variable(const std::string&);
+		void define_variable(const std::string&, Variable*);
 		const decltype(_variables)& variables() const;
 
 		void define_function(Function*);

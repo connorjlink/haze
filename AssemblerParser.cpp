@@ -93,7 +93,7 @@ namespace hz
 		const auto address_expression = parse_address();
 		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
 
-		return new DotOrgCommand{ address, address_expression->_token };
+		return new DotOrgCommand{ integer_literal_raw(address), address_expression->_token };
 	}
 
 	Node* AssemblerParser::parse_label_command()

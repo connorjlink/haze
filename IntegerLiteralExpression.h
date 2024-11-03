@@ -15,7 +15,7 @@ namespace hz
         IntegerLiteral* value;
 
     public:
-        IntegerLiteralExpression(IntegerLiteral* value, Token token)
+        IntegerLiteralExpression(IntegerLiteral* value, const Token& token)
             : Expression{ token }, value{ value }
         {
         }

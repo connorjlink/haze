@@ -54,6 +54,7 @@ namespace hz
 			default:
 			{
 				CommonErrors::invalid_expression_type(expression->etype(), NULL_TOKEN);
+				return nullptr;
 			} break;
 		}
 
