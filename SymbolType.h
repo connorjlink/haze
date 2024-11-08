@@ -23,7 +23,7 @@ namespace hz
 		STRUCT,
 	};
 
-	static const std::unordered_map<SymbolType, std::string_view> _symbol_map
+	static const std::unordered_map<SymbolType, std::string> _symbol_type_map
 	{
 		{ SymbolType::FUNCTION, "function" },
 		{ SymbolType::ARGUMENT, "argument" },

@@ -33,6 +33,16 @@ namespace hz
 		}
 	}
 
+	std::string IntType::string() const
+	{
+		// qualifier signedness int_type storage
+		return std::format("{} {} {} {}",
+			_type_qualifier_map.at(qualifier), 
+			_type_signedness_map.at(signedness),
+			_int_type_type_map.at(int_type),
+			_type_storage_map.at(storage));
+	}
+
 
 	TypeType StructType::ttype() const
 	{
@@ -52,6 +62,16 @@ namespace hz
 		return static_cast<std::uint16_t>(member_count * member_size);
 	}
 
+	std::string StructType::string() const
+	{
+		// qualifier struct tag storage
+		return std::format("{} {} {} {}",
+			_type_qualifier_map.at(qualifier),
+			"struct",
+			tag,
+			_type_storage_map.at(storage));
+	}
+
 
 	TypeType StringType::ttype() const
 	{
@@ -62,5 +82,14 @@ namespace hz
 	{
 		const auto address_size = sizeof(platform_address_size);
 		return address_size;
+	}
+
+	std::string StringType::string() const
+	{
+		// qualifier string storage
+		return std::format("{} {} {}",
+			_type_qualifier_map.at(qualifier),
+			"string",
+			_type_storage_map.at(storage));
 	}
 }

@@ -9,6 +9,9 @@ import std;
 #include "Command.h"
 #include "BinaryExpressionType.h"
 #include "IntTypeType.h"
+#include "Symbol.h"
+#include "TypeCheck.h"
+#include "Type.h"
 #include "Token.h"
 #include "ErrorReporter.h"
 
@@ -78,6 +81,11 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("token", std::string{ _token_map.at(ttype).value() }), token);
 	}
 
+	void CommonErrors::invalid_symbol_type(SymbolType stype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("symbol", _symbol_type_map.at(stype)), token);
+	}
+
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)
 	{
 		_error_reporter->post_error(std::format("{} must be a modifiable l-value", message), token);
@@ -110,24 +118,48 @@ namespace hz
 			_binary_expression_type_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
 	}
 
-	void CommonErrors::type_qualifier_mismatch(Type*, Expression*, const Token&)
+	void CommonErrors::type_qualifier_mismatch(Type* type, Expression* expression, const Token& token)
 	{
-#pragma message("TODO: mismatch errors")
+		const auto expected_qualifier = type->qualifier;
+
+		const auto evaluated_type = resolve_type(expression);
+		const auto erroring_qualifier = evaluated_type->qualifier;
+
+		_error_reporter->post_error(std::format("type qualifier mismatch; expected `{}` but got `{}`",
+			_type_qualifier_map.at(expected_qualifier), _type_qualifier_map.at(erroring_qualifier)), token);
 	}
 
-	void CommonErrors::type_specifier_mismatch(Type*, Expression*, const Token&)
+	void CommonErrors::type_signedness_mismatch(Type* type, Expression* expression, const Token& token)
 	{
-#pragma message("TODO: mismatch errors")
+		const auto expected_signedness = AS_INT_TYPE(type)->signedness;
+
+		const auto evaluated_type = resolve_type(expression);
+		const auto erroring_signedness = AS_INT_TYPE(evaluated_type)->signedness;
+
+		_error_reporter->post_error(std::format("type signedness mismatch; expected `{}` but got `{}`",
+			_type_signedness_map.at(erroring_signedness), _type_signedness_map.at(erroring_signedness)), token);
 	}
 
-	void CommonErrors::type_signedness_mismatch(Type*, Expression*, const Token&)
+	void CommonErrors::type_storage_mismatch(Type* type, Expression* expression, const Token& token)
 	{
-#pragma message("TODO: mismatch errors")
+		const auto expected_storage = type->storage;
+
+		const auto evaluated_type = resolve_type(expression);
+		const auto erroring_storage = evaluated_type->storage;
+
+		_error_reporter->post_error(std::format("type storage mismatch; expected `{}` but got `{}`",
+			_type_storage_map.at(expected_storage), _type_storage_map.at(erroring_storage)), token);
 	}
 
-	void CommonErrors::type_storage_mismatch(Type*, Expression*, const Token&)
+	void CommonErrors::int_type_specifier_mismatch(Type* type, Expression* expression, const Token& token)
 	{
-#pragma message("TODO: mismatch errors")
+		const auto expected_specifier = AS_INT_TYPE(type)->int_type;
+
+		const auto evaluated_type = AS_INT_TYPE(resolve_type(expression));
+		const auto erroring_specifier = evaluated_type->int_type;
+
+		_error_reporter->post_error(std::format("type specifier mismatch; expected `{}` but got `{}`",
+			_int_type_type_map.at(expected_specifier), _int_type_type_map.at(erroring_specifier)), token);
 	}
 
 	void CommonErrors::unsupported_statement(const std::string& source, const std::string& type, const Token& token)

@@ -63,9 +63,9 @@ namespace hz
 
 	public:
 		static void type_qualifier_mismatch(Type*, Expression*, const Token&);
-		static void type_specifier_mismatch(Type*, Expression*, const Token&);
 		static void type_signedness_mismatch(Type*, Expression*, const Token&);
 		static void type_storage_mismatch(Type*, Expression*, const Token&);
+		static void int_type_specifier_mismatch(Type*, Expression*, const Token&);
 
 	public:
 		static void unsupported_statement(const std::string&, const std::string&, const Token&);

@@ -29,6 +29,7 @@ namespace hz
 	public:
 		virtual TypeType ttype() const = 0;
 		virtual std::uint16_t size() const = 0;
+		virtual std::string string() const = 0;
 	};
 
 	class IntType : public Type
@@ -46,6 +47,7 @@ namespace hz
 	public:
 		virtual TypeType ttype() const final override;
 		virtual std::uint16_t size() const final override;
+		virtual std::string string() const final override;
 	};
 
 	class StructType : public Type
@@ -62,6 +64,7 @@ namespace hz
 	public:
 		virtual TypeType ttype() const final override;
 		virtual std::uint16_t size() const final override;
+		virtual std::string string() const final override;
 	};
 
 	class StringType : public Type
@@ -75,6 +78,7 @@ namespace hz
 	public:
 		virtual TypeType ttype() const final override;
 		virtual std::uint16_t size() const final override;
+		virtual std::string string() const final override;
 	};
 }
 

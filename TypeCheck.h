@@ -9,6 +9,7 @@ namespace hz
 	class Type;
 	class Expression;
 
+	Type* resolve_type(Expression*);
 	bool check_type(Expression*, Type*);
 }
 

@@ -12,10 +12,8 @@ import std;
 // Haze TypeCheck.h
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace
+namespace hz
 {
-	using namespace hz;
-
 	Type* resolve_type(Expression* expression)
 	{
 		using enum TypeQualifier;
@@ -43,7 +41,7 @@ namespace
 
 					case UDWORD: return new IntType{ IMMUTABLE, UNSIGNED, INT32, VALUE };
 					case SDWORD: return new IntType{ IMMUTABLE, SIGNED, INT32, VALUE };
-					
+
 					case UQWORD: return new IntType{ IMMUTABLE, UNSIGNED, INT64, VALUE };
 					case SQWORD: return new IntType{ IMMUTABLE, SIGNED, INT64, VALUE };
 				}
@@ -101,10 +99,7 @@ namespace
 			} break;
 		}
 	}
-}
 
-namespace hz
-{
 	bool check_type(Expression* expression, Type* reference)
 	{
 		using enum TypeType;
@@ -118,7 +113,7 @@ namespace hz
 
 				if (expression->etype() != ExpressionType::INTEGER_LITERAL)
 				{
-					CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+					CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 					return false;
 				}
 
@@ -140,7 +135,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT8)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -155,7 +150,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT8)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -170,7 +165,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT16)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -185,7 +180,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT16)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -200,7 +195,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT32)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -215,7 +210,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT32)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -230,7 +225,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT64)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 
@@ -245,7 +240,7 @@ namespace hz
 					{
 						if (reference_int_type->int_type != IntTypeType::INT64)
 						{
-							CommonErrors::type_specifier_mismatch(reference, expression, expression->_token);
+							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
 							return false;
 						}
 

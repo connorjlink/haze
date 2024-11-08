@@ -56,7 +56,7 @@ namespace hz
 		if (symbol_table.contains(name))
 		{
 			_error_reporter->post_error(std::format("symbol `{}` was already defined as a {}",
-				name, _symbol_map.at(symbol_table.at(name)->ytype())), location);
+				name, _symbol_type_map.at(symbol_table.at(name)->ytype())), location);
 			return;
 		}
 
@@ -120,7 +120,7 @@ namespace hz
 
 	Symbol* Parser::reference_symbol(SymbolType type, const std::string& name, const Token& location, bool mark_visited)
 	{
-		if (!_symbol_map.contains(type))
+		if (!_symbol_type_map.contains(type))
 		{
 			_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
 			return nullptr;
@@ -137,7 +137,7 @@ namespace hz
 		if (symbol->ytype() != type)
 		{
 			_error_reporter->post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
-				name, _symbol_map.at(symbol->ytype()), _symbol_map.at(type)), location);
+				name, _symbol_type_map.at(symbol->ytype()), _symbol_type_map.at(type)), location);
 			return nullptr;
 		}
 
@@ -385,7 +385,7 @@ namespace hz
 		if (symbol->ytype() != SymbolType::FUNCTION)
 		{
 			_error_reporter->post_error(std::format("symbol `{}` is a {} but was referenced as a function", 
-				name_token.value, _symbol_map.at(symbol->ytype())), name_token);
+				name_token.value, _symbol_type_map.at(symbol->ytype())), name_token);
 			return nullptr;
 		}
 
