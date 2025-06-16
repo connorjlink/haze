@@ -85,19 +85,16 @@ int main(int argc, char** argv)
 			{
 				case ToolchainType::ASSEMBLER:
 				{
-					// Assembler
 					_toolchain = new AssemblerToolchain{};
 				} break;
 
 				case ToolchainType::COMPILER:
 				{
-					// Compiler
 					_toolchain = new CompilerToolchain{};
 				} break;
 
 				case ToolchainType::INTERPRETER:
 				{
-					// Interpreter
 					_toolchain = new InterpreterToolchain{};
 				} break;
 			}

@@ -67,7 +67,7 @@ namespace hz
 				auto absolute_target_offset = branch_command->target_offset;
 
 				// does the address need to be resolved by label?
-				if (absolute_target_offset == TEMP_ADDRESS)
+				if (!absolute_target_offset.has_value())
 				{
 					// at this point it is unknown if the target label is a function or instruction label
 					
@@ -94,7 +94,7 @@ namespace hz
 
 				const auto next_instruction_offset = current_position + current_size;
 
-				const auto relative_difference = absolute_target_offset - next_instruction_offset;
+				const auto relative_difference = absolute_target_offset.value() - next_instruction_offset;
 				branch_command->target_offset = relative_difference;
 			}
 

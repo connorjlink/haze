@@ -458,11 +458,11 @@ namespace hz
 	public:
 		// jump destination
 		std::string label;
-		std::int32_t target_offset;
+		std::optional<std::int32_t> target_offset;
 
 	public:
 		BranchCommand(const std::string& label)
-			: label{ label }, target_offset{ TEMP_ADDRESS }
+			: label{ label }, target_offset{ std::nullopt }
 		{
 		}
 

@@ -281,14 +281,15 @@ namespace hz
 
 		else
 		{
-			// default to unsigned 16 bits non-compiler workloads
-			type = new IntType{ TypeQualifier::IMMUTABLE, TypeSignedness::UNSIGNED, IntTypeType::INT16, TypeStorage::VALUE };
+			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
+			type = new IntType{ TypeQualifier::IMMUTABLE, TypeSignedness::UNSIGNED, IntTypeType::INT32, TypeStorage::VALUE };
 		}
 		
 		const auto identifier_expression = parse_identifier_expression();
 		consume(TokenType::EQUALS);
 
-		const auto value_expression = parse_expression();
+		// if the optimized value is not a constant expression, it isn't a valid definition
+		const auto value_expression = parse_expression_optimized();
 
 		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
 		{
@@ -296,7 +297,7 @@ namespace hz
 			return nullptr;
 		}
 
-		const auto identifier = identifier_expression->name;
+		const auto& identifier = identifier_expression->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
 		add_define(identifier, peek());
@@ -315,11 +316,7 @@ namespace hz
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
-		// NOTE: old usage
-		//const auto integer_value = std::stoul(integer_literal_token.value);
-		
 		const auto integer_literal_token = consume(TokenType::INT);
-
 		const auto& integer_string = integer_literal_token.value;
 
 		std::int64_t integer_value{};
@@ -333,7 +330,7 @@ namespace hz
 
 		IntegerLiteral* integer_literal = nullptr;
 
-		const auto specifier = peek();
+		const auto& specifier = peek();
 		
 		using enum TokenType;
 		switch (specifier.type)
@@ -560,7 +557,7 @@ namespace hz
 					break;
 				}
 
-				//TODO: maybe add precedence+1 for the next call of the recursive function
+#pragma message("TODO: maybe add precedence+1 for the next call of the recursive function")
 				right = parse_infix_expression(right, precedences.at(lookahead.type));
 
 			} while(true);
