@@ -4,8 +4,6 @@
 #include "X86Builder.h"
 #include "ErrorReporter.h"
 
-#pragma message("TODO: use __COUNTER__ instead for easy deduplication of tests")
-
 // Haze X86BuilderValidator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -24,8 +22,6 @@
 
 namespace
 {
-	constexpr auto _FILENAME = "X86Builder.cpp";
-
 	using namespace hz;
 
 	std::string bytestring(byterange bytes)
@@ -48,37 +44,37 @@ namespace hz
 	X86BuilderValidator::X86BuilderValidator()
 	{
 		//generic mod/rm byte encoding synthesis
-		auto parameters0 = _error_reporter->open_context(_FILENAME, "validating modrm()");
+		auto parameters0 = _error_reporter->open_context(__FILE__, "validating modrm()");
 		auto test0 = Test{ "modrm()", validate_modrm };
 		test0.attach(parameters0);
 		add_test(test0);
 
 		//reg/reg-specific mod/rm byte encoding synthesis
-		auto parameters1 = _error_reporter->open_context(_FILENAME, "validating modrm_rr()");
+		auto parameters1 = _error_reporter->open_context(__FILE__, "validating modrm_rr()");
 		auto test1 = Test{ "modrm_rr()", validate_modrm_rr };
 		test1.attach(parameters1);
 		add_test(test1);
 
 		//generic sib byte encoding synthesis
-		auto parameters2 = _error_reporter->open_context(_FILENAME, "validating sib()");
+		auto parameters2 = _error_reporter->open_context(__FILE__, "validating sib()");
 		auto test2 = Test{ "sib()", validate_sib };
 		test2.attach(parameters2);
 		add_test(test2);
 
 		//push 32-bit register encoding synthesis
-		auto parameters3 = _error_reporter->open_context(_FILENAME, "validating push_r()");
+		auto parameters3 = _error_reporter->open_context(__FILE__, "validating push_r()");
 		auto test3 = Test{ "push_r()", validate_push_r };
 		test3.attach(parameters3);
 		add_test(test3);
 
 		//push 8-bit immediate encoding synthesis
-		auto parameters4 = _error_reporter->open_context(_FILENAME, "validating push_i()");
+		auto parameters4 = _error_reporter->open_context(__FILE__, "validating push_i()");
 		auto test4 = Test{ "push_i()", validate_push_i };
 		test4.attach(parameters4);
 		add_test(test4);
 
 		//push 32-bit immediate (memory effective address) encoding synthesis
-		auto parameters5 = _error_reporter->open_context(_FILENAME, "validating push_m()");
+		auto parameters5 = _error_reporter->open_context(__FILE__, "validating push_m()");
 		auto test5 = Test{ "push_m()", validate_push_m };
 		test5.attach(parameters5);
 		add_test(test5);

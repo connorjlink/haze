@@ -76,7 +76,7 @@ namespace hz
 		}
 	}
 
-	void Parser::add_function(const std::string& name, const Token& location)
+	void Parser::add_function(const std::string& name, const Token& location, Type* return_type)
 	{
 		add_symbol(SymbolType::FUNCTION, name, location);
 	}

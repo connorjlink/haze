@@ -102,9 +102,9 @@ namespace hz
 		_runtime_allocator->read_local(destination, name);
 	}
 
-	void Generator::update_local(const std::string& name, register_t source)
+	void Generator::write_local(const std::string& name, register_t source)
 	{
-		_runtime_allocator->update_local(name, source);
+		_runtime_allocator->write_local(name, source);
 	}
 
 	void Generator::make_global(register_t location, Variable* value)

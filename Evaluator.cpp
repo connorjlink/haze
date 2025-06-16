@@ -55,10 +55,8 @@ namespace hz
 			default:
 			{
 				CommonErrors::invalid_expression_type(expression->etype(), NULL_TOKEN);
-				return nullptr;
 			} break;
 		}
-
 
 		/*if (node->ntype() == NodeType::EXPRESSION)
 		{
@@ -84,6 +82,8 @@ namespace hz
 
 		_error_reporter->post_error(std::format("invalid harvest node type `{}`", _node_map.at(node->ntype())), NULL_TOKEN);
 		return { (std::uint32_t)-1 };*/
+
+		return nullptr;
 	}
 
 	Node* variable_to_node(Variable* variable)

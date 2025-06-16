@@ -477,17 +477,16 @@ namespace hz
 
 		auto return_type = parse_type();
 
-		auto name_token = consume(TokenType::IDENTIFIER);
+		const auto name_token = consume(TokenType::IDENTIFIER);
 
-
-		// 3 digits of randomness for now
-		const auto uuid = hz::generate(3);
-		const auto end_function_label = std::format("end_function_{:03d}", uuid);
+		// 5 digits of randomness for now
+		const auto uuid = hz::generate(5);
+		const auto end_function_label = std::format("end_function_{:05d}", uuid);
 		_function_label_map[name_token.value] = end_function_label;
 
-		//TODO: implement a more efficient way of modifying the return type than this mess
-		add_symbol(SymbolType::FUNCTION, name_token.value, lookbehind());
-		reference_function(name_token.value, peek())->return_type = return_type;
+		#pragma message("TODO: implement a more efficient way of modifying the return type than this mess")
+
+		add_function(name_token.value, lookbehind(), return_type);
 
 		consume(TokenType::EQUALS);
 
@@ -519,11 +518,8 @@ namespace hz
 	std::vector<Node*> CompilerParser::parse()
 	{
 		auto program = parse_functions();
-#pragma message("TODO: unordered map for name -> functions")
-		if (auto it = std::find_if(program.begin(), program.end(), [&](auto function)
-			{
-				return (AS_FUNCTION_NODE(function)->name == "main");
-			}); it != std::end(program))
+
+		if (!_function_label_map.contains("main"))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
 			reference_symbol(SymbolType::FUNCTION, "main", peek(), true);

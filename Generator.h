@@ -64,7 +64,7 @@ namespace hz
 		// read a defined local variable into a target register
 		void read_local(register_t, const std::string&);
 		// update a local variable with the contents of another register (re-assignment)
-		void update_local(const std::string&, register_t);
+		void write_local(const std::string&, register_t);
 
 
 	public:

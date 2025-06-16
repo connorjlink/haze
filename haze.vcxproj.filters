@@ -87,6 +87,9 @@
     <Filter Include="Source Files\Variable">
       <UniqueIdentifier>{8b8ddd9f-aa15-422d-8dfb-abed14db704f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{d24aa0dc-5920-4f58-9445-87bc58c6b4ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -437,9 +440,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bimap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="AdjustExpression.h">
@@ -813,6 +813,9 @@
     </ClInclude>
     <ClInclude Include="ExtendedInteger.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bimap.h">
+      <Filter>Source Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,7 @@ namespace hz
 	class StringExpression;
 	class FunctionCallExpression;
 	class AdjustExpression;
+	class Type;
 
 	enum class SymbolType;
 
@@ -41,7 +42,7 @@ namespace hz
 
 	protected:
 		void add_symbol(SymbolType, const std::string&, const Token&);
-		void add_function(const std::string&, const Token&);
+		void add_function(const std::string&, const Token&, Type*);
 		void add_argument(const std::string&, const Token&);
 		void add_variable(const std::string&, const Token&);
 		void add_define(const std::string&, const Token&);

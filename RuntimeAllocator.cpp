@@ -114,7 +114,7 @@ namespace hz
 		_generator->stack_read(destination, offset);
 	}
 
-	void RuntimeAllocator::update_local(const std::string& name, register_t source)
+	void RuntimeAllocator::write_local(const std::string& name, register_t source)
 	{
 		const auto& current_function = _generator->current_function();
 

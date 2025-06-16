@@ -98,6 +98,8 @@ namespace hz
 				}
 			} break;
 		}
+
+		return nullptr;
 	}
 
 	bool check_type(Expression* expression, Type* reference)

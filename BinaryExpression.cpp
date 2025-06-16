@@ -265,7 +265,7 @@ namespace hz
 
 			right->generate(received_allocation);
 			// figure out how to assign the lhs
-			_generator->update_local(identifier_expression->name, received_allocation->read());
+			_generator->write_local(identifier_expression->name, received_allocation->read());
 		}
 
 		else

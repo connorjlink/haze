@@ -27,9 +27,7 @@ namespace hz
 
 	public:
 		void read_local(register_t, const std::string&);
-
-	public:
-		void update_local(const std::string&, register_t);
+		void write_local(const std::string&, register_t);
 
 	public:
 		RuntimeAllocator()

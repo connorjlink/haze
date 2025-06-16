@@ -115,7 +115,7 @@ namespace hz
 #pragma message("TODO: figure out if there was not a return statement")
 		if constexpr (false)
 		{
-			_error_reporter->post_warning("implicit function return generated", body->_token);
+			_error_reporter->post_warning(std::format("implicit return generated for function `{}`", name), body->_token);
 			
 			Expression* return_value = nullptr;
 
