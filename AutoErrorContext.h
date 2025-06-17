@@ -9,7 +9,7 @@ namespace hz
 	class AutoErrorContext
 	{
 	private:
-		std::size_t _inital_context_count;
+		std::size_t _initial_context_count;
 		TestParameters _frame;
 
 	private:
