@@ -30,6 +30,7 @@
     <ClCompile Include="AdjustExpression.cpp" />
     <ClCompile Include="Allocation.cpp" />
     <ClCompile Include="Allocator.cpp" />
+    <ClCompile Include="AutoJob.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="ExitProgramException.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="RandomUtility.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
+    <ClInclude Include="AutoJob.h" />
     <ClInclude Include="BinaryCommandType.h" />
     <ClInclude Include="BranchCommandType.h" />
     <ClInclude Include="CommonErrors.h" />

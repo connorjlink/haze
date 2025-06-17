@@ -145,4 +145,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_ALLOCATION_H
+#endif

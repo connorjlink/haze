@@ -10,6 +10,12 @@
 
 namespace hz
 {
+	struct ErrorFrame
+	{
+		std::string filepath;
+		ErrorContext* context;
+	};
+
 	class ErrorReporter
 	{
 	private:
@@ -34,17 +40,17 @@ namespace hz
 		}
 
 	private:
-		std::unordered_map<std::string, std::list<ErrorContext>> _open_contexts;
-		std::vector<std::tuple<ErrorContext*, std::string>> _closed_contexts;
+		std::unordered_map<std::string, std::list<ErrorContext>> _open_frames;
+		std::vector<ErrorFrame> _closed_frames;
 
 	private:
-		std::stack<ErrorContext*> _active_contexts;
-		std::stack<std::string> _active_files;
+		std::stack<ErrorFrame> _active_frames;
 
 	public:
 		void close_all_contexts();
 
 	public:
+		std::size_t get_context_count();
 		TestParameters open_context(const std::string&, const std::string&);
 		void close_context();
 
@@ -70,11 +76,10 @@ namespace hz
 		{
 			_error_count = 0;
 
-			_open_contexts = {};
-			_closed_contexts = {};
+			_open_frames = {};
+			_closed_frames = {};
 
-			_active_contexts = {};
-			_active_files = {};
+			_active_frames = {};
 		}
 
 	};

@@ -8,15 +8,15 @@
 
 namespace hz
 {
-    class InstructionValidator : public Validator
-    {
-    private:
-        static bool validate_constructor(TestParameters);
-        static bool validate_bytes(TestParameters);
+	class InstructionValidator : public Validator
+	{
+	private:
+		static bool validate_constructor(TestParameters);
+		static bool validate_bytes(TestParameters);
 
-    public:
-        InstructionValidator();
-    };
+	public:
+		InstructionValidator();
+	};
 }
 
-#endif //HAZE_INSTRUCTIONVALIDATOR_H
+#endif

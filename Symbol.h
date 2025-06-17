@@ -140,4 +140,4 @@ namespace hz
 	};
 }
 
-#endif //HAZE_SYMBOL_H
+#endif

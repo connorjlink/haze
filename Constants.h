@@ -29,4 +29,4 @@ namespace hz
 	}
 }
 
-#endif //HAZE_CONSTANTS_H
+#endif

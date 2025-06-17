@@ -682,7 +682,7 @@ namespace hz
 		// which is done by `ret imm16` instead of manually `sub`-bing here
 		//PUT(X86Builder::add_ri(ESP, 0x1000));
 
-		PUT(X86Builder::call_relative(target_offset));
+		PUT(X86Builder::call_relative(target_offset.value()));
 
 		return out;
 	}
@@ -724,7 +724,7 @@ namespace hz
 			PUT(X86Builder::ret(bytes));
 		}*/
 
-		PUT(X86Builder::jmp_relative(target_offset));
+		PUT(X86Builder::jmp_relative(target_offset.value()));
 
 		return out;
 	}
@@ -776,7 +776,7 @@ namespace hz
 			PUT(X86Builder::ret(bytes));
 		}*/
 
-		PUT(X86Builder::jmp_relative(target_offset));
+		PUT(X86Builder::jmp_relative(target_offset.value()));
 
 		return out;
 	}
@@ -795,7 +795,7 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
-		PUT(X86Builder::jne_relative(target_offset));
+		PUT(X86Builder::jne_relative(target_offset.value()));
 
 		return out;
 	}
@@ -814,7 +814,7 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
-		PUT(X86Builder::je_relative(target_offset));
+		PUT(X86Builder::je_relative(target_offset.value()));
 
 		return out;
 	}
@@ -831,7 +831,7 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::jmp_relative(target_offset));
+		PUT(X86Builder::jmp_relative(target_offset.value()));
 
 		return out;
 	}

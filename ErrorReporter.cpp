@@ -10,40 +10,43 @@ namespace hz
 {
 	void ErrorReporter::close_all_contexts()
 	{
-		while (_active_contexts.size() > 0)
+		while (_active_frames.size() > 0)
 		{
 			close_context();
 		}
 	}
 
+	std::size_t ErrorReporter::get_context_count(void)
+	{
+		return _active_frames.size();
+	}
+
 	TestParameters ErrorReporter::open_context(const std::string& file, const std::string& task)
 	{
-		auto& existing_contexts = _open_contexts[file];
+		auto& existing_contexts = _open_frames[file];
 		auto* new_context = &existing_contexts.emplace_back(ErrorContext{ task });
 
-		_active_contexts.emplace(new_context);
-		_active_files.emplace(file);
+		const ErrorFrame frame{ file, new_context };
+		_active_frames.emplace(frame);
 
 		return { new_context, file };
 	}
 
 	void ErrorReporter::close_context()
 	{
-		_closed_contexts.emplace_back(std::tuple{ _active_contexts.top(), _active_files.top() });
-
-		_active_contexts.pop();
-		_active_files.pop();
+		_closed_frames.emplace_back(_active_frames.top());
+		_active_frames.pop();
 	}
 
 	std::string ErrorReporter::generate_report()
 	{
 		std::string report{};
 
-		for (auto& [context, filepath]: _closed_contexts)
+		for (auto& frame : _closed_frames)
 		{
-			if (context->error_count() > 0)
+			if (frame.context->error_count() > 0)
 			{
-				report += std::format("in {}\n{}", filepath, context->format());
+				report += std::format("in {}\n{}", frame.filepath, frame.context->format());
 			}
 		}
 
@@ -53,7 +56,8 @@ namespace hz
 
 	void ErrorReporter::post_information(const std::string& message, const Token& token)
 	{
-		post_information(_active_contexts.top(), _active_files.top(), message, token);
+		const auto& frame = _active_frames.top();
+		post_information(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_information(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
@@ -70,7 +74,8 @@ namespace hz
 
 	void ErrorReporter::post_warning(const std::string& message, const Token& token)
 	{
-		post_warning(_active_contexts.top(), _active_files.top(), message, token);
+		const auto& frame = _active_frames.top();
+		post_warning(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_warning(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
@@ -87,7 +92,8 @@ namespace hz
 
 	void ErrorReporter::post_error(const std::string& message, const Token& token)
 	{
-		post_error(_active_contexts.top(), _active_files.top(), message, token);
+		const auto& frame = _active_frames.top();
+		post_error(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_error(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
@@ -107,7 +113,8 @@ namespace hz
 
 	void ErrorReporter::post_uncorrectable(const std::string& message, const Token& token)
 	{
-		post_uncorrectable(_active_contexts.top(), _active_files.top(), message, token);
+		const auto& frame = _active_frames.top();
+		post_uncorrectable(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)

@@ -112,7 +112,7 @@ namespace hz
 				{
 					const auto copy_command = static_cast<CopyCommand*>(command);
 
-					// remove any copy commands wherefor in the source and destination match
+					// remove any copy commands wherefor the source and destination match
 					if (copy_command->_destination == copy_command->_source)
 					{
 						copy_command->marked_for_deletion = true;
@@ -125,7 +125,6 @@ namespace hz
 				} break;
 			}
 		}
-
 
 		// gather all undeleted instructions
 		for (auto& command : _ir)

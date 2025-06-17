@@ -9,19 +9,19 @@
 
 namespace hz
 {
-    class Validator
-    {
-    private:
-        std::vector<Test> _tests;
-        static inline std::size_t _num_tests = 0;
+	class Validator
+	{
+	private:
+		std::vector<Test> _tests;
+		static inline std::size_t _num_tests = 0;
 
-    protected:
-        std::size_t test_count() const;
-        void add_test(const Test&);
+	protected:
+		std::size_t test_count() const;
+		void add_test(const Test&);
 
-    public:
-        void run_tests() const;
-    };
+	public:
+		void run_tests() const;
+	};
 }
 
-#endif //HAZE_VALIDATOR_H
+#endif

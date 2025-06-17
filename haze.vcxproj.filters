@@ -389,6 +389,9 @@
     <ClCompile Include="ExtendedInteger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AutoJob.cpp">
+      <Filter>Source Files\Job</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -816,6 +819,9 @@
     </ClInclude>
     <ClInclude Include="Bimap.h">
       <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoJob.h">
+      <Filter>Source Files\Job</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
