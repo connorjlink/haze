@@ -37,33 +37,6 @@ namespace hz
 	protected:
 		const std::string& _filepath;
 
-	private:
-		std::unordered_map<std::string, Symbol*> symbol_table;
-
-	protected:
-		void add_symbol(SymbolType, const std::string&, const Token&);
-		void add_function(const std::string&, const Token&, Type*);
-		void add_argument(const std::string&, const Token&);
-		void add_variable(const std::string&, const Token&);
-		void add_define(const std::string&, const Token&);
-		void add_label(const std::string&, const Token&);
-		void add_struct(const std::string&, const Token&);
-
-	public:
-		SymbolType query_symbol_type(const std::string&, const Token&);
-
-	public:
-		Symbol* reference_symbol(SymbolType, const std::string&, const Token&, bool = false);
-		FunctionSymbol* reference_function(const std::string&, const Token&, bool = false);
-		ArgumentSymbol* reference_argument(const std::string&, const Token&, bool = false);
-		VariableSymbol* reference_variable(const std::string&, const Token&, bool = false);
-		DefineSymbol* reference_define(const std::string&, const Token&, bool = false);
-		LabelSymbol* reference_label(const std::string&, const Token&, bool = false);
-		StructSymbol* reference_struct(const std::string&, const Token&, bool = false);
-
-	public:
-		bool has_symbol(const std::string&);
-
 	protected:
 		Token& lookbehind();
 		Token& peek();

@@ -101,13 +101,12 @@ int main(int argc, char** argv)
 
 			_toolchain->init(filepath);
 		}
-		
 		catch (ExitProgramException e)
 		{
 			_error_reporter->post_information(e.what(), NULL_TOKEN);
+			// graceful shutdown for this reason
 			_toolchain->shut_down(false);
 		}
-
 		catch (std::exception e)
 		{
 			_error_reporter->post_uncorrectable(e.what(), NULL_TOKEN);

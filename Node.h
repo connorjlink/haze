@@ -9,33 +9,34 @@
 
 namespace hz
 {
-    // Required to avoid dependency between Instruction and Allocation
-    class Allocation;
+	// Required to avoid dependency between Instruction and Allocation
+	class Allocation;
 
-    // Required to avoid dependency between Node and Context
-    class Context;
+	// Required to avoid dependency between Node and Context
+	class Context;
 
-    class Node
-    {
-    public:
-        Token _token;
+	class Node
+	{
+	public:
+		Token _token;
 
-    public:
-        Node(const Token& token)
-            : _token{ token }
-        {
-        }
+	public:
+		Node(const Token& token)
+			: _token{ token }
+		{
+		}
+		virtual ~Node() = default;
 
-    public:
-        virtual NodeType ntype() const = 0;
-        virtual Node* copy() const = 0;
-        virtual void generate(Allocation* = nullptr) = 0;
-        virtual Node* optimize() = 0;
+	public:
+		virtual NodeType ntype() const = 0;
+		virtual Node* copy() const = 0;
+		virtual void generate(Allocation* = nullptr) = 0;
+		virtual Node* optimize() = 0;
 
-        // use this to store execution information in the interpreter
-        // this could be extended later to do compile time stuff in the compiler
-        virtual Node* evaluate(Context*) const = 0;
-    };
+		// use this to store execution information in the interpreter
+		// this could be extended later to do compile time stuff in the compiler
+		virtual Node* evaluate(Context*) const = 0;
+	};
 }
 
 #endif

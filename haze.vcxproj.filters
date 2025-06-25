@@ -305,9 +305,6 @@
     <ClCompile Include="Scope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExecutionContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IntermediateCommand.cpp">
       <Filter>Source Files\Intermediate</Filter>
     </ClCompile>
@@ -394,6 +391,12 @@
     </ClCompile>
     <ClCompile Include="AutoErrorContext.cpp">
       <Filter>Source Files\Error</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolDatabase.cpp">
+      <Filter>Source Files\Symbol</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolExporter.cpp">
+      <Filter>Source Files\Symbol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -682,9 +685,6 @@
     <ClInclude Include="Scope.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExecutionContext.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="IntermediateCommand.h">
       <Filter>Source Files\Intermediate</Filter>
     </ClInclude>
@@ -828,6 +828,12 @@
     </ClInclude>
     <ClInclude Include="AutoErrorContext.h">
       <Filter>Source Files\Error</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolDatabase.h">
+      <Filter>Source Files\Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolExporter.h">
+      <Filter>Source Files\Symbol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

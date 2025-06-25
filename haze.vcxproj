@@ -40,6 +40,8 @@
     <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
+    <ClCompile Include="SymbolDatabase.cpp" />
+    <ClCompile Include="SymbolExporter.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeCheck.cpp" />
     <ClCompile Include="Variable.cpp" />
@@ -67,7 +69,6 @@
     <ClCompile Include="ErrorContext.cpp" />
     <ClCompile Include="ErrorReporter.cpp" />
     <ClCompile Include="Evaluator.cpp" />
-    <ClCompile Include="ExecutionContext.cpp" />
     <ClCompile Include="ExitStatement.cpp" />
     <ClCompile Include="ExpressionStatement.cpp" />
     <ClCompile Include="ExpressionUtility.cpp" />
@@ -157,13 +158,13 @@
     <ClInclude Include="BinaryCommandType.h" />
     <ClInclude Include="BranchCommandType.h" />
     <ClInclude Include="CommonErrors.h" />
-    <ClInclude Include="ExecutionContext.h" />
     <ClInclude Include="ExitProgramException.h" />
     <ClInclude Include="ExitStatement.h" />
     <ClInclude Include="ExpressionUtility.h" />
     <ClInclude Include="ExtendedInteger.h" />
     <ClInclude Include="FunctionArgumentExpression.h" />
     <ClInclude Include="HazeBuilder.h" />
+    <ClInclude Include="SymbolExporter.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />
     <ClInclude Include="IntegerLiteral.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="StructDeclarationStatement.h" />
     <ClInclude Include="StructMember.h" />
     <ClInclude Include="MemberDeclarationExpression.h" />
+    <ClInclude Include="SymbolDatabase.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Type.h" />

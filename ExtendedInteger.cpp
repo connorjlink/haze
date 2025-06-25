@@ -45,18 +45,23 @@ namespace hz
 
 	ExtendedInteger& ExtendedInteger::operator-=(const ExtendedInteger& rhs)
 	{
-		if (sign != rhs.sign) {
+		if (sign != rhs.sign) 
+		{
 			magnitude += rhs.magnitude;
 		}
-		else {
-			if (magnitude >= rhs.magnitude) {
+		else 
+		{
+			if (magnitude >= rhs.magnitude) 
+			{
 				magnitude -= rhs.magnitude;
 			}
-			else {
+			else 
+			{
 				magnitude = rhs.magnitude - magnitude;
 				sign = !sign;
 			}
 		}
+
 		return *this;
 	}
 

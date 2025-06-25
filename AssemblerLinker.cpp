@@ -6,6 +6,7 @@ import std;
 #include "Parser.h"
 #include "Constants.h"
 #include "Symbol.h"
+#include "SymbolDatabase.h"
 
 // Haze AssemblerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -61,7 +62,7 @@ namespace hz
 					auto label_command = AS_LABEL_COMMAND(command);
 
 					label_command->offset = address_tracker; // TODO: this assignment might be unnecessary
-					AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, label_command->identifier, NULL_TOKEN))->address = address_tracker;
+					_database->reference_label(label_command->identifier, NULL_TOKEN)->address = address_tracker;
 				} break;
 			}
 		}
@@ -81,7 +82,7 @@ namespace hz
 						if (instruction_command->opcode == Opcode::CALL ||
 							instruction_command->opcode == Opcode::BRNZ)
 						{
-							auto label_symbol = AS_LABEL_SYMBOL(assembler_parser->reference_symbol(SymbolType::LABEL, instruction_command->branch_target, NULL_TOKEN));
+							auto label_symbol = _database->reference_label(instruction_command->branch_target, NULL_TOKEN);
 
 							//const auto branch_target = base_pointer + label_symbol->address;
 							const auto branch_target = label_symbol->address;
@@ -104,7 +105,6 @@ namespace hz
 				_error_reporter->post_warning("possible data loss for code imaged prior to program entrypoint", NULL_TOKEN);
 			}
 		}
-
 
 		return std::vector(executable.begin() + HALF_DWORD_MAX, executable.end());
 	}

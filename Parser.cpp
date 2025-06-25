@@ -1,6 +1,7 @@
 import std;
 
 #include "Parser.h"
+#include "SymbolDatabase.h"
 #include "Token.h"
 #include "Allocator.h"
 #include "CompilerParser.h"
@@ -50,157 +51,7 @@ namespace hz
 	}
 
 
-	void Parser::add_symbol(SymbolType type, const std::string& name, const Token& location)
-	{
-		// does the symbol already exist in the registry?
-		if (symbol_table.contains(name))
-		{
-			_error_reporter->post_error(std::format("symbol `{}` was already defined as a {}",
-				name, _symbol_type_map.at(symbol_table.at(name)->ytype())), location);
-			return;
-		}
-
-		using enum SymbolType;
-		switch (type)
-		{
-			case FUNCTION: symbol_table[name] = new FunctionSymbol{ name, nullptr }; break;
-			case ARGUMENT: symbol_table[name] = new ArgumentSymbol{ name, nullptr }; break;
-			case VARIABLE: symbol_table[name] = new VariableSymbol{ name, nullptr, nullptr }; break;
-			case DEFINE: symbol_table[name] = new DefineSymbol{ name, nullptr, ExtendedInteger{} }; break;
-			case LABEL: symbol_table[name] = new LabelSymbol{ name, 0 }; break;
-
-			default:
-			{
-				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
-			} break;
-		}
-	}
-
-	void Parser::add_function(const std::string& name, const Token& location, Type* return_type)
-	{
-		add_symbol(SymbolType::FUNCTION, name, location);
-	}
-
-	void Parser::add_argument(const std::string& name, const Token& location)
-	{
-		add_symbol(SymbolType::ARGUMENT, name, location);
-	}
-
-	void Parser::add_variable(const std::string& name, const Token& location)
-	{
-		add_symbol(SymbolType::VARIABLE, name, location);
-	}
-
-	void Parser::add_define(const std::string& name, const Token& location)
-	{
-		add_symbol(SymbolType::DEFINE, name, location);
-	}
-
-	void Parser::add_label(const std::string& name, const Token& location)
-	{
-		add_symbol(SymbolType::LABEL, name, location);
-	}
-
-	void Parser::add_struct(const std::string& name, const Token& location)
-	{
-		add_symbol(SymbolType::STRUCT, name, location);
-	}
-
-
-	SymbolType Parser::query_symbol_type(const std::string& name, const Token& location)
-	{
-		if (!symbol_table.contains(name))
-		{
-			_error_reporter->post_error(std::format("symbol `{}` is undefined", name), location);
-			return SymbolType::VARIABLE;
-		}
-
-		return symbol_table.at(name)->ytype();
-	}
-
-	Symbol* Parser::reference_symbol(SymbolType type, const std::string& name, const Token& location, bool mark_visited)
-	{
-		if (!_symbol_type_map.contains(type))
-		{
-			_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
-			return nullptr;
-		}
-
-		if (!symbol_table.contains(name))
-		{
-			_error_reporter->post_error(std::format("symbol `{}` is undefined", name), location);
-			return nullptr;
-		}
-
-		auto symbol = symbol_table.at(name);
-
-		if (symbol->ytype() != type)
-		{
-			_error_reporter->post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
-				name, _symbol_type_map.at(symbol->ytype()), _symbol_type_map.at(type)), location);
-			return nullptr;
-		}
-
-		if (mark_visited)
-		{
-			symbol->was_referenced = true;
-		}
-
-		return symbol;
-	}
-
-	FunctionSymbol* Parser::reference_function(const std::string& name, const Token& location, bool mark_visited)
-	{
-		auto symbol = reference_symbol(SymbolType::FUNCTION, name, location, mark_visited);
-		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
-
-		return function_symbol;
-	}
-
-	ArgumentSymbol* Parser::reference_argument(const std::string& name, const Token& location, bool mark_visited)
-	{
-		auto symbol = reference_symbol(SymbolType::ARGUMENT, name, location, mark_visited);
-		auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
-
-		return argument_symbol;
-	}
-
-	VariableSymbol* Parser::reference_variable(const std::string& name, const Token& location, bool mark_visited)
-	{
-		auto symbol = reference_symbol(SymbolType::VARIABLE, name, location, mark_visited);
-		auto variable_symbol = AS_VARIABLE_SYMBOL(symbol);
-
-		return variable_symbol;
-	}
-
-	DefineSymbol* Parser::reference_define(const std::string& name, const Token& location, bool mark_visited)
-	{
-		auto symbol = reference_symbol(SymbolType::DEFINE, name, location, mark_visited);
-		auto define_symbol = AS_DEFINE_SYMBOL(symbol);
-
-		return define_symbol;
-	}
-
-	LabelSymbol* Parser::reference_label(const std::string& name, const Token& location, bool mark_visited)
-	{
-		auto symbol = reference_symbol(SymbolType::LABEL, name, location, mark_visited);
-		auto label_symbol = AS_LABEL_SYMBOL(symbol);
-
-		return label_symbol;
-	}
-
-	StructSymbol* Parser::reference_struct(const std::string& name, const Token& location, bool mark_visited)
-	{
-		auto symbol = reference_symbol(SymbolType::STRUCT, name, location, mark_visited);
-		auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
-
-		return struct_symbol;
-	}
-
-	bool Parser::has_symbol(const std::string& name)
-	{
-		return symbol_table.contains(name);
-	}
+	
 
 	Token& Parser::lookbehind()
 	{
@@ -300,9 +151,9 @@ namespace hz
 		const auto& identifier = identifier_expression->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
-		add_define(identifier, peek());
+		_database->add_define(identifier, peek());
 		
-		auto define_symbol = reference_define(identifier, peek());
+		auto define_symbol = _database->reference_define(identifier, peek());
 		define_symbol->type = type;
 		define_symbol->value = integer_literal_raw(value);
 
@@ -371,22 +222,13 @@ namespace hz
 		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		consume(TokenType::RPAREN);
 
-		if (!symbol_table.contains(name_token.value))
+		if (!_database->has_symbol(name_token.value))
 		{
 			_error_reporter->post_error(std::format("function `{}` is undefined", name_token.value), name_token);
 			return nullptr;
 		}
 
-		auto symbol = symbol_table.at(name_token.value);
-
-		if (symbol->ytype() != SymbolType::FUNCTION)
-		{
-			_error_reporter->post_error(std::format("symbol `{}` is a {} but was referenced as a function", 
-				name_token.value, _symbol_type_map.at(symbol->ytype())), name_token);
-			return nullptr;
-		}
-
-		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+		auto function_symbol = _database->reference_function(name_token.value, name_token);
 
 		if (function_symbol->arity() != arguments.size())
 		{
