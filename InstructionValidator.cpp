@@ -16,12 +16,12 @@ namespace hz
 		auto tests = test_count();
 	}
 
-	bool InstructionValidator::validate_constructor(TestParameters parameters)
+	bool InstructionValidator::validate_constructor(ErrorFrame parameters)
 	{
 		return false;
 	}
 
-	bool InstructionValidator::validate_bytes(TestParameters parameters)
+	bool InstructionValidator::validate_bytes(ErrorFrame parameters)
 	{
 		return false;
 	}

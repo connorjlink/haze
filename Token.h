@@ -195,6 +195,9 @@ namespace hz
 		TokenType type;
 		std::string value;
 		std::int16_t line, column;
+		std::string filepath;
+#pragma message("TODO: implement token filepath tracking!")
+#pragma message("TODO: program reentrancy--packetize toolchain context instead of global variables!")
 	};
 
 	// NOTE: intentionally not marked const to avoid errors about dropping qualifiers

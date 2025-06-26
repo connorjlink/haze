@@ -10,6 +10,7 @@ import std;
 #include "SymbolType.h"
 #include "ExtendedInteger.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -104,7 +105,7 @@ namespace hz
 
 		const auto identifier = identifier_expression->name;
 
-		add_label(identifier, lookbehind());
+		_database->add_label(identifier, lookbehind());
 		// NOTE: we don't yet know the address since we haven't linked to resolve it yet
 		//AS_LABEL_SYMBOL(reference_symbol(Symbol::Type::LABEL, identifier))->address = 
 

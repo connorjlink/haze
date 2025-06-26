@@ -1,5 +1,6 @@
 import std;
 
+#include "ErrorContext.h"
 #include "ErrorReporter.h"
 #include "Toolchain.h"
 
@@ -21,12 +22,12 @@ namespace hz
 		return _active_frames.size();
 	}
 
-	TestParameters ErrorReporter::open_context(const std::string& file, const std::string& task)
+	ErrorFrame ErrorReporter::open_context(const std::string& file, const std::string& task)
 	{
 		auto& existing_contexts = _open_frames[file];
 		auto* new_context = &existing_contexts.emplace_back(ErrorContext{ task });
 
-		const ErrorFrame frame{ file, new_context };
+		const ErrorFrame frame{ new_context, file };
 		_active_frames.emplace(frame);
 
 		return { new_context, file };

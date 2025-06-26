@@ -12,7 +12,7 @@
 // `e` is the variable against which to compare
 #define VALIDATE_IMPL(x, v, e, a, b, p) if (e != v) \
 { \
-	_error_reporter->post_error(parameters.context, parameters.file, \
+	_error_reporter->post_error(parameters.context, parameters.filepath, \
 		std::format(x " != {} (actually " p, a, b), NULL_TOKEN); \
 	had_error = true; \
 }
@@ -81,7 +81,7 @@ namespace hz
 	}
 
 
-	bool X86BuilderValidator::validate_modrm(TestParameters parameters)
+	bool X86BuilderValidator::validate_modrm(ErrorFrame parameters)
 	{
 		auto had_error = false;
 
@@ -116,7 +116,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool X86BuilderValidator::validate_modrm_rr(TestParameters parameters)
+	bool X86BuilderValidator::validate_modrm_rr(ErrorFrame parameters)
 	{
 		auto had_error = false;
 
@@ -150,7 +150,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool X86BuilderValidator::validate_sib(TestParameters parameters)
+	bool X86BuilderValidator::validate_sib(ErrorFrame parameters)
 	{
 		auto had_error = false;
 
@@ -181,7 +181,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool X86BuilderValidator::validate_push_r(TestParameters parameters)
+	bool X86BuilderValidator::validate_push_r(ErrorFrame parameters)
 	{
 		auto had_error = false;
 
@@ -218,7 +218,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool X86BuilderValidator::validate_push_i(TestParameters parameters)
+	bool X86BuilderValidator::validate_push_i(ErrorFrame parameters)
 	{
 		auto had_error = false;
 
@@ -255,7 +255,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool X86BuilderValidator::validate_push_m(TestParameters parameters)
+	bool X86BuilderValidator::validate_push_m(ErrorFrame parameters)
 	{
 		auto had_error = false;
 

@@ -10,12 +10,6 @@
 
 namespace hz
 {
-	struct ErrorFrame
-	{
-		std::string filepath;
-		ErrorContext* context;
-	};
-
 	class ErrorReporter
 	{
 	private:
@@ -51,7 +45,7 @@ namespace hz
 
 	public:
 		std::size_t get_context_count();
-		TestParameters open_context(const std::string&, const std::string&);
+		ErrorFrame open_context(const std::string&, const std::string&);
 		void close_context();
 
 	public:

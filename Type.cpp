@@ -4,6 +4,7 @@ import std;
 #include "Symbol.h"
 #include "Parser.h"
 #include "CommonErrors.h"
+#include "SymbolDatabase.h"
 
 // Haze Type.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -51,7 +52,7 @@ namespace hz
 
 	std::uint16_t StructType::size() const
 	{
-		auto symbol = _parser->reference_symbol(SymbolType::STRUCT, tag, NULL_TOKEN);
+		auto symbol = _database->reference_symbol(SymbolType::STRUCT, tag, NULL_TOKEN);
 		auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
 
 		const auto member_count = struct_symbol->members.size();

@@ -3,6 +3,7 @@ import std;
 #include "AutoErrorContext.h"
 #include "ErrorReporter.h"
 #include "Token.h"
+#include "ErrorContext.h"
 
 // Haze AutoErrorContext.cpp
 // (c) Connor J. Link. All Rights Reserved.

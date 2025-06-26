@@ -8,47 +8,27 @@ namespace hz
 {
 	class ErrorContext;
 
-	struct TestParameters
+	struct ErrorFrame
 	{
 		ErrorContext* context;
-		std::string file;
+		std::string filepath;
 	};
 
 	class Test
 	{
 	private:
 		std::string _name;
-		std::function<bool(TestParameters)> _test;
+		std::function<bool(ErrorFrame)> _test;
 
 	private:
-		TestParameters _test_parameters;
+		ErrorFrame _frame;
 
 	public:
-		void attach(const TestParameters& parameters)
-		{
-			_test_parameters =
-			{
-				parameters.context,
-				parameters.file,
-			};
-		}
-
-		bool run_test() const
-		{
-			return _test(_test_parameters);
-		}
+		void attach(const ErrorFrame&);
+		bool run_test() const;
 
 	public:
-		Test(const std::string& name, std::function<bool(TestParameters)> test)
-			: _name{ name }, _test{ test }
-		{
-			// explicit default to nullptr
-			_test_parameters =
-			{
-				nullptr,
-				"",
-			};
-		}
+		Test(const std::string&, std::function<bool(ErrorFrame)>);
 	};
 }
 

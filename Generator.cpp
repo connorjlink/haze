@@ -13,6 +13,7 @@ import std;
 #include "RuntimeAllocator.h"
 #include "X86Builder.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
 
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -51,7 +52,7 @@ namespace hz
 
 	void Generator::begin_function(const std::string& name)
 	{
-		_linkables.emplace_back(Linkable{ _parser->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 });
+		_linkables.emplace_back(Linkable{ _database->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 });
 	}
 
 	void Generator::label_command(const std::string& identifier)

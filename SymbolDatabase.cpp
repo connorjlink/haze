@@ -1,6 +1,7 @@
 import std;
 
 #include "SymbolDatabase.h"
+#include "SymbolExporter.h"
 #include "Symbol.h"
 #include "ErrorReporter.h"
 
@@ -24,19 +25,26 @@ namespace hz
 			return;
 		}
 
+		Symbol* new_symbol = nullptr;
+
 		using enum SymbolType;
 		switch (type)
 		{
-			case FUNCTION: _table[name] = new FunctionSymbol{ name, nullptr }; break;
-			case ARGUMENT: _table[name] = new ArgumentSymbol{ name, nullptr }; break;
-			case VARIABLE: _table[name] = new VariableSymbol{ name, nullptr, nullptr }; break;
-			case DEFINE: _table[name] = new DefineSymbol{ name, nullptr, ExtendedInteger{} }; break;
-			case LABEL: _table[name] = new LabelSymbol{ name, 0 }; break;
+			case FUNCTION: new_symbol = _table[name] = new FunctionSymbol{ name, nullptr }; break;
+			case ARGUMENT: new_symbol = _table[name] = new ArgumentSymbol{ name, nullptr }; break;
+			case VARIABLE: new_symbol = _table[name] = new VariableSymbol{ name, nullptr, nullptr }; break;
+			case DEFINE: new_symbol = _table[name] = new DefineSymbol{ name, nullptr, ExtendedInteger{} }; break;
+			case LABEL: new_symbol = _table[name] = new LabelSymbol{ name, 0 }; break;
 
 			default:
 			{
 				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
 			} break;
+		}
+
+		if (new_symbol != nullptr)
+		{
+			_exporter->enqueue(new_symbol);
 		}
 	}
 
@@ -82,7 +90,7 @@ namespace hz
 		return _table.at(name)->ytype();
 	}
 
-	Symbol* SymbolDatabase::internal_reference_symbol(bool log_errors, SymbolType type, const std::string& name, const Token& location, bool mark_visited = false)
+	Symbol* SymbolDatabase::internal_reference_symbol(bool log_errors, SymbolType type, const std::string& name, const Token& location, bool mark_visited)
 	{
 		if (!_symbol_type_map.contains(type))
 		{

@@ -1,23 +1,27 @@
 #ifndef HAZE_AUTOERRORCONTEXT_H
 #define HAZE_AUTOERRORCONTEXT_H
 
+#include "ErrorReporter.h"
+
 // Haze AutoErrorContext.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	struct ErrorFrame;
+
 	class AutoErrorContext
 	{
 	private:
 		std::size_t _initial_context_count;
-		TestParameters _frame;
+		ErrorFrame _frame;
 
 	private:
 		std::string _file, _task;
 
 	public:
-		AutoErrorContext(const std::string&, const std::string&) noexcept;
-		~AutoErrorContext() noexcept;
+		AutoErrorContext(const std::string&, const std::string&);
+		~AutoErrorContext();
 	};
 }
 

@@ -26,6 +26,8 @@ import std;
 #include "HeapAllocator.h"
 #include "ErrorReporter.h"
 #include "CommonErrors.h"
+#include "SymbolDatabase.h"
+#include "SymbolExporter.h"
 
 // Haze CompilerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -84,10 +86,13 @@ namespace hz
 		const auto type = parse_type();
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
 
-		add_variable(identifier_token.value, lookbehind());
+		_database->add_variable(identifier_token.value, lookbehind());
 
-		auto function_symbol = reference_function(enclosing_function, peek());
+		auto function_symbol = _database->reference_function(enclosing_function, peek());
 		function_symbol->locals_count++;
+
+		// exports the variable identifier symbol only
+		_exporter->enqueue(function_symbol, identifier_token);
 
 		if (peek().type == TokenType::EQUALS)
 		{
@@ -124,7 +129,7 @@ namespace hz
 
 		consume(TokenType::SEMICOLON);
 
-		auto symbol = reference_symbol(SymbolType::FUNCTION, enclosing_function, return_token);
+		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, enclosing_function, return_token);
 
 
 		// NOTE: special case for `main()`:
@@ -322,9 +327,12 @@ namespace hz
 				const auto type = parse_type();
 				const auto identifier = parse_identifier_expression();
 
-				add_argument(identifier->name, lookbehind());
-				auto symbol = reference_argument(identifier->name, peek());
+				_database->add_argument(identifier->name, lookbehind());
+				auto symbol = _database->reference_argument(identifier->name, peek());
 				symbol->type = type;
+
+				// exports the argument identifier symbol only
+				_exporter->enqueue(symbol, identifier->_token);
 
 				arguments.emplace_back(new ArgumentExpression{ type, identifier, identifier->_token });
 			}
@@ -486,7 +494,7 @@ namespace hz
 
 		#pragma message("TODO: implement a more efficient way of modifying the return type than this mess")
 
-		add_function(name_token.value, lookbehind(), return_type);
+		_database->add_function(name_token.value, lookbehind(), return_type);
 
 		consume(TokenType::EQUALS);
 
@@ -496,7 +504,11 @@ namespace hz
 
 		// inform the parser of the function arguments
 		// creates a local copy of them for future reference
-		reference_function(name_token.value, peek())->arguments = arguments;
+		auto function_symbol = _database->reference_function(name_token.value, peek());
+		function_symbol->arguments = arguments;
+
+		// exports the function identifier symbol only
+		_exporter->enqueue(function_symbol, name_token);
 
 		auto body = parse_compound_statement(name_token.value);
 
@@ -522,7 +534,7 @@ namespace hz
 		if (!_function_label_map.contains("main"))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
-			reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
+			_database->reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
 
 			if (_options->_optimization & OptimizationType::AST)
 			{

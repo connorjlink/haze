@@ -1,5 +1,7 @@
 import std;
 
+#include "SymbolDatabase.h"
+#include "SymbolExporter.h"
 #include "Context.h"
 #include "JobManager.h"
 #include "FileManager.h"
@@ -41,6 +43,9 @@ StackAllocator* hz::_stack_allocator;
 
 int main(int argc, char** argv)
 {
+	_database = new SymbolDatabase{};
+	_exporter = new SymbolExporter{ std::cout };
+
 	_heap_allocator = new HeapAllocator{};
 	_stack_allocator = new StackAllocator{};
 	_runtime_allocator = new RuntimeAllocator{};

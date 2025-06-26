@@ -3,6 +3,7 @@ import std;
 #include "ExpressionUtility.h"
 #include "IdentifierExpression.h"
 #include "Parser.h"
+#include "Symbol.h"
 #include "SymbolDatabase.h"
 
 // Haze ExpressionUtility.cpp
@@ -22,7 +23,7 @@ namespace hz
 
 				if (symbol_type == SymbolType::VARIABLE)
 				{
-					auto symbol = _parser->reference_symbol(SymbolType::VARIABLE, identifier_expression->name, NULL_TOKEN);
+					auto symbol = _database->reference_variable(identifier_expression->name, NULL_TOKEN);
 					auto variable_symbol = AS_VARIABLE_SYMBOL(symbol);
 
 					// does the referenced variable have a register mapping currently?

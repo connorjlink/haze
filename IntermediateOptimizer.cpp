@@ -3,6 +3,7 @@ import std;
 #include "IntermediateOptimizer.h"
 #include "Symbol.h"
 #include "Parser.h"
+#include "SymbolDatabase.h"
 
 // Haze IntermediateOptimizer.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -13,7 +14,7 @@ namespace hz
 	{
 		std::vector<IntermediateCommand*> out{};
 
-		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
+		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		// NOTE: old method

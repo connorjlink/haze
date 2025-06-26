@@ -17,6 +17,7 @@ import std;
 #include "X86Builder.h"
 #include "CommonErrors.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
 
 // Haze Function.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -24,13 +25,18 @@ import std;
 namespace hz
 {
 	Function::Function(const std::string& name, Type* return_type, std::vector<Expression*>&& arguments, Statement* body, const Token& token)
-		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+		: Node{ token }, Symbol{}, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
 	{
 	}
 
 	NodeType Function::ntype() const
 	{
 		return NodeType::FUNCTION;
+	}
+
+	SymbolType Function::ytype() const
+	{
+		return SymbolType::FUNCTION;
 	}
 
 	Function* Function::copy() const
@@ -50,7 +56,7 @@ namespace hz
 
 		const auto arity = arguments.size();
 
-		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, name, _token);
+		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, name, _token);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		_generator->begin_scope();
@@ -97,7 +103,7 @@ namespace hz
 		{
 			auto compiler_parser = AS_COMPILER_PARSER(_parser);
 
-			const auto end_function_label = compiler_parser->_function_label_map.at(name);
+			const auto& end_function_label = compiler_parser->_function_label_map.at(name);
 			_generator->branch_label(end_function_label);
 
 			_generator->end_scope();

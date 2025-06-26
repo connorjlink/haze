@@ -32,16 +32,19 @@
     <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="AutoErrorContext.cpp" />
     <ClCompile Include="AutoJob.cpp" />
+    <ClCompile Include="AutoJSON.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="ExitProgramException.cpp" />
     <ClCompile Include="ExtendedInteger.cpp" />
     <ClCompile Include="IntegerLiteral.cpp" />
+    <ClCompile Include="JSON.cpp" />
     <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
     <ClCompile Include="SymbolDatabase.cpp" />
     <ClCompile Include="SymbolExporter.cpp" />
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeCheck.cpp" />
     <ClCompile Include="Variable.cpp" />
@@ -155,6 +158,7 @@
     <ClCompile Include="VariableStatement.cpp" />
     <ClInclude Include="AutoErrorContext.h" />
     <ClInclude Include="AutoJob.h" />
+    <ClInclude Include="AutoJSON.h" />
     <ClInclude Include="BinaryCommandType.h" />
     <ClInclude Include="BranchCommandType.h" />
     <ClInclude Include="CommonErrors.h" />
@@ -164,6 +168,7 @@
     <ClInclude Include="ExtendedInteger.h" />
     <ClInclude Include="FunctionArgumentExpression.h" />
     <ClInclude Include="HazeBuilder.h" />
+    <ClInclude Include="JSON.h" />
     <ClInclude Include="SymbolExporter.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />

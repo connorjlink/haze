@@ -12,6 +12,7 @@ import std;
 #include "TypeCheck.h"
 #include "CommonErrors.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
 
 // Haze FunctionCallExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -30,7 +31,7 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, name, _token, true);
+		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, name, _token, true);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		const auto defined_arity = function_symbol->arity();

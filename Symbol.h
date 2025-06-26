@@ -17,6 +17,8 @@ namespace hz
 	{
 	public:
 		std::string name;
+		int confidence = 0;
+#pragma message("TODO: implement TOKEN confidence system")
 
 	public:
 		bool was_referenced;

@@ -13,6 +13,7 @@
 #include "X86Builder.h"
 #include "CommonErrors.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
 
 // Haze ReturnStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -39,7 +40,7 @@ namespace hz
 			// when value==nullptr, expect no return value ONLY from nvr function
 			if (value == nullptr)
 			{
-				if (_parser->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
+				if (_database->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
 				{
 					_error_reporter->post_error("no return value was specified for a non-`void` function", _token);
 					return;

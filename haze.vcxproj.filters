@@ -90,6 +90,9 @@
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{d24aa0dc-5920-4f58-9445-87bc58c6b4ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\JSON">
+      <UniqueIdentifier>{70d93d8e-6fdb-4ee8-bf96-a7e66ca55004}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -397,6 +400,15 @@
     </ClCompile>
     <ClCompile Include="SymbolExporter.cpp">
       <Filter>Source Files\Symbol</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON.cpp">
+      <Filter>Source Files\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Source Files\Validator</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoJSON.cpp">
+      <Filter>Source Files\JSON</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -834,6 +846,12 @@
     </ClInclude>
     <ClInclude Include="SymbolExporter.h">
       <Filter>Source Files\Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON.h">
+      <Filter>Source Files\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoJSON.h">
+      <Filter>Source Files\JSON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

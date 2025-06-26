@@ -349,6 +349,7 @@ namespace hz
 
 		return expression;
 	}
+#error TODO ADD SYMBOL EXPORTING TO PARSER EXPRESSIOS!
 
 	Expression* Parser::parse_expression()
 	{

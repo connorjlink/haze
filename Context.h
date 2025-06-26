@@ -9,12 +9,9 @@
 
 namespace hz
 {	
-	// Required to avoid a dependency between Function and Context
+	// Required
 	class Function;
-
-	// Required to avoid a dependency between Expression and Context
 	class Expression;
-
 
 	class Context
 	{

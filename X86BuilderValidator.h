@@ -8,46 +8,48 @@
 
 namespace hz
 {
+	struct ErrorFrame;
+
 	class X86BuilderValidator : public Validator
 	{
 	private:
-		static bool validate_modrm(TestParameters);
-		static bool validate_modrm_rr(TestParameters);
+		static bool validate_modrm(ErrorFrame);
+		static bool validate_modrm_rr(ErrorFrame);
 
 	private:
-		static bool validate_sib(TestParameters);
+		static bool validate_sib(ErrorFrame);
 
 	private:
-		static bool validate_push_r(TestParameters);
-		static bool validate_push_i(TestParameters);
-		static bool validate_push_m(TestParameters);
+		static bool validate_push_r(ErrorFrame);
+		static bool validate_push_i(ErrorFrame);
+		static bool validate_push_m(ErrorFrame);
 
 	private:
-		static bool validate_pop_r(TestParameters);
+		static bool validate_pop_r(ErrorFrame);
 
 	private:
-		static bool validate_mov_rr(TestParameters);
-		static bool validate_mov_ro(TestParameters);
+		static bool validate_mov_rr(ErrorFrame);
+		static bool validate_mov_ro(ErrorFrame);
 
 	private:
-		static bool validate_add_rr(TestParameters);
-		static bool validate_add_ri(TestParameters);
+		static bool validate_add_rr(ErrorFrame);
+		static bool validate_add_ri(ErrorFrame);
 
 	private:
-		static bool validate_sub_rr(TestParameters);
-		static bool validate_sub_ri(TestParameters);
+		static bool validate_sub_rr(ErrorFrame);
+		static bool validate_sub_ri(ErrorFrame);
 
 	private:
-		static bool validate_or_rr(TestParameters);
-		static bool validate_or_ri(TestParameters);
+		static bool validate_or_rr(ErrorFrame);
+		static bool validate_or_ri(ErrorFrame);
 
 	private:
-		static bool validate_and_rr(TestParameters);
-		static bool validate_and_ri(TestParameters);
+		static bool validate_and_rr(ErrorFrame);
+		static bool validate_and_ri(ErrorFrame);
 
 	private:
-		static bool validate_xor_rr(TestParameters);
-		static bool validate_xor_ri(TestParameters);
+		static bool validate_xor_rr(ErrorFrame);
+		static bool validate_xor_ri(ErrorFrame);
 
 	public:
 		X86BuilderValidator();
