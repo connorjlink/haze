@@ -410,6 +410,9 @@
     <ClCompile Include="AutoJSON.cpp">
       <Filter>Source Files\JSON</Filter>
     </ClCompile>
+    <ClCompile Include="Bimap.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -759,9 +762,6 @@
     </ClInclude>
     <ClInclude Include="CommonErrors.h">
       <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="X86Operand.h">
       <Filter>Source Files\Assembly</Filter>

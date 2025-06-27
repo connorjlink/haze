@@ -25,18 +25,13 @@ import std;
 namespace hz
 {
 	Function::Function(const std::string& name, Type* return_type, std::vector<Expression*>&& arguments, Statement* body, const Token& token)
-		: Node{ token }, Symbol{}, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
 	{
 	}
 
 	NodeType Function::ntype() const
 	{
 		return NodeType::FUNCTION;
-	}
-
-	SymbolType Function::ytype() const
-	{
-		return SymbolType::FUNCTION;
 	}
 
 	Function* Function::copy() const

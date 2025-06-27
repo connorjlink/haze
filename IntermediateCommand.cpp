@@ -8,9 +8,29 @@ import std;
 #include "CompilerParser.h"
 #include "X86Builder.h"
 #include "SymbolDatabase.h"
+#include "ErrorReporter.h"
 
 // Haze IntermediateCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.
+
+namespace
+{
+	using namespace hz;
+
+	constexpr void assert(bool condition, const char* message = nullptr)
+	{
+#ifndef sNDEBUG
+		if (!condition)
+		{
+			const auto real_message = message != nullptr 
+				? message 
+				: "Debug assertion failed";
+
+			_error_reporter->post_uncorrectable(real_message, NULL_TOKEN);
+		}
+#endif
+	}
+}
 
 namespace hz
 {
@@ -683,6 +703,7 @@ namespace hz
 		// which is done by `ret imm16` instead of manually `sub`-bing here
 		//PUT(X86Builder::add_ri(ESP, 0x1000));
 
+		::assert(target_offset.has_value(), "Function call relative jump target offset was not defined");
 		PUT(X86Builder::call_relative(target_offset.value()));
 
 		return out;
@@ -725,6 +746,7 @@ namespace hz
 			PUT(X86Builder::ret(bytes));
 		}*/
 
+		::assert(target_offset.has_value(), "Return statement relative jump target offset was not defined");
 		PUT(X86Builder::jmp_relative(target_offset.value()));
 
 		return out;
@@ -777,6 +799,7 @@ namespace hz
 			PUT(X86Builder::ret(bytes));
 		}*/
 
+		::assert(target_offset.has_value(), "Return statement relative jump target offset was not defined");
 		PUT(X86Builder::jmp_relative(target_offset.value()));
 
 		return out;
@@ -796,6 +819,7 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
+		::assert(target_offset.has_value(), "Ifnz conditional statement relative jump target offset was not defined");
 		PUT(X86Builder::jne_relative(target_offset.value()));
 
 		return out;
@@ -815,6 +839,7 @@ namespace hz
 		byterange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
+		::assert(target_offset.has_value(), "Ifz conditional statement relative jump target offset was not defined");
 		PUT(X86Builder::je_relative(target_offset.value()));
 
 		return out;
@@ -832,6 +857,7 @@ namespace hz
 
 		byterange out{};
 
+		::assert(target_offset.has_value(), "Goto statement relative jump target offset was not defined");
 		PUT(X86Builder::jmp_relative(target_offset.value()));
 
 		return out;

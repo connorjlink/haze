@@ -2,7 +2,6 @@ import std;
 
 #include "ErrorReporter.h"
 #include "X86Linker.h"
-#include "Timer.h"
 
 // Haze X86Linker.cpp
 // (c) Connor J. Link. All Rights Reserved.

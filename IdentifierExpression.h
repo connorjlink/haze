@@ -8,14 +8,25 @@
 
 namespace hz
 {
+	enum class IdentifierType
+	{
+		UNKNOWN, // default
+		GLOBAL_VARIABLE,
+		LOCAL_VARIABLE,
+		FUNCTION,
+		ARGUMENT,
+		MACRO,
+	};
+
 	class IdentifierExpression : public Expression
 	{
 	public:
 		std::string name;
+		IdentifierType itype;
 
 	public:
-		IdentifierExpression(const std::string& name, Token token)
-			: Expression{ token }, name { name }
+		IdentifierExpression(const std::string& name, Token token, IdentifierType itype = IdentifierType::UNKNOWN)
+			: Expression{ token }, name { name }, itype{ itype }
 		{
 		}
 

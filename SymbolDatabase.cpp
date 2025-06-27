@@ -15,14 +15,14 @@ namespace hz
 	// GLOBALS
 
 
-	void SymbolDatabase::add_symbol(SymbolType type, const std::string& name, const Token& location)
+	Symbol* SymbolDatabase::add_symbol(SymbolType type, const std::string& name, const Token& location)
 	{
 		// does the symbol already exist in the registry?
 		if (_table.contains(name))
 		{
 			_error_reporter->post_error(std::format("symbol `{}` was already defined as a {}",
 				name, _symbol_type_map.at(_table.at(name)->ytype())), location);
-			return;
+			return nullptr;
 		}
 
 		Symbol* new_symbol = nullptr;
@@ -44,38 +44,40 @@ namespace hz
 
 		if (new_symbol != nullptr)
 		{
-			_exporter->enqueue(new_symbol);
+			_exporter->enqueue(new_symbol, location);
 		}
+
+		return new_symbol;
 	}
 
-	void SymbolDatabase::add_function(const std::string& name, const Token& location, Type* return_type)
+	FunctionSymbol* SymbolDatabase::add_function(const std::string& name, const Token& location, Type* return_type)
 	{
-		add_symbol(SymbolType::FUNCTION, name, location);
+		return AS_FUNCTION_SYMBOL(add_symbol(SymbolType::FUNCTION, name, location));
 	}
 
-	void SymbolDatabase::add_argument(const std::string& name, const Token& location)
+	ArgumentSymbol* SymbolDatabase::add_argument(const std::string& name, const Token& location)
 	{
-		add_symbol(SymbolType::ARGUMENT, name, location);
+		return AS_ARGUMENT_SYMBOL(add_symbol(SymbolType::ARGUMENT, name, location));
 	}
 
-	void SymbolDatabase::add_variable(const std::string& name, const Token& location)
+	VariableSymbol* SymbolDatabase::add_variable(const std::string& name, const Token& location)
 	{
-		add_symbol(SymbolType::VARIABLE, name, location);
+		return AS_VARIABLE_SYMBOL(add_symbol(SymbolType::VARIABLE, name, location));
 	}
 
-	void SymbolDatabase::add_define(const std::string& name, const Token& location)
+	DefineSymbol* SymbolDatabase::add_define(const std::string& name, const Token& location)
 	{
-		add_symbol(SymbolType::DEFINE, name, location);
+		return AS_DEFINE_SYMBOL(add_symbol(SymbolType::DEFINE, name, location));
 	}
 
-	void SymbolDatabase::add_label(const std::string& name, const Token& location)
+	LabelSymbol* SymbolDatabase::add_label(const std::string& name, const Token& location)
 	{
-		add_symbol(SymbolType::LABEL, name, location);
+		return AS_LABEL_SYMBOL(add_symbol(SymbolType::LABEL, name, location));
 	}
 
-	void SymbolDatabase::add_struct(const std::string& name, const Token& location)
+	StructSymbol* SymbolDatabase::add_struct(const std::string& name, const Token& location)
 	{
-		add_symbol(SymbolType::STRUCT, name, location);
+		return AS_STRUCT_SYMBOL(add_symbol(SymbolType::STRUCT, name, location));
 	}
 
 

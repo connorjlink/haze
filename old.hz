@@ -1,6 +1,3 @@
-function nvr test = ()
+function nvr main = ()
 {
-	byte a = 5; 
-	byte b = 6;
-	byte c = a + b;
 }

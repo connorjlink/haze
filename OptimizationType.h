@@ -8,8 +8,8 @@ namespace hz
 {
 	enum OptimizationType : std::uint32_t
 	{
-		AST,
-		LTO,
+		AST = 0x1,
+		LTO = 0x2,
 	};
 
 	static const std::unordered_map<std::string, OptimizationType> _optimization_map

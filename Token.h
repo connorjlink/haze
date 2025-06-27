@@ -190,13 +190,19 @@ namespace hz
 		bimap_t{ S("sq"), TokenType::S64 },
 	};
 
+	struct SourceLocation
+	{
+		std::string filepath;
+		// quick character index into the file
+		std::size_t position;
+		std::int32_t line, column;
+	};
+
 	struct Token
 	{
 		TokenType type;
-		std::string value;
-		std::int16_t line, column;
-		std::string filepath;
-#pragma message("TODO: implement token filepath tracking!")
+		std::string text;
+		SourceLocation location;
 #pragma message("TODO: program reentrancy--packetize toolchain context instead of global variables!")
 	};
 

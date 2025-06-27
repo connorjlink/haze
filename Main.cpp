@@ -45,6 +45,8 @@ int main(int argc, char** argv)
 {
 	_database = new SymbolDatabase{};
 	_exporter = new SymbolExporter{ std::cout };
+	// spools up the worker thread in the background to idle until symbol information becomes available
+	_exporter->launch();
 
 	_heap_allocator = new HeapAllocator{};
 	_stack_allocator = new StackAllocator{};

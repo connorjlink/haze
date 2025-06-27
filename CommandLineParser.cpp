@@ -4,7 +4,6 @@ import std;
 #include "JobManager.h"
 #include "CommandLineOptions.h"
 #include "ErrorReporter.h"
-#include "Timer.h"
 
 // Haze CommandLineParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

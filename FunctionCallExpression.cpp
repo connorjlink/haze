@@ -8,7 +8,6 @@ import std;
 #include "Generator.h"
 #include "Evaluator.h"
 #include "Symbol.h"
-#include "X86Builder.h"
 #include "TypeCheck.h"
 #include "CommonErrors.h"
 #include "ErrorReporter.h"

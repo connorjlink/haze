@@ -3,6 +3,7 @@
 
 #include "Token.h"
 #include "ParserType.h"
+#include "IdentifierExpression.h"
 
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -61,7 +62,7 @@ namespace hz
 		Node* parse_dotdefine_command();
 
 	protected:
-		IdentifierExpression* parse_identifier_expression();
+		IdentifierExpression* parse_identifier_expression(IdentifierType = IdentifierType::UNKNOWN); // explicit contextual type override
 		IntegerLiteralExpression* parse_integerliteral_expression();
 		StringExpression* parse_string_expression();
 		FunctionCallExpression* parse_functioncall_expression();
@@ -78,9 +79,6 @@ namespace hz
 	private:
 		Expression* parse_generic_expression();
 		Expression* parse_infix_expression(Expression*, Precedence);
-
-	public:
-		IdentifierExpression* parse_identifier();
 
 	public:
 		virtual ParserType ptype() const = 0;

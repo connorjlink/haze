@@ -50,29 +50,29 @@ namespace
 		return function.serialize();
 	}
 
-	void export_argument_symbol(ArgumentSymbol* argument_symbol, Token token)
+	std::string export_argument_symbol(ArgumentSymbol* argument_symbol, Token token)
 	{
-
+		return "";
 	}
 
-	void export_variable_symbol(VariableSymbol* variable_symbol, Token token)
+	std::string export_variable_symbol(VariableSymbol* variable_symbol, Token token)
 	{
-
+		return "";
 	}
 
-	void export_define_symbol(DefineSymbol* define_symbol, Token token)
+	std::string export_define_symbol(DefineSymbol* define_symbol, Token token)
 	{
-
+		return "";
 	}
 
-	void export_label_symbol(LabelSymbol* label_symbol, Token token)
+	std::string export_label_symbol(LabelSymbol* label_symbol, Token token)
 	{
-
+		return "";
 	}
 
-	void export_struct_symbol(StructSymbol* struct_symbol, Token token)
+	std::string export_struct_symbol(StructSymbol* struct_symbol, Token token)
 	{
-
+		return "";
 	}
 }
 
@@ -133,33 +133,31 @@ namespace hz
 		const auto symbol = entry.symbol;
 		const auto location = entry.token;
 
-		auto& stream = std::cout;
-
 		using enum SymbolType;
 		switch (symbol->ytype())
 		{
 			case FUNCTION:
-				stream << ::export_function_symbol(AS_FUNCTION_SYMBOL(symbol), location);
+				_stream << ::export_function_symbol(AS_FUNCTION_SYMBOL(symbol), location);
 				break;
 
 			case ARGUMENT:
-				::export_argument_symbol(AS_ARGUMENT_SYMBOL(symbol), location);
+				_stream << ::export_argument_symbol(AS_ARGUMENT_SYMBOL(symbol), location);
 				break;
 			
 			case VARIABLE:
-				::export_variable_symbol(AS_VARIABLE_SYMBOL(symbol), location);
+				_stream << ::export_variable_symbol(AS_VARIABLE_SYMBOL(symbol), location);
 				break;
 
 			case DEFINE:
-				::export_define_symbol(AS_DEFINE_SYMBOL(symbol), location);
+				_stream << ::export_define_symbol(AS_DEFINE_SYMBOL(symbol), location);
 				break;
 
 			case LABEL:
-				::export_label_symbol(AS_LABEL_SYMBOL(symbol), location);
+				_stream << ::export_label_symbol(AS_LABEL_SYMBOL(symbol), location);
 				break;
 
 			case STRUCT:
-				::export_struct_symbol(AS_STRUCT_SYMBOL(symbol), location);
+				_stream << ::export_struct_symbol(AS_STRUCT_SYMBOL(symbol), location);
 				break;
 		}
 	}

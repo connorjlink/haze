@@ -11,9 +11,8 @@ namespace hz
 	class Expression;
 	class Statement;
 	class Type;
-	class Symbol;
 
-	class Function : public Node, Symbol
+	class Function : public Node
 	{
 	public:
 		std::string name;
@@ -26,7 +25,6 @@ namespace hz
 		virtual ~Function() = default;
 
 	public:
-		virtual SymbolType ytype() const final override;
 		virtual NodeType ntype() const final override;
 		virtual Function* copy() const final override;
 		virtual void generate(Allocation*) final override;

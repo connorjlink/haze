@@ -262,7 +262,7 @@ namespace hz
 	MemberDeclarationExpression* CompilerParser::parse_member_declaration_statement(const std::string& enclosing_function)
 	{
 		const auto type = parse_type();
-		const auto name = parse_identifier();
+		const auto name = parse_identifier_expression();
 
 		consume(TokenType::COMMA);
 
@@ -286,13 +286,16 @@ namespace hz
 	{
 		consume(TokenType::STRUCT);
 
-		const auto identifier = parse_identifier();
+		const auto identifier = parse_identifier_expression();
 
 		consume(TokenType::LBRACE);
-
 		const auto member_declarations = parse_member_declaration_statements(enclosing_function);
-
 		consume(TokenType::RBRACE);
+
+		const auto symbol = new StructSymbol{ identifier->name };
+		
+		_database->add_struct(identifier->name, identifier->_token);
+		
 
 		return new StructDeclarationStatement{ identifier, member_declarations, identifier->_token };
 	}
@@ -463,7 +466,7 @@ namespace hz
 
 			case STRUCT:
 			{
-				const auto tag = parse_identifier();
+				const auto tag = parse_identifier_expression();
 				return new StructType{ qualifier, tag->name, storage };
 			} break;
 
@@ -531,7 +534,7 @@ namespace hz
 	{
 		auto program = parse_functions();
 
-		if (!_function_label_map.contains("main"))
+		if (_function_label_map.contains("main"))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
 			_database->reference_symbol(SymbolType::FUNCTION, "main", peek(), true);

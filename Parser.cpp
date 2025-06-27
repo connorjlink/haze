@@ -18,6 +18,7 @@ import std;
 #include "ExtendedInteger.h"
 #include "CommonErrors.h"
 #include "ErrorReporter.h"
+#include "SymbolExporter.h"
 
 // Haze Parser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -50,8 +51,6 @@ namespace hz
 		_error_reporter->close_context();
 	}
 
-
-	
 
 	Token& Parser::lookbehind()
 	{
@@ -157,12 +156,16 @@ namespace hz
 		define_symbol->type = type;
 		define_symbol->value = integer_literal_raw(value);
 
+		// NOTE: exports the constant expression name symbol only
+		_exporter->enqueue(define_symbol, identifier_expression->_token);
+
 		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
 	}
 
-	IdentifierExpression* Parser::parse_identifier_expression()
+	IdentifierExpression* Parser::parse_identifier_expression(IdentifierType itype)
 	{
-		return parse_identifier();
+		const auto name_token = consume(TokenType::IDENTIFIER);
+		return new IdentifierExpression{ name_token.value, name_token, itype };
 	}
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
@@ -178,6 +181,8 @@ namespace hz
 			_error_reporter->post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
 			return nullptr;
 		}
+
+		// NOTE: hazels-server handles integer literal "symbols" instead
 
 		IntegerLiteral* integer_literal = nullptr;
 
@@ -228,7 +233,7 @@ namespace hz
 			return nullptr;
 		}
 
-		auto function_symbol = _database->reference_function(name_token.value, name_token);
+		const auto function_symbol = _database->reference_function(name_token.value, name_token);
 
 		if (function_symbol->arity() != arguments.size())
 		{
@@ -236,6 +241,9 @@ namespace hz
 				name_token.value, function_symbol->arity(), arguments.size()), name_token);
 			return nullptr;
 		}
+
+		// NOTE: exports the function name symbol only
+		_exporter->enqueue(function_symbol, name_token);
 
 		return new FunctionCallExpression{ name_token.value, std::move(arguments), name_token };
 	}
@@ -346,10 +354,9 @@ namespace hz
 		{
 			expression = AS_EXPRESSION(expression_optimized);
 		}
-
+		
 		return expression;
 	}
-#error TODO ADD SYMBOL EXPORTING TO PARSER EXPRESSIOS!
 
 	Expression* Parser::parse_expression()
 	{
@@ -422,11 +429,5 @@ namespace hz
 		} while (true);
 
 		return left;
-	}
-
-	IdentifierExpression* Parser::parse_identifier()
-	{
-		const auto name_token = consume(TokenType::IDENTIFIER);
-		return new IdentifierExpression{ name_token.value, name_token };
 	}
 }

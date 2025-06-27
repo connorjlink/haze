@@ -113,10 +113,12 @@ namespace hz
 	public:
 		virtual ~JSONObject()
 		{
-			for (const auto [_, pointer] : members)
+			#pragma warning("TODO FIX THE OBJECT DELETION")
+			/*for (auto it = members.begin(); it != members.end(); it++)
 			{
-				delete pointer;
+				delete it->second;
 			}
+			members.clear();*/
 		}
 	};
 
@@ -136,10 +138,11 @@ namespace hz
 	public:
 		virtual ~JSONArray()
 		{
-			for (const auto object : objects)
+			for (auto it = objects.begin(); it != objects.end(); it++)
 			{
-				delete object;
+				delete *it;
 			}
+			objects.clear();
 		}
 	};
 }

@@ -33,6 +33,7 @@
     <ClCompile Include="AutoErrorContext.cpp" />
     <ClCompile Include="AutoJob.cpp" />
     <ClCompile Include="AutoJSON.cpp" />
+    <ClCompile Include="Bimap.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
     <ClCompile Include="ExitProgramException.cpp" />
@@ -187,7 +188,6 @@
     <ClInclude Include="MemberDeclarationExpression.h" />
     <ClInclude Include="SymbolDatabase.h" />
     <ClInclude Include="Test.h" />
-    <ClInclude Include="Timer.h" />
     <ClInclude Include="Type.h" />
     <ClInclude Include="TypeCheck.h" />
     <ClInclude Include="TypeQualifier.h" />

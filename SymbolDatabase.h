@@ -23,13 +23,13 @@ namespace hz
 		std::unordered_map<std::string, Symbol*> _table;
 
 	public:
-		void add_symbol(SymbolType, const std::string&, const Token&);
-		void add_function(const std::string&, const Token&, Type*);
-		void add_argument(const std::string&, const Token&);
-		void add_variable(const std::string&, const Token&);
-		void add_define(const std::string&, const Token&);
-		void add_label(const std::string&, const Token&);
-		void add_struct(const std::string&, const Token&);
+		Symbol* add_symbol(SymbolType, const std::string&, const Token&);
+		FunctionSymbol* add_function(const std::string&, const Token&, Type*);
+		ArgumentSymbol* add_argument(const std::string&, const Token&);
+		VariableSymbol* add_variable(const std::string&, const Token&);
+		DefineSymbol* add_define(const std::string&, const Token&);
+		LabelSymbol* add_label(const std::string&, const Token&);
+		StructSymbol* add_struct(const std::string&, const Token&);
 
 	public:
 		SymbolType query_symbol_type(const std::string&, const Token&);

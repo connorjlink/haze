@@ -1,13 +1,15 @@
 #ifndef HAZE_SYMBOL_EXPORTER_H
 #define HAZE_SYMBOL_EXPORTER_H
 
+#include "Token.h"
+
 // Haze SymbolExporter.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
 	class Symbol;
-	class Token;
+	struct Token;
 
 	class SymbolExporter
 	{

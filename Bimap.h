@@ -7,6 +7,7 @@
 namespace hz
 {
 	template<typename T, typename U>
+		requires !std::is_same_v<T, U>
 	struct bimap_t
 	{
 		T _first;
@@ -14,6 +15,7 @@ namespace hz
 	};
 
 	template<typename T, typename U>
+		requires !std::is_same_v<T, U>
 	class Bimap
 	{
 	private:
@@ -21,6 +23,11 @@ namespace hz
 		std::unordered_map<U, T> _backward;
 
 	public:
+		bool contains(const T& value) const
+		{
+			return _forward.contains(value);
+		}
+
 		std::optional<U> at(const T& value) const
 		{
 			if (_forward.contains(value))
@@ -29,6 +36,11 @@ namespace hz
 			}
 
 			return std::nullopt;
+		}
+
+		bool contains(const U& value) const
+		{
+			return _backward.contains(value);
 		}
 
 		std::optional<T> at(const U& value) const
