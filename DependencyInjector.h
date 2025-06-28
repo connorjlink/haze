@@ -87,24 +87,27 @@ namespace hz
 		}
 	};
 
-	// have to inject per-thread starting at object graph root container to avoid races
+	// have to inject new instances per-thread starting at object graph root container to avoid races
 	class ThreadScope
 	{
+	private:
+		// type erasure is fine since shared ptr stores type-specific deleter
+		std::unordered_map<type_index, std::shared_ptr<void>> _instances;
+
 	public:
 		template<typename T>
 		std::shared_ptr<T> get()
 		{
-			auto it = instances_.find(std::type_index(typeid(T)));
-			if (it != instances_.end())
-				return std::static_pointer_cast<T>(it->second);
+			if (const auto index = type_index<T>(); _instances.contains(index))
+			{
+				const auto& existing_instance = _instances.at(index);
+				return std::static_pointer_cast<T>(existing_instance);
+			}
 
 			auto instance = ServiceContainer::instance().create<T>();
-			instances_[std::type_index(typeid(T))] = instance;
+			_instances[type_index<T>()] = instance;
 			return instance;
 		}
-
-	private:
-		std::unordered_map<std::type_index, std::shared_ptr<void>> instances_;
 	};
 
 	// wtf
@@ -115,24 +118,29 @@ namespace hz
 	}
 
 	// mixin, e.g., MyClass : public Inject<MyService> { } ... get_service().some_method()
-	template<typename T>
+	// NOTE: requires a complete type--include prerequisite headers before using!
+	template<typename... Ts>
 	class Inject
 	{
 	private:
-		T& service;
+		std::tuple<Ts&...> _services;
 
 	public:
-		T& get_service(void) const
+		// resolve a specific service instance. requires static complete type parameter
+		template<typename T>
+		T& using_service() const
 		{
-			return service;
+			return std::get<T&>(_services);
 		}
 
 	protected:
 		Inject()
-			: service{ *hz::using_thread().get<T>() }
+			: _services{ (*hz::using_thread().get<Ts>())... }
 		{
 		}
 	};
+
+#define USE(x) using_service<x>()
 }
 
 // std extension provides a clean means by which to interop with containers (like maps)

@@ -1,8 +1,8 @@
 import std;
 
-#include "RandomUtility.h"
+#include "Random.h"
 
-// Haze RandomUtility.cpp
+// Haze Random.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

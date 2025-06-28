@@ -16,22 +16,23 @@ namespace hz
 		return std::chrono::system_clock::now();
 	}
 
-	class TrackingService;
+	class Tracker;
 
 	// provides some generic machinery for more detailed instrumentation by the compiler driver
-	template<typename T>
-	class Trackable : public Inject<TrackingService>
+	// not templated because C++23 deducing this does not require it
+	class Trackable : public Inject<Tracker>
 	{
 	private:
-		friend TrackingService;
+		friend Tracker;
 		tracking_id _id;
 		const bool _is_enabled;
 
 	private:
 		static tracking_id generate_id(void)
 		{
+			// thread-safe! generated per Trackable type template instantiation
 			static std::atomic<tracking_id> index{ 0 };
-			return ++counter;
+			return ++index;
 		}
 
 	protected:
@@ -45,7 +46,7 @@ namespace hz
 				{
 					self.update();
 				}
-				get_service<TrackingService>().notify_modified(this);
+				get_service<Tracker>().notify_modified(this);
 			}
 		}
 
@@ -53,9 +54,9 @@ namespace hz
 		template<typename Self>
 		void retire(this Self self)
 		{
-			if (is_enabled)
+			if (_is_enabled)
 			{
-				get_service<TrackingService>().notify_retired(this);
+				get_service<Tracker>().notify_retired(this);
 			}
 		}
 
@@ -67,7 +68,7 @@ namespace hz
 			if (_is_enabled)
 			{
 				_id = generate_id();
-				get_service<TrackingService>().notify_created(this);
+				using_service<Tracker>().notify_created(this);
 			}
 		}
 
@@ -75,12 +76,12 @@ namespace hz
 		{
 			if (_is_enabled)
 			{
-				get_service<TrackingService>().notify_deleted(this);
+				using_service<Tracker>().notify_deleted(this);
 			}
 		}
 	};
 
-	class TrackingService
+	class Tracker
 	{
 	private:
 		struct TrackingInformation
@@ -88,13 +89,16 @@ namespace hz
 		public:
 			// for tracking memory leaks
 			std::size_t number_created;
+			std::size_t number_retired;
 			std::size_t number_deleted;
 
 		public:
-#error TODO FIGURE OUT IF TIMESTAMPING THIS MAKES ANY SENSE SINCE THIS IS TRACKING BY TYPE, NOT BY INSTANCE
+			// specifies the first ever time this entity was created
 			tracking_time_point created;
+			// specifies the most recent transaction for modified and retired
 			tracking_time_point modified;
 			tracking_time_point retired;
+			// specifies the last ever time this entity was deleted
 			tracking_time_point deleted;
 
 		public:
@@ -118,6 +122,7 @@ namespace hz
 		}
 
 		template<typename T>
+			requires std::is_base_of_v<T, Trackable>
 		bool validate_notnull(T* entity)
 		{
 			if (entity == nullptr)
@@ -130,36 +135,9 @@ namespace hz
 			return true;
 		}
 
-	public:
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable<T>>
-		bool notify_created(T* entity)
-		{
-			if (!validate_notnull(entity))
-			{
-				return false;
-			}
-
-			if (_database.contains(entity->_id))
-			{
-				_error_reporter->post_error(std::format(
-					"invalid duplicate tracking instance of entity with id `{}`", entity._id), NULL_TOKEN);
-				return false;
-			}
-
-			TrackingInformation entry
-			{
-				.created = std::chrono::system_clock::now(),
-				// let others default initialize since they do not 
-				.is_active = true,
-			};
-
-			_database.emplace(entity->_id, entry);
-		}
-
-		template<typename T>
-			requires std::is_base_of_v<T, Trackable<T>>
-		bool notify_modified(T* entity)
+			requires std::is_base_of_v<T, Trackable>
+		bool strengthen_ensure(T* entity)
 		{
 			if (!validate_notnull(entity))
 			{
@@ -171,10 +149,100 @@ namespace hz
 				return false;
 			}
 
+			return true;
+		}
+
+	public:
+		template<typename T>
+			requires std::is_base_of_v<T, Trackable>
+		//and requires { std::declval<T*>()->_id; } // not necessary since the trackable base will grant this
+		bool notify_created(T* entity)
+		{
+			if (!validate_notnull(entity))
+			{
+				return false;
+			}
+
+			// NOTE: since the tracking indexes by type, it must allow duplicates to multiple instantiations
+			/*if (_database.contains(entity->_id))
+			{
+				_error_reporter->post_error(std::format(
+					"invalid duplicate tracking instance of entity with id `{}`", entity._id), NULL_TOKEN);
+				return false;
+			}*/
+
+			if (!_database.contains(entity->_id))
+			{
+				TrackingInformation entry
+				{
+					.created = system_timestamp(),
+					.number_created = 1,
+					// let others default initialize since they don't matter for now
+					.is_active = true,
+				};
+
+				_database.emplace(entity->_id, entry);
+			}
+
+			else
+			{
+				auto& entry = _database.at(entity->_id);
+				// don't update the timestamp to keep the tracked time from the very first instantiation
+				//entry.created = system_timestamp();
+				entry.number_created++;
+				entry.is_active = true;
+			}
+		}
+
+		template<typename T>
+			requires std::is_base_of_v<T, Trackable>
+		bool notify_modified(T* entity)
+		{
+			if (!strengthen_ensure(entity))
+			{
+				return false;
+			}
+
 			auto& entry = _database.at(entity->_id);
 			entry.modified = system_timestamp();
+			entry.number_modified++;
 			// active flag always reflects the results of the most recent transaction
 			entry.is_active = true;
+		}
+
+		template<typename T>
+			requires std::is_base_of_v<T, Trackable>
+		bool notify_retired(T* entity)
+		{
+			if (!strengthen_ensure(entity))
+			{
+				return false;
+			}
+
+			auto& entry = _database.at(entity->_id);
+			entry.retired = system_timestamp();
+			entry.number_retired++;
+			entry.is_active = false;
+		}
+
+		template<typename T>
+			requires std::is_base_of_v<T, Trackable>
+		bool notify_deleted(T* entity)
+		{
+			if (!strengthen_ensure(entity))
+			{
+				return false;
+			}
+
+			auto& entry = _database.at(entity->_id);
+			entry.number_deleted++;
+			entry.is_active = false;
+
+			if (entry.number_created == entry.number_deleted)
+			{
+				// only timestamp the last entity to get deleted
+				entry.deleted = system_timestamp();
+			}
 		}
 
 	public:

@@ -75,14 +75,9 @@ namespace hz
 				}
 			}
 
-			const auto instruction = InstructionCommand
-			{
-				NULL_TOKEN,
-				static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0)),
-			};
-
-#pragma message("TODO: fix instruction disassembly")
-			//result.append(std::format("${:04X}: {}\n", HALF_DWORD_MAX + i, instruction.string()));
+			const auto machine_code = static_cast<std::uint32_t>((byte1 << 16) | (byte2 << 8) | (byte3 << 0));
+			const auto disassembly = disassemble_instruction(machine_code);
+			result.append(std::format("${:04X}: {}\n", i, disassembly));
 		}
 
 		return result;

@@ -2,13 +2,15 @@
 #define HAZE_PREPROCESSOR_H
 
 #include "Token.h"
+#include "Scanner.h"
 
 // Haze Preprocessor.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Preprocessor
+	// inherits the injected file manager service
+	class Preprocessor : public Scanner
 	{
 	private:
 		std::string& code;

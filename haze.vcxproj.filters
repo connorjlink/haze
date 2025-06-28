@@ -102,18 +102,15 @@
     <Filter Include="Source Files\Tracking">
       <UniqueIdentifier>{61585894-ef0d-45d7-9933-38d1d9cfcd70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Intrinsic">
+      <UniqueIdentifier>{13c8a4e9-a499-4b54-b4a8-91842bd43716}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Preprocessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lexer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Generator.cpp">
@@ -126,12 +123,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Linkable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Intrinsic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorIntrinsic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Context.cpp">
@@ -287,9 +278,6 @@
     <ClCompile Include="HazeEvaluator.cpp">
       <Filter>Source Files\Evaluator</Filter>
     </ClCompile>
-    <ClCompile Include="RandomUtility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CommandLineParser.cpp">
       <Filter>Source Files\Argument</Filter>
     </ClCompile>
@@ -392,9 +380,6 @@
     <ClCompile Include="IntegerLiteral.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TypeCheck.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ExtendedInteger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -431,6 +416,24 @@
     <ClCompile Include="Tracking.cpp">
       <Filter>Source Files\Tracking</Filter>
     </ClCompile>
+    <ClCompile Include="Lexer.cpp">
+      <Filter>Source Files\Scanner</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorIntrinsic.cpp">
+      <Filter>Source Files\Intrinsic</Filter>
+    </ClCompile>
+    <ClCompile Include="Intrinsic.cpp">
+      <Filter>Source Files\Intrinsic</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessor.cpp">
+      <Filter>Source Files\Scanner</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeCheck.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Token.h">
@@ -439,13 +442,7 @@
     <ClInclude Include="Simulator.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Preprocessor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lexer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
@@ -463,22 +460,10 @@
     <ClInclude Include="Disassembler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RandomUtility.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Linkable.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Intrinsic.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntrinsicType.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="NodeType.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorIntrinsic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
@@ -844,9 +829,6 @@
     <ClInclude Include="IntegerLiteral.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TypeCheck.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ExtendedInteger.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -879,6 +861,30 @@
     </ClInclude>
     <ClInclude Include="Tracking.h">
       <Filter>Source Files\Tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexer.h">
+      <Filter>Source Files\Scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorIntrinsic.h">
+      <Filter>Source Files\Intrinsic</Filter>
+    </ClInclude>
+    <ClInclude Include="Intrinsic.h">
+      <Filter>Source Files\Intrinsic</Filter>
+    </ClInclude>
+    <ClInclude Include="IntrinsicType.h">
+      <Filter>Source Files\Intrinsic</Filter>
+    </ClInclude>
+    <ClInclude Include="Preprocessor.h">
+      <Filter>Source Files\Scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Source Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeCheck.h">
+      <Filter>Source Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoableRedoable.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

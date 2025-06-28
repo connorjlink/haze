@@ -209,6 +209,11 @@ namespace hz
 	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers
 	// could make certain inward-facing Token fields mutable, but this feels cleaner
 	inline static const auto NULL_TOKEN = Token{ TokenType::END, "", { "unknown", 0, -1, -1 } };
+	inline SourceLocation null_location(const std::string& filepath)
+	{
+		// specified file (optional) at (1, 1)
+		return SourceLocation{ filepath, 0, 1, 1 };
+	}
 }
 
 #endif

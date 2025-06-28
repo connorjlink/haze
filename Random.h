@@ -1,7 +1,7 @@
-#ifndef HAZE_RANDOMUTILITY_H
-#define HAZE_RANDOMUTILITY_H
+#ifndef HAZE_RANDOM_H
+#define HAZE_RANDOM_H
 
-// Haze RandomUtility.h
+// Haze Random.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

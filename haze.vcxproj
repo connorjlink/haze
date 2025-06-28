@@ -157,7 +157,7 @@
     <ClCompile Include="StringExpression.cpp" />
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="Toolchain.cpp" />
-    <ClCompile Include="RandomUtility.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="VariableStatement.cpp" />
     <ClInclude Include="AutoErrorContext.h" />
@@ -201,6 +201,7 @@
     <ClInclude Include="TypeSpecifier.h" />
     <ClInclude Include="TypeStorage.h" />
     <ClInclude Include="TypeType.h" />
+    <ClInclude Include="UndoableRedoable.h" />
     <ClInclude Include="Variable.h" />
     <ClInclude Include="VariableType.h" />
     <ClInclude Include="VerbosityType.h" />
@@ -327,7 +328,7 @@
     <ClInclude Include="Token.h" />
     <ClInclude Include="Toolchain.h" />
     <ClInclude Include="ToolchainType.h" />
-    <ClInclude Include="RandomUtility.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Validator.h" />
     <ClInclude Include="VariableStatement.h" />
     <ClInclude Include="WhileStatement.h" />
