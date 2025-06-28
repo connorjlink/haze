@@ -39,9 +39,10 @@ namespace
 		function.upsert("text", new StringJSONValue{ function_symbol->name });
 
 		AutoJSONObject location{};
-		location.upsert("line", new NumberJSONValue{ token.line });
-		location.upsert("column", new NumberJSONValue{ token.column });
-		location.upsert("filepath", new StringJSONValue{ token.filepath });
+		location.upsert("position", new NumberJSONValue{ static_cast<std::int32_t>(token.location.position) });
+		location.upsert("line", new NumberJSONValue{ token.location.line });
+		location.upsert("column", new NumberJSONValue{ token.location.column });
+		location.upsert("filepath", new StringJSONValue{ token.location.filepath });
 		location.upsert("stage", new StringJSONValue{ "source" });
 
 		function.upsert("location", location.get_object());
@@ -160,6 +161,8 @@ namespace hz
 				_stream << ::export_struct_symbol(AS_STRUCT_SYMBOL(symbol), location);
 				break;
 		}
+
+		_stream.emit();
 	}
 
 	SymbolExporter::SymbolExporter(std::ostream& stream)

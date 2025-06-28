@@ -15,6 +15,7 @@ namespace hz
 
 	public:
 		void open_file(const std::string&);
+		bool has_file(const std::string&);
 		File& get_file(const std::string&);
 
 	public:

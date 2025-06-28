@@ -93,6 +93,9 @@
     <Filter Include="Source Files\JSON">
       <UniqueIdentifier>{70d93d8e-6fdb-4ee8-bf96-a7e66ca55004}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scanner">
+      <UniqueIdentifier>{c5040c31-efec-470e-a2af-ac00fcb247fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -412,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="Bimap.cpp">
       <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scanner.cpp">
+      <Filter>Source Files\Scanner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -852,6 +858,9 @@
     </ClInclude>
     <ClInclude Include="AutoJSON.h">
       <Filter>Source Files\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="Scanner.h">
+      <Filter>Source Files\Scanner</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

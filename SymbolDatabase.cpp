@@ -38,7 +38,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
+				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.text), location);
 			} break;
 		}
 
@@ -98,7 +98,7 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.value), location);
+				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.text), location);
 			}
 			return nullptr;
 		}

@@ -113,7 +113,7 @@ namespace hz
 	public:
 		virtual ~JSONObject()
 		{
-			#pragma warning("TODO FIX THE OBJECT DELETION")
+#pragma message ("TODO FIX THE OBJECT DELETION")
 			/*for (auto it = members.begin(); it != members.end(); it++)
 			{
 				delete it->second;

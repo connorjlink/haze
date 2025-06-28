@@ -100,7 +100,7 @@ namespace hz
 		};
 
 		_error_reporter->post_error(std::format("expected token `{}` but got `{}`", 
-			convert(token), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.value : convert(current.type))), current);
+			convert(token), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
 		return current;
 	}
 
@@ -165,13 +165,13 @@ namespace hz
 	IdentifierExpression* Parser::parse_identifier_expression(IdentifierType itype)
 	{
 		const auto name_token = consume(TokenType::IDENTIFIER);
-		return new IdentifierExpression{ name_token.value, name_token, itype };
+		return new IdentifierExpression{ name_token.text, name_token, itype };
 	}
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
 		const auto integer_literal_token = consume(TokenType::INT);
-		const auto& integer_string = integer_literal_token.value;
+		const auto& integer_string = integer_literal_token.text;
 
 		std::int64_t integer_value{};
 		auto [ptr, ec] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
@@ -216,7 +216,7 @@ namespace hz
 	StringExpression* Parser::parse_string_expression()
 	{
 		const auto message_token = consume(TokenType::STRING);
-		return new StringExpression{ std::move(message_token.value), message_token };
+		return new StringExpression{ std::move(message_token.text), message_token };
 	}
 
 	FunctionCallExpression* Parser::parse_functioncall_expression()
@@ -227,25 +227,25 @@ namespace hz
 		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		consume(TokenType::RPAREN);
 
-		if (!_database->has_symbol(name_token.value))
+		if (!_database->has_symbol(name_token.text))
 		{
-			_error_reporter->post_error(std::format("function `{}` is undefined", name_token.value), name_token);
+			_error_reporter->post_error(std::format("function `{}` is undefined", name_token.text), name_token);
 			return nullptr;
 		}
 
-		const auto function_symbol = _database->reference_function(name_token.value, name_token);
+		const auto function_symbol = _database->reference_function(name_token.text, name_token);
 
 		if (function_symbol->arity() != arguments.size())
 		{
 			_error_reporter->post_error(std::format("function `{}` was defined with {} arguments but called with {}",
-				name_token.value, function_symbol->arity(), arguments.size()), name_token);
+				name_token.text, function_symbol->arity(), arguments.size()), name_token);
 			return nullptr;
 		}
 
 		// NOTE: exports the function name symbol only
 		_exporter->enqueue(function_symbol, name_token);
 
-		return new FunctionCallExpression{ name_token.value, std::move(arguments), name_token };
+		return new FunctionCallExpression{ name_token.text, std::move(arguments), name_token };
 	}
 
 	Expression* Parser::parse_parenthesis_expression()
@@ -340,7 +340,8 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("expected an expression but got `{}`", peek().value), peek());
+				_error_reporter->post_error(std::format(
+					"expected an expression but got `{}`", peek().text), peek());
 				return nullptr;
 			} break;
 		}

@@ -3,6 +3,7 @@ import std;
 #include "SymbolDatabase.h"
 #include "SymbolExporter.h"
 #include "Context.h"
+#include "AutoJob.h"
 #include "JobManager.h"
 #include "FileManager.h"
 #include "CompilerToolchain.h"
@@ -16,6 +17,7 @@ import std;
 #include "StackAllocator.h"
 #include "RuntimeAllocator.h"
 #include "ExitProgramException.h"
+#include "DependencyInjector.h"
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -65,8 +67,21 @@ int main(int argc, char** argv)
 	_file_manager = new FileManager{};
 
 
-	const auto test_task = _job_manager->begin_job("unit testing");
+	hz::ServiceContainer::instance().register_factory<FileManager>([]
 	{
+		// or std::make_shared<TargetService>() to create a new instance
+		return std::shared_ptr<FileManager>{ _file_manager };
+	});
+
+	/*
+	hz::Injects<MyService> myService;
+   myService.service.doSomething();*/
+
+	// require explicit opt-in to run tests; takes about 300us otherwise
+	if (_options->_execution == ExecutionType::VALIDATE)
+	{
+		AutoJob test_task{ "unit testing" };
+
 		auto validators = std::vector<Validator*>
 		{
 			new X86BuilderValidator{},
@@ -77,9 +92,6 @@ int main(int argc, char** argv)
 			validator->run_tests();
 		}
 	}
-	_job_manager->end_job(test_task);
-	
-
 
 	for (auto& filepath : command_line_parser.files())
 	{

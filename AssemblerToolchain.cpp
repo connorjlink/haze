@@ -20,24 +20,24 @@ namespace hz
 		return ToolchainType::ASSEMBLER;
 	}
 
-	void AssemblerToolchain::run()
+	void AssemblerToolchain::run(const std::string& filepath)
 	{
-		_error_reporter->open_context(_filepath, "assembling");
+		_error_reporter->open_context(filepath, "assembling");
 
 		const auto parse_task = _job_manager->begin_job("parsing");
-		_parser = new AssemblerParser{ _tokens.at(_filepath), _filepath };
+		_parser = new AssemblerParser{ _tokens.at(filepath), filepath };
 		auto commands = _parser->parse();
 		_job_manager->end_job(parse_task);
 
 
-		_linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser), _filepath };
+		_linker = new AssemblerLinker{ std::move(commands), AS_ASSEMBLER_PARSER(_parser), filepath };
 		// shared environment with Assembler/Compiler
 		auto image = common_link();
-		auto executable = common_emit(std::move(image), _filepath);
+		auto executable = common_emit(std::move(image), filepath);
 
 		if (!_error_reporter->had_error())
 		{
-			common_finalize(std::move(executable), _filepath);
+			common_finalize(std::move(executable), filepath);
 		}
 
 		_error_reporter->close_context();

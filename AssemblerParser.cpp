@@ -41,7 +41,7 @@ namespace hz
 			return it_operand->second;
 		}
 
-		_error_reporter->post_error(std::format("expected a register but got {}", peek().value), peek());
+		_error_reporter->post_error(std::format("expected a register but got {}", peek().text), peek());
 		return static_cast<Register>(0);
 	}
 
@@ -55,7 +55,7 @@ namespace hz
 			auto label_command_token = peek();
 			consume(TokenType::IDENTIFIER);
 
-			return new IdentifierExpression{ label_command_token.value, label_command_token };
+			return new IdentifierExpression{ label_command_token.text, label_command_token };
 		}
 
 		const auto address_expression = parse_expression_optimized();
@@ -76,7 +76,7 @@ namespace hz
 			const auto label_command_token = peek();
 			consume(TokenType::IDENTIFIER);
 
-			return new IdentifierExpression{ label_command_token.value, label_command_token };
+			return new IdentifierExpression{ label_command_token.text, label_command_token };
 		}
 
 		const auto immediate_expression = parse_expression_optimized();
@@ -324,7 +324,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid instruction mnemonic `{}`", peek().value), peek());
+				_error_reporter->post_error(std::format("invalid instruction mnemonic `{}`", peek().text), peek());
 				return nullptr;
 			} break;
 		}

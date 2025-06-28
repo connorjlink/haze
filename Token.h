@@ -80,7 +80,7 @@ namespace hz
 
 		PRINT,
 
-		END,
+		END, ERROR,
 
 		DECLARE,
 
@@ -206,9 +206,9 @@ namespace hz
 #pragma message("TODO: program reentrancy--packetize toolchain context instead of global variables!")
 	};
 
-	// NOTE: intentionally not marked const to avoid errors about dropping qualifiers
+	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers
 	// could make certain inward-facing Token fields mutable, but this feels cleaner
-	inline static const auto NULL_TOKEN = Token{ TokenType::END, "", -1, -1 };
+	inline static const auto NULL_TOKEN = Token{ TokenType::END, "", { "unknown", 0, -1, -1 } };
 }
 
 #endif

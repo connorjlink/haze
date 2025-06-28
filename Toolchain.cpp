@@ -15,32 +15,31 @@ namespace hz
 {
 	void Toolchain::init(const std::string& filepath)
 	{
-		_filepath = filepath;
-
 		_toolchain_task = _job_manager->begin_job("toolchain execution");
 
-		_error_reporter->open_context(_filepath, "initializing");
+		_error_reporter->open_context(filepath, "initializing");
 
 		const auto read_task = _job_manager->begin_job("file reading");
-		auto& file = _file_manager->get_file(_filepath);
+		auto& file = _file_manager->get_file(filepath);
 		auto source = file.contents();
 		_job_manager->end_job(read_task);
 
 
 		const auto preprocess_task = _job_manager->begin_job("preprocessing");
-		const auto preprocessor = new Preprocessor{ source, _filepath };
-		auto source_processed = preprocessor->preprocess();
+		const auto preprocessor = new Preprocessor{ source, filepath };
+		preprocessor->preprocess(filepath);
+		const auto& source_processed = preprocessor->get_preprocessed_source(filepath);
 		_job_manager->end_job(preprocess_task);
 
 
 		const auto lex_task = _job_manager->begin_job("lexing");
-		const auto lexer = new Lexer{ source_processed };
-		_tokens[_filepath] = lexer->lex();
+		const auto lexer = new Lexer{ source_processed, filepath };
+		_tokens[filepath] = lexer->lex();
 		_job_manager->end_job(lex_task);
 
 		_error_reporter->close_context();
 
-		run();
+		run(filepath);
 
 		shut_down(false);
 	}

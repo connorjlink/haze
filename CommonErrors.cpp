@@ -103,7 +103,7 @@ namespace hz
 
 	void CommonErrors::invalid_type(const std::string& component, const Token& token)
 	{
-		_error_reporter->post_error(std::format("invalid type {} `{}`", component, token.value), token);
+		_error_reporter->post_error(std::format("invalid type {} `{}`", component, token.text), token);
 	}
 
 	void CommonErrors::integer_size_mismatch(IntegerLiteralType lhs, IntegerLiteralType rhs, const Token& token)

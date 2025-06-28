@@ -20,7 +20,7 @@ namespace hz
 
 	std::string StringJSONValue::serialize(void) const noexcept
 	{
-		return std::format("{}", value);
+		return std::format("\"{}\"", value);
 	}
 
 

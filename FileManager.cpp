@@ -15,9 +15,14 @@ namespace hz
 		_files[filepath] = file;
 	}
 
+	bool FileManager::has_file(const std::string& filepath)
+	{
+		return _files.contains(filepath);
+	}
+
 	File& FileManager::get_file(const std::string& filepath)
 	{
-		if (_files.contains(filepath))
+		if (has_file(filepath))
 		{
 			return _files.at(filepath);
 		}

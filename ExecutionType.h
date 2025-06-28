@@ -8,12 +8,14 @@ namespace hz
 {
 	enum class ExecutionType
 	{
+		VALIDATE,
 		COMPILE,
 		SIMULATE,
 	};
 
 	static const std::unordered_map<std::string, ExecutionType> _execution_map
 	{
+		{ "validate", ExecutionType::VALIDATE },
 		{ "compile", ExecutionType::COMPILE },
 		{ "simulate", ExecutionType::SIMULATE },
 	};

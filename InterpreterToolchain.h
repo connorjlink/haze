@@ -14,8 +14,11 @@ namespace hz
 		using Toolchain::Toolchain;
 
 	public:
+		virtual ~InterpreterToolchain() = default;
+
+	public:
 		virtual ToolchainType ttype() const final override;
-		virtual void run() final override;
+		virtual void run(const std::string&) final override;
 	};
 }
 

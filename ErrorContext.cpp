@@ -26,7 +26,7 @@ namespace hz
 
 	void ErrorContext::post(ErrorType severity, const std::string& message, const std::string& file, const Token& token)
 	{
-		const auto pos = TokenPosition{ token.line, token.column };
-		_errors.emplace_back(Error{ pos, token.value, message, severity });
+		const auto location = SourceLocation{ file, token.location.position, token.location.line, token.location.column };
+		_errors.emplace_back(Error{ location, token.text, message, severity });
 	}
 }

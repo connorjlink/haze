@@ -40,6 +40,7 @@
     <ClCompile Include="ExtendedInteger.cpp" />
     <ClCompile Include="IntegerLiteral.cpp" />
     <ClCompile Include="JSON.cpp" />
+    <ClCompile Include="Scanner.cpp" />
     <ClCompile Include="StructDeclarationStatement.cpp" />
     <ClCompile Include="StructMember.cpp" />
     <ClCompile Include="MemberDeclarationExpression.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="FunctionArgumentExpression.h" />
     <ClInclude Include="HazeBuilder.h" />
     <ClInclude Include="JSON.h" />
+    <ClInclude Include="Scanner.h" />
     <ClInclude Include="SymbolExporter.h" />
     <ClInclude Include="HeapAllocator.h" />
     <ClInclude Include="InstructionEncoding.h" />

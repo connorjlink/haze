@@ -16,6 +16,7 @@ namespace hz
 
 	public:
 		std::string contents();
+		// only one toolchain can claim proprietership of a file for now
 		ToolchainType ttype() const;
 
 	public:

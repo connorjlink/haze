@@ -13,9 +13,6 @@ namespace hz
 	class Toolchain
 	{
 	protected:
-		std::string _filepath;
-
-	protected:
 		// filepath to vector<token> mapping
 		std::unordered_map<std::string, std::vector<Token>> _tokens;
 
@@ -26,7 +23,6 @@ namespace hz
 		Toolchain()
 			: _tokens{}
 		{
-			_filepath = "";
 			_toolchain_task = -1;
 		}
 
@@ -38,11 +34,14 @@ namespace hz
 
 	public:
 		virtual ToolchainType ttype() const = 0;
-		virtual void run() = 0;
+		// entry point filepath
+		virtual void run(const std::string&) = 0;
 
 	public:
+		// entry point filepath
 		void init(const std::string&);
-		void shut_down(bool is_panic);
+		// is_panic
+		void shut_down(bool);
 	};
 
 	extern Toolchain* _toolchain;

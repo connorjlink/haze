@@ -53,15 +53,15 @@ namespace hz
 		const auto finalize_task = _job_manager->begin_job("finalizing");
 
 		const auto fullpath = std::filesystem::path(filepath);
-		const auto filename = fullpath.stem().string();
+		const auto basename = fullpath.stem().string();
 
 		if (_options->_raw_output)
 		{
-			const auto filepath_out = std::format("{}.hzb", filename);
+			const auto filepath_out = std::format("{}.hzb", basename);
 
 			auto outfile = std::ofstream(filepath_out, std::ios::out | std::ios::binary);
 
-			if (!outfile.good())
+			if (!outfile)
 			{
 				_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
 			}
@@ -77,7 +77,7 @@ namespace hz
 			{
 #pragma message("TODO: for now only one translation unit is supported per executable")
 				// later on compiling multiple files into one .exe is desired
-				const auto exefile = std::format("{}.exe", filename);
+				const auto exefile = std::format("{}.exe", basename);
 
 				auto pe_builder = new PEBuilder{ executable };
 				pe_builder->export_exe(exefile);

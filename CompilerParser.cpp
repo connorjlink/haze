@@ -86,7 +86,7 @@ namespace hz
 		const auto type = parse_type();
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
 
-		_database->add_variable(identifier_token.value, lookbehind());
+		_database->add_variable(identifier_token.text, lookbehind());
 
 		auto function_symbol = _database->reference_function(enclosing_function, peek());
 		function_symbol->locals_count++;
@@ -102,12 +102,12 @@ namespace hz
 	
 			consume(TokenType::SEMICOLON);
 
-			return new VariableStatement{ type, identifier_token.value, value, nullptr, value->_token };
+			return new VariableStatement{ type, identifier_token.text, value, nullptr, value->_token };
 		}
 
 		consume(TokenType::SEMICOLON);
 
-		return new VariableStatement{ type, identifier_token.value, nullptr, nullptr, identifier_token };
+		return new VariableStatement{ type, identifier_token.text, nullptr, nullptr, identifier_token };
 	}
 
 	Statement* CompilerParser::parse_compound_statement(const std::string& enclosing_function)
@@ -155,7 +155,7 @@ namespace hz
 		consume(TokenType::LBRACE);
 
 		auto assembly = fetch_until(TokenType::RBRACE);
-		assembly.emplace_back(TokenType::END, "eof", peek().line, peek().column);
+		assembly.emplace_back(Token{ TokenType::END, "eof", peek().location });
 
 		auto assembler_parser = new AssemblerParser{ std::move(assembly), _filepath };
 		auto commands = assembler_parser->parse();
@@ -493,11 +493,11 @@ namespace hz
 		// 5 digits of randomness for now
 		const auto uuid = hz::generate(5);
 		const auto end_function_label = std::format("end_function_{:05d}", uuid);
-		_function_label_map[name_token.value] = end_function_label;
+		_function_label_map[name_token.text] = end_function_label;
 
 		#pragma message("TODO: implement a more efficient way of modifying the return type than this mess")
 
-		_database->add_function(name_token.value, lookbehind(), return_type);
+		_database->add_function(name_token.text, lookbehind(), return_type);
 
 		consume(TokenType::EQUALS);
 
@@ -507,15 +507,11 @@ namespace hz
 
 		// inform the parser of the function arguments
 		// creates a local copy of them for future reference
-		auto function_symbol = _database->reference_function(name_token.value, peek());
+		auto function_symbol = _database->reference_function(name_token.text, peek());
 		function_symbol->arguments = arguments;
 
-		// exports the function identifier symbol only
-		_exporter->enqueue(function_symbol, name_token);
-
-		auto body = parse_compound_statement(name_token.value);
-
-		return new Function{ name_token.value, return_type, std::move(arguments), body, name_token };
+		const auto body = parse_compound_statement(name_token.text);
+		return new Function{ name_token.text, return_type, std::move(arguments), body, name_token };
 	}
 
 	std::vector<Node*> CompilerParser::parse_functions()

@@ -6,7 +6,7 @@ import std;
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, raw, _line, _column })
+#define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, raw, { _filepath, _position, _line, _column } })
 
 namespace
 {
@@ -26,20 +26,30 @@ namespace
 	}
 
 
-	hz::Token error_token(std::string value, std::int16_t line, std::int16_t column)
+	hz::Token error_token(const std::string& value, hz::SourceLocation location)
 	{
 		hz::Token token{};
 
-		token.value = value;
-		token.line = line;
-		token.column = column;
-
+		token.type = hz::TokenType::ERROR;
+		token.text = value;
+		token.location = location;
+		
 		return token;
 	}
 }
 
 namespace hz
 {
+	void Lexer::advance(std::size_t how_many)
+	{
+
+	}
+
+	void Lexer::expect()
+	{
+
+	}
+
 	std::vector<Token> Lexer::lex()
 	{
 		std::vector<Token> tokens{};
@@ -95,9 +105,8 @@ namespace hz
 					continue;
 				}
 
-				
 				_error_reporter->post_error("unexpected character `/`", 
-					::error_token({ current }, _line, _column));
+					::error_token({ current }, { _filepath, _position, _line, _column }));
 			}
 
 			else if ('0' <= current && current <= '9')
@@ -209,7 +218,7 @@ namespace hz
 				else
 				{
 					_error_reporter->post_error(std::format("unexpected token `{}`", current_string),
-						::error_token(current_string, _line, _column));
+						::error_token(current_string, { _filepath, _position, _line, _column }));
 				}
 			}
 		}

@@ -24,18 +24,18 @@ namespace hz
 		return ToolchainType::COMPILER;
 	}
 
-	void CompilerToolchain::run()
+	void CompilerToolchain::run(const std::string& filepath)
 	{
-		_error_reporter->open_context(_filepath, "compiling");
+		_error_reporter->open_context(filepath, "compiling");
 
 		const auto parse_task = _job_manager->begin_job("parsing");
-		_parser = new CompilerParser{ _tokens.at(_filepath), _filepath };
+		_parser = new CompilerParser{ _tokens.at(filepath), filepath };
 		auto ast = _parser->parse();
 		_job_manager->end_job(parse_task);
 
 
 		const auto generate_task = _job_manager->begin_job("generating");
-		_generator = new Generator{ ast, _filepath };
+		_generator = new Generator{ ast, filepath };
 		auto linkables = _generator->generate();
 		_job_manager->end_job(generate_task);
 
@@ -67,11 +67,13 @@ namespace hz
 		executable.append_range(out);
 		_job_manager->end_job(link_task);
 
-		for (auto byte : out)
+
+		// NOTE: the following snippet will format the machine code as readable hex; useful for debugging!
+		/*for (auto byte : out)
 		{
 			std::print("{:02X} ", byte);
 		}
-		std::println();
+		std::println();*/
 
 
 		/*if (_error_reporter->had_error())
@@ -97,10 +99,10 @@ namespace hz
 
 		if (!_error_reporter->had_error())
 		{
-			common_finalize(executable, _filepath);
+			common_finalize(executable, filepath);
 		}
 
-		_error_reporter->post_information(std::format("wrote fresh executable at `{}`", _filepath), NULL_TOKEN);
+		_error_reporter->post_information(std::format("wrote fresh executable for `{}`", filepath), NULL_TOKEN);
 		_error_reporter->close_context();
 	}
 }
