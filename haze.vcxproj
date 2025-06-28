@@ -36,6 +36,7 @@
     <ClCompile Include="Bimap.cpp" />
     <ClCompile Include="BinaryUtilities.cpp" />
     <ClCompile Include="CommonErrors.cpp" />
+    <ClCompile Include="DependencyInjector.cpp" />
     <ClCompile Include="ExitProgramException.cpp" />
     <ClCompile Include="ExtendedInteger.cpp" />
     <ClCompile Include="IntegerLiteral.cpp" />
@@ -47,6 +48,7 @@
     <ClCompile Include="SymbolDatabase.cpp" />
     <ClCompile Include="SymbolExporter.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Tracking.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeCheck.cpp" />
     <ClCompile Include="Variable.cpp" />
@@ -162,6 +164,7 @@
     <ClInclude Include="AutoJob.h" />
     <ClInclude Include="AutoJSON.h" />
     <ClInclude Include="BinaryCommandType.h" />
+    <ClInclude Include="Tracking.h" />
     <ClInclude Include="BranchCommandType.h" />
     <ClInclude Include="CommonErrors.h" />
     <ClInclude Include="ExitProgramException.h" />
@@ -170,6 +173,7 @@
     <ClInclude Include="ExtendedInteger.h" />
     <ClInclude Include="FunctionArgumentExpression.h" />
     <ClInclude Include="HazeBuilder.h" />
+    <ClInclude Include="DependencyInjector.h" />
     <ClInclude Include="JSON.h" />
     <ClInclude Include="Scanner.h" />
     <ClInclude Include="SymbolExporter.h" />

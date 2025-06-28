@@ -14,7 +14,7 @@ namespace hz
 		LEXER,
 	};
 
-	class Scanner : Injects<FileManager>
+	class Scanner : WithInjected<FileManager>
 	{
 	private:
 		std::string _source;

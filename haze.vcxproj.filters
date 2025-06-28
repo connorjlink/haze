@@ -96,6 +96,12 @@
     <Filter Include="Source Files\Scanner">
       <UniqueIdentifier>{c5040c31-efec-470e-a2af-ac00fcb247fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Dependency">
+      <UniqueIdentifier>{3a51e834-0ca7-4b1d-a59f-9f65624f35fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tracking">
+      <UniqueIdentifier>{61585894-ef0d-45d7-9933-38d1d9cfcd70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Simulator.cpp">
@@ -418,6 +424,12 @@
     </ClCompile>
     <ClCompile Include="Scanner.cpp">
       <Filter>Source Files\Scanner</Filter>
+    </ClCompile>
+    <ClCompile Include="DependencyInjector.cpp">
+      <Filter>Source Files\Dependency</Filter>
+    </ClCompile>
+    <ClCompile Include="Tracking.cpp">
+      <Filter>Source Files\Tracking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -861,6 +873,12 @@
     </ClInclude>
     <ClInclude Include="Scanner.h">
       <Filter>Source Files\Scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="DependencyInjector.h">
+      <Filter>Source Files\Dependency</Filter>
+    </ClInclude>
+    <ClInclude Include="Tracking.h">
+      <Filter>Source Files\Tracking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
