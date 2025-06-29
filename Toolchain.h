@@ -27,8 +27,6 @@ namespace hz
 		{
 			_toolchain_task = -1;
 		}
-
-	public:
 		virtual ~Toolchain() = default;
 
 	public:

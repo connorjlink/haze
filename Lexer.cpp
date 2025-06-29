@@ -6,144 +6,111 @@ import std;
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define APPEND_TOKEN(type, raw) tokens.emplace_back(Token{ type, raw, { _filepath, _position, _line, _column } })
-
-namespace
-{
-	// used to continue lexing until reaching the end of a string literal
-	// NOTE: this method does not work if there are escape code \" characters embedded within!
-	int isquoted(int c)
-	{
-		return c != '"';
-	}
-
-	// used to continue lexing until reaching a word boundary
-	// NOTE: this method is naive and only checks for whitespace characters
-	int nisspace(int c)
-	{
-		// NOTE: boolean NOT is the intended behavior here
-		return !std::isspace(c);
-	}
-
-
-	hz::Token error_token(const std::string& value, hz::SourceLocation location)
-	{
-		hz::Token token{};
-
-		token.type = hz::TokenType::ERROR;
-		token.text = value;
-		token.location = location;
-		
-		return token;
-	}
-}
+#define APPEND_TOKEN(ttype, raw) tokens.emplace_back(Token{ .type = ttype, .text = raw, .location = get_state().location })
 
 namespace hz
 {
-	void Lexer::advance(std::size_t how_many)
+	Lexer::Lexer(const std::string& filepath)
+		: Scanner{ filepath }
 	{
-
+		commit<void>([&](auto& context) -> void
+		{
+			context.source = USE_SAFE(FileManager).get_file(filepath).processed_contents();
+			context.location = null_location(filepath);
+		});
 	}
 
-	void Lexer::expect()
+	ScannerType Lexer::stype(void) const noexcept
 	{
-
+		return ScannerType::LEXER;
 	}
 
 	std::vector<Token> Lexer::lex()
 	{
 		std::vector<Token> tokens{};
 
-		/*
-		std::cout << std::format("Token: {} ({})\n", hz::debug_tokens.at(token.type),
-			(token.type == TokenType::INT || token.type == TokenType::IDENTIFIER) ? std::format("({})", token.value.value_or("undef")) : "");
-		*/
-
-		for (auto i = 0; i < _input.length(); i++)
+		while (!eof())
 		{
-			auto rest = [&](int(*functor)(int))
-			{
-				std::string out;
-
-				while (i < _input.length() && functor(_input[i]))
-				{
-					out += _input[i];
-					i++;
-				}
-
-				i--;
-
-				return out;
-			};
-
-
 			using enum TokenType;
 
-			const auto& current = _input[i + 0];
-			const auto& next = _input[i + 1];
+			// NOTE: intentionally making a copy here
+			const auto here = current();
+			const auto there = lookahead();
 
-			if (current == ' ' || current == '\n' || current == '\r' || current == '\t')
+			if (my_isspace(here))
 			{
-				if (current == '\n')
-				{
-					_line++;
-					_column = 1;
-				}
-
-				continue;
+				advance();
 			}
 
-			else if (current == '/')
+			else if (my_isdigit(here))
 			{
-				if (_input[i + 1] == '/')
-				{
-					while (_input[i] != '\n')
-					{
-						i++;
-					}
+				const auto rest = substring_while(my_isdigit);
+				APPEND_TOKEN(INT, rest);
 
+				advance(rest.length()); // number
+			}
+
+			else if (here == '/')
+			{
+				if (there == '/')
+				{
+					// comment, no need to add a token
+					skip_while([](auto c) { return c != '\n'; });
+					advance(); // newline
 					continue;
 				}
 
-				USE_SAFE(ErrorReporter).post_error("unexpected character `/`",
-					::error_token({ current }, { _filepath, _position, _line, _column }));
+				APPEND_TOKEN(SLASH, { here });
+
+				advance(); // /
 			}
 
-			else if ('0' <= current && current <= '9')
+			// NOTE: preprocessor will have already tried to expand macros
+			// hexadecimal integer literal
+			else if (here == '$')
 			{
-				APPEND_TOKEN(INT, rest(std::isdigit));
-			}
+				advance(); // dollar sign
+				
+				const auto lexeme = substring_while(my_ishex);
 
-			else if (current == '$')
-			{
-				// Hexadecimal integer literal
-				i++;
-				const auto lexeme = rest(std::isxdigit);
-				const auto number = std::stoi(lexeme, nullptr, 16);
+				undo(); // rewind to dollar sign
+
+				std::int32_t number{};
+				auto [ptr, ec] = std::from_chars(lexeme.data(), lexeme.data() + lexeme.size(), number, 16);
+
+				if (ec != std::errc())
+				{
+					USE_SAFE(ErrorReporter).post_error(std::format(
+						"unparseable integer literal `{}`", lexeme), forge_token(lexeme));
+					advance(); // dollar sign
+					advance(lexeme.length()); // number
+					continue;
+				}
+
+				// convert back to a string to apply regional formatting for error reporting
 				APPEND_TOKEN(INT, std::format("{}", number));
+
+				advance(); // dollar sign
+				advance(lexeme.length()); // number
 			}
 
-			else if ('a' <= current && current <= 'z' ||
-					 'A' <= current && current <= 'Z')
+			else if (here == '"')
 			{
-				const auto lexeme = rest(std::isalnum);
-				const auto search = _token_map.at(lexeme);
+				advance(); // opening quote
 
-				if (search)
-				{
-					APPEND_TOKEN(*search, lexeme);
-				}
+				// NOTE: does not allow for \" escape sequences!
+				const auto string_literal = substring_while([](auto c) { return c != '"'; });
 
-				else
-				{
-					APPEND_TOKEN(IDENTIFIER, lexeme);
-				}
+				undo(); // rewind to opening quote
+				APPEND_TOKEN(STRING, string_literal);
+
+				advance(); // opening quote
+				advance(); // closing quote
 			}
 
-			else if (current == '.')
+			else if (here == '.')
 			{
-				i++;
-				const auto lexeme = rest(std::isalnum);
+				const auto lexeme = substring_while(my_isalnum);
 				const auto search = _token_map.at(std::format(".{}", lexeme));
 
 				if (search)
@@ -155,59 +122,66 @@ namespace hz
 				{
 					APPEND_TOKEN(IDENTIFIER, lexeme);
 				}
+
+				advance(); // .
+				advance(lexeme.length()); // directive
 			}
 
-			else if (current == '"')
+			else if (my_isidentifierfirst(here))
 			{
-				// skip opening quote
-				i++;
+				const auto lexeme = read_identifier();
+				const auto search = _token_map.at(lexeme);
 
-				const auto lexeme = rest(::isquoted);
-
-				// skip closing quote
-				i++;
-
-				APPEND_TOKEN(STRING, lexeme);
-			}
-
-			else if (current == '=')
-			{
-				if (next == '=')
+				if (search.has_value())
 				{
-					const auto lexeme = "==";
-					APPEND_TOKEN(EQUALSEQUALS, lexeme);
-					
-					i++;
+					APPEND_TOKEN(search.value(), lexeme);
 				}
-				
+
 				else
 				{
-					const auto lexeme = "=";
-					APPEND_TOKEN(EQUALS, lexeme);
+					APPEND_TOKEN(IDENTIFIER, lexeme);
 				}
+
+				advance(lexeme.length());
 			}
 
-			else if (current == '!')
+			else if (here == '!')
 			{
-				if (next == '=')
+				if (there == '=')
 				{
 					const auto lexeme = "!=";
 					APPEND_TOKEN(EXCLAMATIONEQUALS, lexeme);
-
-					i++;
+					advance(2); // !=
 				}
 
 				else
 				{
 					const auto lexeme = "!";
 					APPEND_TOKEN(EXCLAMATION, lexeme);
+					advance(); /// !
+				}
+			}
+
+			else if (here == '=')
+			{
+				if (there == '=')
+				{
+					const auto lexeme = "==";
+					APPEND_TOKEN(EQUALSEQUALS, lexeme);
+					advance(2); // ==
+				}
+
+				else
+				{
+					const auto lexeme = "=";
+					APPEND_TOKEN(EQUALS, lexeme);
+					advance(); // =
 				}
 			}
 
 			else
 			{
-				const auto current_string = std::string{ current };
-
+				const auto current_string = std::string{ here };
 				const auto search = _token_map.at(current_string);
 
 				if (search.has_value())
@@ -217,9 +191,11 @@ namespace hz
 
 				else
 				{
-					USE_SAFE(ErrorReporter).post_error(std::format("unexpected token `{}`", current_string),
-						::error_token(current_string, { _filepath, _position, _line, _column }));
+					USE_SAFE(ErrorReporter).post_error(std::format(
+						"unexpected token `{}`", current_string), error_token(current_string));
 				}
+
+				advance(current_string.length());
 			}
 		}
 

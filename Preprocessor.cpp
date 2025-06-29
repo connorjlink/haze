@@ -56,136 +56,45 @@ namespace
 
 namespace hz
 {
+	Preprocessor::Preprocessor(const std::string& filepath)
+		: Scanner{ filepath }, _files_to_process{}
+	{
+		const auto contents = USE_SAFE(FileManager).get_file(filepath).raw_contents();
+		// moving the contents is safe because the filemanager returns a copy
+		set_state(SourceContext{ .source = std::move(contents), .location = { filepath, 0, 1, 1 } });
+		save_state();
+	}
+
+	ScannerType Preprocessor::stype(void) const noexcept
+	{
+		return ScannerType::PREPROCESSOR;
+	}
+
 	void Preprocessor::register_macro_definition(const Macro& macro)
 	{
 		// only specifies the original definition, so invokations have to manually export each time
 		const auto symbol = _database->add_define(macro.name, macro.token);
 	}
 
-	void Preprocessor::register_macro_invokation(Context& context, const std::string& name)
+	void Preprocessor::register_macro_invokation(const std::string& name)
 	{
-		const auto forged = forge(context);
+		const auto forged = forge_token();
 		// explicitly mark as visited
 		const auto symbol = _database->reference_symbol(SymbolType::DEFINE, name, forged, true);
 		_exporter->enqueue(symbol, forged);
 	}
 
-	std::string Preprocessor::read_identifier(Context& context, bool advance_context)
-	{
-		auto position = context.location.position;
-		auto& content = context.content;
-
-		auto start = position;
-
-		// special case for the first character
-		if (position >= content.size() || !is_identifier_first(content[position]))
-		{
-			return "";
-		}
-
-		position++;
-		while (position < content.size() && is_identifier(content[position]))
-		{
-			position++;
-		}
-
-		auto end = position;
-
-		const auto length = end - start;
-
-		if (advance_context)
-		{
-			advance(context, length);
-		}
-
-		return content.substr(start, length);
-	}
-
-	std::string Preprocessor::substring_until(Context& context, char c)
-	{
-		const auto start = context.location.position;
-		
-		while (context.current() != '"' && context.location.position < context.content.length())
-		{
-			context.location.position++;
-		}
-
-		const auto string = context.content.substr(start, context.location.position - start);
-		return string;
-	}
-
-	Token Preprocessor::forge(const Context& context) const
-	{
-		auto current = std::string{ context.current() };
-
-		// default to identifier unless the contex holds a valid context for which to search
-		auto type = TokenType::IDENTIFIER;
-		if (_token_map.contains(current))
-		{
-			// has_value() strengthened
-			type = _token_map.at(current).value();
-		}
-
-		return Token
-		{
-			.type = type,
-			.text = current,
-			.location = context.location,
-		};
-	}
-
-	bool Preprocessor::expect(Context& context, char expected, bool consume_whitespace)
-	{
-		if (auto c = context.current(); c != expected)
-		{
-			USE_SAFE(ErrorReporter).post_error(std::format(
-				"expected token `{}` to specify an include filepath but got `{}`", expected, c), NULL_TOKEN);
-			return false;
-		}
-
-		// if the character matches, consume it
-		advance(context, 1);
-
-		if (consume_whitespace)
-		{
-			// try consume as requested
-			skip_whitespace(context, false);
-		}
-		return true;
-	}
-
-	bool Preprocessor::match_macro_invokation(Context& context)
+	bool Preprocessor::match_macro_invokation(void)
 	{
 		// will return empty if there is not a valid macro invokation
-		return read_identifier(context, false) != "";
+		return read_identifier(false) != "";
 	}
 
 	void Preprocessor::load_file(const std::string& filepath)
 	{
-		std::ifstream file(filepath, std::ios::binary);
-		if (!file)
-		{
-			USE_UNSAFE(ErrorReporter).post_error(std::format(
-				"could not open file `{}`", filepath), forge({ "", { filepath, 0, 1, 1 } }));
-			return;
-		}
-
-		const auto size = std::filesystem::file_size(filepath);
-
-		// is this any faster than string('\0', size)?
-		std::string content{};
-		content.resize(size);
-
-		file.read(content.data(), size);
-		if (!file)
-		{
-			USE_UNSAFE(ErrorReporter).post_error(std::format(
-				"error reading file `{}`", filepath), forge({ "", { filepath, 0, 1, 1 } }));
-			return;
-		}
-
-		_raw_file_cache.emplace(filepath, content);
-		_files_to_process.emplace(Context{ content, { filepath, 0, 1, 1 } });
+		USE_SAFE(FileManager).open_file(filepath);
+		const auto contents = USE_SAFE(FileManager).get_file(filepath).raw_contents();
+		_files_to_process.emplace(SourceContext{ .source = contents, .location = { filepath, 0, 1, 1 } });
 	}
 
 	void Preprocessor::preprocess(const std::string& initial_file)
@@ -197,10 +106,9 @@ namespace hz
 			auto& context = _files_to_process.top();
 
 			// only pop once advanced past the last virtual location of the file in question
-			if (context.eof())
+			if (eof())
 			{
-				// about to dispose context, so safe to move from here
-				_processed_file_cache.emplace(initial_file, std::move(context.content));
+				USE_SAFE(FileManager).update_file(context.location.filepath, context.source);
 				_files_to_process.pop();
 				continue;
 			}
@@ -210,166 +118,145 @@ namespace hz
 			{
 				case '.':
 				{
-					if (match_keyword(context, INCLUDE_KEYWORD))
+					if (match_keyword(INCLUDE_KEYWORD))
 					{
-						handle_include(context);
+						handle_include();
 					}
-					else if (match_keyword(context, MACRO_KEYWORD))
+					else if (match_keyword(MACRO_KEYWORD))
 					{
-						handle_macro_definition(context);
+						handle_macro_definition();
 					}
 					else
 					{
-						// unrecognized, pass through
-						advance(context);
+						advance();
 					}
 				} break;
 
 				case '$':
 				{
-					if (match_macro_invokation(context))
+					if (match_macro_invokation())
 					{
-						handle_macro_invokation(context);
+						handle_macro_invokation();
 					}
 					else
 					{
-						// unrecognized, pass through
-						advance(context);
+						advance();
 					}
 				} break;
 
 				default:
 				{
-					// unrecognized, pass through
-					advance(context);
+					advance();
 				} break;
 			}
 		}
 	}
 
-	const std::string& Preprocessor::get_preprocessed_source(const std::string& filepath)
-	{
-		if (!_processed_file_cache.contains(filepath))
-		{
-			preprocess(filepath);
-		}
-
-		if (!_processed_file_cache.contains(filepath))
-		{
-			// using NULL_TOKEN is okay since the context is probably not available if the operation failed
-			USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
-				"failed to lazy-load preprocess source file `{}`", filepath), NULL_TOKEN);
-		}
-
-		// strengthened contains
-		return _processed_file_cache.at(filepath);
-	}
-
-	void Preprocessor::handle_include(Context& context)
+	void Preprocessor::handle_include(void)
 	{
 		// consume keyword ".include" and any trailing whitespace
-		advance(context, INCLUDE_KEYWORD.length());
-		skip_whitespace(context);
+		advance(INCLUDE_KEYWORD.length());
+		skip_whitespace();
 
-		expect(context, '"');
+		expect('"');
 
 		// e.g., test_file.hz
-		const auto include_filepath = substring_until(context, '"');
-		expect(context, '"');
+		const auto include_filepath = substring_until('"');
+		expect('"');
 		
-		if (include_filepath == context.location.filepath)
+		if (include_filepath == wherein())
 		{
 			USE_SAFE(ErrorReporter).post_error(std::format(
-				"invalid recursive include of file `{}`", include_filepath), forge(context));
+				"invalid recursive include of file `{}`", include_filepath), forge_token());
 			return;
 		}
 
 		load_file(include_filepath);
 	}
 
-	void Preprocessor::handle_macro_definition(Context& context)
+	void Preprocessor::handle_macro_definition(void)
 	{
 		// consume keyword ".macro" and any trailing whitespace
-		advance(context, MACRO_KEYWORD.length());
-		skip_whitespace(context);
+		advance(MACRO_KEYWORD.length());
+		skip_whitespace();
 
-		const auto name = read_identifier(context);
-		advance(context, name.length());
-		skip_whitespace(context);
+		const auto name = read_identifier();
+		advance(name.length());
+		skip_whitespace();
 		
-		expect(context, '=');
-		expect(context, '(');
+		expect('=');
+		expect('(');
 
 		// greedily consume until a closing parenthesis
 		std::vector<std::string> arguments{};
-		while (context.current() != ')')
+		while (current() != ')')
 		{
-			const auto argument = read_identifier(context);
-			advance(context, argument.length());
+			const auto argument = read_identifier();
+			advance(argument.length());
 			arguments.push_back(argument);
-			anticipate(context, ',');
+			anticipate(',');
 		}
 
-		expect(context, ')');
-		expect(context, ':');
+		expect(')');
+		expect(':');
 
-		expect(context, '{');
+		expect('{');
 
-		const auto body = substring_until(context, '}');
-		expect(context, '}');
+		const auto body = substring_until('}');
+		expect('}');
 
-		Macro macro{ name, arguments, body, forge(context) };
+		Macro macro{ name, arguments, body, forge_token() };
 		defined_macros.try_emplace(name, macro);
 
 		// call stub you can integrate with your symbol DB
 		register_macro_definition(macro);
 	}
 
-	void Preprocessor::handle_macro_invokation(Context& context)
+	void Preprocessor::handle_macro_invokation()
 	{
-		const auto start = context.where();
-		expect(context, '$');
+		const auto start = whereat();
+		expect('$');
 
-		const auto name = read_identifier(context);
+		const auto name = read_identifier();
 
-		expect(context, '(');
+		expect('(');
 
 		// greedily consume until a closing parenthesis
 		std::vector<std::string> arguments{};
-		while (context.current() != ')')
+		while (current() != ')')
 		{
-			const auto argument = read_identifier(context);
+			const auto argument = read_identifier();
 			arguments.push_back(argument);
-			anticipate(context, ',');
+			anticipate(',');
 		}
 
-		expect(context, ')');
+		expect(')');
 
 		// explicitly forbid any macro recursion at all. if this macro was called anywhere in the current
 		// macro callstack, error out! this is the easiest way to prevent infinite recursion
 		if (_macro_invokations.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("invalid recursive macro `{}`", name), forge(context));
+			USE_SAFE(ErrorReporter).post_error(std::format("invalid recursive macro `{}`", name), forge_token());
 			return;
 		}
 
 		if (!defined_macros.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` is undefined", name), forge(context));
+			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` is undefined", name), forge_token());
 			return;
 		}
 
 		const auto& macro = defined_macros.at(name);
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter).post_error("macro argument count mismatch", forge(context));
+			USE_SAFE(ErrorReporter).post_error("macro argument count mismatch", forge_token());
 			return;
 		}
 
 		if (macro.args.size() != arguments.size())
 		{
 			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` was defined with {} arguments but called with {}",
-				macro.name, macro.args.size(), arguments.size()), forge(context));
+				macro.name, macro.args.size(), arguments.size()), forge_token());
 			return;
 		}
 
@@ -383,8 +270,8 @@ namespace hz
 			replace(expanded, std::format("[{}]", macro.args[i]), arguments[i]);
 		}
 
-		context.insert_inline(expanded);
-		register_macro_invokation(context, name);
+		insert_adjacent(expanded);
+		register_macro_invokation(name);
 
 		_macro_invokations.erase(name);
 

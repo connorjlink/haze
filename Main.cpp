@@ -43,9 +43,20 @@ StackAllocator* hz::_stack_allocator;
 
 int main(int argc, char** argv)
 {
+	//ServiceContainer::instance().register_factory<FileManager>([]
+	//{
+	//	return std::make_shared<FileManager>();
+	//});
+	
+	// alternative API for thread-shared service (singleton)
+	//SingletonContainer::instance().register_singleton<FileManager>();
+	SingletonContainer::instance().register_singleton<ErrorReporter>();
+	SingletonContainer::instance().register_singleton<FileManager>();
+
+
 	_database = new SymbolDatabase{};
-	_exporter = new SymbolExporter{ std::cout };
 	// spools up the worker thread in the background to idle until symbol information becomes available
+	_exporter = new SymbolExporter{ std::cout };
 	_exporter->launch();
 
 	_heap_allocator = new HeapAllocator{};
@@ -60,19 +71,7 @@ int main(int argc, char** argv)
 
 	auto command_line_parser = CommandLineParser{};
 	command_line_parser.parse(argc, argv);
-
-
-	hz::ServiceContainer::instance().register_factory<FileManager>([]
-	{
-		return std::make_shared<FileManager>();
-	});
-
-	// alternative API for thread-shared service (singleton)
-	//hz::SingletonContainer::instance().register_singleton<FileManager>();
-	hz::SingletonContainer::instance().register_singleton<ErrorReporter>();
-
-
-
+	
 	// require explicit opt-in to run tests; takes about 300us otherwise
 	if (_options->_execution == ExecutionType::VALIDATE)
 	{

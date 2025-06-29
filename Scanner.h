@@ -12,8 +12,6 @@
 
 namespace hz
 {
-	class FileManager;
-
 	enum class ScannerType
 	{
 		PREPROCESSOR,
@@ -22,11 +20,45 @@ namespace hz
 
 	struct SourceContext
 	{
+	public:
 		std::string source;
 		SourceLocation location;
+
+	public:
+		std::size_t whereat(void) const
+		{
+			return location.position;
+		}
+
+		std::string wherein(void) const
+		{
+			return location.filepath;
+		}
+
+		bool eof(void) const
+		{
+			return whereat() >= source.length();
+		}
+
+		char current(void) const
+		{
+			if (!eof())
+			{
+				return source[whereat()];
+			}
+			return '\0';
+		}
+
+		char lookahead(void) const
+		{
+			if (whereat() + 1 < source.length())
+			{
+				return source[whereat() + 1];
+			}
+			return '\0';
+		}
 	};
 
-	// represents a generic lexical analyzer instance 
 	class Scanner : 
 		public InjectSingleton<FileManager, ErrorReporter>,
 		public UndoableRedoable<SourceContext>
@@ -44,16 +76,10 @@ namespace hz
 			_current_context = context;
 		}
 
-	private:
-		void commit(void(*callable)(SourceContext&))
+	protected:
+		template<typename T>
+		T commit(std::function<T(SourceContext&)> callable)
 		{
-			if (callable == nullptr)
-			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
-					"invalid nullish entity tracking instance"), NULL_TOKEN);
-				return;
-			}
-
 			callable(_current_context);
 			set_state(_current_context);
 			save_state();
@@ -62,7 +88,9 @@ namespace hz
 	protected:
 		// positional queries
 		char current(void) const;
-		std::size_t where(void) const;
+		char lookahead(void) const;
+		std::size_t whereat(void) const;
+		std::string wherein(void) const;
 		bool eof(void) const;
 
 	protected:
@@ -72,37 +100,59 @@ namespace hz
 
 	protected:
 		// error handling/recovery
-		void advance(std::size_t);
-		bool expect(char, bool);
-		bool anticipate(char, bool);
+		void advance(std::size_t = 1u);
+		bool expect(char, bool = true);
+		bool anticipate(char, bool = true);
 		Token forge_token(void) const;
+		Token forge_token(const std::string&) const;
+		Token error_token(const std::string&);
 
 	protected:
-		// advance context?
-		std::string read_identifier(bool);
+		// advance the cursor context?
+		std::string read_identifier(bool = false);
 		bool match_keyword(std::string_view);
+		void skip_whitespace(bool = false);
+		void skip_until(char);
+		void skip_while(bool(*)(char));
+		std::string substring_until(char, bool = false);
+		std::string substring_while(bool(*)(char), bool = false);
 
 	protected:
-		bool is_identifier_first(char c) const
+		inline static bool my_isidentifierfirst(char c)
 		{
 			return std::isalpha(c) || c == '_';
 		}
-		bool is_identifier(char c) const
+		inline static bool my_isidentifier(char c)
 		{
 			return std::isalnum(c) || c == '_';
 		}
-
-	protected:
-		void skip_whitespace(bool = false);
-		std::string substring_until(char, bool = false);
-
+		inline static bool my_isspace(char c)
+		{
+			return !!std::isspace(static_cast<int>(c));
+		}
+		inline static bool my_isdigit(char c)
+		{
+			return !!std::isdigit(static_cast<int>(c));
+		}
+		inline static bool my_isalpha(char c)
+		{
+			return !!std::isalpha(static_cast<int>(c));
+		}
+		inline static bool my_isalnum(char c)
+		{
+			return !!std::isalnum(static_cast<int>(c));
+		}
+		inline static bool my_ishex(char c)
+		{
+			return !!std::isdigit(static_cast<int>(c)) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+		}
+		
 	public:
 		virtual ScannerType stype(void) const noexcept = 0;
-		virtual void run(void) noexcept = 0;
 
 	public:
 		Scanner(const std::string&);
-		virtual ~Scanner() = default;
+		virtual ~Scanner();
 	};
 }
 

@@ -12,10 +12,13 @@ namespace hz
 	using tracking_id = std::size_t;
 	using tracking_time_point = std::chrono::time_point<std::chrono::system_clock>;
 
-	tracking_time_point system_timestamp(void)
-	{
-		return std::chrono::system_clock::now();
-	}
+#ifndef NDEBUG
+	static constexpr inline bool ENABLE_TRACKING = true;
+#else
+	static constexpr inline bool ENABLE_TRACKING = false;
+#endif
+
+	tracking_time_point system_timestamp(void);
 
 	class Trackable;
 
@@ -135,6 +138,8 @@ namespace hz
 				//entry.created = system_timestamp();
 				entry.is_active = true;
 			}
+
+			return true;
 		}
 
 		template<typename T>
@@ -154,6 +159,8 @@ namespace hz
 			entry.modified = system_timestamp();
 			// active flag always reflects the results of the most recent transaction
 			entry.is_active = true;
+
+			return true;
 		}
 
 		template<typename T>
@@ -172,6 +179,8 @@ namespace hz
 			entry.number_retired++;
 			entry.retired = system_timestamp();
 			entry.is_active = false;
+
+			return true;
 		}
 
 		template<typename T>
@@ -195,6 +204,8 @@ namespace hz
 				// only timestamp the last entity to get deleted
 				entry.deleted = system_timestamp();
 			}
+
+			return true;
 		}
 
 	public:
@@ -224,7 +235,7 @@ namespace hz
 	private:
 		friend Tracker;
 		tracking_id _id;
-		const bool _is_enabled;
+		bool _is_enabled;
 
 	private:
 		static tracking_id generate_id(void)

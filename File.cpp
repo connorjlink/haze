@@ -1,10 +1,40 @@
 import std;
 
 #include "File.h"
-#include "ErrorReporter.h"
 
 // Haze File.cpp
 // (c) Connor J. Link. All Rights Reserved.
+
+namespace
+{
+	std::string friendlify_ordinal(int cardinal)
+	{
+		if (cardinal <= 0)
+		{
+			return std::to_string(cardinal) + "th";
+		}
+
+		// 11th, 12th, and 13th need a special case
+		const auto last_two_digits = cardinal % 100;
+		if (last_two_digits >= 11 && last_two_digits <= 13)
+		{
+			return std::to_string(cardinal) + "th";
+		}
+
+		const auto last_digit = cardinal % 10;
+		switch (last_digit)
+		{
+			case 1:
+				return std::to_string(cardinal) + "st";
+			case 2:
+				return std::to_string(cardinal) + "nd";
+			case 3:
+				return std::to_string(cardinal) + "rd";
+			default:
+				return std::to_string(cardinal) + "th";
+		}
+	}
+}
 
 namespace hz
 {
@@ -13,7 +43,7 @@ namespace hz
 		return _type;
 	}
 
-	const std::string& File::raw_contents(void) 
+	std::string File::raw_contents(void) 
 	{
 		if (_raw_contents.has_value())
 		{
@@ -29,6 +59,8 @@ namespace hz
 			source.assign((std::istreambuf_iterator<char>(file)),
 						   std::istreambuf_iterator<char>());
 
+			_raw_contents = { source };
+
 			return source;
 		}
 
@@ -36,7 +68,7 @@ namespace hz
 			"file {} not found", _filepath), NULL_TOKEN);
 	}
 
-	const std::string& File::processed_contents(void)
+	std::string File::processed_contents(void)
 	{
 		if (_processed_contents.has_value())
 		{
@@ -57,6 +89,19 @@ namespace hz
 
 		USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
 			"file {} not yet loaded", _filepath), NULL_TOKEN);
+	}
+
+	void File::reload(void)
+	{
+		_reload_count++;
+
+		// since the file contents lazy-load and cache as needed, simply deleting the cache 
+		// will force a reload upon next access
+		_raw_contents.reset();
+		_processed_contents.reset();
+
+		USE_SAFE(ErrorReporter).post_information(std::format(
+			"reloading file `{}` for the {} time", _filepath, ::friendlify_ordinal(_reload_count)), NULL_TOKEN);
 	}
 
 	void File::compute_type(void)

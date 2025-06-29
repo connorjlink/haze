@@ -28,7 +28,6 @@ namespace hz
 		const auto preprocess_task = _job_manager->begin_job("preprocessing");
 		const auto preprocessor = new Preprocessor{ filepath };
 		preprocessor->preprocess(filepath);
-		const auto& source_processed = preprocessor->get_preprocessed_source(filepath);
 		_job_manager->end_job(preprocess_task);
 
 

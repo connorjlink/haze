@@ -1,15 +1,15 @@
 function byte fib = (byte n)
 {
-	if (n == 0)
+	if (n == 0ul)
 	{
-		return 0;
+		return 0ul;
 	}
 
-	return n + fib(n - 1);
+	return n + fib(n - 1ul);
 }
 
 function byte main = ()
 {
-	fib(10);
-	return 0;
+	fib(10ul);
+	return 0ul;
 }

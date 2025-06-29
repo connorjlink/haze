@@ -21,9 +21,6 @@ namespace hz
 		}
 
 	public:
-		virtual ~Command() = default;
-
-	public:
 		virtual NodeType ntype() const final override;
 		virtual CommandType ctype() const = 0;
 	};

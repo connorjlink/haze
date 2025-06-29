@@ -13,20 +13,13 @@ namespace hz
 	class Lexer : public Scanner
 	{
 	public:
-		void advance(std::size_t = 0);
-		void expect(char);
-		void expect(const std::string&);
 		std::vector<Token> lex();
 
 	public:
 		ScannerType stype(void) const noexcept override;
 
 	public:
-		Lexer(const std::string& filepath)
-			: Scanner{ filepath }
-		{
-		}
-		virtual ~Lexer() = default;
+		Lexer(const std::string&);
 	};
 }
 

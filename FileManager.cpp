@@ -9,9 +9,15 @@ namespace hz
 {
 	void FileManager::open_file(const std::string& filepath)
 	{
+		if (has_file(filepath))
+		{
+			auto& file = _files.at(filepath);
+			file.reload();
+		}
+		
 		auto file = File{ filepath };
 		file.compute_type();
-		_files[filepath] = file;
+		_files.emplace(filepath, file);
 	}
 
 	bool FileManager::has_file(const std::string& filepath)
@@ -33,7 +39,8 @@ namespace hz
 	{
 		if (has_file(filepath))
 		{
-			_files[filepath].update_content(content);
+			auto& file = _files.at(filepath);
+			file.process(content);
 			return;
 		}
 

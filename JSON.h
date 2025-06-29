@@ -37,9 +37,6 @@ namespace hz
 	public:
 		virtual JSONType jtype(void) const noexcept override;
 		virtual JSONValueType vtype(void) const noexcept = 0;
-
-	public:
-		virtual ~JSONValue() = default;
 	};
 
 	class StringJSONValue : public JSONValue
@@ -53,7 +50,6 @@ namespace hz
 
 	public:
 		StringJSONValue(const std::string& value) : value { value } {}
-		virtual ~StringJSONValue() = default;
 	};
 
 	class NumberJSONValue : public JSONValue
@@ -67,7 +63,6 @@ namespace hz
 
 	public:
 		NumberJSONValue(std::int32_t value) : value{ value } {}
-		virtual ~NumberJSONValue() = default;
 	};
 
 	class BooleanJSONValue : public JSONValue
@@ -81,7 +76,6 @@ namespace hz
 
 	public:
 		BooleanJSONValue(bool value) : value{ value } {}
-		virtual ~BooleanJSONValue() = default;
 	};
 
 	class NullJSONValue : public JSONValue
@@ -92,10 +86,7 @@ namespace hz
 
 	public:
 		NullJSONValue() {}
-		virtual ~NullJSONValue() = default;
 	};
-
-
 
 
 	class JSONObject : public JSON
@@ -111,7 +102,7 @@ namespace hz
 		std::string serialize(void) const noexcept override;
 
 	public:
-		virtual ~JSONObject()
+		~JSONObject()
 		{
 #pragma message ("TODO FIX THE OBJECT DELETION")
 			/*for (auto it = members.begin(); it != members.end(); it++)
@@ -136,7 +127,7 @@ namespace hz
 		std::string serialize(void) const noexcept override;
 
 	public:
-		virtual ~JSONArray()
+		~JSONArray()
 		{
 			for (auto it = objects.begin(); it != objects.end(); it++)
 			{

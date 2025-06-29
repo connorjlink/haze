@@ -59,7 +59,6 @@ namespace hz
 			arguments = {};
 			locals_count = { 0 };
 		}
-		virtual ~FunctionSymbol() = default;
 
 	public:
 		virtual SymbolType ytype() const final override;
@@ -76,7 +75,6 @@ namespace hz
 			: Symbol{ name }, allocation{ nullptr }, type{ type }
 		{
 		}
-		virtual ~ArgumentSymbol() = default;
 
 	public:
 		virtual SymbolType ytype() const final override;
@@ -93,7 +91,6 @@ namespace hz
 			: Symbol{ name }, type{ type }, allocation{ allocation }
 		{
 		}
-		virtual ~VariableSymbol() = default;
 
 	public:
 		virtual SymbolType ytype() const final override;
@@ -110,7 +107,6 @@ namespace hz
 			: Symbol{ name }, type{ type }, value { value }
 		{
 		}
-		virtual ~DefineSymbol() = default;
 
 	public:
 		virtual SymbolType ytype() const final override;
@@ -126,7 +122,6 @@ namespace hz
 			: Symbol{ name }, address{ address }
 		{
 		}
-		virtual ~LabelSymbol() = default;
 
 	public:
 		virtual SymbolType ytype() const final override;
@@ -142,7 +137,6 @@ namespace hz
 			: Symbol{ name }, members{}
 		{
 		}
-		virtual ~StructSymbol() = default;
 
 	public:
 		virtual SymbolType ytype() const final override;

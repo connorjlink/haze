@@ -22,7 +22,6 @@ namespace hz
 
 	public:
 		Function(const std::string&, Type*, std::vector<Expression*>&&, Statement*, const Token&);
-		virtual ~Function() = default;
 
 	public:
 		virtual NodeType ntype() const final override;

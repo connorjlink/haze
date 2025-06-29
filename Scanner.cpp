@@ -10,34 +10,43 @@ namespace hz
 {
 	Scanner::Scanner(const std::string& filepath)
 	{
-#error TODO CONSTRUCT WITH SOMETHING OTHER THAN RAW CONTENTS!!!!! THIS WILL NOT WORK FOR THE LEXER
-		const auto& contents = USE_SAFE(FileManager).get_file(filepath).raw_contents();
-		set_state(SourceContext{ .source = contents, .location = null_location(filepath) });
-		save_state();
+		USE_SAFE(ErrorReporter).open_context(filepath, "scanning");
 	}
 
-	char Scanner::current(void) const
+	Scanner::~Scanner()
 	{
-		if (!eof())
-		{
-			return _current_context.source[where()];
-		}
-		return '\0';
-	}
-
-	std::size_t Scanner::where(void) const
-	{
-		return _current_context.location.position;
+		USE_SAFE(ErrorReporter).close_context();
 	}
 
 	bool Scanner::eof(void) const
 	{
-		return where() >= _current_context.source.length();
+		return _current_context.eof();
+	}
+
+	char Scanner::current(void) const
+	{
+		return _current_context.current();
+	}
+
+	char Scanner::lookahead(void) const
+	{
+		return _current_context.lookahead();
+	}
+
+	std::size_t Scanner::whereat(void) const
+	{
+		return _current_context.whereat();
+	}
+
+	std::string Scanner::wherein(void) const
+	{
+		return _current_context.wherein();
 	}
 
 	void Scanner::insert_adjacent(const std::string& source)
 	{
-		_current_context.source.insert(where(), source);
+		_current_context.source.insert(whereat(), source);
+		save_state();
 	}
 
 	void Scanner::advance(std::size_t how_many)
@@ -76,6 +85,8 @@ namespace hz
 		{
 			skip_whitespace(false);
 		}
+
+		save_state();
 		return true;
 	}
 
@@ -100,41 +111,55 @@ namespace hz
 		return false;
 	}
 
-	Token Scanner::forge_token(void) const
+	Token Scanner::forge_token(const std::string& text) const
 	{
-		auto character = std::string{ current() };
-
 		// default to identifier unless the search proves otherwise
 		auto type = TokenType::IDENTIFIER;
-		if (_token_map.contains(character))
+		if (_token_map.contains(text))
 		{
 			// has_value() strengthened
-			type = _token_map.at(character).value();
+			type = _token_map.at(text).value();
 		}
 
 		return Token
 		{
 			.type = type,
-			.text = character,
+			.text = text,
 			.location = _current_context.location,
 		};
+	}
+
+	Token Scanner::forge_token(void) const
+	{
+		return forge_token({ current() });
+	}
+
+	Token Scanner::error_token(const std::string& value)
+	{
+		Token token{};
+
+		token.type = TokenType::ERROR;
+		token.text = value;
+		token.location = _current_context.location;
+
+		return token;
 	}
 
 	std::string Scanner::read_identifier(bool advance_context)
 	{
 		auto& content = _current_context.source;
 
-		const auto start = where();
+		const auto start = whereat();
 		auto position = start;
 
 		// special case for the first character
-		if (position >= content.size() || !is_identifier_first(content[position]))
+		if (position >= content.size() || !my_isidentifierfirst(content[position]))
 		{
 			return "";
 		}
 
 		position++;
-		while (position < content.size() && is_identifier(content[position]))
+		while (position < content.size() && my_isidentifier(content[position]))
 		{
 			position++;
 		}
@@ -147,6 +172,7 @@ namespace hz
 			advance(length);
 		}
 
+		// enforce URVO
 		return content.substr(start, length);
 	}
 
@@ -154,8 +180,8 @@ namespace hz
 	{
 		const auto length = keyword.length();
 
-		if (_current_context.source.compare(where(), length, keyword) == 0 &&
-			(std::isspace(_current_context.source[where() + length]) || _current_context.source[where() + length] == '"'))
+		if (_current_context.source.compare(whereat(), length, keyword) == 0 &&
+			(std::isspace(_current_context.source[whereat() + length]) || _current_context.source[whereat() + length] == '"'))
 		{
 			return true;
 		}
@@ -180,24 +206,61 @@ namespace hz
 		advance(number_to_skip);
 	}
 
+	void Scanner::skip_until(char c)
+	{
+		while (!eof() && current() != c)
+		{
+			advance();
+		}
+	}
+
+	void Scanner::skip_while(bool(*functor)(char))
+	{
+		while (!eof() && functor(current()))
+		{
+			advance();
+		}
+	}
+
 	std::string Scanner::substring_until(char c, bool advance_until)
 	{
-		const auto start = where();
+		const auto source_length = _current_context.source.length();
+		const auto start = whereat();
 
 		auto position = start;
-		while (current() != '"' && !eof())
+		while (position < source_length && _current_context.source[position] != c)
 		{
 			position++;
 		}
 
 		const auto length = position - start;
-
 		if (advance_until)
 		{
 			advance(length);
 		}
 
-		const auto string = _current_context.source.substr(start, length);
-		return string;
+		// enforce URVO
+		return _current_context.source.substr(start, length);
+	}
+
+	std::string Scanner::substring_while(bool(*functor)(char), bool advance_while)
+	{
+		const auto source_length = _current_context.source.length();
+		const auto start = whereat();
+
+		auto position = start;
+		while (position < source_length && functor(_current_context.source[position]))
+		{
+			position++;
+		}
+
+		const auto length = position - start;
+		if (advance_while)
+		{
+			advance(length);
+		}
+
+		// enforce URVO
+		return _current_context.source.substr(start, length);
 	}
 }

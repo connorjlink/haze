@@ -1,5 +1,5 @@
-#ifndef HAZE_DEPENDENCYNIJECTOR_H
-#define HAZE_DEPENDENCYNIJECTOR_H
+#ifndef HAZE_DEPENDENCYINJECTOR_H
+#define HAZE_DEPENDENCYINJECTOR_H
 
 // Haze DependencyInjector.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -99,7 +99,7 @@ namespace hz
 			if (!_factories.contains(id))
 			{
 				// no return
-				std::println("unregisted factory type with entity id `{}`", id.hash_code());
+				std::println("unregistered factory type with entity id `{}`", id.hash_code());
 				std::exit(1);
 			}
 
@@ -148,7 +148,7 @@ namespace hz
 			if (!_instances.contains(id))
 			{
 				// no return
-				std::println("unregisted global service type with entity id `{}`", id.hash_code());
+				std::println("unregistered global service type with entity id `{}`", id.hash_code());
 				std::exit(1);
 			}
 
