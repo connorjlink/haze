@@ -1,6 +1,9 @@
 #ifndef HAZE_SYMBOL_DATABASE_H
 #define HAZE_SYMBOL_DATABASE_H
 
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
+
 // Haze SymbolDatabase.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -18,6 +21,7 @@ namespace hz
 	class StructSymbol;
 
 	class SymbolDatabase
+		: public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::unordered_map<std::string, Symbol*> _table;

@@ -15,7 +15,7 @@ namespace hz
 			return std::chrono::duration_cast<std::chrono::microseconds>(_stop_time - _start_time);
 		}
 
-		_error_reporter->post_error("undefined job duration stop time", NULL_TOKEN);
+		USE_UNSAFE(ErrorReporter).post_error("undefined job duration stop time", NULL_TOKEN);
 		return std::chrono::microseconds{ 0 };
 	}
 

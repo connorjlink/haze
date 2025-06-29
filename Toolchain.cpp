@@ -17,27 +17,27 @@ namespace hz
 	{
 		_toolchain_task = _job_manager->begin_job("toolchain execution");
 
-		_error_reporter->open_context(filepath, "initializing");
+		USE_SAFE(ErrorReporter).open_context(filepath, "initializing");
 
 		const auto read_task = _job_manager->begin_job("file reading");
-		auto& file = _file_manager->get_file(filepath);
-		auto source = file.contents();
+		auto& file = USE_SAFE(FileManager).get_file(filepath);
+		const auto& source = file.raw_contents();
 		_job_manager->end_job(read_task);
 
 
 		const auto preprocess_task = _job_manager->begin_job("preprocessing");
-		const auto preprocessor = new Preprocessor{ source, filepath };
+		const auto preprocessor = new Preprocessor{ filepath };
 		preprocessor->preprocess(filepath);
 		const auto& source_processed = preprocessor->get_preprocessed_source(filepath);
 		_job_manager->end_job(preprocess_task);
 
 
 		const auto lex_task = _job_manager->begin_job("lexing");
-		const auto lexer = new Lexer{ source_processed, filepath };
+		const auto lexer = new Lexer{ filepath };
 		_tokens[filepath] = lexer->lex();
 		_job_manager->end_job(lex_task);
 
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 
 		run(filepath);
 
@@ -53,8 +53,8 @@ namespace hz
 			_job_manager->log();
 		}
 
-		_error_reporter->close_all_contexts();
-		Log::raw(_error_reporter->generate_report());
+		USE_SAFE(ErrorReporter).close_all_contexts();
+		Log::raw(USE_SAFE(ErrorReporter).generate_report());
 	}
 
 	void Toolchain::panic()

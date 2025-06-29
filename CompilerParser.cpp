@@ -21,7 +21,7 @@ import std;
 #include "FileManager.h"
 #include "CommandLineOptions.h"
 #include "Symbol.h"
-#include "RandomUtility.h"
+#include "Random.h"
 #include "Type.h"
 #include "HeapAllocator.h"
 #include "ErrorReporter.h"
@@ -140,7 +140,7 @@ namespace hz
 		{
 			if (expression == nullptr)
 			{
-				_error_reporter->post_error("non-nvr function `main()` must specify a return value", return_token);
+				USE_SAFE(ErrorReporter).post_error("non-nvr function `main()` must specify a return value", return_token);
 			}
 
 			return new ExitStatement{ expression, expression->_token };
@@ -352,7 +352,7 @@ namespace hz
 
 				if (peek().type == TokenType::RPAREN)
 				{
-					_error_reporter->post_error("expected another argument but got `)`", peek());
+					USE_SAFE(ErrorReporter).post_error("expected another argument but got `)`", peek());
 					break;
 				}
 			}
@@ -549,7 +549,7 @@ namespace hz
 			return program;
 		}
 
-		_error_reporter->post_error("no main() function was defined", NULL_TOKEN);
+		USE_SAFE(ErrorReporter).post_error("no main() function was defined", NULL_TOKEN);
 		return {};
 	}
 }

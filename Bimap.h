@@ -7,7 +7,7 @@
 namespace hz
 {
 	template<typename T, typename U>
-		requires !std::is_same_v<T, U>
+		requires (!std::is_same_v<T, U>)
 	struct bimap_t
 	{
 		T _first;
@@ -15,7 +15,7 @@ namespace hz
 	};
 
 	template<typename T, typename U>
-		requires !std::is_same_v<T, U>
+		requires (!std::is_same_v<T, U>)
 	class Bimap
 	{
 	private:

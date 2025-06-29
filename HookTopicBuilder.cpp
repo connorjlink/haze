@@ -18,7 +18,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error("invalid project type", NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter).post_error("invalid project type", NULL_TOKEN);
 				return "ERROR";
 			} break;
 		}
@@ -40,7 +40,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error("invalid namespace type", NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter).post_error("invalid namespace type", NULL_TOKEN);
 				return "ERROR";
 			} break;
 		}
@@ -63,7 +63,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error("invalid datapoint type", NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter).post_error("invalid datapoint type", NULL_TOKEN);
 				return "ERROR";
 			} break;
 		}
@@ -80,7 +80,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error("invalid operation type", NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter).post_error("invalid operation type", NULL_TOKEN);
 				return "ERROR";
 			} break;
 		}

@@ -20,21 +20,21 @@ namespace hz
 	{
 		for (auto& job : _jobs)
 		{
-			if (job._uuid == uuid)
+			if (job.uuid == uuid)
 			{
 				job.end();
 				return;
 			}
 		}
 
-		_error_reporter->post_error(std::format("job id {} is undefined and cannot be stopped", uuid), NULL_TOKEN);
+		USE_SAFE(ErrorReporter).post_error(std::format("job id {} is undefined and cannot be stopped", uuid), NULL_TOKEN);
 	}
 
 	void JobManager::log() const
 	{
 		for (auto& job : _jobs)
 		{
-			_error_reporter->post_information(job.format(), NULL_TOKEN);
+			USE_SAFE(ErrorReporter).post_information(job.format(), NULL_TOKEN);
 		}
 	}
 }

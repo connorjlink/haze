@@ -32,12 +32,12 @@ namespace hz
 		: _program{ program }
 	{
 		_string_length_map = {};
-		_error_reporter->open_context(filepath, "generating");
+		USE_SAFE(ErrorReporter).open_context(filepath, "generating");
 	}
 
 	Generator::~Generator()
 	{
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 
 
@@ -362,7 +362,7 @@ namespace hz
 			return;
 		}
 
-		_error_reporter->post_error(std::format("undefined string pointer `{:08X}`", pointer), NULL_TOKEN);
+		USE_SAFE(ErrorReporter). post_error(std::format("undefined string pointer `{:08X}`", pointer), NULL_TOKEN);
 	}
 
 	void Generator::print_number(register_t value)

@@ -3,6 +3,8 @@
 
 #include "Constants.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Simulator.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,6 +12,7 @@
 namespace hz
 {
 	class Simulator
+		: public InjectSingleton<ErrorReporter>
 	{
 	private:
 		static constexpr auto DATA_STACK = HALF_DWORD_MAX - 1;
@@ -44,7 +47,7 @@ namespace hz
 				return;
 			}
 
-			_error_reporter->post_uncorrectable(std::format("object code length {} bytes exceeds the ROM capacity of {} bytes", bytes.size(), rom.size()), NULL_TOKEN);
+			USE_SAFE(ErrorReporter).post_uncorrectable(std::format("object code length {} bytes exceeds the ROM capacity of {} bytes", bytes.size(), rom.size()), NULL_TOKEN);
 		}
 
 	private:

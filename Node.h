@@ -1,6 +1,8 @@
 #ifndef HAZE_NODE_H
 #define HAZE_NODE_H
 
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 #include "NodeType.h"
 #include "Token.h"
 
@@ -16,6 +18,7 @@ namespace hz
 	class Context;
 
 	class Node
+		: public InjectSingleton<ErrorReporter>
 	{
 	public:
 		Token _token;

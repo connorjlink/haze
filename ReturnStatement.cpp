@@ -42,7 +42,7 @@ namespace hz
 			{
 				if (_database->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
 				{
-					_error_reporter->post_error("no return value was specified for a non-`void` function", _token);
+					USE_SAFE(ErrorReporter).post_error("no return value was specified for a non-`void` function", _token);
 					return;
 				}
 

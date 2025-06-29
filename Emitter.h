@@ -4,6 +4,8 @@
 #include "EmitterType.h"
 #include "Constants.h"
 #include "InstructionEncoding.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Emitter.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -13,6 +15,7 @@ namespace hz
 	class InstructionCommand;
 
 	class Emitter
+		: public InjectSingleton<ErrorReporter>
 	{
 	protected:
 		std::vector<InstructionCommand*> image;

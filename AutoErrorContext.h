@@ -1,6 +1,7 @@
 #ifndef HAZE_AUTOERRORCONTEXT_H
 #define HAZE_AUTOERRORCONTEXT_H
 
+#include "DependencyInjector.h"
 #include "ErrorReporter.h"
 
 // Haze AutoErrorContext.h
@@ -10,7 +11,7 @@ namespace hz
 {
 	struct ErrorFrame;
 
-	class AutoErrorContext
+	class AutoErrorContext : public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::size_t _initial_context_count;

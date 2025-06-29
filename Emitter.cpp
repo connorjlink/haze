@@ -19,12 +19,12 @@ namespace hz
 	Emitter::Emitter(std::vector<InstructionCommand*>&& image, const std::string& filepath)
 		: image{ std::move(image) }
 	{
-		_error_reporter->open_context(filepath, "emitting");
+		USE_SAFE(ErrorReporter).open_context(filepath, "emitting");
 	}
 
 	Emitter::~Emitter()
 	{
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 
 	Emitter* Emitter::from_architecture(std::vector<InstructionCommand*>&& image, const std::string& filepath)
@@ -36,7 +36,7 @@ namespace hz
 		{
 			case HAZE: emitter = new HazeEmitter{ std::move(image), filepath }; break;
 			case X86: emitter = new X86Emitter{ std::move(image), filepath }; break;
-			default: _error_reporter->post_error("invalid architecture type", NULL_TOKEN); break;
+			default: USE_UNSAFE(ErrorReporter).post_error("invalid architecture type", NULL_TOKEN); break;
 		}
 
 		return emitter;

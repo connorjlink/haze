@@ -20,7 +20,7 @@ namespace hz
 		// does the symbol already exist in the registry?
 		if (_table.contains(name))
 		{
-			_error_reporter->post_error(std::format("symbol `{}` was already defined as a {}",
+			USE_SAFE(ErrorReporter).post_error(std::format("symbol `{}` was already defined as a {}",
 				name, _symbol_type_map.at(_table.at(name)->ytype())), location);
 			return nullptr;
 		}
@@ -38,7 +38,8 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.text), location);
+				USE_SAFE(ErrorReporter).post_error(std::format(
+					"invalid symbol type `{}`", location.text), location);
 			} break;
 		}
 
@@ -85,7 +86,8 @@ namespace hz
 	{
 		if (!_table.contains(name))
 		{
-			_error_reporter->post_error(std::format("symbol `{}` is undefined", name), location);
+			USE_SAFE(ErrorReporter).post_error(std::format(
+				"symbol `{}` is undefined", name), location);
 			return SymbolType::VARIABLE;
 		}
 
@@ -98,7 +100,8 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				_error_reporter->post_error(std::format("invalid symbol type `{}`", location.text), location);
+				USE_SAFE(ErrorReporter).post_error(std::format(
+					"invalid symbol type `{}`", location.text), location);
 			}
 			return nullptr;
 		}
@@ -107,7 +110,8 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				_error_reporter->post_error(std::format("symbol `{}` is undefined", name), location);
+				USE_SAFE(ErrorReporter).post_error(std::format(
+					"symbol `{}` is undefined", name), location);
 			}
 			return nullptr;
 		}
@@ -118,7 +122,7 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				_error_reporter->post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
+				USE_SAFE(ErrorReporter).post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
 					name, _symbol_type_map.at(symbol->ytype()), _symbol_type_map.at(type)), location);
 			}
 			return nullptr;

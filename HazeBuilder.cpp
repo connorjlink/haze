@@ -24,7 +24,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid source register `{}`", static_cast<int>(source)), NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter).post_error(std::format("invalid source register `{}`", static_cast<int>(source)), NULL_TOKEN);
 				return -1;
 			}
 		}

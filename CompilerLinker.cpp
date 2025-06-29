@@ -8,6 +8,7 @@ import std;
 #include "CommandLineOptions.h"
 #include "Symbol.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze CompilerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -40,7 +41,7 @@ namespace
 
 	void internal_linker_error()
 	{
-		_error_reporter->post_error("internal error caused by unrecognized command type", NULL_TOKEN);
+		USE_UNSAFE(ErrorReporter).post_error("internal error caused by unrecognized command type", NULL_TOKEN);
 	}
 
 

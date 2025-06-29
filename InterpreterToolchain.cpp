@@ -18,7 +18,7 @@ namespace hz
 
 	void InterpreterToolchain::run(const std::string& filepath)
 	{
-		_error_reporter->open_context(filepath, "interpreting");
+		USE_SAFE(ErrorReporter).open_context(filepath, "interpreting");
 
 		const auto parse_task = _job_manager->begin_job("parsing");
 		_parser = new InterpreterParser{ _tokens.at(filepath), filepath };
@@ -35,12 +35,10 @@ namespace hz
 
 		catch (std::exception)
 		{
-			_error_reporter->post_information("exit condition encountered", NULL_TOKEN);
-
+			USE_SAFE(ErrorReporter).post_information("exit condition encountered", NULL_TOKEN);
 		}
 
 		_job_manager->end_job(evaluate_task);
-
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 }

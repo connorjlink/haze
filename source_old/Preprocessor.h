@@ -31,6 +31,16 @@ namespace hz
 		// name -> Macro
 		std::unordered_map<std::string, Macro> defined_macros;
 
+	// NOTE: OLD CONTENT! HERE ONLY FOR LEGACY/BACKWARDS-COMPATIBILITY PURPOSES
+	private:
+		void preprocess_include_old();
+		void preprocess_macro_definition_old();
+		void preprocess_macro_invokation_old();
+
+	public:
+		std::string preprocess_old();
+
+
 	// NOTE: new content
 	private:
 		struct Context
@@ -88,7 +98,7 @@ namespace hz
 		void skip_whitespace(Context&, bool = false);
 		void advance(Context&, std::size_t = 1u);
 		void load_file(const std::string&);
-		bool match_keyword(Context&, std::string_view);
+		bool match_keyword(Context&, const std::string&);
 		bool match_macro_invokation(Context&);
 		void handle_include(Context&);
 		void handle_macro_definition(Context&);

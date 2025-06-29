@@ -3,6 +3,7 @@
 
 #include "ToolchainType.h"
 #include "FileManager.h"
+#include "DependencyInjector.h"
 #include "Token.h"
 
 // Haze Toolchain.h
@@ -11,6 +12,7 @@
 namespace hz
 {
 	class Toolchain
+		: public InjectSingleton<ErrorReporter, FileManager>
 	{
 	protected:
 		// filepath to vector<token> mapping

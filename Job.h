@@ -1,34 +1,33 @@
 #ifndef HAZE_JOB_H
 #define HAZE_JOB_H
 
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
+
 // Haze Job.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Job
+	class Job : public InjectSingleton<ErrorReporter>
 	{
 	public:
-		std::uint32_t _uuid;
+		std::uint32_t uuid;
 
 	private:
 		std::string _task;
-
-	private:
 		std::chrono::high_resolution_clock::time_point _start_time, _stop_time;
 
 	private:
 		std::chrono::microseconds duration() const;
 
 	public:
+		std::string format() const;
 		void end();
 
 	public:
-		std::string format() const;
-
-	public:
 		Job(const std::string& task, std::uint32_t uuid)
-			: _task{ task }, _uuid(uuid)
+			: _task{ task }, uuid(uuid)
 		{
 			_start_time = std::chrono::high_resolution_clock::now();
 			_stop_time = std::chrono::high_resolution_clock::time_point::min();

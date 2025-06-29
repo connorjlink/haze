@@ -28,10 +28,8 @@ Context* hz::_context;
 Toolchain* hz::_toolchain;
 
 JobManager* hz::_job_manager;
-FileManager* hz::_file_manager;
 
 CommandLineOptions* hz::_options;
-ErrorReporter* hz::_error_reporter;
 
 HeapAllocator* hz::_heap_allocator;
 StackAllocator* hz::_stack_allocator;
@@ -56,7 +54,6 @@ int main(int argc, char** argv)
 
 	_context = new Context{};
 
-	_error_reporter = new ErrorReporter{};
 	_job_manager = new JobManager{};
 
 	_options = new CommandLineOptions{};
@@ -64,18 +61,17 @@ int main(int argc, char** argv)
 	auto command_line_parser = CommandLineParser{};
 	command_line_parser.parse(argc, argv);
 
-	_file_manager = new FileManager{};
-
 
 	hz::ServiceContainer::instance().register_factory<FileManager>([]
 	{
-		// or std::make_shared<TargetService>() to create a new instance
-		return std::shared_ptr<FileManager>{ _file_manager };
+		return std::make_shared<FileManager>();
 	});
 
-	/*
-	hz::Injects<MyService> myService;
-   myService.service.doSomething();*/
+	// alternative API for thread-shared service (singleton)
+	//hz::SingletonContainer::instance().register_singleton<FileManager>();
+	hz::SingletonContainer::instance().register_singleton<ErrorReporter>();
+
+
 
 	// require explicit opt-in to run tests; takes about 300us otherwise
 	if (_options->_execution == ExecutionType::VALIDATE)
@@ -97,8 +93,10 @@ int main(int argc, char** argv)
 	{
 		try
 		{
-			_file_manager->open_file(filepath);
-			const auto& file = _file_manager->get_file(filepath);
+			auto& file_manager = USE_UNSAFE(FileManager);
+			file_manager.open_file(filepath);
+
+			const auto& file = file_manager.get_file(filepath);
 
 			switch (file.ttype())
 			{
@@ -122,13 +120,13 @@ int main(int argc, char** argv)
 		}
 		catch (ExitProgramException e)
 		{
-			_error_reporter->post_information(e.what(), NULL_TOKEN);
+			USE_UNSAFE(ErrorReporter).post_information(e.what(), NULL_TOKEN);
 			// graceful shutdown for this reason
 			_toolchain->shut_down(false);
 		}
 		catch (std::exception e)
 		{
-			_error_reporter->post_uncorrectable(e.what(), NULL_TOKEN);
+			USE_UNSAFE(ErrorReporter).post_uncorrectable(e.what(), NULL_TOKEN);
 			_toolchain->panic();
 		}
 	}

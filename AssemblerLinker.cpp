@@ -102,7 +102,7 @@ namespace hz
 		{
 			if (executable[i] != 0)
 			{
-				_error_reporter->post_warning("possible data loss for code imaged prior to program entrypoint", NULL_TOKEN);
+				USE_SAFE(ErrorReporter).post_warning("possible data loss for code imaged prior to program entrypoint", NULL_TOKEN);
 			}
 		}
 

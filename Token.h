@@ -203,7 +203,6 @@ namespace hz
 		TokenType type;
 		std::string text;
 		SourceLocation location;
-#pragma message("TODO: program reentrancy--packetize toolchain context instead of global variables!")
 	};
 
 	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers

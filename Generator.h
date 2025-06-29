@@ -5,11 +5,13 @@
 #include "InstructionEncoding.h"
 #include "Scope.h"
 #include "IntermediateCommand.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Generator.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define UNSUPPORTED_OPERATION(x) _error_reporter->post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
+#define UNSUPPORTED_OPERATION(x) USE_UNSAFE(ErrorReporter).post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
 
 namespace hz
 {
@@ -20,6 +22,7 @@ namespace hz
 	class Variable;
 
 	class Generator
+		: public InjectSingleton<ErrorReporter>
 	{
 	private:
 		// Imported from the parser in the constructor

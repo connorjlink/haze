@@ -43,12 +43,12 @@ namespace hz
 	Parser::Parser(const std::vector<Token>& tokens, const std::string& filepath)
 		: cursor{ 0 }, tokens{ tokens }, _filepath{ filepath }
 	{
-		_error_reporter->open_context(filepath, "parsing");
+		USE_SAFE(ErrorReporter).open_context(filepath, "parsing");
 	}
 
 	Parser::~Parser()
 	{
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 
 
@@ -59,7 +59,7 @@ namespace hz
 			return tokens[cursor - 1];
 		}
 
-		_error_reporter->post_uncorrectable("invalid token backtrack", peek());
+		USE_SAFE(ErrorReporter).post_uncorrectable("invalid token backtrack", peek());
 	}
 
 	Token& Parser::peek()
@@ -74,7 +74,7 @@ namespace hz
 			return tokens[cursor + 1];
 		}
 
-		_error_reporter->post_uncorrectable("unexpectedly reached the end of file", peek());
+		USE_SAFE(ErrorReporter).post_uncorrectable("unexpectedly reached the end of file", peek());
 	}
 
 	Token Parser::consume(TokenType token)
@@ -95,11 +95,11 @@ namespace hz
 				return *item;
 			}
 
-			_error_reporter->post_error("invalid token", current);
+			USE_SAFE(ErrorReporter).post_error("invalid token", current);
 			return { "[error]" };
 		};
 
-		_error_reporter->post_error(std::format("expected token `{}` but got `{}`", 
+		USE_SAFE(ErrorReporter).post_error(std::format("expected token `{}` but got `{}`",
 			convert(token), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
 		return current;
 	}
@@ -143,7 +143,7 @@ namespace hz
 
 		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("definitions must result in a constant expression", value_expression->_token);
+			USE_SAFE(ErrorReporter).post_error("definitions must result in a constant expression", value_expression->_token);
 			return nullptr;
 		}
 
@@ -178,7 +178,7 @@ namespace hz
 
 		if (ec != std::errc())
 		{
-			_error_reporter->post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
+			USE_SAFE(ErrorReporter).post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
 			return nullptr;
 		}
 
@@ -229,7 +229,7 @@ namespace hz
 
 		if (!_database->has_symbol(name_token.text))
 		{
-			_error_reporter->post_error(std::format("function `{}` is undefined", name_token.text), name_token);
+			USE_SAFE(ErrorReporter).post_error(std::format("function `{}` is undefined", name_token.text), name_token);
 			return nullptr;
 		}
 
@@ -237,7 +237,7 @@ namespace hz
 
 		if (function_symbol->arity() != arguments.size())
 		{
-			_error_reporter->post_error(std::format("function `{}` was defined with {} arguments but called with {}",
+			USE_SAFE(ErrorReporter).post_error(std::format("function `{}` was defined with {} arguments but called with {}",
 				name_token.text, function_symbol->arity(), arguments.size()), name_token);
 			return nullptr;
 		}
@@ -273,7 +273,7 @@ namespace hz
 			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
 		}
 
-		_error_reporter->post_error("increment target must evaluate to a modifiable l-value", peek());
+		USE_SAFE(ErrorReporter).post_error("increment target must evaluate to a modifiable l-value", peek());
 		return nullptr;
 	}
 
@@ -293,7 +293,7 @@ namespace hz
 			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
 		}
 
-		_error_reporter->post_error("decrement target must evaluate to a modifiable l-value", peek());
+		USE_SAFE(ErrorReporter).post_error("decrement target must evaluate to a modifiable l-value", peek());
 		return nullptr;
 	}
 
@@ -340,7 +340,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format(
+				USE_SAFE(ErrorReporter).post_error(std::format(
 					"expected an expression but got `{}`", peek().text), peek());
 				return nullptr;
 			} break;

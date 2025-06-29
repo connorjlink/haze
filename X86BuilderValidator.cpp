@@ -12,7 +12,7 @@
 // `e` is the variable against which to compare
 #define VALIDATE_IMPL(x, v, e, a, b, p) if (e != v) \
 { \
-	_error_reporter->post_error(parameters.context, parameters.filepath, \
+	USE_UNSAFE(ErrorReporter).post_error(parameters.context, parameters.filepath, \
 		std::format(x " != {} (actually " p, a, b), NULL_TOKEN); \
 	had_error = true; \
 }
@@ -44,37 +44,37 @@ namespace hz
 	X86BuilderValidator::X86BuilderValidator()
 	{
 		//generic mod/rm byte encoding synthesis
-		auto parameters0 = _error_reporter->open_context(__FILE__, "validating modrm()");
+		auto parameters0 = USE_SAFE(ErrorReporter).open_context(__FILE__, "validating modrm()");
 		auto test0 = Test{ "modrm()", validate_modrm };
 		test0.attach(parameters0);
 		add_test(test0);
 
 		//reg/reg-specific mod/rm byte encoding synthesis
-		auto parameters1 = _error_reporter->open_context(__FILE__, "validating modrm_rr()");
+		auto parameters1 = USE_SAFE(ErrorReporter).open_context(__FILE__, "validating modrm_rr()");
 		auto test1 = Test{ "modrm_rr()", validate_modrm_rr };
 		test1.attach(parameters1);
 		add_test(test1);
 
 		//generic sib byte encoding synthesis
-		auto parameters2 = _error_reporter->open_context(__FILE__, "validating sib()");
+		auto parameters2 = USE_SAFE(ErrorReporter).open_context(__FILE__, "validating sib()");
 		auto test2 = Test{ "sib()", validate_sib };
 		test2.attach(parameters2);
 		add_test(test2);
 
 		//push 32-bit register encoding synthesis
-		auto parameters3 = _error_reporter->open_context(__FILE__, "validating push_r()");
+		auto parameters3 = USE_SAFE(ErrorReporter).open_context(__FILE__, "validating push_r()");
 		auto test3 = Test{ "push_r()", validate_push_r };
 		test3.attach(parameters3);
 		add_test(test3);
 
 		//push 8-bit immediate encoding synthesis
-		auto parameters4 = _error_reporter->open_context(__FILE__, "validating push_i()");
+		auto parameters4 = USE_SAFE(ErrorReporter).open_context(__FILE__, "validating push_i()");
 		auto test4 = Test{ "push_i()", validate_push_i };
 		test4.attach(parameters4);
 		add_test(test4);
 
 		//push 32-bit immediate (memory effective address) encoding synthesis
-		auto parameters5 = _error_reporter->open_context(__FILE__, "validating push_m()");
+		auto parameters5 = USE_SAFE(ErrorReporter).open_context(__FILE__, "validating push_m()");
 		auto test5 = Test{ "push_m()", validate_push_m };
 		test5.attach(parameters5);
 		add_test(test5);

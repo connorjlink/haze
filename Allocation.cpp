@@ -135,7 +135,7 @@ namespace hz
 			case SQWORD: integer_literal = new SignedQuadWordIntegerLiteral{ AS_SQWORD_VARIABLE(value)->value }; break;
 
 			case STRING: [[fallthrough]];
-			case STRUCT: _error_reporter->post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);
+			case STRUCT: USE_SAFE(ErrorReporter).post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);
 		}
 
 		if (integer_literal != nullptr)
@@ -151,7 +151,7 @@ namespace hz
 		{
 			case OBSERVER:
 			{
-				_error_reporter->post_error("cannot modify constant allocation type `observer`", NULL_TOKEN);
+				USE_SAFE(ErrorReporter).post_error("cannot modify constant allocation type `observer`", NULL_TOKEN);
 			} break;
 
 			// NOTE: StackAllocation and AutoStackAllocationImpl are transitive

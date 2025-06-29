@@ -13,12 +13,12 @@ namespace
 
 	void already_defined_error(const std::string& name, Token token)
 	{
-		_error_reporter->post_error(std::format("variable `{}` was already defined in the current scope", name), token);
+		USE_UNSAFE(ErrorReporter).post_error(std::format("variable `{}` was already defined in the current scope", name), token);
 	}
 
 	void not_defined_error(const std::string& name, Token token)
 	{
-		_error_reporter->post_error(std::format("variable `{}` was not defined in the current scope", name), token);
+		USE_UNSAFE(ErrorReporter).post_error(std::format("variable `{}` was not defined in the current scope", name), token);
 	}
 }
 

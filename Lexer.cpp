@@ -105,7 +105,7 @@ namespace hz
 					continue;
 				}
 
-				_error_reporter->post_error("unexpected character `/`", 
+				USE_SAFE(ErrorReporter).post_error("unexpected character `/`",
 					::error_token({ current }, { _filepath, _position, _line, _column }));
 			}
 
@@ -217,7 +217,7 @@ namespace hz
 
 				else
 				{
-					_error_reporter->post_error(std::format("unexpected token `{}`", current_string),
+					USE_SAFE(ErrorReporter).post_error(std::format("unexpected token `{}`", current_string),
 						::error_token(current_string, { _filepath, _position, _line, _column }));
 				}
 			}

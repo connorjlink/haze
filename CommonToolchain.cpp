@@ -63,7 +63,7 @@ namespace hz
 
 			if (!outfile)
 			{
-				_error_reporter->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter).post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
 			}
 
 			outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());

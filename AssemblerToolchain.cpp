@@ -22,7 +22,7 @@ namespace hz
 
 	void AssemblerToolchain::run(const std::string& filepath)
 	{
-		_error_reporter->open_context(filepath, "assembling");
+		USE_SAFE(ErrorReporter).open_context(filepath, "assembling");
 
 		const auto parse_task = _job_manager->begin_job("parsing");
 		_parser = new AssemblerParser{ _tokens.at(filepath), filepath };
@@ -35,11 +35,11 @@ namespace hz
 		auto image = common_link();
 		auto executable = common_emit(std::move(image), filepath);
 
-		if (!_error_reporter->had_error())
+		if (!USE_SAFE(ErrorReporter).had_error())
 		{
 			common_finalize(std::move(executable), filepath);
 		}
 
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 }

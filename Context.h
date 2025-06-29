@@ -3,6 +3,8 @@
 
 //#include "Hook.h"
 #include "Variable.h"
+#include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze Context.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -14,6 +16,7 @@ namespace hz
 	class Expression;
 
 	class Context
+		: public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::unordered_map<std::string, Variable*> _variables;

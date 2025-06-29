@@ -10,8 +10,24 @@ import std;
 // Haze Preprocessor.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+// for _old functions
 namespace
 {
+	std::vector<std::string> split(const std::string& text, char delimiter)
+	{
+		std::vector<std::string> result{};
+
+		std::stringstream input{ text };
+
+		std::string segment;
+		while (std::getline(input, segment, delimiter))
+		{
+			result.emplace_back(segment);
+		}
+
+		return result;
+	}
+
 	void replace(std::string& str, const std::string& from, const std::string& to)
 	{
 		if (from.empty())
@@ -29,8 +45,11 @@ namespace
 	}
 
 	static constexpr auto ws = " \t\n\r";
-	static constexpr std::string_view MACRO_KEYWORD = ".macro";
-	static constexpr std::string_view INCLUDE_KEYWORD = ".include";
+
+	bool isspace(char character)
+	{
+		return std::isspace(static_cast<int>(character));
+	}
 
 	// Thanks https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring :)
 	// trim from end of string (right)
@@ -54,8 +73,141 @@ namespace
 	}
 }
 
+// for the new implementation only
+namespace
+{
+	static const std::string MACRO_KEYWORD = ".macro";
+	static const std::string INCLUDE_KEYWORD = ".include";
+
+	auto is_identifier_first = [&](char c)
+	{
+		return (c >= 'a' && c <= 'z') ||
+			   (c >= 'A' && c <= 'Z') ||
+			   (c == '_');
+	};
+
+	auto is_identifier = [&](char c)
+	{
+		return is_identifier_first(c) || (c >= '0' && c <= '9');
+	};
+}
+
 namespace hz
 {
+	void Preprocessor::preprocess_include_old()
+	{
+		std::regex rx_incl(R"(^(\.include \"(.*)\"\s*((;.*$)?|$)))", std::regex::optimize);
+		std::smatch matches;
+
+		while (std::regex_search(code, matches, rx_incl))
+		{
+			std::string filepath = matches[2];
+
+			if (filepath == parent_filepath)
+			{
+				_error_reporter->post_error(std::format("invalid recursive include of `{}`", filepath), NULL_TOKEN);
+				break;
+			}
+
+			std::ifstream file(filepath);
+
+			if (!file.good())
+			{
+				_error_reporter->post_error(std::format("could not open file `{}` for reading", filepath), NULL_TOKEN);
+				break;
+			}
+
+			const auto size = std::filesystem::file_size(filepath); //bytes
+			std::string buffer(size, '\0');
+			file.read(buffer.data(), static_cast<std::streamsize>(size));
+
+			replace(code, matches[1], buffer);
+		}
+	}
+
+	void Preprocessor::preprocess_macro_definition_old()
+	{
+		std::regex rx_mcro(R"((\.macro ([a-zA-Z_][a-zA-Z0-0_]*) = \((([a-zA-Z])(, ?[a-zA-Z])*)?\)\:\s*\{([^\}]*)\}))", std::regex::optimize);
+		std::smatch matches;
+
+		while (std::regex_search(code, matches, rx_mcro))
+		{
+			std::string name = matches[2];
+			std::string args = matches[3];
+
+			args.erase(std::remove_if(args.begin(), args.end(), ::isspace), args.end());
+			const auto args_delim = split(args, ',');
+
+			std::string mcode = matches[6];
+			trim(mcode);
+
+			Macro macro{ name, args_delim, mcode };
+
+			if (defined_macros.contains(macro.name))
+			{
+				_error_reporter->post_error(std::format("invalid duplicate definition of macro {}", macro.name), NULL_TOKEN);
+				break;
+			}
+
+			defined_macros.emplace(name, macro);
+
+			replace(code, matches[1], "");
+		}
+	}
+
+	void Preprocessor::preprocess_macro_invokation_old()
+	{
+		std::regex rx_invk(R"((\$([a-zA-Z_][a-zA-Z0-9_]*)\(([^\,\)]*\s*(\,[^\,\)]*)*)?\)))", std::regex::optimize);
+		std::smatch matches;
+
+		while (std::regex_search(code, matches, rx_invk))
+		{
+			std::string name = matches[2];
+			std::string args = matches[3];
+
+			args.erase(std::remove_if(args.begin(), args.end(), ::isspace), args.end());
+			const auto args_delim = split(args, ',');
+
+			Macro macro{ name, args_delim, "" }, defined_macro;
+
+			if (!defined_macros.contains(macro.name))
+			{
+				_error_reporter->post_error(std::format("macro `{}` is undefined", macro.name), NULL_TOKEN);
+				break;
+			}
+
+			if (defined_macro.args.size() != args_delim.size())
+			{
+				_error_reporter->post_error(std::format("macro `{}` was defined with {} arguments but called with {}", 
+					defined_macro.name, args_delim.size(), defined_macro.args.size()), NULL_TOKEN);
+				break;
+			}
+
+			if (!args_delim.empty())
+			{
+				std::string copy = defined_macro.code;
+
+				for (auto i = 0; i < args_delim.size(); ++i)
+				{
+					replace(copy, std::string("[") + defined_macro.args[i] + std::string("]"), args_delim[i]);
+				}
+
+				replace(code, matches[1], copy);
+			}
+		}
+	}
+
+	std::string Preprocessor::preprocess_old()
+	{
+		preprocess_include_old();
+		preprocess_macro_definition_old();
+		preprocess_macro_invokation_old();
+		return code;
+	}
+
+
+	//---------------------------------------------------------------------------
+
 	void Preprocessor::register_macro_definition(const Macro& macro)
 	{
 		// only specifies the original definition, so invokations have to manually export each time
@@ -138,7 +290,7 @@ namespace hz
 	{
 		if (auto c = context.current(); c != expected)
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format(
+			_error_reporter->post_error(std::format(
 				"expected token `{}` to specify an include filepath but got `{}`", expected, c), NULL_TOKEN);
 			return false;
 		}
@@ -154,10 +306,81 @@ namespace hz
 		return true;
 	}
 
+	bool Preprocessor::anticipate(Context& context, char expected, bool consume_whitespace)
+	{
+		auto try_consume = [&]
+		{
+			if (consume_whitespace)
+			{
+				// try consume as requested
+				skip_whitespace(context, false);
+			}
+		};
+
+		if (context.current() == expected)
+		{
+			advance(context, 1);
+			try_consume();
+			return true;
+		}
+
+		try_consume();
+		return false;
+	}
+
+	void Preprocessor::skip_whitespace(Context& context, bool require)
+	{
+		int number_to_skip = 0;
+		for (auto c = context.content[context.location.position]; std::isspace(c); number_to_skip++)
+		{
+			// this is a weird for... loop :D
+		}
+
+		if (require && number_to_skip == 0)
+		{
+			_error_reporter->post_error(std::format(
+				"expectd one or more whitespace tokens but got `{}`", context.current()), NULL_TOKEN);
+		}
+
+		advance(context, number_to_skip);
+	}
+
+	bool Preprocessor::match_keyword(Context& context, const std::string& keyword)
+	{
+		const auto length = keyword.length();
+
+		// match the same number of characters and ensure the current string piece is a valid token (delimited correctly)
+		if (context.content.compare(context.location.position, length, keyword) == 0 &&
+			(std::isspace(context.content[context.location.position + length]) || context.content[context.location.position + length] == '"')) 
+		{
+			return true;
+		}
+		return false;
+	}
+
 	bool Preprocessor::match_macro_invokation(Context& context)
 	{
 		// will return empty if there is not a valid macro invokation
 		return read_identifier(context, false) != "";
+	}
+
+	void Preprocessor::advance(Context& context, std::size_t how_many)
+	{
+		for (int i = 0u; i < how_many; ++i)
+		{
+			// NOTE: this will not correctly handle Windows \r\n
+			if (context.content[context.location.position] == '\n')
+			{
+				context.location.line++;
+				context.location.column = 1;
+			}
+			else
+			{
+				context.location.column++;
+			}
+			// while line and column updates vary by input, the running index always increments
+			context.location.position++;
+		}
 	}
 
 	void Preprocessor::load_file(const std::string& filepath)
@@ -165,7 +388,7 @@ namespace hz
 		std::ifstream file(filepath, std::ios::binary);
 		if (!file)
 		{
-			USE_UNSAFE(ErrorReporter).post_error(std::format(
+			_error_reporter->post_error(std::format(
 				"could not open file `{}`", filepath), forge({ "", { filepath, 0, 1, 1 } }));
 			return;
 		}
@@ -179,7 +402,7 @@ namespace hz
 		file.read(content.data(), size);
 		if (!file)
 		{
-			USE_UNSAFE(ErrorReporter).post_error(std::format(
+			_error_reporter->post_error(std::format(
 				"error reading file `{}`", filepath), forge({ "", { filepath, 0, 1, 1 } }));
 			return;
 		}
@@ -257,8 +480,9 @@ namespace hz
 		if (!_processed_file_cache.contains(filepath))
 		{
 			// using NULL_TOKEN is okay since the context is probably not available if the operation failed
-			USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
+			_error_reporter->post_error(std::format(
 				"failed to lazy-load preprocess source file `{}`", filepath), NULL_TOKEN);
+			return "<error>";
 		}
 
 		// strengthened contains
@@ -279,7 +503,7 @@ namespace hz
 		
 		if (include_filepath == context.location.filepath)
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format(
+			_error_reporter->post_error(std::format(
 				"invalid recursive include of file `{}`", include_filepath), forge(context));
 			return;
 		}
@@ -349,26 +573,26 @@ namespace hz
 		// macro callstack, error out! this is the easiest way to prevent infinite recursion
 		if (_macro_invokations.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("invalid recursive macro `{}`", name), forge(context));
+			_error_reporter->post_error(std::format("invalid recursive macro `{}`", name), forge(context));
 			return;
 		}
 
 		if (!defined_macros.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` is undefined", name), forge(context));
+			_error_reporter->post_error(std::format("macro `{}` is undefined", name), forge(context));
 			return;
 		}
 
 		const auto& macro = defined_macros.at(name);
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter).post_error("macro argument count mismatch", forge(context));
+			_error_reporter->post_error("macro argument count mismatch", forge(context));
 			return;
 		}
 
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` was defined with {} arguments but called with {}",
+			_error_reporter->post_error(std::format("macro `{}` was defined with {} arguments but called with {}",
 				macro.name, macro.args.size(), arguments.size()), forge(context));
 			return;
 		}

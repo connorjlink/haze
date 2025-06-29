@@ -2,6 +2,8 @@
 #define HAZE_VARIABLE_H
 
 #include "VariableType.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Variable.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -9,6 +11,7 @@
 namespace hz
 {
 	class Variable
+		: public InjectSingleton<ErrorReporter>
 	{
 	public:
 		virtual VariableType vtype() const = 0;

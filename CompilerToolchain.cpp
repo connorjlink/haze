@@ -26,7 +26,7 @@ namespace hz
 
 	void CompilerToolchain::run(const std::string& filepath)
 	{
-		_error_reporter->open_context(filepath, "compiling");
+		USE_SAFE(ErrorReporter).open_context(filepath, "compiling");
 
 		const auto parse_task = _job_manager->begin_job("parsing");
 		_parser = new CompilerParser{ _tokens.at(filepath), filepath };
@@ -97,12 +97,12 @@ namespace hz
 		/*auto image = common_link(entrypoint);
 		auto executable = common_emit(std::move(image), _filepath);*/
 
-		if (!_error_reporter->had_error())
+		if (!USE_SAFE(ErrorReporter).had_error())
 		{
 			common_finalize(executable, filepath);
 		}
 
-		_error_reporter->post_information(std::format("wrote fresh executable for `{}`", filepath), NULL_TOKEN);
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).post_information(std::format("wrote fresh executable for `{}`", filepath), NULL_TOKEN);
+		USE_SAFE(ErrorReporter).close_context();
 	}
 }

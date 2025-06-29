@@ -13,11 +13,11 @@ namespace hz
 
 	Linker::Linker(const std::string& filepath)
 	{
-		_error_reporter->open_context(filepath, "linking");
+		USE_SAFE(ErrorReporter).open_context(filepath, "linking");
 	}
 
 	Linker::~Linker()
 	{
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 }

@@ -4,6 +4,8 @@
 #include "Token.h"
 #include "ParserType.h"
 #include "IdentifierExpression.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -30,6 +32,7 @@ namespace hz
 	enum class SymbolType;
 
 	class Parser
+		: public InjectSingleton<ErrorReporter>
 	{
 	protected:
 		std::size_t cursor;

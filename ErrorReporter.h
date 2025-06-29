@@ -3,14 +3,18 @@
 
 #include "ErrorContext.h"
 #include "Token.h"
+#include "DependencyInjector.h"
 #include "Test.h"
 
 // Haze ErrorReporter.h
 // (c) Connor J. Link. All Rights Reserved.
 
+#pragma message("TODO: provide safe API for error reporter with thread synchonization!")
+
 namespace hz
 {
-	class ErrorReporter
+	class ErrorReporter :
+		public SingletonTag<ErrorReporter>
 	{
 	private:
 		static constexpr auto MAX_ERRORS = 5;
@@ -77,8 +81,6 @@ namespace hz
 		}
 
 	};
-
-	extern ErrorReporter* _error_reporter;
 }
 
 #endif 

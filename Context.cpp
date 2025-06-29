@@ -70,12 +70,14 @@ namespace hz
 
 	void Context::print(const std::string& message)
 	{
-		_error_reporter->post_information(message, NULL_TOKEN);
+		USE_SAFE(ErrorReporter).post_information(message, NULL_TOKEN);
 	}
 
 	void Context::exit_program(Variable* value)
 	{
-		using enum VariableType;
+		throw ExitProgramException{ value->format() };
+
+		/*using enum VariableType;
 		switch (value->vtype())
 		{
 			case UBYTE: throw ExitProgramException{ AS_UBYTE_VARIABLE(value)->format() };
@@ -89,6 +91,6 @@ namespace hz
 		
 			case STRING: throw ExitProgramException{ AS_STRING_VARIABLE(value)->format() };
 			case STRUCT: throw ExitProgramException{ AS_STRUCT_VARIABLE(value)->format() };
-		}
+		}*/
 	}
 }

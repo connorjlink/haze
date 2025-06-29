@@ -6,7 +6,7 @@ import std;
 #include "Allocation.h"
 #include "Allocator.h"
 #include "Evaluator.h"
-#include "RandomUtility.h"
+#include "Random.h"
 #include "ErrorReporter.h"
 
 // Haze ForStatement.cpp
@@ -111,7 +111,7 @@ namespace hz
 
 		if (condition->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("`for` loop conditions must result in an r-value", condition_evaluated->_token);
+			USE_SAFE(ErrorReporter).post_error("`for` loop conditions must result in an r-value", condition_evaluated->_token);
 			return nullptr;
 		}
 

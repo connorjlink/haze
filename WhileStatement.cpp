@@ -4,7 +4,7 @@ import std;
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Generator.h"
-#include "RandomUtility.h"
+#include "Random.h"
 #include "IntegerLiteralExpression.h"
 #include "CommonErrors.h"
 #include "ErrorReporter.h"

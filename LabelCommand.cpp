@@ -20,7 +20,7 @@ namespace hz
 
 	void LabelCommand::generate(Allocation*)
 	{
-		_error_reporter->post_error("unsupported compiler command type `label`", _token);
+		USE_SAFE(ErrorReporter).post_error("unsupported compiler command type `label`", _token);
 	}
 
 	LabelCommand* LabelCommand::optimize()
@@ -31,7 +31,7 @@ namespace hz
 
 	Node* LabelCommand::evaluate(Context*) const
 	{
-		_error_reporter->post_error("unsupported interpreter command type `label`", _token);
+		USE_SAFE(ErrorReporter).post_error("unsupported interpreter command type `label`", _token);
 		return nullptr;
 	}
 }

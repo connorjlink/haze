@@ -48,7 +48,7 @@ namespace hz
 			
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid intrinsic type `{}`", peek().text), peek());
+				USE_SAFE(ErrorReporter).post_error(std::format("invalid intrinsic type `{}`", peek().text), peek());
 			} break;
 		}
 
@@ -65,7 +65,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid script declarator `{}`", peek().text), peek());
+				USE_SAFE(ErrorReporter).post_error(std::format("invalid script declarator `{}`", peek().text), peek());
 				return nullptr;
 			} break;
 		}

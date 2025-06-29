@@ -15,11 +15,10 @@ namespace hz
 	class Variable;
 
 	class Allocation
+		: public InjectSingleton<ErrorReporter>
 	{
 	public:
-		virtual ~Allocation()
-		{
-		}
+		virtual ~Allocation() = default;
 
 	public:
 		virtual AllocationType atype() const = 0;

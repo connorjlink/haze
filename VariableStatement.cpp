@@ -118,13 +118,13 @@ namespace hz
 
 				case STRING:
 				{
-					_error_reporter->post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					USE_SAFE(ErrorReporter).post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->ttype()), name), _token);
 					variable = new StringVariable{ "" };
 				} break;
 
 				case VOID: 
 				{
-					_error_reporter->post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					USE_SAFE(ErrorReporter).post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->ttype()), name), _token);
 					return nullptr;
 				} break;
 			}

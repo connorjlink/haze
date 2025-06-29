@@ -2,6 +2,8 @@
 #define HAZE_PEBUILDER_H
 
 #include "Constants.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze PEBuilder.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -9,6 +11,7 @@
 namespace hz
 {
 	class PEBuilder
+		: public InjectSingleton<ErrorReporter>
 	{
 	// pe utilities
 	private:

@@ -5,6 +5,7 @@
 #include "InstructionCommand.h"
 #include "ErrorReporter.h"
 #include "LinkerType.h"
+#include "DependencyInjector.h"
 
 // Haze Linker.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -12,6 +13,7 @@
 namespace hz
 {
 	class Linker
+		: public InjectSingleton<ErrorReporter>
 	{
 	public:
 		Linker(const std::string&);

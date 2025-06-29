@@ -1,7 +1,6 @@
 import std;
 
 #include "FileManager.h"
-#include "ErrorReporter.h"
 
 // Haze FileManager.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -27,6 +26,23 @@ namespace hz
 			return _files.at(filepath);
 		}
 
-		_error_reporter->post_uncorrectable(std::format("file {} was never opened", filepath), NULL_TOKEN);
+		never_opened_error(filepath);
+	}
+
+	void FileManager::update_file(const std::string& filepath, const std::string& content)
+	{
+		if (has_file(filepath))
+		{
+			_files[filepath].update_content(content);
+			return;
+		}
+
+		never_opened_error(filepath);
+	}
+	
+	void FileManager::never_opened_error(const std::string& filepath) const
+	{
+		USE_UNSAFE(ErrorReporter).post_uncorrectable(std::format(
+			"file {} was never opened", filepath), NULL_TOKEN);
 	}
 }

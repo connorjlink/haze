@@ -2,6 +2,7 @@
 #define HAZE_GATEWAY_H
 
 #include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Tracking.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -16,72 +17,11 @@ namespace hz
 		return std::chrono::system_clock::now();
 	}
 
-	class Tracker;
-
-	// provides some generic machinery for more detailed instrumentation by the compiler driver
-	// not templated because C++23 deducing this does not require it
-	class Trackable : public Inject<Tracker>
-	{
-	private:
-		friend Tracker;
-		tracking_id _id;
-		const bool _is_enabled;
-
-	private:
-		static tracking_id generate_id(void)
-		{
-			// thread-safe! generated per Trackable type template instantiation
-			static std::atomic<tracking_id> index{ 0 };
-			return ++index;
-		}
-
-	protected:
-		// manually notify the change tracker that the object has been modified to forcibly flush its changes
-		template<typename Self>
-		void commit(this Self self)
-		{
-			if (_is_enabled)
-			{
-				if constexpr (requires { self.update(); })
-				{
-					self.update();
-				}
-				get_service<Tracker>().notify_modified(this);
-			}
-		}
-
-		// manually notify the change tracker that the object is done being used but will remain alive and allocated longer
-		template<typename Self>
-		void retire(this Self self)
-		{
-			if (_is_enabled)
-			{
-				get_service<Tracker>().notify_retired(this);
-			}
-		}
-
-	public:
-		// dynamically enable or disable entity tracking for this instance
-		Trackable(bool is_enabled = true)
-			: _is_enabled{ is_enabled }
-		{
-			if (_is_enabled)
-			{
-				_id = generate_id();
-				using_service<Tracker>().notify_created(this);
-			}
-		}
-
-		~Trackable()
-		{
-			if (_is_enabled)
-			{
-				using_service<Tracker>().notify_deleted(this);
-			}
-		}
-	};
+	class Trackable;
 
 	class Tracker
+		: public SingletonTag<Tracker>
+		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		struct TrackingInformation
@@ -113,7 +53,7 @@ namespace hz
 		{
 			if (!_database.contains(id))
 			{
-				_error_reporter->post_error(std::format(
+				USE_SAFE(ErrorReporter).post_error(std::format(
 					"invalid attachment to nonexistent entity tracking instance `{}`", id), NULL_TOKEN);
 				return false;
 			}
@@ -122,12 +62,12 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable>
+			requires std::derived_from<T, Trackable>
 		bool validate_notnull(T* entity)
 		{
 			if (entity == nullptr)
 			{
-				_error_reporter->post_error(std::format(
+				USE_SAFE(ErrorReporter).post_error(std::format(
 					"invalid nullish entity tracking instance"), NULL_TOKEN);
 				return false;
 			}
@@ -136,7 +76,7 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable>
+			requires std::derived_from<T, Trackable>
 		bool strengthen_ensure(T* entity)
 		{
 			if (!validate_notnull(entity))
@@ -154,7 +94,7 @@ namespace hz
 
 	public:
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable>
+			requires std::derived_from<T, Trackable>
 		//and requires { std::declval<T*>()->_id; } // not necessary since the trackable base will grant this
 		bool notify_created(T* entity)
 		{
@@ -171,12 +111,15 @@ namespace hz
 				return false;
 			}*/
 
+			static std::mutex mutex;
+			std::scoped_lock lock{ mutex };
+
 			if (!_database.contains(entity->_id))
 			{
 				TrackingInformation entry
 				{
-					.created = system_timestamp(),
 					.number_created = 1,
+					.created = system_timestamp(),
 					// let others default initialize since they don't matter for now
 					.is_active = true,
 				};
@@ -187,15 +130,15 @@ namespace hz
 			else
 			{
 				auto& entry = _database.at(entity->_id);
+				entry.number_created++;
 				// don't update the timestamp to keep the tracked time from the very first instantiation
 				//entry.created = system_timestamp();
-				entry.number_created++;
 				entry.is_active = true;
 			}
 		}
 
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable>
+			requires std::derived_from<T, Trackable>
 		bool notify_modified(T* entity)
 		{
 			if (!strengthen_ensure(entity))
@@ -203,15 +146,18 @@ namespace hz
 				return false;
 			}
 
+			static std::mutex mutex;
+			std::scoped_lock lock{ mutex };
+
 			auto& entry = _database.at(entity->_id);
-			entry.modified = system_timestamp();
 			entry.number_modified++;
+			entry.modified = system_timestamp();
 			// active flag always reflects the results of the most recent transaction
 			entry.is_active = true;
 		}
 
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable>
+			requires std::derived_from<T, Trackable>
 		bool notify_retired(T* entity)
 		{
 			if (!strengthen_ensure(entity))
@@ -219,20 +165,26 @@ namespace hz
 				return false;
 			}
 
+			static std::mutex mutex;
+			std::scoped_lock lock{ mutex };
+
 			auto& entry = _database.at(entity->_id);
-			entry.retired = system_timestamp();
 			entry.number_retired++;
+			entry.retired = system_timestamp();
 			entry.is_active = false;
 		}
 
 		template<typename T>
-			requires std::is_base_of_v<T, Trackable>
+			requires std::derived_from<T, Trackable>
 		bool notify_deleted(T* entity)
 		{
 			if (!strengthen_ensure(entity))
 			{
 				return false;
 			}
+
+			static std::mutex mutex;
+			std::scoped_lock lock{ mutex };
 
 			auto& entry = _database.at(entity->_id);
 			entry.number_deleted++;
@@ -261,6 +213,70 @@ namespace hz
 			}
 
 			return result;
+		}
+	};
+
+	// provides some generic machinery for more detailed instrumentation by the compiler driver
+	// not templated because C++23 deducing this does not require it
+	class Trackable 
+		: public InjectSingleton<Tracker>
+	{
+	private:
+		friend Tracker;
+		tracking_id _id;
+		const bool _is_enabled;
+
+	private:
+		static tracking_id generate_id(void)
+		{
+			// thread-safe! generated per Trackable type template instantiation
+			static std::atomic<tracking_id> index{ 0 };
+			return ++index;
+		}
+
+	protected:
+		// manually notify the change tracker that the object has been modified to forcibly flush its changes
+		template<typename Self>
+		void commit(this Self self)
+		{
+			if (_is_enabled)
+			{
+				if constexpr (requires { self.update(); })
+				{
+					self.update();
+				}
+				using_singleton<Tracker>().notify_modified(this);
+			}
+		}
+
+		// manually notify the change tracker that the object is done being used but will remain alive and allocated longer
+		template<typename Self>
+		void retire(this Self self)
+		{
+			if (_is_enabled)
+			{
+				using_singleton<Tracker>().notify_retired(this);
+			}
+		}
+
+	public:
+		// dynamically enable or disable entity tracking for this instance
+		Trackable(bool is_enabled = true)
+			: _is_enabled{ is_enabled }
+		{
+			if (_is_enabled)
+			{
+				_id = generate_id();
+				using_singleton<Tracker>().notify_created(this);
+			}
+		}
+
+		~Trackable()
+		{
+			if (_is_enabled)
+			{
+				using_singleton<Tracker>().notify_deleted(this);
+			}
 		}
 	};
 }

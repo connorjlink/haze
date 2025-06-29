@@ -9,6 +9,7 @@
 namespace hz
 {
 	class JobManager
+		: public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::vector<Job> _jobs;

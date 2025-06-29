@@ -3,6 +3,8 @@
 
 #include "Test.h"
 #include "ErrorContext.h"
+#include "DependencyInjector.h"
+#include "ErrorReporter.h"
 
 // Haze Validator.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,6 +12,7 @@
 namespace hz
 {
 	class Validator
+		: public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::vector<Test> _tests;

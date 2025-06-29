@@ -35,7 +35,7 @@ namespace hz
 
 	Node* FunctionArgumentExpression::evaluate(Context*) const
 	{
-		_error_reporter->post_error("unsupported interpreter expression type `function argument`", _token);
+		USE_SAFE(ErrorReporter).post_error("unsupported interpreter expression type `function argument`", _token);
 		return nullptr;
 	}
 }

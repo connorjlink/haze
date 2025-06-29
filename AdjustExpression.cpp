@@ -85,7 +85,7 @@ namespace hz
 			return integer_literal_expression;
 		}
 
-		_error_reporter->post_error("adjustment expression target must result in a modifiable l-value", target->_token);
+		using_singleton<ErrorReporter>().post_error("adjustment expression target must result in a modifiable l-value", target->_token);
 		return nullptr;
 	}
 }

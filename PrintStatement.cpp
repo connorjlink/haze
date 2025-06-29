@@ -47,7 +47,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error("unsupported compiler print expression type", message->_token);
+				USE_SAFE(ErrorReporter).post_error("unsupported compiler print expression type", message->_token);
 			} break;
 		}
 	}

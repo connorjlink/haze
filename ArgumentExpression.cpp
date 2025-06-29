@@ -20,7 +20,7 @@ namespace hz
 
 	void ArgumentExpression::generate(Allocation*)
 	{
-		_error_reporter->post_error("unsupported compiler expression type `argument`", _token);
+		USE_SAFE(ErrorReporter).post_error("unsupported compiler expression type `argument`", _token);
 	}
 
 	Expression* ArgumentExpression::optimize()

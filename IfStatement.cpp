@@ -5,7 +5,7 @@ import std;
 #include "Allocation.h"
 #include "Evaluator.h"
 #include "Generator.h"
-#include "RandomUtility.h"
+#include "Random.h"
 #include "ErrorReporter.h"
 
 // Haze IfStatement.cpp
@@ -114,7 +114,7 @@ namespace hz
 
 		if (condition_evaluated->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			_error_reporter->post_error("`if` statement conditions must result in an r-value", condition_evaluated->_token);
+			USE_SAFE(ErrorReporter).post_error("`if` statement conditions must result in an r-value", condition_evaluated->_token);
 			return nullptr;
 		}
 

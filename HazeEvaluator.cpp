@@ -13,12 +13,12 @@ namespace hz
 	HazeEvaluator::HazeEvaluator(std::vector<Node*>&& declarators, const std::string& filepath)
 		: declarators{ std::move(declarators) }
 	{
-		_error_reporter->open_context(filepath, "evaluating");
+		USE_SAFE(ErrorReporter).open_context(filepath, "evaluating");
 	}
 
 	HazeEvaluator::~HazeEvaluator()
 	{
-		_error_reporter->close_context();
+		USE_SAFE(ErrorReporter).close_context();
 	}
 
 	void HazeEvaluator::evaluate()

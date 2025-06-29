@@ -15,8 +15,8 @@ import std;
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) { _error_reporter->post_error("term must result in a constant expression", NULL_TOKEN); return nullptr; }
-#define ASSERT_IN_RANGE(x, a, b) if (x < EI(a) || x > EI(b - 1)) { _error_reporter->post_error(std::format("value {} is outside the its range [0, {}]", x.magnitude, b - 1), NULL_TOKEN); return nullptr; }
+#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) { USE_SAFE(ErrorReporter).post_error("term must result in a constant expression", NULL_TOKEN); return nullptr; }
+#define ASSERT_IN_RANGE(x, a, b) if (x < EI(a) || x > EI(b - 1)) { USE_SAFE(ErrorReporter).post_error(std::format("value {} is outside the its range [0, {}]", x.magnitude, b - 1), NULL_TOKEN); return nullptr; }
 
 namespace hz
 {
@@ -41,7 +41,7 @@ namespace hz
 			return it_operand->second;
 		}
 
-		_error_reporter->post_error(std::format("expected a register but got {}", peek().text), peek());
+		USE_SAFE(ErrorReporter).post_error(std::format("expected a register but got {}", peek().text), peek());
 		return static_cast<Register>(0);
 	}
 
@@ -324,7 +324,7 @@ namespace hz
 
 			default:
 			{
-				_error_reporter->post_error(std::format("invalid instruction mnemonic `{}`", peek().text), peek());
+				USE_SAFE(ErrorReporter).post_error(std::format("invalid instruction mnemonic `{}`", peek().text), peek());
 				return nullptr;
 			} break;
 		}
