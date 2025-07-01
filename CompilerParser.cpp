@@ -156,7 +156,9 @@ namespace hz
 		auto assembly = fetch_until(TokenType::RBRACE);
 		assembly.emplace_back(Token{ TokenType::END, "eof", peek().location });
 
-		auto assembler_parser = new AssemblerParser{ std::move(assembly), _filepath };
+		auto assembler_parser = new AssemblerParser{ _filepath };
+		assembler_parser->reload(std::move(assembly), _filepath);
+
 		auto commands = assembler_parser->parse();
 
 		consume(TokenType::RBRACE);

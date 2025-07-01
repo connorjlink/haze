@@ -17,7 +17,10 @@ namespace hz
 
 	void Log::raw(const std::string& message)
 	{
-		stream << message;
+		if (USE_UNSAFE(CommandLineOptions)->_verbosity != VerbosityType::SILENT)
+		{
+			stream << message;
+		}
 	}
 
 	void Log::with_severity(const std::string& message, ErrorType severity)
@@ -59,6 +62,9 @@ namespace hz
 
 	void Log::uncorrectable(const std::string& message)
 	{
-		print(_error_type_map.at(ErrorType::UNCORRECTABLE), message);
+		if (USE_UNSAFE(CommandLineOptions)->_verbosity != VerbosityType::SILENT)
+		{
+			print(_error_type_map.at(ErrorType::UNCORRECTABLE), message);
+		}
 	}
 }

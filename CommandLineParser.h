@@ -12,8 +12,8 @@
 namespace hz
 {
 	class CommandLineParser
-		: public InjectService<JobManager>
-		, public InjectSingleton<ErrorReporter, CommandLineOptions>
+		//: public InjectService<JobManager>
+		: public InjectSingleton<ErrorReporter, CommandLineOptions>
 	{
 	private:
 		std::vector<std::string> _filepaths;

@@ -36,8 +36,8 @@ namespace
 
 namespace hz
 {
-	Parser::Parser(const std::vector<Token>& tokens, const std::string& filepath)
-		: cursor{ 0 }, tokens{ tokens }, _filepath{ filepath }
+	Parser::Parser(const std::string& filepath)
+		: cursor{ 0 }, _tokens{ _tokens }, _filepath{ filepath }
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
 	}
@@ -52,7 +52,7 @@ namespace hz
 	{
 		if (cursor > 0)
 		{
-			return tokens[cursor - 1];
+			return _tokens[cursor - 1];
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable("invalid token backtrack", peek());
@@ -60,14 +60,14 @@ namespace hz
 
 	Token& Parser::peek()
 	{
-		return tokens[cursor];
+		return _tokens[cursor];
 	}
 
 	Token& Parser::lookahead()
 	{
-		if (cursor < tokens.size() - 1)
+		if (cursor < _tokens.size() - 1)
 		{
-			return tokens[cursor + 1];
+			return _tokens[cursor + 1];
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable("unexpectedly reached the end of file", peek());
@@ -426,5 +426,11 @@ namespace hz
 		} while (true);
 
 		return left;
+	}
+
+	void Parser::reload(const std::vector<Token>& tokens, const std::string& filepath)
+	{
+		_tokens = tokens;
+		_filepath = filepath;
 	}
 }

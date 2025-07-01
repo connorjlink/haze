@@ -29,8 +29,8 @@ namespace hz
 		, public InjectSingleton<ErrorReporter, SymbolDatabase>
 	{
 	private:
-		// Imported from the parser in the constructor
-		const std::vector<Node*>& _program;
+		// imported upon reload()
+		std::vector<Node*> _program;
 
 	private:
 		std::vector<Linkable> _linkables;
@@ -186,7 +186,10 @@ namespace hz
 
 	public:
 		// ast, filepath
-		Generator(const std::vector<Node*>&, const std::string&);
+		void reload(const std::vector<Node*>&, const std::string&);
+
+	public:
+		Generator(const std::string&);
 		~Generator();
 
 	public:

@@ -20,10 +20,8 @@ import std;
 
 namespace hz
 {
-	Generator::Generator(const std::vector<Node*>& program, const std::string& filepath)
-		: _program{ program }
+	Generator::Generator(const std::string& filepath)
 	{
-		_string_length_map = {};
 		USE_SAFE(ErrorReporter)->open_context(filepath, "generating");
 	}
 
@@ -389,5 +387,12 @@ namespace hz
 		});
 
 		return _linkables;	
+	}
+
+
+	void Generator::reload(const std::vector<Node*>& program, const std::string& filepath)
+	{
+		_program = program;
+		// log the filepath for context?
 	}
 }

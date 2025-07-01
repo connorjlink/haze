@@ -8,6 +8,7 @@ namespace hz
 {
 	enum class VerbosityType
 	{
+		SILENT,
 		QUIET,
 		NORMAL,
 		VERBOSE,
@@ -15,6 +16,7 @@ namespace hz
 
 	static const std::unordered_map<std::string, VerbosityType> _verbosity_type_map
 	{
+		{ "silent", VerbosityType::SILENT },
 		{ "quiet", VerbosityType::QUIET },
 		{ "normal", VerbosityType::NORMAL },
 		{ "verbose", VerbosityType::VERBOSE },

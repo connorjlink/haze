@@ -26,8 +26,10 @@ namespace hz
 
 		ServiceContainer::instance().register_factory<Parser, AssemblerParser>([&]()
 		{
-			return std::make_shared<AssemblerParser>(_tokens.at(filepath), filepath);
+			return std::make_shared<AssemblerParser>(filepath);
 		});
+
+		REQUIRE_SAFE(Parser)->reload(_tokens.at(filepath), filepath);
 
 		auto commands = REQUIRE_SAFE(Parser)->parse();
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);

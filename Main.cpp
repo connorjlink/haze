@@ -11,6 +11,7 @@ import std;
 #include "InterpreterToolchain.h"
 #include "CommandLineOptions.h"
 #include "CommandLineParser.h"
+#include "CompilerParser.h"
 #include "X86BuilderValidator.h"
 #include "ErrorReporter.h"
 #include "HeapAllocator.h"
@@ -33,19 +34,13 @@ using namespace hz;
 
 int main(int argc, char** argv)
 {
-	// TODO: instance (thread-local) services startup
-	//ServiceContainer::instance().register_factory<FileManager>([]
-	//{
-	//	return std::make_shared<FileManager>();
-	//});
-
 	// global (thread-shared) singleton startup
 	SingletonContainer::instance().register_singleton<ErrorReporter>();
 	SingletonContainer::instance().register_singleton<FileManager>();
 	SingletonContainer::instance().register_singleton<Context>();
+	SingletonContainer::instance().register_singleton<SymbolExporter>(std::cout);
 	SingletonContainer::instance().register_singleton<SymbolDatabase>();
 	SingletonContainer::instance().register_singleton<CommandLineOptions>();
-	SingletonContainer::instance().register_singleton<SymbolExporter>(std::cout);
 
 	// spools up the worker thread in the background to idle until symbol information becomes available
 	USE_UNSAFE(SymbolExporter)->launch();
@@ -71,12 +66,42 @@ int main(int argc, char** argv)
 
 	for (auto& filepath : command_line_parser.files())
 	{
+		// TODO: break specified files into workgroups to spawn a thread pool
+
 		try
 		{
 			auto& file_manager = *USE_UNSAFE(FileManager);
 			file_manager.open_file(filepath);
 
 			const auto& file = file_manager.get_file(filepath);
+
+			// TODO: instance (thread-local) services startup
+			ServiceContainer::instance().register_factory<JobManager>([]
+			{
+				return std::make_shared<JobManager>();
+			});
+			ServiceContainer::instance().register_factory<Generator>([&]
+			{
+				return std::make_shared<Generator>(filepath);
+			});
+			ServiceContainer::instance().register_factory<RuntimeAllocator>([&]
+			{
+				return std::make_shared<RuntimeAllocator>();
+			});
+			ServiceContainer::instance().register_factory<StackAllocator>([&]
+			{
+				return std::make_shared<StackAllocator>();
+			});
+			ServiceContainer::instance().register_factory<HeapAllocator>([&]
+			{
+				return std::make_shared<HeapAllocator>();
+			});
+#pragma message ("TODO: refactor the pipeline dependency system so I can safely create the correct type before it is needed. now, this is a dummy just so Toolchain doesn't try to create one/misses injection")
+			ServiceContainer::instance().register_factory<Parser>([&]
+			{
+				return std::make_shared<CompilerParser>(filepath);
+			});
+
 
 			switch (file.ttype())
 			{

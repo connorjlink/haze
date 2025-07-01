@@ -40,10 +40,10 @@ namespace hz
 	{
 	protected:
 		std::size_t cursor;
-		std::vector<Token> tokens;
+		std::vector<Token> _tokens;
 
 	protected:
-		const std::string& _filepath;
+		std::string _filepath;
 
 	protected:
 		Token& lookbehind();
@@ -92,7 +92,10 @@ namespace hz
 		virtual std::vector<Node*> parse() = 0;
 
 	public:
-		Parser(const std::vector<Token>&, const std::string&);
+		void reload(const std::vector<Token>&, const std::string&);
+
+	public:
+		Parser(const std::string&);
 		virtual ~Parser();
 	};
 }

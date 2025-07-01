@@ -22,10 +22,12 @@ namespace hz
 
 		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
 
-		ServiceContainer::instance().register_factory<Parser, InterpreterParser>([&]()
+		ServiceContainer::instance().register_factory<Parser>([&]()
 		{
-			return std::make_shared<InterpreterParser>(_tokens.at(filepath), filepath);
+			return std::make_shared<InterpreterParser>(filepath);
 		});
+
+		REQUIRE_SAFE(Parser)->reload(_tokens.at(filepath), filepath);
 
 		auto declarators = REQUIRE_SAFE(Parser)->parse();
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);

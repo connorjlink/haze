@@ -27,25 +27,25 @@ namespace hz
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "compiling");
 
-		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
-
 		ServiceContainer::instance().register_factory<Parser>([&]
 		{
-			return std::make_shared<CompilerParser>(_tokens.at(filepath), filepath);
+			return std::make_shared<CompilerParser>(filepath);
 		});
 
 
+		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
+
+		REQUIRE_SAFE(Parser)->reload(_tokens.at(filepath), filepath);
 		auto ast = REQUIRE_SAFE(Parser)->parse();
+
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);
+		
 
 		const auto generate_task = REQUIRE_SAFE(JobManager)->begin_job("generating");
 
-		ServiceContainer::instance().register_factory<Generator>([&]
-		{
-			return std::make_shared<Generator>(ast, filepath);
-		});
-
+		REQUIRE_SAFE(Generator)->reload(ast, filepath);
 		auto linkables = REQUIRE_SAFE(Generator)->generate();
+
 		REQUIRE_SAFE(JobManager)->end_job(generate_task);
 
 

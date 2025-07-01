@@ -73,7 +73,8 @@ namespace hz
 	{
 	private:
 		std::unordered_map<type_index, std::function<std::shared_ptr<void>()>> _factories;
-		std::mutex _mutex;
+		// has to be a recursive mutex to allow the same thread to register nested services
+		std::recursive_mutex _mutex;
 
 	public:
 		template<typename T>
