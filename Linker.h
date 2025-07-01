@@ -5,6 +5,7 @@
 #include "InstructionCommand.h"
 #include "ErrorReporter.h"
 #include "LinkerType.h"
+#include "SymbolDatabase.h"
 #include "DependencyInjector.h"
 
 // Haze Linker.h

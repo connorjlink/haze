@@ -1,8 +1,9 @@
 #ifndef HAZE_HAZEEVALUATOR_H
 #define HAZE_HAZEEVALUATOR_H
 
-#include "DependencyInjector.h"
+#include "Context.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze HazeEvaluator.h
 // (c) Connor J. Link. All Rights Reserved.

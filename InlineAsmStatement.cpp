@@ -25,12 +25,12 @@ namespace hz
 	void InlineAsmStatement::generate(Allocation*)
 	{
 		auto linker = new AssemblerLinker{ std::move(_commands), _assembler_parser, _enclosing_file };
-		auto commands = linker->link(_generator->resolve_origin());
+		auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin());
 		
 		auto emitter = Emitter::from_architecture(std::move(commands), _enclosing_file);
 		auto object_code = emitter->emit();
 
-		_generator->inline_assembly(std::move(object_code), linker->approximate_size());
+		REQUIRE_SAFE(Generator)->inline_assembly(std::move(object_code), linker->approximate_size());
 	}
 
 	Statement* InlineAsmStatement::optimize()

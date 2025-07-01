@@ -1,8 +1,8 @@
-#ifndef HAZE_GATEWAY_H
-#define HAZE_GATEWAY_H
+#ifndef HAZE_TRACKING_H
+#define HAZE_TRACKING_H
 
-#include "DependencyInjector.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze Tracking.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -256,7 +256,7 @@ namespace hz
 				{
 					self.update();
 				}
-				using_singleton<Tracker>()->notify_modified(this);
+				USE_SAFE(Tracker)->notify_modified(this);
 			}
 		}
 
@@ -266,7 +266,7 @@ namespace hz
 		{
 			if (_is_enabled)
 			{
-				using_singleton<Tracker>()->notify_retired(this);
+				USE_SAFE(Tracker)->notify_retired(this);
 			}
 		}
 
@@ -278,7 +278,7 @@ namespace hz
 			if (_is_enabled)
 			{
 				_id = generate_id();
-				using_singleton<Tracker>()->notify_created(this);
+				USE_SAFE(Tracker)->notify_created(this);
 			}
 		}
 
@@ -286,7 +286,7 @@ namespace hz
 		{
 			if (_is_enabled)
 			{
-				using_singleton<Tracker>()->notify_deleted(this);
+				USE_SAFE(Tracker)->notify_deleted(this);
 			}
 		}
 	};

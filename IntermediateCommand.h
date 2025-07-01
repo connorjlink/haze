@@ -9,13 +9,18 @@
 #include "IntermediateType.h"
 #include "IntegerLiteral.h"
 #include "CommonErrors.h"
+#include "Generator.h"
+#include "SymbolDatabase.h"
+#include "DependencyInjector.h"
 
 // Haze IntermediateCommand.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class IntermediateCommand
+	class IntermediateCommand 
+		: public InjectService<Generator>
+		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
 		std::int32_t offset;

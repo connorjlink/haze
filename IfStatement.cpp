@@ -32,29 +32,29 @@ namespace hz
 		const auto begin_else_label = std::format("begin_else_{:03d}", uuid);
 		const auto end_else_label = std::format("end_else_{:03d}", uuid);
 
-		_generator->branch_label(begin_if_label);
+		REQUIRE_SAFE(Generator)->branch_label(begin_if_label);
 
 		// scoping so that the if body can re-use the condition register
 		{
 			AutoStackAllocation condition_allocation{};
 			condition->generate(condition_allocation.source());
 
-			_generator->check_ifz(begin_else_label, condition_allocation.source()->read());
+			REQUIRE_SAFE(Generator)->check_ifz(begin_else_label, condition_allocation.source()->read());
 		}
 
 		if_body->generate();
 
 		if (else_body != nullptr)
 		{
-			_generator->goto_command(end_else_label);
+			REQUIRE_SAFE(Generator)->goto_command(end_else_label);
 		}
 
-		_generator->branch_label(begin_else_label);
+		REQUIRE_SAFE(Generator)->branch_label(begin_else_label);
 
 		if (else_body != nullptr)
 		{
 			else_body->generate();
-			_generator->branch_label(end_else_label);
+			REQUIRE_SAFE(Generator)->branch_label(end_else_label);
 		}
 	}
 
@@ -86,7 +86,7 @@ namespace hz
 			else_body_optimized = else_body;
 		}
 
-		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(_context));
+		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(REQUIRE_SAFE(Context).get()));
 
 		if (condition_optimized_evaluated != nullptr)
 		{

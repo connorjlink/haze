@@ -216,7 +216,7 @@ namespace hz
 	class InjectService
 	{
 	private:
-		std::tuple<Ts...> _services;
+		std::tuple<std::shared_ptr<Ts>...> _services;
 
 	public:
 		// resolve a specific thread-local service instance. requires static complete type parameter
@@ -239,7 +239,7 @@ namespace hz
 	class InjectSingleton
 	{
 	private:
-		std::tuple<Ts...> _services;
+		std::tuple<std::shared_ptr<Ts>...> _services;
 
 	public:
 		// resolve a specific global singleton instance. requires static complete type parameter

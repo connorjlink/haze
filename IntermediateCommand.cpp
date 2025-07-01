@@ -3,11 +3,8 @@ import std;
 #include "IntermediateCommand.h"
 #include "BinaryUtilities.h"
 #include "BinaryConstants.h"
-#include "Generator.h"
-#include "Parser.h"
-#include "CompilerParser.h"
+#include "Symbol.h"
 #include "X86Builder.h"
-#include "SymbolDatabase.h"
 #include "ErrorReporter.h"
 
 // Haze IntermediateCommand.cpp
@@ -76,9 +73,9 @@ namespace hz
 
 	byterange EnterScopeCommand::emit() const
 	{
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
-		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
+		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		const auto locals_count = function_symbol->locals_count;
@@ -113,9 +110,9 @@ namespace hz
 
 		PUT(X86Builder::leave());
 		
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
-		const auto symbol = _database->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
+		const auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
 		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		const auto arity = function_symbol->arity();

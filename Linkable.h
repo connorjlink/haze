@@ -1,15 +1,17 @@
 #ifndef HAZE_LINKABLE_H
 #define HAZE_LINKABLE_H
 
-#include "Symbol.h"
+#include "Constants.h"
 #include "Command.h"
-#include "IntermediateCommand.h"
 
 // Haze Linkable.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	class Symbol;
+	class IntermediateCommand;
+
 	class Linkable
 	{
 	public:

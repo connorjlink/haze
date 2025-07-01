@@ -1,5 +1,7 @@
 import std;
 
+#include "Symbol.h"
+#include "IntermediateCommand.h"
 #include "Linkable.h"
 
 // Haze Linkable.cpp

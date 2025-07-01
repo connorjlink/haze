@@ -4,12 +4,10 @@
 #include "TypeType.h"
 #include "IntTypeType.h"
 #include "TypeQualifier.h"
-#include "TypeSpecifier.h"
 #include "TypeSignedness.h"
 #include "TypeStorage.h"
-#include "PlatformVariables.h"
-#include "DependencyInjector.h"
 #include "SymbolDatabase.h"
+#include "DependencyInjector.h"
 
 // Haze Type.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,6 +1,7 @@
 import std;
 
-#include "ErrorReporter.h"
+#include "IntermediateCommand.h"
+#include "Symbol.h"
 #include "X86Linker.h"
 
 // Haze X86Linker.cpp

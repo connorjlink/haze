@@ -2,17 +2,14 @@ import std;
 
 #include "Generator.h"
 #include "Allocation.h"
-#include "Parser.h"
 #include "Symbol.h"
 #include "Expression.h"
 #include "ArgumentExpression.h"
 #include "Linkable.h"
 #include "LabelCommand.h"
-#include "IntermediateCommand.h"
 #include "IntegerLiteral.h"
-#include "RuntimeAllocator.h"
-#include "X86Builder.h"
 #include "ErrorReporter.h"
+#include "IntermediateCommand.h"
 #include "SymbolDatabase.h"
 
 // Haze Generator.cpp

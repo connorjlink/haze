@@ -12,13 +12,14 @@
 namespace hz
 {
 	class Allocation;
+	class Expression;
 
 	class Symbol
 	{
 	public:
 		std::string name;
 		int confidence = 0;
-#pragma message("TODO: implement TOKEN confidence system")
+#pragma message("TODO: implement TOKEN confidence system. GOOD STATEMENT/FUNCTION++, error tokens--")
 
 	public:
 		bool was_referenced;

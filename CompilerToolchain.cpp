@@ -5,13 +5,12 @@ import std;
 #include "CompilerParser.h"
 #include "Generator.h"
 #include "CommonToolchain.h"
-#include "CompilerLinker.h"
+#include "Symbol.h"
 #include "Constants.h"
 #include "CommandLineOptions.h"
 #include "IntermediateOptimizer.h"
 #include "X86Linker.h"
 #include "X86Emitter.h"
-#include "ErrorContext.h"
 #include "ErrorReporter.h"
 
 // Haze CompilerToolchain.cpp

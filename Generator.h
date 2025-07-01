@@ -3,8 +3,6 @@
 
 #include "Linkable.h"
 #include "InstructionEncoding.h"
-#include "Scope.h"
-#include "IntermediateCommand.h"
 #include "ErrorReporter.h"
 #include "DependencyInjector.h"
 
@@ -20,6 +18,10 @@ namespace hz
 	class InstructionCommand;
 	class Allocation;
 	class Variable;
+	class IntegerLiteral;
+	class Expression;
+
+#pragma message("TODO: Refactor this class to completely avoid circular dependencies with the AST components (like expression, function, statement)")
 
 	class Generator
 		: public ServiceTag<Generator>
@@ -189,7 +191,6 @@ namespace hz
 	public:
 		// { assembly code, bytecount }
 		void inline_assembly(byterange&&, std::uint32_t);
-
 
 	public:
 		// get the current index for Command generation

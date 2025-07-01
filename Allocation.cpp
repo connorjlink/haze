@@ -4,6 +4,7 @@ import std;
 #include "Allocator.h"
 #include "Generator.h"
 #include "IdentifierExpression.h"
+#include "IntegerLiteral.h"
 #include "ErrorReporter.h"
 
 // Haze Allocation.cpp

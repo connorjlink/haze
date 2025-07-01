@@ -8,7 +8,9 @@
 
 namespace hz
 {
-	class IntermediateOptimizer
+	class IntermediateOptimizer 
+		: public InjectService<Generator>
+		, public InjectSingleton<SymbolDatabase>
 	{
 	private:
 		std::string _function;

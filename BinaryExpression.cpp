@@ -184,7 +184,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_add(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_add(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void MinusBinaryExpression::generate(Allocation* received_allocation)
@@ -194,7 +194,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_subtract(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_subtract(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void TimesBinaryExpression::generate(Allocation* received_allocation)
@@ -204,7 +204,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_multiplication(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_multiplication(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void OrBinaryExpression::generate(Allocation* received_allocation)
@@ -214,7 +214,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_bitor(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_bitor(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void XorBinaryExpression::generate(Allocation* received_allocation)
@@ -224,7 +224,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_bitxor(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_bitxor(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void AndBinaryExpression::generate(Allocation* received_allocation)
@@ -234,7 +234,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_bitand(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_bitand(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void LeftShiftBinaryExpression::generate(Allocation* received_allocation)
@@ -244,7 +244,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_bitlshift(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_bitlshift(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void RightShiftBinaryExpression::generate(Allocation* received_allocation)
@@ -254,7 +254,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_bitrshift(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_bitrshift(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void AssignBinaryExpression::generate(Allocation* received_allocation)
@@ -265,7 +265,7 @@ namespace hz
 
 			right->generate(received_allocation);
 			// figure out how to assign the lhs
-			_generator->write_local(identifier_expression->name, received_allocation->read());
+			REQUIRE_SAFE(Generator)->write_local(identifier_expression->name, received_allocation->read());
 		}
 
 		else
@@ -281,7 +281,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_equality(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_equality(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void InequalityBinaryExpression::generate(Allocation* received_allocation)
@@ -291,7 +291,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_inequality(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_inequality(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void GreaterBinaryExpression::generate(Allocation* received_allocation)
@@ -301,7 +301,7 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_greater(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_greater(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
 
 	void LessBinaryExpression::generate(Allocation* received_allocation)
@@ -311,9 +311,8 @@ namespace hz
 		left->generate(received_allocation);
 		right->generate(temp.source());
 
-		_generator->compute_less(received_allocation->read(), temp.source()->read(), received_allocation->read());
+		REQUIRE_SAFE(Generator)->compute_less(received_allocation->read(), temp.source()->read(), received_allocation->read());
 	}
-
 
 
 	Expression* PlusBinaryExpression::optimize()
