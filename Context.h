@@ -16,7 +16,8 @@ namespace hz
 	class Expression;
 
 	class Context
-		: public InjectSingleton<ErrorReporter>
+		: public SingletonTag<Context>
+		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::unordered_map<std::string, Variable*> _variables;
@@ -60,8 +61,6 @@ namespace hz
 		}
 
 	};
-
-	extern Context* _context;
 }
 
 #endif

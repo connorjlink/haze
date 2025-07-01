@@ -13,22 +13,17 @@ namespace
 
 	void already_defined_error(const std::string& name, Token token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("variable `{}` was already defined in the current scope", name), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("variable `{}` was already defined in the current scope", name), token);
 	}
 
 	void not_defined_error(const std::string& name, Token token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("variable `{}` was not defined in the current scope", name), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("variable `{}` was not defined in the current scope", name), token);
 	}
 }
 
 namespace hz
 {
-	// GLOBALS
-	RuntimeAllocator* _runtime_allocator;
-	// GLOBALS
-
-
 	std::uint32_t RuntimeAllocator::allocate(std::uint32_t bytes)
 	{
 		UNSUPPORTED_OPERATION(__FUNCTION__);
@@ -36,7 +31,7 @@ namespace hz
 
 	void RuntimeAllocator::define_local(const std::string& name)
 	{
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 		
 		if (_locals_offsets[current_function].contains(name))
 		{
@@ -46,12 +41,12 @@ namespace hz
 
 		// NOTE: intentionally leaving `undefined` state to show that it is currently unmapped
 		// but want to indicate that the variable exists at least
-		_locals_offsets[_generator->current_function()][name] = -1;
+		_locals_offsets[REQUIRE_SAFE(Generator)->current_function()][name] = -1;
 	}
 
 	void RuntimeAllocator::define_local(const std::string& name, register_t source)
 	{
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (_locals_offsets[current_function].contains(name))
 		{
@@ -78,13 +73,13 @@ namespace hz
 
 		const auto offset = lowest_offset - previous_size;
 
-		_generator->stack_write(offset, source);
+		REQUIRE_SAFE(Generator)->stack_write(offset, source);
 		_locals_offsets[current_function][name] = offset;
 	}
 
 	void RuntimeAllocator::attach_local(const std::string& name, std::int32_t offset)
 	{
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (_locals_offsets[current_function].contains(name))
 		{
@@ -102,7 +97,7 @@ namespace hz
 
 	void RuntimeAllocator::read_local(register_t destination, const std::string& name)
 	{
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (!_locals_offsets[current_function].contains(name))
 		{
@@ -111,12 +106,12 @@ namespace hz
 		}
 
 		const auto offset = _locals_offsets[current_function].at(name);
-		_generator->stack_read(destination, offset);
+		REQUIRE_SAFE(Generator)->stack_read(destination, offset);
 	}
 
 	void RuntimeAllocator::write_local(const std::string& name, register_t source)
 	{
-		const auto& current_function = _generator->current_function();
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (!_locals_offsets[current_function].contains(name))
 		{
@@ -125,6 +120,6 @@ namespace hz
 		}
 
 		const auto offset = _locals_offsets[current_function].at(name);
-		_generator->stack_write(offset, source);
+		REQUIRE_SAFE(Generator)->stack_write(offset, source);
 	}
 }

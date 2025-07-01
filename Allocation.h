@@ -5,10 +5,14 @@
 #include "AllocationType.h"
 #include "StackAllocator.h"
 #include "HeapAllocator.h"
+#include "DependencyInjector.h"
 #include "Context.h"
 
 // Haze Allocation.h
 // (c) Connor J. Link. All Rights Reserved.
+
+#define AS_HEAP_ALLOCATION(x) static_cast<HeapAllocation*>(x)
+#define AS_STACK_ALLOCATION(x) static_cast<StackAllocation*>(x)
 
 namespace hz
 {
@@ -58,7 +62,9 @@ namespace hz
 		~AutoObserverAllocation();
 	};
 
-	class StackAllocation : public Allocation
+	class StackAllocation 
+		: public Allocation
+		, public InjectService<StackAllocator>
 	{
 	public:
 		register_t allocation;
@@ -101,7 +107,9 @@ namespace hz
 		~AutoStackAllocation();
 	};
 
-	class HeapAllocation : public Allocation
+	class HeapAllocation 
+		: public Allocation
+		, public InjectService<HeapAllocator>
 	{
 	public:
 		std::uint32_t address;

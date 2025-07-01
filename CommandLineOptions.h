@@ -5,6 +5,7 @@
 #include "VerbosityType.h"
 #include "ExecutionType.h"
 #include "OptimizationType.h"
+#include "DependencyInjector.h"
 #include "OptionType.h"
 
 // Haze CommandLineOptions.h
@@ -12,7 +13,8 @@
 
 namespace hz
 {
-	struct CommandLineOptions
+	struct CommandLineOptions 
+		: public SingletonTag<CommandLineOptions>
 	{
 		// --architecture=
 		ArchitectureType _architecture = ArchitectureType::HAZE;
@@ -27,8 +29,6 @@ namespace hz
 		// bit flags by optimization category of OptimizationType
 		std::uint32_t _optimization{};
 	};
-
-	extern CommandLineOptions* _options;
 }
 
 #endif

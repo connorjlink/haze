@@ -3,6 +3,8 @@
 
 #include "ToolchainType.h"
 #include "FileManager.h"
+#include "JobManager.h"
+#include "CommandLineOptions.h"
 #include "DependencyInjector.h"
 #include "Token.h"
 
@@ -12,7 +14,9 @@
 namespace hz
 {
 	class Toolchain
-		: public InjectSingleton<ErrorReporter, FileManager>
+		: public ServiceTag<Toolchain>
+		, public InjectService<JobManager>
+		, public InjectSingleton<ErrorReporter, FileManager, CommandLineOptions>
 	{
 	protected:
 		// filepath to vector<token> mapping
@@ -43,8 +47,6 @@ namespace hz
 		// is_panic
 		void shut_down(bool);
 	};
-
-	extern Toolchain* _toolchain;
 }
 
 #endif

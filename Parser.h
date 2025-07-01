@@ -4,8 +4,11 @@
 #include "Token.h"
 #include "ParserType.h"
 #include "IdentifierExpression.h"
-#include "DependencyInjector.h"
+#include "SymbolDatabase.h"
+#include "CommandLineOptions.h"
+#include "SymbolExporter.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -32,7 +35,8 @@ namespace hz
 	enum class SymbolType;
 
 	class Parser
-		: public InjectSingleton<ErrorReporter>
+		: public ServiceTag<Parser>
+		, public InjectSingleton<ErrorReporter, SymbolDatabase, SymbolExporter, CommandLineOptions>
 	{
 	protected:
 		std::size_t cursor;
@@ -91,8 +95,6 @@ namespace hz
 		Parser(const std::vector<Token>&, const std::string&);
 		virtual ~Parser();
 	};
-
-	extern Parser* _parser;
 }
 
 #endif

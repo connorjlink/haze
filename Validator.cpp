@@ -34,8 +34,8 @@ namespace hz
 
 		if (had_error)
 		{
-			USE_SAFE(ErrorReporter).close_all_contexts();
-			Log::raw(USE_SAFE(ErrorReporter).generate_report());
+			USE_SAFE(ErrorReporter)->close_all_contexts();
+			Log::raw(USE_SAFE(ErrorReporter)->generate_report());
 		}
 	}
 }

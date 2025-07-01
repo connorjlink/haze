@@ -2,13 +2,17 @@
 #define HAZE_RUNTIMEALLOCATOR_H
 
 #include "InstructionEncoding.h"
+#include "Generator.h"
+#include "DependencyInjector.h"
 
 // Haze RuntimeAllocator.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class RuntimeAllocator
+	class RuntimeAllocator 
+		: public ServiceTag<RuntimeAllocator>
+		, public InjectService<Generator>
 	{
 	private:
 		// map of (function -> (map of variables -> offset))
@@ -35,8 +39,6 @@ namespace hz
 		{
 		}
 	};
-
-	extern RuntimeAllocator* _runtime_allocator;
 }
 
 #endif 

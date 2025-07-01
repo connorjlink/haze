@@ -114,7 +114,7 @@ namespace hz
 
 		if (condition_evaluated->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			USE_SAFE(ErrorReporter).post_error("`if` statement conditions must result in an r-value", condition_evaluated->_token);
+			USE_SAFE(ErrorReporter)->post_error("`if` statement conditions must result in an r-value", condition_evaluated->_token);
 			return nullptr;
 		}
 

@@ -79,11 +79,6 @@ namespace
 
 namespace hz
 {
-	// GLOBALS
-	SymbolExporter* _exporter;
-	// GLOBALS
-
-
 	void SymbolExporter::enqueue(Symbol* symbol, Token token)
 	{
 		// lock

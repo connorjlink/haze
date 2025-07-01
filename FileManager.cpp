@@ -49,7 +49,7 @@ namespace hz
 	
 	void FileManager::never_opened_error(const std::string& filepath) const
 	{
-		USE_UNSAFE(ErrorReporter).post_uncorrectable(std::format(
+		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"file {} was never opened", filepath), NULL_TOKEN);
 	}
 }

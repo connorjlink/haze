@@ -26,21 +26,31 @@ namespace hz
 
 	void CompilerToolchain::run(const std::string& filepath)
 	{
-		USE_SAFE(ErrorReporter).open_context(filepath, "compiling");
+		USE_SAFE(ErrorReporter)->open_context(filepath, "compiling");
 
-		const auto parse_task = _job_manager->begin_job("parsing");
-		_parser = new CompilerParser{ _tokens.at(filepath), filepath };
-		auto ast = _parser->parse();
-		_job_manager->end_job(parse_task);
+		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
 
-
-		const auto generate_task = _job_manager->begin_job("generating");
-		_generator = new Generator{ ast, filepath };
-		auto linkables = _generator->generate();
-		_job_manager->end_job(generate_task);
+		ServiceContainer::instance().register_factory<Parser>([&]
+		{
+			return std::make_shared<CompilerParser>(_tokens.at(filepath), filepath);
+		});
 
 
-		const auto optimize_task = _job_manager->begin_job("optimizing");
+		auto ast = USE_SAFE(Parser)->parse();
+		REQUIRE_SAFE(JobManager)->end_job(parse_task);
+
+		const auto generate_task = REQUIRE_SAFE(JobManager)->begin_job("generating");
+
+		ServiceContainer::instance().register_factory<Generator>([&]
+		{
+			return std::make_shared<Generator>(ast, filepath);
+		});
+
+		auto linkables = USE_SAFE(Generator)->generate();
+		REQUIRE_SAFE(JobManager)->end_job(generate_task);
+
+
+		const auto optimize_task = REQUIRE_SAFE(JobManager)->begin_job("optimizing");
 		for (auto& linkable : linkables)
 		{
 			auto optimizer = new IntermediateOptimizer{ linkable.symbol->name, linkable.ir };
@@ -48,7 +58,7 @@ namespace hz
 
 			linkable.ir = std::move(ir_optimized);
 		}
-		_job_manager->end_job(optimize_task);
+		REQUIRE_SAFE(JobManager)->end_job(optimize_task);
 
 		// NOTE: old method;
 		/*byterange out{};
@@ -60,12 +70,13 @@ namespace hz
 			}
 		}*/
 
-		const auto link_task = _job_manager->begin_job("linking");
+		const auto link_task = REQUIRE_SAFE(JobManager)->begin_job("linking");
+#pragma message ("TODO: replace with singleton linker service instead!. so as to not require an architecture-specific linker instace")
 		auto linker = new X86Linker{ linkables };
 		auto executable = X86Emitter::emit_init();
 		auto out = linker->link();
 		executable.append_range(out);
-		_job_manager->end_job(link_task);
+		REQUIRE_SAFE(JobManager)->end_job(link_task);
 
 
 		// NOTE: the following snippet will format the machine code as readable hex; useful for debugging!
@@ -86,7 +97,7 @@ namespace hz
 
 		auto entrypoint = HALF_DWORD_MAX;
 
-		if (_options->_architecture == ArchitectureType::X86)
+		if (USE_SAFE(CommandLineOptions)->_architecture == ArchitectureType::X86)
 		{
 			//entrypoint = 0x401000 + 0x200;
 			//entrypoint = 0x1000;
@@ -97,12 +108,12 @@ namespace hz
 		/*auto image = common_link(entrypoint);
 		auto executable = common_emit(std::move(image), _filepath);*/
 
-		if (!USE_SAFE(ErrorReporter).had_error())
+		if (!USE_SAFE(ErrorReporter)->had_error())
 		{
 			common_finalize(executable, filepath);
 		}
 
-		USE_SAFE(ErrorReporter).post_information(std::format("wrote fresh executable for `{}`", filepath), NULL_TOKEN);
-		USE_SAFE(ErrorReporter).close_context();
+		USE_SAFE(ErrorReporter)->post_information(std::format("wrote fresh executable for `{}`", filepath), NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 }

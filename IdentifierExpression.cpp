@@ -71,11 +71,11 @@ namespace hz
 				return variable_to_node(value);
 			}
 
-			USE_SAFE(ErrorReporter).post_error(std::format("identifier `{}` is unassigned", name), _token);
+			USE_SAFE(ErrorReporter)->post_error(std::format("identifier `{}` is unassigned", name), _token);
 			return nullptr;
 		}
 
-		USE_SAFE(ErrorReporter).post_error(std::format("identifier `{}` is undefined", name), _token);
+		USE_SAFE(ErrorReporter)->post_error(std::format("identifier `{}` is undefined", name), _token);
 		return nullptr;
 	}
 }

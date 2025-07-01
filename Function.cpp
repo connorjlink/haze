@@ -41,7 +41,7 @@ namespace hz
 
 	void Function::generate(Allocation*)
 	{
-		_generator->begin_function(name);
+		REQUIRE_SAFE(Generator)->begin_function(name);
 
 		// ensure each function implicitly has its own scope block
 		if (body->stype() != StatementType::COMPOUND)
@@ -51,16 +51,16 @@ namespace hz
 
 		const auto arity = arguments.size();
 
-		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, name, _token);
+		auto symbol = USE_UNSAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, _token);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
-		_generator->begin_scope();
+		REQUIRE_SAFE(Generator)->begin_scope();
 
 		auto current_argument = 0;
 		for (auto argument : arguments)
 		{
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(argument);
-			_generator->attach_local(argument_expression->identifier->name, ((current_argument + 2) * 4));
+			REQUIRE_SAFE(Generator)->attach_local(argument_expression->identifier->name, ((current_argument + 2) * 4));
 
 			current_argument++;
 		}
@@ -94,19 +94,19 @@ namespace hz
 		// NOTE: old method
 		//_generator->end_scope();
 
-		if (_parser->ptype() == ParserType::COMPILER)
+		if (REQUIRE_SAFE(Parser)->ptype() == ParserType::COMPILER)
 		{
-			auto compiler_parser = AS_COMPILER_PARSER(_parser);
+			auto compiler_parser = AS_COMPILER_PARSER(REQUIRE_SAFE(Parser).get());
 
 			const auto& end_function_label = compiler_parser->_function_label_map.at(name);
-			_generator->branch_label(end_function_label);
+			REQUIRE_SAFE(Generator)->branch_label(end_function_label);
 
-			_generator->end_scope();
+			REQUIRE_SAFE(Generator)->end_scope();
 		}
 
 		else
 		{
-			CommonErrors::invalid_parser_type(_parser->ptype(), _token);
+			CommonErrors::invalid_parser_type(REQUIRE_SAFE(Parser)->ptype(), _token);
 			return;
 		}
 		
@@ -116,7 +116,7 @@ namespace hz
 #pragma message("TODO: figure out if there was not a return statement")
 		if constexpr (false)
 		{
-			USE_SAFE(ErrorReporter).post_warning(std::format("implicit return generated for function `{}`", name), body->_token);
+			USE_SAFE(ErrorReporter)->post_warning(std::format("implicit return generated for function `{}`", name), body->_token);
 			
 			Expression* return_value = nullptr;
 

@@ -10,17 +10,12 @@ import std;
 
 namespace hz
 {
-	// GLOBALS
-	SymbolDatabase* _database;
-	// GLOBALS
-
-
 	Symbol* SymbolDatabase::add_symbol(SymbolType type, const std::string& name, const Token& location)
 	{
 		// does the symbol already exist in the registry?
 		if (_table.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("symbol `{}` was already defined as a {}",
+			USE_SAFE(ErrorReporter)->post_error(std::format("symbol `{}` was already defined as a {}",
 				name, _symbol_type_map.at(_table.at(name)->ytype())), location);
 			return nullptr;
 		}
@@ -38,14 +33,14 @@ namespace hz
 
 			default:
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
+				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"invalid symbol type `{}`", location.text), location);
 			} break;
 		}
 
 		if (new_symbol != nullptr)
 		{
-			_exporter->enqueue(new_symbol, location);
+			USE_SAFE(SymbolExporter)->enqueue(new_symbol, location);
 		}
 
 		return new_symbol;
@@ -86,7 +81,7 @@ namespace hz
 	{
 		if (!_table.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format(
+			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"symbol `{}` is undefined", name), location);
 			return SymbolType::VARIABLE;
 		}
@@ -100,7 +95,7 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
+				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"invalid symbol type `{}`", location.text), location);
 			}
 			return nullptr;
@@ -110,7 +105,7 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
+				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"symbol `{}` is undefined", name), location);
 			}
 			return nullptr;
@@ -122,7 +117,7 @@ namespace hz
 		{
 			if (log_errors)
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
+				USE_SAFE(ErrorReporter)->post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
 					name, _symbol_type_map.at(symbol->ytype()), _symbol_type_map.at(type)), location);
 			}
 			return nullptr;

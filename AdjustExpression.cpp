@@ -30,12 +30,12 @@ namespace hz
 
 		if (increment)
 		{
-			_generator->compute_increment(allocation->read(), allocation->read());
+			REQUIRE_SAFE(Generator)->compute_increment(allocation->read(), allocation->read());
 		}
 
 		else
 		{
-			_generator->compute_decrement(allocation->read(), allocation->read());
+			REQUIRE_SAFE(Generator)->compute_decrement(allocation->read(), allocation->read());
 		}
 	}
 
@@ -85,7 +85,7 @@ namespace hz
 			return integer_literal_expression;
 		}
 
-		using_singleton<ErrorReporter>().post_error("adjustment expression target must result in a modifiable l-value", target->_token);
+		USE_SAFE(ErrorReporter)->post_error("adjustment expression target must result in a modifiable l-value", target->_token);
 		return nullptr;
 	}
 }

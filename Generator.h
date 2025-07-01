@@ -5,13 +5,13 @@
 #include "InstructionEncoding.h"
 #include "Scope.h"
 #include "IntermediateCommand.h"
-#include "DependencyInjector.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze Generator.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define UNSUPPORTED_OPERATION(x) USE_UNSAFE(ErrorReporter).post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
+#define UNSUPPORTED_OPERATION(x) USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format("unsupported operation `{}()`", x), NULL_TOKEN)
 
 namespace hz
 {
@@ -22,7 +22,8 @@ namespace hz
 	class Variable;
 
 	class Generator
-		: public InjectSingleton<ErrorReporter>
+		: public ServiceTag<Generator>
+		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		// Imported from the parser in the constructor
@@ -197,9 +198,6 @@ namespace hz
 		std::int32_t resolve_origin() const;
 
 	public:
-
-
-	public:
 		// ast, filepath
 		Generator(const std::vector<Node*>&, const std::string&);
 		~Generator();
@@ -207,8 +205,6 @@ namespace hz
 	public:
 		std::vector<Linkable> generate();
 	};
-
-	extern Generator* _generator;
 }
 
 #endif

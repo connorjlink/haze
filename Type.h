@@ -8,6 +8,8 @@
 #include "TypeSignedness.h"
 #include "TypeStorage.h"
 #include "PlatformVariables.h"
+#include "DependencyInjector.h"
+#include "SymbolDatabase.h"
 
 // Haze Type.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -15,6 +17,7 @@
 namespace hz
 {
 	class Type
+		: public InjectSingleton<SymbolDatabase>
 	{
 	public:
 		TypeQualifier qualifier;

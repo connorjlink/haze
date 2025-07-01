@@ -1,8 +1,8 @@
 #ifndef HAZE_AUTOERRORCONTEXT_H
 #define HAZE_AUTOERRORCONTEXT_H
 
-#include "DependencyInjector.h"
 #include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze AutoErrorContext.h
 // (c) Connor J. Link. All Rights Reserved.

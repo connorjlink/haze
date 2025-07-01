@@ -30,7 +30,7 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, name, _token, true);
+		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, _token, true);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		const auto defined_arity = function_symbol->arity();
@@ -38,7 +38,7 @@ namespace hz
 
 		if (defined_arity != called_arity)
 		{
-			USE_UNSAFE(ErrorReporter).post_error(std::format("function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), _token);
+			USE_UNSAFE(ErrorReporter)->post_error(std::format("function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), _token);
 			return;
 		}
 
@@ -61,7 +61,7 @@ namespace hz
 		}
 
 		// will emit a placeholder call address before hot-patching in the correct target during linking
-		_generator->call_function(name, argument_expressions, allocation);
+		REQUIRE_SAFE(Generator)->call_function(name, argument_expressions, allocation);
 	}
 
 	Expression* FunctionCallExpression::optimize()
@@ -82,7 +82,7 @@ namespace hz
 
 			if (argument_evaluated->ntype() != NodeType::EXPRESSION)
 			{
-				USE_UNSAFE(ErrorReporter).post_error("function call arguments must evaluate to an r-value", argument->_token);
+				USE_UNSAFE(ErrorReporter)->post_error("function call arguments must evaluate to an r-value", argument->_token);
 			}
 
 			arguments_evaluated.emplace_back(AS_EXPRESSION(argument_evaluated));
@@ -100,7 +100,7 @@ namespace hz
 			}
 		}
 
-		USE_UNSAFE(ErrorReporter).post_error(std::format("function `{}` is undefined", name), _token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("function `{}` is undefined", name), _token);
 		return nullptr;
 	}
 }

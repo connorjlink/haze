@@ -2,13 +2,15 @@
 #define HAZE_STACKALLOCATOR_H
 
 #include "InstructionEncoding.h"
+#include "DependencyInjector.h"
 
 // Haze StackAllocator.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class StackAllocator
+	// thread-local service because each translation effectively has its own memory space during compilation
+	class StackAllocator : public ServiceTag<StackAllocator>
 	{
 	public:
 		register_t allocate()
@@ -44,13 +46,11 @@ namespace hz
 		}
 
 	private:
-		std::set<register_t> _ledger;
+		std::unordered_set<register_t> _ledger;
 
 	public:
 		StackAllocator();
 	};
-
-	extern StackAllocator* _stack_allocator;
 }
 
 #endif

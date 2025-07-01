@@ -26,7 +26,7 @@ namespace
 				? message 
 				: "Debug assertion failed";
 
-			USE_UNSAFE(ErrorReporter).post_uncorrectable(real_message, NULL_TOKEN);
+			USE_UNSAFE(ErrorReporter)->post_uncorrectable(real_message, NULL_TOKEN);
 		}
 #endif
 	}

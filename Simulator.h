@@ -47,7 +47,7 @@ namespace hz
 				return;
 			}
 
-			USE_SAFE(ErrorReporter).post_uncorrectable(std::format("object code length {} bytes exceeds the ROM capacity of {} bytes", bytes.size(), rom.size()), NULL_TOKEN);
+			USE_SAFE(ErrorReporter)->post_uncorrectable(std::format("object code length {} bytes exceeds the ROM capacity of {} bytes", bytes.size(), rom.size()), NULL_TOKEN);
 		}
 
 	private:

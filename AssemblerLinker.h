@@ -35,11 +35,11 @@ namespace hz
 				{
 					if (!_node_type_map.contains(val->ntype()))
 					{
-						USE_SAFE(ErrorReporter).post_error("unrecognized node type", NULL_TOKEN);
+						USE_SAFE(ErrorReporter)->post_error("unrecognized node type", NULL_TOKEN);
 					}
 					else
 					{
-						USE_SAFE(ErrorReporter).post_error(std::format("invalid node type `{}`", _node_type_map.at(val->ntype())), NULL_TOKEN);
+						USE_SAFE(ErrorReporter)->post_error(std::format("invalid node type `{}`", _node_type_map.at(val->ntype())), NULL_TOKEN);
 					}
 
 					return true;

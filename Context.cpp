@@ -70,11 +70,12 @@ namespace hz
 
 	void Context::print(const std::string& message)
 	{
-		USE_SAFE(ErrorReporter).post_information(message, NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_information(message, NULL_TOKEN);
 	}
 
 	void Context::exit_program(Variable* value)
 	{
+		// not an error condition
 		throw ExitProgramException{ value->format() };
 
 		/*using enum VariableType;

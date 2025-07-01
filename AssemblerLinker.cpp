@@ -62,7 +62,7 @@ namespace hz
 					auto label_command = AS_LABEL_COMMAND(command);
 
 					label_command->offset = address_tracker; // TODO: this assignment might be unnecessary
-					_database->reference_label(label_command->identifier, NULL_TOKEN)->address = address_tracker;
+					USE_SAFE(SymbolDatabase)->reference_label(label_command->identifier, NULL_TOKEN)->address = address_tracker;
 				} break;
 			}
 		}
@@ -82,7 +82,7 @@ namespace hz
 						if (instruction_command->opcode == Opcode::CALL ||
 							instruction_command->opcode == Opcode::BRNZ)
 						{
-							auto label_symbol = _database->reference_label(instruction_command->branch_target, NULL_TOKEN);
+							auto label_symbol = USE_SAFE(SymbolDatabase)->reference_label(instruction_command->branch_target, NULL_TOKEN);
 
 							//const auto branch_target = base_pointer + label_symbol->address;
 							const auto branch_target = label_symbol->address;
@@ -102,7 +102,7 @@ namespace hz
 		{
 			if (executable[i] != 0)
 			{
-				USE_SAFE(ErrorReporter).post_warning("possible data loss for code imaged prior to program entrypoint", NULL_TOKEN);
+				USE_SAFE(ErrorReporter)->post_warning("possible data loss for code imaged prior to program entrypoint", NULL_TOKEN);
 			}
 		}
 

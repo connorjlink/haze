@@ -2,6 +2,9 @@
 #define HAZE_FUNCTION_H
 
 #include "Node.h"
+#include "Generator.h"
+#include "SymbolDatabase.h"
+#include "DependencyInjector.h"
 
 // Haze Function.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -12,7 +15,10 @@ namespace hz
 	class Statement;
 	class Type;
 
-	class Function : public Node
+	class Function 
+		: public Node
+		, public InjectService<Generator>
+		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
 		std::string name;

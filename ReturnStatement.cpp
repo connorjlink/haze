@@ -32,23 +32,23 @@ namespace hz
 
 	void ReturnStatement::generate(Allocation*)
 	{
-		if (_parser->ptype() == ParserType::COMPILER)
+		if (REQUIRE_SAFE(Parser)->ptype() == ParserType::COMPILER)
 		{
-			auto compiler_parser = AS_COMPILER_PARSER(_parser);
+			auto compiler_parser = AS_COMPILER_PARSER(REQUIRE_SAFE(Parser).get());
 			const auto& end_function_label = compiler_parser->_function_label_map.at(enclosing_function);
 
 			// when value==nullptr, expect no return value ONLY from nvr function
 			if (value == nullptr)
 			{
-				if (_database->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
+				if (USE_SAFE(SymbolDatabase)->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
 				{
-					USE_SAFE(ErrorReporter).post_error("no return value was specified for a non-`void` function", _token);
+					USE_SAFE(ErrorReporter)->post_error("no return value was specified for a non-`void` function", _token);
 					return;
 				}
 
 				// NOTE: no parameters return 
 				// simply destroy the stack frame and return
-				_generator->make_return(end_function_label);
+				REQUIRE_SAFE(Generator)->make_return(end_function_label);
 			}
 
 			// now, figure out how to return the value
@@ -81,12 +81,12 @@ namespace hz
 			// generate the return value
 			value->generate(temp.source());
 
-			_generator->make_return(end_function_label, temp.source()->read());
+			REQUIRE_SAFE(Generator)->make_return(end_function_label, temp.source()->read());
 		}
 
 		else
 		{
-			CommonErrors::invalid_parser_type(_parser->ptype(), _token);
+			CommonErrors::invalid_parser_type(REQUIRE_SAFE(Parser)->ptype(), _token);
 			return;
 		}
 	}

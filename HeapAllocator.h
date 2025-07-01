@@ -1,9 +1,12 @@
 #ifndef HAZE_HEAPALLOCATOR_H
 #define HAZE_HEAPALLOCATOR_H
 
+#include "DependencyInjector.h"
+
 namespace hz
 {
-	class HeapAllocator
+	// thread-local service because each translation effectively has its own memory space during compilation
+	class HeapAllocator : public ServiceTag<HeapAllocator>
 	{
 	public:
 		std::uint32_t allocate(std::uint32_t bytes)
@@ -16,8 +19,6 @@ namespace hz
 			
 		}
 	};
-
-	extern HeapAllocator* _heap_allocator;
 }
 
 #endif

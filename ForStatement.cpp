@@ -34,22 +34,22 @@ namespace hz
 
 		initialization->generate();
 
-		_generator->branch_label(begin_for_label);
+		REQUIRE_SAFE(Generator)->branch_label(begin_for_label);
 
 		// scoping so that the for body can re-use the condition register
 		{
 			AutoStackAllocation condition_allocation{};
 			condition->generate(condition_allocation.source());
 
-			_generator->check_ifnz(end_for_label, condition_allocation.source()->read());
+			REQUIRE_SAFE(Generator)->check_ifnz(end_for_label, condition_allocation.source()->read());
 		}
 
 		body->generate();
 		expression->generate();
 
-		_generator->goto_command(begin_for_label);
+		REQUIRE_SAFE(Generator)->goto_command(begin_for_label);
 
-		_generator->branch_label(end_for_label);
+		REQUIRE_SAFE(Generator)->branch_label(end_for_label);
 	}
 
 	Statement* ForStatement::optimize()
@@ -87,7 +87,7 @@ namespace hz
 			body_optimized = body;
 		}
 
-		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(_context));
+		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(REQUIRE_SAFE(Context).get()));
 
 		if (condition_optimized_evaluated != nullptr)
 		{
@@ -111,7 +111,7 @@ namespace hz
 
 		if (condition->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			USE_SAFE(ErrorReporter).post_error("`for` loop conditions must result in an r-value", condition_evaluated->_token);
+			USE_SAFE(ErrorReporter)->post_error("`for` loop conditions must result in an r-value", condition_evaluated->_token);
 			return nullptr;
 		}
 

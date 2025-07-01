@@ -3,8 +3,8 @@
 
 #include "ErrorContext.h"
 #include "Token.h"
-#include "DependencyInjector.h"
 #include "Test.h"
+#include "DependencyInjector.h"
 
 // Haze ErrorReporter.h
 // (c) Connor J. Link. All Rights Reserved.

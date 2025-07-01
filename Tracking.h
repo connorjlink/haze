@@ -56,7 +56,7 @@ namespace hz
 		{
 			if (!_database.contains(id))
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
+				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"invalid attachment to nonexistent entity tracking instance `{}`", id), NULL_TOKEN);
 				return false;
 			}
@@ -70,7 +70,7 @@ namespace hz
 		{
 			if (entity == nullptr)
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
+				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"invalid nullish entity tracking instance"), NULL_TOKEN);
 				return false;
 			}
@@ -256,7 +256,7 @@ namespace hz
 				{
 					self.update();
 				}
-				using_singleton<Tracker>().notify_modified(this);
+				using_singleton<Tracker>()->notify_modified(this);
 			}
 		}
 
@@ -266,7 +266,7 @@ namespace hz
 		{
 			if (_is_enabled)
 			{
-				using_singleton<Tracker>().notify_retired(this);
+				using_singleton<Tracker>()->notify_retired(this);
 			}
 		}
 
@@ -278,7 +278,7 @@ namespace hz
 			if (_is_enabled)
 			{
 				_id = generate_id();
-				using_singleton<Tracker>().notify_created(this);
+				using_singleton<Tracker>()->notify_created(this);
 			}
 		}
 
@@ -286,7 +286,7 @@ namespace hz
 		{
 			if (_is_enabled)
 			{
-				using_singleton<Tracker>().notify_deleted(this);
+				using_singleton<Tracker>()->notify_deleted(this);
 			}
 		}
 	};

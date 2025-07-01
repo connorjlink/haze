@@ -9,7 +9,8 @@
 namespace hz
 {
 	class JobManager
-		: public InjectSingleton<ErrorReporter>
+		: public ServiceTag<JobManager>
+		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::vector<Job> _jobs;
@@ -27,8 +28,6 @@ namespace hz
 		{
 		}
 	};
-
-	extern JobManager* _job_manager;
 }
 
 #endif

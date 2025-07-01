@@ -27,14 +27,14 @@ namespace hz
 			}
 		}
 
-		USE_SAFE(ErrorReporter).post_error(std::format("job id {} is undefined and cannot be stopped", uuid), NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_error(std::format("job id {} is undefined and cannot be stopped", uuid), NULL_TOKEN);
 	}
 
 	void JobManager::log() const
 	{
 		for (auto& job : _jobs)
 		{
-			USE_SAFE(ErrorReporter).post_information(job.format(), NULL_TOKEN);
+			USE_SAFE(ErrorReporter)->post_information(job.format(), NULL_TOKEN);
 		}
 	}
 }

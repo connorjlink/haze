@@ -3,13 +3,17 @@
 
 #include "Node.h"
 #include "ExpressionType.h"
+#include "Generator.h"
+#include "DependencyInjector.h"
 
 // Haze ExpressionType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Expression : public Node
+	class Expression 
+		: public Node
+		, public InjectService<Generator>
 	{
 	public:
 		Expression(const Token& token)

@@ -80,7 +80,7 @@ namespace hz
 
 				if (ec != std::errc())
 				{
-					USE_SAFE(ErrorReporter).post_error(std::format(
+					USE_SAFE(ErrorReporter)->post_error(std::format(
 						"unparseable integer literal `{}`", lexeme), forge_token(lexeme));
 					advance(); // dollar sign
 					advance(lexeme.length()); // number
@@ -191,7 +191,7 @@ namespace hz
 
 				else
 				{
-					USE_SAFE(ErrorReporter).post_error(std::format(
+					USE_SAFE(ErrorReporter)->post_error(std::format(
 						"unexpected token `{}`", current_string), error_token(current_string));
 				}
 

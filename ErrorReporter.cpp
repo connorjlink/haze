@@ -134,7 +134,7 @@ namespace hz
 		}
 		
 		close_all_contexts();
-		_toolchain->panic();
+#pragma message ("TODO: determine how threading will interact with thi call. with the calling thread retain its context for the correct toolchain")
+		REQUIRE_UNSAFE(Toolchain)->panic();
 	}
-
 }

@@ -38,7 +38,7 @@ namespace
 			case 0b11: return R3;
 
 			default:
-				USE_UNSAFE(ErrorReporter).post_error(std::format("invalid register `{}` for architecture `haze`", reg), NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid register `{}` for architecture `haze`", reg), NULL_TOKEN);
 				return DC;
 		}
 	}
@@ -173,7 +173,7 @@ namespace hz
 
 					default: 
 					{
-						USE_SAFE(ErrorReporter).post_error(std::format("unrecognized instruction {:02x}", static_cast<std::uint8_t>(instruction_command->opcode)), NULL_TOKEN);
+						USE_SAFE(ErrorReporter)->post_error(std::format("unrecognized instruction {:02x}", static_cast<std::uint8_t>(instruction_command->opcode)), NULL_TOKEN);
 					} break;
 				}
 			}

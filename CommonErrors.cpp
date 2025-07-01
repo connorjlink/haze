@@ -22,18 +22,18 @@ namespace hz
 {
 	void CommonErrors::internal_compiler_error(const std::string& message, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("[internal compiler error] {}", message), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("[internal compiler error] {}", message), token);
 	}
 
 	void CommonErrors::internal_linker_error(const std::string& message, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("[internal linker error] {}", message), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("[internal linker error] {}", message), token);
 	}
 
 
 	void CommonErrors::unsupported_instruction_format(const std::string& instruction, const std::string& format)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("unsupported instruction format `{}` for `{}`", format, instruction), NULL_TOKEN);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported instruction format `{}` for `{}`", format, instruction), NULL_TOKEN);
 	}
 
 	std::string CommonErrors::invalid_generic_type(const std::string& context, const std::string& type)
@@ -88,33 +88,33 @@ namespace hz
 
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("{} must be a modifiable l-value", message), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("{} must be a modifiable l-value", message), token);
 	}
 
 	void CommonErrors::must_be_rvalue(const std::string& message, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("{} must evaluate to an r-value", message), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("{} must evaluate to an r-value", message), token);
 	}
 
 	void CommonErrors::must_be_constexpr(const std::string& message, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("{} must evaluate to a constant expression", message), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("{} must evaluate to a constant expression", message), token);
 	}
 
 	void CommonErrors::invalid_type(const std::string& component, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("invalid type {} `{}`", component, token.text), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid type {} `{}`", component, token.text), token);
 	}
 
 	void CommonErrors::integer_size_mismatch(IntegerLiteralType lhs, IntegerLiteralType rhs, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("integer type mismatch between `{}` and `{}`",
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("integer type mismatch between `{}` and `{}`",
 			_integer_literal_type_map.at(lhs), _integer_literal_type_map.at(rhs)), token);
 	}
 
 	void CommonErrors::invalid_binary_expression(ExpressionType lhs, ExpressionType rhs, BinaryExpressionType op, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("invalid binary expression `{}` between `{}` and `{}`",
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid binary expression `{}` between `{}` and `{}`",
 			_binary_expression_type_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
 	}
 
@@ -125,7 +125,7 @@ namespace hz
 		const auto evaluated_type = resolve_type(expression);
 		const auto erroring_qualifier = evaluated_type->qualifier;
 
-		USE_UNSAFE(ErrorReporter).post_error(std::format("type qualifier mismatch; expected `{}` but got `{}`",
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("type qualifier mismatch; expected `{}` but got `{}`",
 			_type_qualifier_map.at(expected_qualifier), _type_qualifier_map.at(erroring_qualifier)), token);
 	}
 
@@ -136,7 +136,7 @@ namespace hz
 		const auto evaluated_type = resolve_type(expression);
 		const auto erroring_signedness = AS_INT_TYPE(evaluated_type)->signedness;
 
-		USE_UNSAFE(ErrorReporter).post_error(std::format("type signedness mismatch; expected `{}` but got `{}`",
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("type signedness mismatch; expected `{}` but got `{}`",
 			_type_signedness_map.at(erroring_signedness), _type_signedness_map.at(erroring_signedness)), token);
 	}
 
@@ -147,7 +147,7 @@ namespace hz
 		const auto evaluated_type = resolve_type(expression);
 		const auto erroring_storage = evaluated_type->storage;
 
-		USE_UNSAFE(ErrorReporter).post_error(std::format("type storage mismatch; expected `{}` but got `{}`",
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("type storage mismatch; expected `{}` but got `{}`",
 			_type_storage_map.at(expected_storage), _type_storage_map.at(erroring_storage)), token);
 	}
 
@@ -158,17 +158,17 @@ namespace hz
 		const auto evaluated_type = AS_INT_TYPE(resolve_type(expression));
 		const auto erroring_specifier = evaluated_type->int_type;
 
-		USE_UNSAFE(ErrorReporter).post_error(std::format("type specifier mismatch; expected `{}` but got `{}`",
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("type specifier mismatch; expected `{}` but got `{}`",
 			_int_type_type_map.at(expected_specifier), _int_type_type_map.at(erroring_specifier)), token);
 	}
 
 	void CommonErrors::unsupported_statement(const std::string& source, const std::string& type, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("unsupported {} statement type `{}`", source, type), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported {} statement type `{}`", source, type), token);
 	}
 
 	void CommonErrors::unsupported_expression(const std::string& source, const std::string& type, const Token& token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("unsupported {} expression type `{}`", source, type), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported {} expression type `{}`", source, type), token);
 	}
 }

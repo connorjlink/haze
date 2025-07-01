@@ -12,8 +12,11 @@
 
 namespace hz
 {
+	// Has to be a singleton because many threads will feed compiled 
+	// translation units to the linker to produce a final command stream
 	class Linker
-		: public InjectSingleton<ErrorReporter>
+		: public SingletonTag<Linker>
+		, public InjectSingleton<ErrorReporter, SymbolDatabase>
 	{
 	public:
 		Linker(const std::string&);
@@ -24,8 +27,6 @@ namespace hz
 		virtual bool optimize() = 0;
 		virtual std::vector<InstructionCommand*> link(std::uint32_t) = 0;
 	};
-
-	extern Linker* _linker;
 }
 
 #endif

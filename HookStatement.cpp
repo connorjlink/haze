@@ -22,7 +22,7 @@ namespace hz
 	void HookStatement::generate(Allocation*)
 	{
 		const auto type = hook ? "hook" : "unhook";
-		USE_SAFE(ErrorReporter).post_error(std::format("unsupported compiler statement type `{}`", type), NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_error(std::format("unsupported compiler statement type `{}`", type), NULL_TOKEN);
 	}
 
 	Statement* HookStatement::optimize()

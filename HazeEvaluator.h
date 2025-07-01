@@ -12,7 +12,7 @@ namespace hz
 	class Node;
 
 	class HazeEvaluator
-		: public InjectSingleton<ErrorReporter>
+		: public InjectSingleton<ErrorReporter, Context>
 	{
 	private:
 		std::vector<Node*> declarators;

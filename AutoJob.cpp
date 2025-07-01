@@ -9,11 +9,11 @@ namespace hz
 {
 	AutoJob::AutoJob(const std::string& task) noexcept
 	{
-		_job_id = _job_manager->begin_job(task);
+		_job_id = REQUIRE_SAFE(JobManager)->begin_job(task);
 	}
 
 	AutoJob::~AutoJob() noexcept
 	{
-		_job_manager->end_job(_job_id);
+		REQUIRE_SAFE(JobManager)->end_job(_job_id);
 	}
 }

@@ -54,12 +54,12 @@ namespace hz
 
 	StackAllocation::StackAllocation()
 	{
-		allocation = _stack_allocator->allocate();
+		allocation = REQUIRE_SAFE(StackAllocator)->allocate();
 	}
 
 	AutoStackAllocationImpl::~AutoStackAllocationImpl()
 	{
-		_stack_allocator->release(allocation);
+		REQUIRE_SAFE(StackAllocator)->release(allocation);
 	}
 
 	AutoStackAllocation::AutoStackAllocation()
@@ -75,12 +75,12 @@ namespace hz
 	HeapAllocation::HeapAllocation(std::uint32_t bytes)
 		: bytes{ bytes }
 	{
-		address = _heap_allocator->allocate(bytes);
+		address = REQUIRE_SAFE(HeapAllocator)->allocate(bytes);
 	}
 
 	AutoHeapAllocationImpl::~AutoHeapAllocationImpl()
 	{
-		_heap_allocator->release(address, bytes);
+		REQUIRE_SAFE(HeapAllocator)->release(address, bytes);
 	}
 
 	AutoHeapAllocation::AutoHeapAllocation(std::uint32_t bytes)
@@ -135,12 +135,12 @@ namespace hz
 			case SQWORD: integer_literal = new SignedQuadWordIntegerLiteral{ AS_SQWORD_VARIABLE(value)->value }; break;
 
 			case STRING: [[fallthrough]];
-			case STRUCT: USE_SAFE(ErrorReporter).post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);
+			case STRUCT: USE_SAFE(ErrorReporter)->post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);
 		}
 
 		if (integer_literal != nullptr)
 		{
-			_generator->make_immediate(allocation, integer_literal);
+			REQUIRE_SAFE(Generator)->make_immediate(allocation, integer_literal);
 		}
 	}
 
@@ -151,24 +151,24 @@ namespace hz
 		{
 			case OBSERVER:
 			{
-				USE_SAFE(ErrorReporter).post_error("cannot modify constant allocation type `observer`", NULL_TOKEN);
+				USE_SAFE(ErrorReporter)->post_error("cannot modify constant allocation type `observer`", NULL_TOKEN);
 			} break;
 
 			// NOTE: StackAllocation and AutoStackAllocationImpl are transitive
 			case STACK: [[fallthrough]];
 			case STACK_AUTO:
 			{
-				auto stack_allocation = static_cast<StackAllocation*>(destination);
-				_generator->make_copy(stack_allocation->allocation, allocation);
+				auto stack_allocation = AS_STACK_ALLOCATION(destination);
+				REQUIRE_SAFE(Generator)->make_copy(stack_allocation->allocation, allocation);
 			} break;
 
 			// NOTE: HeapAllocation and AutoHeapAllocationImpl are transitive
 			case HEAP: [[fallthrough]];
 			case HEAP_AUTO:
 			{
-				auto heap_allocation = static_cast<HeapAllocation*>(destination);
+				auto heap_allocation = AS_HEAP_ALLOCATION(destination);
 				AutoStackAllocation temp{};
-				_generator->heap_write(heap_allocation->address, temp.source()->read());
+				REQUIRE_SAFE(Generator)->heap_write(heap_allocation->address, temp.source()->read());
 			} break;
 		}
 	}

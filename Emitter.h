@@ -15,7 +15,8 @@ namespace hz
 	class InstructionCommand;
 
 	class Emitter
-		: public InjectSingleton<ErrorReporter>
+		: public ServiceTag<Emitter>
+		, public InjectSingleton<ErrorReporter>
 	{
 	protected:
 		std::vector<InstructionCommand*> image;
@@ -53,8 +54,6 @@ namespace hz
 	public:
 		virtual byterange emit() = 0;
 	};
-
-	extern Emitter* _emitter;
 }
 
 #endif 

@@ -20,7 +20,7 @@ namespace hz
 
 	void DotOrgCommand::generate(Allocation*)
 	{
-		USE_SAFE(ErrorReporter).post_error("unsupported compiler command type `.org`", _token);
+		USE_SAFE(ErrorReporter)->post_error("unsupported compiler command type `.org`", _token);
 	}
 
 	DotOrgCommand* DotOrgCommand::optimize()
@@ -30,7 +30,7 @@ namespace hz
 
 	Node* DotOrgCommand::evaluate(Context* context) const
 	{
-		USE_SAFE(ErrorReporter).post_error("unsupported interpreter command type `.org`", _token);
+		USE_SAFE(ErrorReporter)->post_error("unsupported interpreter command type `.org`", _token);
 		return nullptr;
 	}
 }

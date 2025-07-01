@@ -1,7 +1,9 @@
 #ifndef HAZE_COMMANDLINEPARSER_H
 #define HAZE_COMMANDLINEPARSER_H
 
+#include "CommandLineOptions.h"
 #include "DependencyInjector.h"
+#include "JobManager.h"
 #include "ErrorReporter.h"
 
 // Haze CommandLineParser.h
@@ -10,7 +12,8 @@
 namespace hz
 {
 	class CommandLineParser
-		: public InjectSingleton<ErrorReporter>
+		: public InjectService<JobManager>
+		, public InjectSingleton<ErrorReporter, CommandLineOptions>
 	{
 	private:
 		std::vector<std::string> _filepaths;

@@ -21,7 +21,8 @@ namespace hz
 	class StructSymbol;
 
 	class SymbolDatabase
-		: public InjectSingleton<ErrorReporter>
+		: public SingletonTag<SymbolDatabase>
+		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::unordered_map<std::string, Symbol*> _table;
@@ -57,8 +58,6 @@ namespace hz
 	public:
 		SymbolDatabase();
 	};
-
-	extern SymbolDatabase* _database;
 }
 
 #endif

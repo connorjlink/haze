@@ -24,16 +24,6 @@ import std;
 
 using namespace hz;
 
-Context* hz::_context;
-Toolchain* hz::_toolchain;
-
-JobManager* hz::_job_manager;
-
-CommandLineOptions* hz::_options;
-
-HeapAllocator* hz::_heap_allocator;
-StackAllocator* hz::_stack_allocator;
-
 // NOTE: used for the MQTT client hook
 //namespace mqtt
 //{
@@ -47,33 +37,32 @@ int main(int argc, char** argv)
 	//{
 	//	return std::make_shared<FileManager>();
 	//});
-	
-	// alternative API for thread-shared service (singleton)
-	//SingletonContainer::instance().register_singleton<FileManager>();
+
+	// instance (thread-local) services startup
+	ServiceContainer::instance().register_factory<Toolchain>([]
+	{
+#pragma message ("TODO: pass along the proper argument to each toolchain type, e.g., filepath for split compilation")
+		return std::make_shared<Toolchain>();
+	});
+
+	// global (thread-shared) singleton startup
 	SingletonContainer::instance().register_singleton<ErrorReporter>();
 	SingletonContainer::instance().register_singleton<FileManager>();
+	SingletonContainer::instance().register_singleton<Context>();
+	SingletonContainer::instance().register_singleton<SymbolDatabase>();
+	SingletonContainer::instance().register_singleton<CommandLineOptions>();
+	SingletonContainer::instance().register_singleton<SymbolExporter>(std::cout);
 
-
-	_database = new SymbolDatabase{};
 	// spools up the worker thread in the background to idle until symbol information becomes available
-	_exporter = new SymbolExporter{ std::cout };
-	_exporter->launch();
-
-	_heap_allocator = new HeapAllocator{};
-	_stack_allocator = new StackAllocator{};
-	_runtime_allocator = new RuntimeAllocator{};
-
-	_context = new Context{};
+	USE_UNSAFE(SymbolExporter)->launch();
 
 	_job_manager = new JobManager{};
-
-	_options = new CommandLineOptions{};
 
 	auto command_line_parser = CommandLineParser{};
 	command_line_parser.parse(argc, argv);
 	
 	// require explicit opt-in to run tests; takes about 300us otherwise
-	if (_options->_execution == ExecutionType::VALIDATE)
+	if (USE_UNSAFE(CommandLineOptions)->_execution == ExecutionType::VALIDATE)
 	{
 		AutoJob test_task{ "unit testing" };
 
@@ -92,41 +81,53 @@ int main(int argc, char** argv)
 	{
 		try
 		{
-			auto& file_manager = USE_UNSAFE(FileManager);
+			auto& file_manager = *USE_UNSAFE(FileManager);
 			file_manager.open_file(filepath);
 
 			const auto& file = file_manager.get_file(filepath);
 
 			switch (file.ttype())
 			{
+#pragma message ("TODO: pass along the proper argument to each toolchain type, e.g., filepath for split compilation")
+
+
 				case ToolchainType::ASSEMBLER:
 				{
-					_toolchain = new AssemblerToolchain{};
+					ServiceContainer::instance().register_factory<Toolchain>([]
+					{
+						return std::make_shared<AssemblerToolchain>();
+					});
 				} break;
 
 				case ToolchainType::COMPILER:
 				{
-					_toolchain = new CompilerToolchain{};
+					ServiceContainer::instance().register_factory<Toolchain>([]
+					{
+						return std::make_shared<CompilerToolchain>();
+					});
 				} break;
 
 				case ToolchainType::INTERPRETER:
 				{
-					_toolchain = new InterpreterToolchain{};
+					ServiceContainer::instance().register_factory<Toolchain>([]
+					{
+						return std::make_shared<InterpreterToolchain>();
+					});
 				} break;
 			}
 
-			_toolchain->init(filepath);
+			REQUIRE_UNSAFE(Toolchain)->init(filepath);
 		}
 		catch (ExitProgramException e)
 		{
-			USE_UNSAFE(ErrorReporter).post_information(e.what(), NULL_TOKEN);
+			USE_UNSAFE(ErrorReporter)->post_information(e.what(), NULL_TOKEN);
 			// graceful shutdown for this reason
-			_toolchain->shut_down(false);
+			REQUIRE_UNSAFE(Toolchain)->shut_down(false);
 		}
 		catch (std::exception e)
 		{
-			USE_UNSAFE(ErrorReporter).post_uncorrectable(e.what(), NULL_TOKEN);
-			_toolchain->panic();
+			USE_UNSAFE(ErrorReporter)->post_uncorrectable(e.what(), NULL_TOKEN);
+			REQUIRE_UNSAFE(Toolchain)->panic();
 		}
 	}
 

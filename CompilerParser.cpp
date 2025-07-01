@@ -86,13 +86,13 @@ namespace hz
 		const auto type = parse_type();
 		const auto identifier_token = consume(TokenType::IDENTIFIER);
 
-		_database->add_variable(identifier_token.text, lookbehind());
+		USE_SAFE(SymbolDatabase)->add_variable(identifier_token.text, lookbehind());
 
-		auto function_symbol = _database->reference_function(enclosing_function, peek());
+		auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(enclosing_function, peek());
 		function_symbol->locals_count++;
 
 		// exports the variable identifier symbol only
-		_exporter->enqueue(function_symbol, identifier_token);
+		USE_SAFE(SymbolExporter)->enqueue(function_symbol, identifier_token);
 
 		if (peek().type == TokenType::EQUALS)
 		{
@@ -129,8 +129,7 @@ namespace hz
 
 		consume(TokenType::SEMICOLON);
 
-		auto symbol = _database->reference_symbol(SymbolType::FUNCTION, enclosing_function, return_token);
-
+		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, enclosing_function, return_token);
 
 		// NOTE: special case for `main()`:
 		// return statements are really an exit from the entire program
@@ -140,7 +139,7 @@ namespace hz
 		{
 			if (expression == nullptr)
 			{
-				USE_SAFE(ErrorReporter).post_error("non-nvr function `main()` must specify a return value", return_token);
+				USE_SAFE(ErrorReporter)->post_error("non-nvr function `main()` must specify a return value", return_token);
 			}
 
 			return new ExitStatement{ expression, expression->_token };
@@ -294,8 +293,7 @@ namespace hz
 
 		const auto symbol = new StructSymbol{ identifier->name };
 		
-		_database->add_struct(identifier->name, identifier->_token);
-		
+		USE_SAFE(SymbolDatabase)->add_struct(identifier->name, identifier->_token);
 
 		return new StructDeclarationStatement{ identifier, member_declarations, identifier->_token };
 	}
@@ -330,12 +328,12 @@ namespace hz
 				const auto type = parse_type();
 				const auto identifier = parse_identifier_expression();
 
-				_database->add_argument(identifier->name, lookbehind());
-				auto symbol = _database->reference_argument(identifier->name, peek());
+				USE_SAFE(SymbolDatabase)->add_argument(identifier->name, lookbehind());
+				auto symbol = USE_SAFE(SymbolDatabase)->reference_argument(identifier->name, peek());
 				symbol->type = type;
 
 				// exports the argument identifier symbol only
-				_exporter->enqueue(symbol, identifier->_token);
+				USE_SAFE(SymbolExporter)->enqueue(symbol, identifier->_token);
 
 				arguments.emplace_back(new ArgumentExpression{ type, identifier, identifier->_token });
 			}
@@ -352,7 +350,7 @@ namespace hz
 
 				if (peek().type == TokenType::RPAREN)
 				{
-					USE_SAFE(ErrorReporter).post_error("expected another argument but got `)`", peek());
+					USE_SAFE(ErrorReporter)->post_error("expected another argument but got `)`", peek());
 					break;
 				}
 			}
@@ -495,9 +493,9 @@ namespace hz
 		const auto end_function_label = std::format("end_function_{:05d}", uuid);
 		_function_label_map[name_token.text] = end_function_label;
 
-		#pragma message("TODO: implement a more efficient way of modifying the return type than this mess")
+#pragma message("TODO: implement a more efficient way of modifying the return type than this mess")
 
-		_database->add_function(name_token.text, lookbehind(), return_type);
+		USE_SAFE(SymbolDatabase)->add_function(name_token.text, lookbehind(), return_type);
 
 		consume(TokenType::EQUALS);
 
@@ -507,7 +505,7 @@ namespace hz
 
 		// inform the parser of the function arguments
 		// creates a local copy of them for future reference
-		auto function_symbol = _database->reference_function(name_token.text, peek());
+		auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name_token.text, peek());
 		function_symbol->arguments = arguments;
 
 		const auto body = parse_compound_statement(name_token.text);
@@ -533,9 +531,9 @@ namespace hz
 		if (_function_label_map.contains("main"))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
-			_database->reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
+			USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
 
-			if (_options->_optimization & OptimizationType::AST)
+			if (USE_SAFE(CommandLineOptions)->_optimization & OptimizationType::AST)
 			{
 				for (auto& node : program)
 				{
@@ -549,7 +547,7 @@ namespace hz
 			return program;
 		}
 
-		USE_SAFE(ErrorReporter).post_error("no main() function was defined", NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_error("no main() function was defined", NULL_TOKEN);
 		return {};
 	}
 }

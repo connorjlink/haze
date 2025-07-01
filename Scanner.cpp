@@ -10,12 +10,12 @@ namespace hz
 {
 	Scanner::Scanner(const std::string& filepath)
 	{
-		USE_SAFE(ErrorReporter).open_context(filepath, "scanning");
+		USE_SAFE(ErrorReporter)->open_context(filepath, "scanning");
 	}
 
 	Scanner::~Scanner()
 	{
-		USE_SAFE(ErrorReporter).close_context();
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 
 	bool Scanner::eof(void) const
@@ -74,7 +74,7 @@ namespace hz
 	{
 		if (auto actual = current(); actual != c)
 		{
-			USE_UNSAFE(ErrorReporter).post_error(std::format(
+			USE_UNSAFE(ErrorReporter)->post_error(std::format(
 				"expected token `{}` to specify an include filepath but got `{}`", actual, c), forge_token());
 			return false;
 		}
@@ -199,7 +199,7 @@ namespace hz
 
 		if (is_required && number_to_skip == 0)
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format(
+			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"expected one or more whitespace tokens but got `{}`", current()), forge_token());
 		}
 

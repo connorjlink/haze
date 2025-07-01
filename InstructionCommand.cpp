@@ -87,7 +87,7 @@ namespace hz
 
 	Node* InstructionCommand::evaluate(Context* context) const
 	{
-		USE_SAFE(ErrorReporter).post_error("unsupported interpreter command type `instruction`", _token);
+		USE_SAFE(ErrorReporter)->post_error("unsupported interpreter command type `instruction`", _token);
 		return nullptr;
 	}
 }

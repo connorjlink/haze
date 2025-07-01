@@ -64,7 +64,7 @@ namespace hz
 			return source;
 		}
 
-		USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
+		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"file {} not found", _filepath), NULL_TOKEN);
 	}
 
@@ -75,7 +75,7 @@ namespace hz
 			return _processed_contents.value();
 		}
 
-		USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
+		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"file {} not yet processed", _filepath), NULL_TOKEN);
 	}
 
@@ -87,7 +87,7 @@ namespace hz
 			return;
 		}
 
-		USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
+		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"file {} not yet loaded", _filepath), NULL_TOKEN);
 	}
 
@@ -100,7 +100,7 @@ namespace hz
 		_raw_contents.reset();
 		_processed_contents.reset();
 
-		USE_SAFE(ErrorReporter).post_information(std::format(
+		USE_SAFE(ErrorReporter)->post_information(std::format(
 			"reloading file `{}` for the {} time", _filepath, ::friendlify_ordinal(_reload_count)), NULL_TOKEN);
 	}
 
@@ -111,7 +111,7 @@ namespace hz
 
 		if (!_toolchain_map.contains(extension))
 		{
-			USE_SAFE(ErrorReporter).post_uncorrectable(std::format(
+			USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 				"unrecognized file extension {}", extension), NULL_TOKEN);
 		}
 

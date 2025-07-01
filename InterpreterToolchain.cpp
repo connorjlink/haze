@@ -18,14 +18,19 @@ namespace hz
 
 	void InterpreterToolchain::run(const std::string& filepath)
 	{
-		USE_SAFE(ErrorReporter).open_context(filepath, "interpreting");
+		USE_SAFE(ErrorReporter)->open_context(filepath, "interpreting");
 
-		const auto parse_task = _job_manager->begin_job("parsing");
-		_parser = new InterpreterParser{ _tokens.at(filepath), filepath };
-		auto declarators = _parser->parse();
-		_job_manager->end_job(parse_task);
+		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
 
-		const auto evaluate_task = _job_manager->begin_job("evaluating");
+		ServiceContainer::instance().register_factory<Parser>([&]()
+		{
+			return new InterpreterParser{ _tokens.at(filepath), filepath };
+		});
+
+		auto declarators = REQUIRE_SAFE(Parser)->parse();
+		REQUIRE_SAFE(JobManager)->end_job(parse_task);
+
+		const auto evaluate_task = REQUIRE_SAFE(JobManager)->begin_job("evaluating");
 		const auto evaluator = new HazeEvaluator{ std::move(declarators), filepath };
 		
 		try
@@ -35,10 +40,10 @@ namespace hz
 
 		catch (std::exception)
 		{
-			USE_SAFE(ErrorReporter).post_information("exit condition encountered", NULL_TOKEN);
+			USE_SAFE(ErrorReporter)->post_information("exit condition encountered", NULL_TOKEN);
 		}
 
-		_job_manager->end_job(evaluate_task);
-		USE_SAFE(ErrorReporter).close_context();
+		REQUIRE_SAFE(JobManager)->end_job(evaluate_task);
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 }

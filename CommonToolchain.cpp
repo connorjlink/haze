@@ -24,38 +24,44 @@ namespace hz
 		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
 		// This is done here by simply emitting the corresponding instruction with dummy values
 		// and checking its length. So, make a temporary emitter object here to do so.
-		_emitter = Emitter::from_architecture({}, "");
+		ServiceContainer::instance().register_factory<Emitter>([&]()
+		{
+			return std::shared_ptr<Emitter>(Emitter::from_architecture({}, ""));
+		});
 
-		const auto link_task = _job_manager->begin_job("linking");
+		const auto link_task = REQUIRE_UNSAFE(JobManager)->begin_job("linking");
 		// begin writing commands at $8000 for haze
 		// and currently 0x401200 for Windows PE 32
 
-		auto image = _linker->link(entrypoint);
-		_job_manager->end_job(link_task);
+		auto image = USE_UNSAFE(Linker)->link(entrypoint);
+		REQUIRE_UNSAFE(JobManager)->end_job(link_task);
 		return image;
 	}
 	
 	std::vector<std::uint8_t> common_emit(std::vector<InstructionCommand*>&& image, const std::string& filepath)
 	{
-		const auto emit_task = _job_manager->begin_job("emitting");
+		const auto emit_task = REQUIRE_UNSAFE(JobManager)->begin_job("emitting");
 
 		// NOTE: this is the *actual* machine code emitter
-		_emitter = Emitter::from_architecture(std::move(image), filepath);
+		ServiceContainer::instance().register_factory<Emitter>([&]()
+		{
+			return std::shared_ptr<Emitter>(Emitter::from_architecture(std::move(image), filepath));
+		});
 
-		auto executable = _emitter->emit();
-		_job_manager->end_job(emit_task);
+		auto executable = REQUIRE_UNSAFE(Emitter)->emit();
+		REQUIRE_UNSAFE(JobManager)->end_job(emit_task);
 
 		return executable;
 	}
 
 	void common_finalize(const std::vector<std::uint8_t>& executable, const std::string& filepath)
 	{
-		const auto finalize_task = _job_manager->begin_job("finalizing");
+		const auto finalize_task = REQUIRE_UNSAFE(JobManager)->begin_job("finalizing");
 
 		const auto fullpath = std::filesystem::path(filepath);
 		const auto basename = fullpath.stem().string();
 
-		if (_options->_raw_output)
+		if (USE_UNSAFE(CommandLineOptions)->_raw_output)
 		{
 			const auto filepath_out = std::format("{}.hzb", basename);
 
@@ -63,7 +69,7 @@ namespace hz
 
 			if (!outfile)
 			{
-				USE_UNSAFE(ErrorReporter).post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
+				USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format("output file {} not writable", filepath_out), NULL_TOKEN);
 			}
 
 			outfile.write(reinterpret_cast<const char*>(executable.data()), executable.size());
@@ -71,7 +77,7 @@ namespace hz
 		}
 
 		using enum ExecutionType;
-		switch (_options->_execution)
+		switch (USE_UNSAFE(CommandLineOptions)->_execution)
 		{
 			case COMPILE:
 			{
@@ -91,6 +97,6 @@ namespace hz
 			} break;
 		}
 		
-		_job_manager->end_job(finalize_task);
+		REQUIRE_UNSAFE(JobManager)->end_job(finalize_task);
 	}
 }

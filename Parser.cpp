@@ -35,20 +35,15 @@ namespace
 
 namespace hz
 {
-	// GLOBALS
-	Parser* _parser;
-	// GLOBALS
-
-
 	Parser::Parser(const std::vector<Token>& tokens, const std::string& filepath)
 		: cursor{ 0 }, tokens{ tokens }, _filepath{ filepath }
 	{
-		USE_SAFE(ErrorReporter).open_context(filepath, "parsing");
+		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
 	}
 
 	Parser::~Parser()
 	{
-		USE_SAFE(ErrorReporter).close_context();
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 
 
@@ -59,7 +54,7 @@ namespace hz
 			return tokens[cursor - 1];
 		}
 
-		USE_SAFE(ErrorReporter).post_uncorrectable("invalid token backtrack", peek());
+		USE_SAFE(ErrorReporter)->post_uncorrectable("invalid token backtrack", peek());
 	}
 
 	Token& Parser::peek()
@@ -74,7 +69,7 @@ namespace hz
 			return tokens[cursor + 1];
 		}
 
-		USE_SAFE(ErrorReporter).post_uncorrectable("unexpectedly reached the end of file", peek());
+		USE_SAFE(ErrorReporter)->post_uncorrectable("unexpectedly reached the end of file", peek());
 	}
 
 	Token Parser::consume(TokenType token)
@@ -95,11 +90,11 @@ namespace hz
 				return *item;
 			}
 
-			USE_SAFE(ErrorReporter).post_error("invalid token", current);
+			USE_SAFE(ErrorReporter)->post_error("invalid token", current);
 			return { "[error]" };
 		};
 
-		USE_SAFE(ErrorReporter).post_error(std::format("expected token `{}` but got `{}`",
+		USE_SAFE(ErrorReporter)->post_error(std::format("expected token `{}` but got `{}`",
 			convert(token), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
 		return current;
 	}
@@ -143,21 +138,21 @@ namespace hz
 
 		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
 		{
-			USE_SAFE(ErrorReporter).post_error("definitions must result in a constant expression", value_expression->_token);
+			USE_SAFE(ErrorReporter)->post_error("definitions must result in a constant expression", value_expression->_token);
 			return nullptr;
 		}
 
 		const auto& identifier = identifier_expression->name;
 		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
 
-		_database->add_define(identifier, peek());
+		USE_SAFE(SymbolDatabase)->add_define(identifier, peek());
 		
-		auto define_symbol = _database->reference_define(identifier, peek());
+		auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(identifier, peek());
 		define_symbol->type = type;
 		define_symbol->value = integer_literal_raw(value);
 
 		// NOTE: exports the constant expression name symbol only
-		_exporter->enqueue(define_symbol, identifier_expression->_token);
+		USE_SAFE(SymbolExporter)->enqueue(define_symbol, identifier_expression->_token);
 
 		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
 	}
@@ -178,7 +173,7 @@ namespace hz
 
 		if (ec != std::errc())
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
+			USE_SAFE(ErrorReporter)->post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
 			return nullptr;
 		}
 
@@ -227,23 +222,23 @@ namespace hz
 		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		consume(TokenType::RPAREN);
 
-		if (!_database->has_symbol(name_token.text))
+		if (!USE_SAFE(SymbolDatabase)->has_symbol(name_token.text))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("function `{}` is undefined", name_token.text), name_token);
+			USE_SAFE(ErrorReporter)->post_error(std::format("function `{}` is undefined", name_token.text), name_token);
 			return nullptr;
 		}
 
-		const auto function_symbol = _database->reference_function(name_token.text, name_token);
+		const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name_token.text, name_token);
 
 		if (function_symbol->arity() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("function `{}` was defined with {} arguments but called with {}",
+			USE_SAFE(ErrorReporter)->post_error(std::format("function `{}` was defined with {} arguments but called with {}",
 				name_token.text, function_symbol->arity(), arguments.size()), name_token);
 			return nullptr;
 		}
 
 		// NOTE: exports the function name symbol only
-		_exporter->enqueue(function_symbol, name_token);
+		USE_SAFE(SymbolExporter)->enqueue(function_symbol, name_token);
 
 		return new FunctionCallExpression{ name_token.text, std::move(arguments), name_token };
 	}
@@ -273,7 +268,7 @@ namespace hz
 			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
 		}
 
-		USE_SAFE(ErrorReporter).post_error("increment target must evaluate to a modifiable l-value", peek());
+		USE_SAFE(ErrorReporter)->post_error("increment target must evaluate to a modifiable l-value", peek());
 		return nullptr;
 	}
 
@@ -293,7 +288,7 @@ namespace hz
 			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
 		}
 
-		USE_SAFE(ErrorReporter).post_error("decrement target must evaluate to a modifiable l-value", peek());
+		USE_SAFE(ErrorReporter)->post_error("decrement target must evaluate to a modifiable l-value", peek());
 		return nullptr;
 	}
 
@@ -340,7 +335,7 @@ namespace hz
 
 			default:
 			{
-				USE_SAFE(ErrorReporter).post_error(std::format(
+				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"expected an expression but got `{}`", peek().text), peek());
 				return nullptr;
 			} break;

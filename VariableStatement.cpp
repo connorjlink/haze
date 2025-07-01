@@ -43,12 +43,12 @@ namespace hz
 		{
 			AutoStackAllocation temp{};
 			value->generate(temp.source());
-			_generator->define_local(name, temp.source()->read());
+			REQUIRE_SAFE(Generator)->define_local(name, temp.source()->read());
 		}
 
 		else
 		{
-			_generator->define_local(name);
+			REQUIRE_SAFE(Generator)->define_local(name);
 		}
 	}
 
@@ -118,13 +118,13 @@ namespace hz
 
 				case STRING:
 				{
-					USE_SAFE(ErrorReporter).post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					USE_SAFE(ErrorReporter)->post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->ttype()), name), _token);
 					variable = new StringVariable{ "" };
 				} break;
 
 				case VOID: 
 				{
-					USE_SAFE(ErrorReporter).post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					USE_SAFE(ErrorReporter)->post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->ttype()), name), _token);
 					return nullptr;
 				} break;
 			}

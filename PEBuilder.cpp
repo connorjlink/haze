@@ -17,7 +17,7 @@ namespace hz
 	{
 		if (name.length() > 7)
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("section name `{}` exceeds the maximum allowable length", name), NULL_TOKEN);
+			USE_SAFE(ErrorReporter)->post_error(std::format("section name `{}` exceeds the maximum allowable length", name), NULL_TOKEN);
 		}
 
 		name.resize(7, '\0');

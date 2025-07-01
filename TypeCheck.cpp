@@ -53,26 +53,26 @@ namespace hz
 				const auto identifier_expression = AS_IDENTIFIER_EXPRESSION(expression);
 				const auto& identifier = identifier_expression->name;
 
-				const auto symbol_type = _database->query_symbol_type(identifier, expression->_token);
+				const auto symbol_type = USE_UNSAFE(SymbolDatabase)->query_symbol_type(identifier, expression->_token);
 
 				using enum SymbolType;
 				switch (symbol_type)
 				{
 					case ARGUMENT:
 					{
-						const auto argument_symbol = _database->reference_argument(identifier, expression->_token);
+						const auto argument_symbol = USE_UNSAFE(SymbolDatabase)->reference_argument(identifier, expression->_token);
 						return argument_symbol->type;
 					} break;
 
 					case VARIABLE:
 					{
-						const auto variable_symbol = _database->reference_variable(identifier, expression->_token);
+						const auto variable_symbol = USE_UNSAFE(SymbolDatabase)->reference_variable(identifier, expression->_token);
 						return variable_symbol->type;
 					} break;
 
 					case DEFINE:
 					{
-						const auto define_symbol = _database->reference_define(identifier, expression->_token);
+						const auto define_symbol = USE_UNSAFE(SymbolDatabase)->reference_define(identifier, expression->_token);
 						return define_symbol->type;
 					} break;
 

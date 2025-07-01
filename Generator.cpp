@@ -23,21 +23,16 @@ import std;
 
 namespace hz
 {
-	// GLOBALS
-	Generator* _generator;
-	// GLOBALS
-
-
 	Generator::Generator(const std::vector<Node*>& program, const std::string& filepath)
 		: _program{ program }
 	{
 		_string_length_map = {};
-		USE_SAFE(ErrorReporter).open_context(filepath, "generating");
+		USE_SAFE(ErrorReporter)->open_context(filepath, "generating");
 	}
 
 	Generator::~Generator()
 	{
-		USE_SAFE(ErrorReporter).close_context();
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 
 
@@ -52,7 +47,7 @@ namespace hz
 
 	void Generator::begin_function(const std::string& name)
 	{
-		_linkables.emplace_back(Linkable{ _database->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0 });
+		_linkables.emplace_back(Linkable{ USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0});
 	}
 
 	void Generator::label_command(const std::string& identifier)
@@ -76,36 +71,6 @@ namespace hz
 	{
 		auto command = new LeaveScopeCommand{};
 		COMPOSE(command);
-	}
-
-	void Generator::define_local(const std::string& name, register_t source)
-	{
-		_runtime_allocator->define_local(name, source);
-	}
-
-	void Generator::define_local(const std::string& name)
-	{
-		_runtime_allocator->define_local(name);
-	}
-
-	void Generator::attach_local(const std::string& name, std::int32_t offset)
-	{
-		_runtime_allocator->attach_local(name, offset);
-	}
-
-	void Generator::destroy_local(const std::string& name)
-	{
-		_runtime_allocator->destroy_local(name);
-	}
-
-	void Generator::read_local(register_t destination, const std::string& name)
-	{
-		_runtime_allocator->read_local(destination, name);
-	}
-
-	void Generator::write_local(const std::string& name, register_t source)
-	{
-		_runtime_allocator->write_local(name, source);
 	}
 
 	void Generator::make_global(register_t location, Variable* value)
@@ -362,7 +327,7 @@ namespace hz
 			return;
 		}
 
-		USE_SAFE(ErrorReporter). post_error(std::format("undefined string pointer `{:08X}`", pointer), NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_error(std::format("undefined string pointer `{:08X}`", pointer), NULL_TOKEN);
 	}
 
 	void Generator::print_number(register_t value)

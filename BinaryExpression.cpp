@@ -19,7 +19,7 @@ namespace
 
 	void generate_error(std::string op, Token token)
 	{
-		USE_UNSAFE(ErrorReporter).post_error(std::format("unsupported compiler binary operator `{}`", op), token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported compiler binary operator `{}`", op), token);
 	}
 
 	const IntegerLiteral& match_type(IntegerLiteral* matchee, std::uint64_t value)
@@ -518,7 +518,7 @@ namespace hz
 
 					else
 					{
-						USE_SAFE(ErrorReporter).post_error("unsupported compiler code generation for multiplication", right_optimized->_token);
+						USE_SAFE(ErrorReporter)->post_error("unsupported compiler code generation for multiplication", right_optimized->_token);
 						return nullptr;
 					}
 				}
@@ -552,7 +552,7 @@ namespace hz
 
 					else
 					{
-						USE_SAFE(ErrorReporter).post_error("unsupported compiler code generation for multiplication", left_optimized->_token);
+						USE_SAFE(ErrorReporter)->post_error("unsupported compiler code generation for multiplication", left_optimized->_token);
 						return nullptr;
 					}
 				}

@@ -55,7 +55,7 @@ namespace hz
 				ram[memory] = register_file[operand2];
 				if (memory == 0x1111)
 				{
-					USE_SAFE(ErrorReporter).post_information(std::format("program output character `{}`", ram[memory]), NULL_TOKEN);
+					USE_SAFE(ErrorReporter)->post_information(std::format("program output character `{}`", ram[memory]), NULL_TOKEN);
 				}
 			} break;
 

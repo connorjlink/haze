@@ -196,7 +196,7 @@ namespace hz
 				return std::static_pointer_cast<T>(existing_instance);
 			}
 
-			auto instance = ServiceContainer::instance().create<T>();
+			const auto instance = ServiceContainer::instance().create<T>();
 			_instances[index] = instance;
 			return instance;
 		}
@@ -216,19 +216,19 @@ namespace hz
 	class InjectService
 	{
 	private:
-		std::tuple<Ts&...> _services;
+		std::tuple<Ts...> _services;
 
 	public:
 		// resolve a specific thread-local service instance. requires static complete type parameter
 		template<typename T>
-		T& using_service() const
+		std::shared_ptr<T> using_service() const
 		{
-			return std::get<T&>(_services);
+			return std::get<T>(_services);
 		}
 
 	protected:
 		InjectService()
-			: _services{ (*hz::using_thread().get<Ts>())... }
+			: _services{ (using_thread().get<Ts>())... }
 		{
 		}
 	};
@@ -239,27 +239,30 @@ namespace hz
 	class InjectSingleton
 	{
 	private:
-		std::tuple<Ts&...> _services;
+		std::tuple<Ts...> _services;
 
 	public:
 		// resolve a specific global singleton instance. requires static complete type parameter
 		template<typename T>
-		T& using_singleton() const
+		std::shared_ptr<T> using_singleton() const
 		{
-			return std::get<T&>(_services);
+			return std::get<T>(_services);
 		}
 
 	public:
 		InjectSingleton()
-			: _services{ (*SingletonContainer::instance().get<Ts>())... }
+			: _services{ (SingletonContainer::instance().get<Ts>())... }
 		{
 		}
 	};
 
-#define USE(x) using_service<x>()
+#define REQUIRE_SAFE(x) using_service<x>()
+//#define REQUIRE_UNSAFE(x) ServiceContainer::instance().get<x>()
+#define REQUIRE_UNSAFE(x) using_thread().get<x>()
 
 	// Denoted unsafe because the call could fail if the singleton was not registered
-#define USE_UNSAFE(x) (*SingletonContainer::instance().get<x>())
+	// NOTE: DO NOT DEFERENCE THE SINGLETON POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
+#define USE_UNSAFE(x) SingletonContainer::instance().get<x>()
 	// Denoted safe because the caller has already injected the singleton (so it would have failed already), so this call cannot fail
 	// NOTE: not explicitly thread-safe, so use with caution!
 #define USE_SAFE(x) using_singleton<x>()

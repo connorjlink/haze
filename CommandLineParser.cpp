@@ -54,10 +54,10 @@ namespace hz
 	{
 		static constexpr auto TASK = "identifying arguments";
 
-		const auto identify_task = _job_manager->begin_job(TASK);
+		const auto identify_task = REQUIRE_SAFE(JobManager)->begin_job(TASK);
 		const auto arguments = convert(argc, argv);
 		
-		USE_SAFE(ErrorReporter).open_context("command line", TASK);
+		USE_SAFE(ErrorReporter)->open_context("command line", TASK);
 
 		for (auto& argument : arguments)
 		{
@@ -70,7 +70,7 @@ namespace hz
 
 				if (argument_split.size() != 2)
 				{
-					USE_SAFE(ErrorReporter).post_warning(std::format(
+					USE_SAFE(ErrorReporter)->post_warning(std::format(
 						"unrecognized option format `{}`", argument), NULL_TOKEN);
 					continue;
 				}
@@ -79,7 +79,7 @@ namespace hz
 
 				if (!_option_map.contains(option_string))
 				{
-					USE_SAFE(ErrorReporter).post_warning(std::format(
+					USE_SAFE(ErrorReporter)->post_warning(std::format(
 						"unrecognized option `{}`", option_string), NULL_TOKEN);
 					continue;
 				}
@@ -94,43 +94,43 @@ namespace hz
 					{
 						if (!_architecture_map.contains(value))
 						{
-							USE_SAFE(ErrorReporter).post_warning(std::format(
+							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized architecture type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
-						_options->_architecture = _architecture_map.at(value);
+						USE_SAFE(CommandLineOptions)->_architecture = _architecture_map.at(value);
 					} break;
 
 					case VERBOSITY:
 					{
 						if (!_verbosity_type_map.contains(value))
 						{
-							USE_SAFE(ErrorReporter).post_warning(std::format(
+							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized verbosity type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
-						_options->_verbosity = _verbosity_type_map.at(value);
+						USE_SAFE(CommandLineOptions)->_verbosity = _verbosity_type_map.at(value);
 					} break;
 
 					case EXECUTION:
 					{
 						if (!_execution_map.contains(value))
 						{
-							USE_SAFE(ErrorReporter).post_warning(std::format(
+							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized execution type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
-						_options->_execution = _execution_map.at(value);
+						USE_SAFE(CommandLineOptions)->_execution = _execution_map.at(value);
 					} break;
 
 					case OUTPUT:
 					{
 						if (value != "raw")
 						{
-							USE_SAFE(ErrorReporter).post_warning(std::format(
+							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized output type `{}`", value), NULL_TOKEN);
 							continue;
 						}
@@ -140,13 +140,13 @@ namespace hz
 					{
 						if (!_optimization_map.contains(value))
 						{
-							USE_SAFE(ErrorReporter).post_warning(std::format(
+							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized optimization type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
 						auto flag = _optimization_map.at(value);
-						_options->_optimization |= flag;
+						USE_SAFE(CommandLineOptions)->_optimization |= flag;
 					} break;
 				}
 			}
@@ -158,7 +158,7 @@ namespace hz
 			}
 		}
 
-		USE_SAFE(ErrorReporter).close_context();
-		_job_manager->end_job(identify_task);
+		USE_SAFE(ErrorReporter)->close_context();
+		REQUIRE_SAFE(JobManager)->end_job(identify_task);
 	}
 }

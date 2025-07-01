@@ -1,7 +1,6 @@
 import std;
 
 #include "AutoErrorContext.h"
-#include "ErrorReporter.h"
 #include "Token.h"
 #include "ErrorContext.h"
 
@@ -12,28 +11,28 @@ namespace hz
 {
 	AutoErrorContext::AutoErrorContext(const std::string& file, const std::string& task)
 	{
-		_initial_context_count = USE_SAFE(ErrorReporter).get_context_count();
-		_frame = USE_SAFE(ErrorReporter).open_context(file, task);
+		_initial_context_count = USE_SAFE(ErrorReporter)->get_context_count();
+		_frame = USE_SAFE(ErrorReporter)->open_context(file, task);
 	}
 
 	AutoErrorContext::~AutoErrorContext()
 	{
-		auto current_context_count = USE_SAFE(ErrorReporter).get_context_count();
+		auto current_context_count = USE_SAFE(ErrorReporter)->get_context_count();
 
 		if (current_context_count != _initial_context_count)
 		{
-			USE_SAFE(ErrorReporter).post_warning(_frame.context, _file, "encountered a mismatched error context; attempting to correct", NULL_TOKEN);
+			USE_SAFE(ErrorReporter)->post_warning(_frame.context, _file, "encountered a mismatched error context; attempting to correct", NULL_TOKEN);
 
 			// close until we have matched
-			while (current_context_count = USE_SAFE(ErrorReporter).get_context_count(),
+			while (current_context_count = USE_SAFE(ErrorReporter)->get_context_count(),
 				current_context_count >= _initial_context_count)
 			{
-				USE_SAFE(ErrorReporter).close_context();
+				USE_SAFE(ErrorReporter)->close_context();
 			}
 
 			return;
 		}
 
-		USE_SAFE(ErrorReporter).close_context();
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 }

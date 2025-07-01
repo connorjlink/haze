@@ -114,7 +114,7 @@ namespace hz
 
 	std::string StructVariable::format() const
 	{
-		USE_SAFE(ErrorReporter).post_error(std::format("undefined string conversion for user struct type `{}`", tag), NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_error(std::format("undefined string conversion for user struct type `{}`", tag), NULL_TOKEN);
 		return std::format("<struct::{}>", tag);
 	}
 }

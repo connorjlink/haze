@@ -59,7 +59,7 @@ namespace hz
 	Preprocessor::Preprocessor(const std::string& filepath)
 		: Scanner{ filepath }, _files_to_process{}
 	{
-		const auto contents = USE_SAFE(FileManager).get_file(filepath).raw_contents();
+		const auto contents = USE_SAFE(FileManager)->get_file(filepath).raw_contents();
 		// moving the contents is safe because the filemanager returns a copy
 		set_state(SourceContext{ .source = std::move(contents), .location = { filepath, 0, 1, 1 } });
 		save_state();
@@ -73,15 +73,15 @@ namespace hz
 	void Preprocessor::register_macro_definition(const Macro& macro)
 	{
 		// only specifies the original definition, so invokations have to manually export each time
-		const auto symbol = _database->add_define(macro.name, macro.token);
+		const auto symbol = USE_SAFE(SymbolDatabase)->add_define(macro.name, macro.token);
 	}
 
 	void Preprocessor::register_macro_invokation(const std::string& name)
 	{
 		const auto forged = forge_token();
 		// explicitly mark as visited
-		const auto symbol = _database->reference_symbol(SymbolType::DEFINE, name, forged, true);
-		_exporter->enqueue(symbol, forged);
+		const auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::DEFINE, name, forged, true);
+		USE_SAFE(SymbolExporter)->enqueue(symbol, forged);
 	}
 
 	bool Preprocessor::match_macro_invokation(void)
@@ -92,8 +92,8 @@ namespace hz
 
 	void Preprocessor::load_file(const std::string& filepath)
 	{
-		USE_SAFE(FileManager).open_file(filepath);
-		const auto contents = USE_SAFE(FileManager).get_file(filepath).raw_contents();
+		USE_SAFE(FileManager)->open_file(filepath);
+		const auto contents = USE_SAFE(FileManager)->get_file(filepath).raw_contents();
 		_files_to_process.emplace(SourceContext{ .source = contents, .location = { filepath, 0, 1, 1 } });
 	}
 
@@ -108,7 +108,7 @@ namespace hz
 			// only pop once advanced past the last virtual location of the file in question
 			if (eof())
 			{
-				USE_SAFE(FileManager).update_file(context.location.filepath, context.source);
+				USE_SAFE(FileManager)->update_file(context.location.filepath, context.source);
 				_files_to_process.pop();
 				continue;
 			}
@@ -166,7 +166,7 @@ namespace hz
 		
 		if (include_filepath == wherein())
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format(
+			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"invalid recursive include of file `{}`", include_filepath), forge_token());
 			return;
 		}
@@ -236,26 +236,26 @@ namespace hz
 		// macro callstack, error out! this is the easiest way to prevent infinite recursion
 		if (_macro_invokations.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("invalid recursive macro `{}`", name), forge_token());
+			USE_SAFE(ErrorReporter)->post_error(std::format("invalid recursive macro `{}`", name), forge_token());
 			return;
 		}
 
 		if (!defined_macros.contains(name))
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` is undefined", name), forge_token());
+			USE_SAFE(ErrorReporter)->post_error(std::format("macro `{}` is undefined", name), forge_token());
 			return;
 		}
 
 		const auto& macro = defined_macros.at(name);
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter).post_error("macro argument count mismatch", forge_token());
+			USE_SAFE(ErrorReporter)->post_error("macro argument count mismatch", forge_token());
 			return;
 		}
 
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter).post_error(std::format("macro `{}` was defined with {} arguments but called with {}",
+			USE_SAFE(ErrorReporter)->post_error(std::format("macro `{}` was defined with {} arguments but called with {}",
 				macro.name, macro.args.size(), arguments.size()), forge_token());
 			return;
 		}

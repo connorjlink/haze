@@ -26,11 +26,11 @@ namespace hz
 		// add an extra byte for the null terminator byte
 		const auto bytes = message.length() + 1;
 
-		const auto address = _runtime_allocator->allocate(static_cast<std::uint32_t>(bytes));
+		const auto address = REQUIRE_SAFE(RuntimeAllocator)->allocate(static_cast<std::uint32_t>(bytes));
 		const auto integer_literal = make_integer_literal<platform_address_size>(address);
 
-		_generator->make_message(address, message);
-		_generator->make_immediate(allocation->read(), integer_literal);
+		REQUIRE_SAFE(Generator)->make_message(address, message);
+		REQUIRE_SAFE(Generator)->make_immediate(allocation->read(), integer_literal);
 	}
 
 	Expression* StringExpression::optimize()

@@ -10,11 +10,11 @@ namespace hz
 {
 	void Hook::hook()
 	{
-		USE_SAFE(ErrorReporter).post_information("hook set", NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_information("hook set", NULL_TOKEN);
 	}
 
 	void Hook::unhook()
 	{
-		USE_SAFE(ErrorReporter).post_information("hook released", NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->post_information("hook released", NULL_TOKEN);
 	}
 }

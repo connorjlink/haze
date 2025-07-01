@@ -41,7 +41,7 @@ namespace
 
 	void internal_linker_error()
 	{
-		USE_UNSAFE(ErrorReporter).post_error("internal error caused by unrecognized command type", NULL_TOKEN);
+		USE_UNSAFE(ErrorReporter)->post_error("internal error caused by unrecognized command type", NULL_TOKEN);
 	}
 
 
@@ -52,22 +52,22 @@ namespace
 		using enum Opcode;
 		switch (instruction->opcode)
 		{
-			case MOVE: length = _emitter->emit_move(instruction->destination, instruction->source).size(); break;
-			case LOAD: length = _emitter->emit_load(instruction->destination, instruction->address).size(); break;
-			case COPY: length = _emitter->emit_copy(instruction->destination, instruction->immediate).size(); break;
-			case SAVE: length = _emitter->emit_save(instruction->address, instruction->source).size(); break;
-			case IADD: length = _emitter->emit_iadd(instruction->destination, instruction->source).size(); break;
-			case ISUB: length = _emitter->emit_isub(instruction->destination, instruction->source).size(); break;
-			case BAND: length = _emitter->emit_band(instruction->destination, instruction->source).size(); break;
-			case BIOR: length = _emitter->emit_bior(instruction->destination, instruction->source).size(); break;
-			case BXOR: length = _emitter->emit_bior(instruction->destination, instruction->source).size(); break;
-			case CALL: length = _emitter->emit_call(instruction->address).size(); break;
-			case EXIT: length = _emitter->emit_exit().size(); break;
-			case PUSH: length = _emitter->emit_push(instruction->source).size(); break;
-			case PULL: length = _emitter->emit_pull(instruction->destination).size(); break;
-			case BRNZ: length = _emitter->emit_brnz(instruction->address, instruction->source).size(); break;
-			case BOOL: length = _emitter->emit_bool(instruction->source).size(); break;
-			case STOP: length = _emitter->emit_stop().size(); break;
+			case MOVE: length = REQUIRE_UNSAFE(Emitter)->emit_move(instruction->destination, instruction->source).size(); break;
+			case LOAD: length = REQUIRE_UNSAFE(Emitter)->emit_load(instruction->destination, instruction->address).size(); break;
+			case COPY: length = REQUIRE_UNSAFE(Emitter)->emit_copy(instruction->destination, instruction->immediate).size(); break;
+			case SAVE: length = REQUIRE_UNSAFE(Emitter)->emit_save(instruction->address, instruction->source).size(); break;
+			case IADD: length = REQUIRE_UNSAFE(Emitter)->emit_iadd(instruction->destination, instruction->source).size(); break;
+			case ISUB: length = REQUIRE_UNSAFE(Emitter)->emit_isub(instruction->destination, instruction->source).size(); break;
+			case BAND: length = REQUIRE_UNSAFE(Emitter)->emit_band(instruction->destination, instruction->source).size(); break;
+			case BIOR: length = REQUIRE_UNSAFE(Emitter)->emit_bior(instruction->destination, instruction->source).size(); break;
+			case BXOR: length = REQUIRE_UNSAFE(Emitter)->emit_bior(instruction->destination, instruction->source).size(); break;
+			case CALL: length = REQUIRE_UNSAFE(Emitter)->emit_call(instruction->address).size(); break;
+			case EXIT: length = REQUIRE_UNSAFE(Emitter)->emit_exit().size(); break;
+			case PUSH: length = REQUIRE_UNSAFE(Emitter)->emit_push(instruction->source).size(); break;
+			case PULL: length = REQUIRE_UNSAFE(Emitter)->emit_pull(instruction->destination).size(); break;
+			case BRNZ: length = REQUIRE_UNSAFE(Emitter)->emit_brnz(instruction->address, instruction->source).size(); break;
+			case BOOL: length = REQUIRE_UNSAFE(Emitter)->emit_bool(instruction->source).size(); break;
+			case STOP: length = REQUIRE_UNSAFE(Emitter)->emit_stop().size(); break;
 		}
 
 		// explicit narrowing conversion to avoid nuisance warning
@@ -195,7 +195,7 @@ namespace hz
 		{
 			if (symbol->was_referenced)
 			{
-				if (_options->_optimization & OptimizationType::LTO)
+				if (USE_UNSAFE(CommandLineOptions)->_optimization & OptimizationType::LTO)
 				{
 					while (optimize());
 				}
