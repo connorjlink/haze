@@ -4,7 +4,7 @@ import std;
 #include "Allocation.h"
 #include "Generator.h"
 #include "RuntimeAllocator.h"
-#include "ErrorReporter.h"
+#include "IntegerLiteral.h"
 
 // Haze StringExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

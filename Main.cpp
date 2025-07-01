@@ -33,17 +33,11 @@ using namespace hz;
 
 int main(int argc, char** argv)
 {
+	// TODO: instance (thread-local) services startup
 	//ServiceContainer::instance().register_factory<FileManager>([]
 	//{
 	//	return std::make_shared<FileManager>();
 	//});
-
-	// instance (thread-local) services startup
-	ServiceContainer::instance().register_factory<Toolchain>([]
-	{
-#pragma message ("TODO: pass along the proper argument to each toolchain type, e.g., filepath for split compilation")
-		return std::make_shared<Toolchain>();
-	});
 
 	// global (thread-shared) singleton startup
 	SingletonContainer::instance().register_singleton<ErrorReporter>();
@@ -55,8 +49,6 @@ int main(int argc, char** argv)
 
 	// spools up the worker thread in the background to idle until symbol information becomes available
 	USE_UNSAFE(SymbolExporter)->launch();
-
-	_job_manager = new JobManager{};
 
 	auto command_line_parser = CommandLineParser{};
 	command_line_parser.parse(argc, argv);

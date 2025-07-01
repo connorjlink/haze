@@ -32,17 +32,17 @@ namespace hz
 		{
 			case STRING:
 			{
-				_generator->print_message(temp.source()->read());
+				REQUIRE_SAFE(Generator)->print_message(temp.source()->read());
 			} break;
 
 			case INTEGER_LITERAL:
 			{
-				_generator->print_number(temp.source()->read());
+				REQUIRE_SAFE(Generator)->print_number(temp.source()->read());
 			} break;
 
 			case IDENTIFIER:
 			{
-				_generator->print_number(temp.source()->read());
+				REQUIRE_SAFE(Generator)->print_number(temp.source()->read());
 			} break;
 
 			default:

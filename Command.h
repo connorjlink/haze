@@ -3,13 +3,17 @@
 
 #include "Node.h"
 #include "CommandType.h"
+#include "ErrorReporter.h"
+#include "DependencyInjector.h"
 
 // Haze Command.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Command : public Node
+	class Command 
+		: public Node
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		std::uint32_t offset;

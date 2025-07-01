@@ -14,20 +14,20 @@ import std;
 #include "HookStatement.h"
 #include "NullStatement.h"
 #include "ExitStatement.h"
-#include "StringExpression.h"
 #include "ArgumentExpression.h"
 #include "MemberDeclarationExpression.h"
 #include "StructDeclarationStatement.h"
-#include "FileManager.h"
 #include "CommandLineOptions.h"
+#include "OptimizationType.h"
 #include "Symbol.h"
 #include "Random.h"
 #include "Type.h"
-#include "HeapAllocator.h"
 #include "ErrorReporter.h"
 #include "CommonErrors.h"
 #include "SymbolDatabase.h"
 #include "SymbolExporter.h"
+#include "TypeSpecifier.h"
+#include "ParserType.h"
 
 // Haze CompilerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

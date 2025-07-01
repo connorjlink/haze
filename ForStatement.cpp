@@ -87,7 +87,7 @@ namespace hz
 			body_optimized = body;
 		}
 
-		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(REQUIRE_SAFE(Context).get()));
+		auto condition_optimized_evaluated = AS_EXPRESSION(condition_optimized->evaluate(USE_SAFE(Context).get()));
 
 		if (condition_optimized_evaluated != nullptr)
 		{

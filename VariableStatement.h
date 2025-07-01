@@ -2,7 +2,6 @@
 #define HAZE_VARIABLESTATEMENT_H
 
 #include "Statement.h"
-#include "Expression.h"
 
 // Haze VariableStatement.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -11,6 +10,7 @@ namespace hz
 {
 	class Type;
 	class Allocation;
+	class Expression;
 
 	class VariableStatement : public Statement
 	{

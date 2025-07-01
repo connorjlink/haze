@@ -1,12 +1,11 @@
 #ifndef HAZE_ALLOCATION_H
 #define HAZE_ALLOCATION_H
 
-#include "InstructionCommand.h"
 #include "AllocationType.h"
 #include "StackAllocator.h"
 #include "HeapAllocator.h"
+#include "Generator.h"
 #include "DependencyInjector.h"
-#include "Context.h"
 
 // Haze Allocation.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -19,7 +18,8 @@ namespace hz
 	class Variable;
 
 	class Allocation
-		: public InjectSingleton<ErrorReporter>
+		: public InjectService<Generator, StackAllocator, HeapAllocator>
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		virtual ~Allocation() = default;
@@ -64,7 +64,6 @@ namespace hz
 
 	class StackAllocation 
 		: public Allocation
-		, public InjectService<StackAllocator>
 	{
 	public:
 		register_t allocation;
@@ -107,9 +106,7 @@ namespace hz
 		~AutoStackAllocation();
 	};
 
-	class HeapAllocation 
-		: public Allocation
-		, public InjectService<HeapAllocator>
+	class HeapAllocation : public Allocation
 	{
 	public:
 		std::uint32_t address;

@@ -4,6 +4,7 @@
 #include "Linkable.h"
 #include "InstructionEncoding.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
 #include "DependencyInjector.h"
 
 // Haze Generator.h
@@ -25,7 +26,7 @@ namespace hz
 
 	class Generator
 		: public ServiceTag<Generator>
-		, public InjectSingleton<ErrorReporter>
+		, public InjectSingleton<ErrorReporter, SymbolDatabase>
 	{
 	private:
 		// Imported from the parser in the constructor
@@ -57,21 +58,6 @@ namespace hz
 		// pop the most recent scope and clean up all local variables' storage
 		// also used to declare a function epilogue
 		void end_scope();
-
-	public:
-		// push a new variable private to the current scope
-		void define_local(const std::string&, register_t);
-		// push a new undefined variable private to the current scope
-		void define_local(const std::string&);
-		// resolve a local by attaching a name to an existing stack allocation
-		void attach_local(const std::string&, std::int32_t);
-		// delete a previously defined local variable from the current scope
-		void destroy_local(const std::string&);
-		// read a defined local variable into a target register
-		void read_local(register_t, const std::string&);
-		// update a local variable with the contents of another register (re-assignment)
-		void write_local(const std::string&, register_t);
-
 
 	public:
 		// push a new variable public to the entire program

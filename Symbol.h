@@ -5,6 +5,7 @@
 #include "StructMember.h"
 #include "Function.h"
 #include "ExtendedInteger.h"
+#include "PlatformVariables.h"
 
 // Haze Symbol.h
 // (c) Connor J. Link. All Rights Reserved.

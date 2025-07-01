@@ -89,6 +89,20 @@ namespace hz
 			};
 		}
 
+		// polymorphic use only
+		template<typename T, typename U>
+			requires std::derived_from<T, ServiceTag<T>> and (std::derived_from<U, T> or std::is_same_v<T, U>)
+		void register_factory(std::function<std::shared_ptr<U>()> factory)
+		{
+			std::scoped_lock lock{ _mutex };
+			const auto id = type_id<T>();
+
+			_factories[id] = [factory]()
+			{
+				return std::static_pointer_cast<void>(factory());
+			};
+		}
+
 		template<typename T>
 			requires std::derived_from<T, ServiceTag<T>>
 		std::shared_ptr<T> create()
@@ -103,7 +117,7 @@ namespace hz
 				std::exit(1);
 			}
 
-			return std::static_pointer_cast<T>(_factories.at(id));
+			return std::static_pointer_cast<T>(_factories.at(id)());
 		}
 
 	public:
@@ -121,9 +135,9 @@ namespace hz
 		std::mutex _mutex;
 
 	public:
-		template<typename T>
-			requires std::derived_from<T, SingletonTag<T>>
-		void register_instance(std::shared_ptr<T> instance)
+		template<typename T, typename U = T>
+			requires std::derived_from<T, SingletonTag<T>> and (std::derived_from<U, T> or std::is_same_v<T, U>)
+		void register_instance(std::shared_ptr<U> instance)
 		{
 			std::scoped_lock lock{ _mutex };
 			_instances[type_id<T>()] = std::static_pointer_cast<void>(instance);
@@ -134,6 +148,14 @@ namespace hz
 		void register_singleton(Args&&... args)
 		{
 			register_instance<T>(std::make_shared<T>(std::forward<Args>(args)...));
+		}
+
+		// polymorphic only
+		template<typename T, typename U, typename... Args>
+			requires std::derived_from<T, SingletonTag<T>> and std::derived_from<U, T>
+		void register_singleton_polymorphic(Args&&... args)
+		{
+			register_instance<T>(std::make_shared<U>(std::forward<Args>(args)...));
 		}
 		
 		// fetches an unsynchronized singleton handle. note
@@ -223,7 +245,7 @@ namespace hz
 		template<typename T>
 		std::shared_ptr<T> using_service() const
 		{
-			return std::get<T>(_services);
+			return std::get<std::shared_ptr<T>>(_services);
 		}
 
 	protected:
@@ -246,7 +268,7 @@ namespace hz
 		template<typename T>
 		std::shared_ptr<T> using_singleton() const
 		{
-			return std::get<T>(_services);
+			return std::get<std::shared_ptr<T>>(_services);
 		}
 
 	public:

@@ -1,5 +1,6 @@
 import std;
 
+#include "ParserType.h"
 #include "AssemblerParser.h"
 #include "DotOrgCommand.h"
 #include "LabelCommand.h"

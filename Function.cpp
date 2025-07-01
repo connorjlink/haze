@@ -10,6 +10,7 @@ import std;
 #include "ReturnStatement.h"
 #include "Allocation.h"
 #include "Evaluator.h"
+#include "ParserType.h"
 #include "Parser.h"
 #include "CompilerParser.h"
 #include "Statement.h"
@@ -60,7 +61,7 @@ namespace hz
 		for (auto argument : arguments)
 		{
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(argument);
-			REQUIRE_SAFE(Generator)->attach_local(argument_expression->identifier->name, ((current_argument + 2) * 4));
+			REQUIRE_SAFE(RuntimeAllocator)->attach_local(argument_expression->identifier->name, ((current_argument + 2) * 4));
 
 			current_argument++;
 		}

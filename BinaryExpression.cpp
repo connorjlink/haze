@@ -265,7 +265,7 @@ namespace hz
 
 			right->generate(received_allocation);
 			// figure out how to assign the lhs
-			REQUIRE_SAFE(Generator)->write_local(identifier_expression->name, received_allocation->read());
+			REQUIRE_SAFE(RuntimeAllocator)->write_local(identifier_expression->name, received_allocation->read());
 		}
 
 		else

@@ -1,12 +1,15 @@
 #ifndef HAZE_TOOLCHAIN_H
 #define HAZE_TOOLCHAIN_H
 
+#include "Token.h"
 #include "ToolchainType.h"
 #include "FileManager.h"
 #include "JobManager.h"
+#include "Parser.h"
 #include "CommandLineOptions.h"
 #include "DependencyInjector.h"
-#include "Token.h"
+#include "Generator.h"
+#include "DependencyInjector.h"
 
 // Haze Toolchain.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -15,8 +18,8 @@ namespace hz
 {
 	class Toolchain
 		: public ServiceTag<Toolchain>
-		, public InjectService<JobManager>
-		, public InjectSingleton<ErrorReporter, FileManager, CommandLineOptions>
+		, public InjectService<Generator, JobManager, Parser>
+		, public InjectSingleton<CommandLineOptions, ErrorReporter, FileManager>
 	{
 	protected:
 		// filepath to vector<token> mapping

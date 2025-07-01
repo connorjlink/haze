@@ -4,11 +4,9 @@ import std;
 #include "JobManager.h"
 #include "AssemblerParser.h"
 #include "AssemblerLinker.h"
-#include "Constants.h"
-#include "HazeEmitter.h"
-#include "X86Emitter.h"
 #include "CommonToolchain.h"
 #include "ErrorReporter.h"
+#include "ParserType.h"
 
 // Haze AssemblerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -26,7 +24,7 @@ namespace hz
 
 		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
 
-		ServiceContainer::instance().register_factory<Parser>([&]()
+		ServiceContainer::instance().register_factory<Parser, AssemblerParser>([&]()
 		{
 			return std::make_shared<AssemblerParser>(_tokens.at(filepath), filepath);
 		});
@@ -35,8 +33,8 @@ namespace hz
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);
 
 		// NOTE: global singleton linker instance
-		SingletonContainer::instance().register_singleton<Linker>(
-			std::move(commands), AS_ASSEMBLER_PARSER(REQUIRE_SAFE(Parser).get()), filepath);
+		SingletonContainer::instance().register_instance<Linker>(
+			std::make_shared<AssemblerLinker>(std::move(commands), AS_ASSEMBLER_PARSER(REQUIRE_SAFE(Parser).get()), filepath));
 
 		// shared environment with Assembler/Compiler
 		auto image = common_link();

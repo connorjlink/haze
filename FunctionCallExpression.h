@@ -2,6 +2,8 @@
 #define HAZE_FUNCTIONCALLEXPRESSION_H
 
 #include "Expression.h"
+#include "SymbolDatabase.h"
+#include "DependencyInjector.h"
 
 // Haze FunctionCallExpression.h
 // (c) Connor J. Link. All Rights Reserved.

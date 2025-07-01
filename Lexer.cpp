@@ -13,9 +13,10 @@ namespace hz
 	Lexer::Lexer(const std::string& filepath)
 		: Scanner{ filepath }
 	{
+		// transact an initial state for undoing
 		commit<void>([&](auto& context) -> void
 		{
-			context.source = USE_SAFE(FileManager).get_file(filepath).processed_contents();
+			context.source = USE_SAFE(FileManager)->get_file(filepath).processed_contents();
 			context.location = null_location(filepath);
 		});
 	}

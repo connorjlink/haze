@@ -18,7 +18,6 @@ namespace hz
 	class Context;
 
 	class Node
-		: public InjectSingleton<ErrorReporter>
 	{
 	public:
 		Token _token;

@@ -1,5 +1,6 @@
 import std;
 
+#include "ParserType.h"
 #include "InterpreterParser.h"
 #include "IntegerLiteralExpression.h"
 #include "IdentifierExpression.h"

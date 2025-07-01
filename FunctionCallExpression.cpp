@@ -38,7 +38,8 @@ namespace hz
 
 		if (defined_arity != called_arity)
 		{
-			USE_UNSAFE(ErrorReporter)->post_error(std::format("function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), _token);
+			USE_UNSAFE(ErrorReporter)->post_error(std::format(
+				"function `{}` expects {} arguments but got {}", name, defined_arity, called_arity), _token);
 			return;
 		}
 
@@ -82,7 +83,8 @@ namespace hz
 
 			if (argument_evaluated->ntype() != NodeType::EXPRESSION)
 			{
-				USE_UNSAFE(ErrorReporter)->post_error("function call arguments must evaluate to an r-value", argument->_token);
+				USE_UNSAFE(ErrorReporter)->post_error(
+					"function call arguments must evaluate to an r-value", argument->_token);
 			}
 
 			arguments_evaluated.emplace_back(AS_EXPRESSION(argument_evaluated));
@@ -100,7 +102,8 @@ namespace hz
 			}
 		}
 
-		USE_UNSAFE(ErrorReporter)->post_error(std::format("function `{}` is undefined", name), _token);
+		USE_UNSAFE(ErrorReporter)->post_error(std::format(
+			"function `{}` is undefined", name), _token);
 		return nullptr;
 	}
 }

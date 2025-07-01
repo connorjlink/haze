@@ -51,7 +51,7 @@ namespace hz
 			} break;
 		}*/
 
-		_generator->read_local(allocation->read(), name);
+		REQUIRE_SAFE(RuntimeAllocator)->read_local(allocation->read(), name);
 	}
 
 	Expression* IdentifierExpression::optimize()

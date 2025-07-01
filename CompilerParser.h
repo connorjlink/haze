@@ -12,6 +12,11 @@ namespace hz
 	class Statement;
 	class MemberDeclarationExpression;
 
+	enum class TypeSpecifier;
+	enum class TypeQualifier;
+	enum class TypeSignedness;
+	enum class TypeStorage;
+
 	class CompilerParser : public Parser
 	{
 	public:

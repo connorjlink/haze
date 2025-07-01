@@ -27,7 +27,7 @@ namespace hz
 	{
 		AutoStackAllocation temp{};
 		_code->generate(temp.source());
-		_generator->exit_program(temp.source()->read());
+		REQUIRE_SAFE(Generator)->exit_program(temp.source()->read());
 	}
 
 	Statement* ExitStatement::optimize()

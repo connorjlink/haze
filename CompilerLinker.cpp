@@ -6,6 +6,7 @@ import std;
 #include "LabelCommand.h"
 #include "Emitter.h"
 #include "CommandLineOptions.h"
+#include "OptimizationType.h"
 #include "Symbol.h"
 #include "ErrorReporter.h"
 #include "DependencyInjector.h"

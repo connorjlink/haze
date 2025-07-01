@@ -2,7 +2,6 @@
 #define HAZE_PARSER_H
 
 #include "Token.h"
-#include "ParserType.h"
 #include "IdentifierExpression.h"
 #include "SymbolDatabase.h"
 #include "CommandLineOptions.h"
@@ -33,6 +32,7 @@ namespace hz
 	class Type;
 
 	enum class SymbolType;
+	enum class ParserType;
 
 	class Parser
 		: public ServiceTag<Parser>

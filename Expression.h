@@ -3,7 +3,10 @@
 
 #include "Node.h"
 #include "ExpressionType.h"
+#include "RuntimeAllocator.h"
 #include "Generator.h"
+#include "SymbolDatabase.h"
+#include "ErrorReporter.h"
 #include "DependencyInjector.h"
 
 // Haze ExpressionType.h
@@ -13,7 +16,8 @@ namespace hz
 {
 	class Expression 
 		: public Node
-		, public InjectService<Generator>
+		, public InjectService<RuntimeAllocator, Generator>
+		, public InjectSingleton<ErrorReporter, SymbolDatabase>
 	{
 	public:
 		Expression(const Token& token)

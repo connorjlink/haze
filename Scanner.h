@@ -3,9 +3,11 @@
 
 #include "Token.h"
 #include "FileManager.h"
-#include "DependencyInjector.h"
 #include "UndoableRedoable.h"
 #include "ErrorReporter.h"
+#include "SymbolDatabase.h"
+#include "SymbolExporter.h"
+#include "DependencyInjector.h"
 
 // Haze Scanner.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -59,9 +61,9 @@ namespace hz
 		}
 	};
 
-	class Scanner : 
-		public InjectSingleton<FileManager, ErrorReporter>,
-		public UndoableRedoable<SourceContext>
+	class Scanner 
+		: public UndoableRedoable<SourceContext>
+		, public InjectSingleton<ErrorReporter, FileManager, SymbolDatabase, SymbolExporter>
 	{
 	private:
 		SourceContext _current_context;

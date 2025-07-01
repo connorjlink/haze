@@ -4,6 +4,11 @@
 #include "Node.h"
 #include "StatementType.h"
 #include "Generator.h"
+#include "ErrorReporter.h"
+#include "Context.h"
+#include "Parser.h"
+#include "RuntimeAllocator.h"
+#include "SymbolDatabase.h"
 #include "DependencyInjector.h"
 
 // Haze Statement.h
@@ -13,7 +18,8 @@ namespace hz
 {
 	class Statement 
 		: public Node
-		, public InjectService<Generator>
+		, public InjectService<Generator, RuntimeAllocator, Parser>
+		, public InjectSingleton<Context, ErrorReporter, SymbolDatabase>
 	{
 	public:
 		Statement(Token token)

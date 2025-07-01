@@ -1,6 +1,7 @@
 import std;
 
 #include "Parser.h"
+#include "ParserType.h"
 #include "SymbolDatabase.h"
 #include "Token.h"
 #include "Allocator.h"

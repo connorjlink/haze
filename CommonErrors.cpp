@@ -2,6 +2,7 @@ import std;
 
 #include "CommonErrors.h"
 #include "Parser.h"
+#include "ParserType.h"
 #include "Node.h"
 #include "Statement.h"
 #include "Expression.h"

@@ -35,7 +35,7 @@ namespace hz
 		});
 
 
-		auto ast = USE_SAFE(Parser)->parse();
+		auto ast = REQUIRE_SAFE(Parser)->parse();
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);
 
 		const auto generate_task = REQUIRE_SAFE(JobManager)->begin_job("generating");
@@ -45,7 +45,7 @@ namespace hz
 			return std::make_shared<Generator>(ast, filepath);
 		});
 
-		auto linkables = USE_SAFE(Generator)->generate();
+		auto linkables = REQUIRE_SAFE(Generator)->generate();
 		REQUIRE_SAFE(JobManager)->end_job(generate_task);
 
 

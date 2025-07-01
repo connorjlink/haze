@@ -43,12 +43,12 @@ namespace hz
 		{
 			AutoStackAllocation temp{};
 			value->generate(temp.source());
-			REQUIRE_SAFE(Generator)->define_local(name, temp.source()->read());
+			REQUIRE_SAFE(RuntimeAllocator)->define_local(name, temp.source()->read());
 		}
 
 		else
 		{
-			REQUIRE_SAFE(Generator)->define_local(name);
+			REQUIRE_SAFE(RuntimeAllocator)->define_local(name);
 		}
 	}
 

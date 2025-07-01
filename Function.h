@@ -4,6 +4,8 @@
 #include "Node.h"
 #include "Generator.h"
 #include "SymbolDatabase.h"
+#include "RuntimeAllocator.h"
+#include "Parser.h"
 #include "DependencyInjector.h"
 
 // Haze Function.h
@@ -17,7 +19,7 @@ namespace hz
 
 	class Function 
 		: public Node
-		, public InjectService<Generator>
+		, public InjectService<Generator, Parser, RuntimeAllocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:

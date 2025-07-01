@@ -4,9 +4,7 @@
 #include "ArchitectureType.h"
 #include "VerbosityType.h"
 #include "ExecutionType.h"
-#include "OptimizationType.h"
 #include "DependencyInjector.h"
-#include "OptionType.h"
 
 // Haze CommandLineOptions.h
 // (c) Connor J. Link. All Rights Reserved.
