@@ -4,6 +4,7 @@
 // Haze Constants.h
 // (c) Connor J. Link. All Rights Reserved.
 
+// prevent <Windows.h> interference with std::max
 #undef max
 
 namespace hz

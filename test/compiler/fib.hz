@@ -1,0 +1,14 @@
+function dword fib = (dword n)
+{
+	if (n == 0ul)
+	{
+		return 0ul;
+	}
+
+	return n + fib(n - 1ul);
+}
+
+function dword main = ()
+{
+	return fib(10ul);
+}

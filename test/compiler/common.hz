@@ -1,8 +1,5 @@
-//.include "test.hzs"
-
 function nvr main = ()
 {
-	//TODO: add the following for inline assembly
 	asm
 	{
 	.define TEST = 1

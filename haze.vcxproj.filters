@@ -1,946 +1,256 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Meta Files">
-      <UniqueIdentifier>{bb747166-e62d-4931-8cee-5001fbbd75f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Expression">
-      <UniqueIdentifier>{7ae579b2-0c73-4189-b71d-2d8b5f6a5e22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Statement">
-      <UniqueIdentifier>{384a80a6-7e4c-446a-b693-91dafa196c38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Toolchain">
-      <UniqueIdentifier>{49f8eafc-6864-47ea-96e0-093c249eb416}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Linker">
-      <UniqueIdentifier>{9a9d161e-957f-4c15-b2d8-d2c72a536474}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Parser">
-      <UniqueIdentifier>{34eb948a-41b6-4844-ae2a-422e29f0583b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Hook">
-      <UniqueIdentifier>{315afef3-1651-4644-923a-36ad587365b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Error">
-      <UniqueIdentifier>{ddaf0f97-68a9-4b2f-bd25-1fd11cd1cd44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\File">
-      <UniqueIdentifier>{83c0a182-2d43-4601-93c8-e21435253bb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Job">
-      <UniqueIdentifier>{9da7ea94-9223-4374-886a-ba7f49dbfada}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Validator">
-      <UniqueIdentifier>{62fe28d1-5583-46ab-a039-1d6b9e7fd8ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Emitter">
-      <UniqueIdentifier>{e63c00af-6188-461a-a05c-907a92cee20c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Symbol">
-      <UniqueIdentifier>{fc11c81a-5027-4af5-8b2a-ce8a81f5ae64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Command">
-      <UniqueIdentifier>{1e59256a-d3bd-42d7-8bac-b2b993192a64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Evaluator">
-      <UniqueIdentifier>{fb401d20-591b-4e9e-845b-f581154aa9db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Argument">
-      <UniqueIdentifier>{82183aef-d26a-468c-a538-72baee1d93bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Output Files">
-      <UniqueIdentifier>{35486fac-b1f1-4267-85cd-832a11fb56b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Binary">
-      <UniqueIdentifier>{8a997064-5801-4141-9767-107e0064d213}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Intermediate">
-      <UniqueIdentifier>{8f35d445-db7b-466a-ba17-2a252026b433}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Types">
-      <UniqueIdentifier>{1ba08e6a-fbd1-4f84-8cf0-36c6d701bd0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Example Files">
-      <UniqueIdentifier>{c544c3b4-6538-433a-8e74-ebec2fcf0e5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Memory">
-      <UniqueIdentifier>{40b958de-7eb1-4f01-b42e-3d4e7cf47798}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Assembly">
-      <UniqueIdentifier>{2b124717-431d-4075-8412-b790d2bca9eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Target">
-      <UniqueIdentifier>{8790601f-e233-46a3-ba7b-c2891b0a8a4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Platform">
-      <UniqueIdentifier>{75155f9f-2629-426e-aaab-3d1c281eea39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Variable">
-      <UniqueIdentifier>{8b8ddd9f-aa15-422d-8dfb-abed14db704f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Utilities">
-      <UniqueIdentifier>{d24aa0dc-5920-4f58-9445-87bc58c6b4ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\JSON">
-      <UniqueIdentifier>{70d93d8e-6fdb-4ee8-bf96-a7e66ca55004}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Scanner">
-      <UniqueIdentifier>{c5040c31-efec-470e-a2af-ac00fcb247fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Dependency">
-      <UniqueIdentifier>{3a51e834-0ca7-4b1d-a59f-9f65624f35fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Tracking">
-      <UniqueIdentifier>{61585894-ef0d-45d7-9933-38d1d9cfcd70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Intrinsic">
-      <UniqueIdentifier>{13c8a4e9-a499-4b54-b4a8-91842bd43716}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Simulator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Generator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Function.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Disassembler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Linkable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Context.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AdjustExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="AssemblerLinker.cpp">
-      <Filter>Source Files\Linker</Filter>
-    </ClCompile>
-    <ClCompile Include="AssemblerParser.cpp">
-      <Filter>Source Files\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="AssemblerToolchain.cpp">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClCompile>
-    <ClCompile Include="BinaryExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="CompilerToolchain.cpp">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClCompile>
-    <ClCompile Include="CompoundStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="CompilerLinker.cpp">
-      <Filter>Source Files\Linker</Filter>
-    </ClCompile>
-    <ClCompile Include="CompilerParser.cpp">
-      <Filter>Source Files\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="ExpressionStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="Expression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="NullStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="ForStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="HookStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="Hook.cpp">
-      <Filter>Source Files\Hook</Filter>
-    </ClCompile>
-    <ClCompile Include="HookClient.cpp">
-      <Filter>Source Files\Hook</Filter>
-    </ClCompile>
-    <ClCompile Include="HookTopicBuilder.cpp">
-      <Filter>Source Files\Hook</Filter>
-    </ClCompile>
-    <ClCompile Include="IdentifierExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="FunctionCallExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="InlineAsmStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="VariableStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="WhileStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="Error.cpp">
-      <Filter>Source Files\Error</Filter>
-    </ClCompile>
-    <ClCompile Include="ErrorContext.cpp">
-      <Filter>Source Files\Error</Filter>
-    </ClCompile>
-    <ClCompile Include="ErrorReporter.cpp">
-      <Filter>Source Files\Error</Filter>
-    </ClCompile>
-    <ClCompile Include="InterpreterToolchain.cpp">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClCompile>
-    <ClCompile Include="File.cpp">
-      <Filter>Source Files\File</Filter>
-    </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Source Files\File</Filter>
-    </ClCompile>
-    <ClCompile Include="Job.cpp">
-      <Filter>Source Files\Job</Filter>
-    </ClCompile>
-    <ClCompile Include="JobManager.cpp">
-      <Filter>Source Files\Job</Filter>
-    </ClCompile>
-    <ClCompile Include="Toolchain.cpp">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClCompile>
-    <ClCompile Include="PrintStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="ReturnStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="InterpreterParser.cpp">
-      <Filter>Source Files\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Statement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="StringExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="InstructionValidator.cpp">
-      <Filter>Source Files\Validator</Filter>
-    </ClCompile>
-    <ClCompile Include="IntegerLiteralExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="X86Emitter.cpp">
-      <Filter>Source Files\Emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="Emitter.cpp">
-      <Filter>Source Files\Emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="HazeEmitter.cpp">
-      <Filter>Source Files\Emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="Symbol.cpp">
-      <Filter>Source Files\Symbol</Filter>
-    </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Source Files\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="DotDefineCommand.cpp">
-      <Filter>Source Files\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="DotOrgCommand.cpp">
-      <Filter>Source Files\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="InstructionCommand.cpp">
-      <Filter>Source Files\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="LabelCommand.cpp">
-      <Filter>Source Files\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="Evaluator.cpp">
-      <Filter>Source Files\Evaluator</Filter>
-    </ClCompile>
-    <ClCompile Include="HazeEvaluator.cpp">
-      <Filter>Source Files\Evaluator</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandLineParser.cpp">
-      <Filter>Source Files\Argument</Filter>
-    </ClCompile>
-    <ClCompile Include="CommonToolchain.cpp">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClCompile>
-    <ClCompile Include="IfStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser.cpp">
-      <Filter>Source Files\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="ArgumentExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="PEBuilder.cpp">
-      <Filter>Source Files\Binary</Filter>
-    </ClCompile>
-    <ClCompile Include="ExitStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="Linker.cpp">
-      <Filter>Source Files\Linker</Filter>
-    </ClCompile>
-    <ClCompile Include="Scope.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermediateCommand.cpp">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClCompile>
-    <ClCompile Include="X86BuilderValidator.cpp">
-      <Filter>Source Files\Validator</Filter>
-    </ClCompile>
-    <ClCompile Include="Validator.cpp">
-      <Filter>Source Files\Validator</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocation.cpp">
-      <Filter>Source Files\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="Allocator.cpp">
-      <Filter>Source Files\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="StackAllocator.cpp">
-      <Filter>Source Files\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="HeapAllocator.cpp">
-      <Filter>Source Files\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="RuntimeAllocator.cpp">
-      <Filter>Source Files\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="X86Builder.cpp">
-      <Filter>Source Files\Binary</Filter>
-    </ClCompile>
-    <ClCompile Include="HazeBuilder.cpp">
-      <Filter>Source Files\Binary</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermediateOptimizer.cpp">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClCompile>
-    <ClCompile Include="FunctionArgumentExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="ExpressionUtility.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="X86Instruction.cpp">
-      <Filter>Source Files\Assembly</Filter>
-    </ClCompile>
-    <ClCompile Include="X86Linker.cpp">
-      <Filter>Source Files\Assembly</Filter>
-    </ClCompile>
-    <ClCompile Include="CommonErrors.cpp">
-      <Filter>Source Files\Error</Filter>
-    </ClCompile>
-    <ClCompile Include="BinaryUtilities.cpp">
-      <Filter>Source Files\Binary</Filter>
-    </ClCompile>
-    <ClCompile Include="X86Operand.cpp">
-      <Filter>Source Files\Assembly</Filter>
-    </ClCompile>
-    <ClCompile Include="Type.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="StructMember.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MemberDeclarationExpression.cpp">
-      <Filter>Source Files\Expression</Filter>
-    </ClCompile>
-    <ClCompile Include="StructDeclarationStatement.cpp">
-      <Filter>Source Files\Statement</Filter>
-    </ClCompile>
-    <ClCompile Include="Variable.cpp">
-      <Filter>Source Files\Variable</Filter>
-    </ClCompile>
-    <ClCompile Include="ExitProgramException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntegerLiteral.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ExtendedInteger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoJob.cpp">
-      <Filter>Source Files\Job</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoErrorContext.cpp">
-      <Filter>Source Files\Error</Filter>
-    </ClCompile>
-    <ClCompile Include="SymbolDatabase.cpp">
-      <Filter>Source Files\Symbol</Filter>
-    </ClCompile>
-    <ClCompile Include="SymbolExporter.cpp">
-      <Filter>Source Files\Symbol</Filter>
-    </ClCompile>
-    <ClCompile Include="JSON.cpp">
-      <Filter>Source Files\JSON</Filter>
-    </ClCompile>
-    <ClCompile Include="Test.cpp">
-      <Filter>Source Files\Validator</Filter>
-    </ClCompile>
-    <ClCompile Include="AutoJSON.cpp">
-      <Filter>Source Files\JSON</Filter>
-    </ClCompile>
-    <ClCompile Include="Bimap.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Scanner.cpp">
-      <Filter>Source Files\Scanner</Filter>
-    </ClCompile>
-    <ClCompile Include="DependencyInjector.cpp">
-      <Filter>Source Files\Dependency</Filter>
-    </ClCompile>
-    <ClCompile Include="Tracking.cpp">
-      <Filter>Source Files\Tracking</Filter>
-    </ClCompile>
-    <ClCompile Include="Lexer.cpp">
-      <Filter>Source Files\Scanner</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorIntrinsic.cpp">
-      <Filter>Source Files\Intrinsic</Filter>
-    </ClCompile>
-    <ClCompile Include="Intrinsic.cpp">
-      <Filter>Source Files\Intrinsic</Filter>
-    </ClCompile>
-    <ClCompile Include="Preprocessor.cpp">
-      <Filter>Source Files\Scanner</Filter>
-    </ClCompile>
-    <ClCompile Include="Random.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="TypeCheck.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="UndoableRedoable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Token.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Simulator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Generator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Function.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Disassembler.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Linkable.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeType.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Context.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AdjustExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="AssemblerLinker.h">
-      <Filter>Source Files\Linker</Filter>
-    </ClInclude>
-    <ClInclude Include="AssemblerParser.h">
-      <Filter>Source Files\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="AssemblerToolchain.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryExpressionType.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="CompilerToolchain.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="CompoundStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="CompilerLinker.h">
-      <Filter>Source Files\Linker</Filter>
-    </ClInclude>
-    <ClInclude Include="CompilerParser.h">
-      <Filter>Source Files\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="ExpressionStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="Expression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="ExpressionType.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="NullStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="ForStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="HookStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="Hook.h">
-      <Filter>Source Files\Hook</Filter>
-    </ClInclude>
-    <ClInclude Include="HookClient.h">
-      <Filter>Source Files\Hook</Filter>
-    </ClInclude>
-    <ClInclude Include="HookTopicBuilder.h">
-      <Filter>Source Files\Hook</Filter>
-    </ClInclude>
-    <ClInclude Include="IdentifierExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionCallExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="InlineAsmStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="VariableStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="WhileStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="Error.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="ErrorContext.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="ErrorReporter.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="ErrorType.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpreterToolchain.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>Source Files\File</Filter>
-    </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>Source Files\File</Filter>
-    </ClInclude>
-    <ClInclude Include="Job.h">
-      <Filter>Source Files\Job</Filter>
-    </ClInclude>
-    <ClInclude Include="JobManager.h">
-      <Filter>Source Files\Job</Filter>
-    </ClInclude>
-    <ClInclude Include="Toolchain.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="ToolchainType.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="ReturnStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpreterParser.h">
-      <Filter>Source Files\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Statement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="StatementType.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="StringExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="InstructionValidator.h">
-      <Filter>Source Files\Validator</Filter>
-    </ClInclude>
-    <ClInclude Include="Validator.h">
-      <Filter>Source Files\Validator</Filter>
-    </ClInclude>
-    <ClInclude Include="IntegerLiteralExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="X86Emitter.h">
-      <Filter>Source Files\Emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="Emitter.h">
-      <Filter>Source Files\Emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="EmitterType.h">
-      <Filter>Source Files\Emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="HazeEmitter.h">
-      <Filter>Source Files\Emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="Symbol.h">
-      <Filter>Source Files\Symbol</Filter>
-    </ClInclude>
-    <ClInclude Include="SymbolType.h">
-      <Filter>Source Files\Symbol</Filter>
-    </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandType.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="DotDefineCommand.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="DotOrgCommand.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="InstructionCommand.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="LabelCommand.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="Evaluator.h">
-      <Filter>Source Files\Evaluator</Filter>
-    </ClInclude>
-    <ClInclude Include="HazeEvaluator.h">
-      <Filter>Source Files\Evaluator</Filter>
-    </ClInclude>
-    <ClInclude Include="Linker.h">
-      <Filter>Source Files\Linker</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkerType.h">
-      <Filter>Source Files\Linker</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandLineParser.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandLineOptions.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClInclude>
-    <ClInclude Include="OptimizationType.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionType.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClInclude>
-    <ClInclude Include="ExecutionType.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonToolchain.h">
-      <Filter>Source Files\Toolchain</Filter>
-    </ClInclude>
-    <ClInclude Include="IfStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Source Files\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="ParserType.h">
-      <Filter>Source Files\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="ArgumentExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="PEBuilder.h">
-      <Filter>Source Files\Binary</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryUtilities.h">
-      <Filter>Source Files\Binary</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryConstants.h">
-      <Filter>Source Files\Binary</Filter>
-    </ClInclude>
-    <ClInclude Include="VerbosityType.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClInclude>
-    <ClInclude Include="ArchitectureType.h">
-      <Filter>Source Files\Argument</Filter>
-    </ClInclude>
-    <ClInclude Include="InstructionEncoding.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExitStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="Scope.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermediateCommand.h">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermediateType.h">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClInclude>
-    <ClInclude Include="X86BuilderValidator.h">
-      <Filter>Source Files\Validator</Filter>
-    </ClInclude>
-    <ClInclude Include="Test.h">
-      <Filter>Source Files\Validator</Filter>
-    </ClInclude>
-    <ClInclude Include="StackAllocator.h">
-      <Filter>Source Files\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocation.h">
-      <Filter>Source Files\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Allocator.h">
-      <Filter>Source Files\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="AllocationType.h">
-      <Filter>Source Files\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="HeapAllocator.h">
-      <Filter>Source Files\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="RuntimeAllocator.h">
-      <Filter>Source Files\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="X86Builder.h">
-      <Filter>Source Files\Binary</Filter>
-    </ClInclude>
-    <ClInclude Include="HazeBuilder.h">
-      <Filter>Source Files\Binary</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermediateOptimizer.h">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionArgumentExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="ExpressionUtility.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="X86Instruction.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="X86InstructionType.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="X86Linker.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="BranchCommandType.h">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryCommandType.h">
-      <Filter>Source Files\Intermediate</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonErrors.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="X86Operand.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="X86OperandType.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="X86Register.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="X86JccInstructionType.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="X86SetccInstructionType.h">
-      <Filter>Source Files\Assembly</Filter>
-    </ClInclude>
-    <ClInclude Include="Type.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeSpecifier.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeQualifier.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeSignedness.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeStorage.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeType.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="IntTypeType.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformVariables.h">
-      <Filter>Source Files\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="StructMember.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MemberDeclarationExpression.h">
-      <Filter>Source Files\Expression</Filter>
-    </ClInclude>
-    <ClInclude Include="StructDeclarationStatement.h">
-      <Filter>Source Files\Statement</Filter>
-    </ClInclude>
-    <ClInclude Include="Variable.h">
-      <Filter>Source Files\Variable</Filter>
-    </ClInclude>
-    <ClInclude Include="VariableType.h">
-      <Filter>Source Files\Variable</Filter>
-    </ClInclude>
-    <ClInclude Include="ExitProgramException.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntegerLiteralType.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntegerLiteral.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExtendedInteger.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bimap.h">
-      <Filter>Source Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoJob.h">
-      <Filter>Source Files\Job</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoErrorContext.h">
-      <Filter>Source Files\Error</Filter>
-    </ClInclude>
-    <ClInclude Include="SymbolDatabase.h">
-      <Filter>Source Files\Symbol</Filter>
-    </ClInclude>
-    <ClInclude Include="SymbolExporter.h">
-      <Filter>Source Files\Symbol</Filter>
-    </ClInclude>
-    <ClInclude Include="JSON.h">
-      <Filter>Source Files\JSON</Filter>
-    </ClInclude>
-    <ClInclude Include="AutoJSON.h">
-      <Filter>Source Files\JSON</Filter>
-    </ClInclude>
-    <ClInclude Include="Scanner.h">
-      <Filter>Source Files\Scanner</Filter>
-    </ClInclude>
-    <ClInclude Include="DependencyInjector.h">
-      <Filter>Source Files\Dependency</Filter>
-    </ClInclude>
-    <ClInclude Include="Tracking.h">
-      <Filter>Source Files\Tracking</Filter>
-    </ClInclude>
-    <ClInclude Include="Lexer.h">
-      <Filter>Source Files\Scanner</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorIntrinsic.h">
-      <Filter>Source Files\Intrinsic</Filter>
-    </ClInclude>
-    <ClInclude Include="Intrinsic.h">
-      <Filter>Source Files\Intrinsic</Filter>
-    </ClInclude>
-    <ClInclude Include="IntrinsicType.h">
-      <Filter>Source Files\Intrinsic</Filter>
-    </ClInclude>
-    <ClInclude Include="Preprocessor.h">
-      <Filter>Source Files\Scanner</Filter>
-    </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>Source Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeCheck.h">
-      <Filter>Source Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="UndoableRedoable.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="common.hz">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="specification.md">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="test.hzs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="old.hz">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="generated_optimizations.hzs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="test.hzi">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="sample.hzs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="vcpkg.json">
-      <Filter>Meta Files</Filter>
-    </None>
-    <None Include="vcpkg-configuration.json">
-      <Filter>Meta Files</Filter>
-    </None>
-    <None Include="sample.hzi">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="std.hzi">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="README.md" />
-    <None Include="fibonacci.hzi">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="test.exe">
-      <Filter>Output Files</Filter>
-    </None>
-    <None Include="test.hzb">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="chatgpt_cdecl_example.md" />
-    <None Include="fib.hz">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="fibonacci.hz" />
-    <None Include="test.hz">
-      <Filter>Resource Files</Filter>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\AdjustExpression.cpp" />
+    <ClCompile Include="source\Allocation.cpp" />
+    <ClCompile Include="source\Allocator.cpp" />
+    <ClCompile Include="source\ArgumentExpression.cpp" />
+    <ClCompile Include="source\AssemblerLinker.cpp" />
+    <ClCompile Include="source\AssemblerParser.cpp" />
+    <ClCompile Include="source\AssemblerToolchain.cpp" />
+    <ClCompile Include="source\AutoErrorContext.cpp" />
+    <ClCompile Include="source\AutoJob.cpp" />
+    <ClCompile Include="source\AutoJSON.cpp" />
+    <ClCompile Include="source\Bimap.cpp" />
+    <ClCompile Include="source\BinaryExpression.cpp" />
+    <ClCompile Include="source\BinaryUtilities.cpp" />
+    <ClCompile Include="source\ColorIntrinsic.cpp" />
+    <ClCompile Include="source\Command.cpp" />
+    <ClCompile Include="source\CommandLineParser.cpp" />
+    <ClCompile Include="source\CommonErrors.cpp" />
+    <ClCompile Include="source\CommonToolchain.cpp" />
+    <ClCompile Include="source\CompilerLinker.cpp" />
+    <ClCompile Include="source\CompilerParser.cpp" />
+    <ClCompile Include="source\CompilerToolchain.cpp" />
+    <ClCompile Include="source\CompoundStatement.cpp" />
+    <ClCompile Include="source\Context.cpp" />
+    <ClCompile Include="source\DependencyInjector.cpp" />
+    <ClCompile Include="source\Disassembler.cpp" />
+    <ClCompile Include="source\DotDefineCommand.cpp" />
+    <ClCompile Include="source\DotOrgCommand.cpp" />
+    <ClCompile Include="source\Emitter.cpp" />
+    <ClCompile Include="source\Error.cpp" />
+    <ClCompile Include="source\ErrorContext.cpp" />
+    <ClCompile Include="source\ErrorReporter.cpp" />
+    <ClCompile Include="source\Evaluator.cpp" />
+    <ClCompile Include="source\ExitProgramException.cpp" />
+    <ClCompile Include="source\ExitStatement.cpp" />
+    <ClCompile Include="source\Expression.cpp" />
+    <ClCompile Include="source\ExpressionStatement.cpp" />
+    <ClCompile Include="source\ExpressionUtility.cpp" />
+    <ClCompile Include="source\ExtendedInteger.cpp" />
+    <ClCompile Include="source\File.cpp" />
+    <ClCompile Include="source\FileManager.cpp" />
+    <ClCompile Include="source\ForStatement.cpp" />
+    <ClCompile Include="source\Function.cpp" />
+    <ClCompile Include="source\FunctionArgumentExpression.cpp" />
+    <ClCompile Include="source\FunctionCallExpression.cpp" />
+    <ClCompile Include="source\Generator.cpp" />
+    <ClCompile Include="source\HazeBuilder.cpp" />
+    <ClCompile Include="source\HazeEmitter.cpp" />
+    <ClCompile Include="source\HazeEvaluator.cpp" />
+    <ClCompile Include="source\HeapAllocator.cpp" />
+    <ClCompile Include="source\IdentifierExpression.cpp" />
+    <ClCompile Include="source\IfStatement.cpp" />
+    <ClCompile Include="source\InlineAsmStatement.cpp" />
+    <ClCompile Include="source\InstructionCommand.cpp" />
+    <ClCompile Include="source\InstructionValidator.cpp" />
+    <ClCompile Include="source\IntegerLiteral.cpp" />
+    <ClCompile Include="source\IntegerLiteralExpression.cpp" />
+    <ClCompile Include="source\IntermediateCommand.cpp" />
+    <ClCompile Include="source\IntermediateOptimizer.cpp" />
+    <ClCompile Include="source\Job.cpp" />
+    <ClCompile Include="source\JobManager.cpp" />
+    <ClCompile Include="source\JSON.cpp" />
+    <ClCompile Include="source\LabelCommand.cpp" />
+    <ClCompile Include="source\Lexer.cpp" />
+    <ClCompile Include="source\Linkable.cpp" />
+    <ClCompile Include="source\Linker.cpp" />
+    <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\MemberDeclarationExpression.cpp" />
+    <ClCompile Include="source\NullStatement.cpp" />
+    <ClCompile Include="source\Parser.cpp" />
+    <ClCompile Include="source\PEBuilder.cpp" />
+    <ClCompile Include="source\Preprocessor.cpp" />
+    <ClCompile Include="source\PrintStatement.cpp" />
+    <ClCompile Include="source\Random.cpp" />
+    <ClCompile Include="source\ReturnStatement.cpp" />
+    <ClCompile Include="source\RuntimeAllocator.cpp" />
+    <ClCompile Include="source\Scanner.cpp" />
+    <ClCompile Include="source\Scope.cpp" />
+    <ClCompile Include="source\Simulator.cpp" />
+    <ClCompile Include="source\StackAllocator.cpp" />
+    <ClCompile Include="source\Statement.cpp" />
+    <ClCompile Include="source\StringExpression.cpp" />
+    <ClCompile Include="source\StructDeclarationStatement.cpp" />
+    <ClCompile Include="source\StructMember.cpp" />
+    <ClCompile Include="source\Symbol.cpp" />
+    <ClCompile Include="source\SymbolDatabase.cpp" />
+    <ClCompile Include="source\SymbolExporter.cpp" />
+    <ClCompile Include="source\Test.cpp" />
+    <ClCompile Include="source\Toolchain.cpp" />
+    <ClCompile Include="source\Tracking.cpp" />
+    <ClCompile Include="source\Type.cpp" />
+    <ClCompile Include="source\TypeCheck.cpp" />
+    <ClCompile Include="source\UndoableRedoable.cpp" />
+    <ClCompile Include="source\Validator.cpp" />
+    <ClCompile Include="source\Variable.cpp" />
+    <ClCompile Include="source\VariableStatement.cpp" />
+    <ClCompile Include="source\WhileStatement.cpp" />
+    <ClCompile Include="source\X86Builder.cpp" />
+    <ClCompile Include="source\X86BuilderValidator.cpp" />
+    <ClCompile Include="source\X86Emitter.cpp" />
+    <ClCompile Include="source\X86Instruction.cpp" />
+    <ClCompile Include="source\X86Linker.cpp" />
+    <ClCompile Include="source\X86Operand.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\AdjustExpression.h" />
+    <ClInclude Include="include\Allocation.h" />
+    <ClInclude Include="include\AllocationType.h" />
+    <ClInclude Include="include\Allocator.h" />
+    <ClInclude Include="include\ArchitectureType.h" />
+    <ClInclude Include="include\ArgumentExpression.h" />
+    <ClInclude Include="include\AssemblerLinker.h" />
+    <ClInclude Include="include\AssemblerParser.h" />
+    <ClInclude Include="include\AssemblerToolchain.h" />
+    <ClInclude Include="include\AutoErrorContext.h" />
+    <ClInclude Include="include\AutoJob.h" />
+    <ClInclude Include="include\AutoJSON.h" />
+    <ClInclude Include="include\Bimap.h" />
+    <ClInclude Include="include\BinaryCommandType.h" />
+    <ClInclude Include="include\BinaryConstants.h" />
+    <ClInclude Include="include\BinaryExpression.h" />
+    <ClInclude Include="include\BinaryExpressionType.h" />
+    <ClInclude Include="include\BinaryUtilities.h" />
+    <ClInclude Include="include\BranchCommandType.h" />
+    <ClInclude Include="include\ColorIntrinsic.h" />
+    <ClInclude Include="include\Command.h" />
+    <ClInclude Include="include\CommandLineOptions.h" />
+    <ClInclude Include="include\CommandLineParser.h" />
+    <ClInclude Include="include\CommandType.h" />
+    <ClInclude Include="include\CommonErrors.h" />
+    <ClInclude Include="include\CommonToolchain.h" />
+    <ClInclude Include="include\CompilerLinker.h" />
+    <ClInclude Include="include\CompilerParser.h" />
+    <ClInclude Include="include\CompilerToolchain.h" />
+    <ClInclude Include="include\CompoundStatement.h" />
+    <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\Context.h" />
+    <ClInclude Include="include\DependencyInjector.h" />
+    <ClInclude Include="include\Disassembler.h" />
+    <ClInclude Include="include\DotDefineCommand.h" />
+    <ClInclude Include="include\DotOrgCommand.h" />
+    <ClInclude Include="include\Emitter.h" />
+    <ClInclude Include="include\EmitterType.h" />
+    <ClInclude Include="include\Error.h" />
+    <ClInclude Include="include\ErrorContext.h" />
+    <ClInclude Include="include\ErrorReporter.h" />
+    <ClInclude Include="include\ErrorType.h" />
+    <ClInclude Include="include\Evaluator.h" />
+    <ClInclude Include="include\ExecutionType.h" />
+    <ClInclude Include="include\ExitProgramException.h" />
+    <ClInclude Include="include\ExitStatement.h" />
+    <ClInclude Include="include\Expression.h" />
+    <ClInclude Include="include\ExpressionStatement.h" />
+    <ClInclude Include="include\ExpressionType.h" />
+    <ClInclude Include="include\ExpressionUtility.h" />
+    <ClInclude Include="include\ExtendedInteger.h" />
+    <ClInclude Include="include\File.h" />
+    <ClInclude Include="include\FileManager.h" />
+    <ClInclude Include="include\ForStatement.h" />
+    <ClInclude Include="include\Function.h" />
+    <ClInclude Include="include\FunctionArgumentExpression.h" />
+    <ClInclude Include="include\FunctionCallExpression.h" />
+    <ClInclude Include="include\Generator.h" />
+    <ClInclude Include="include\HazeBuilder.h" />
+    <ClInclude Include="include\HazeEmitter.h" />
+    <ClInclude Include="include\HazeEvaluator.h" />
+    <ClInclude Include="include\HeapAllocator.h" />
+    <ClInclude Include="include\IdentifierExpression.h" />
+    <ClInclude Include="include\IfStatement.h" />
+    <ClInclude Include="include\InlineAsmStatement.h" />
+    <ClInclude Include="include\InstructionCommand.h" />
+    <ClInclude Include="include\InstructionEncoding.h" />
+    <ClInclude Include="include\InstructionValidator.h" />
+    <ClInclude Include="include\IntegerLiteral.h" />
+    <ClInclude Include="include\IntegerLiteralExpression.h" />
+    <ClInclude Include="include\IntegerLiteralType.h" />
+    <ClInclude Include="include\IntermediateCommand.h" />
+    <ClInclude Include="include\IntermediateOptimizer.h" />
+    <ClInclude Include="include\IntermediateType.h" />
+    <ClInclude Include="include\IntTypeType.h" />
+    <ClInclude Include="include\Job.h" />
+    <ClInclude Include="include\JobManager.h" />
+    <ClInclude Include="include\JSON.h" />
+    <ClInclude Include="include\LabelCommand.h" />
+    <ClInclude Include="include\Lexer.h" />
+    <ClInclude Include="include\Linkable.h" />
+    <ClInclude Include="include\Linker.h" />
+    <ClInclude Include="include\LinkerType.h" />
+    <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\MemberDeclarationExpression.h" />
+    <ClInclude Include="include\Node.h" />
+    <ClInclude Include="include\NodeType.h" />
+    <ClInclude Include="include\NullStatement.h" />
+    <ClInclude Include="include\OptimizationType.h" />
+    <ClInclude Include="include\OptionType.h" />
+    <ClInclude Include="include\Parser.h" />
+    <ClInclude Include="include\ParserType.h" />
+    <ClInclude Include="include\PEBuilder.h" />
+    <ClInclude Include="include\PlatformVariables.h" />
+    <ClInclude Include="include\Preprocessor.h" />
+    <ClInclude Include="include\PrintStatement.h" />
+    <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\ReturnStatement.h" />
+    <ClInclude Include="include\RuntimeAllocator.h" />
+    <ClInclude Include="include\Scanner.h" />
+    <ClInclude Include="include\Scope.h" />
+    <ClInclude Include="include\Simulator.h" />
+    <ClInclude Include="include\StackAllocator.h" />
+    <ClInclude Include="include\Statement.h" />
+    <ClInclude Include="include\StatementType.h" />
+    <ClInclude Include="include\StringExpression.h" />
+    <ClInclude Include="include\StructDeclarationStatement.h" />
+    <ClInclude Include="include\StructMember.h" />
+    <ClInclude Include="include\Symbol.h" />
+    <ClInclude Include="include\SymbolDatabase.h" />
+    <ClInclude Include="include\SymbolExporter.h" />
+    <ClInclude Include="include\SymbolType.h" />
+    <ClInclude Include="include\Test.h" />
+    <ClInclude Include="include\Token.h" />
+    <ClInclude Include="include\Toolchain.h" />
+    <ClInclude Include="include\ToolchainType.h" />
+    <ClInclude Include="include\Tracking.h" />
+    <ClInclude Include="include\Type.h" />
+    <ClInclude Include="include\TypeCheck.h" />
+    <ClInclude Include="include\TypeQualifier.h" />
+    <ClInclude Include="include\TypeSignedness.h" />
+    <ClInclude Include="include\TypeSpecifier.h" />
+    <ClInclude Include="include\TypeStorage.h" />
+    <ClInclude Include="include\TypeType.h" />
+    <ClInclude Include="include\UndoableRedoable.h" />
+    <ClInclude Include="include\Validator.h" />
+    <ClInclude Include="include\Variable.h" />
+    <ClInclude Include="include\VariableStatement.h" />
+    <ClInclude Include="include\VariableType.h" />
+    <ClInclude Include="include\VerbosityType.h" />
+    <ClInclude Include="include\WhileStatement.h" />
+    <ClInclude Include="include\X86Builder.h" />
+    <ClInclude Include="include\X86BuilderValidator.h" />
+    <ClInclude Include="include\X86Emitter.h" />
+    <ClInclude Include="include\X86Instruction.h" />
+    <ClInclude Include="include\X86InstructionType.h" />
+    <ClInclude Include="include\X86JccInstructionType.h" />
+    <ClInclude Include="include\X86Linker.h" />
+    <ClInclude Include="include\X86Operand.h" />
+    <ClInclude Include="include\X86OperandType.h" />
+    <ClInclude Include="include\X86Register.h" />
+    <ClInclude Include="include\X86SetccInstructionType.h" />
   </ItemGroup>
 </Project>

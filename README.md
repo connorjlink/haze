@@ -1,26 +1,20 @@
 # HAZE
-> A bespoke, from-scratch, full-stack toolchain for my new processor architecture, Haze.
+> A bespoke, from-scratch, full-stack, machine-code–level x86 optimizing compiler for Windows.
 
 ## MAIN FEATURES
 - Fully custom assembly language and assembler
 - Fully custom compiler
-  - Haze CPU support
-  - x86_64 CPU support
-    - Custom Win32 PE .exe exporter
+  - x86_64 and x86 CPU support
+  - Custom Win32 PE .exe exporter
 - Fully custom interpreter
-  - Function as `geo` engine scripting language
-    - Use custom MQTT-based RPC
-- Custom CPU implementation in SystemVerilog
+  - Used for constant evaluation optimizations
 
 ## INTERPRETED FIBONACCI PROGRAM
 ![Fibonacci Program](resources/example.png)
 
-
-## CONNECTED PROJECTS
-- _haze-ls_, my fully LSP-compliant language server featuring contextual autocompletion and custom syntax highlighting
+## RELATED PROJECTS
+- _haze-ls_, my fully LSP-compliant language server featuring contextual autocompletion and custom syntax highlighting published on the Visual Studio Code Extension Marketplace.
   - [https://github.com/connorjlink/haze-ls](https://github.com/connorjlink/haze-ls)
   - [https://marketplace.visualstudio.com/items?itemName=connorjlink.haze-ls](https://marketplace.visualstudio.com/items?itemName=connorjlink.haze-ls)
-- _geo_, my custom 3-D voxel rendering engine with which interpreted Haze can interact
-  - [https://github.com/connorjlink/geo](https://github.com/connorjlink/geo)
-- _inspector_, my custom C#/WPF tool to monitor interpreter MQTT traffic
-  - [https://github.com/connorjlink/inspector](https://github.com/connorjlink/inspector)
+- _clarity_, my scratch-built source code editor, LSP-compliant language server, and web-based data visualization tool for the Haze compiler.
+  - [https://github.com/connorjlink/clarity](https://github.com/connorjlink/clarity)

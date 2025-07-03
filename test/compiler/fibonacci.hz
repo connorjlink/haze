@@ -1,0 +1,22 @@
+function nvr foo = (dword iterations)
+{
+	dword n0 = 0ul;
+	dword n1 = 1ul;
+
+	dword iteration = 0ul;
+	while (iteration < iterations)
+	{
+		print(n0);
+		dword n2 = n0 + n1;
+		n0 = n1;
+		n1 = n2;
+
+		iteration = iteration + 1ul;
+	}
+}
+
+function dword main = ()
+{
+	foo(20ul);
+	return 0ul;
+}
