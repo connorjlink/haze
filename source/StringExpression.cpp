@@ -28,7 +28,7 @@ namespace hz
 		const auto bytes = message.length() + 1;
 
 		const auto address = REQUIRE_SAFE(RuntimeAllocator)->allocate(static_cast<std::uint32_t>(bytes));
-		const auto integer_literal = make_integer_literal<native_int>(address);
+		const auto integer_literal = make_integer_literal<native_uint>(address);
 
 		REQUIRE_SAFE(Generator)->make_message(address, message);
 		REQUIRE_SAFE(Generator)->make_immediate(allocation->read(), integer_literal);

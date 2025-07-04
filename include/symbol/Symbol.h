@@ -116,10 +116,10 @@ namespace hz
 	class LabelSymbol : public Symbol
 	{
 	public:
-		native_int address;
+		native_uint address;
 
 	public:
-		LabelSymbol(const std::string& name, native_int address)
+		LabelSymbol(const std::string& name, native_uint address)
 			: Symbol{ name }, address{ address }
 		{
 		}

@@ -132,38 +132,85 @@ namespace hz
 		switch (symbol->ytype())
 		{
 			case FUNCTION:
-				_stream << ::export_function_symbol(AS_FUNCTION_SYMBOL(symbol), location);
+				*_stream << ::export_function_symbol(AS_FUNCTION_SYMBOL(symbol), location);
 				break;
 
 			case ARGUMENT:
-				_stream << ::export_argument_symbol(AS_ARGUMENT_SYMBOL(symbol), location);
+				*_stream << ::export_argument_symbol(AS_ARGUMENT_SYMBOL(symbol), location);
 				break;
 			
 			case VARIABLE:
-				_stream << ::export_variable_symbol(AS_VARIABLE_SYMBOL(symbol), location);
+				*_stream << ::export_variable_symbol(AS_VARIABLE_SYMBOL(symbol), location);
 				break;
 
 			case DEFINE:
-				_stream << ::export_define_symbol(AS_DEFINE_SYMBOL(symbol), location);
+				*_stream << ::export_define_symbol(AS_DEFINE_SYMBOL(symbol), location);
 				break;
 
 			case LABEL:
-				_stream << ::export_label_symbol(AS_LABEL_SYMBOL(symbol), location);
+				*_stream << ::export_label_symbol(AS_LABEL_SYMBOL(symbol), location);
 				break;
 
 			case STRUCT:
-				_stream << ::export_struct_symbol(AS_STRUCT_SYMBOL(symbol), location);
+				*_stream << ::export_struct_symbol(AS_STRUCT_SYMBOL(symbol), location);
 				break;
 		}
 
-		_stream.emit();
+		_stream->emit();
+	}
+
+	void SymbolExporter::try_reconnect(int retry_attempts)
+	{
+		// not considering running out of attempts an error because it might just be that the server gracefully shut down
+		if (retry_attempts == 0)
+		{
+			return;
+		}
+
+		_client->connect(L"http://localhost:8080", L"");
+
+		_client->on_open = [&]
+		{
+			// perhaps transmit some handshake information?
+		};
+
+		_client->on_message = [&](const std::string& message)
+		{
+			// TODO: talk to the toolchain to iniciate appropriate recompilation
+			// probably a full build for now of the specified path, but perhaps an incremental one might make sense
+			// I think the source would have to get passed through with the message for this
+			// Otherwise it would have to re-read from disk and that won't work once the server is a webworker
+
+			// I believe that in all cases this should represent a symbol/recompile request
+		};
+
+		_client->on_close = [&]
+		{
+			try_reconnect(retry_attempts - 1);
+		};
+
+		_client->on_error = [&](const std::string& error)
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"websocket error `{}`", error), NULL_TOKEN);
+		};
 	}
 
 	SymbolExporter::SymbolExporter(std::ostream& stream)
-		: _stream{ std::osyncstream{ stream } }
+		: _client{ std::nullopt }, _stream{ std::osyncstream{ stream } }
 	{
 		// locking machinery auto-initialized
 		_queue = {};
+	}
+
+	SymbolExporter::SymbolExporter(const std::wstring& path)
+		: _client{}, _stream{ std::nullopt }
+	{
+		// locking machinery auto-initialized
+		_queue = {};
+
+		_path = path;
+		try_reconnect(3);
 	}
 
 	SymbolExporter::~SymbolExporter()

@@ -9,6 +9,7 @@ import std;
 #include <runtime/Context.h>
 #include <runtime/Evaluator.h>
 #include <toolchain/Generator.h>
+#include <utility/ExtendedInteger.h>
 #include <utility/PlatformVariables.h>
 
 // Haze BinaryExpression.cpp
@@ -23,7 +24,7 @@ namespace
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported compiler binary operator `{}`", op), token);
 	}
 
-	const IntegerLiteral& match_type(IntegerLiteral* matchee, native_int value)
+	const IntegerLiteral& match_type(IntegerLiteral* matchee, native_uint value)
 	{
 		using enum IntegerLiteralType;
 		switch (matchee->itype())
@@ -497,12 +498,12 @@ namespace hz
 				auto left_value = VALUE_OF(left_optimized);
 				auto result = left_optimized;
 
-				if (integer_literal_equals(left_value, EI(0)))
+				if (integer_literal_equals(left_value, EI(std::intmax_t{ 0 })))
 				{
 					left_value->assign(left_value->from_value(0));
 				}
 
-				else if (integer_literal_equals(left_value, EI(1)))
+				else if (integer_literal_equals(left_value, EI(std::intmax_t{ 1 })))
 				{
 					delete result;
 					result = right_optimized;
@@ -531,12 +532,12 @@ namespace hz
 				auto right_value = AS_INTEGER_LITERAL_EXPRESSION(right_optimized)->value;
 				auto result = right_optimized;
 
-				if (integer_literal_equals(right_value, EI(0)))
+				if (integer_literal_equals(right_value, EI(std::intmax_t{ 0 })))
 				{
 					right_value->assign(right_value->from_value(0));
 				}
 
-				else if (integer_literal_equals(right_value, EI(1)))
+				else if (integer_literal_equals(right_value, EI(std::intmax_t{ 1 })))
 				{
 					delete result;
 					result = left_optimized;

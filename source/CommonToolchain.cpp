@@ -13,7 +13,7 @@ import std;
 
 namespace hz
 {
-	std::vector<InstructionCommand*> common_link(native_int entrypoint, native_int size)
+	std::vector<InstructionCommand*> common_link(native_uint entrypoint, native_uint size)
 	{
 		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
 		// This is done here by simply emitting the corresponding instruction with dummy values

@@ -10,8 +10,19 @@ import std;
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define ASSERT_IS_INTEGER_LITERAL(x) if (x->etype() != ExpressionType::INTEGER_LITERAL) { USE_SAFE(ErrorReporter)->post_error("term must result in a constant expression", NULL_TOKEN); return nullptr; }
-#define ASSERT_IN_RANGE(x, a, b) if (x < EI(a) || x > EI(b - 1)) { USE_SAFE(ErrorReporter)->post_error(std::format("value {} is outside the its range [0, {}]", x.magnitude, b - 1), NULL_TOKEN); return nullptr; }
+#define ASSERT_IS_INTEGER_LITERAL(x) \
+	if (x->etype() != ExpressionType::INTEGER_LITERAL) \
+	{ \
+		USE_SAFE(ErrorReporter)->post_error("term must result in a constant expression", NULL_TOKEN); \
+		return nullptr; \
+	} 
+
+#define ASSERT_IN_RANGE(x, a, b, c, d) \
+	if (x < a || x > b) \
+	{ \
+		USE_SAFE(ErrorReporter)->post_error(std::format("value {} is outside the its range [{}, {}]", x.magnitude, c, d), NULL_TOKEN);  \
+		return nullptr; \
+	}
 
 namespace hz
 {
@@ -47,7 +58,7 @@ namespace hz
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			auto label_command_token = peek();
+			const auto& label_command_token = peek();
 			consume(TokenType::IDENTIFIER);
 
 			return new IdentifierExpression{ label_command_token.text, label_command_token };
@@ -57,7 +68,7 @@ namespace hz
 		ASSERT_IS_INTEGER_LITERAL(address_expression);
 
 		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
-		ASSERT_IN_RANGE(integer_literal_raw(address), 0, NATIVE_MAX);
+		ASSERT_IN_RANGE(integer_literal_raw(address), EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
 
 		return new IntegerLiteralExpression{ address, address_expression->_token };
 	}
@@ -68,7 +79,7 @@ namespace hz
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			const auto label_command_token = peek();
+			const auto& label_command_token = peek();
 			consume(TokenType::IDENTIFIER);
 
 			return new IdentifierExpression{ label_command_token.text, label_command_token };
@@ -78,7 +89,7 @@ namespace hz
 		ASSERT_IS_INTEGER_LITERAL(immediate_expression);
 
 		const auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
-		ASSERT_IN_RANGE(integer_literal_raw(immediate), 0, NATIVE_MAX);
+		ASSERT_IN_RANGE(integer_literal_raw(immediate), EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
 
 		return new IntegerLiteralExpression{ immediate, immediate_expression->_token };
 	}
@@ -173,9 +184,9 @@ namespace hz
 				}
 
 				const auto value = integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value);
-				ASSERT_IN_RANGE(value, 0, NATIVE_MAX);
+				ASSERT_IN_RANGE(value, EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
 
-				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<native_int>(value.magnitude) };
+				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<native_uint>(value.magnitude) };
 			} break;
 
 			case TokenType::SAVE:

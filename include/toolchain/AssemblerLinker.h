@@ -31,7 +31,7 @@ namespace hz
 	public:
 		virtual LinkerType ltype() const final override;
 		virtual bool optimize() final override;
-		virtual std::vector<InstructionCommand*> link(native_int, native_int) final override;
+		virtual std::vector<InstructionCommand*> link(native_uint, native_uint) final override;
 	};
 }
 

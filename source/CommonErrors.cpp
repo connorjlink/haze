@@ -152,6 +152,13 @@ namespace hz
 		const auto expected_specifier = AS_INT_TYPE(type)->int_type;
 
 		const auto evaluated_type = AS_INT_TYPE(resolve_type(expression));
+		if (evaluated_type == nullptr)
+		{
+			USE_UNSAFE(ErrorReporter)->post_error(std::format("unresolvable type specifier and mismatch; expected `{}`",
+				_int_type_type_map.at(expected_specifier)), token);
+			return;
+		}
+
 		const auto erroring_specifier = evaluated_type->int_type;
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("type specifier mismatch; expected `{}` but got `{}`",

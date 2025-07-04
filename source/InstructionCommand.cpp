@@ -18,7 +18,7 @@ namespace hz
 		marked_for_deletion = false;
 	}
 
-	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, native_int imm, native_int mem, const std::string& branch_target)
+	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, native_uint imm, native_uint mem, const std::string& branch_target)
 		: Command{ token }, opcode{ opcode }, destination{ dst }, source{ src }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
 		this->immediate = static_cast<decltype(imm)>(imm);

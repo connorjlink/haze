@@ -49,7 +49,7 @@ namespace hz
 		return false;
 	}
 
-	std::vector<InstructionCommand*> AssemblerLinker::link(native_int base_pointer, native_int size)
+	std::vector<InstructionCommand*> AssemblerLinker::link(native_uint base_pointer, native_uint size)
 	{
 		std::vector<InstructionCommand*> executable(size);
 
@@ -122,7 +122,7 @@ namespace hz
 			}
 		}
 
-		for (auto i = native_int{ 0 }; i < size / 2; i++)
+		for (auto i = native_uint{ 0 }; i < size / 2; i++)
 		{
 			if (executable[i] != 0)
 			{

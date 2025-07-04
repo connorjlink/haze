@@ -186,11 +186,11 @@ namespace hz
 	}
 
 	// intentionally ignoring the size parameter since the compiler can just take as required and generate the EXE appropriately
-	std::vector<InstructionCommand*> CompilerLinker::link(native_int base_pointer, native_int)
+	std::vector<InstructionCommand*> CompilerLinker::link(native_uint base_pointer, native_uint)
 	{
 		std::vector<InstructionCommand*> executable{};
 
-		native_int address_tracker = 0;
+		native_uint address_tracker = 0;
 
 		// resolve the length of each instruction to compute each label's address
 		for (auto& [symbol, function, ir, offset] : linkables)

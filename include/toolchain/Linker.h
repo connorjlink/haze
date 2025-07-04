@@ -26,7 +26,7 @@ namespace hz
 	public:
 		virtual LinkerType ltype() const = 0;
 		virtual bool optimize() = 0;
-		virtual std::vector<InstructionCommand*> link(native_int, native_int) = 0;
+		virtual std::vector<InstructionCommand*> link(native_uint, native_uint) = 0;
 	};
 }
 

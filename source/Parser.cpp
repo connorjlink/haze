@@ -20,11 +20,9 @@ import std;
 
 namespace
 {
-	using namespace hz;
-
-	bool is_binary_operator(TokenType type)
+	bool is_binary_operator(hz::TokenType type)
 	{
-		return _binary_expression_map.contains(type);
+		return hz::_binary_expression_map.contains(type);
 	}
 }
 
@@ -381,7 +379,7 @@ namespace hz
 		{
 			const auto& next = peek();
 
-			if (!is_binary_operator(next.type) || precedences.at(next.type) < min_precedence)
+			if (!::is_binary_operator(next.type) || precedences.at(next.type) < min_precedence)
 			{
 				break;
 			}
@@ -394,7 +392,7 @@ namespace hz
 			{
 				const auto& lookahead = peek();
 
-				if (!is_binary_operator(lookahead.type) || precedences.at(lookahead.type) <= precedences.at(next.type))
+				if (!::is_binary_operator(lookahead.type) || precedences.at(lookahead.type) <= precedences.at(next.type))
 				{
 					break;
 				}

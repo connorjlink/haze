@@ -1,11 +1,11 @@
-function dword tri = (dword n)
+function signed dword tri = (signed dword n)
 {
-	return n + 1ul;
+	return n + 1sl;
 }
 
-function dword main = ()
+function signed dword main = ()
 {
-	declare dword v = tri(10ul);
+	declare signed dword v = tri(10sl);
 	print(v);
 	return v;
 }

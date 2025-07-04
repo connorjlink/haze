@@ -5,6 +5,7 @@ import std;
 #include <ast/NullStatement.h>
 #include <ast/IntegerLiteralExpression.h>
 #include <runtime/Context.h>
+#include <utility/ExtendedInteger.h>
 #include <utility/Random.h>
 
 // Haze ForStatement.cpp
@@ -115,7 +116,7 @@ namespace hz
 
 		auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
 
-		while (integer_literal_raw(integer_literal) != EI(0))
+		while (integer_literal_raw(integer_literal) != EI(std::intmax_t{ 0 }))
 		{
 			body->evaluate(context);
 			expression->evaluate(context);

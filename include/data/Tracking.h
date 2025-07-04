@@ -1,8 +1,8 @@
 #ifndef HAZE_TRACKING_H
 #define HAZE_TRACKING_H
 
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 
 // Haze Tracking.h
 // (c) Connor J. Link. All Rights Reserved.

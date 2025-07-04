@@ -2,6 +2,9 @@
 #define HAZE_SYMBOL_EXPORTER_H
 
 #include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <io/WebSocketClient.h>
+#undef VOID
 #include <toolchain/models/Token.h>
 
 // Haze SymbolExporter.h
@@ -11,7 +14,9 @@ namespace hz
 {
 	class Symbol;
 
-	class SymbolExporter : public SingletonTag<SymbolExporter>
+	class SymbolExporter 
+		: public SingletonTag<SymbolExporter>
+		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		struct QueueEntry
@@ -25,7 +30,12 @@ namespace hz
 		std::mutex _queue_mutex;
 		std::condition_variable_any _listener;
 		std::jthread _worker;
-		std::osyncstream _stream;
+
+	private:
+		// optional to allow dynamic disablement
+		std::optional<std::osyncstream> _stream;
+		std::optional<WebSocketClient> _client;
+		std::wstring _path;
 
 	// producer operations
 	public:
@@ -35,12 +45,16 @@ namespace hz
 	public:
 		void launch();
 		void notify();
+
+	public:
+		void try_reconnect(int);
 	
 	private:
 		void export_symbol(QueueEntry);
 
 	public:
 		SymbolExporter(std::ostream&);
+		SymbolExporter(const std::wstring&);
 		~SymbolExporter();
 	};
 }

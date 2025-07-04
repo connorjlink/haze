@@ -32,41 +32,38 @@ namespace
 
 namespace hz
 {
-	namespace bin
+	constexpr byterange range8(std::uint8_t value)
 	{
-		constexpr byterange range8(std::uint8_t value)
+		return ::range(value);
+	}
+
+	constexpr byterange range16(std::uint16_t value)
+	{
+		return ::range(value);
+	}
+
+	constexpr byterange range32(std::uint32_t value)
+	{
+		return ::range(value);
+	}
+
+	constexpr byterange range64(std::uint64_t value)
+	{
+		return ::range(value);
+	}
+
+	byterange range_of(const std::string& s)
+	{
+		byterange out{};
+
+		for (auto c : s)
 		{
-			return ::range(value);
+			out.emplace_back(static_cast<std::uint8_t>(c));
 		}
 
-		constexpr byterange range16(std::uint16_t value)
-		{
-			return ::range(value);
-		}
+		// builtin \00 null terminator byte for constant-table strings
+		out.emplace_back(0x00);
 
-		constexpr byterange range32(std::uint32_t value)
-		{
-			return ::range(value);
-		}
-
-		constexpr byterange range64(std::uint64_t value)
-		{
-			return ::range(value);
-		}
-
-		constexpr byterange range_string(const std::string& s)
-		{
-			byterange out{};
-
-			for (auto c : s)
-			{
-				out.emplace_back(static_cast<std::uint8_t>(c));
-			}
-
-			// builtin \00 null terminator byte for constant-table strings
-			out.emplace_back(0x00);
-
-			return out;
-		}
+		return out;
 	}
 }
