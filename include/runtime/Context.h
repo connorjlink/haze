@@ -23,6 +23,7 @@ namespace hz
 		std::unordered_map<std::string, Variable*> _variables;
 		std::vector<Function*> _functions;
 
+#pragma message("TODO: refactor the context to not maintain a state--should work on pure functions only!")
 		std::stack<Variable*> _returns;
 		std::stack<std::vector<Expression*>> _arguments;
 

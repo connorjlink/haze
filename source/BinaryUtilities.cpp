@@ -32,28 +32,6 @@ namespace
 
 namespace hz
 {
-	/*constexpr byterange bin::range8(std::uint8_t value)
-	{
-		const byte b0 = value;
-		return { b0 };
-	}*/
-
-	/*constexpr byterange bin::range16(std::uint16_t value)
-	{
-		const byte b0 = (value & 0xFF) >> 0;
-		const byte b1 = (value & 0xFF00) >> 8;
-		return { b0, b1 };
-	}*/
-
-	/*constexpr byterange bin::range32(std::uint32_t value)
-	{
-		const byte b0 = (value & 0xFF) >> 0;
-		const byte b1 = (value & 0xFF00) >> 8;
-		const byte b2 = (value & 0xFF0000) >> 16;
-		const byte b3 = (value & 0xFF000000) >> 24;
-		return { b0, b1, b2, b3 };
-	}*/
-
 	namespace bin
 	{
 		constexpr byterange range8(std::uint8_t value)
@@ -76,7 +54,7 @@ namespace hz
 			return ::range(value);
 		}
 
-		byterange range_string(const std::string& s)
+		constexpr byterange range_string(const std::string& s)
 		{
 			byterange out{};
 

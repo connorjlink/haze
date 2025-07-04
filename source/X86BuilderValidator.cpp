@@ -1,8 +1,8 @@
 ﻿import std;
 
-#include "X86BuilderValidator.h"
-#include "X86Builder.h"
-#include "ErrorReporter.h"
+#include "../include/validator/X86BuilderValidator.h"
+#include "../include/x86/X86Builder.h"
+#include "../include/error/ErrorReporter.h"
 
 // Haze X86BuilderValidator.cpp
 // (c) Connor J. Link. All Rights Reserved.

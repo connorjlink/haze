@@ -52,6 +52,8 @@ namespace hz
 		const auto optimize_task = REQUIRE_SAFE(JobManager)->begin_job("optimizing");
 		for (auto& linkable : linkables)
 		{
+			linkable->optimize();
+
 			auto optimizer = new IntermediateOptimizer{ linkable.symbol->name, linkable.ir };
 			auto ir_optimized = optimizer->optimize();
 

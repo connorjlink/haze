@@ -1,12 +1,9 @@
 #ifndef HAZE_INTEGERLITERAL_H
 #define HAZE_INTEGERLITERAL_H
 
-#include "IntegerLiteralType.h"
-#include "CommonErrors.h"
-#include "PlatformVariables.h"
-#include "Variable.h"
-#include "Token.h"
-#include "ExtendedInteger.h"
+#include <command/models/IntegerLiteralType.h>
+#include <runtime/models/Variable.h>
+#include <utility/ExtendedInteger.h>
 
 // Haze IntegerLiteral.h
 // (c) Connor J. Link. All Rights Reserved.

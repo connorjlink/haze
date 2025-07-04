@@ -25,6 +25,9 @@ namespace hz
 		std::uint32_t offset;
 
 	public:
+		void optimize(void);
+
+	public:
 		Linkable(Symbol* symbol, std::vector<Command*>&& commands, std::vector<IntermediateCommand*>&& ir, std::uint32_t offset)
 			: symbol{ symbol }, commands{ std::move(commands) }, ir{ std::move(ir) }, offset{ offset }
 		{

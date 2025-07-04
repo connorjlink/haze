@@ -30,10 +30,10 @@ namespace hz
 		virtual ~Node() = default;
 
 	public:
-		virtual NodeType ntype() const = 0;
-		virtual Node* copy() const = 0;
+		virtual NodeType ntype(void) const = 0;
+		virtual Node* copy(void) const = 0;
 		virtual void generate(Allocation* = nullptr) = 0;
-		virtual Node* optimize() = 0;
+		virtual Node* optimize(void) = 0;
 
 		// use this to store execution information in the interpreter
 		// this could be extended later to do compile time stuff in the compiler

@@ -1,7 +1,8 @@
 import std;
 
-#include "IntegerLiteral.h"
-#include "CommonErrors.h"
+#include <command/models/IntegerLiteral.h>
+#include <error/CommonErrors.h>
+#include <toolchain/models/Token.h>
 
 // Haze IntegerLiteral.h
 // (c) Connor J. Link. All Rights Reserved.

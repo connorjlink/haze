@@ -1,5 +1,5 @@
-#ifndef HAZE_x86EMITTER_H
-#define HAZE_x86EMITTER_H
+#ifndef HAZE_X86EMITTER_H
+#define HAZE_X86EMITTER_H
 
 #include "Emitter.h"
 

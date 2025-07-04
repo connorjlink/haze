@@ -22,8 +22,6 @@ namespace hz
 	class IntegerLiteral;
 	class Expression;
 
-#pragma message("TODO: Refactor this class to completely avoid circular dependencies with the AST components (like expression, function, statement)")
-
 	class Generator
 		: public ServiceTag<Generator>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase>
