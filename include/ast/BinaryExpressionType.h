@@ -1,7 +1,7 @@
 #ifndef HAZE_BINARYEXPRESSIONTYPE_H
 #define HAZE_BINARYEXPRESSIONTYPE_H
 
-#include "Token.h"
+#include <toolchain/models/Token.h>
 
 // Haze BinaryExpressionType.h
 // (c) Connor J. Link. All Rights Reserved.

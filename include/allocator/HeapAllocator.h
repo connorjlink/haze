@@ -1,7 +1,7 @@
 #ifndef HAZE_HEAPALLOCATOR_H
 #define HAZE_HEAPALLOCATOR_H
 
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
 
 namespace hz
 {

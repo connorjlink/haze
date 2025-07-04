@@ -1,13 +1,13 @@
 #ifndef HAZE_EXPRESSION_H
 #define HAZE_EXPRESSION_H
 
-#include "Node.h"
-#include "ExpressionType.h"
-#include "RuntimeAllocator.h"
-#include "Generator.h"
-#include "SymbolDatabase.h"
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <allocator/RuntimeAllocator.h>
+#include <ast/Node.h>
+#include <ast/ExpressionType.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <symbol/SymbolDatabase.h>
+#include <toolchain/Generator.h>
 
 // Haze ExpressionType.h
 // (c) Connor J. Link. All Rights Reserved.

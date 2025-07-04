@@ -1,10 +1,9 @@
 #ifndef HAZE_FILE_H
 #define HAZE_FILE_H
 
-#include "ToolchainType.h"
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
-#include "Tracking.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <toolchain/ToolchainType.h>
 
 // Haze File.h
 // (c) Connor J. Link. All Rights Reserved.

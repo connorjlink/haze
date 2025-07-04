@@ -1,8 +1,8 @@
 #ifndef HAZE_JOB_H
 #define HAZE_JOB_H
 
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 
 // Haze Job.h
 // (c) Connor J. Link. All Rights Reserved.

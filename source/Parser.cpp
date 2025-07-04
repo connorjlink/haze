@@ -1,25 +1,19 @@
 import std;
 
-#include "Parser.h"
-#include "ParserType.h"
-#include "SymbolDatabase.h"
-#include "Token.h"
-#include "Allocator.h"
-#include "CompilerParser.h"
-#include "VariableStatement.h"
-#include "ReturnStatement.h"
-#include "IntegerLiteralExpression.h"
-#include "IdentifierExpression.h"
-#include "FunctionCallExpression.h"
-#include "AdjustExpression.h"
-#include "StringExpression.h"
-#include "BinaryExpression.h"
-#include "DotDefineCommand.h"
-#include "Symbol.h"
-#include "ExtendedInteger.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
-#include "SymbolExporter.h"
+#include <ast/AdjustExpression.h>
+#include <ast/BinaryExpression.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <ast/FunctionCallExpression.h>
+#include <ast/StringExpression.h>
+#include <command/DotDefineCommand.h>
+#include <error/CommonErrors.h>
+#include <error/ErrorReporter.h>
+#include <symbol/Symbol.h>
+#include <symbol/SymbolExporter.h>
+#include <toolchain/Parser.h>
+#include <toolchain/CompilerParser.h>
+#include <type/Type.h>
+#include <utility/ExtendedInteger.h>
 
 // Haze Parser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -113,6 +107,7 @@ namespace hz
 		return tokens;
 	}
 
+#pragma message ("TODO: refactor the dotdefine to be overriden by subclasses")
 	Node* Parser::parse_dotdefine_command()
 	{
 		consume(TokenType::DOTDEFINE);

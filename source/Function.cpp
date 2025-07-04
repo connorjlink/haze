@@ -1,24 +1,16 @@
 import std;
 
-#include "Function.h"
-#include "Generator.h"
-#include "Allocator.h"
-#include "IdentifierExpression.h"
-#include "IntegerLiteralExpression.h"
-#include "ArgumentExpression.h"
-#include "CompoundStatement.h"
-#include "ReturnStatement.h"
-#include "Allocation.h"
-#include "Evaluator.h"
-#include "ParserType.h"
-#include "Parser.h"
-#include "CompilerParser.h"
-#include "Statement.h"
-#include "Symbol.h"
-#include "X86Builder.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
-#include "SymbolDatabase.h"
+#include <allocator/Allocation.h>
+#include <ast/Function.h>
+#include <ast/IdentifierExpression.h>
+#include <ast/ArgumentExpression.h>
+#include <ast/CompoundStatement.h>
+#include <ast/ReturnStatement.h>
+#include <error/CommonErrors.h>
+#include <runtime/Evaluator.h>
+#include <toolchain/Parser.h>
+#include <toolchain/CompilerParser.h>
+#include <x86/X86Register.h>
 
 // Haze Function.cpp
 // (c) Connor J. Link. All Rights Reserved.

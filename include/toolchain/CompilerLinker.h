@@ -1,7 +1,8 @@
 #ifndef HAZE_COMPILERLINKER_H
 #define HAZE_COMPILERLINKER_H
 
-#include "Linker.h"
+#include <toolchain/Linker.h>
+#include <toolchain/Linkable.h>
 
 // Haze CompilerLinker.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -19,10 +20,10 @@ namespace hz
 		{
 		}
 
-	public:   
+	public:
 		virtual LinkerType ltype() const final override;
 		virtual bool optimize() final override;
-		virtual std::vector<InstructionCommand*> link(std::uint32_t) final override;
+		virtual std::vector<InstructionCommand*> link(native_int, native_int) final override;
 	};
 }
 

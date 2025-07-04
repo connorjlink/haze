@@ -1,14 +1,22 @@
 #ifndef HAZE_ERRORCONTEXT_H
 #define HAZE_ERRORCONTEXT_H
 
-#include "Error.h"
-#include "Token.h"
+#include <error/Error.h>
+#include <toolchain/models/Token.h>
 
 // Haze ErrorContext.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	class ErrorContext;
+
+	struct ErrorFrame
+	{
+		ErrorContext* context;
+		std::string filepath;
+	};
+
 	class ErrorContext
 	{
 	private:

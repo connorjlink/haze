@@ -1,17 +1,15 @@
 #ifndef HAZE_CONTEXT_H
 #define HAZE_CONTEXT_H
 
-//#include "Hook.h"
-#include "Variable.h"
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <runtime/models/Variable.h>
 
 // Haze Context.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {	
-	// Required
 	class Function;
 	class Expression;
 
@@ -28,7 +26,6 @@ namespace hz
 		std::stack<std::vector<Expression*>> _arguments;
 
 	private:
-		//Hook _hook;
 		bool _executing = true;
 
 	public:
@@ -46,10 +43,6 @@ namespace hz
 	public:
 		void push_arguments(const std::vector<Expression*>&);
 		std::vector<Expression*> pop_arguments();
-
-	public:
-		void hook();
-		void unhook();
 
 	public:
 		void print(const std::string& message);

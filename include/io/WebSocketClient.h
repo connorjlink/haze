@@ -17,15 +17,19 @@ namespace hz
 		bool connect(const std::wstring& url, const std::wstring& path = L"/");
 		bool send(const std::string& message);
 
-		void close() {
-			if (!running) return;
+		void close()
+		{
+			if (!running)
+			{
+				return;
+			}
 
 			running = false;
 
-			if (hWebSocket) {
-				WinHttpWebSocketClose(hWebSocket,
-					WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, NULL, 0);
-				WinHttpWebSocketShutdown(hWebSocket, WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS);
+			if (hWebSocket)
+			{
+				WinHttpWebSocketClose(hWebSocket, WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
+				WinHttpWebSocketShutdown(hWebSocket, WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
 			}
 
 			if (recvThread.joinable())
@@ -38,12 +42,15 @@ namespace hz
 			if (hConnect) WinHttpCloseHandle(hConnect);
 			if (hSession) WinHttpCloseHandle(hSession);
 
-			hWebSocket = NULL;
-			hRequest = NULL;
-			hConnect = NULL;
-			hSession = NULL;
+			hWebSocket = nullptr;
+			hRequest = nullptr;
+			hConnect = nullptr;
+			hSession = nullptr;
 
-			if (onClose) onClose();
+			if (onClose)
+			{
+				onClose();
+			}
 		}
 
 	private:

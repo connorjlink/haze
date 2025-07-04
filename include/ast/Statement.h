@@ -1,15 +1,16 @@
 #ifndef HAZE_STATEMENT_H
 #define HAZE_STATEMENT_H
 
-#include "Node.h"
-#include "StatementType.h"
-#include "Generator.h"
-#include "ErrorReporter.h"
-#include "Context.h"
-#include "Parser.h"
-#include "RuntimeAllocator.h"
-#include "SymbolDatabase.h"
-#include "DependencyInjector.h"
+#include <allocator/RuntimeAllocator.h>
+#include <ast/Node.h>
+#include <ast/StatementType.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <runtime/Context.h>
+#include <symbol/SymbolDatabase.h>
+#include <toolchain/Generator.h>
+#include <toolchain/Parser.h>
+#include <toolchain/models/Token.h>
 
 // Haze Statement.h
 // (c) Connor J. Link. All Rights Reserved.

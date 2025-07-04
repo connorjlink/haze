@@ -1,9 +1,7 @@
 #ifndef HAZE_FILEMANAGER_H
 #define HAZE_FILEMANAGER_H
 
-#include "File.h"
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
+#include <io/models/File.h>
 
 // Haze FileManager.h
 // (c) Connor J. Link. All Rights Reserved.

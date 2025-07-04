@@ -1,6 +1,6 @@
 import std;
 
-#include "BinaryUtilities.h"
+#include <utility/BinaryUtilities.h>
 
 // Haze BinaryUtilities.cpp
 // (c) Connor J. Link. All Rights Reserved.

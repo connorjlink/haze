@@ -1,6 +1,6 @@
 import std;
 
-#include "ExitProgramException.h"
+#include <utility/ExitProgramException.h>
 
 // Haze ExitProgramException.cpp
 // (c) Connor J. Link. All Rights Reserved.

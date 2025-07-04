@@ -1,7 +1,7 @@
 #ifndef HAZE_LOG_H
 #define HAZE_LOG_H
 
-#include "ErrorType.h"
+#include <error/ErrorType.h>
 
 // Haze Log.h
 // (c) Connor J. Link. All Rights Reserved.

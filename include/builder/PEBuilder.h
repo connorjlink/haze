@@ -1,9 +1,9 @@
 #ifndef HAZE_PEBUILDER_H
 #define HAZE_PEBUILDER_H
 
-#include "Constants.h"
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <utility/Constants.h>
 
 // Haze PEBuilder.h
 // (c) Connor J. Link. All Rights Reserved.

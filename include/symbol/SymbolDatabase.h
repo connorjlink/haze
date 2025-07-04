@@ -1,9 +1,9 @@
 #ifndef HAZE_SYMBOL_DATABASE_H
 #define HAZE_SYMBOL_DATABASE_H
 
-#include "SymbolExporter.h"
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <symbol/SymbolExporter.h>
 
 // Haze SymbolDatabase.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -20,6 +20,7 @@ namespace hz
 	class DefineSymbol;
 	class LabelSymbol;
 	class StructSymbol;
+	class Expression;
 
 	class SymbolDatabase
 		: public SingletonTag<SymbolDatabase>
@@ -55,6 +56,7 @@ namespace hz
 
 	public:
 		bool has_symbol(const std::string&);
+		bool is_mapped_identifier(Expression*);
 
 	public:
 		SymbolDatabase();

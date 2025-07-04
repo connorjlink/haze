@@ -1,7 +1,7 @@
 import std;
 
-#include "ArgumentExpression.h"
-#include "ErrorReporter.h"
+#include <ast/ArgumentExpression.h>
+#include <ast/IdentifierExpression.h>
 
 // Haze ArgumentExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

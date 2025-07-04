@@ -1,10 +1,9 @@
 #ifndef HAZE_ERRORREPORTER_H
 #define HAZE_ERRORREPORTER_H
 
-#include "ErrorContext.h"
-#include "Token.h"
-#include "Test.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorContext.h>
+#include <toolchain/models/Token.h>
 
 // Haze ErrorReporter.h
 // (c) Connor J. Link. All Rights Reserved.

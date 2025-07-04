@@ -1,10 +1,8 @@
 #ifndef HAZE_NODE_H
 #define HAZE_NODE_H
 
-#include "NodeType.h"
-#include "Token.h"
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <ast/NodeType.h>
+#include <toolchain/models/Token.h>
 
 // Haze Node.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,8 +1,8 @@
 #ifndef HAZE_STACKALLOCATOR_H
 #define HAZE_STACKALLOCATOR_H
 
-#include "InstructionEncoding.h"
-#include "DependencyInjector.h"
+#include <toolchain/models/InstructionEncoding.h>
+#include <data/DependencyInjector.h>
 
 // Haze StackAllocator.h
 // (c) Connor J. Link. All Rights Reserved.

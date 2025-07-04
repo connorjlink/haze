@@ -9,10 +9,15 @@
 namespace hz
 {
 #ifdef USE_64_BITS
-	using platform_address_size = std::uint64_t;
+	using native_int = std::uint64_t;
 #else
-	using platform_address_size = std::uint32_t;
+	using native_int = std::uint32_t;
 #endif
+
+	enum : native_int
+	{
+		NATIVE_MAX = std::numeric_limits<native_int>::max(),
+	};
 }
 
 #endif

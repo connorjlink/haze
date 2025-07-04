@@ -56,7 +56,7 @@ namespace hz
 		auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
 
 		const auto member_count = struct_symbol->members.size();
-		const auto member_size = sizeof(platform_address_size);
+		const auto member_size = sizeof(native_int);
 
 #pragma message("TODO: compute the real size of the struct based on each member's size and offset!")
 
@@ -81,7 +81,7 @@ namespace hz
 
 	std::uint16_t StringType::size() const
 	{
-		const auto address_size = sizeof(platform_address_size);
+		const auto address_size = sizeof(native_int);
 		return address_size;
 	}
 

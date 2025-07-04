@@ -1,15 +1,14 @@
 import std;
 
-#include "CompilerLinker.h"
-#include "Command.h"
-#include "InstructionCommand.h"
-#include "LabelCommand.h"
-#include "Emitter.h"
-#include "CommandLineOptions.h"
-#include "OptimizationType.h"
-#include "Symbol.h"
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <cli/CommandLineOptions.h>
+#include <cli/OptimizationType.h>
+#include <command/Command.h>
+#include <command/InstructionCommand.h>
+#include <command/LabelCommand.h>
+#include <symbol/Symbol.h>
+#include <toolchain/CompilerLinker.h>
+#include <toolchain/Emitter.h>
+#include <error/ErrorReporter.h>
 
 // Haze CompilerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -93,6 +92,7 @@ namespace hz
 		{
 			for (auto i = 0; i < function.size(); i++)
 			{
+#pragma message("TODO: FIX THIS REGISTER ENUMERATIO SINCE X86 HAS MORE REGISTERS!")
 				for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
 				{
 					//TODO: ensure none of our bytes are branch targets
@@ -185,11 +185,12 @@ namespace hz
 		return false;
 	}
 
-	std::vector<InstructionCommand*> CompilerLinker::link(std::uint32_t base_pointer)
+	// intentionally ignoring the size parameter since the compiler can just take as required and generate the EXE appropriately
+	std::vector<InstructionCommand*> CompilerLinker::link(native_int base_pointer, native_int)
 	{
 		std::vector<InstructionCommand*> executable{};
 
-		std::uint32_t address_tracker = 0;
+		native_int address_tracker = 0;
 
 		// resolve the length of each instruction to compute each label's address
 		for (auto& [symbol, function, ir, offset] : linkables)

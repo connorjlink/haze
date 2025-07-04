@@ -1,11 +1,12 @@
 #ifndef HAZE_ALLOCATION_H
 #define HAZE_ALLOCATION_H
 
-#include "AllocationType.h"
-#include "StackAllocator.h"
-#include "HeapAllocator.h"
-#include "Generator.h"
-#include "DependencyInjector.h"
+#include <allocator/AllocationType.h>
+#include <allocator/StackAllocator.h>
+#include <allocator/HeapAllocator.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <toolchain/Generator.h>
 
 // Haze Allocation.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,8 +1,8 @@
 import std;
 
-#include "IntermediateCommand.h"
-#include "Symbol.h"
-#include "X86Linker.h"
+#include <command/IntermediateCommand.h>
+#include <symbol/Symbol.h>
+#include <toolchain/X86Linker.h>
 
 // Haze X86Linker.cpp
 // (c) Connor J. Link. All Rights Reserved.

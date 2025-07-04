@@ -1,10 +1,9 @@
 #ifndef HAZE_COMMANDLINEPARSER_H
 #define HAZE_COMMANDLINEPARSER_H
 
-#include "CommandLineOptions.h"
-#include "DependencyInjector.h"
-#include "JobManager.h"
-#include "ErrorReporter.h"
+#include <cli/CommandLineOptions.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 
 // Haze CommandLineParser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -12,7 +11,6 @@
 namespace hz
 {
 	class CommandLineParser
-		//: public InjectService<JobManager>
 		: public InjectSingleton<ErrorReporter, CommandLineOptions>
 	{
 	private:

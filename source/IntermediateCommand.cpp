@@ -1,11 +1,10 @@
 import std;
 
-#include "IntermediateCommand.h"
-#include "BinaryUtilities.h"
-#include "BinaryConstants.h"
-#include "Symbol.h"
-#include "X86Builder.h"
-#include "ErrorReporter.h"
+#include <command/IntermediateCommand.h>
+#include <symbol/Symbol.h>
+#include <utility/BinaryUtilities.h>
+#include <utility/BinaryConstants.h>
+#include <x86/X86Builder.h>
 
 // Haze IntermediateCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.

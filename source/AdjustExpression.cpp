@@ -1,13 +1,13 @@
 import std;
 
-#include "AdjustExpression.h"
-#include "IntegerLiteralExpression.h"
-#include "IdentifierExpression.h"
-#include "Context.h"
-#include "Evaluator.h"
-#include "Generator.h"
-#include "Allocation.h"
-#include "ErrorReporter.h"
+#include <ast/AdjustExpression.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <ast/IdentifierExpression.h>
+#include <runtime/Context.h>
+#include <runtime/Evaluator.h>
+#include <toolchain/Generator.h>
+#include <allocator/Allocation.h>
+#include <error/ErrorReporter.h>
 
 // Haze AdjustExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

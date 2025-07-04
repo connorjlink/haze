@@ -1,6 +1,6 @@
 import std;
 
-#include "Linker.h"
+#include <toolchain/Linker.h>
 
 // Haze Linker.cpp
 // (c) Connor J. Link. All Rights Reserved.

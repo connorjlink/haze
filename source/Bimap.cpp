@@ -1,6 +1,6 @@
 import std;
 
-#include "Bimap.h"
+#include <utility/Bimap.h>
 
 // Haze Bimap.cpp
 // (c) Connor J. Link. All Rights Reserved.

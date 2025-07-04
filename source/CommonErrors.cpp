@@ -1,20 +1,15 @@
 import std;
 
-#include "CommonErrors.h"
-#include "Parser.h"
-#include "ParserType.h"
-#include "Node.h"
-#include "Statement.h"
-#include "Expression.h"
-#include "IntegerLiteral.h"
-#include "Command.h"
-#include "BinaryExpressionType.h"
-#include "IntTypeType.h"
-#include "Symbol.h"
-#include "TypeCheck.h"
-#include "Type.h"
-#include "Token.h"
-#include "ErrorReporter.h"
+#include <ast/BinaryExpressionType.h>
+#include <ast/Expression.h>
+#include <ast/StatementType.h>
+#include <symbol/SymbolType.h>
+#include <command/models/IntegerLiteralType.h>
+#include <error/CommonErrors.h>
+#include <toolchain/ParserType.h>
+#include <type/IntTypeType.h>
+#include <type/Type.h>
+#include <type/TypeCheck.h>
 
 // Haze CommonErrors.cpp
 // (c) Connor J. Link. All Rights Reserved.

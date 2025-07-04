@@ -1,7 +1,7 @@
 #ifndef HAZE_IDENTIFIEREXPRESSION_H
 #define HAZE_IDENTIFIEREXPRESSION_H
 
-#include "Expression.h"
+#include <ast/Expression.h>
 
 // Haze IdentifierExpression.h
 // (c) Connor J. Link. All Rights Reserved.

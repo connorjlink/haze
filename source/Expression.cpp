@@ -1,6 +1,6 @@
 import std;
 
-#include "Expression.h"
+#include <ast/Expression.h>
 
 // Haze ExpressionType.cpp
 // (c) Connor J. Link. All Rights Reserved.

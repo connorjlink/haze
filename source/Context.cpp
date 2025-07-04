@@ -1,8 +1,7 @@
 import std;
 
-#include "Context.h"
-#include "ExitProgramException.h"
-#include "ErrorReporter.h"
+#include <runtime/Context.h>
+#include <utility/ExitProgramException.h>
 
 // Haze Context.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -56,16 +55,6 @@ namespace hz
 		const auto arguments = _arguments.top();
 		_arguments.pop();
 		return arguments;
-	}
-
-	void Context::hook()
-	{
-		//_hook.hook();
-	}
-
-	void Context::unhook()
-	{
-		//_hook.unhook();
 	}
 
 	void Context::print(const std::string& message)

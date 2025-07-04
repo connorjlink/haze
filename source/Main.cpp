@@ -1,24 +1,22 @@
 import std;
 
-#include "SymbolDatabase.h"
-#include "SymbolExporter.h"
-#include "Context.h"
-#include "AutoJob.h"
-#include "JobManager.h"
-#include "FileManager.h"
-#include "CompilerToolchain.h"
-#include "AssemblerToolchain.h"
-#include "InterpreterToolchain.h"
-#include "CommandLineOptions.h"
-#include "CommandLineParser.h"
-#include "CompilerParser.h"
-#include "X86BuilderValidator.h"
-#include "ErrorReporter.h"
-#include "HeapAllocator.h"
-#include "StackAllocator.h"
-#include "RuntimeAllocator.h"
-#include "ExitProgramException.h"
-#include "DependencyInjector.h"
+#include <allocator/HeapAllocator.h>
+#include <allocator/RuntimeAllocator.h>
+#include <allocator/StackAllocator.h>
+#include <cli/CommandLineParser.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <io/FileManager.h>
+#include <job/AutoJob.h>
+#include <job/JobManager.h>
+#include <runtime/Context.h>
+#include <symbol/SymbolDatabase.h>
+#include <symbol/SymbolExporter.h>
+#include <toolchain/CompilerParser.h>
+#include <toolchain/CompilerToolchain.h>
+#include <toolchain/AssemblerToolchain.h>
+#include <utility/ExitProgramException.h>
+#include <validator/X86BuilderValidator.h>
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -107,7 +105,6 @@ int main(int argc, char** argv)
 			{
 #pragma message ("TODO: pass along the proper argument to each toolchain type, e.g., filepath for split compilation")
 
-
 				case ToolchainType::ASSEMBLER:
 				{
 					ServiceContainer::instance().register_factory<Toolchain>([]
@@ -121,14 +118,6 @@ int main(int argc, char** argv)
 					ServiceContainer::instance().register_factory<Toolchain>([]
 					{
 						return std::make_shared<CompilerToolchain>();
-					});
-				} break;
-
-				case ToolchainType::INTERPRETER:
-				{
-					ServiceContainer::instance().register_factory<Toolchain>([]
-					{
-						return std::make_shared<InterpreterToolchain>();
 					});
 				} break;
 			}

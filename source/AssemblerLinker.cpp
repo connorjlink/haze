@@ -1,18 +1,41 @@
 import std;
 
-#include "AssemblerLinker.h"
-#include "DotOrgCommand.h"
-#include "LabelCommand.h"
-#include "Parser.h"
-#include "Constants.h"
-#include "Symbol.h"
-#include "SymbolDatabase.h"
+#include <toolchain/AssemblerLinker.h>
+#include <toolchain/AssemblerParser.h>
+#include <toolchain/Parser.h>
+#include <command/DotOrgCommand.h>
+#include <command/LabelCommand.h>
+#include <symbol/SymbolDatabase.h>
+#include <utility/Constants.h>
 
 // Haze AssemblerLinker.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	AssemblerLinker(std::vector<Node*>&& commands, AssemblerParser* assembler_parser, const std::string& filepath)
+		: Linker{ filepath }, commands{ std::move(commands) }, assembler_parser{ assembler_parser }
+	{
+		commands.erase(std::remove_if(commands.begin(), commands.end(), [&](auto&& val)
+			{
+				if (val->ntype() != NodeType::COMMAND)
+				{
+					if (!_node_type_map.contains(val->ntype()))
+					{
+						USE_SAFE(ErrorReporter)->post_error("unrecognized node type", NULL_TOKEN);
+					}
+					else
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format("invalid node type `{}`", _node_type_map.at(val->ntype())), NULL_TOKEN);
+					}
+
+					return true;
+				}
+
+				return false;
+			}));
+	}
+
 	LinkerType AssemblerLinker::ltype() const
 	{
 		return LinkerType::ASSEMBLER;
@@ -25,7 +48,7 @@ namespace hz
 		return false;
 	}
 
-	std::vector<InstructionCommand*> AssemblerLinker::link(std::uint32_t base_pointer)
+	std::vector<InstructionCommand*> AssemblerLinker::link(native_int base_pointer, native_int)
 	{
 		std::vector<InstructionCommand*> executable(DWORD_MAX);
 

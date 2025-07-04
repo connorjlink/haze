@@ -1,14 +1,14 @@
 import std;
 
-#include "BinaryExpression.h"
-#include "IntegerLiteralExpression.h"
-#include "StringExpression.h"
-#include "IdentifierExpression.h"
-#include "Allocation.h"
-#include "Generator.h"
-#include "Evaluator.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/BinaryExpression.h>
+#include <ast/IdentifierExpression.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <ast/StringExpression.h>
+#include <error/CommonErrors.h>
+#include <runtime/Evaluator.h>
+#include <toolchain/Generator.h>
+#include <utility/PlatformVariables.h>
 
 // Haze BinaryExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,12 +17,12 @@ namespace
 {
 	using namespace hz;
 
-	void generate_error(std::string op, Token token)
+	void generate_error(const std::string& op, Token token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported compiler binary operator `{}`", op), token);
 	}
 
-	const IntegerLiteral& match_type(IntegerLiteral* matchee, std::uint64_t value)
+	const IntegerLiteral& match_type(IntegerLiteral* matchee, native_int value)
 	{
 		using enum IntegerLiteralType;
 		switch (matchee->itype())

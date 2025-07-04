@@ -1,16 +1,16 @@
 import std;
 
-#include "Generator.h"
-#include "Allocation.h"
-#include "Symbol.h"
-#include "Expression.h"
-#include "ArgumentExpression.h"
-#include "Linkable.h"
-#include "LabelCommand.h"
-#include "IntegerLiteral.h"
-#include "ErrorReporter.h"
-#include "IntermediateCommand.h"
-#include "SymbolDatabase.h"
+#include <allocator/Allocation.h>
+#include <ast/ArgumentExpression.h>
+#include <ast/Expression.h>
+#include <ast/IdentifierExpression.h>
+#include <command/IntermediateCommand.h>
+#include <command/LabelCommand.h>
+#include <command/models/IntegerLiteral.h>
+#include <symbol/Symbol.h>
+#include <symbol/SymbolDatabase.h>
+#include <toolchain/Generator.h>
+#include <toolchain/Linkable.h>
 
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -373,6 +373,7 @@ namespace hz
 		}
 
 		// Reorder defined functions so `main` is first since it's the entrypoint
+		// IntelliSense error only
 		std::ranges::partition(_linkables, [](auto& linkable)
 		{
 			if (linkable.symbol->name == "main")

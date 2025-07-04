@@ -1,8 +1,8 @@
 #ifndef HAZE_ARGUMENTEXPRESSION_H
 #define HAZE_ARGUMENTEXPRESSION_H
 
-#include "Expression.h"
-#include "IdentifierExpression.h"
+#include <ast/Expression.h>
+#include <toolchain/models/Token.h>
 
 // Haze ArgumentExpression.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,6 +10,7 @@
 namespace hz
 {
 	class Type;
+	class IdentifierExpression;
 
 	class ArgumentExpression : public Expression
 	{

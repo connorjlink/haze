@@ -33,7 +33,10 @@
   <ItemGroup>
     <ClCompile Include="source\AdjustExpression.cpp" />
     <ClCompile Include="source\Allocation.cpp" />
-    <ClCompile Include="source\Allocator.cpp" />
+    <ClCompile Include="source %28old%29\Allocator.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\ArgumentExpression.cpp" />
     <ClCompile Include="source\AssemblerLinker.cpp" />
     <ClCompile Include="source\AssemblerParser.cpp" />
@@ -67,7 +70,6 @@
     <ClCompile Include="source\ExitStatement.cpp" />
     <ClCompile Include="source\Expression.cpp" />
     <ClCompile Include="source\ExpressionStatement.cpp" />
-    <ClCompile Include="source\ExpressionUtility.cpp" />
     <ClCompile Include="source\ExtendedInteger.cpp" />
     <ClCompile Include="source\File.cpp" />
     <ClCompile Include="source\FileManager.cpp" />
@@ -107,7 +109,7 @@
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\MemberDeclarationExpression.cpp" />
-    <ClCompile Include="source\Networking.cpp" />
+    <ClCompile Include="source\WebSocketClient.cpp" />
     <ClCompile Include="source\NullStatement.cpp" />
     <ClCompile Include="source\Parser.cpp" />
     <ClCompile Include="source\PEBuilder.cpp" />
@@ -148,7 +150,6 @@
     <ClInclude Include="include\allocator\Allocation.h" />
     <ClInclude Include="include\allocator\AllocationType.h" />
     <ClInclude Include="include\Allocator.h" />
-    <ClInclude Include="include\allocator\Allocator.h" />
     <ClInclude Include="include\allocator\HeapAllocator.h" />
     <ClInclude Include="include\allocator\RuntimeAllocator.h" />
     <ClInclude Include="include\allocator\StackAllocator.h" />
@@ -204,13 +205,13 @@
     <ClInclude Include="include\DotOrgCommand.h" />
     <ClInclude Include="include\Emitter.h" />
     <ClInclude Include="include\EmitterType.h" />
-    <ClInclude Include="include\emitter\Emitter.h" />
-    <ClInclude Include="include\emitter\EmitterType.h" />
+    <ClInclude Include="include\toolchain\Emitter.h" />
+    <ClInclude Include="include\toolchain\EmitterType.h" />
     <ClInclude Include="source %28old%29\HazeEmitter.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="include\emitter\X86Emitter.h" />
+    <ClInclude Include="include\toolchain\X86Emitter.h" />
     <ClInclude Include="include\Error.h" />
     <ClInclude Include="include\ErrorContext.h" />
     <ClInclude Include="include\ErrorReporter.h" />
@@ -230,20 +231,19 @@
     <ClInclude Include="include\ExpressionStatement.h" />
     <ClInclude Include="include\ExpressionType.h" />
     <ClInclude Include="include\ExpressionUtility.h" />
-    <ClInclude Include="include\expression\AdjustExpression.h" />
-    <ClInclude Include="include\expression\ArgumentExpression.h" />
-    <ClInclude Include="include\expression\BinaryExpression.h" />
-    <ClInclude Include="include\expression\BinaryExpressionType.h" />
-    <ClInclude Include="include\expression\Expression.h" />
-    <ClInclude Include="include\expression\ExpressionStatement.h" />
-    <ClInclude Include="include\expression\ExpressionType.h" />
-    <ClInclude Include="include\expression\ExpressionUtility.h" />
-    <ClInclude Include="include\expression\FunctionArgumentExpression.h" />
-    <ClInclude Include="include\expression\FunctionCallExpression.h" />
-    <ClInclude Include="include\expression\IdentifierExpression.h" />
-    <ClInclude Include="include\expression\IntegerLiteralExpression.h" />
-    <ClInclude Include="include\expression\MemberDeclarationExpression.h" />
-    <ClInclude Include="include\expression\StringExpression.h" />
+    <ClInclude Include="include\ast\AdjustExpression.h" />
+    <ClInclude Include="include\ast\ArgumentExpression.h" />
+    <ClInclude Include="include\ast\BinaryExpression.h" />
+    <ClInclude Include="include\ast\BinaryExpressionType.h" />
+    <ClInclude Include="include\ast\Expression.h" />
+    <ClInclude Include="include\ast\ExpressionStatement.h" />
+    <ClInclude Include="include\ast\ExpressionType.h" />
+    <ClInclude Include="include\ast\FunctionArgumentExpression.h" />
+    <ClInclude Include="include\ast\FunctionCallExpression.h" />
+    <ClInclude Include="include\ast\IdentifierExpression.h" />
+    <ClInclude Include="include\ast\IntegerLiteralExpression.h" />
+    <ClInclude Include="include\ast\MemberDeclarationExpression.h" />
+    <ClInclude Include="include\ast\StringExpression.h" />
     <ClInclude Include="include\utility\ExtendedInteger.h" />
     <ClInclude Include="include\File.h" />
     <ClInclude Include="include\io\FileManager.h" />
@@ -318,22 +318,22 @@
     <ClInclude Include="include\StackAllocator.h" />
     <ClInclude Include="include\Statement.h" />
     <ClInclude Include="include\StatementType.h" />
-    <ClInclude Include="include\statement\CompoundStatement.h" />
-    <ClInclude Include="include\statement\ExitStatement.h" />
-    <ClInclude Include="include\statement\ForStatement.h" />
-    <ClInclude Include="include\statement\IfStatement.h" />
-    <ClInclude Include="include\statement\InlineAsmStatement.h" />
-    <ClInclude Include="include\statement\NullStatement.h" />
-    <ClInclude Include="include\statement\PrintStatement.h" />
-    <ClInclude Include="include\statement\ReturnStatement.h" />
-    <ClInclude Include="include\statement\Statement.h" />
-    <ClInclude Include="include\statement\StatementType.h" />
-    <ClInclude Include="include\statement\StructDeclarationStatement.h" />
-    <ClInclude Include="include\statement\VariableStatement.h" />
-    <ClInclude Include="include\statement\WhileStatement.h" />
+    <ClInclude Include="include\ast\CompoundStatement.h" />
+    <ClInclude Include="include\ast\ExitStatement.h" />
+    <ClInclude Include="include\ast\ForStatement.h" />
+    <ClInclude Include="include\ast\IfStatement.h" />
+    <ClInclude Include="include\ast\InlineAsmStatement.h" />
+    <ClInclude Include="include\ast\NullStatement.h" />
+    <ClInclude Include="include\ast\PrintStatement.h" />
+    <ClInclude Include="include\ast\ReturnStatement.h" />
+    <ClInclude Include="include\ast\Statement.h" />
+    <ClInclude Include="include\ast\StatementType.h" />
+    <ClInclude Include="include\ast\StructDeclarationStatement.h" />
+    <ClInclude Include="include\ast\VariableStatement.h" />
+    <ClInclude Include="include\ast\WhileStatement.h" />
     <ClInclude Include="include\StringExpression.h" />
     <ClInclude Include="include\StructDeclarationStatement.h" />
-    <ClInclude Include="include\statement\models\StructMember.h" />
+    <ClInclude Include="include\ast\models\StructMember.h" />
     <ClInclude Include="include\Symbol.h" />
     <ClInclude Include="include\SymbolDatabase.h" />
     <ClInclude Include="include\SymbolExporter.h" />

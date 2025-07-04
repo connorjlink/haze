@@ -1,6 +1,6 @@
 import std;
 
-#include "X86Operand.h"
+#include <x86/X86Operand.h>
 
 // Haze X86Operand.cpp
 // (c) Connor J. Link. All Rights Reserved.

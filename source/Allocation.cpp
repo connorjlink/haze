@@ -1,8 +1,8 @@
 import std;
 
-#include "Allocation.h"
-#include "IntegerLiteral.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <command/models/IntegerLiteral.h>
+#include <toolchain/models/Token.h>
 
 // Haze Allocation.cpp
 // (c) Connor J. Link. All Rights Reserved.

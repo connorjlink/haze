@@ -1,12 +1,12 @@
 #ifndef HAZE_LINKER_H
 #define HAZE_LINKER_H
 
-#include "Linkable.h"
-#include "InstructionCommand.h"
-#include "ErrorReporter.h"
-#include "LinkerType.h"
-#include "SymbolDatabase.h"
-#include "DependencyInjector.h"
+#include <command/InstructionCommand.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <symbol/SymbolDatabase.h>
+#include <toolchain/LinkerType.h>
+#include <utility/PlatformVariables.h>
 
 // Haze Linker.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -26,7 +26,7 @@ namespace hz
 	public:
 		virtual LinkerType ltype() const = 0;
 		virtual bool optimize() = 0;
-		virtual std::vector<InstructionCommand*> link(std::uint32_t) = 0;
+		virtual std::vector<InstructionCommand*> link(native_int, native_int) = 0;
 	};
 }
 

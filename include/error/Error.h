@@ -1,8 +1,8 @@
 #ifndef HAZE_ERROR_H
 #define HAZE_ERROR_H
 
-#include "ErrorType.h"
-#include "Token.h"
+#include <error/ErrorType.h>
+#include <toolchain/models/Token.h>
 
 // Haze Error.h
 // (c) Connor J. Link. All Rights Reserved.

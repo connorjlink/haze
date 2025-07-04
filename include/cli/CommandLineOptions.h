@@ -1,10 +1,10 @@
 #ifndef HAZE_COMMANDLINEOPTIONS_H
 #define HAZE_COMMANDLINEOPTIONS_H
 
-#include "ArchitectureType.h"
-#include "VerbosityType.h"
-#include "ExecutionType.h"
-#include "DependencyInjector.h"
+#include <cli/ArchitectureType.h>
+#include <cli/ExecutionType.h>
+#include <cli/VerbosityType.h>
+#include <data/DependencyInjector.h>
 
 // Haze CommandLineOptions.h
 // (c) Connor J. Link. All Rights Reserved.

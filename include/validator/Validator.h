@@ -1,10 +1,9 @@
 #ifndef HAZE_VALIDATOR_H
 #define HAZE_VALIDATOR_H
 
-#include "Test.h"
-#include "ErrorContext.h"
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <validator/Test.h>s
 
 // Haze Validator.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,10 +1,9 @@
 import std;
 
-#include "Symbol.h"
-#include "SymbolExporter.h"
-#include "SymbolDatabase.h"
-#include "AutoJSON.h"
-#include "JSON.h"
+#include <symbol/Symbol.h>
+#include <symbol/SymbolExporter.h>
+#include <utility/AutoJSON.h>
+#include <utility/JSON.h>
 
 // Haze SymbolExporter.cpp
 // (c) Connor J. Link. All Rights Reserved.

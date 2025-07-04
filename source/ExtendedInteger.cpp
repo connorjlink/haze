@@ -1,6 +1,6 @@
 import std;
 
-#include "ExtendedInteger.h"
+#include <utility/ExtendedInteger.h>
 
 // Haze ExtendedInteger.cpp
 // (c) Connor J. Link. All Rights Reserved.

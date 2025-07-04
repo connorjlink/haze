@@ -1,9 +1,9 @@
 #ifndef HAZE_VARIABLE_H
 #define HAZE_VARIABLE_H
 
-#include "VariableType.h"
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <runtime/models/VariableType.h>
 
 // Haze Variable.h
 // (c) Connor J. Link. All Rights Reserved.

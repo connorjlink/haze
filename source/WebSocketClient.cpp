@@ -1,6 +1,6 @@
 import std;
 
-#include "WebSocketClient.h"
+#include <io/WebSocketClient.h>
 
 #include <windows.h>
 #include <winhttp.h>
@@ -9,6 +9,8 @@ import std;
 
 // Haze WebSocketClient.cpp
 // (c) Connor J. Link. All Rights Reserved.
+
+#pragma message("TODO: fix this clas to work and test with browser JS!")
 
 namespace hz
 {

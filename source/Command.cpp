@@ -1,6 +1,6 @@
 import std;
 
-#include "Command.h"
+#include <command/Command.h>
 
 // Haze Command.cpp
 // (c) Connor J. Link. All Rights Reserved.

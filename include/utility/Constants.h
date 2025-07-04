@@ -21,7 +21,7 @@ namespace hz
 	using sdword = std::int32_t;
 	using sqword = std::int64_t;
 
-	enum Limit
+	enum Limit : std::uint64_t
 	{
 		UBYTE_MAX  = std::numeric_limits<ubyte>::max(),
 		UWORD_MAX  = std::numeric_limits<uword>::max(),

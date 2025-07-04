@@ -1,12 +1,10 @@
 import std;
 
-#include "AssemblerToolchain.h"
-#include "JobManager.h"
-#include "AssemblerParser.h"
-#include "AssemblerLinker.h"
-#include "CommonToolchain.h"
-#include "ErrorReporter.h"
-#include "ParserType.h"
+#include <job/JobManager.h>
+#include <toolchain/AssemblerToolchain.h>
+#include <toolchain/AssemblerLinker.h>
+#include <toolchain/AssemblerParser.h>
+#include <toolchain/CommonToolchain.h>
 
 // Haze AssemblerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

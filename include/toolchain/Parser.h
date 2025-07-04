@@ -1,13 +1,14 @@
 #ifndef HAZE_PARSER_H
 #define HAZE_PARSER_H
 
-#include "Token.h"
-#include "IdentifierExpression.h"
-#include "SymbolDatabase.h"
-#include "CommandLineOptions.h"
-#include "SymbolExporter.h"
-#include "ErrorReporter.h"
-#include "DependencyInjector.h"
+#include <ast/IdentifierExpression.h>
+#include <cli/CommandLineOptions.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <symbol/SymbolDatabase.h>
+#include <symbol/SymbolExporter.h>
+#include <toolchain/ParserType.h>
+#include <toolchain/models/Token.h>
 
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -31,9 +32,6 @@ namespace hz
 	class AdjustExpression;
 	class Type;
 
-	enum class SymbolType;
-	enum class ParserType;
-
 	class Parser
 		: public ServiceTag<Parser>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, SymbolExporter, CommandLineOptions>
@@ -46,6 +44,7 @@ namespace hz
 		std::string _filepath;
 
 	protected:
+		// explicitly mutable!
 		Token& lookbehind();
 		Token& peek();
 		Token& lookahead();

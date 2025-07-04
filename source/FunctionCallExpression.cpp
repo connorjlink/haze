@@ -1,17 +1,15 @@
 import std;
 
-#include "FunctionCallExpression.h"
-#include "FunctionArgumentExpression.h"
-#include "ArgumentExpression.h"
-#include "Parser.h"
-#include "Allocation.h"
-#include "Generator.h"
-#include "Evaluator.h"
-#include "Symbol.h"
-#include "TypeCheck.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
-#include "SymbolDatabase.h"
+#include <allocator/Allocation.h>
+#include <ast/FunctionCallExpression.h>
+#include <ast/FunctionArgumentExpression.h>
+#include <ast/ArgumentExpression.h>
+#include <ast/Function.h>
+#include <runtime/Context.h>
+#include <runtime/Evaluator.h>
+#include <symbol/Symbol.h>
+#include <toolchain/Generator.h>
+#include <type/TypeCheck.h>
 
 // Haze FunctionCallExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

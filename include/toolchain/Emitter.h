@@ -1,11 +1,10 @@
 #ifndef HAZE_EMITTER_H
 #define HAZE_EMITTER_H
 
-#include "EmitterType.h"
-#include "Constants.h"
-#include "InstructionEncoding.h"
-#include "DependencyInjector.h"
-#include "ErrorReporter.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <toolchain/EmitterType.h>
+#include <utility/Constants.h>
 
 // Haze Emitter.h
 // (c) Connor J. Link. All Rights Reserved.

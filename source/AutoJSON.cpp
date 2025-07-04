@@ -1,7 +1,7 @@
 import std;
 
-#include "JSON.h"
-#include "AutoJSON.h"
+#include <utility/JSON.h>
+#include <utility/AutoJSON.h>
 
 // Haze AutoJSON.cpp
 // (c) Connor J. Link. All Rights Reserved.

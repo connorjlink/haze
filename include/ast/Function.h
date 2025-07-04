@@ -1,12 +1,12 @@
 #ifndef HAZE_FUNCTION_H
 #define HAZE_FUNCTION_H
 
-#include "Node.h"
-#include "Generator.h"
-#include "SymbolDatabase.h"
-#include "RuntimeAllocator.h"
-#include "Parser.h"
-#include "DependencyInjector.h"
+#include <allocator/RuntimeAllocator.h>
+#include <ast/Node.h>
+#include <data/DependencyInjector.h>
+#include <symbol/SymbolDatabase.h>
+#include <toolchain/Generator.h>
+#include <toolchain/Parser.h>
 
 // Haze Function.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,11 +1,10 @@
 #ifndef HAZE_SYMBOL_H
 #define HAZE_SYMBOL_H
 
-#include "SymbolType.h"
-#include "StructMember.h"
-#include "Function.h"
-#include "ExtendedInteger.h"
-#include "PlatformVariables.h"
+#include <symbol/SymbolType.h>
+#include <ast/models/StructMember.h>
+#include <utility/ExtendedInteger.h>
+#include <utility/PlatformVariables.h>
 
 // Haze Symbol.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -117,10 +116,10 @@ namespace hz
 	class LabelSymbol : public Symbol
 	{
 	public:
-		platform_address_size address;
+		native_int address;
 
 	public:
-		LabelSymbol(const std::string& name, platform_address_size address)
+		LabelSymbol(const std::string& name, native_int address)
 			: Symbol{ name }, address{ address }
 		{
 		}

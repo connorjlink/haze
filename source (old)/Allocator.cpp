@@ -1,14 +1,14 @@
 import std;
 
-#include "Allocator.h"
-#include "Allocation.h"
+#include <allocator/Allocator.h>
+#include <allocator/Allocation.h>
 
 // Haze Allocator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	std::optional<Register> Allocator::find_register(Register exclude) const
+	/*std::optional<Register> Allocator::find_register(Register exclude) const
 	{
 		for (auto i = 0; i < register_ledger.size(); i++)
 		{
@@ -19,8 +19,7 @@ namespace hz
 		}
 
 		return std::nullopt;
-	}
-
+	}*/
 
 	/*StaticAllocation* Allocator::allocate_static(Register exclude, bool force)
 	{

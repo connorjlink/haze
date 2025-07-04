@@ -1,9 +1,9 @@
 #ifndef HAZE_RUNTIMEALLOCATOR_H
 #define HAZE_RUNTIMEALLOCATOR_H
 
-#include "InstructionEncoding.h"
-#include "Generator.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <toolchain/models/InstructionEncoding.h>
+#include <toolchain/Generator.h>
 
 // Haze RuntimeAllocator.h
 // (c) Connor J. Link. All Rights Reserved.

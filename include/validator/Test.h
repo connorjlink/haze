@@ -1,19 +1,13 @@
 #ifndef HAZE_TEST_H
 #define HAZE_TEST_H
 
+#include <error/ErrorContext.h>
+
 // Haze Test.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class ErrorContext;
-
-	struct ErrorFrame
-	{
-		ErrorContext* context;
-		std::string filepath;
-	};
-
 	class Test
 	{
 	private:

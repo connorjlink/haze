@@ -1,8 +1,7 @@
 #ifndef HAZE_MEMBERDECLARATIONEXPRESSION_H
 #define HAZE_MEMBERDECLARATIONEXPRESSION_H
 
-#include "Expression.h"
-#include "Type.h"
+#include <ast/Expression.h>
 
 // Haze MemberDeclarationExpression.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,6 +9,7 @@
 namespace hz
 {
 	class IdentifierExpression;
+	class Type;
 
 	class MemberDeclarationExpression : public Expression
 	{

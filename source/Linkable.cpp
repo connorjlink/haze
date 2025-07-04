@@ -1,15 +1,15 @@
 import std;
 
-#include "Symbol.h"
-#include "IntermediateCommand.h"
-#include "Linkable.h"
+#include <toolchain/Linkable.h>
+#include <command/IntermediateCommand.h>
+#include <symbol/Symbol.h>
 
 // Haze Linkable.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace hz
+namespace
 {
-	std::vector<IntermediateCommand*> IntermediateOptimizer::optimize()
+	std::vector<IntermediateCommand*> optimize()
 	{
 		std::vector<IntermediateCommand*> out{};
 
@@ -135,5 +135,13 @@ namespace hz
 		}
 
 		return out;
+	}
+}
+
+namespace hz
+{
+	void Linkable::optimize(void)
+	{
+
 	}
 }

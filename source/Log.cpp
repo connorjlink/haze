@@ -1,7 +1,8 @@
 import std;
 
-#include "Log.h"
-#include "CommandLineOptions.h"
+#include <cli/CommandLineOptions.h>
+#include <data/DependencyInjector.h>
+#include <io/Log.h>
 
 // Haze Log.cpp
 // (c) Connor J. Link. All Rights Reserved.

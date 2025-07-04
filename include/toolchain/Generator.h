@@ -1,11 +1,12 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
-#include "Linkable.h"
-#include "InstructionEncoding.h"
-#include "ErrorReporter.h"
-#include "SymbolDatabase.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
+#include <symbol/SymbolDatabase.h>
+#include <toolchain/Linkable.h>
+#include <toolchain/models/InstructionEncoding.h>
+#include <utility/Constants.h>
 
 // Haze Generator.h
 // (c) Connor J. Link. All Rights Reserved.

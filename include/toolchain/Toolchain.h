@@ -1,15 +1,14 @@
 #ifndef HAZE_TOOLCHAIN_H
 #define HAZE_TOOLCHAIN_H
 
-#include "Token.h"
-#include "ToolchainType.h"
-#include "FileManager.h"
-#include "JobManager.h"
-#include "Parser.h"
-#include "CommandLineOptions.h"
-#include "DependencyInjector.h"
-#include "Generator.h"
-#include "DependencyInjector.h"
+#include <cli/CommandLineOptions.h>
+#include <data/DependencyInjector.h>
+#include <io/FileManager.h>
+#include <job/JobManager.h>
+#include <toolchain/Generator.h>
+#include <toolchain/ToolchainType.h>
+#include <toolchain/Parser.h>
+#include <toolchain/models/Token.h>
 
 // Haze Toolchain.h
 // (c) Connor J. Link. All Rights Reserved.

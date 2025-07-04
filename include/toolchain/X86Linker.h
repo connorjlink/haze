@@ -1,7 +1,7 @@
 #ifndef HAZE_X86LINKER_H
 #define HAZE_X86LINKER_H
 
-#include "Linkable.h"
+#include <toolchain/Linkable.h>
 
 // Haze X86Linker.h
 // (c) Connor J. Link. All Rights Reserved.

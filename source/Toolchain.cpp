@@ -1,12 +1,10 @@
 import std;
 
-#include "Toolchain.h"
-#include "JobManager.h"
-#include "FileManager.h"
-#include "Preprocessor.h"
-#include "Lexer.h"
-#include "Log.h"
-#include "ErrorReporter.h"
+#include <error/ErrorReporter.h>
+#include <io/Log.h>
+#include <toolchain/Toolchain.h>
+#include <toolchain/Preprocessor.h>
+#include <toolchain/Lexer.h>
 
 // Haze Toolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

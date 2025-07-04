@@ -1,8 +1,8 @@
 #ifndef HAZE_ASSEMBLERPARSER_H
 #define HAZE_ASSEMBLERPARSER_H
 
-#include "Parser.h"
-#include "InstructionEncoding.h"
+#include <toolchain/Parser.h>
+#include <toolchain/models/InstructionEncoding.h>
 
 // Haze AssemblerParser.h
 // (c) Connor J. Link. All Rights Reserved.

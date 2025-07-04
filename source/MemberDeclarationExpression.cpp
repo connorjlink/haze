@@ -1,6 +1,7 @@
 import std;
 
-#include "MemberDeclarationExpression.h"
+#include <ast/MemberDeclarationExpression.h>
+#include <type/Type.h>
 
 // Haze MemberDeclarationExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

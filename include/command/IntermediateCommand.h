@@ -1,17 +1,16 @@
 #ifndef HAZE_INTERMEDIATECOMMAND_H
 #define HAZE_INTERMEDIATECOMMAND_H
 
-#include "Constants.h"
-#include "Context.h"
-#include "InstructionEncoding.h"
-#include "BranchCommandType.h"
-#include "BinaryCommandType.h"
-#include "IntermediateType.h"
-#include "IntegerLiteral.h"
-#include "CommonErrors.h"
-#include "Generator.h"
-#include "SymbolDatabase.h"
-#include "DependencyInjector.h"
+#include <command/BranchCommandType.h>
+#include <command/BinaryCommandType.h>
+#include <command/IntermediateType.h>
+#include <command/models/IntegerLiteral.h>
+#include <data/DependencyInjector.h>
+#include <error/CommonErrors.h>
+#include <symbol/SymbolDatabase.h>
+#include <utility/Constants.h>
+#include <toolchain/Generator.h>
+#include <toolchain/models/InstructionEncoding.h>
 
 // Haze IntermediateCommand.h
 // (c) Connor J. Link. All Rights Reserved.

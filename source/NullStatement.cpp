@@ -1,7 +1,6 @@
 import std;
 
-#include "NullStatement.h"
-#include "Generator.h"
+#include <ast/NullStatement.h>
 
 // Haze NullStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

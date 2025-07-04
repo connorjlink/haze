@@ -1,8 +1,8 @@
 #ifndef HAZE_SYMBOL_EXPORTER_H
 #define HAZE_SYMBOL_EXPORTER_H
 
-#include "Token.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <toolchain/models/Token.h>
 
 // Haze SymbolExporter.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,7 +10,6 @@
 namespace hz
 {
 	class Symbol;
-	struct Token;
 
 	class SymbolExporter : public SingletonTag<SymbolExporter>
 	{

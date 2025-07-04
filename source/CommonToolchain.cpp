@@ -1,25 +1,18 @@
 import std;
 
-#include "CommonToolchain.h"
-#include "JobManager.h"
-#include "Linker.h"
-#include "CompilerLinker.h"
-#include "Constants.h"
-#include "Emitter.h"
-#include "ArchitectureType.h"
-#include "HazeEmitter.h"
-#include "X86Emitter.h"
-#include "CommandLineOptions.h"
-#include "Simulator.h"
-#include "PEBuilder.h"
-#include "ErrorReporter.h"
+#include <builder/PEBuilder.h>
+#include <cli/CommandLineOptions.h>
+#include <job/JobManager.h>
+#include <toolchain/CommonToolchain.h>
+#include <toolchain/Emitter.h>
+#include <toolchain/Linker.h>
 
 // Haze CommonToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	std::vector<InstructionCommand*> common_link(std::uint32_t entrypoint)
+	std::vector<InstructionCommand*> common_link(native_int entrypoint, native_int size)
 	{
 		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
 		// This is done here by simply emitting the corresponding instruction with dummy values
@@ -33,7 +26,7 @@ namespace hz
 		// begin writing commands at $8000 for haze
 		// and currently 0x401200 for Windows PE 32
 
-		auto image = USE_UNSAFE(Linker)->link(entrypoint);
+		auto image = USE_UNSAFE(Linker)->link(entrypoint, size);
 		REQUIRE_UNSAFE(JobManager)->end_job(link_task);
 		return image;
 	}
@@ -87,13 +80,6 @@ namespace hz
 
 				auto pe_builder = new PEBuilder{ executable };
 				pe_builder->export_exe(exefile);
-			} break;
-
-			case SIMULATE:
-			{
-				Simulator sim{ executable };
-				sim.reset();
-				sim.run();
 			} break;
 		}
 		

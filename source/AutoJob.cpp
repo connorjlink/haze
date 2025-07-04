@@ -1,6 +1,6 @@
 import std;
 
-#include "AutoJob.h"
+#include <job/AutoJob.h>
 
 // Haze AutoJob.cpp
 // (c) Connor J. Link. All Rights Reserved.

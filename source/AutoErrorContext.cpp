@@ -1,8 +1,7 @@
 import std;
 
-#include "AutoErrorContext.h"
-#include "Token.h"
-#include "ErrorContext.h"
+#include <error/AutoErrorContext.h>
+#include <toolchain/models/Token.h>
 
 // Haze AutoErrorContext.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,6 +1,6 @@
 import std;
 
-#include "HeapAllocator.h"
+#include <allocator/HeapAllocator.h>
 
 // Haze HeapAllocator.cpp
 // (c) Connor J. Link. All Rights Reserved.
