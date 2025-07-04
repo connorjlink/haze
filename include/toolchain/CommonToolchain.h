@@ -2,6 +2,7 @@
 #define HAZE_COMMONTOOLCHAIN_H
 
 #include <utility/Constants.h>
+#include <utility/PlatformVariables.h>
 
 // Haze CommonToolchain.h
 // (c) Connor J. Link. All Rights Reserved.

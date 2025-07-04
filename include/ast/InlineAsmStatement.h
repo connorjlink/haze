@@ -1,8 +1,7 @@
 #ifndef HAZE_INLINEASMSTATEMENT_H
 #define HAZE_INLINEASMSTATEMENT_H
 
-#include "Statement.h"
-#include "Command.h"
+#include <ast/Statement.h>
 
 // Haze InlineAsmStatement.h
 // (c) Connor J. Link. All Rights Reserved.

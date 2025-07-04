@@ -1,8 +1,8 @@
 import std;
 
-#include "IntegerLiteralExpression.h"
-#include "Allocation.h"
-#include "Generator.h"
+#include <allocator/Allocation.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <toolchain/Generator.h>
 
 // Haze IntegerLiteralExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

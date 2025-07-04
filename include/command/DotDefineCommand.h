@@ -1,15 +1,16 @@
 #ifndef HAZE_DOTDEFINECOMMAND_H
 #define HAZE_DOTDEFINECOMMAND_H
 
-#include "Command.h"
-#include "Context.h"
-#include "IntegerLiteral.h"
+#include <command/Command.h>
 
 // Haze DotDefineCommand.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	class Context;
+	class IntegerLiteral;
+
 	class DotDefineCommand : public Command
 	{
 	private:

@@ -44,8 +44,7 @@ namespace hz
 
 		const auto arity = arguments.size();
 
-		auto symbol = USE_UNSAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, _token);
-		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+		auto function_symbol = USE_UNSAFE(SymbolDatabase)->reference_function(name, _token);
 
 		REQUIRE_SAFE(Generator)->begin_scope();
 

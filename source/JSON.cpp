@@ -1,6 +1,6 @@
 import std;
 
-#include "JSON.h"
+#include <utility/JSON.h>
 
 // Haze JSON.h
 // (c) Connor J. Link. All Rights Reserved.

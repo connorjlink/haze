@@ -1,13 +1,11 @@
 import std;
 
-#include "ForStatement.h"
-#include "IntegerLiteralExpression.h"
-#include "NullStatement.h"
-#include "Allocation.h"
-#include "Allocator.h"
-#include "Evaluator.h"
-#include "Random.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/ForStatement.h>
+#include <ast/NullStatement.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <runtime/Context.h>
+#include <utility/Random.h>
 
 // Haze ForStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

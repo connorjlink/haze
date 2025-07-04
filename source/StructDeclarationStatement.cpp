@@ -1,7 +1,7 @@
 import std;
 
-#include "MemberDeclarationExpression.h"
-#include "StructDeclarationStatement.h"
+#include <ast/MemberDeclarationExpression.h>
+#include <ast/StructDeclarationStatement.h>
 
 // Haze StructDeclarationStatement.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -4,7 +4,7 @@
 // Haze ExtendedInteger.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define EI(x) ExtendedInteger{ static_cast<std::uint64_t>(std::abs(x)), x >= 0 }
+#define EI(x) ExtendedInteger{ std::abs(x), x >= 0 }
 
 namespace hz
 {

@@ -1,7 +1,7 @@
 import std;
 
-#include "ExpressionStatement.h"
-#include "Allocation.h"
+#include <allocator/Allocation.h>
+#include <ast/ExpressionStatement.h>
 
 // Haze ExpressionStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

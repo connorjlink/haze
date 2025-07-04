@@ -5,6 +5,7 @@ import std;
 #include <toolchain/Parser.h>
 #include <command/DotOrgCommand.h>
 #include <command/LabelCommand.h>
+#include <symbol/Symbol.h>
 #include <symbol/SymbolDatabase.h>
 #include <utility/Constants.h>
 
@@ -13,27 +14,27 @@ import std;
 
 namespace hz
 {
-	AssemblerLinker(std::vector<Node*>&& commands, AssemblerParser* assembler_parser, const std::string& filepath)
+	AssemblerLinker::AssemblerLinker(std::vector<Node*>&& commands, AssemblerParser* assembler_parser, const std::string& filepath)
 		: Linker{ filepath }, commands{ std::move(commands) }, assembler_parser{ assembler_parser }
 	{
 		commands.erase(std::remove_if(commands.begin(), commands.end(), [&](auto&& val)
+		{
+			if (val->ntype() != NodeType::COMMAND)
 			{
-				if (val->ntype() != NodeType::COMMAND)
+				if (!_node_type_map.contains(val->ntype()))
 				{
-					if (!_node_type_map.contains(val->ntype()))
-					{
-						USE_SAFE(ErrorReporter)->post_error("unrecognized node type", NULL_TOKEN);
-					}
-					else
-					{
-						USE_SAFE(ErrorReporter)->post_error(std::format("invalid node type `{}`", _node_type_map.at(val->ntype())), NULL_TOKEN);
-					}
-
-					return true;
+					USE_SAFE(ErrorReporter)->post_error("unrecognized node type", NULL_TOKEN);
+				}
+				else
+				{
+					USE_SAFE(ErrorReporter)->post_error(std::format("invalid node type `{}`", _node_type_map.at(val->ntype())), NULL_TOKEN);
 				}
 
-				return false;
-			}));
+				return true;
+			}
+
+			return false;
+		}));
 	}
 
 	LinkerType AssemblerLinker::ltype() const
@@ -48,9 +49,9 @@ namespace hz
 		return false;
 	}
 
-	std::vector<InstructionCommand*> AssemblerLinker::link(native_int base_pointer, native_int)
+	std::vector<InstructionCommand*> AssemblerLinker::link(native_int base_pointer, native_int size)
 	{
-		std::vector<InstructionCommand*> executable(DWORD_MAX);
+		std::vector<InstructionCommand*> executable(size);
 
 		auto address_tracker = 0;
 
@@ -121,7 +122,7 @@ namespace hz
 			}
 		}
 
-		for (auto i = 0; i < HALF_DWORD_MAX; i++)
+		for (auto i = native_int{ 0 }; i < size / 2; i++)
 		{
 			if (executable[i] != 0)
 			{
@@ -129,6 +130,7 @@ namespace hz
 			}
 		}
 
-		return std::vector(executable.begin() + HALF_DWORD_MAX, executable.end());
+#pragma message("TODO: figure out if this is the correct logic for pagination of the output binary. might not involve the base pointer here at all")
+		return std::vector(executable.begin() + base_pointer, executable.end());
 	}
 }

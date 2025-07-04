@@ -1,13 +1,14 @@
 #ifndef HAZE_TYPE_H
 #define HAZE_TYPE_H
 
-#include "TypeType.h"
-#include "IntTypeType.h"
-#include "TypeQualifier.h"
-#include "TypeSignedness.h"
-#include "TypeStorage.h"
-#include "SymbolDatabase.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <symbol/SymbolDatabase.h>
+#include <type/TypeType.h>
+#include <type/IntTypeType.h>
+#include <type/TypeQualifier.h>
+#include <type/TypeSignedness.h>
+#include <type/TypeSpecifier.h>
+#include <type/TypeStorage.h>
 
 // Haze Type.h
 // (c) Connor J. Link. All Rights Reserved.

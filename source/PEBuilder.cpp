@@ -1,19 +1,18 @@
 import std;
 
-#include "PEBuilder.h"
-#include "X86Emitter.h"
-#include "BinaryUtilities.h"
-#include "BinaryConstants.h"
-#include "JobManager.h"
-#include "ErrorReporter.h"
+#include <builder/PEBuilder.h>
+#include <error/ErrorReporter.h>
+#include <utility/BinaryUtilities.h>
+#include <utility/BinaryConstants.h>
 
 // Haze PEBuilder.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	byterange PEBuilder::make_section(std::string name, std::uint32_t virtual_size, std::uint32_t virtual_address,
-								      std::uint32_t raw_size, std::uint32_t raw_pointer, std::uint32_t characteristics)
+	byterange PEBuilder::make_section(
+		std::string name, std::uint32_t virtual_size, std::uint32_t virtual_address,
+		std::uint32_t raw_size, std::uint32_t raw_pointer, std::uint32_t characteristics)
 	{
 		if (name.length() > 7)
 		{
@@ -26,7 +25,7 @@ namespace hz
 		byterange out{};
 
 		// insert section name char by char
-		PUT(range_string(name));
+		PUT(range_of(name));
 
 		PUT(range32(virtual_size));
 		PUT(range32(virtual_address));
@@ -288,34 +287,34 @@ namespace hz
 
 		// function name imports
 		auto getstdhandle = range16(0x0000);
-		getstdhandle.append_range(range_string("GetStdHandle")); // from kernel32.dll
+		getstdhandle.append_range(range_of("GetStdHandle")); // from kernel32.dll
 		std::copy(getstdhandle.begin(), getstdhandle.end(), head + getstdhandle_va);
 
 		auto writeconsole = range16(0x0000);
-		writeconsole.append_range(range_string("WriteConsoleA")); // from kernel32.dll
+		writeconsole.append_range(range_of("WriteConsoleA")); // from kernel32.dll
 		std::copy(writeconsole.begin(), writeconsole.end(), head + writeconsole_va);
 
 		auto exitprocess = range16(0x0000);
-		exitprocess.append_range(range_string("ExitProcess")); // from kernel32.dll
+		exitprocess.append_range(range_of("ExitProcess")); // from kernel32.dll
 		std::copy(exitprocess.begin(), exitprocess.end(), head + exitprocess_va);
 
 		auto messageboxa = range16(0x0000);
-		messageboxa.append_range(range_string("MessageBoxA")); // from user32.dll
+		messageboxa.append_range(range_of("MessageBoxA")); // from user32.dll
 		std::copy(messageboxa.begin(), messageboxa.end(), head + messageboxa_va);
 
 		auto wnsprintfa = range16(0x0000);
-		wnsprintfa.append_range(range_string("wnsprintfA")); // from shlwapi.dll
+		wnsprintfa.append_range(range_of("wnsprintfA")); // from shlwapi.dll
 		std::copy(wnsprintfa.begin(), wnsprintfa.end(), head + wnsprintfa_va);
 		
 		
 		// dll name imports
-		const auto kernel32 = range_string("kernel32.dll");
+		const auto kernel32 = range_of("kernel32.dll");
 		std::copy(kernel32.begin(), kernel32.end(), head + kernel32_va);
 
-		const auto user32 = range_string("user32.dll");
+		const auto user32 = range_of("user32.dll");
 		std::copy(user32.begin(), user32.end(), head + user32_va);
 
-		const auto shlwapi = range_string("shlwapi.dll");
+		const auto shlwapi = range_of("shlwapi.dll");
 		std::copy(shlwapi.begin(), shlwapi.end(), head + shlwapi_va);
 
 
@@ -327,13 +326,13 @@ namespace hz
 	{
 		byterange out{};
 
-		const auto logo_string = range_string("Haze Optimizing Compiler Executable\n(c) Connor J. Link. All Rights Reserved.\n");
+		const auto logo_string = range_of("Haze Optimizing Compiler Executable\n(c) Connor J. Link. All Rights Reserved.\n");
 		PUT(logo_string);
 
-		const auto output_string = range_string("Program output: ");
+		const auto output_string = range_of("Program output: ");
 		PUT(output_string);
 
-		const auto format_string = range_string("%d\n");
+		const auto format_string = range_of("%d\n");
 		PUT(format_string);
 
 		return out;

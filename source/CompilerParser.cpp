@@ -1,33 +1,28 @@
 import std;
 
-#include "CompilerParser.h"
-#include "AssemblerParser.h"
-#include "VariableStatement.h"
-#include "CompoundStatement.h"
-#include "ReturnStatement.h"
-#include "InlineAsmStatement.h"
-#include "WhileStatement.h"
-#include "ForStatement.h"
-#include "IfStatement.h"
-#include "ExpressionStatement.h"
-#include "PrintStatement.h"
-#include "HookStatement.h"
-#include "NullStatement.h"
-#include "ExitStatement.h"
-#include "ArgumentExpression.h"
-#include "MemberDeclarationExpression.h"
-#include "StructDeclarationStatement.h"
-#include "CommandLineOptions.h"
-#include "OptimizationType.h"
-#include "Symbol.h"
-#include "Random.h"
-#include "Type.h"
-#include "ErrorReporter.h"
-#include "CommonErrors.h"
-#include "SymbolDatabase.h"
-#include "SymbolExporter.h"
-#include "TypeSpecifier.h"
-#include "ParserType.h"
+#include <ast/Expression.h>
+#include <ast/ArgumentExpression.h>
+#include <ast/MemberDeclarationExpression.h>
+#include <ast/Function.h>
+#include <ast/Statement.h>
+#include <ast/ExitStatement.h>
+#include <ast/CompoundStatement.h>
+#include <ast/ExpressionStatement.h>
+#include <ast/ForStatement.h>
+#include <ast/IfStatement.h>
+#include <ast/InlineAsmStatement.h>
+#include <ast/NullStatement.h>
+#include <ast/PrintStatement.h>
+#include <ast/ReturnStatement.h>
+#include <ast/StructDeclarationStatement.h>
+#include <ast/VariableStatement.h>
+#include <ast/WhileStatement.h>
+#include <cli/OptimizationType.h>
+#include <error/CommonErrors.h>
+#include <symbol/Symbol.h>
+#include <toolchain/CompilerParser.h>
+#include <toolchain/AssemblerParser.h>
+#include <utility/Random.h>
 
 // Haze CompilerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -53,8 +48,6 @@ namespace hz
 			case WHILE: return parse_while_statement(enclosing_function);
 			case IF: return parse_if_statement(enclosing_function);
 			case PRINT: return parse_print_statement(enclosing_function);
-			case DOTHOOK: return parse_hook_statement(enclosing_function);
-			case DOTUNHOOK: return parse_unhook_statement(enclosing_function);
 
 			// if nothing else worked, try to fall back on parsing any expression followed by a semicolon
 			default: return parse_expression_statement(enclosing_function);
@@ -231,20 +224,6 @@ namespace hz
 		consume(TokenType::SEMICOLON);
 
 		return new PrintStatement{ expression, expression->_token };
-	}
-
-	Statement* CompilerParser::parse_hook_statement(const std::string& enclosing_function)
-	{
-		const auto dothook_token = consume(TokenType::DOTHOOK);
-
-		return new HookStatement{ true, dothook_token };
-	}
-
-	Statement* CompilerParser::parse_unhook_statement(const std::string& enclosing_function)
-	{
-		const auto dotunhook_token = consume(TokenType::DOTUNHOOK);
-
-		return new HookStatement{ false, dotunhook_token };
 	}
 
 	Statement* CompilerParser::parse_expression_statement(const std::string& enclosing_function)

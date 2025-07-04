@@ -1,7 +1,7 @@
 #ifndef HAZE_DOTORGCOMMAND_H
 #define HAZE_DOTORGCOMMAND_H
 
-#include "Command.h"
+#include <command/Command.h>
 
 // Haze DotOrgCommand.h
 // (c) Connor J. Link. All Rights Reserved.

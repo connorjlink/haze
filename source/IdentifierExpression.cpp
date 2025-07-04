@@ -1,14 +1,10 @@
 import std;
 
-#include "IdentifierExpression.h"
-#include "IntegerLiteralExpression.h"
-#include "StringExpression.h"
-#include "Parser.h"
-#include "Allocator.h"
-#include "Allocation.h"
-#include "Evaluator.h"
-#include "Symbol.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/IdentifierExpression.h>
+#include <runtime/Context.h>
+#include <runtime/Evaluator.h>
+#include <error/ErrorReporter.h>
 
 // Haze IdentifierExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

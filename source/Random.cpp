@@ -1,6 +1,6 @@
 import std;
 
-#include "Random.h"
+#include <utility/Random.h>
 
 // Haze Random.cpp
 // (c) Connor J. Link. All Rights Reserved.

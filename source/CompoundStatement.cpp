@@ -1,6 +1,6 @@
 ﻿import std;
 
-#include <statement/CompoundStatement.h>
+#include <ast/CompoundStatement.h>
 
 // Haze CompoundStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

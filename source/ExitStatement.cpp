@@ -1,12 +1,10 @@
 import std;
 
-#include "ExitStatement.h"
-#include "Generator.h"
-#include "Allocation.h"
-#include "Expression.h"
-#include "Context.h"
-#include "Evaluator.h"
-#include "StackAllocator.h"
+#include <allocator/Allocation.h>
+#include <ast/ExitStatement.h>
+#include <toolchain/Generator.h>
+#include <runtime/Context.h>
+#include <runtime/Evaluator.h>
 
 // Haze ExitStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

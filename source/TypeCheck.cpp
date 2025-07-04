@@ -1,14 +1,12 @@
 import std;
 
-#include "Expression.h"
-#include "IntegerLiteralExpression.h"
-#include "IdentifierExpression.h"
-#include "Symbol.h"
-#include "Type.h"
-#include "Parser.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
-#include "SymbolDatabase.h"
+#include <ast/Expression.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <ast/IdentifierExpression.h>
+#include <error/CommonErrors.h>
+#include <symbol/Symbol.h>
+#include <symbol/SymbolDatabase.h>
+#include <type/Type.h>
 
 // Haze TypeCheck.h
 // (c) Connor J. Link. All Rights Reserved.

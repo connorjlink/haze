@@ -1,9 +1,6 @@
 import std;
 
-#include "InstructionCommand.h"
-#include "Disassembler.h"
-#include "Generator.h"
-#include "ErrorReporter.h"
+#include <command/InstructionCommand.h>
 
 // Haze InstructionCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.

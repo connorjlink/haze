@@ -1,7 +1,6 @@
 import std;
 
-#include "Variable.h"
-#include "ErrorReporter.h"
+#include <runtime/models/Variable.h>
 
 // Haze Variable.cpp
 // (c) Connor J. Link. All Rights Reserved.

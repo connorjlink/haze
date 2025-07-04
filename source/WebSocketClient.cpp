@@ -3,7 +3,6 @@ import std;
 #include <io/WebSocketClient.h>
 
 #include <windows.h>
-#include <winhttp.h>
 
 #pragma comment(lib, "winhttp.lib")
 
@@ -30,14 +29,14 @@ namespace hz
 			WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
 
 		if (!hSession) {
-			emitError("Failed to open WinHttp session.");
+			emit_error("Failed to open WinHttp session.");
 			return false;
 		}
 
 		hConnect = WinHttpConnect(hSession, urlComp.lpszHostName,
 			urlComp.nPort, 0);
 		if (!hConnect) {
-			emitError("Failed to connect.");
+			emit_error("Failed to connect.");
 			return false;
 		}
 
@@ -46,35 +45,35 @@ namespace hz
 			WINHTTP_DEFAULT_ACCEPT_TYPES,
 			(urlComp.nScheme == INTERNET_SCHEME_HTTPS) ? WINHTTP_FLAG_SECURE : 0);
 		if (!hRequest) {
-			emitError("Failed to open request.");
+			emit_error("Failed to open request.");
 			return false;
 		}
 
 		BOOL bResult = WinHttpSetOption(hRequest,
 			WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET, NULL, 0);
 		if (!bResult) {
-			emitError("Failed to set WebSocket upgrade option.");
+			emit_error("Failed to set WebSocket upgrade option.");
 			return false;
 		}
 
 		if (!WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0,
 			WINHTTP_NO_REQUEST_DATA, 0, 0, 0) ||
 			!WinHttpReceiveResponse(hRequest, NULL)) {
-			emitError("Failed to send or receive WebSocket handshake.");
+			emit_error("Failed to send or receive WebSocket handshake.");
 			return false;
 		}
 
 		hWebSocket = WinHttpWebSocketCompleteUpgrade(hRequest, 0);
 		hRequest = NULL; // WinHttpWebSocketCompleteUpgrade takes ownership
 		if (!hWebSocket) {
-			emitError("Failed to complete WebSocket upgrade.");
+			emit_error("Failed to complete WebSocket upgrade.");
 			return false;
 		}
 
 		if (onOpen) onOpen();
 
 		running = true;
-		recvThread = std::thread([this]() { receiveLoop(); });
+		recvThread = std::thread([this]() { receive_loop(); });
 
 		return true;
 	}

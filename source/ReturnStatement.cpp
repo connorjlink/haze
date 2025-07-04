@@ -1,17 +1,13 @@
 ﻿import std;
 
-#include "ReturnStatement.h"
-#include "Function.h"
-#include "Symbol.h"
-#include "ParserType.h"
-#include "Parser.h"
-#include "CompilerParser.h"
-#include "Allocation.h"
-#include "Generator.h"
-#include "Evaluator.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
-#include "SymbolDatabase.h"
+#include <allocator/Allocation.h>
+#include <ast/ReturnStatement.h>
+#include <error/CommonErrors.h>
+#include <runtime/Evaluator.h>
+#include <symbol/Symbol.h>
+#include <toolchain/CompilerParser.h>
+#include <toolchain/Parser.h>
+#include <toolchain/Generator.h>
 
 // Haze ReturnStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

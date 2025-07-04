@@ -1,8 +1,8 @@
 #ifndef HAZE_LEXER_H
 #define HAZE_LEXER_H
 
-#include "Token.h"
-#include "Scanner.h"
+#include <toolchain/Scanner.h>
+#include <toolchain/models/Token.h>
 
 // Haze Lexer.h
 // (c) Connor J. Link. All Rights Reserved.

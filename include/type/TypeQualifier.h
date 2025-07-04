@@ -1,7 +1,7 @@
 #ifndef HAZE_TYPEQUALIFIER_H
 #define HAZE_TYPEQUALIFIER_H
 
-#include "Token.h"
+#include <toolchain/models/Token.h>
 
 // Haze TypeQualifier.h
 // (c) Connor J. Link. All Rights Reserved.

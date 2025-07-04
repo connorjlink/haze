@@ -1,10 +1,11 @@
 import std;
 
-#include "StringExpression.h"
-#include "Allocation.h"
-#include "Generator.h"
-#include "RuntimeAllocator.h"
-#include "IntegerLiteral.h"
+#include <allocator/Allocation.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/StringExpression.h>
+#include <command/models/IntegerLiteral.h>
+#include <toolchain/Generator.h>
+#include <utility/PlatformVariables.h>
 
 // Haze StringExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

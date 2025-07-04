@@ -1,8 +1,8 @@
 #ifndef HAZE_COMPILERPARSER_H
 #define HAZE_COMPILERPARSER_H
 
-#include "Parser.h"
-#include "Type.h"
+#include <toolchain/Parser.h>
+#include <type/Type.h>
 
 // Haze CompilerParser.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -11,12 +11,7 @@ namespace hz
 {
 	class Statement;
 	class MemberDeclarationExpression;
-
-	enum class TypeSpecifier;
-	enum class TypeQualifier;
-	enum class TypeSignedness;
-	enum class TypeStorage;
-
+	
 	class CompilerParser : public Parser
 	{
 	public:
@@ -44,12 +39,8 @@ namespace hz
 	public:
 		Statement* parse_struct_declaration_statement(const std::string&);
 
-	// interpreter-specific functionality
-	// but it needs to interface with statements, so we include it in the compiler as well
 	private:
 		Statement* parse_print_statement(const std::string&);
-		Statement* parse_hook_statement(const std::string&);
-		Statement* parse_unhook_statement(const std::string&);
 
 	public:
 		std::vector<Expression*> parse_arguments(bool);

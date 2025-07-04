@@ -6,7 +6,6 @@ import std;
 #include <command/LabelCommand.h>
 #include <command/InstructionCommand.h>
 #include <toolchain/AssemblerParser.h>
-#include <utility/Constants.h>
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -58,7 +57,7 @@ namespace hz
 		ASSERT_IS_INTEGER_LITERAL(address_expression);
 
 		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
-		ASSERT_IN_RANGE(integer_literal_raw(address), 0, DWORD_MAX);
+		ASSERT_IN_RANGE(integer_literal_raw(address), 0, NATIVE_MAX);
 
 		return new IntegerLiteralExpression{ address, address_expression->_token };
 	}
@@ -79,7 +78,7 @@ namespace hz
 		ASSERT_IS_INTEGER_LITERAL(immediate_expression);
 
 		const auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
-		ASSERT_IN_RANGE(integer_literal_raw(immediate), 0, std::numeric_limit<);
+		ASSERT_IN_RANGE(integer_literal_raw(immediate), 0, NATIVE_MAX);
 
 		return new IntegerLiteralExpression{ immediate, immediate_expression->_token };
 	}
@@ -174,7 +173,7 @@ namespace hz
 				}
 
 				const auto value = integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value);
-				ASSERT_IN_RANGE(value, 0, WORD_MAX);
+				ASSERT_IN_RANGE(value, 0, NATIVE_MAX);
 
 				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<native_int>(value.magnitude) };
 			} break;

@@ -4,6 +4,7 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/EmitterType.h>
+#include <toolchain/models/InstructionEncoding.h>
 #include <utility/Constants.h>
 
 // Haze Emitter.h

@@ -1,8 +1,8 @@
 import std;
 
-#include "RuntimeAllocator.h"
-#include "Generator.h"
-#include "ErrorReporter.h"
+#include <allocator/RuntimeAllocator.h>
+#include <toolchain/Generator.h>
+#include <error/ErrorReporter.h>
 
 // Haze RuntimeAllocator.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -1,5 +1,7 @@
 import std;
 
+#include <ast/Expression.h>
+#include <ast/IdentifierExpression.h>
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
 #include <symbol/Symbol.h>

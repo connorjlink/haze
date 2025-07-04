@@ -1,10 +1,8 @@
 import std;
 
-#include "Emitter.h"
-#include "HazeEmitter.h"
-#include "X86Emitter.h"
-#include "CommandLineOptions.h"
-#include "ErrorReporter.h"
+#include <cli/CommandLineOptions.h>
+#include <toolchain/Emitter.h>
+#include <toolchain/X86Emitter.h>
 
 // Haze Emitter.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -29,7 +27,6 @@ namespace hz
 		using enum ArchitectureType;
 		switch (USE_UNSAFE(CommandLineOptions)->_architecture)
 		{
-			case HAZE: emitter = new HazeEmitter{ std::move(image), filepath }; break;
 			case X86: emitter = new X86Emitter{ std::move(image), filepath }; break;
 			default: USE_UNSAFE(ErrorReporter)->post_error("invalid architecture type", NULL_TOKEN); break;
 		}

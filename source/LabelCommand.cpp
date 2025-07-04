@@ -1,7 +1,6 @@
 import std;
 
-#include "LabelCommand.h"
-#include "ErrorReporter.h"
+#include <command/LabelCommand.h>
 
 // Haze LabelCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.

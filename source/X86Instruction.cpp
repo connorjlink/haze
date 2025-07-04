@@ -1,8 +1,8 @@
 import std;
 
-#include "X86Instruction.h"
-#include "X86Builder.h"
-#include "CommonErrors.h"
+#include <error/CommonErrors.h>
+#include <x86/X86Instruction.h>
+#include <x86/X86Builder.h>
 
 // Haze X86Instruction.cpp
 // (c) Connor J. Link. All Rights Reserved.

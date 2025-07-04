@@ -1,10 +1,10 @@
 import std;
 
-#include "Evaluator.h"
-#include "IntegerLiteralExpression.h"
-#include "StringExpression.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
+#include <runtime/Evaluator.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <ast/StringExpression.h>
+#include <error/CommonErrors.h>
+#include <runtime/models/Variable.h>
 
 // Haze Evaluator.cpp
 // (c) Connor J. Link. All Rights Reserved.

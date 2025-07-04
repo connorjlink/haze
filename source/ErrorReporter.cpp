@@ -1,8 +1,8 @@
 import std;
 
-#include "ErrorContext.h"
-#include "ErrorReporter.h"
-#include "Toolchain.h"
+#include <error/ErrorContext.h>
+#include <error/ErrorReporter.h>
+#include <toolchain/Toolchain.h>
 
 // Haze ErrorReporter.cpp
 // (c) Connor J. Link. All Rights Reserved.

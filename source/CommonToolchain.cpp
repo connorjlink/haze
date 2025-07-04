@@ -6,6 +6,7 @@ import std;
 #include <toolchain/CommonToolchain.h>
 #include <toolchain/Emitter.h>
 #include <toolchain/Linker.h>
+#include <utility/PlatformVariables.h>
 
 // Haze CommonToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

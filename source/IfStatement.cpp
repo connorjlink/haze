@@ -1,12 +1,11 @@
 import std;
 
-#include "IfStatement.h"
-#include "IntegerLiteralExpression.h"
-#include "Allocation.h"
-#include "Evaluator.h"
-#include "Generator.h"
-#include "Random.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/IfStatement.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <toolchain/Generator.h>
+#include <utility/Random.h>
+#include <error/ErrorReporter.h>
 
 // Haze IfStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

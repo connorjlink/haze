@@ -1,11 +1,11 @@
 import std;
 
-#include "Preprocessor.h"
-#include "ErrorReporter.h"
-#include "Symbol.h"
-#include "SymbolDatabase.h"
-#include "SymbolExporter.h"
-#include "FileManager.h"
+#include <error/ErrorReporter.h>
+#include <io/FileManager.h>
+#include <symbol/Symbol.h>
+#include <symbol/SymbolDatabase.h>
+#include <symbol/SymbolExporter.h>
+#include <toolchain/Preprocessor.h>
 
 // Haze Preprocessor.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -80,7 +80,7 @@ namespace hz
 	{
 		const auto forged = forge_token();
 		// explicitly mark as visited
-		const auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::DEFINE, name, forged, true);
+		const auto symbol = USE_SAFE(SymbolDatabase)->reference_define(name, forged, true);
 		USE_SAFE(SymbolExporter)->enqueue(symbol, forged);
 	}
 

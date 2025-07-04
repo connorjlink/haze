@@ -7,13 +7,12 @@ import std;
 // Haze Linkable.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace
+namespace hz
 {
-	std::vector<IntermediateCommand*> optimize()
+	void Linkable::optimize(void)
 	{
 		std::vector<IntermediateCommand*> out{};
 
-		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, _function, NULL_TOKEN);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		// NOTE: old method
@@ -30,8 +29,8 @@ namespace
 
 		if (function_symbol->name == "main")
 		{
-			auto penultimate = *(_ir.end() - 2);
-			auto last = *(_ir.end() - 1);
+			auto penultimate = *(ir.end() - 2);
+			auto last = *(ir.end() - 1);
 
 			penultimate->marked_for_deletion = true;
 			last->marked_for_deletion = true;
@@ -76,25 +75,25 @@ namespace
 		}*/
 
 
-		if (_ir.size() >= 2)
+		if (ir.size() >= 2)
 		{
-			const auto size = _ir.size();
+			const auto size = ir.size();
 
 			for (auto i = 0; i < size; i++)
 			{
-				auto c0 = _ir[i + 0];
+				auto c0 = ir[i + 0];
 
 				// TODO: one byte optimizations
 
 				if (i < size - 1)
 				{
-					auto c1 = _ir[i + 1];
+					auto c1 = ir[i + 1];
 
 					// TODO: two byte optimizations
 
 					if (i < size - 2)
 					{
-						auto c2 = _ir[i + 2];
+						auto c2 = ir[i + 2];
 
 						// TODO: three byte optimizations
 					}
@@ -102,7 +101,7 @@ namespace
 			}
 		}
 
-		for (auto& command : _ir)
+		for (auto& command : ir)
 		{
 			using enum IntermediateType;
 			switch (command->itype())
@@ -126,7 +125,7 @@ namespace
 		}
 
 		// gather all undeleted instructions
-		for (auto& command : _ir)
+		for (auto& command : ir)
 		{
 			if (!command->marked_for_deletion)
 			{
@@ -134,14 +133,7 @@ namespace
 			}
 		}
 
-		return out;
-	}
-}
-
-namespace hz
-{
-	void Linkable::optimize(void)
-	{
-
+		// overrwrite the existing code with the newly optimized bytecode
+		ir = out;
 	}
 }

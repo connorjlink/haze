@@ -1,13 +1,12 @@
 import std;
 
-#include "WhileStatement.h"
-#include "Allocation.h"
-#include "Evaluator.h"
-#include "Generator.h"
-#include "Random.h"
-#include "IntegerLiteralExpression.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <ast/WhileStatement.h>
+#include <command/models/IntegerLiteral.h>
+#include <error/CommonErrors.h>
+#include <toolchain/Generator.h>
+#include <utility/Random.h>
 
 // Haze WhileStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

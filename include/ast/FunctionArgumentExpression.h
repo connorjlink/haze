@@ -1,8 +1,8 @@
 #ifndef HAZE_FUNCTIONARGUMENTEXPRESSION_H
 #define HAZE_FUNCTIONARGUMENTEXPRESSION_H
 
-#include "ArgumentExpression.h"
-#include "Type.h"
+#include <ast/ArgumentExpression.h>
+#include <type/Type.h>
 
 // Haze FunctionArgumentExpression.h
 // (c) Connor J. Link. All Rights Reserved.

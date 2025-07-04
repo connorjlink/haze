@@ -5,6 +5,7 @@ import std;
 #include <utility/BinaryConstants.h>
 #include <utility/BinaryUtilities.h>
 #include <x86/X86Builder.h>
+#include <x86/X86Register.h>
 
 // Haze X86Emitter.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -285,7 +286,7 @@ namespace hz
 		// another pop will point to the desired return value.
 		
 		// pop r32
-		return { static_cast<byte>(0x58 | static_cast<byte>(destination)) };
+		return { static_cast<ubyte>(0x58 | static_cast<ubyte>(destination)) };
 	}
 
 	// done

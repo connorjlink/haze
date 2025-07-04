@@ -1,7 +1,6 @@
 import std;
 
-#include "InstructionValidator.h"
-#include "Log.h"
+#include <validator/InstructionValidator.h>
 
 // Haze InstructionValidator.cpp
 // (c) Connor J. Link. All Rights Reserved.

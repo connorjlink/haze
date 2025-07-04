@@ -1,8 +1,8 @@
 import std;
 
-#include "Disassembler.h"
-#include "InstructionCommand.h"
-#include "Constants.h"
+#include <runtime/Disassembler.h>
+#include <command/InstructionCommand.h>
+#include <utility/Constants.h>
 
 // Haze Disassembler.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -42,7 +42,7 @@ namespace hz
 		}
 	}
 
-	std::string Disassembler::disassemble_program(const std::array<std::uint8_t, HALF_DWORD_MAX>& program, std::size_t first, std::size_t last)
+	std::string Disassembler::disassemble_program(const std::vector<ubyte>& program, std::size_t first, std::size_t last)
 	{
 		std::string result{};
 

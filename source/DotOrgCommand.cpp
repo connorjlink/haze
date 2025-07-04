@@ -1,7 +1,6 @@
 import std;
 
-#include "DotOrgCommand.h"
-#include "ErrorReporter.h"
+#include <command/DotOrgCommand.h>
 
 // Haze DotOrgCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.

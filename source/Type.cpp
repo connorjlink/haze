@@ -1,10 +1,8 @@
 import std;
 
-#include "Type.h"
-#include "Symbol.h"
-#include "Parser.h"
-#include "CommonErrors.h"
-#include "SymbolDatabase.h"
+#include <error/CommonErrors.h>
+#include <symbol/Symbol.h>
+#include <type/Type.h>
 
 // Haze Type.cpp
 // (c) Connor J. Link. All Rights Reserved.

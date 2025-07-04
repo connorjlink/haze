@@ -1,7 +1,6 @@
 import std;
 
-#include "FunctionArgumentExpression.h"
-#include "ErrorReporter.h"
+#include <ast/FunctionArgumentExpression.h>
 
 // Haze FunctionArgumentExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.

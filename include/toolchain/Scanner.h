@@ -1,13 +1,13 @@
 #ifndef HAZE_SCANNER_H
 #define HAZE_SCANNER_H
 
-#include "Token.h"
-#include "FileManager.h"
-#include "UndoableRedoable.h"
-#include "ErrorReporter.h"
-#include "SymbolDatabase.h"
-#include "SymbolExporter.h"
-#include "DependencyInjector.h"
+#include <data/DependencyInjector.h>
+#include <data/UndoableRedoable.h>
+#include <error/ErrorReporter.h>
+#include <io/FileManager.h>
+#include <symbol/SymbolDatabase.h>
+#include <symbol/SymbolExporter.h>
+#include <toolchain/models/Token.h>
 
 // Haze Scanner.h
 // (c) Connor J. Link. All Rights Reserved.

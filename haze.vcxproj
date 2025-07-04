@@ -47,7 +47,6 @@
     <ClCompile Include="source\Bimap.cpp" />
     <ClCompile Include="source\BinaryExpression.cpp" />
     <ClCompile Include="source\BinaryUtilities.cpp" />
-    <ClCompile Include="source\ColorIntrinsic.cpp" />
     <ClCompile Include="source\Command.cpp" />
     <ClCompile Include="source\CommandLineParser.cpp" />
     <ClCompile Include="source\CommonErrors.cpp" />
@@ -119,7 +118,6 @@
     <ClCompile Include="source\ReturnStatement.cpp" />
     <ClCompile Include="source\RuntimeAllocator.cpp" />
     <ClCompile Include="source\Scanner.cpp" />
-    <ClCompile Include="source\Simulator.cpp" />
     <ClCompile Include="source\StackAllocator.cpp" />
     <ClCompile Include="source\Statement.cpp" />
     <ClCompile Include="source\StringExpression.cpp" />
@@ -334,7 +332,6 @@
     <ClInclude Include="include\StringExpression.h" />
     <ClInclude Include="include\StructDeclarationStatement.h" />
     <ClInclude Include="include\ast\models\StructMember.h" />
-    <ClInclude Include="include\Symbol.h" />
     <ClInclude Include="include\SymbolDatabase.h" />
     <ClInclude Include="include\SymbolExporter.h" />
     <ClInclude Include="include\SymbolType.h" />

@@ -6,6 +6,7 @@ import std;
 #include <ast/IntegerLiteralExpression.h>
 #include <ast/StringExpression.h>
 #include <error/CommonErrors.h>
+#include <runtime/Context.h>
 #include <runtime/Evaluator.h>
 #include <toolchain/Generator.h>
 #include <utility/PlatformVariables.h>

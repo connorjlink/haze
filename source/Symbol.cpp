@@ -1,6 +1,6 @@
 import std;
 
-#include "Symbol.h"
+#include <symbol/Symbol.h>
 
 // Haze Symbol.cpp
 // (c) Connor J. Link. All Rights Reserved.

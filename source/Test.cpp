@@ -1,6 +1,6 @@
 import std;
 
-#include "Test.h"
+#include <validator/Test.h>
 
 // Haze Test.cpp
 // (c) Connor J. Link. All Rights Reserved.

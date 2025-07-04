@@ -1,11 +1,11 @@
 import std;
 
-#include "InlineAsmStatement.h"
-#include "AssemblerLinker.h"
-#include "FileManager.h"
-#include "Generator.h"
-#include "Emitter.h"
-#include "CommonErrors.h"
+#include <ast/InlineAsmStatement.h>
+#include <error/CommonErrors.h>
+#include <toolchain/AssemblerLinker.h>
+#include <toolchain/Emitter.h>
+#include <toolchain/Generator.h>
+#include <utility/Constants.h>
 
 // Haze InlineAsmStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -25,7 +25,7 @@ namespace hz
 	void InlineAsmStatement::generate(Allocation*)
 	{
 		auto linker = new AssemblerLinker{ std::move(_commands), _assembler_parser, _enclosing_file };
-		auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin());
+		auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin(), UWORD_MAX); 
 		
 		auto emitter = Emitter::from_architecture(std::move(commands), _enclosing_file);
 		auto object_code = emitter->emit();

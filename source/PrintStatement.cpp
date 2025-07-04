@@ -1,11 +1,9 @@
 import std;
 
-#include "PrintStatement.h"
-#include "Expression.h"
-#include "Allocation.h"
-#include "Generator.h"
-#include "Evaluator.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/Expression.h>
+#include <ast/PrintStatement.h>
+#include <runtime/Evaluator.h>
 
 // Haze PrintStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

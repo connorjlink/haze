@@ -1,8 +1,9 @@
 import std;
 
-#include "DotDefineCommand.h"
-#include "CommonErrors.h"
-#include "ErrorReporter.h"
+#include <command/DotDefineCommand.h>
+#include <command/models/IntegerLiteral.h>
+#include <error/CommonErrors.h>
+#include <runtime/Context.h>
 
 // Haze DotDefineCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.

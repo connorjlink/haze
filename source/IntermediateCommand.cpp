@@ -5,6 +5,7 @@ import std;
 #include <utility/BinaryUtilities.h>
 #include <utility/BinaryConstants.h>
 #include <x86/X86Builder.h>
+#include <x86/X86Register.h>
 
 // Haze IntermediateCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.

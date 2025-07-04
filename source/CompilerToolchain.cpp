@@ -1,17 +1,14 @@
 import std;
 
-#include "CompilerToolchain.h"
-#include "JobManager.h"
-#include "CompilerParser.h"
-#include "Generator.h"
-#include "CommonToolchain.h"
-#include "Symbol.h"
-#include "Constants.h"
-#include "CommandLineOptions.h"
-#include "IntermediateOptimizer.h"
-#include "X86Linker.h"
-#include "X86Emitter.h"
-#include "ErrorReporter.h"
+#include <job/JobManager.h>
+#include <symbol/Symbol.h>
+#include <toolchain/CommonToolchain.h>
+#include <toolchain/CompilerToolchain.h>
+#include <toolchain/CompilerParser.h>
+#include <toolchain/Generator.h>
+#include <toolchain/Linkable.h>
+#include <toolchain/X86Emitter.h>
+#include <toolchain/X86Linker.h>
 
 // Haze CompilerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -52,12 +49,7 @@ namespace hz
 		const auto optimize_task = REQUIRE_SAFE(JobManager)->begin_job("optimizing");
 		for (auto& linkable : linkables)
 		{
-			linkable->optimize();
-
-			auto optimizer = new IntermediateOptimizer{ linkable.symbol->name, linkable.ir };
-			auto ir_optimized = optimizer->optimize();
-
-			linkable.ir = std::move(ir_optimized);
+			linkable.optimize();
 		}
 		REQUIRE_SAFE(JobManager)->end_job(optimize_task);
 
@@ -96,7 +88,7 @@ namespace hz
 
 		//_linker = new CompilerLinker{ std::move(linkables), _filepath };
 
-		auto entrypoint = HALF_DWORD_MAX;
+		auto entrypoint = 0;
 
 		if (USE_SAFE(CommandLineOptions)->_architecture == ArchitectureType::X86)
 		{

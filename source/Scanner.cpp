@@ -1,7 +1,7 @@
 import std;
 
-#include "Scanner.h"
-#include "FileManager.h"
+#include <toolchain/Scanner.h>
+#include <io/FileManager.h>
 
 // Haze Scanner.cpp
 // (c) Connor J. Link. All Rights Reserved.

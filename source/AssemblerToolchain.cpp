@@ -37,7 +37,7 @@ namespace hz
 			std::make_shared<AssemblerLinker>(std::move(commands), AS_ASSEMBLER_PARSER(REQUIRE_SAFE(Parser).get()), filepath));
 
 		// shared environment with Assembler/Compiler
-		auto image = common_link();
+		auto image = common_link(0, UWORD_MAX); // 64k region for assembly maximum
 		auto executable = common_emit(std::move(image), filepath);
 
 		if (!USE_SAFE(ErrorReporter)->had_error())

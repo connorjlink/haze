@@ -1,6 +1,6 @@
 import std;
 
-#include "StackAllocator.h"
+#include <allocator/StackAllocator.h>
 
 // Haze StackAllocator.cpp
 // (c) Connor J. Link. All Rights Reserved.

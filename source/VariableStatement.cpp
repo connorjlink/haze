@@ -1,12 +1,9 @@
 import std;
 
-#include "VariableStatement.h"
-#include "Allocator.h"
-#include "Allocation.h"
-#include "Parser.h"
-#include "Evaluator.h"
-#include "Symbol.h"
-#include "ErrorReporter.h"
+#include <allocator/Allocation.h>
+#include <ast/VariableStatement.h>
+#include <runtime/Evaluator.h>
+#include <type/Type.h>
 
 // Haze VariableStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
