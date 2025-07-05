@@ -5,6 +5,29 @@ import std;
 // Haze JSON.h
 // (c) Connor J. Link. All Rights Reserved.
 
+namespace
+{
+	std::string escape_string(const std::string& str)
+	{
+		std::string escaped;
+		for (const char c : str)
+		{
+			switch (c)
+			{
+				case '"':  escaped += "\\\""; break;
+				case '\\': escaped += "\\\\"; break;
+				case '\b': escaped += "\\b"; break;
+				case '\f': escaped += "\\f"; break;
+				case '\n': escaped += "\\n"; break;
+				case '\r': escaped += "\\r"; break;
+				case '\t': escaped += "\\t"; break;
+				default:   escaped += c; break;
+			}
+		}
+		return escaped;
+	}
+}
+
 namespace hz
 {
 	JSONType JSONValue::jtype(void) const noexcept
@@ -20,7 +43,8 @@ namespace hz
 
 	std::string StringJSONValue::serialize(void) const noexcept
 	{
-		return std::format("\"{}\"", value);
+		const auto processed = ::escape_string(value);
+		return std::format("\"{}\"", processed);
 	}
 
 

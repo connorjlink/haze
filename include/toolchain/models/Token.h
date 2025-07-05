@@ -131,24 +131,23 @@ namespace hz
 		bimap_t{ S("qword"), TokenType::QWORD },
 
 		bimap_t{ S("function"), TokenType::FUNCTION },
-		bimap_t{ S("byte"), TokenType::BYTE },
 		bimap_t{ S("nvr"), TokenType::NVR},
 		bimap_t{ S("return"), TokenType::RETURN },
 		bimap_t{ S("while"), TokenType::WHILE },
 		bimap_t{ S("for"), TokenType::FOR },
 		bimap_t{ S("if"), TokenType::IF },
 		bimap_t{ S("else"), TokenType::ELSE },
+		bimap_t{ S("asm"), TokenType::ASM },
 		
 		bimap_t{ S("intrinsic"), TokenType::INTRINSIC },
-		bimap_t{ S("geometry"), TokenType::GEOMETRY },
+		bimap_t{ S("print"), TokenType::PRINT },
+		bimap_t{ S("declare"), TokenType::DECLARE },
 		
 		bimap_t{ S(".define"), TokenType::DOTDEFINE },
 		bimap_t{ S(".org"), TokenType::DOTORG },
 		
 		bimap_t{ S(".hook"), TokenType::DOTHOOK },
 		bimap_t{ S(".unhook"), TokenType::DOTUNHOOK },
-		
-		bimap_t{ S("asm"), TokenType::ASM },
 		
 		bimap_t{ S("r0"), TokenType::R0 },
 		bimap_t{ S("r1"), TokenType::R1 },
@@ -169,13 +168,9 @@ namespace hz
 		bimap_t{ S("pull"), TokenType::PULL },
 		bimap_t{ S("brnz"), TokenType::BRNZ },
 		bimap_t{ S("stop"), TokenType::STOP },
-		
-		bimap_t{ S("print"), TokenType::PRINT },
 
 		bimap_t{ S("string"), TokenType::STRING },
 		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },
-		
-		bimap_t{ S("declare"), TokenType::DECLARE },
 
 		bimap_t{ S("eof"), TokenType::END },
 
