@@ -11,8 +11,6 @@ import std;
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "websocket.lib")
 
-#error TODO CLEAN UP THIS CLASS AND TEST WITH BROWSER CLIENT!
-
 namespace hz
 {
 	bool WebSocketServer::start(std::uint16_t port)
@@ -102,76 +100,117 @@ namespace hz
 
 	void WebSocketServer::handle_client(SOCKET client)
 	{
+		std::string req;
 		char buffer[4096];
-		int received = recv(client, buffer, sizeof(buffer), 0);
-		if (received <= 0)
+		while (true)
 		{
-			closesocket(client);
-			return;
-		}
-		std::string req(buffer, received);
+			int received = recv(client, buffer, sizeof(buffer), 0);
+			if (received <= 0)
+			{
+				closesocket(client);
+				return;
+			}
+			req.append(buffer, received);
 
-		// 2. Extraer headers HTTP y construir array de WEB_SOCKET_HTTP_HEADER
-		std::vector<WEB_SOCKET_HTTP_HEADER> requestHeaders;
+			// HTTP request ends with two breaks
+			if (req.find("\r\n\r\n") != std::string::npos)
+				break;
+		}
+
+		std::vector<std::string> header_names;
+		std::vector<std::string> header_values;
 		std::istringstream iss(req);
 		std::string line;
-		while (std::getline(iss, line) && line != "\r")
-		{
-			auto colon = line.find(':');
-			if (colon != std::string::npos)
-			{
-				std::string name = line.substr(0, colon);
-				std::string value = line.substr(colon + 1);
-				// Quitar espacios y \r
-				while (!value.empty() && (value[0] == ' ' || value[0] == '\t')) value.erase(0, 1);
-				if (!value.empty() && value.back() == '\r') value.pop_back();
-				requestHeaders.push_back({
-					(PCHAR)name.c_str(), (ULONG)name.size(),
-					(PCHAR)value.c_str(), (ULONG)value.size()
-					});
-			}
-		}
 
-		// 3. Crear el handle WebSocket
-		WEB_SOCKET_HANDLE wsHandle = nullptr;
-		if (WebSocketCreateServerHandle(nullptr, 0, &wsHandle) != S_OK)
+		// Saltar la línea de petición (GET / HTTP/1.1)
+		if (!std::getline(iss, line))
 		{
 			closesocket(client);
 			return;
 		}
 
-		// 4. Handshake WebSocket
-		PWEB_SOCKET_HTTP_HEADER responseHeaders = nullptr;
-		ULONG responseHeaderCount = 0;
+		while (std::getline(iss, line))
+		{
+			// El final de las cabeceras HTTP es una línea vacía
+			if (line == "\r" || line.empty())
+				break;
+
+			const auto colon = line.find(':');
+			if (colon == std::string::npos)
+				continue; // Saltar líneas mal formateadas
+
+			std::string name = line.substr(0, colon);
+			std::string value = line.substr(colon + 1);
+
+			// trim leading whitespace
+			value.erase(0, value.find_first_not_of(" \t\r\n"));
+			// trim trailing whitespace
+			value.erase(value.find_last_not_of(" \t\r\n") + 1);
+
+			// trim trailing whitespace in name también
+			name.erase(name.find_last_not_of(" \t\r\n") + 1);
+
+			if (name.empty() || value.empty())
+				continue; // Saltar cabeceras vacías
+
+			header_names.push_back(name);
+			header_values.push_back(value);
+		}
+
+		std::vector<WEB_SOCKET_HTTP_HEADER> request_headers;
+		for (std::size_t i = 0; i < header_names.size(); ++i)
+		{
+			request_headers.push_back(
+				{
+				const_cast<PCHAR>(header_names[i].c_str()), static_cast<ULONG>(header_names[i].size()),
+				const_cast<PCHAR>(header_values[i].c_str()), static_cast<ULONG>(header_values[i].size())
+			});
+		}
+
+		WEB_SOCKET_HANDLE websocket_handle = nullptr;
+		if (WebSocketCreateServerHandle(nullptr, 0, &websocket_handle) != S_OK)
+		{
+			closesocket(client);
+			return;
+		}
+
+		PWEB_SOCKET_HTTP_HEADER response_headers = nullptr;
+		ULONG response_header_count = 0;
 		if (WebSocketBeginServerHandshake(
-			wsHandle,
-			nullptr, // subprotocol
-			nullptr, 0, // extensions
-			requestHeaders.data(), (ULONG)requestHeaders.size(),
-			&responseHeaders, &responseHeaderCount) != S_OK)
+			websocket_handle,
+			nullptr, 
+			nullptr, 0,
+			request_headers.data(), static_cast<ULONG>(request_headers.size()),
+			&response_headers, &response_header_count) != S_OK)
 		{
-			WebSocketDeleteHandle(wsHandle);
+			WebSocketDeleteHandle(websocket_handle);
 			closesocket(client);
 			return;
 		}
 
-		// 5. Enviar respuesta HTTP con los headers generados por la API
 		std::ostringstream oss;
 		oss << "HTTP/1.1 101 Switching Protocols\r\n";
-		for (ULONG i = 0; i < responseHeaderCount; ++i)
+		for (ULONG i = 0; i < response_header_count; ++i)
 		{
-			oss.write(responseHeaders[i].pcName, responseHeaders[i].ulNameLength);
+			oss.write(response_headers[i].pcName, response_headers[i].ulNameLength);
 			oss << ": ";
-			oss.write(responseHeaders[i].pcValue, responseHeaders[i].ulValueLength);
+			oss.write(response_headers[i].pcValue, response_headers[i].ulValueLength);
 			oss << "\r\n";
 		}
 		oss << "\r\n";
-		std::string response = oss.str();
-		send(client, response.c_str(), (int)response.size(), 0);
+		auto response = oss.str();
+		send(client, response.c_str(), static_cast<int>(response.size()), 0);
 
-		if (WebSocketEndServerHandshake(wsHandle) != S_OK)
+		if (WebSocketEndServerHandshake(websocket_handle) != S_OK)
 		{
-			WebSocketDeleteHandle(wsHandle);
+			WebSocketDeleteHandle(websocket_handle);
+			closesocket(client);
+			return;
+		}
+
+		if (WebSocketReceive(websocket_handle, nullptr, nullptr) != S_OK)
+		{
+			WebSocketDeleteHandle(websocket_handle);
 			closesocket(client);
 			return;
 		}
@@ -181,56 +220,87 @@ namespace hz
 			on_open(client);
 		}
 
-		// 6. Bucle de mensajes usando la API WebSocket
 		bool local_running = true;
 		while (local_running && running)
 		{
+			fd_set readfds{};
+			FD_ZERO(&readfds);
+			FD_SET(client, &readfds);
+
+			timeval timeout{};
+			// maximum 1 second interval
+			timeout.tv_sec = 1;
+			timeout.tv_usec = 0;
+
+			int ready = select(0, &readfds, nullptr, nullptr, &timeout);
+			if (ready < 0)
+			{
+				break;
+			}
+			if (ready == 0)
+			{
+				continue;
+			}
+
 			WEB_SOCKET_ACTION action;
-			WEB_SOCKET_BUFFER_TYPE bufferType;
+			WEB_SOCKET_BUFFER_TYPE buffer_type;
 			WEB_SOCKET_BUFFER buffer;
 			ULONG bufferCount = 1;
-			PVOID appContext = nullptr, actionContext = nullptr;
+			PVOID appContext = nullptr, action_context = nullptr;
 
 			if (WebSocketGetAction(
-				wsHandle,
+				websocket_handle,
 				WEB_SOCKET_RECEIVE_ACTION_QUEUE,
 				&buffer, &bufferCount,
-				&action, &bufferType,
-				&appContext, &actionContext) != S_OK)
+				&action, &buffer_type,
+				&appContext, &action_context) != S_OK)
 			{
 				break;
 			}
 
 			switch (action)
 			{
-			case WEB_SOCKET_RECEIVE_FROM_NETWORK_ACTION:
-			{
-				int n = recv(client, (char*)buffer.Data.pbBuffer, buffer.Data.ulBufferLength, 0);
-				if (n <= 0)
+				case WEB_SOCKET_RECEIVE_FROM_NETWORK_ACTION:
 				{
-					local_running = false;
+					int bytes_received = recv(client, (char*)buffer.Data.pbBuffer, buffer.Data.ulBufferLength, 0);
+					if (bytes_received <= 0)
+					{
+						local_running = false;
+						break;
+					}
+					WebSocketCompleteAction(websocket_handle, action_context, bytes_received);
 					break;
 				}
-				WebSocketCompleteAction(wsHandle, actionContext, n);
-				break;
-			}
-			case WEB_SOCKET_INDICATE_RECEIVE_COMPLETE_ACTION:
-			{
-				if (bufferType == WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE && on_message)
+				case WEB_SOCKET_INDICATE_RECEIVE_COMPLETE_ACTION:
 				{
-					std::string msg((char*)buffer.Data.pbBuffer, buffer.Data.ulBufferLength);
-					on_message(client, msg);
+					if (buffer_type == WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE && on_message)
+					{
+						std::string message(reinterpret_cast<char*>(buffer.Data.pbBuffer), buffer.Data.ulBufferLength);
+						on_message(client, message);
+					}
+					else if (buffer_type == WEB_SOCKET_CLOSE_BUFFER_TYPE)
+					{
+						local_running = false;
+					}
+					WebSocketCompleteAction(websocket_handle, action_context, 0);
+
+					if (local_running && running)
+					{
+						if (WebSocketReceive(websocket_handle, nullptr, nullptr) != S_OK)
+						{
+							local_running = false;
+						}
+					}
+					break;
 				}
-				else if (bufferType == WEB_SOCKET_CLOSE_BUFFER_TYPE)
+				case WEB_SOCKET_NO_ACTION:
 				{
-					local_running = false;
+					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+					break;
 				}
-				WebSocketCompleteAction(wsHandle, actionContext, 0);
-				break;
-			}
-			default:
-				WebSocketCompleteAction(wsHandle, actionContext, 0);
-				break;
+				default:
+					WebSocketCompleteAction(websocket_handle, action_context, 0);
+					break;
 			}
 		}
 
@@ -238,15 +308,17 @@ namespace hz
 		{
 			on_close(client);
 		}
-		WebSocketDeleteHandle(wsHandle);
+
+		WebSocketDeleteHandle(websocket_handle);
 		closesocket(client);
 	}
 
-	void WebSocketServer::emit_error(const std::string& message)
+	void WebSocketServer::emit_error(const std::string& message) const
 	{
 		if (on_error)
 		{
 			on_error(message);
 		}
+		std::cerr << message << std::endl;
 	}
 }

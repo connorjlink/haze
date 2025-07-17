@@ -7,6 +7,7 @@ import std;
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <io/FileManager.h>
+#include <io/WebSocketServer.h>
 #include <job/AutoJob.h>
 #include <job/JobManager.h>
 #include <runtime/Context.h>
@@ -32,6 +33,26 @@ using namespace hz;
 
 int main(int argc, char** argv)
 {
+	WebSocketServer server{ [](SOCKET client)
+	{
+		std::cout << "New client connected: " << client << std::endl;
+	}, [](SOCKET client, const std::string& message)
+	{
+		std::cout << "Received message from client " << client << ": " << message << std::endl;
+	}, [](SOCKET client)
+	{
+		std::cout << "Client disconnected: " << client << std::endl;
+	}, [](const std::string& error)
+	{
+		std::cerr << "Error: " << error << std::endl;
+	} };
+
+	server.start(8080);
+
+	std::cout << "WebSocket server started on port 8080." << std::endl;
+
+	std::cin.get();
+
 	// global (thread-shared) singleton startup
 	SingletonContainer::instance().register_singleton<ErrorReporter>();
 	SingletonContainer::instance().register_singleton<FileManager>();
