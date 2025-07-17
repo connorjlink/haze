@@ -156,6 +156,7 @@ namespace hz
 
 		bimap_t{ S("move"), TokenType::MOVE },
 		bimap_t{ S("load"), TokenType::LOAD },
+		bimap_t{ S("save"), TokenType::SAVE },
 		bimap_t{ S("copy"), TokenType::COPY },
 		bimap_t{ S("iadd"), TokenType::IADD },
 		bimap_t{ S("isub"), TokenType::ISUB },

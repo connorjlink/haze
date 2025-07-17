@@ -135,6 +135,7 @@
     <ClCompile Include="source\Validator.cpp" />
     <ClCompile Include="source\Variable.cpp" />
     <ClCompile Include="source\VariableStatement.cpp" />
+    <ClCompile Include="source\WebSocketServer.cpp" />
     <ClCompile Include="source\WhileStatement.cpp" />
     <ClCompile Include="source\X86Builder.cpp" />
     <ClCompile Include="source\X86BuilderValidator.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="include\CompilerToolchain.h" />
     <ClInclude Include="include\CompoundStatement.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\io\WebSocketServer.h" />
     <ClInclude Include="include\runtime\Context.h" />
     <ClInclude Include="include\data\Tracking.h" />
     <ClInclude Include="include\data\UndoableRedoable.h" />
@@ -203,6 +205,7 @@
     <ClInclude Include="include\DotOrgCommand.h" />
     <ClInclude Include="include\Emitter.h" />
     <ClInclude Include="include\EmitterType.h" />
+    <ClInclude Include="include\statistic\models\Statistic.h" />
     <ClInclude Include="include\toolchain\Emitter.h" />
     <ClInclude Include="include\toolchain\EmitterType.h" />
     <ClInclude Include="source %28old%29\HazeEmitter.h">
