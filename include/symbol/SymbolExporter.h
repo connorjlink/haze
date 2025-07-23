@@ -4,7 +4,7 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <io/WebSocketClient.h>
-#undef VOID
+#undef VOID // windows lol
 #include <toolchain/models/Token.h>
 
 // Haze SymbolExporter.h

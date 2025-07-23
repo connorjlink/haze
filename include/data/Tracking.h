@@ -52,7 +52,7 @@ namespace hz
 		std::unordered_map<tracking_id, TrackingInformation> _database;
 
 	private:
-		bool validate_existing(tracking_id id)
+		bool validate_exists(tracking_id id)
 		{
 			if (!_database.contains(id))
 			{
@@ -87,7 +87,7 @@ namespace hz
 				return false;
 			}
 
-			if (!validate_existing(entity->_id))
+			if (!validate_exists(entity->_id))
 			{
 				return false;
 			}
@@ -209,6 +209,36 @@ namespace hz
 		}
 
 	public:
+		// even though these processes will be slow, this has to take a copy to prevent invalidating the database
+		// in case the functions get called at a time other than program exit
+
+		std::vector<decltype(_database)::value_type> get_tracking_information(void) const
+		{
+			std::vector<decltype(_database)::value_type> result{};
+			result.reserve(_database.size());
+
+			for (auto& kv : _database)
+			{
+				result.emplace_back(kv);
+			}
+
+			return result;
+		}
+
+		std::vector<TrackingInformation> scan_stale_entities(void) const
+		{
+			std::vector<TrackingInformation> result{};
+
+			for (const auto& [key, value] : _database)
+			{
+				if (value.number_retired > value.number_deleted && value.is_active)
+				{
+					result.emplace_back(value);
+				}
+			}
+			return result;
+		}
+
 		std::vector<TrackingInformation> scan_memory_leaks(void) const
 		{
 			std::vector<TrackingInformation> result{};
@@ -217,8 +247,6 @@ namespace hz
 			{
 				if (value.number_created > value.number_deleted)
 				{
-					// even though this process will be slow, this has to take a copy to prevent invalidating the database
-					// in case this function is called at a time other than program exit
 					result.emplace_back(value);
 				}
 			}

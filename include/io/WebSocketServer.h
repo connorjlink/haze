@@ -1,10 +1,10 @@
 #ifndef HAZE_WEBSOCKETSERVER_H
 #define HAZE_WEBSOCKETSERVER_H
 
+#include <WinSock2.h>
+
 // Haze WebSocketServer.h
 // (c) Connor J. Link. All Rights Reserved.
-
-#include <WinSock2.h>
 
 namespace hz
 {
