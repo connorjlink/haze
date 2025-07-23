@@ -33,6 +33,9 @@ namespace hz
 		void attach_to_process(const std::wstring&);
 		bool inject_software_breakpoint_at(DWORD, BYTE&);
 		bool inject_hardware_breakpoint_at(DWORD, BYTE&);
+		bool set_single_step(void);
+#warning TODO: Implement hardware context schedulding (effective USING_CONTEXT_SAFE with a callable)
+#warning TODO: implement state transformations with a source map to enable step in/out (reverse source position to a memory address in the corresponding function)
 	};
 }
 

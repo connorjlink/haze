@@ -166,5 +166,22 @@ namespace hz
 		context.Dr7 = (context.Dr7 & ~0xF) | 0x1;  
 
 		SetThreadContext(_thread_handle, &context);
+
+		return true;
 	}
+
+	bool Debugger::set_single_step(void)
+	{
+		CONTEXT context{};
+		context.ContextFlags = CONTEXT_FULL;
+		GetThreadContext(_thread_handle, &context);
+
+		context.EFlags |= 0x100; // Set Trap Flag
+
+		SetThreadContext(_thread_handle, &context);
+		ContinueDebugEvent(dbg.dwProcessId, dbg.dwThreadId, DBG_CONTINUE);
+
+		return true;
+	}
+#warning TODO: implement a driver system that effectively watches the process and runs WaitForDebugEvent/ContinueDebugEvent in a loop
 }
