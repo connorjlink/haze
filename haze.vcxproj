@@ -56,6 +56,8 @@
     <ClCompile Include="source\CompilerToolchain.cpp" />
     <ClCompile Include="source\CompoundStatement.cpp" />
     <ClCompile Include="source\Context.cpp" />
+    <ClCompile Include="source\Daemon.cpp" />
+    <ClCompile Include="source\Debugger.cpp" />
     <ClCompile Include="source\DependencyInjector.cpp" />
     <ClCompile Include="source\Disassembler.cpp" />
     <ClCompile Include="source\DotDefineCommand.cpp" />
@@ -195,6 +197,8 @@
     <ClInclude Include="include\CompilerToolchain.h" />
     <ClInclude Include="include\CompoundStatement.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\daemon\Daemon.h" />
+    <ClInclude Include="include\daemon\Debugger.h" />
     <ClInclude Include="include\io\WebSocketServer.h" />
     <ClInclude Include="include\runtime\Context.h" />
     <ClInclude Include="include\data\Tracking.h" />
@@ -206,6 +210,7 @@
     <ClInclude Include="include\Emitter.h" />
     <ClInclude Include="include\EmitterType.h" />
     <ClInclude Include="include\statistic\models\Statistic.h" />
+    <ClInclude Include="include\statistic\StatisticExporter.h" />
     <ClInclude Include="include\toolchain\Emitter.h" />
     <ClInclude Include="include\toolchain\EmitterType.h" />
     <ClInclude Include="source %28old%29\HazeEmitter.h">
