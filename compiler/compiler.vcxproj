@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{96540526-fbf4-4718-836d-6cc09d2ce345}</ProjectGuid>
+    <RootNamespace>compiler</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <BuildStlModules>true</BuildStlModules>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <BuildStlModules>true</BuildStlModules>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\AdjustExpression.cpp" />
+    <ClCompile Include="source\Allocation.cpp" />
+    <ClCompile Include="source\ArgumentExpression.cpp" />
+    <ClCompile Include="source\AssemblerLinker.cpp" />
+    <ClCompile Include="source\AssemblerParser.cpp" />
+    <ClCompile Include="source\AssemblerToolchain.cpp" />
+    <ClCompile Include="source\AutoErrorContext.cpp" />
+    <ClCompile Include="source\AutoJob.cpp" />
+    <ClCompile Include="source\AutoJSON.cpp" />
+    <ClCompile Include="source\Bimap.cpp" />
+    <ClCompile Include="source\BinaryExpression.cpp" />
+    <ClCompile Include="source\BinaryUtilities.cpp" />
+    <ClCompile Include="source\Command.cpp" />
+    <ClCompile Include="source\CommandLineParser.cpp" />
+    <ClCompile Include="source\CommonErrors.cpp" />
+    <ClCompile Include="source\CommonToolchain.cpp" />
+    <ClCompile Include="source\CompilerLinker.cpp" />
+    <ClCompile Include="source\CompilerParser.cpp" />
+    <ClCompile Include="source\CompilerToolchain.cpp" />
+    <ClCompile Include="source\CompoundStatement.cpp" />
+    <ClCompile Include="source\Context.cpp" />
+    <ClCompile Include="source\Daemon.cpp" />
+    <ClCompile Include="source\Debugger.cpp" />
+    <ClCompile Include="source\DependencyInjector.cpp" />
+    <ClCompile Include="source\Disassembler.cpp" />
+    <ClCompile Include="source\DotDefineCommand.cpp" />
+    <ClCompile Include="source\DotOrgCommand.cpp" />
+    <ClCompile Include="source\Emitter.cpp" />
+    <ClCompile Include="source\Error.cpp" />
+    <ClCompile Include="source\ErrorContext.cpp" />
+    <ClCompile Include="source\ErrorReporter.cpp" />
+    <ClCompile Include="source\Evaluator.cpp" />
+    <ClCompile Include="source\ExitProgramException.cpp" />
+    <ClCompile Include="source\ExitStatement.cpp" />
+    <ClCompile Include="source\Expression.cpp" />
+    <ClCompile Include="source\ExpressionStatement.cpp" />
+    <ClCompile Include="source\ExtendedInteger.cpp" />
+    <ClCompile Include="source\File.cpp" />
+    <ClCompile Include="source\FileManager.cpp" />
+    <ClCompile Include="source\ForStatement.cpp" />
+    <ClCompile Include="source\Function.cpp" />
+    <ClCompile Include="source\FunctionArgumentExpression.cpp" />
+    <ClCompile Include="source\FunctionCallExpression.cpp" />
+    <ClCompile Include="source\Generator.cpp" />
+    <ClCompile Include="source\HeapAllocator.cpp" />
+    <ClCompile Include="source\IdentifierExpression.cpp" />
+    <ClCompile Include="source\IfStatement.cpp" />
+    <ClCompile Include="source\InlineAsmStatement.cpp" />
+    <ClCompile Include="source\InstructionCommand.cpp" />
+    <ClCompile Include="source\InstructionValidator.cpp" />
+    <ClCompile Include="source\IntegerLiteral.cpp" />
+    <ClCompile Include="source\IntegerLiteralExpression.cpp" />
+    <ClCompile Include="source\IntermediateCommand.cpp" />
+    <ClCompile Include="source\Job.cpp" />
+    <ClCompile Include="source\JobManager.cpp" />
+    <ClCompile Include="source\JSON.cpp" />
+    <ClCompile Include="source\LabelCommand.cpp" />
+    <ClCompile Include="source\Lexer.cpp" />
+    <ClCompile Include="source\Linkable.cpp" />
+    <ClCompile Include="source\Linker.cpp" />
+    <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\MemberDeclarationExpression.cpp" />
+    <ClCompile Include="source\NullStatement.cpp" />
+    <ClCompile Include="source\Parser.cpp" />
+    <ClCompile Include="source\PEBuilder.cpp" />
+    <ClCompile Include="source\Preprocessor.cpp" />
+    <ClCompile Include="source\PrintStatement.cpp" />
+    <ClCompile Include="source\Random.cpp" />
+    <ClCompile Include="source\ReturnStatement.cpp" />
+    <ClCompile Include="source\RuntimeAllocator.cpp" />
+    <ClCompile Include="source\Scanner.cpp" />
+    <ClCompile Include="source\StackAllocator.cpp" />
+    <ClCompile Include="source\Statement.cpp" />
+    <ClCompile Include="source\StringExpression.cpp" />
+    <ClCompile Include="source\StructDeclarationStatement.cpp" />
+    <ClCompile Include="source\StructMember.cpp" />
+    <ClCompile Include="source\Symbol.cpp" />
+    <ClCompile Include="source\SymbolDatabase.cpp" />
+    <ClCompile Include="source\SymbolExporter.cpp" />
+    <ClCompile Include="source\Test.cpp" />
+    <ClCompile Include="source\Toolchain.cpp" />
+    <ClCompile Include="source\Tracking.cpp" />
+    <ClCompile Include="source\Type.cpp" />
+    <ClCompile Include="source\TypeCheck.cpp" />
+    <ClCompile Include="source\UndoableRedoable.cpp" />
+    <ClCompile Include="source\Validator.cpp" />
+    <ClCompile Include="source\Variable.cpp" />
+    <ClCompile Include="source\VariableStatement.cpp" />
+    <ClCompile Include="source\WebSocketClient.cpp" />
+    <ClCompile Include="source\WebSocketServer.cpp" />
+    <ClCompile Include="source\WhileStatement.cpp" />
+    <ClCompile Include="source\X86Builder.cpp" />
+    <ClCompile Include="source\X86BuilderValidator.cpp" />
+    <ClCompile Include="source\X86Emitter.cpp" />
+    <ClCompile Include="source\X86Instruction.cpp" />
+    <ClCompile Include="source\X86Linker.cpp" />
+    <ClCompile Include="source\X86Operand.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
