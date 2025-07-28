@@ -67,12 +67,12 @@ static const char* _explorer_items[] =
 
 ////////////////////////////////////////////////////
 
-void exception_handler(uint64_t code)
+static void exception_handler(uint64_t code)
 {
 	write_console(_console_rect, &_console_cursor, _active_color, "Error!");
 }
 
-void terminal_initialize(void)
+static void terminal_initialize(void)
 {
 	_active_color = compose_color(palette(VGA_COLOR_BLUE, VGA_COLOR_LIGHT_GREY));
 
@@ -86,13 +86,13 @@ void terminal_initialize(void)
 	}
 }
 
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
+static void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 {
 	const size_t index = (y * VGA_WIDTH) + x;
 	terminal_buffer[index] = compose_entry(c, color);
 }
 
-void terminal_putchar(char c, size_t* x, size_t* y)
+static void terminal_putchar(char c, size_t* x, size_t* y)
 {
 	switch (c)
 	{
@@ -126,7 +126,7 @@ void terminal_putchar(char c, size_t* x, size_t* y)
 	}
 }
 
-void terminal_write(const char* data, size_t size, size_t x, size_t y)
+static void terminal_write(const char* data, size_t size, size_t x, size_t y)
 {
 	for (size_t i = 0; i < size; i++)
 	{
@@ -134,12 +134,12 @@ void terminal_write(const char* data, size_t size, size_t x, size_t y)
 	}
 }
 
-void terminal_writestring(const char* data, size_t x, size_t y)
+static void terminal_writestring(const char* data, size_t x, size_t y)
 {
 	terminal_write(data, strlen(data), x, y);
 }
 
-void render_text_center(const char* data, size_t x0, size_t x1, size_t y)
+static void render_text_center(const char* data, size_t x0, size_t x1, size_t y)
 {
 	const size_t length = strlen(data);
 	const size_t midpoint = (x0 + x1) / 2;
@@ -148,7 +148,7 @@ void render_text_center(const char* data, size_t x0, size_t x1, size_t y)
 	terminal_write(data, length, begin, y);
 }
 
-void render_menubar()
+static void render_menubar()
 {
 	const size_t header_row = 0;
 	const size_t copyright_row = VGA_HEIGHT - 1;
@@ -167,7 +167,7 @@ void render_menubar()
 	_active_color = invert_color(_active_color);
 }
 
-void render_groupbox(Rect rect, uint8_t color, const char* title, bool is_selected)
+static void render_groupbox(Rect rect, uint8_t color, const char* title, bool is_selected)
 {
 	const size_t left = rect.pos.x;
 	const size_t right = rect.pos.x + rect.size.x;
@@ -239,7 +239,7 @@ void render_groupbox(Rect rect, uint8_t color, const char* title, bool is_select
 	}
 }
 
-void render_text(Rect parent, Point pos, uint8_t color, const char* text)
+static void render_text(Rect parent, Point pos, uint8_t color, const char* text)
 {
 	const size_t start_left = parent.pos.x + pos.x + 1;
 	const size_t start_top = parent.pos.y + pos.y + 1;
@@ -268,7 +268,7 @@ void render_text(Rect parent, Point pos, uint8_t color, const char* text)
 	}
 }
 
-void render_text_justified(Rect parent, Point pos, uint8_t color, const char* text)
+static void render_text_justified(Rect parent, Point pos, uint8_t color, const char* text)
 {
 	uint8_t color_cached = _active_color;
 	_active_color = color;
@@ -283,7 +283,7 @@ void render_text_justified(Rect parent, Point pos, uint8_t color, const char* te
 	_active_color = color_cached;
 }
 
-void scroll_rect(Rect parent, uint8_t color)
+static void scroll_rect(Rect parent, uint8_t color)
 {
 	const size_t left = parent.pos.x + 1;
 	const size_t right = parent.pos.x + parent.size.x;
@@ -305,7 +305,7 @@ void scroll_rect(Rect parent, uint8_t color)
 	}
 }
 
-void erase_rect(Rect rect, uint8_t color)
+static void erase_rect(Rect rect, uint8_t color)
 {
 	const size_t left = rect.pos.x + 1;
 	const size_t right = rect.pos.x + rect.size.x;
@@ -365,7 +365,9 @@ static void render_about()
 	render_text_justified(_navigator_rect, point(0, 3), _active_color, COPYRIGHT_LOGO);
 }
 
+#pragma warning disable VCR003
 void kernel_main(void)
+#pragma warning restore VCR003
 {
 	terminal_initialize();
 	render_menubar();
