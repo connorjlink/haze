@@ -1,4 +1,5 @@
 #include <Std.h>
+#include <Video.h>
 
 size_t max(size_t x, size_t y)
 {

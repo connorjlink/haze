@@ -2,11 +2,12 @@
 #define HAZEOS_STD_H
 
 #include <stddef.h>
+#include <stdint.h>
 
-size_t max(size_t x, size_t y);
-size_t min(size_t x, size_t y);
+size_t max(size_t, size_t);
+size_t min(size_t, size_t);
 
-size_t strlen(const char* str);
-char* strcpy(char* out, const char* str);
+size_t strlen(const char*);
+char* strcpy(char*, const char*);
 
 #endif 

@@ -2,6 +2,15 @@
 #define HAZEOS_VIDEO_H
 
 #include <stddef.h>
+#include <stdint.h>
+
+#define PALETTE(fg, bg) (VGAPalette){ fg, bg }
+#define INVERT_PALETTE(palette) (VGAPalette){ palette.bg, palette.fg }
+
+#define CHARACTER(c, x, y, palette) (VGACharacter){ c, x, y, palette }
+
+#define POINT(x, y) (Point){ x, y }
+#define RECT(pos, size) (Rect){ pos, size };
 
 typedef enum
 {
@@ -35,12 +44,17 @@ typedef struct
 	VGAPalette palette;
 } VGACharacter;
 
-#define PALETTE(fg, bg) (VGAPalette){ fg, bg }
-#define INVERT_PALETTE(palette) (VGAPalette){ palette.bg, palette.fg }
+typedef struct
+{
+	size_t x, y;
+} Point;
 
-#define CHARACTER(c, x, y, palette) (VGACharacter){ c, x, y, palette }
+typedef struct
+{
+	Point pos, size;
+} Rect;
 
 void disable_cursor(void);
-void write_console(Rect parent, Point* cursor, uint8_t color, const char* text);
+void write_console(Rect, Point*, uint8_t, const char*);
 
 #endif 

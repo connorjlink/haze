@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -65,6 +65,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeOutput>kernel.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeOutput>kernel.exe</NMakeOutput>
@@ -77,10 +78,29 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakeOutput>kernel.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Lib.h" />
+    <ClInclude Include="include\Std.h" />
+    <ClInclude Include="include\Video.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Kernel.c" />
+    <ClCompile Include="source\Std.c" />
+    <ClCompile Include="source\Video.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="configuration\linker.ld" />
+    <None Include="source\boot.s" />
+    <None Include="source\idt.s" />
+    <None Include="source\Lib.s" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="configuration\Makefile" />
+    <Text Include="documents\Box Characters.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

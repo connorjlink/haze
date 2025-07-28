@@ -4,15 +4,11 @@
 
 #include <Video.h>
 #include <Std.h>
+#include <Lib.h>
 
-#include "kernel.h"
-#include "utils.h"
-#include "power.h"
-#include "graphics.h"
-#include "vga.h"
-#include "defs.h"
+#define COPYRIGHT_LOGO "HazeOS. (c) Connor J. Link. All Rights Reserved."
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
-#define COPYRIGHT_LOGO "HazeOS - (c) Connor J. Link. All Rights Reserved."
 
 static uint8_t compose_color(VGAPalette palette)
 {
@@ -29,16 +25,56 @@ static uint16_t compose_entry(unsigned char uc, uint8_t color)
 	return (uint16_t)color << 8 | (uint16_t)uc;
 }
 
+////////////////////////////////////////////////////
+
+static Point point(size_t x, size_t y)
+{
+	return { x, y };
+}
+
+static Rect rect(Point pos, Point size)
+{
+	return { pos, size };
+}
+
+static VGAPalette palette(VGAColor fg, VGAColor bg)
+{
+	return { fg, bg };
+}
+
+static Rect _explorer_rect = rect(point(0, 1), point(20, 22));
+static Rect _console_rect = rect(point(21, 15), point(58, 8));
+static Rect _navigator_rect = rect(point(21, 1), point(58, 13));
+
+static Point _console_cursor = point(0, -1);
+
+static bool _explorer_selected = true;
+static size_t _explorer_index = 0;
+
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
 static uint16_t* terminal_buffer = (uint16_t*)0xB8000;
+static uint8_t _active_color = 0;
 
+static const char* _explorer_items[] =
+{
+	"Editor",
+	"Terminal",
+	"Settings",
+	"About",
+};
 
+////////////////////////////////////////////////////
+
+void exception_handler(uint64_t code)
+{
+	write_console(_console_rect, &_console_cursor, _active_color, "Error!");
+}
 
 void terminal_initialize(void)
 {
-	_active_color = compose_color(PALETTE(VGA_COLOR_BLUE, VGA_COLOR_LIGHT_GREY));
+	_active_color = compose_color(palette(VGA_COLOR_BLUE, VGA_COLOR_LIGHT_GREY));
 
 	for (size_t y = 0; y < VGA_HEIGHT; y++)
 	{
@@ -286,22 +322,9 @@ void erase_rect(Rect rect, uint8_t color)
 	}
 }
 
-const char* _explorer_items[] =
+static void render_explorer()
 {
-	"Editor",
-	"Terminal",
-	"Settings",
-	"About",
-};
-
-bool _explorer_selected = true;
-size_t _explorer_index = 0;
-
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
-
-void render_explorer()
-{
-	Point point = POINT(0, 0);
+	Point position = point(0, 0);
 
 	for (int i = 0; i < ARRAY_SIZE(_explorer_items); i++)
 	{
@@ -312,34 +335,34 @@ void render_explorer()
 			color = invert_color(color);
 		}
 
-		render_text(_explorer_rect, point, color, _explorer_items[i]);
-		point.y++;
+		render_text(_explorer_rect, position, color, _explorer_items[i]);
+		position.y++;
 	}
 }
 
-void render_editor()
+static void render_editor()
 {
 	erase_rect(_navigator_rect, _active_color);
-	render_text(_navigator_rect, POINT(0, 1), _active_color, "EDITOR");
+	render_text(_navigator_rect, point(0, 1), _active_color, "EDITOR");
 }
 
-void render_terminal()
+static void render_terminal()
 {
 	erase_rect(_navigator_rect, _active_color);
-	render_text_justified(_navigator_rect, POINT(0, 1), _active_color, "TERMINAL");
+	render_text_justified(_navigator_rect, point(0, 1), _active_color, "TERMINAL");
 }
 
-void render_settings()
+static void render_settings()
 {
 	erase_rect(_navigator_rect, _active_color);
-	render_text_justified(_navigator_rect, POINT(0, 1), _active_color, "SETTINGS");
+	render_text_justified(_navigator_rect, point(0, 1), _active_color, "SETTINGS");
 }
 
-void render_about()
+static void render_about()
 {
 	erase_rect(_navigator_rect, _active_color);
-	render_text_justified(_navigator_rect, POINT(0, 1), _active_color, "ABOUT");
-	render_text_justified(_navigator_rect, POINT(0, 3), _active_color, COPYRIGHT_LOGO);
+	render_text_justified(_navigator_rect, point(0, 1), _active_color, "ABOUT");
+	render_text_justified(_navigator_rect, point(0, 3), _active_color, COPYRIGHT_LOGO);
 }
 
 void kernel_main(void)
@@ -394,45 +417,42 @@ void kernel_main(void)
 				}
 			}
 
-
-
 			switch (c)
 			{
-			case 's':
-			{
-				if (_explorer_selected && _explorer_index < ARRAY_SIZE(_explorer_items) - 1)
+				case 's':
 				{
-					_explorer_index++;
-					render_explorer();
-				}
-			} break;
+					if (_explorer_selected && _explorer_index < ARRAY_SIZE(_explorer_items) - 1)
+					{
+						_explorer_index++;
+						render_explorer();
+					}
+				} break;
 
-			case 'w':
-			{
-				if (_explorer_selected && _explorer_index > 0)
+				case 'w':
 				{
-					_explorer_index--;
+					if (_explorer_selected && _explorer_index > 0)
+					{
+						_explorer_index--;
+						render_explorer();
+					}
+				} break;
+
+				case 'd':
+				{
+					_explorer_selected = false;
 					render_explorer();
-				}
-			} break;
+				} break;
 
-			case 'd':
-			{
-				_explorer_selected = false;
-				render_explorer();
-			} break;
+				case 'a':
+				{
+					_explorer_selected = true;
+					render_explorer();
+				} break;
 
-			case 'a':
-			{
-				_explorer_selected = true;
-				render_explorer();
-			} break;
-
-			default:
-			{
-				terminal_putchar(c, &x, &y);
-			} break;
-
+				default:
+				{
+					terminal_putchar(c, &x, &y);
+				} break;
 			}
 
 			// else if (c == 'a') 
