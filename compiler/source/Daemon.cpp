@@ -8,28 +8,28 @@ import std;
 namespace hz
 {
 	Daemon::Daemon(std::uint16_t port)
-		: server{ &OnOpen, &OnMessage, &OnClose, &OnError }
+		: server{ OnOpen, OnMessage, OnClose, OnError }
 	{
 		server.start(port);
 	}
 #pragma message("TODO: implement Daemon class to handle WebSocket connections and messages")
 	void Daemon::OnOpen(SOCKET client)
 	{
-		std::cout << "New client connected: " << client << std::endl;
+		std::print("New client connected: {}", client);
 	}
 
 	void Daemon::OnMessage(SOCKET client, const std::string& message)
 	{
-		std::cout << "Received message from client " << client << ": " << message << std::endl;
+		std::print("Received message from client {}: {}", client, message);
 	}
 
 	void Daemon::OnClose(SOCKET client)
 	{
-		std::cout << "Client disconnected: " << client << std::endl;
+		std::print("Client disconnected: {}", client);
 	}
 
 	void Daemon::OnError(const std::string& error)
 	{
-		std::cerr << "Error: " << error << std::endl;
+		std::print("Error: {}", error);
 	}
 }
