@@ -8,7 +8,7 @@ import std;
 namespace hz
 {
 	Daemon::Daemon(std::uint16_t port)
-		: server{ OnOpen, OnMessage, OnClose, OnError }
+		: server{ &OnOpen, &OnMessage, &OnClose, &OnError }
 	{
 		server.start(port);
 	}

@@ -81,9 +81,6 @@
     <ClCompile Include="source\Daemon.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\Debugger.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\DependencyInjector.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>

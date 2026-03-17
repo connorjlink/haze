@@ -16,10 +16,10 @@ namespace hz
 		WebSocketServer server;
 
 	private:
-		void OnOpen(SOCKET);
-		void OnMessage(SOCKET, const std::string&);
-		void OnClose(SOCKET);
-		void OnError(const std::string&);
+		static void OnOpen(SOCKET);
+		static void OnMessage(SOCKET, const std::string&);
+		static void OnClose(SOCKET);
+		static void OnError(const std::string&);
 
 	public:
 		Daemon(std::uint16_t);

@@ -155,7 +155,6 @@
     <ClCompile Include="source\CompoundStatement.cpp" />
     <ClCompile Include="source\Context.cpp" />
     <ClCompile Include="source\Daemon.cpp" />
-    <ClCompile Include="source\Debugger.cpp" />
     <ClCompile Include="source\DependencyInjector.cpp" />
     <ClCompile Include="source\Disassembler.cpp" />
     <ClCompile Include="source\DotDefineCommand.cpp" />
