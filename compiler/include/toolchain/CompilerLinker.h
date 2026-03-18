@@ -12,12 +12,16 @@ namespace hz
 	class CompilerLinker : public Linker
 	{
 	private:
-		std::vector<Linkable> linkables;
+		std::unordered_map<std::string, Linkable> _linkables;
 
 	public:
 		CompilerLinker(std::vector<Linkable>&& linkables, const std::string& filepath)
-			: Linker{ filepath }, linkables { std::move(linkables) }
+			: Linker{ filepath }
 		{
+			for (auto& linkable : linkables)
+			{
+				_linkables[linkable.symbol->name] = std::move(linkable);
+			}
 		}
 
 	public:

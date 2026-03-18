@@ -11,6 +11,12 @@ namespace hz
 		X86,
 		RISCV,
 	};
+
+	static const std::unordered_map<EmitterType, std::string> emitter_type_to_string
+	{
+		{ EmitterType::X86, "x86" },
+		{ EmitterType::RISCV, "riscv" },
+	};
 }
 
 #endif

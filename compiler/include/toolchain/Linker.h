@@ -7,6 +7,7 @@
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/LinkerType.h>
 #include <utility/PlatformVariables.h>
+#include <cli/CommandLineOptions.h>
 
 // Haze Linker.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,7 +18,7 @@ namespace hz
 	// translation units to the linker to produce a final command stream
 	class Linker
 		: public SingletonTag<Linker>
-		, public InjectSingleton<ErrorReporter, SymbolDatabase>
+		, public InjectSingleton<ErrorReporter, SymbolDatabase, CommandLineOptions>
 	{
 	public:
 		Linker(const std::string&);

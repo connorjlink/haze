@@ -90,9 +90,6 @@
     <ClCompile Include="source\DotOrgCommand.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\Emitter.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\Error.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -416,12 +413,6 @@
     <ClInclude Include="include\toolchain\CompilerToolchain.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\toolchain\Emitter.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\EmitterType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\toolchain\Generator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -453,15 +444,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\ToolchainType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\X86Emitter.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\X86Linker.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\models\InstructionEncoding.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Token.h">
@@ -720,6 +702,12 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\allocator\StackAllocator.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\toolchain\AssemblerParserType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\toolchain\X86AssemblerParser.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

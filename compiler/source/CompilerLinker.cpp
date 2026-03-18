@@ -88,12 +88,17 @@ namespace hz
 
 	bool CompilerLinker::optimize()
 	{
-		for (auto& [symbol, function, ir, offset] : linkables)
+		for (auto& [name, linkable] : _linkables)
 		{
+			auto& [symbol, function, ir, offset] = linkable;
+
 			for (auto i = 0; i < function.size(); i++)
 			{
 #pragma message("TODO: FIX THIS REGISTER ENUMERATIO SINCE X86 HAS MORE REGISTERS!")
-				for (auto r = R0; r <= R3; r = static_cast<Register>(r + 1))
+
+				const auto register_minimum = USE_SAFE(CommandLineOptions)->_architecture
+
+				for (auto r = 0; r <= R3; r = static_cast<Register>(r + 1))
 				{
 					//TODO: ensure none of our bytes are branch targets
 
@@ -193,13 +198,17 @@ namespace hz
 		native_uint address_tracker = 0;
 
 		// resolve the length of each instruction to compute each label's address
-		for (auto& [symbol, function, ir, offset] : linkables)
+		for (auto& [name, linkable] : _linkables)
 		{
+			
+			auto& [symbol, function, ir, offset] = linkable;
+
 			if (symbol->was_referenced)
 			{
 				if (USE_UNSAFE(CommandLineOptions)->_optimization & OptimizationType::LTO)
 				{
-					while (optimize());
+					while (optimize())
+						;
 				}
 
 				offset = address_tracker;
@@ -239,12 +248,14 @@ namespace hz
 			}
 		}
 
-		for (auto& [symbol, function, ir, offset] : linkables)
+		for (auto& [name, linkable] : _linkables)
 		{
+			auto& [symbol, function, ir, offset] = linkable;
+
 			// reset the address tracker to be used again
 			address_tracker = 0;
 
-			for (auto& linkable : linkables)
+			for (auto& [_, linkable] : _linkables)
 			{
 				for (auto command : linkable.commands)
 				{
@@ -255,7 +266,7 @@ namespace hz
 						{
 							auto label = AS_LABEL_COMMAND(command);
 
-							for (auto& patching_linkable : linkables)
+							for (auto& [_, patching_linkable] : _linkables)
 							{
 								for (auto patching_command : patching_linkable.commands)
 								{
@@ -336,9 +347,11 @@ namespace hz
 			}
 		}
 
-		for (auto& [symbol, function, ir, offset] : linkables)
+		for (auto& [name, linkable] : _linkables)
 		{
-			for (auto i = 0; i < function.size(); i++)
+			auto& [symbol, function, ir, offset] = linkable;
+
+			for (auto i = 0uz; i < function.size(); i++)
 			{
 				const auto& command = function[i];
 
@@ -356,31 +369,16 @@ namespace hz
 
 						if (!instruction->marked_for_deletion)
 						{
-							const auto embedded_size = instruction->approximate_embedded_size;
-
-							if (embedded_size != 0)
+							for (auto& embedded_instruction : instruction->embedded_object_code)
 							{
-								for (auto j = i + 1; j < function.size(); j++)
+								// NOTE: since we don't do any safety checks on inline assembly,
+								// we could (or maybe even likely) are overwriting compiler-generated code.
+								// Depending on our needs going forward, this might be very undesirable for debugging purposes.
+
+								if (embedded_instruction != nullptr)
 								{
-									function[j]->offset += embedded_size;
+									executable.emplace_back(embedded_instruction);
 								}
-
-								for (auto& embedded_instruction : instruction->embedded_object_code)
-								{
-									// NOTE: since we don't do any safety checks on inline assembly,
-									// we could (or maybe even likely) are overwriting compiler-generated code.
-									// Depending on our needs going forward, this might be very undesirable for debugging purposes.
-
-									if (embedded_instruction != nullptr)
-									{
-										executable.emplace_back(embedded_instruction);
-									}
-								}
-							}
-
-							else // (embedded_size == 0)
-							{
-								executable.emplace_back(instruction);
 							}
 						}
 					} break;

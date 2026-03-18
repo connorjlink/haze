@@ -31,30 +31,8 @@ namespace hz
 		return ParserType::ASSEMBLER;
 	}
 
-	Register AssemblerParser::parse_register()
+	Expression* AssemblerParser::parse_literal()
 	{
-		static const std::unordered_map<TokenType, Register> registers
-		{
-			{ TokenType::R0, R0 },
-			{ TokenType::R1, R1 },
-			{ TokenType::R2, R2 },
-			{ TokenType::R3, R3 },
-		};
-
-		if (const auto it_operand = registers.find(peek().type); it_operand != std::end(registers))
-		{
-			consume(peek().type);
-			return it_operand->second;
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format("expected a register but got {}", peek().text), peek());
-		return static_cast<Register>(0);
-	}
-
-	Expression* AssemblerParser::parse_literal(TokenType type)
-	{
-		consume(type);
-
 		if (peek().type == TokenType::IDENTIFIER)
 		{
 			const auto& label_command_token = peek();
@@ -72,23 +50,20 @@ namespace hz
 		return new IntegerLiteralExpression{ address, literal_expression->_token };
 	}
 
-	Expression* AssemblerParser::parse_address()
-	{
-		return parse_literal(TokenType::AMPERSAND);
-	}
-
-	Expression* AssemblerParser::parse_immediate()
-	{
-		return parse_literal(TokenType::POUND);
-	}
-
 	Node* AssemblerParser::parse_dotorg_command()
 	{
 		consume(TokenType::DOTORG);
+		const auto& token = lookahead();
 
-		const auto address_expression = parse_address();
+		const auto address_expression = parse_literal();
+		if (address_expression->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"address of `.org` must result in a constant expression"), token);
+			return nullptr;
+		}
+
 		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
-
 		return new DotOrgCommand{ integer_literal_raw(address), address_expression->_token };
 	}
 
@@ -108,27 +83,7 @@ namespace hz
 
 	Node* AssemblerParser::parse_instruction_command()
 	{
-		//TODO: this is probably useless and should later be removed but I am leaving for now in case I come up with a need for it :)
-		/*static const std::unordered_map<TokenType, Opcode> opcodes
-		{
-			{ TokenType::MOVE, MOVE },
-			{ TokenType::LOAD, LOAD },
-			{ TokenType::COPY, COPY },
-			{ TokenType::SAVE, SAVE },
-			{ TokenType::IADD, IADD },
-			{ TokenType::ISUB, ISUB },
-			{ TokenType::BAND, BAND },
-			{ TokenType::BIOR, BIOR },
-			{ TokenType::BXOR, BXOR },
-			{ TokenType::CALL, CALL },
-			{ TokenType::EXIT, EXIT },
-			{ TokenType::PUSH, PUSH },
-			{ TokenType::PULL, PULL },
-			{ TokenType::BREZ, BREZ },
-		};*/
-
-
-		//TODO: patch branch_target resolution to more generally just resolve labels!
+#pragma message("TODO: patch branch_target resolution to more generally just resolve labels!")
 		switch (peek().type)
 		{
 			case TokenType::MOVE:
@@ -148,11 +103,12 @@ namespace hz
 
 				const auto operand1 = parse_register();
 				consume(TokenType::COMMA);
-				const auto operand2 = parse_address();
+				const auto operand2 = parse_literal();
 
+				byterange object_code{};
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ load_token, std::move(object_code), AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
 				return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value) };
@@ -164,7 +120,7 @@ namespace hz
 
 				const auto operand1 = parse_register();
 				consume(TokenType::COMMA);
-				const auto operand2 = parse_immediate();
+				const auto operand2 = parse_literal();
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
