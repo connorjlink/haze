@@ -8,11 +8,17 @@
 
 namespace hz
 {
+	enum class DisassemblerType
+	{
+		RISCV,
+	};
+
 	class Disassembler
 	{
 	public:
-		static std::string disassemble_instruction(std::uint32_t);
-		static std::string disassemble_program(const std::vector<ubyte>&, std::size_t, std::size_t);
+		virtual DissassemblerType dtype() const = 0;
+		// returns the next instruction
+		virtual std::string disassemble_next(const std::vector<ubyte>&, std::size_t&) const = 0;
 	};
 }
 
