@@ -53,19 +53,19 @@ namespace
 		switch (instruction->opcode)
 		{
 			case MOVE: length = REQUIRE_UNSAFE(Emitter)->emit_move(instruction->destination, instruction->source).size(); break;
-			case LOAD: length = REQUIRE_UNSAFE(Emitter)->emit_load(instruction->destination, instruction->address).size(); break;
+			case LOAD: length = REQUIRE_UNSAFE(Emitter)->emit_load(instruction->destination, instruction->absolute).size(); break;
 			case COPY: length = REQUIRE_UNSAFE(Emitter)->emit_copy(instruction->destination, instruction->immediate).size(); break;
-			case SAVE: length = REQUIRE_UNSAFE(Emitter)->emit_save(instruction->address, instruction->source).size(); break;
+			case SAVE: length = REQUIRE_UNSAFE(Emitter)->emit_save(instruction->absolute, instruction->source).size(); break;
 			case IADD: length = REQUIRE_UNSAFE(Emitter)->emit_iadd(instruction->destination, instruction->source).size(); break;
 			case ISUB: length = REQUIRE_UNSAFE(Emitter)->emit_isub(instruction->destination, instruction->source).size(); break;
 			case BAND: length = REQUIRE_UNSAFE(Emitter)->emit_band(instruction->destination, instruction->source).size(); break;
 			case BIOR: length = REQUIRE_UNSAFE(Emitter)->emit_bior(instruction->destination, instruction->source).size(); break;
 			case BXOR: length = REQUIRE_UNSAFE(Emitter)->emit_bior(instruction->destination, instruction->source).size(); break;
-			case CALL: length = REQUIRE_UNSAFE(Emitter)->emit_call(instruction->address).size(); break;
+			case CALL: length = REQUIRE_UNSAFE(Emitter)->emit_call(instruction->relative).size(); break;
 			case EXIT: length = REQUIRE_UNSAFE(Emitter)->emit_exit().size(); break;
 			case PUSH: length = REQUIRE_UNSAFE(Emitter)->emit_push(instruction->source).size(); break;
 			case PULL: length = REQUIRE_UNSAFE(Emitter)->emit_pull(instruction->destination).size(); break;
-			case BRNZ: length = REQUIRE_UNSAFE(Emitter)->emit_brnz(instruction->address, instruction->source).size(); break;
+			case BRNZ: length = REQUIRE_UNSAFE(Emitter)->emit_brnz(instruction->relative, instruction->source).size(); break;
 			case BOOL: length = REQUIRE_UNSAFE(Emitter)->emit_bool(instruction->source).size(); break;
 			case STOP: length = REQUIRE_UNSAFE(Emitter)->emit_stop().size(); break;
 		}
@@ -155,7 +155,7 @@ namespace hz
 										 (i0->opcode == Opcode::LOAD && i0->destination == r &&  //load r, &x
 										  i1->opcode == Opcode::SAVE && i1->source == r))   //save &x, r
 								{
-									if (i0->address == i1->address)
+									if (i0->absolute == i1->absolute)
 									{
 										//These instructions are entirely redundant
 										i0->marked_for_deletion = true;
@@ -278,7 +278,7 @@ namespace hz
 													// compute the relative address
 													const auto distance = branch_target - branch_start - resolve_instruction_length(patching_instruction);
 
-													patching_instruction->address = distance;
+													patching_instruction->absolute = distance;
 
 													// NOTE: absolute addressing only works for brnz
 													//const auto branch_target = base_pointer + label->offset;
@@ -317,7 +317,7 @@ namespace hz
 
 										// NOTE: call only works with relative addressing
 										//const auto call_target = branch_target - address_tracker + length + length - base_pointer;
-										instruction->address = distance;
+										instruction->absolute = distance;
 									}
 
 								}

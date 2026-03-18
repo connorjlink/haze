@@ -519,7 +519,8 @@ namespace hz
 
 					else
 					{
-						USE_SAFE(ErrorReporter)->post_error("unsupported compiler code generation for multiplication", right_optimized->_token);
+						USE_SAFE(ErrorReporter)->post_error(
+							"unsupported compiler code generation for multiplication", right_optimized->_token);
 						return nullptr;
 					}
 				}
@@ -553,7 +554,8 @@ namespace hz
 
 					else
 					{
-						USE_SAFE(ErrorReporter)->post_error("unsupported compiler code generation for multiplication", left_optimized->_token);
+						USE_SAFE(ErrorReporter)->post_error(
+							"unsupported compiler code generation for multiplication", left_optimized->_token);
 						return nullptr;
 					}
 				}

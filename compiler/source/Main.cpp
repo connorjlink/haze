@@ -16,6 +16,8 @@ import std;
 #include <toolchain/CompilerParser.h>
 #include <toolchain/CompilerToolchain.h>
 #include <toolchain/AssemblerToolchain.h>
+#include <toolchain/Linker.h>
+#include <toolchain/X86Linker.h>
 #include <utility/ExitProgramException.h>
 #include <validator/X86BuilderValidator.h>
 
@@ -47,11 +49,11 @@ int main(int argc, char** argv)
 		std::cerr << "Error: " << error << std::endl;
 	} };
 
-	server.start(8080);
+	/*server.start(8080);
 
 	std::cout << "WebSocket server started on port 8080." << std::endl;
 
-	std::cin.get();
+	std::cin.get();*/
 
 	// global (thread-shared) singleton startup
 	SingletonContainer::instance().register_singleton<ErrorReporter>();
@@ -83,19 +85,51 @@ int main(int argc, char** argv)
 		}
 	}
 
+	auto is_error = false;
+
+	using enum ArchitectureType;
+	switch (USE_UNSAFE(CommandLineOptions)->_architecture)
+	{
+		case X86:
+		{
+			SingletonContainer::instance().register_singleton_polymorphic<Linker>([&]
+			{
+				return std::make_shared<CompilerLinker>();
+			});
+		} break;
+
+		case RISCV:
+		{
+			std::println("Need to implement this first!");
+			terminate();
+		} break;
+
+		default:
+		{
+			USE_UNSAFE(ErrorReporter)->post_error("invalid architecture type", NULL_TOKEN);
+			is_error = true;
+		} break;
+	}
+
+
 	for (auto& filepath : command_line_parser.files())
 	{
 		// TODO: break specified files into workgroups to spawn a thread pool
 
 		try
 		{
+			if (is_error)
+			{
+				throw std::exception("initialization failure");
+			}
+
 			auto& file_manager = *USE_UNSAFE(FileManager);
 			file_manager.open_file(filepath);
 
 			const auto& file = file_manager.get_file(filepath);
 
 			// TODO: instance (thread-local) services startup
-			ServiceContainer::instance().register_factory<JobManager>([]
+			ServiceContainer::instance().register_factory<JobManager>([&]
 			{
 				return std::make_shared<JobManager>();
 			});
@@ -157,23 +191,6 @@ int main(int argc, char** argv)
 			REQUIRE_UNSAFE(Toolchain)->panic();
 		}
 	}
-
-	/*consteval auto formulate = [](auto opcode, auto operand1, auto operand2)
-	{
-		return (opcode << 4) | (operand1 << 2) | (operand2 << 0);
-	};
-	std::vector<std::uint8_t> rom = 
-	{
-		::formulate(COPY, R0, DC), 0x7, 0x0, //load r0, #7
-		::formulate(COPY, R1, DC), 0x4, 0x0, //load r1, #4
-		::formulate(IADD, R0, R1), 0x0, 0x0, //iadd r0, r1
-		::formulate(BXOR, R1, R1), 0x0, 0x0, //bnot r1
-		::formulate(PUSH, DC, R0), 0x0, 0x0, //push r0
-		::formulate(PUSH, DC, R1), 0x0, 0x0, //push r1
-		::formulate(PULL, R0, DC), 0x0, 0x0, //pull r0
-		::formulate(PULL, R1, DC), 0x0, 0x0, //pull r1
-	};
-	Simulator sim{ std::move(rom) };*/
 
 	return 0;
 }

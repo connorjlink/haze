@@ -5,9 +5,11 @@
 #include <ast/Node.h>
 #include <ast/ExpressionType.h>
 #include <data/DependencyInjector.h>
+#include <runtime/Context.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
+#include <type/TypeType.h>
 
 // Haze ExpressionType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,7 +19,7 @@ namespace hz
 	class Expression 
 		: public Node
 		, public InjectService<RuntimeAllocator, Generator>
-		, public InjectSingleton<ErrorReporter, SymbolDatabase>
+		, public InjectSingleton<Context, ErrorReporter, SymbolDatabase>
 	{
 	public:
 		Expression(const Token& token)
@@ -27,6 +29,7 @@ namespace hz
 
 	public:
 		virtual NodeType ntype() const final override;
+		virtual TypeType ttype() const = 0;
 		virtual ExpressionType etype() const = 0;
 	};
 }

@@ -28,26 +28,6 @@ namespace hz
 		STOP,
 	};
 
-	enum HazeOpcode
-	{
-		MOVE = 0x0,
-		LOAD = 0x1,
-		COPY = 0x2,
-		SAVE = 0x3,
-		IADD = 0x4,
-		ISUB = 0x5,
-		BAND = 0x6,
-		BIOR = 0x7,
-		BXOR = 0x8,
-		CALL = 0x9,
-		EXIT = 0xA,
-		PUSH = 0xB, 
-		PULL = 0xC,
-		BRNZ = 0xD,
-		LNEG = 0xE,
-		STOP = 0xF,
-	};
-
 	enum Register
 	{
 		R0 = 0b000,

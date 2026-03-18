@@ -4,6 +4,8 @@ import std;
 #include <symbol/Symbol.h>
 #include <utility/BinaryUtilities.h>
 #include <utility/BinaryConstants.h>
+#include <ast/ArgumentExpression.h>
+#include <type/Type.h>
 #include <x86/X86Builder.h>
 #include <x86/X86Register.h>
 
@@ -16,7 +18,7 @@ namespace
 
 	constexpr void assert(bool condition, const char* message = nullptr)
 	{
-#ifndef sNDEBUG
+#ifndef NDEBUG
 		if (!condition)
 		{
 			const auto real_message = message != nullptr 
@@ -27,6 +29,24 @@ namespace
 		}
 #endif
 	}
+
+	struct sum_fn
+	{
+		template<std::ranges::input_range R>
+		constexpr auto operator()(R&& r) const
+		{
+			using T = std::ranges::range_value_t<R>;
+			return std::ranges::fold_left(std::forward<R>(r), T{}, std::plus<>{});
+		}
+
+		template<std::ranges::input_range R>
+		friend constexpr auto operator|(R&& r, const sum_fn& fn)
+		{
+			return fn(std::forward<R>(r));
+		}
+	};
+
+	inline constexpr sum_fn sum{};
 }
 
 namespace hz
@@ -116,7 +136,6 @@ namespace hz
 		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		const auto arity = function_symbol->arity();
-
 		if (arity == 0)
 		{
 			PUT(X86Builder::ret());
@@ -124,10 +143,12 @@ namespace hz
 
 		else
 		{
-#pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
 			// pop all arguments pushed by the caller
-			const auto bytes = static_cast<std::uint16_t>(arity * 4);
-			PUT(X86Builder::ret(bytes));
+			const auto size = function_symbol->arguments
+				| std::ranges::views::transform([](auto argument) { return AS_ARGUMENT_EXPRESSION(argument)->type->size(); })
+				| ::sum;
+
+			PUT(X86Builder::ret(size));
 		}
 
 

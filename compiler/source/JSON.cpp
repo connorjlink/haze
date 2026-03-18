@@ -100,7 +100,7 @@ namespace hz
 			| std::ranges::views::join_with(std::string(","))
 			| std::ranges::to<std::string>();
 
-		return std::format(R"({{{}}})", children);
+		return std::format("{{{}}}", children);
 	}
 
 
@@ -117,7 +117,7 @@ namespace hz
 	std::string JSONArray::serialize(void) const noexcept
 	{
 		const auto children = objects
-			| std::ranges::views::transform([](const JSON* j) { return j->serialize(); })
+			| std::ranges::views::transform([](const JSON* json) { return json->serialize(); })
 			| std::ranges::views::join_with(std::string(","))
 			| std::ranges::to<std::string>();
 		

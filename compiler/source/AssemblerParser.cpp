@@ -51,10 +51,9 @@ namespace hz
 		return static_cast<Register>(0);
 	}
 
-	//TODO: roll this function and parse_immediate() below it into a "nice" macro to reduce code duplication
-	Expression* AssemblerParser::parse_address()
+	Expression* AssemblerParser::parse_literal(TokenType type)
 	{
-		consume(TokenType::AMPERSAND);
+		consume(type);
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
@@ -64,34 +63,23 @@ namespace hz
 			return new IdentifierExpression{ label_command_token.text, label_command_token };
 		}
 
-		const auto address_expression = parse_expression_optimized();
-		ASSERT_IS_INTEGER_LITERAL(address_expression);
+		const auto literal_expression = parse_expression_optimized();
+		ASSERT_IS_INTEGER_LITERAL(literal_expression);
 
-		const auto address = AS_INTEGER_LITERAL_EXPRESSION(address_expression)->value;
+		const auto address = AS_INTEGER_LITERAL_EXPRESSION(literal_expression)->value;
 		ASSERT_IN_RANGE(integer_literal_raw(address), EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
 
-		return new IntegerLiteralExpression{ address, address_expression->_token };
+		return new IntegerLiteralExpression{ address, literal_expression->_token };
+	}
+
+	Expression* AssemblerParser::parse_address()
+	{
+		return parse_literal(TokenType::AMPERSAND);
 	}
 
 	Expression* AssemblerParser::parse_immediate()
 	{
-		consume(TokenType::POUND);
-
-		if (peek().type == TokenType::IDENTIFIER)
-		{
-			const auto& label_command_token = peek();
-			consume(TokenType::IDENTIFIER);
-
-			return new IdentifierExpression{ label_command_token.text, label_command_token };
-		}
-
-		const auto immediate_expression = parse_expression_optimized();
-		ASSERT_IS_INTEGER_LITERAL(immediate_expression);
-
-		const auto immediate = AS_INTEGER_LITERAL_EXPRESSION(immediate_expression)->value;
-		ASSERT_IN_RANGE(integer_literal_raw(immediate), EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
-
-		return new IntegerLiteralExpression{ immediate, immediate_expression->_token };
+		return parse_literal(TokenType::POUND);
 	}
 
 	Node* AssemblerParser::parse_dotorg_command()
@@ -164,7 +152,7 @@ namespace hz
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
 				return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value) };
@@ -180,7 +168,7 @@ namespace hz
 
 				if (operand2->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, 0xCC, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
+					return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, 0xCC, 0, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
 				}
 
 				const auto value = integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value);
@@ -200,7 +188,7 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
 				return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
@@ -268,7 +256,7 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
 				return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
@@ -307,7 +295,7 @@ namespace hz
 
 				if (operand1->etype() == ExpressionType::IDENTIFIER)
 				{
-					return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, 0xCCCCCCCC, AS_IDENTIFIER_EXPRESSION(operand1)->name };
+					return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand1)->name };
 				}
 
 				return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };

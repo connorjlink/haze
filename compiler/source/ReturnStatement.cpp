@@ -36,7 +36,7 @@ namespace hz
 			{
 				if (USE_SAFE(SymbolDatabase)->reference_function(enclosing_function, _token)->return_type->ttype() != TypeType::VOID)
 				{
-					USE_SAFE(ErrorReporter)->post_error("no return value was specified for a non-`void` function", _token);
+					USE_SAFE(ErrorReporter)->post_error("no return value was specified for a non-nvr function", _token);
 					return;
 				}
 

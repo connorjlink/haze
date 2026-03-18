@@ -19,6 +19,11 @@ namespace hz
 		return ExpressionType::ADJUST;
 	}
 
+	TypeType AdjustExpression::ttype() const
+	{
+		return TypeType::INT;
+	}
+
 	AdjustExpression* AdjustExpression::copy() const
 	{
 		return new AdjustExpression{ *this };

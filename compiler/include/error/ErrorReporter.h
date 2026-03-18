@@ -8,18 +8,16 @@
 // Haze ErrorReporter.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#pragma message("TODO: provide safe API for error reporter with thread synchonization!")
-
 namespace hz
 {
-	class ErrorReporter :
-		public SingletonTag<ErrorReporter>
+	class ErrorReporter 
+		: public SingletonTag<ErrorReporter>
 	{
 	private:
 		static constexpr auto MAX_ERRORS = 5;
 
 	private:
-		std::int32_t _error_count;
+		std::atomic<std::int32_t> _error_count;
 
 	private:
 		void validate_error_count()
@@ -37,13 +35,20 @@ namespace hz
 		}
 
 	private:
-		std::unordered_map<std::string, std::list<ErrorContext>> _open_frames;
-		std::vector<ErrorFrame> _closed_frames;
+		std::mutex _mutex;
 
 	private:
-		std::stack<ErrorFrame> _active_frames;
+		std::unordered_map<std::thread::id, std::unordered_map<std::string, std::list<ErrorContext>>> _open_frames;
+		std::unordered_map<std::thread::id, std::vector<ErrorFrame>> _closed_frames;
+
+	private:
+		std::unordered_map<std::thread::id, std::stack<ErrorFrame>> _active_frames;
+
+	private:
+		void close_these_contexts(std::thread::id);
 
 	public:
+		void close_these_contexts();
 		void close_all_contexts();
 
 	public:
@@ -78,7 +83,6 @@ namespace hz
 
 			_active_frames = {};
 		}
-
 	};
 }
 

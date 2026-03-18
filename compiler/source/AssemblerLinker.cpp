@@ -111,14 +111,13 @@ namespace hz
 							//const auto branch_target = base_pointer + label_symbol->address;
 							const auto branch_target = label_symbol->address;
 
-							instruction_command->address = branch_target;
+#pragma message("TODO: does this need to be adjusted for instruction length?")
+							instruction_command->relative = branch_target - instruction_command->offset;
 						}
 
 						executable[instruction_command->offset] = instruction_command;
 					}
 				} break;
-				
-				// TODO: do we need to worry about .org directives here as well??
 			}
 		}
 

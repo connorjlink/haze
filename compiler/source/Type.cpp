@@ -54,11 +54,21 @@ namespace hz
 		auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
 
 		const auto member_count = struct_symbol->members.size();
-		const auto member_size = sizeof(native_uint);
 
-#pragma message("TODO: compute the real size of the struct based on each member's size and offset!")
+		// since there are no specific alignment requirements, struct size is just the largest member's offset + its size
+		std::uint16_t running_count{};
+		for (const auto& [name, member] : struct_symbol->members)
+		{
+			const auto member_size = member.type->size();
+			const auto candidate = member.offset + member_size;
 
-		return static_cast<std::uint16_t>(member_count * member_size);
+			if (candidate > running_count)
+			{
+				running_count = candidate;
+			}
+		}
+
+		return running_count;
 	}
 
 	std::string StructType::string() const

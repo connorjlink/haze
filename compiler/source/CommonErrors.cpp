@@ -32,6 +32,11 @@ namespace hz
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported instruction format `{}` for `{}`", format, instruction), NULL_TOKEN);
 	}
 
+	void CommonErrors::unsupported_instruction_range(const std::string& instruction, const std::string& range)
+	{
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported instruction range `{}` for `{}`", range, instruction), NULL_TOKEN);
+	}
+
 	std::string CommonErrors::invalid_generic_type(const std::string& context, const std::string& type)
 	{
 		return std::format("invalid {} type `{}`", context, type);

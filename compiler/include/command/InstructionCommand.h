@@ -19,7 +19,8 @@ namespace hz
 		Opcode opcode;
 		register_t destination, source;
 		std::uint8_t immediate;
-		std::uint32_t address;
+		std::uint32_t absolute;
+		std::int32_t relative;
 		bool marked_for_deletion;
 		std::string branch_target;
 
@@ -29,9 +30,7 @@ namespace hz
 
 	public:
 		InstructionCommand() = delete;
-		InstructionCommand(Token, std::uint32_t);
-		InstructionCommand(Token, Opcode, register_t, register_t, native_uint = 0, native_uint = 0, const std::string& = "");
-		//std::uint32_t bytes() const;
+		InstructionCommand(Token, Opcode, register_t, register_t, native_uint = 0, native_uint = 0, native_int = 0, const std::string& = "");
 
 	public:
 		virtual CommandType ctype() const final override;

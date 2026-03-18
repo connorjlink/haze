@@ -14,6 +14,12 @@ namespace hz
 		COMPILER,
 		ASSEMBLER,
 	};
+
+	static const std::unordered_map<LinkerType, std::string> _linker_type_map
+	{
+		{ LinkerType::COMPILER, "compiler" },
+		{ LinkerType::ASSEMBLER, "assembler" },
+	};
 }
 
 #endif

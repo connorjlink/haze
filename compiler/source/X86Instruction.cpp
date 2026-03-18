@@ -21,9 +21,19 @@ namespace hz
 		{
 			case IMMEDIATE:
 			{
-				// TODO: push imm8 when the operand is small enough
 				auto immediate_operand = AS_IMMEDIATE_OPERAND(_operand);
-				return X86Builder::push_i32(immediate_operand->_immediate);
+				const auto immediate = immediate_operand->_immediate;
+				if (immediate < EI(static_cast<std::uintmax_t>(std::numeric_limits<std::uint32_t>::min())))
+				{
+					return X86Builder::push_i32(static_cast<std::uint32_t>(immediate.magnitude));
+				}
+				else if (immediate < EI(static_cast<std::uintmax_t>(std::numeric_limits<std::uint8_t>::max())))
+				{
+					return X86Builder::push_i8(static_cast<std::uint8_t>(immediate.magnitude));
+				}
+
+				CommonErrors::unsupported_instruction_range("push", std::to_string(immediate.magnitude));
+				return {};
 			} break;
 
 			case INDIRECT:

@@ -117,12 +117,11 @@ namespace hz
 			PUT(range32(PROCEDURE(writeconsole_iat_va)));
 
 
-			// Convert our one? digit to ascii
+			// convert the first digit to ascii
 
 			// and r/m32, 0xFF
 			PUT(range8(0x81));
 			PUT(range8(X86Builder::modrm(0b11, 0b100, source)));
-			//PUT(range8(0xE0));
 			PUT(range8(0xFF));
 			PUT(range8(0x00));
 			PUT(range8(0x00));
@@ -132,7 +131,6 @@ namespace hz
 			PUT(range8(0x83));
 			PUT(range8(X86Builder::modrm_rr(source, source)));
 			PUT(range8(0x30));
-
 
 
 			// push NULL
@@ -161,7 +159,6 @@ namespace hz
 				PUT(range32(0x004033FF));
 			}
 
-			
 
 			// push [0x4013FF]
 			PUT(X86Builder::push_i32(0x004033FF));
@@ -223,16 +220,14 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_call(std::uint32_t address)
+	byterange X86Emitter::emit_call(std::int32_t address)
 	{
 		byterange out{};
 
-		// TODO: replace with `sub esp, 4`
-		// push imm32 (save some space on the stack for the return value)
-		PUT(range8(0x68));
-		PUT(range32(0xAAAAAAAA)); // temp value
+		// save some space on the stack for the return value
+		PUT(X86Builder::sub_ri(ESP, 4));
 
-		// call NEAR
+		// call NEAR -- used by the debugger to find function calls
 		PUT(range8(0xE8));
 		PUT(range32(address));
 
@@ -290,33 +285,37 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_brnz(std::uint32_t address, register_t source)
+	byterange X86Emitter::emit_brnz(std::int32_t address, register_t source)
 	{
-		// NOTE: old format before using relative jump addresses
-		
-		// test r/m32, r32
-		// je skip
-		// jmp abs32
-		//skip:
-
-		//PUT(PEBuilder::make8(0x85));
-		//PUT(PEBuilder::make8(BYTE(::x86_reg_reg(source, source))));
-		//PUT(PEBuilder::make8(0x74));
-		//PUT(PEBuilder::make8(0x06)); // 6 since the length of the next instruction is 6 bytes
-		//PUT(PEBuilder::make8(0xFF));
-		//PUT(PEBuilder::make8(0x25));
-		//PUT(PEBuilder::make32(address));
-		
 		byterange out{};
 
 		// test r/m32, r32
 		PUT(range8(0x85));
 		PUT(range8(X86Builder::modrm_rr(source, source)));
-#pragma message("TODO: optimizations for rel8/rel16 jumps which have shorter encoding!")
-		// jne rel32
-		PUT(range8(0x0F));
-		PUT(range8(0x85));
-		PUT(range32(address));
+
+		if (address > std::numeric_limits<std::int8_t>::min() && address < std::numeric_limits<std::int8_t>::max())
+		{
+			// jne rel8
+			PUT(range8(0x75));
+			PUT(range8(static_cast<std::int8_t>(address)));
+			return out;
+		}
+		else if (address > std::numeric_limits<std::int16_t>::min() && address < std::numeric_limits<std::int16_t>::max())
+		{
+			// jne rel16
+			PUT(range8(0x66));
+			PUT(range8(0x0F));
+			PUT(range8(0x85));
+			PUT(range16(static_cast<std::int16_t>(address)));
+			return out;
+		}
+		else
+		{
+			// jne rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x85));
+			PUT(range32(address));
+		}
 
 		return out;
 	}
@@ -422,8 +421,8 @@ namespace hz
 		{
 			PUT(range8(0x68));
 
-			// NOTE: this is some hackery so we can avoid including <windows.h> 
-			// since it is a MASSIVE header file and we really don't need anything from it.
+			// NOTE: this is some hackery to avoid including <windows.h> 
+			// since it is a MASSIVE header file and it isn't otherwise needed.
 			// See the following link for more info:
 			// https://learn.microsoft.com/en-us/windows/console/getstdhandle
 #define DWORD std::uint32_t
@@ -483,19 +482,19 @@ namespace hz
 				switch (instruction_command->opcode)
 				{
 					case Opcode::MOVE: result.append_range(emit_move(instruction_command->destination, instruction_command->source)); break;
-					case Opcode::LOAD: result.append_range(emit_load(instruction_command->destination, instruction_command->address)); break;
+					case Opcode::LOAD: result.append_range(emit_load(instruction_command->destination, instruction_command->absolute)); break;
 					case Opcode::COPY: result.append_range(emit_copy(instruction_command->destination, instruction_command->immediate)); break;
-					case Opcode::SAVE: result.append_range(emit_save(instruction_command->address, instruction_command->source)); break;
+					case Opcode::SAVE: result.append_range(emit_save(instruction_command->absolute, instruction_command->source)); break;
 					case Opcode::IADD: result.append_range(emit_iadd(instruction_command->destination, instruction_command->source)); break;
 					case Opcode::ISUB: result.append_range(emit_isub(instruction_command->destination, instruction_command->source)); break;
 					case Opcode::BAND: result.append_range(emit_band(instruction_command->destination, instruction_command->source)); break;
 					case Opcode::BIOR: result.append_range(emit_bior(instruction_command->destination, instruction_command->source)); break;
 					case Opcode::BXOR: result.append_range(emit_bxor(instruction_command->destination, instruction_command->source)); break;
-					case Opcode::CALL: result.append_range(emit_call(instruction_command->address)); break;
+					case Opcode::CALL: result.append_range(emit_call(instruction_command->relative)); break;
 					case Opcode::EXIT: result.append_range(emit_exit()); break;
 					case Opcode::PUSH: result.append_range(emit_push(instruction_command->source)); break;
 					case Opcode::PULL: result.append_range(emit_pull(instruction_command->destination)); break;
-					case Opcode::BRNZ: result.append_range(emit_brnz(instruction_command->address, instruction_command->source)); break;
+					case Opcode::BRNZ: result.append_range(emit_brnz(instruction_command->relative, instruction_command->source)); break;
 					case Opcode::BOOL: result.append_range(emit_bool(instruction_command->source)); break;
 					case Opcode::STOP: result.append_range(emit_stop()); break;
 				}

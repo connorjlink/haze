@@ -35,6 +35,12 @@ namespace hz
 			: on_open(std::move(onopen)), on_message(std::move(onmessage)), on_close(std::move(onclose)), on_error(std::move(onerror))
 		{
 		}
+
+	public:
+		~WebSocketServer()
+		{
+			stop();
+		}
 	};
 }
 

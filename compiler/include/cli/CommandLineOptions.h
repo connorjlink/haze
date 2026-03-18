@@ -15,7 +15,7 @@ namespace hz
 		: public SingletonTag<CommandLineOptions>
 	{
 		// --architecture=
-		ArchitectureType _architecture = ArchitectureType::HAZE;
+		ArchitectureType _architecture = ArchitectureType::X86;
 		// --verbosity=
 		VerbosityType _verbosity = VerbosityType::NORMAL;
 		// --execution=

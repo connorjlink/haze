@@ -70,7 +70,6 @@ namespace hz
 
 #pragma message("TODO: compute the size of the previous element (so probably our variables should be in an ordered map")
 		const auto previous_size = 4;
-
 		const auto offset = lowest_offset - previous_size;
 
 		REQUIRE_SAFE(Generator)->stack_write(offset, source);

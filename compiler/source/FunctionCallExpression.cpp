@@ -5,7 +5,6 @@ import std;
 #include <ast/FunctionArgumentExpression.h>
 #include <ast/ArgumentExpression.h>
 #include <ast/Function.h>
-#include <runtime/Context.h>
 #include <runtime/Evaluator.h>
 #include <symbol/Symbol.h>
 #include <toolchain/Generator.h>
@@ -19,6 +18,12 @@ namespace hz
 	ExpressionType FunctionCallExpression::etype() const
 	{
 		return ExpressionType::FUNCTION_CALL;
+	}
+
+	TypeType FunctionCallExpression::ttype() const
+	{
+		const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name, _token);
+		return function_symbol->return_type->ttype();
 	}
 
 	FunctionCallExpression* FunctionCallExpression::copy() const
@@ -65,10 +70,40 @@ namespace hz
 
 	Expression* FunctionCallExpression::optimize()
 	{
-#pragma message("TODO: implement determination if a function is constexpr")
-		//in that case, we can fold it down to a single integer literal node
-		//for now, we don't have that functionality so just terminate further optimization of this node
-		return nullptr;
+		std::vector<Expression*> optimized_arguments{};
+		for (auto& argument : arguments)
+		{
+			const auto try_optimized = argument->optimize();
+			const auto optimized = try_optimized ? try_optimized : argument;
+			
+			
+			if (optimized->ntype() != NodeType::EXPRESSION)
+			{
+				// optimized argument did not result in an expression, not an error yet until generation or evaluation
+				return nullptr;
+			}
+
+			const auto expression = AS_EXPRESSION(optimized);
+			if (expression->etype() != ExpressionType::INTEGER_LITERAL ||
+				expression->etype() != ExpressionType::STRING)
+			{
+				// NOTE: only optimize arguments that result in compile-time constants for now
+				return nullptr;
+			}
+			
+			optimized_arguments.emplace_back(expression);
+		}
+
+		auto context = USE_SAFE(Context);
+		const auto result = this->evaluate(context.get());
+
+		if (!result || result->ntype() != NodeType::EXPRESSION)
+		{
+			// evaluation did not result in an expression, not an error yet until generation
+			return nullptr;
+		}
+
+		return AS_EXPRESSION(result);
 	}
 
 	Node* FunctionCallExpression::evaluate(Context* context) const

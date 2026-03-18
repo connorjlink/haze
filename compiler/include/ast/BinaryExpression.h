@@ -27,6 +27,12 @@ namespace hz
 		{
 			return ExpressionType::BINARY;
 		}
+		virtual TypeType ttype() const final override
+		{
+			// NOTE: always the type of the left hand side
+			// this will support things like ("1234" + 1) in the future -> string "234"
+			return left->ttype();
+		}
 	};
 
 	class PlusBinaryExpression : public BinaryExpression

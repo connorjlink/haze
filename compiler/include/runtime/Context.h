@@ -53,7 +53,6 @@ namespace hz
 			: _variables{}, _functions{}, _returns{}, _arguments{}
 		{
 		}
-
 	};
 }
 

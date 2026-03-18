@@ -18,6 +18,11 @@ namespace hz
 		return ExpressionType::STRUCT_MEMBER_DECLARATION;
 	}
 
+	TypeType MemberDeclarationExpression::ttype() const
+	{
+		return type->ttype();
+	}
+
 	MemberDeclarationExpression* MemberDeclarationExpression::copy() const
 	{
 		return new MemberDeclarationExpression{ *this };

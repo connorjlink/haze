@@ -143,14 +143,13 @@ namespace hz
 			body->evaluate(context);
 			return nullptr;
 		}
-
 		else
 		{
 			const auto arguments_evaluated = context->pop_arguments();
 
-			for (auto i = 0; i < arguments.size(); i++)
+			for (auto i = 0uz; i < arguments.size(); i++)
 			{
-				const auto argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
+				const auto& argument_name = AS_IDENTIFIER_EXPRESSION(arguments[i])->name;
 				context->define_variable(argument_name, node_to_variable(arguments_evaluated[i]));
 			}
 

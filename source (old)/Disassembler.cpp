@@ -19,12 +19,13 @@ namespace hz
 		const auto src = _register_map.at(static_cast<Register>(instruction.source));
 
 		const auto imm = instruction.immediate;
-		const auto mem = instruction.address;
+		const auto mem = instruction.absolute;
+		const auto rel = instruction.relative;
 
 		switch (opcode)
 		{
 			case Opcode::MOVE: return std::format("move {}, {}    ",     dst, src);
-			case Opcode::LOAD: return std::format("load {}, &${:04X}",   dst, mem);
+			case Opcode::LOAD: return std::format("load {}, &${:08X}",   dst, mem);
 			case Opcode::COPY: return std::format("copy {}, #${:02X}  ", dst, imm);
 			case Opcode::SAVE: return std::format("save &${:04X}, {}",   mem, src);
 			case Opcode::IADD: return std::format("iadd {}, {}    ",     dst, src);
@@ -32,13 +33,13 @@ namespace hz
 			case Opcode::BAND: return std::format("band {}, {}    ",     dst, src);
 			case Opcode::BIOR: return std::format("bior {}, {}    ",     dst, src);
 			case Opcode::BXOR: return std::format("bxor {}, {}    ",     dst, src);
-			case Opcode::CALL: return std::format("call ${:04X}     ",   mem);
+			case Opcode::CALL: return std::format("call ${:08X}     ",   rel);
 			case Opcode::EXIT: return std::format("exit           ");
 			case Opcode::PUSH: return std::format("push {}        ",     src);
 			case Opcode::PULL: return std::format("pull {}        ",     dst);
-			case Opcode::BRNZ: return std::format("brnz &${:04X}, {}", mem, src);
-			case Opcode::BOOL: return std::format("bool {}        ", src);
-			default:   return             "XXXX           ";
+			case Opcode::BRNZ: return std::format("brnz &${:08X}, {}",   rel, src);
+			case Opcode::BOOL: return std::format("bool {}        ",     src);
+			default:           return             "XXXX           ";
 		}
 	}
 

@@ -8,9 +8,8 @@ namespace hz
 {
 	enum class EmitterType
 	{
-		HAZE,  // NOTE: current implementation
-		X86,   // NOTE: near future
-		ARM64, // NOTE: far future
+		X86,
+		RISCV,
 	};
 }
 

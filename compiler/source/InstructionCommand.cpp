@@ -7,40 +7,16 @@ import std;
 
 namespace hz
 {
-	InstructionCommand::InstructionCommand(Token token, std::uint32_t bytes)
-		: Command{ token }
-	{
-		address = bytes & 0xFFFF;
-		immediate = (bytes & 0xFF00) >> 8;
-		source = ((bytes & (0x03 << 16)) >> 16);
-		destination = ((bytes & (0x0C << 16)) >> 18);
-		opcode = static_cast<Opcode>((bytes & (0xF0 << 16)) >> 20);
-		marked_for_deletion = false;
-	}
-
-	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, native_uint imm, native_uint mem, const std::string& branch_target)
+	InstructionCommand::InstructionCommand(Token token, Opcode opcode, register_t dst, register_t src, native_uint imm, native_uint mem, native_int rel, const std::string& branch_target)
 		: Command{ token }, opcode{ opcode }, destination{ dst }, source{ src }, marked_for_deletion{ false }, branch_target{ std::move(branch_target) }
 	{
-		this->immediate = static_cast<decltype(imm)>(imm);
-		this->address = static_cast<decltype(address)>(mem);
+		this->immediate = static_cast<decltype(immediate)>(imm);
+		this->absolute = static_cast<decltype(absolute)>(mem);
+		this->relative = static_cast<decltype(relative)>(mem);
 
 		embedded_object_code = {};
 		approximate_embedded_size = 0;
 	}
-
-
-	/*std::uint32_t InstructionCommand::bytes() const
-	{
-		std::uint32_t instruction{};
-
-		instruction |= mem;
-		instruction |= imm << 8;
-		instruction |= (src & 0b11) << 16;
-		instruction |= (dst & 0b11) << 18;
-		instruction |= opcode << 20;
-
-		return instruction;
-	}*/
 
 	CommandType InstructionCommand::ctype() const
 	{
@@ -52,8 +28,9 @@ namespace hz
 		return new InstructionCommand{ *this };
 	}
 
-	void InstructionCommand::generate(Allocation*)
+	void InstructionCommand::generate([[maybe_unused]] Allocation* allocation)
 	{
+#pragma message("TODO: FIX THIS METHOD to generate for allocations")
 		/*switch (opcode)
 		{
 			case Opcode::MOVE: _generator->make_move(dst, src); break;

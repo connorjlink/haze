@@ -2,6 +2,7 @@ import std;
 
 #include <ast/ArgumentExpression.h>
 #include <ast/IdentifierExpression.h>
+#include <type/Type.h>
 
 // Haze ArgumentExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -11,6 +12,11 @@ namespace hz
 	ExpressionType ArgumentExpression::etype() const
 	{
 		return ExpressionType::ARGUMENT;
+	}
+
+	TypeType ArgumentExpression::ttype() const
+	{
+		return type->ttype();
 	}
 
 	ArgumentExpression* ArgumentExpression::copy() const
@@ -25,7 +31,7 @@ namespace hz
 
 	Expression* ArgumentExpression::optimize()
 	{
-		// No optimizations possible for an argument expression
+		// no optimizations possible for an argument expression
 		return nullptr;
 	}
 

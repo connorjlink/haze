@@ -9,60 +9,97 @@ import std;
 
 namespace hz
 {
-	void ErrorReporter::close_all_contexts()
+	void ErrorReporter::close_these_contexts(std::thread::id thread_id)
 	{
-		while (_active_frames.size() > 0)
+		while (_active_frames[thread_id].size() > 0)
 		{
 			close_context();
 		}
 	}
 
+	void ErrorReporter::close_these_contexts()
+	{
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		close_these_contexts(thread_id);
+	}
+
+	void ErrorReporter::close_all_contexts()
+	{
+		const auto _ = std::scoped_lock{ _mutex };
+		
+		for (const auto& [thread_id, _] : _active_frames)
+		{
+			close_these_contexts(thread_id);
+		}
+	}
+
 	std::size_t ErrorReporter::get_context_count(void)
 	{
-		return _active_frames.size();
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		return _active_frames[thread_id].size();
 	}
 
 	ErrorFrame ErrorReporter::open_context(const std::string& file, const std::string& task)
 	{
-		auto& existing_contexts = _open_frames[file];
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		auto& existing_contexts = _open_frames[thread_id][file];
 		auto* new_context = &existing_contexts.emplace_back(ErrorContext{ task });
 
 		const ErrorFrame frame{ new_context, file };
-		_active_frames.emplace(frame);
+		_active_frames[thread_id].emplace(frame);
 
 		return { new_context, file };
 	}
 
 	void ErrorReporter::close_context()
 	{
-		_closed_frames.emplace_back(_active_frames.top());
-		_active_frames.pop();
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		_closed_frames[thread_id].emplace_back(_active_frames[thread_id].top());
+		_active_frames[thread_id].pop();
 	}
 
 	std::string ErrorReporter::generate_report()
 	{
-		std::string report{};
+		const auto _ = std::scoped_lock{ _mutex };
 
-		for (auto& frame : _closed_frames)
+		std::string report(0x2000, '\0');
+
+		// generate report for every thread
+		for (auto& [_, frameset] : _closed_frames)
 		{
-			if (frame.context->error_count() > 0)
+			for (auto& frame : frameset)
 			{
-				report += std::format("in {}\n{}", frame.filepath, frame.context->format());
+				if (frame.context->error_count() > 0)
+				{
+					report += std::format("in {}\n{}", frame.filepath, frame.context->format());
+				}
 			}
 		}
 
 		return report;
 	}
 
-
 	void ErrorReporter::post_information(const std::string& message, const Token& token)
 	{
-		const auto& frame = _active_frames.top();
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		const auto& frame = _active_frames[thread_id].top();
 		post_information(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_information(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
+		const auto _ = std::scoped_lock{ _mutex };
+
 		if (context != nullptr)
 		{
 			context->post(ErrorType::INFORMATION, message, file, token);
@@ -72,10 +109,12 @@ namespace hz
 		post_information(message, token);
 	}
 
-
 	void ErrorReporter::post_warning(const std::string& message, const Token& token)
 	{
-		const auto& frame = _active_frames.top();
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		const auto& frame = _active_frames[thread_id].top();
 		post_warning(frame.context, frame.filepath, message, token);
 	}
 
@@ -90,15 +129,19 @@ namespace hz
 		post_warning(message, token);
 	}
 
-
 	void ErrorReporter::post_error(const std::string& message, const Token& token)
 	{
-		const auto& frame = _active_frames.top();
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		const auto& frame = _active_frames[thread_id].top();
 		post_error(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_error(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
+		const auto _ = std::scoped_lock{ _mutex };
+
 		_error_count++;
 		validate_error_count();
 
@@ -111,30 +154,32 @@ namespace hz
 		post_error(message, token);
 	}
 
-
 	void ErrorReporter::post_uncorrectable(const std::string& message, const Token& token)
 	{
-		const auto& frame = _active_frames.top();
+		const auto _ = std::scoped_lock{ _mutex };
+
+		const auto thread_id = std::this_thread::get_id();
+		const auto& frame = _active_frames[thread_id].top();
 		post_uncorrectable(frame.context, frame.filepath, message, token);
 	}
 
 	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
+		const auto _ = std::scoped_lock{ _mutex };
+
+		// not checking validating the error count here since that would be recursive uncorrectable!
 		_error_count++;
-		// not checking validating the error count here since that would be recursive!
 
 		if (context != nullptr)
 		{
 			context->post(ErrorType::UNCORRECTABLE, message, file, token);
 		}
-
 		else
 		{
 			post_uncorrectable(message, token);
 		}
 		
 		close_all_contexts();
-#pragma message ("TODO: determine how threading will interact with thi call. with the calling thread retain its context for the correct toolchain")
 		REQUIRE_UNSAFE(Toolchain)->panic();
 	}
 }

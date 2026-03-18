@@ -14,6 +14,11 @@ namespace hz
 		return ExpressionType::INTEGER_LITERAL;
 	}
 
+	TypeType IntegerLiteralExpression::ttype() const
+	{
+		return TypeType::INT;
+	}
+
 	IntegerLiteralExpression* IntegerLiteralExpression::copy() const
 	{
 		return new IntegerLiteralExpression{ *this };

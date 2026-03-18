@@ -79,7 +79,7 @@ namespace hz
 		{
 			const auto size = ir.size();
 
-			for (auto i = 0; i < size; i++)
+			for (auto i = 0uz; i < size; i++)
 			{
 				auto c0 = ir[i + 0];
 

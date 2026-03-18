@@ -64,23 +64,7 @@ namespace hz
 
 	void Context::exit_program(Variable* value)
 	{
-		// not an error condition
+		// not an error condition, just a quick escape hatch to main()
 		throw ExitProgramException{ value->format() };
-
-		/*using enum VariableType;
-		switch (value->vtype())
-		{
-			case UBYTE: throw ExitProgramException{ AS_UBYTE_VARIABLE(value)->format() };
-			case SBYTE: throw ExitProgramException{ AS_SBYTE_VARIABLE(value)->format() };
-			case UWORD: throw ExitProgramException{ AS_UWORD_VARIABLE(value)->format() };
-			case SWORD: throw ExitProgramException{ AS_SWORD_VARIABLE(value)->format() };
-			case UDWORD: throw ExitProgramException{ AS_UDWORD_VARIABLE(value)->format() };
-			case SDWORD: throw ExitProgramException{ AS_SDWORD_VARIABLE(value)->format() };
-			case UQWORD: throw ExitProgramException{ AS_UQWORD_VARIABLE(value)->format() };
-			case SQWORD: throw ExitProgramException{ AS_SQWORD_VARIABLE(value)->format() };
-		
-			case STRING: throw ExitProgramException{ AS_STRING_VARIABLE(value)->format() };
-			case STRUCT: throw ExitProgramException{ AS_STRUCT_VARIABLE(value)->format() };
-		}*/
 	}
 }

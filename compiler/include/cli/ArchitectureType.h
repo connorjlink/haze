@@ -8,14 +8,14 @@ namespace hz
 {
 	enum class ArchitectureType
 	{
-		HAZE,
 		X86,
+		RISCV,
 	};
 
 	static const std::unordered_map<std::string, ArchitectureType> _architecture_map
 	{
-		{ "haze", ArchitectureType::HAZE },
 		{ "x86", ArchitectureType::X86 },
+		{ "riscv", ArchitectureType::RISCV },
 	};
 }
 

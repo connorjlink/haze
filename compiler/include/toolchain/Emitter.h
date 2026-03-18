@@ -38,13 +38,13 @@ namespace hz
 		virtual byterange emit_band(register_t, register_t) = 0;
 		virtual byterange emit_bior(register_t, register_t) = 0;
 		virtual byterange emit_bxor(register_t, register_t) = 0;
-		virtual byterange emit_call(std::uint32_t) = 0;
+		virtual byterange emit_call(std::int32_t) = 0;
 		virtual byterange emit_exit() = 0;
 		virtual byterange emit_push(register_t) = 0;
 		virtual byterange emit_pull(register_t) = 0;
 		virtual byterange emit_make(register_t) = 0;
 		virtual byterange emit_take(register_t) = 0;
-		virtual byterange emit_brnz(std::uint32_t, register_t) = 0;
+		virtual byterange emit_brnz(std::int32_t, register_t) = 0;
 		virtual byterange emit_bool(register_t) = 0;
 		virtual byterange emit_stop() = 0;
 

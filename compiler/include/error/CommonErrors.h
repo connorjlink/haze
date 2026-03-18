@@ -30,6 +30,7 @@ namespace hz
 
 	public:
 		static void unsupported_instruction_format(const std::string&, const std::string&);
+		static void unsupported_instruction_range(const std::string&, const std::string&);
 
 	public:
 		static std::string invalid_generic_type(const std::string&, const std::string&);

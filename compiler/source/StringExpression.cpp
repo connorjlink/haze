@@ -17,6 +17,11 @@ namespace hz
 		return ExpressionType::STRING;
 	}
 
+	TypeType StringExpression::ttype() const
+	{
+		return TypeType::STRING;
+	}
+
 	StringExpression* StringExpression::copy() const
 	{
 		return new StringExpression{ *this };

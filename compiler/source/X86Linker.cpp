@@ -9,6 +9,7 @@ import std;
 
 namespace hz
 {
+#pragma error("THIS NEEDS TO BE REWRITTEN IN THE COMPILERLINKER, not architecture dpeendent stuff")
 	byterange X86Linker::link()
 	{
 		std::vector<IntermediateCommand*> ir_code{};

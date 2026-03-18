@@ -15,6 +15,7 @@ namespace hz
 		Register parse_register();
 
 	private:
+		Expression* parse_literal(TokenType);
 		Expression* parse_address();
 		Expression* parse_immediate();
 

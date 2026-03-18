@@ -4,6 +4,8 @@ import std;
 #include <ast/IdentifierExpression.h>
 #include <runtime/Context.h>
 #include <runtime/Evaluator.h>
+#include <type/Type.h>
+#include <symbol/Symbol.h>
 #include <error/ErrorReporter.h>
 
 // Haze IdentifierExpression.cpp
@@ -14,6 +16,42 @@ namespace hz
 	ExpressionType IdentifierExpression::etype() const
 	{
 		return ExpressionType::IDENTIFIER;
+	}
+
+	TypeType IdentifierExpression::ttype() const
+	{
+		const auto type = USE_SAFE(SymbolDatabase)->query_symbol_type(name, _token);
+		switch (type)
+		{
+			case SymbolType::FUNCTION:
+			{
+				const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name, _token);
+				return function_symbol->return_type->ttype();
+			} break;
+			case SymbolType::ARGUMENT:
+			{
+				const auto argument_symbol = USE_SAFE(SymbolDatabase)->reference_argument(name, _token);
+				return argument_symbol->type->ttype();
+			} break;
+			case SymbolType::VARIABLE:
+			{
+				const auto variable_symbol = USE_SAFE(SymbolDatabase)->reference_variable(name, _token);
+				return variable_symbol->type->ttype();
+			} break;
+			case SymbolType::DEFINE:
+			{
+				const auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(name, _token);
+				return define_symbol->type->ttype();
+			} break;
+			case SymbolType::STRUCT:
+			{
+				return TypeType::STRUCT;
+			} break;
+		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"invalid identifier symbol type `{}`", _symbol_type_map.at(type)), _token);
+		return TypeType::VOID;
 	}
 
 	IdentifierExpression* IdentifierExpression::copy() const
@@ -52,7 +90,12 @@ namespace hz
 
 	Expression* IdentifierExpression::optimize()
 	{
-		// No optimizations possible for an identifier expression
+		const auto symbol = USE_SAFE(SymbolDatabase)->try_reference_symbol(SymbolType::DEFINE, name, _token);
+		if (symbol)
+		{
+
+		}
+
 		return nullptr;
 	}
 

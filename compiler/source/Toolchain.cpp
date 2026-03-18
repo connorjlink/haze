@@ -50,7 +50,7 @@ namespace hz
 			REQUIRE_SAFE(JobManager)->log();
 		}
 
-		USE_SAFE(ErrorReporter)->close_all_contexts();
+		USE_SAFE(ErrorReporter)->close_these_contexts();
 		Log::raw(USE_SAFE(ErrorReporter)->generate_report());
 	}
 

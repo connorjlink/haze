@@ -2,6 +2,7 @@
 #define HAZE_X86LINKER_H
 
 #include <toolchain/Linkable.h>
+#include <toolchain/Linker.h>
 
 // Haze X86Linker.h
 // (c) Connor J. Link. All Rights Reserved.

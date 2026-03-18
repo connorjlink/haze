@@ -65,10 +65,10 @@ namespace hz
 		USE_SAFE(ErrorReporter)->post_uncorrectable("unexpectedly reached the end of file", peek());
 	}
 
-	Token Parser::consume(TokenType token)
+	Token Parser::consume(TokenType type)
 	{
 		const auto& current = peek();
-		if (current.type == token)
+		if (current.type == type)
 		{
 			cursor++;
 			return current;
@@ -88,7 +88,7 @@ namespace hz
 		};
 
 		USE_SAFE(ErrorReporter)->post_error(std::format("expected token `{}` but got `{}`",
-			convert(token), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
+			convert(type), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
 		return current;
 	}
 

@@ -32,6 +32,7 @@ namespace hz
 
 	public:
 		virtual ExpressionType etype() const final override;
+		virtual TypeType ttype() const final override;
 		virtual IdentifierExpression* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Expression* optimize() final override;

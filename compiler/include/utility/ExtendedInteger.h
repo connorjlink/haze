@@ -69,7 +69,6 @@ namespace hz
 		friend ExtendedInteger operator-(const ExtendedInteger&);
 
 	public:
-#pragma message ("TODO: implement spaceship comparison for ExtendedInteger")
 		friend bool operator==(ExtendedInteger, const ExtendedInteger&);
 		friend bool operator!=(ExtendedInteger, const ExtendedInteger&);
 		friend bool operator>(ExtendedInteger, const ExtendedInteger&);
