@@ -300,6 +300,12 @@
     <ClCompile Include="source\X86Operand.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="include\toolchain\RISCVAssemblerParser.h">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RISCVAssemblerParser.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\validator\InstructionValidator.h">
@@ -707,7 +713,25 @@
     <ClInclude Include="include\toolchain\AssemblerParserType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\toolchain\X86AssemblerParser.h">
+    <ClInclude Include="include\riscv\RISCVInstructionType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVInstruction.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\toolchain\models\Instruction.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVWidthType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVSignednessType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVRegister.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVBccInstructionType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

@@ -81,7 +81,7 @@ namespace hz
 		return new LabelCommand{ identifier, identifier_expression->_token };
 	}
 
-	Node* AssemblerParser::parse_instruction_command()
+	Node* AssemblerParser::parse_instruction_command() const
 	{
 #pragma message("TODO: patch branch_target resolution to more generally just resolve labels!")
 		switch (peek().type)
@@ -292,9 +292,9 @@ namespace hz
 		}
 	}
 
-	std::vector<Node*> AssemblerParser::parse_commands()
+	std::vector<Node*> AssemblerParser::parse()
 	{
-		std::vector<Node*> instructions;
+		std::vector<Node*> instructions{};
 
 		while (peek().type != TokenType::END)
 		{
@@ -302,10 +302,5 @@ namespace hz
 		}
 
 		return instructions;
-	}
-
-	std::vector<Node*> AssemblerParser::parse()
-	{
-		return parse_commands();
 	}
 }

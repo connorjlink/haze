@@ -72,9 +72,8 @@ namespace hz
 		ASM,
 
 		// riscv register set
-		X0, X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31,
-
-
+		X0,   X1, X2, X3, X4, X5, X6, X7, X8,     X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31,
+		ZERO, RA, SP, GP, TP, T0, T1, T2, S0, FP, S1, A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  S2,  S3,  S4,  S5,  S6,  S7,  S8,  S9,  S10, S11, T3,  T4,  T5,  T6,
 		
 		// I instruction set
 		LB, LH, LW, LBU, LHU,
@@ -122,7 +121,7 @@ namespace hz
 		DECLARE,
 
 		U8, U16, U32, U64,
-		S8, S16, S32, S64,
+		/*S8,*/ S16, S32, S64,
 	};
 
 #define S(x) std::string_view{ x }

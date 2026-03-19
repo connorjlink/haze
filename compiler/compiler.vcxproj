@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\toolchain\RISCVAssemblerParser.h" />
     <ClCompile Include="source\AdjustExpression.cpp" />
     <ClCompile Include="source\Allocation.cpp" />
     <ClCompile Include="source\ArgumentExpression.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="source\PrintStatement.cpp" />
     <ClCompile Include="source\Random.cpp" />
     <ClCompile Include="source\ReturnStatement.cpp" />
+    <ClCompile Include="source\RISCVAssemblerParser.cpp" />
     <ClCompile Include="source\RuntimeAllocator.cpp" />
     <ClCompile Include="source\Scanner.cpp" />
     <ClCompile Include="source\StackAllocator.cpp" />
@@ -304,6 +306,12 @@
     <ClInclude Include="include\job\AutoJob.h" />
     <ClInclude Include="include\job\Job.h" />
     <ClInclude Include="include\job\JobManager.h" />
+    <ClInclude Include="include\riscv\RISCVBccInstructionType.h" />
+    <ClInclude Include="include\riscv\RISCVInstruction.h" />
+    <ClInclude Include="include\riscv\RISCVInstructionType.h" />
+    <ClInclude Include="include\riscv\RISCVRegister.h" />
+    <ClInclude Include="include\riscv\RISCVSignednessType.h" />
+    <ClInclude Include="include\riscv\RISCVWidthType.h" />
     <ClInclude Include="include\runtime\Context.h" />
     <ClInclude Include="include\runtime\Disassembler.h" />
     <ClInclude Include="include\runtime\Evaluator.h" />
@@ -328,6 +336,7 @@
     <ClInclude Include="include\toolchain\Linkable.h" />
     <ClInclude Include="include\toolchain\Linker.h" />
     <ClInclude Include="include\toolchain\LinkerType.h" />
+    <ClInclude Include="include\toolchain\models\Instruction.h" />
     <ClInclude Include="include\toolchain\models\Token.h" />
     <ClInclude Include="include\toolchain\Parser.h" />
     <ClInclude Include="include\toolchain\ParserType.h" />
@@ -335,7 +344,6 @@
     <ClInclude Include="include\toolchain\Scanner.h" />
     <ClInclude Include="include\toolchain\Toolchain.h" />
     <ClInclude Include="include\toolchain\ToolchainType.h" />
-    <ClInclude Include="include\toolchain\X86AssemblerParser.h" />
     <ClInclude Include="include\type\IntTypeType.h" />
     <ClInclude Include="include\type\Type.h" />
     <ClInclude Include="include\type\TypeCheck.h" />
@@ -358,14 +366,54 @@
     <ClInclude Include="include\validator\Test.h" />
     <ClInclude Include="include\validator\Validator.h" />
     <ClInclude Include="include\validator\X86BuilderValidator.h" />
-    <ClInclude Include="include\x86\X86Builder.h" />
-    <ClInclude Include="include\x86\X86Instruction.h" />
-    <ClInclude Include="include\x86\X86InstructionType.h" />
-    <ClInclude Include="include\x86\X86JccInstructionType.h" />
-    <ClInclude Include="include\x86\X86Operand.h" />
-    <ClInclude Include="include\x86\X86OperandType.h" />
-    <ClInclude Include="include\x86\X86Register.h" />
-    <ClInclude Include="include\x86\X86SetccInstructionType.h" />
+    <ClInclude Include="include\x86\X86Builder.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86Instruction.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86InstructionType.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86JccInstructionType.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86Operand.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86OperandType.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86Register.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="include\x86\X86SetccInstructionType.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,9 +20,6 @@ namespace hz
 		Node* parse_label_command();
 		Node* parse_command();
 
-	private:
-		std::vector<Node*> parse_commands();
-
 	public:
 		virtual ParserType ptype() const final override;
 		virtual std::vector<Node*> parse() final override;
@@ -31,8 +28,8 @@ namespace hz
 		virtual AssemblerParserType atype() const = 0;
 
 	private:
-		virtual Node* parse_instruction_command() const = 0;
-		virtual register_t parse_register() const = 0;
+		virtual Node* parse_instruction_command() = 0;
+		virtual register_t parse_register() = 0;
 
 	public:
 		using Parser::Parser;
