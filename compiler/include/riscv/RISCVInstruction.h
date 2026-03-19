@@ -61,6 +61,18 @@ namespace hz
 		virtual byterange emit() const final override;
 	};
 
+	class RISCVSbInstruction : public RISCVStoreInstruction
+	{
+	public:
+		RISCVSbInstruction(RISCVRegister rs1, RISCVRegister rs2)
+			: RISCVStoreInstruction{ RISCVWidthType::BYTE, rs1, rs2 }
+		{
+		}
+
+#error TODO FINISH THIS STUFF!
+	};
+
+
 	class RISCVBccInstruction : public RISCVInstruction
 	{
 	private:
@@ -138,6 +150,58 @@ namespace hz
 		virtual RISCVBccInstructionType btype() const final override;
 		virtual byterange emit() const final override;
 	};
+
+
+	class RISCVNopInstruction : public RISCVInstruction
+	{
+	public:
+		using RISCVInstruction::RISCVInstruction;
+
+	public:
+		virtual RISCVInstructionType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class RISCVEcallInstruction : public RISCVInstruction
+	{
+	public:
+		using RISCVInstruction::RISCVInstruction;
+
+	public:
+		virtual RISCVInstructionType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class RISCVEbreakInstruction : public RISCVInstruction
+	{
+	public:
+		using RISCVInstruction::RISCVInstruction;
+
+	public:
+		virtual RISCVInstructionType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class RISCVWfiInstruction : public RISCVInstruction
+	{
+	public:
+		using RISCVInstruction::RISCVInstruction;
+
+	public:
+		virtual RISCVInstructionType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
+	class RISCVFenceInstruction : public RISCVInstruction
+	{
+	public:
+		using RISCVInstruction::RISCVInstruction;
+
+	public:
+		virtual RISCVInstructionType itype() const final override;
+		virtual byterange emit() const final override;
+	};
+
 }
 
 #endif
