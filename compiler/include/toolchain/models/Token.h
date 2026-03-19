@@ -78,7 +78,7 @@ namespace hz
 		// I instruction set
 		LB, LH, LW, LBU, LHU,
 		SB, SH, SW,
-		LI, LUI, AUIPC,
+		LUI, AUIPC,
 		ADDI, ADD, SUB,
 		SLTI, SLT, SLTIU, SLTU,
 		ANDI, AND, ORI, OR, XORI, XOR,
@@ -112,7 +112,6 @@ namespace hz
 
 		// U/S mode
 		URET, SRET, MRET,
-		SFENCEVMA,
 
 		PRINT,
 
@@ -221,7 +220,6 @@ namespace hz
 		bimap_t{ S("sb"), TokenType::SB },
 		bimap_t{ S("sh"), TokenType::SH },
 		bimap_t{ S("sw"), TokenType::SW },
-		bimap_t{ S("li"), TokenType::LI },
 		bimap_t{ S("lui"), TokenType::LUI },
 		bimap_t{ S("auipc"), TokenType::AUIPC },
 		bimap_t{ S("addi"), TokenType::ADDI },

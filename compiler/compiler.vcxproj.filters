@@ -722,16 +722,22 @@
     <ClInclude Include="include\toolchain\models\Instruction.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\riscv\RISCVWidthType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\riscv\RISCVSignednessType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\riscv\RISCVRegister.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\RISCVBccInstructionType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVLoadInstructionType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVStoreInstructionType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVSetInstructionType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\RISCVJumpInstructionType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

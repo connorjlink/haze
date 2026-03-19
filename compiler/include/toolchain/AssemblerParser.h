@@ -27,7 +27,7 @@ namespace hz
 	public:
 		virtual AssemblerParserType atype() const = 0;
 
-	private:
+	protected:
 		virtual Node* parse_instruction_command() = 0;
 		virtual register_t parse_register() = 0;
 

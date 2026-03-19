@@ -10,10 +10,7 @@ namespace hz
 {
 	class RISCVAssemblerParser : public AssemblerParser
 	{
-	public:
-
-
-	private:
+	protected:
 		virtual Node* parse_instruction_command() final override;
 		virtual register_t parse_register() final override;
 
