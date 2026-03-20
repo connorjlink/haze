@@ -746,5 +746,8 @@
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h">
       <Filter>Archivos de origen</Filter>
     </ClInclude>
+    <ClInclude Include="include\riscv\RISCVAmoInstructionType.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
