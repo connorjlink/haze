@@ -14,7 +14,6 @@ namespace hz
 		BYTE,
 		WORD,
 		DWORD,
-		QWORD,
 		STRING,
 		STRUCT,
 		NVR, // "void"
@@ -22,10 +21,12 @@ namespace hz
 
 	static const std::unordered_map<TokenType, TypeSpecifier> _type_specifier_token_map
 	{
-		{ TokenType::BYTE, TypeSpecifier::BYTE },
-		{ TokenType::WORD, TypeSpecifier::WORD },
-		{ TokenType::DWORD, TypeSpecifier::DWORD },
-		{ TokenType::QWORD, TypeSpecifier::QWORD },
+		{ TokenType::S8, TypeSpecifier::BYTE },
+		{ TokenType::U8, TypeSpecifier::BYTE },
+		{ TokenType::S16, TypeSpecifier::WORD },
+		{ TokenType::U16, TypeSpecifier::WORD },
+		{ TokenType::S32, TypeSpecifier::DWORD },
+		{ TokenType::U32, TypeSpecifier::DWORD },
 		{ TokenType::STRING, TypeSpecifier::STRING },
 		{ TokenType::STRUCT, TypeSpecifier::STRUCT },
 		{ TokenType::NVR, TypeSpecifier::NVR },
@@ -36,7 +37,6 @@ namespace hz
 		{ TypeSpecifier::BYTE, IntTypeType::INT8 },
 		{ TypeSpecifier::WORD, IntTypeType::INT16 },
 		{ TypeSpecifier::DWORD, IntTypeType::INT32 },
-		{ TypeSpecifier::QWORD, IntTypeType::INT64 },
 	};
 
 	static const std::unordered_map<TypeSpecifier, std::string> _type_specifier_map
@@ -44,7 +44,6 @@ namespace hz
 		{ TypeSpecifier::BYTE, "byte" },
 		{ TypeSpecifier::WORD, "word" },
 		{ TypeSpecifier::DWORD, "dword" },
-		{ TypeSpecifier::QWORD, "qword" },
 		{ TypeSpecifier::STRING, "string" },
 		{ TypeSpecifier::STRUCT, "struct" },
 		{ TypeSpecifier::NVR, "nvr" },

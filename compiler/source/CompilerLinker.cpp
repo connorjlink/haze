@@ -7,7 +7,6 @@ import std;
 #include <command/LabelCommand.h>
 #include <symbol/Symbol.h>
 #include <toolchain/CompilerLinker.h>
-#include <toolchain/Emitter.h>
 #include <error/ErrorReporter.h>
 
 // Haze CompilerLinker.cpp
@@ -62,11 +61,10 @@ namespace hz
 
 			for (auto i = 0; i < function.size(); i++)
 			{
-#pragma message("TODO: FIX THIS REGISTER ENUMERATIO SINCE X86 HAS MORE REGISTERS!")
+				const auto architecture = USE_SAFE(CommandLineOptions)->_architecture;
+				const auto extrema = get_register_extrema(architecture);
 
-				const auto register_minimum = USE_SAFE(CommandLineOptions)->_architecture
-
-				for (auto r = 0; r <= R3; r = static_cast<Register>(r + 1))
+				for (auto r = extrema.first; r <= extrema.second; r++)
 				{
 					//TODO: ensure none of our bytes are branch targets
 
@@ -335,7 +333,7 @@ namespace hz
 
 						if (!instruction->marked_for_deletion)
 						{
-							for (auto& embedded_instruction : instruction->embedded_object_code)
+							for (auto& embedded_instruction : instruction->object_code)
 							{
 								// NOTE: since we don't do any safety checks on inline assembly,
 								// we could (or maybe even likely) are overwriting compiler-generated code.

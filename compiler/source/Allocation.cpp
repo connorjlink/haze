@@ -129,9 +129,6 @@ namespace hz
 			case UDWORD: integer_literal = new UnsignedDoubleWordIntegerLiteral{ AS_UDWORD_VARIABLE(value)->value }; break;
 			case SDWORD: integer_literal = new SignedDoubleWordIntegerLiteral{ AS_SDWORD_VARIABLE(value)->value }; break;
 
-			case UQWORD: integer_literal = new UnsignedQuadWordIntegerLiteral{ AS_UQWORD_VARIABLE(value)->value }; break;
-			case SQWORD: integer_literal = new SignedQuadWordIntegerLiteral{ AS_SQWORD_VARIABLE(value)->value }; break;
-
 			case STRING: [[fallthrough]];
 			case STRUCT: USE_SAFE(ErrorReporter)->post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);
 		}

@@ -37,9 +37,6 @@ namespace
 
 			case UDWORD: return UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(value)};
 			case SDWORD: return SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(value) };
-
-			case UQWORD: return UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(value) };
-			case SQWORD: return SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(value) };
 		}
 	}
 }

@@ -6,6 +6,7 @@ import std;
 #include <command/LabelCommand.h>
 #include <command/InstructionCommand.h>
 #include <toolchain/AssemblerParser.h>
+#include <toolchain/models/Instruction.h>
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -33,9 +34,11 @@ namespace hz
 
 	Expression* AssemblerParser::parse_literal()
 	{
-		if (peek().type == TokenType::IDENTIFIER)
+		const auto& first = peek();
+
+		if (first.type == TokenType::IDENTIFIER)
 		{
-			const auto& label_command_token = peek();
+			const auto& label_command_token = first;
 			consume(TokenType::IDENTIFIER);
 
 			return new IdentifierExpression{ label_command_token.text, label_command_token };
@@ -81,215 +84,19 @@ namespace hz
 		return new LabelCommand{ identifier, identifier_expression->_token };
 	}
 
-	Node* AssemblerParser::parse_instruction_command() const
-	{
-#pragma message("TODO: patch branch_target resolution to more generally just resolve labels!")
-		switch (peek().type)
-		{
-			case TokenType::MOVE:
-			{
-				const auto move_token = consume(TokenType::MOVE);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				return new InstructionCommand{ move_token, Opcode::MOVE, operand1, operand2 };
-			} break;
-
-			case TokenType::LOAD:
-			{
-				const auto load_token = consume(TokenType::LOAD);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_literal();
-
-				byterange object_code{};
-				if (operand2->etype() == ExpressionType::IDENTIFIER)
-				{
-					return new InstructionCommand{ load_token, std::move(object_code), AS_IDENTIFIER_EXPRESSION(operand2)->name };
-				}
-
-				return new InstructionCommand{ load_token, Opcode::LOAD, operand1, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value) };
-			} break;
-
-			case TokenType::COPY:
-			{
-				const auto copy_token = consume(TokenType::COPY);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_literal();
-
-				if (operand2->etype() == ExpressionType::IDENTIFIER)
-				{
-					return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, 0xCC, 0, 0, AS_IDENTIFIER_EXPRESSION(operand2)->name };
-				}
-
-				const auto value = integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand2)->value);
-				ASSERT_IN_RANGE(value, EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
-
-				return new InstructionCommand{ copy_token, Opcode::COPY, operand1, DC, static_cast<native_uint>(value.magnitude) };
-			} break;
-
-			case TokenType::SAVE:
-			{
-				const auto save_token = consume(TokenType::SAVE);
-
-				consume(TokenType::AMPERSAND);
-				const auto operand1 = parse_address();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				if (operand1->etype() == ExpressionType::IDENTIFIER)
-				{
-					return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand1)->name };
-				}
-
-				return new InstructionCommand{ save_token, Opcode::SAVE, DC, operand2, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
-			} break;
-
-			case TokenType::IADD:
-			{
-				const auto iadd_token = consume(TokenType::IADD);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				return new InstructionCommand{ iadd_token, Opcode::IADD, operand1, operand2 };
-			} break;
-
-			case TokenType::ISUB:
-			{
-				const auto isub_token = consume(TokenType::ISUB);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				return new InstructionCommand{ isub_token, Opcode::ISUB, operand1, operand2 };
-			} break;
-
-			case TokenType::BAND:
-			{
-				const auto band_token = consume(TokenType::BAND);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				return new InstructionCommand{ band_token, Opcode::BAND, operand1, operand2 };
-			} break;
-
-			case TokenType::BIOR:
-			{
-				const auto bior_token = consume(TokenType::BIOR);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				return new InstructionCommand{ bior_token, Opcode::BIOR, operand1, operand2 };
-			} break;
-
-			case TokenType::BXOR:
-			{
-				const auto bxor_token = consume(TokenType::BXOR);
-
-				const auto operand1 = parse_register();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				return new InstructionCommand{ bxor_token, Opcode::BXOR, operand1, operand2 };
-			} break;
-
-			case TokenType::CALL:
-			{
-				const auto call_token = consume(TokenType::CALL);
-				const auto operand1 = parse_address();
-
-				if (operand1->etype() == ExpressionType::IDENTIFIER)
-				{
-					return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand1)->name };
-				}
-
-				return new InstructionCommand{ call_token, Opcode::CALL, DC, DC, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
-			} break;
-
-			case TokenType::EXIT:
-			{
-				const auto exit_token = consume(TokenType::EXIT);
-
-				return new InstructionCommand{ exit_token, Opcode::EXIT, DC, DC };
-			} break;
-
-			case TokenType::PUSH:
-			{
-				const auto push_token = consume(TokenType::PUSH);
-				const auto operand1 = parse_register();
-
-				return new InstructionCommand{ push_token, Opcode::PUSH, DC, operand1 };
-			} break;
-
-			case TokenType::PULL:
-			{
-				const auto pull_token = consume(TokenType::PULL);
-				const auto operand1 = parse_register();
-
-				return new InstructionCommand{ pull_token, Opcode::PULL, operand1, DC };
-			} break;
-
-			case TokenType::BRNZ:
-			{
-				const auto brnz_token = consume(TokenType::BRNZ);
-
-				const auto operand1 = parse_address();
-				consume(TokenType::COMMA);
-				const auto operand2 = parse_register();
-
-				if (operand1->etype() == ExpressionType::IDENTIFIER)
-				{
-					return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, 0xCCCCCCCC, 0, AS_IDENTIFIER_EXPRESSION(operand1)->name };
-				}
-
-				return new InstructionCommand{ brnz_token, Opcode::BRNZ, DC, operand2, 0, integer_literal_raw(AS_INTEGER_LITERAL_EXPRESSION(operand1)->value) };
-			} break;
-
-			case TokenType::BOOL:
-			{
-				const auto bool_token = consume(TokenType::BOOL);
-				const auto operand1 = parse_register();
-
-				return new InstructionCommand{ bool_token, Opcode::BOOL, DC, operand1  };
-			} break;
-
-			case TokenType::STOP:
-			{
-				const auto stop_token = consume(TokenType::STOP);
-
-				return new InstructionCommand{ stop_token, Opcode::STOP, DC, DC };
-			} break;
-
-			default:
-			{
-				USE_SAFE(ErrorReporter)->post_error(std::format("invalid instruction mnemonic `{}`", peek().text), peek());
-				return nullptr;
-			} break;
-		}
-	}
-
-
 	Node* AssemblerParser::parse_command()
 	{
-		switch (peek().type)
+		const auto& first = peek();
+
+		switch (first.type)
 		{
 			case TokenType::DOTDEFINE: return parse_dotdefine_command();
 			case TokenType::DOTORG: return parse_dotorg_command();
 			case TokenType::IDENTIFIER: return parse_label_command();
-			default: return parse_instruction_command();
 		}
+
+		const auto instruction = parse_instruction_command();
+		return new InstructionCommand{ first, instruction->emit(), "" };
 	}
 
 	std::vector<Node*> AssemblerParser::parse()

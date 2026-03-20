@@ -294,9 +294,6 @@
     <ClCompile Include="source\X86Operand.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="include\toolchain\RISCVAssemblerParser.h">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\RISCVAssemblerParser.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -745,6 +742,9 @@
     </ClInclude>
     <ClInclude Include="include\x86\X86SetccInstructionType.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\toolchain\RISCVAssemblerParser.h">
+      <Filter>Archivos de origen</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

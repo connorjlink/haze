@@ -15,7 +15,7 @@ namespace hz
 {
 	Instruction* RISCVAssemblerParser::parse_instruction_command()
 	{
-		const auto opcode_token = peek();
+		const auto& opcode_token = peek();
 		consume(opcode_token.type);
 
 		using enum TokenType;

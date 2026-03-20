@@ -183,12 +183,10 @@ namespace hz
 			case U8: integer_literal = new UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(integer_value) }; break;
 			case U16: integer_literal = new UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(integer_value) }; break;
 			case U32: integer_literal = new UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(integer_value) }; break;
-			case U64: integer_literal = new UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(integer_value) }; break;
 
 			case S8: integer_literal = new SignedByteIntegerLiteral{ static_cast<std::int8_t>(integer_value) }; break;
 			case S16: integer_literal = new SignedWordIntegerLiteral{ static_cast<std::int16_t>(integer_value) }; break;
 			case S32: integer_literal = new SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(integer_value) }; break;
-			case S64: integer_literal = new SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(integer_value) }; break;
 
 			default:
 			{
@@ -361,7 +359,7 @@ namespace hz
 		return nullptr;
 	}
 
-	Expression* Parser::parse_infix_expression(Expression* left, Precedence min_precedence)
+	Expression* Parser::parse_infix_expression(Expression* left, Precedence minimum_precedence)
 	{
 		static const std::unordered_map<TokenType, Precedence> precedences
 		{
@@ -379,7 +377,7 @@ namespace hz
 		{
 			const auto& next = peek();
 
-			if (!::is_binary_operator(next.type) || precedences.at(next.type) < min_precedence)
+			if (!::is_binary_operator(next.type) || precedences.at(next.type) < minimum_precedence)
 			{
 				break;
 			}

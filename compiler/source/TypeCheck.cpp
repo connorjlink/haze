@@ -40,9 +40,6 @@ namespace hz
 
 					case UDWORD: return new IntType{ IMMUTABLE, UNSIGNED, INT32, VALUE };
 					case SDWORD: return new IntType{ IMMUTABLE, SIGNED, INT32, VALUE };
-
-					case UQWORD: return new IntType{ IMMUTABLE, UNSIGNED, INT64, VALUE };
-					case SQWORD: return new IntType{ IMMUTABLE, SIGNED, INT64, VALUE };
 				}
 			} break;
 
@@ -221,42 +218,12 @@ namespace hz
 							return false;
 						}
 					} break;
-
-					case IntegerLiteralType::UQWORD:
-					{
-						if (reference_int_type->int_type != IntTypeType::INT64)
-						{
-							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
-							return false;
-						}
-
-						if (reference_int_type->signedness != TypeSignedness::UNSIGNED)
-						{
-							CommonErrors::type_signedness_mismatch(reference, expression, expression->_token);
-							return false;
-						}
-					} break;
-
-					case IntegerLiteralType::SQWORD:
-					{
-						if (reference_int_type->int_type != IntTypeType::INT64)
-						{
-							CommonErrors::int_type_specifier_mismatch(reference, expression, expression->_token);
-							return false;
-						}
-
-						if (reference_int_type->signedness != TypeSignedness::SIGNED)
-						{
-							CommonErrors::type_signedness_mismatch(reference, expression, expression->_token);
-							return false;
-						}
-					} break;
 				}
 			} break;
 
 			case STRUCT:
 			{
-
+#pragma message("TODO: FINISH STRUCT PARSING!")
 			} break;
 
 			case STRING:

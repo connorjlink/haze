@@ -133,7 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\toolchain\RISCVAssemblerParser.h" />
+    <ClInclude Include="include\toolchain\RISCVAssemblerParser.h" />
     <ClCompile Include="source\AdjustExpression.cpp" />
     <ClCompile Include="source\Allocation.cpp" />
     <ClCompile Include="source\ArgumentExpression.cpp" />

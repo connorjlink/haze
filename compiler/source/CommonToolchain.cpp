@@ -4,7 +4,6 @@ import std;
 #include <cli/CommandLineOptions.h>
 #include <job/JobManager.h>
 #include <toolchain/CommonToolchain.h>
-#include <toolchain/Emitter.h>
 #include <toolchain/Linker.h>
 #include <utility/PlatformVariables.h>
 
@@ -15,14 +14,6 @@ namespace hz
 {
 	std::vector<InstructionCommand*> common_link(native_uint entrypoint, native_uint size)
 	{
-		// NOTE: to resolve instruction addresses, the instruction lengths are needed.
-		// This is done here by simply emitting the corresponding instruction with dummy values
-		// and checking its length. So, make a temporary emitter object here to do so.
-		ServiceContainer::instance().register_factory<Emitter>([&]()
-		{
-			return std::shared_ptr<Emitter>(Emitter::from_architecture({}, ""));
-		});
-
 		const auto link_task = REQUIRE_UNSAFE(JobManager)->begin_job("linking");
 		// begin writing commands at $8000 for haze
 		// and currently 0x401200 for Windows PE 32
@@ -32,22 +23,6 @@ namespace hz
 		return image;
 	}
 	
-	std::vector<std::uint8_t> common_emit(std::vector<InstructionCommand*>&& image, const std::string& filepath)
-	{
-		const auto emit_task = REQUIRE_UNSAFE(JobManager)->begin_job("emitting");
-
-		// NOTE: this is the *actual* machine code emitter
-		ServiceContainer::instance().register_factory<Emitter>([&]()
-		{
-			return std::shared_ptr<Emitter>(Emitter::from_architecture(std::move(image), filepath));
-		});
-
-		auto executable = REQUIRE_UNSAFE(Emitter)->emit();
-		REQUIRE_UNSAFE(JobManager)->end_job(emit_task);
-
-		return executable;
-	}
-
 	void common_finalize(const std::vector<std::uint8_t>& executable, const std::string& filepath)
 	{
 		const auto finalize_task = REQUIRE_UNSAFE(JobManager)->begin_job("finalizing");
