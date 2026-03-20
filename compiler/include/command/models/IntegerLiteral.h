@@ -14,8 +14,6 @@
 #define SWORD(x) SignedWordIntegerLiteral{ x }
 #define UDWORD(x) UnsignedDoubleWordIntegerLiteral{ x }
 #define SDWORD(x) SignedDoubleWordIntegerLiteral{ x }
-#define UQWORD(x) UnsignedQuadWordIntegerLiteral{ x }
-#define SQWORD(x) SignedQuadWordIntegerLiteral{ x }
 
 #define UNSIGNED_BYTE_CAST(x) *AS_UNSIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
 #define SIGNED_BYTE_CAST(x) *AS_SIGNED_BYTE_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
@@ -23,8 +21,6 @@
 #define SIGNED_WORD_CAST(x) *AS_SIGNED_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
 #define UNSIGNED_DOUBLE_WORD_CAST(x) *AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
 #define SIGNED_DOUBLE_WORD_CAST(x) *AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define UNSIGNED_QUAD_WORD_CAST(x) *AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
-#define SIGNED_QUAD_WORD_CAST(x) *AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(AS_INTEGER_LITERAL_EXPRESSION(x)->value)
 
 #define VALUE_OF(x) AS_INTEGER_LITERAL_EXPRESSION(x)->value
 #define MESSAGE_OF(x) AS_STRING_EXPRESSION(x)->message
@@ -262,75 +258,8 @@ namespace hz
 		virtual IntegerLiteral* notequals(IntegerLiteral*) final override;
 	};
 
-	class UnsignedQuadWordIntegerLiteral : public IntegerLiteral
-	{
-	public:
-		std::uint64_t value;
-
-	public:
-		UnsignedQuadWordIntegerLiteral(std::uint64_t value)
-			: value{ value }
-		{
-		}
-
-	public:
-		virtual IntegerLiteral* from_value(std::int32_t value) const final override
-		{
-			return new UnsignedQuadWordIntegerLiteral{ static_cast<std::uint64_t>(value) };
-		}
-
-	public:
-		virtual IntegerLiteralType itype() const final override;
-		virtual IntegerLiteral* plus(IntegerLiteral*) final override;
-		virtual IntegerLiteral* minus(IntegerLiteral*) final override;
-		virtual IntegerLiteral* times(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwiseor(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwisexor(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwiseand(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwisershift(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwiselshift(IntegerLiteral*) final override;
-		virtual IntegerLiteral* greater(IntegerLiteral*) final override;
-		virtual IntegerLiteral* less(IntegerLiteral*) final override;
-		virtual IntegerLiteral* assign(IntegerLiteral*) final override;
-		virtual IntegerLiteral* equals(IntegerLiteral*) final override;
-		virtual IntegerLiteral* notequals(IntegerLiteral*) final override;
-	};
-	
-	class SignedQuadWordIntegerLiteral : public IntegerLiteral
-	{
-	public:
-		std::int64_t value;
-
-	public:
-		SignedQuadWordIntegerLiteral(std::int64_t value)
-			: value{ value }
-		{
-		}
-
-	public:
-		virtual IntegerLiteral* from_value(std::int32_t value) const final override
-		{
-			return new SignedQuadWordIntegerLiteral{ static_cast<std::int64_t>(value) };
-		}
-
-	public:
-		virtual IntegerLiteralType itype() const final override;
-		virtual IntegerLiteral* plus(IntegerLiteral*) final override;
-		virtual IntegerLiteral* minus(IntegerLiteral*) final override;
-		virtual IntegerLiteral* times(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwiseor(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwisexor(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwiseand(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwisershift(IntegerLiteral*) final override;
-		virtual IntegerLiteral* bitwiselshift(IntegerLiteral*) final override;
-		virtual IntegerLiteral* greater(IntegerLiteral*) final override;
-		virtual IntegerLiteral* less(IntegerLiteral*) final override;
-		virtual IntegerLiteral* assign(IntegerLiteral*) final override;
-		virtual IntegerLiteral* equals(IntegerLiteral*) final override;
-		virtual IntegerLiteral* notequals(IntegerLiteral*) final override;
-	};
-
 	ExtendedInteger integer_literal_raw(IntegerLiteral*);
+	std::intmax_t integer_literal_int(IntegerLiteral*);
 
 
 	template<typename T>
@@ -342,14 +271,9 @@ namespace hz
 	bool integer_literal_equals(IntegerLiteral*, ExtendedInteger);
 
 	template<typename T>
-		requires (std::is_same_v<T, std::uint8_t> or
-				  std::is_same_v<T, std::int8_t> or
-				  std::is_same_v<T, std::uint16_t> or
-				  std::is_same_v<T, std::int16_t> or
-				  std::is_same_v<T, std::uint32_t> or
-				  std::is_same_v<T, std::int32_t> or
-			      std::is_same_v<T, std::uint64_t> or
-				  std::is_same_v<T, std::int64_t>)
+		requires (std::is_same_v<T, std::uint8_t> or std::is_same_v<T, std::int8_t> or
+				  std::is_same_v<T, std::uint16_t> or std::is_same_v<T, std::int16_t> or
+				  std::is_same_v<T, std::uint32_t> or std::is_same_v<T, std::int32_t>)
 	IntegerLiteral* make_integer_literal(T value)
 	{
 		static_assert(false);
@@ -372,12 +296,6 @@ namespace hz
 
 	template<>
 	IntegerLiteral* make_integer_literal<std::int32_t>(std::int32_t);
-
-	template<>
-	IntegerLiteral* make_integer_literal<std::uint64_t>(std::uint64_t);
-
-	template<>
-	IntegerLiteral* make_integer_literal<std::int64_t>(std::int64_t);
 
 	// all possible explicit specializations are defined in the cpp file
 

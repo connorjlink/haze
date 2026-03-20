@@ -4,6 +4,7 @@
 // Haze ErrorType.h
 // (c) Connor J. Link. All Rights Reserved.
 
+// weird Windows.h stuff... again...
 #undef ERROR
 
 namespace hz

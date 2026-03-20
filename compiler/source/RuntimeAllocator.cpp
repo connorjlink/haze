@@ -44,7 +44,7 @@ namespace hz
 		_locals_offsets[REQUIRE_SAFE(Generator)->current_function()][name] = -1;
 	}
 
-	void RuntimeAllocator::define_local(const std::string& name, register_t source)
+	void RuntimeAllocator::define_local(const std::string& name, std::int8_t source)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -94,7 +94,7 @@ namespace hz
 		_locals_offsets.erase(name);
 	}
 
-	void RuntimeAllocator::read_local(register_t destination, const std::string& name)
+	void RuntimeAllocator::read_local(std::int8_t destination, const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -108,7 +108,7 @@ namespace hz
 		REQUIRE_SAFE(Generator)->stack_read(destination, offset);
 	}
 
-	void RuntimeAllocator::write_local(const std::string& name, register_t source)
+	void RuntimeAllocator::write_local(const std::string& name, std::int8_t source)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 

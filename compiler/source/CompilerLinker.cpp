@@ -44,38 +44,6 @@ namespace
 		USE_UNSAFE(ErrorReporter)->post_error("internal error caused by unrecognized command type", NULL_TOKEN);
 	}
 
-
-	std::uint32_t resolve_instruction_length(InstructionCommand* instruction)
-	{
-		std::size_t length = 0;
-		
-		using enum Opcode;
-		switch (instruction->opcode)
-		{
-			case MOVE: length = REQUIRE_UNSAFE(Emitter)->emit_move(instruction->destination, instruction->source).size(); break;
-			case LOAD: length = REQUIRE_UNSAFE(Emitter)->emit_load(instruction->destination, instruction->absolute).size(); break;
-			case COPY: length = REQUIRE_UNSAFE(Emitter)->emit_copy(instruction->destination, instruction->immediate).size(); break;
-			case SAVE: length = REQUIRE_UNSAFE(Emitter)->emit_save(instruction->absolute, instruction->source).size(); break;
-			case IADD: length = REQUIRE_UNSAFE(Emitter)->emit_iadd(instruction->destination, instruction->source).size(); break;
-			case ISUB: length = REQUIRE_UNSAFE(Emitter)->emit_isub(instruction->destination, instruction->source).size(); break;
-			case BAND: length = REQUIRE_UNSAFE(Emitter)->emit_band(instruction->destination, instruction->source).size(); break;
-			case BIOR: length = REQUIRE_UNSAFE(Emitter)->emit_bior(instruction->destination, instruction->source).size(); break;
-			case BXOR: length = REQUIRE_UNSAFE(Emitter)->emit_bior(instruction->destination, instruction->source).size(); break;
-			case CALL: length = REQUIRE_UNSAFE(Emitter)->emit_call(instruction->relative).size(); break;
-			case EXIT: length = REQUIRE_UNSAFE(Emitter)->emit_exit().size(); break;
-			case PUSH: length = REQUIRE_UNSAFE(Emitter)->emit_push(instruction->source).size(); break;
-			case PULL: length = REQUIRE_UNSAFE(Emitter)->emit_pull(instruction->destination).size(); break;
-			case BRNZ: length = REQUIRE_UNSAFE(Emitter)->emit_brnz(instruction->relative, instruction->source).size(); break;
-			case BOOL: length = REQUIRE_UNSAFE(Emitter)->emit_bool(instruction->source).size(); break;
-			case STOP: length = REQUIRE_UNSAFE(Emitter)->emit_stop().size(); break;
-		}
-
-		// explicit narrowing conversion to avoid nuisance warning
-		return static_cast<std::uint32_t>(length);
-	}
-
-
-
 	std::size_t _global_pass = 0;
 }
 
@@ -230,12 +198,10 @@ namespace hz
 
 							if (!instruction->marked_for_deletion)
 							{
-								auto length = resolve_instruction_length(instruction);
-
 								instruction->offset = address_tracker;
 
 								// previously this was always 3 (since haze instructions are 24 bits)
-								address_tracker += length;
+								address_tracker += instruction->length();
 							}
 						} break;
 
@@ -392,5 +358,106 @@ namespace hz
 		}
 
 		return executable;
+	}
+
+	byterange link()
+	{
+		std::vector<IntermediateCommand*> ir_code{};
+		std::vector<byterange> object_code{};
+		byterange final_image{};
+
+		// map of (label name -> address)
+		std::unordered_map<std::string, std::int32_t> branches;
+
+		// the first function starts at address 0
+		std::int32_t address_tracker = 0;
+
+		for (auto& linkable : _linkables)
+		{
+			linkable.offset = address_tracker;
+
+			for (auto command : linkable.ir)
+			{
+				using enum IntermediateType;
+				switch (command->itype())
+				{
+				case BRANCH_LABEL:
+				{
+					auto branch_label_command = AS_BRANCH_LABEL_COMMAND(command);
+					branches[branch_label_command->label] = address_tracker;
+				} break;
+
+				default:
+				{
+					// NOTE: branches have not yet been resolved
+					// so, just generate the instruction with dummy placeholders
+
+					// The binary is wrong, but is at least of the correct 
+					// length for future label/target address resolution
+					const auto code = command->emit();
+					const auto size = static_cast<std::int32_t>(code.size());
+
+					command->offset = address_tracker;
+					command->size = size;
+					address_tracker += size;
+
+					ir_code.emplace_back(command);
+				} break;
+				}
+			}
+		}
+
+		for (auto& command : ir_code)
+		{
+#pragma message("TODO: support branch commands that go directly to an index instead of only by label!")
+
+			if (command->itype() == IntermediateType::BRANCH)
+			{
+				auto branch_command = AS_BRANCH_COMMAND(command);
+
+				auto absolute_target_offset = branch_command->target_offset;
+
+				// does the address need to be resolved by label?
+				if (!absolute_target_offset.has_value())
+				{
+					// at this point it is unknown if the target label is a function or instruction label
+
+					const auto target_linkable = std::find_if(_linkables.begin(), _linkables.end(), [&](auto&& linkable)
+						{
+							return linkable.symbol->name == branch_command->label;
+						});
+
+					// if the label was found, it is a function
+					if (target_linkable != _linkables.end())
+					{
+						absolute_target_offset = target_linkable->offset;
+					}
+
+					// otherwise, it must be a specific instruction-level label
+					else
+					{
+						absolute_target_offset = branches[branch_command->label];
+					}
+				}
+
+				const auto current_position = command->offset;
+				const auto current_size = command->size;
+
+				const auto next_instruction_offset = current_position + current_size;
+
+				const auto relative_difference = absolute_target_offset.value() - next_instruction_offset;
+				branch_command->target_offset = relative_difference;
+			}
+
+			const auto code = command->emit();
+			object_code.emplace_back(code);
+		}
+
+		for (auto& instruction : object_code)
+		{
+			final_image.append_range(instruction);
+		}
+
+		return final_image;
 	}
 }

@@ -8,12 +8,10 @@
 
 namespace hz
 {
-	template<typename T>
 	class Instruction
 	{
 	public:
-		virtual T itype() const = 0;
-		virtual ArchitectureType atype() const = 0;
+		virtual ArchitectureType ctype() const = 0;
 		virtual byterange emit() const = 0;
 	};
 }

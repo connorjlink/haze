@@ -2,7 +2,7 @@
 #define HAZE_ASSEMBLERPARSER_H
 
 #include <toolchain/Parser.h>
-#include <toolchain/AssemblerParserType.h>
+#include <cli/ArchitectureType.h>
 #include <utility/Constants.h>
 
 // Haze AssemblerParser.h
@@ -10,6 +10,8 @@
 
 namespace hz
 {
+	class Instruction;
+
 	class AssemblerParser : public Parser
 	{
 	private:
@@ -25,11 +27,11 @@ namespace hz
 		virtual std::vector<Node*> parse() final override;
 
 	public:
-		virtual AssemblerParserType atype() const = 0;
+		virtual ArchitectureType ctype() const = 0;
 
 	protected:
-		virtual Node* parse_instruction_command() = 0;
-		virtual register_t parse_register() = 0;
+		virtual Instruction* parse_instruction_command() = 0;
+		virtual std::int8_t parse_register() = 0;
 
 	public:
 		using Parser::Parser;

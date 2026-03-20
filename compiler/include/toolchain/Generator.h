@@ -5,7 +5,6 @@
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Linkable.h>
-#include <toolchain/models/InstructionEncoding.h>
 #include <utility/Constants.h>
 
 // Haze Generator.h
@@ -60,70 +59,70 @@ namespace hz
 
 	public:
 		// push a new variable public to the entire program
-		void make_global(register_t, Variable*);
+		void make_global(std::int8_t, Variable*);
 
 	public:
 		// destination = memory[pointer]
-		void heap_read(register_t, std::uint32_t);
+		void heap_read(std::int8_t, std::uint32_t);
 		// memory[pointer] = source
-		void heap_write(std::uint32_t, register_t);
+		void heap_write(std::uint32_t, std::int8_t);
 
 	public:
 		// destination = stack[ebp + offset]
-		void stack_read(register_t, std::int32_t);
+		void stack_read(std::int8_t, std::int32_t);
 		// stack[ebp + offset] = source
-		void stack_write(std::int32_t, register_t);
+		void stack_write(std::int32_t, std::int8_t);
 
 	public:
 		// NOTE: all math operations are { LHS, RHS, destination }
 		// destination = lhs + rhs
-		void compute_add(register_t, register_t, register_t);
+		void compute_add(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs - rhs
-		void compute_subtract(register_t, register_t, register_t);
+		void compute_subtract(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs * rhs
-		void compute_multiplication(register_t, register_t, register_t);
+		void compute_multiplication(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs | rhs
-		void compute_bitor(register_t, register_t, register_t);
+		void compute_bitor(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs ^ rhs
-		void compute_bitxor(register_t, register_t, register_t);
+		void compute_bitxor(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs & rhs
-		void compute_bitand(register_t, register_t, register_t);
+		void compute_bitand(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs << rhs
-		void compute_bitlshift(register_t, register_t, register_t);
+		void compute_bitlshift(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs >> rhs
-		void compute_bitrshift(register_t, register_t, register_t);
+		void compute_bitrshift(std::int8_t, std::int8_t, std::int8_t);
 
 	public:
 		// destination = lhs == rhs
-		void compute_equality(register_t, register_t, register_t);
+		void compute_equality(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs != rhs
-		void compute_inequality(register_t, register_t, register_t);
+		void compute_inequality(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs < rhs
-		void compute_less(register_t, register_t, register_t);
+		void compute_less(std::int8_t, std::int8_t, std::int8_t);
 		// destination = lhs > rhs
-		void compute_greater(register_t, register_t, register_t);
+		void compute_greater(std::int8_t, std::int8_t, std::int8_t);
 
 	private:
 		// destination = (bool)source
-		void compute_bool(register_t, register_t);
+		void compute_bool(std::int8_t, std::int8_t);
 
 	public:
 		// destination = source + 1
-		void compute_increment(register_t, register_t);
+		void compute_increment(std::int8_t, std::int8_t);
 		// destination = source - 1
-		void compute_decrement(register_t, register_t);
+		void compute_decrement(std::int8_t, std::int8_t);
 
 	public:
 		// destination = source
-		void make_copy(register_t, register_t);
+		void make_copy(std::int8_t, std::int8_t);
 		// destination = immediate
-		void make_immediate(register_t, IntegerLiteral*);
+		void make_immediate(std::int8_t, IntegerLiteral*);
 
 	public:
 		// position a new function argument for the next call
-		void make_argument(const std::string&, register_t);
+		void make_argument(const std::string&, std::int8_t);
 		// pull a function argument during call from those prepared
-		void take_argument(const std::string&, register_t, std::int32_t);
+		void take_argument(const std::string&, std::int8_t, std::int32_t);
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function
@@ -133,21 +132,21 @@ namespace hz
 		// return from a call to a `nvr` function
 		void make_return(std::int32_t);
 		// return from a call to a value-typed function
-		void make_return(const std::string&, register_t);
+		void make_return(const std::string&, std::int8_t);
 		// return from a call to a value-typed function
-		void make_return(std::int32_t, register_t);
+		void make_return(std::int32_t, std::int8_t);
 
 	public:
 		// { target_offset, condition }
-		void check_ifnz(std::int32_t, register_t);
+		void check_ifnz(std::int32_t, std::int8_t);
 		// { label, condition }
-		void check_ifnz(const std::string&, register_t);
+		void check_ifnz(const std::string&, std::int8_t);
 
 	public:
 		// { target_offset, condition }
-		void check_ifz(std::int32_t, register_t);
+		void check_ifz(std::int32_t, std::int8_t);
 		// { label, condition }
-		void check_ifz(const std::string&, register_t);
+		void check_ifz(const std::string&, std::int8_t);
 
 	public:
 		// target_offset
@@ -163,11 +162,11 @@ namespace hz
 
 	public:
 		// print(integer)
-		void print_number(register_t);
+		void print_number(std::int8_t);
 
 	public:
 		// exit(code)
-		void exit_program(register_t);
+		void exit_program(std::int8_t);
 
 	public:
 		// { assembly code }

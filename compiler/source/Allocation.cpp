@@ -35,12 +35,12 @@ namespace hz
 	}
 
 	
-	ObserverAllocation::ObserverAllocation(register_t source)
+	ObserverAllocation::ObserverAllocation(std::int8_t source)
 	{
 		allocation = source;
 	}
 
-	AutoObserverAllocation::AutoObserverAllocation(register_t source)
+	AutoObserverAllocation::AutoObserverAllocation(std::int8_t source)
 	{
 		_source = new ObserverAllocation{ source };
 	}
@@ -92,7 +92,7 @@ namespace hz
 	}
 
 
-	register_t ObserverAllocation::read() const
+	std::int8_t ObserverAllocation::read() const
 	{
 		return allocation;
 	}
@@ -108,7 +108,7 @@ namespace hz
 	}
 
 
-	register_t StackAllocation::read() const
+	std::int8_t StackAllocation::read() const
 	{
 		return allocation;
 	}
@@ -172,7 +172,7 @@ namespace hz
 	}
 
 
-	register_t HeapAllocation::read() const
+	std::int8_t HeapAllocation::read() const
 	{
 		UNSUPPORTED_OPERATION(__FUNCTION__);
 	}

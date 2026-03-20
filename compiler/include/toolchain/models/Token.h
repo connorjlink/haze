@@ -316,7 +316,6 @@ namespace hz
 		bimap_t{ S("uret"), TokenType::URET },
 		bimap_t{ S("sret"), TokenType::SRET },
 		bimap_t{ S("mret"), TokenType::MRET },
-		bimap_t{ S("sfence.vma"), TokenType::SFENCEVMA },
 
 		bimap_t{ S("string"), TokenType::STRING },
 		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },

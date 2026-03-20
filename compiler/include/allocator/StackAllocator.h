@@ -1,7 +1,6 @@
 #ifndef HAZE_STACKALLOCATOR_H
 #define HAZE_STACKALLOCATOR_H
 
-#include <toolchain/models/InstructionEncoding.h>
 #include <data/DependencyInjector.h>
 
 // Haze StackAllocator.h
@@ -13,7 +12,7 @@ namespace hz
 	class StackAllocator : public ServiceTag<StackAllocator>
 	{
 	public:
-		register_t allocate()
+		std::int8_t allocate()
 		{
 			auto allocation = find_register();
 			_ledger.insert(allocation);
@@ -21,19 +20,19 @@ namespace hz
 		}
 
 	public:
-		void release(register_t allocation)
+		void release(std::int8_t allocation)
 		{
 			_ledger.erase(allocation);
 		}
 
 	public:
-		bool is_available(register_t allocation)
+		bool is_available(std::int8_t allocation)
 		{
 			return _ledger.contains(allocation);
 		}
 
 	private:
-		register_t find_register() const
+		std::int8_t find_register() const
 		{
 			auto current = 0;
 
@@ -46,7 +45,7 @@ namespace hz
 		}
 
 	private:
-		std::unordered_set<register_t> _ledger;
+		std::unordered_set<std::int8_t> _ledger;
 
 	public:
 		StackAllocator();

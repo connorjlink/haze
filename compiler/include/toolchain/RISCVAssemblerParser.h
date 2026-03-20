@@ -8,11 +8,13 @@
 
 namespace hz
 {
+	class Instruction;
+
 	class RISCVAssemblerParser : public AssemblerParser
 	{
 	protected:
-		virtual Node* parse_instruction_command() final override;
-		virtual register_t parse_register() final override;
+		virtual Instruction* parse_instruction_command() final override;
+		virtual std::int8_t parse_register() final override;
 
 	public:
 		using AssemblerParser::AssemblerParser;

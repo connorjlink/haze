@@ -2,7 +2,6 @@
 #define HAZE_RUNTIMEALLOCATOR_H
 
 #include <data/DependencyInjector.h>
-#include <toolchain/models/InstructionEncoding.h>
 #include <toolchain/Generator.h>
 
 // Haze RuntimeAllocator.h
@@ -23,15 +22,15 @@ namespace hz
 
 	public:
 		void define_local(const std::string&);
-		void define_local(const std::string&, register_t);
+		void define_local(const std::string&, std::int8_t);
 		void attach_local(const std::string&, std::int32_t);
 
 	public:
 		void destroy_local(const std::string&);
 
 	public:
-		void read_local(register_t, const std::string&);
-		void write_local(const std::string&, register_t);
+		void read_local(std::int8_t, const std::string&);
+		void write_local(const std::string&, std::int8_t);
 
 	public:
 		RuntimeAllocator()

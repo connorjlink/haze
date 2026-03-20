@@ -25,9 +25,6 @@ namespace hz
 
 		UDWORD,
 		SDWORD,
-
-		UQWORD,
-		SQWORD,
 	};
 
 	static const std::unordered_map<IntegerLiteralType, std::string> _integer_literal_type_map
@@ -38,8 +35,6 @@ namespace hz
 		{ IntegerLiteralType::SWORD, "signed word" },
 		{ IntegerLiteralType::UDWORD, "unsigned double word" },
 		{ IntegerLiteralType::SDWORD, "signed double word" },
-		{ IntegerLiteralType::UQWORD, "unsigned quad word" },
-		{ IntegerLiteralType::SQWORD, "signed quad word" },
 	};
 }
 

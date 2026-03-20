@@ -13,6 +13,7 @@
 #include <riscv/RISCVArithmeticInstructionType.h>
 #include <riscv/RISCVBccInstructionType.h>
 #include <riscv/RISCVMExtensionInstructionType.h>
+#include <riscv/RISCVAExtensionInstructionType.h>
 #include <riscv/RISCVZicsrExtensionInstructionType.h>
 #include <riscv/RISCVRegister.h>
 
@@ -24,7 +25,7 @@ namespace hz
 	class RISCVInstruction : public Instruction<RISCVInstructionType>
 	{
 	public:
-		virtual ArchitectureType atype() const final override
+		virtual ArchitectureType ctype() const final override
 		{
 			return ArchitectureType::RISCV;
 		}
@@ -759,6 +760,28 @@ namespace hz
 #define remu(rd, rs1, rs2) RISCVRemuInstruction{ rd, rs1, rs2 }
 
 
+
+	class RISCVAExtensionInstruction : public RISCVInstruction
+	{
+	protected:
+		RISCVRegister _rd;
+		RISCVRegister _rs1;
+
+	public:
+		RISCVAExtensionInstruction(RISCVRegister rd, RISCVRegister rs1)
+			: _rd{ rd }, _rs1{ rs1 }
+		{
+		}
+
+	public:
+		virtual RISCVInstructionType itype() const final override;
+		virtual RISCVAExtensionInstructionType ttype() const = 0;
+	};
+
+	class RISCVAmoInstruction : public RISCVAExtensionInstruction
+	{
+
+	};
 
 
 

@@ -27,7 +27,7 @@ namespace hz
 
 	public:
 		virtual AllocationType atype() const = 0;
-		virtual register_t read() const = 0;
+		virtual std::int8_t read() const = 0;
 		virtual void write(Variable*) const = 0;
 		virtual void copy_into(Allocation*) const = 0;
 	};
@@ -35,16 +35,16 @@ namespace hz
 	class ObserverAllocation : public Allocation
 	{
 	public:
-		register_t allocation;
+		std::int8_t allocation;
 
 	public:
 		virtual AllocationType atype() const final override;
-		virtual register_t read() const final override;
+		virtual std::int8_t read() const final override;
 		virtual void write(Variable*) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
 	public:
-		ObserverAllocation(register_t);
+		ObserverAllocation(std::int8_t);
 	};
 
 	class AutoObserverAllocation
@@ -59,7 +59,7 @@ namespace hz
 		}
 
 	public:
-		AutoObserverAllocation(register_t);
+		AutoObserverAllocation(std::int8_t);
 		~AutoObserverAllocation();
 	};
 
@@ -67,11 +67,11 @@ namespace hz
 		: public Allocation
 	{
 	public:
-		register_t allocation;
+		std::int8_t allocation;
 
 	public:
 		virtual AllocationType atype() const override;
-		virtual register_t read() const final override;
+		virtual std::int8_t read() const final override;
 		virtual void write(Variable*) const final override;
 		virtual void copy_into(Allocation*) const final override;
 
@@ -115,7 +115,7 @@ namespace hz
 
 	public:
 		virtual AllocationType atype() const override;
-		virtual register_t read() const final override;
+		virtual std::int8_t read() const final override;
 		virtual void write(Variable*) const final override;
 		virtual void copy_into(Allocation*) const final override;
 

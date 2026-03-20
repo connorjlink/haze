@@ -1,14 +1,19 @@
 import std;
 
 #include <toolchain/RISCVAssemblerParser.h>
+#include <command/models/IntegerLiteral.h>
+#include <ast/IntegerLiteralExpression.h>
+#include <riscv/RISCVInstruction.h>
 #include <riscv/RISCVRegister.h>
 
 // Haze RISCVAssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+#define PARSE_REGISTER() static_cast<RISCVRegister>(parse_register())
+
 namespace hz
 {
-	Node* RISCVAssemblerParser::parse_instruction_command()
+	Instruction* RISCVAssemblerParser::parse_instruction_command()
 	{
 		const auto opcode_token = peek();
 		consume(opcode_token.type);
@@ -18,15 +23,16 @@ namespace hz
 		{
 			// I instruction set
 			case LB:
-				const auto rd = parse_register();
+			{
+				const auto rd = PARSE_REGISTER();
 				consume(TokenType::COMMA);
-				const auto immediate = parse_integerliteral_expression();
+				const auto integer_literal = parse_integerliteral_expression();
+				const auto immediate = static_cast<native_int>(integer_literal_int(integer_literal->value));
 				consume(TokenType::LPAREN);
-				const auto rs1 = parse_register();
+				const auto rs1 = PARSE_REGISTER();
 				consume(TokenType::RPAREN);
-				return new LoadInstruction{ rd, rs1, immediate };
-				break;
-
+				return new lb(rd, immediate, rs1);
+			} break;
 
 			case LH:
 			case LW:
@@ -35,7 +41,6 @@ namespace hz
 			case SB:
 			case SH:
 			case SW:
-			case LI:
 			case LUI:
 			case AUIPC:
 			case ADDI:
@@ -138,7 +143,6 @@ namespace hz
 			case URET:
 			case SRET:
 			case MRET:
-			case SFENCEVMA:
 		}
 		
 		USE_SAFE(ErrorReporter)->post_error(std::format(
@@ -147,9 +151,9 @@ namespace hz
 		return nullptr;
 	}
 
-	register_t RISCVAssemblerParser::parse_register()
+	std::int8_t RISCVAssemblerParser::parse_register()
 	{
-		const auto register_token = peek(); 
+		const auto& register_token = peek();
 		consume(register_token.type);
 
 		switch (register_token.type)
@@ -191,6 +195,6 @@ namespace hz
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"unrecognized register `{}`", register_token.text), register_token);
 
-		return register_t{ -1 };
+		return std::int8_t{ -1 };
 	}
 }

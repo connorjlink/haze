@@ -2,7 +2,6 @@
 #define HAZE_INSTRUCTION_H
 
 #include <command/Command.h>
-#include <toolchain/models/InstructionEncoding.h>
 #include <utility/PlatformVariables.h>
 #include <utility/Constants.h>
 
@@ -24,6 +23,13 @@ namespace hz
 	public:
 		InstructionCommand() = delete;
 		InstructionCommand(Token, byterange&&, const std::string& = "");
+
+	public:
+		inline std::size_t length() const
+		{
+			return object_code.size();
+		}
+
 
 	public:
 		virtual CommandType ctype() const final override;

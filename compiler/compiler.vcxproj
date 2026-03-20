@@ -226,9 +226,7 @@
     <ClCompile Include="source\WhileStatement.cpp" />
     <ClCompile Include="source\X86Builder.cpp" />
     <ClCompile Include="source\X86BuilderValidator.cpp" />
-    <ClCompile Include="source\X86Emitter.cpp" />
     <ClCompile Include="source\X86Instruction.cpp" />
-    <ClCompile Include="source\X86Linker.cpp" />
     <ClCompile Include="source\X86Operand.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -306,14 +304,19 @@
     <ClInclude Include="include\job\AutoJob.h" />
     <ClInclude Include="include\job\Job.h" />
     <ClInclude Include="include\job\JobManager.h" />
+    <ClInclude Include="include\riscv\RISCVAExtensionInstructionType.h" />
+    <ClInclude Include="include\riscv\RISCVArithmeticInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVBccInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVInstruction.h" />
     <ClInclude Include="include\riscv\RISCVInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVJumpInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVLoadInstructionType.h" />
+    <ClInclude Include="include\riscv\RISCVMExtensionInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVRegister.h" />
     <ClInclude Include="include\riscv\RISCVSetInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVStoreInstructionType.h" />
+    <ClInclude Include="include\riscv\RISCVUpperInstructionType.h" />
+    <ClInclude Include="include\riscv\RISCVZicsrExtensionInstructionType.h" />
     <ClInclude Include="include\runtime\Context.h" />
     <ClInclude Include="include\runtime\Disassembler.h" />
     <ClInclude Include="include\runtime\Evaluator.h" />
@@ -327,7 +330,6 @@
     <ClInclude Include="include\symbol\SymbolType.h" />
     <ClInclude Include="include\toolchain\AssemblerLinker.h" />
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
-    <ClInclude Include="include\toolchain\AssemblerParserType.h" />
     <ClInclude Include="include\toolchain\AssemblerToolchain.h" />
     <ClInclude Include="include\toolchain\CommonToolchain.h" />
     <ClInclude Include="include\toolchain\CompilerLinker.h" />

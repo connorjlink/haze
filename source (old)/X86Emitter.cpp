@@ -36,14 +36,14 @@ namespace hz
 
 
 	// done
-	byterange X86Emitter::emit_move(register_t destination, register_t source)
+	byterange X86Emitter::emit_move(std::int8_t destination, std::int8_t source)
 	{
 		// mov r/m32, r32
 		return { 0x89, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_load(register_t destination, std::uint32_t address)
+	byterange X86Emitter::emit_load(std::int8_t destination, std::uint32_t address)
 	{
 		byterange out{};
 
@@ -58,7 +58,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_copy(register_t destination, std::uint8_t immediate)
+	byterange X86Emitter::emit_copy(std::int8_t destination, std::uint8_t immediate)
 	{
 		// mov r/m32, imm32
 		byterange out{};
@@ -74,18 +74,18 @@ namespace hz
 		return {};
 	}*/
 
-	byterange X86Emitter::emit_make(register_t source)
+	byterange X86Emitter::emit_make(std::int8_t source)
 	{
 		return {};
 	}
 
-	byterange X86Emitter::emit_take(register_t destination)
+	byterange X86Emitter::emit_take(std::int8_t destination)
 	{
 		return {};
 	}
 
 	// done
-	byterange X86Emitter::emit_save(std::uint32_t address, register_t source)
+	byterange X86Emitter::emit_save(std::uint32_t address, std::int8_t source)
 	{
 		byterange out{};
 
@@ -185,35 +185,35 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_iadd(register_t destination, register_t source)
+	byterange X86Emitter::emit_iadd(std::int8_t destination, std::int8_t source)
 	{
 		// add r/m32, r32
 		return { 0x01, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_isub(register_t destination, register_t source)
+	byterange X86Emitter::emit_isub(std::int8_t destination, std::int8_t source)
 	{
 		// sub r/m32, r32
 		return { 0x29, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_band(register_t destination, register_t source)
+	byterange X86Emitter::emit_band(std::int8_t destination, std::int8_t source)
 	{
 		// and r/m32, r32
 		return { 0x21, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_bior(register_t destination, register_t source)
+	byterange X86Emitter::emit_bior(std::int8_t destination, std::int8_t source)
 	{
 		// or r/m32, r32
 		return { 0x09, X86Builder::modrm_rr(destination, source) };
 	}
 
 	// done
-	byterange X86Emitter::emit_bxor(register_t destination, register_t source)
+	byterange X86Emitter::emit_bxor(std::int8_t destination, std::int8_t source)
 	{
 		// xor r/m32, r32
 		return { 0x31, X86Builder::modrm_rr(destination, source) };
@@ -242,7 +242,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_push(register_t source)
+	byterange X86Emitter::emit_push(std::int8_t source)
 	{
 		// NOTE: old format--clobbers the stack pointer register so the `ret` goes bad :(
 		// push r32
@@ -263,7 +263,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_pull(register_t destination)
+	byterange X86Emitter::emit_pull(std::int8_t destination)
 	{
 		// NOTE: newer format--used before switching to CodeBuilder generic codegenerator frontend
 		//byterange out{};
@@ -285,7 +285,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_brnz(std::int32_t address, register_t source)
+	byterange X86Emitter::emit_brnz(std::int32_t address, std::int8_t source)
 	{
 		byterange out{};
 
@@ -321,7 +321,7 @@ namespace hz
 	}
 
 	// done
-	byterange X86Emitter::emit_bool(register_t source)
+	byterange X86Emitter::emit_bool(std::int8_t source)
 	{
 		byterange out{};
 

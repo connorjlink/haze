@@ -10,7 +10,6 @@
 #include <symbol/SymbolDatabase.h>
 #include <utility/Constants.h>
 #include <toolchain/Generator.h>
-#include <toolchain/models/InstructionEncoding.h>
 
 // Haze IntermediateCommand.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -87,11 +86,11 @@ namespace hz
 	class LocalVariableCommand : public IntermediateCommand
 	{
 	private:
-		register_t _location;
+		std::int8_t _location;
 		Variable* _value;
 
 	public:
-		LocalVariableCommand(register_t location, Variable* value)
+		LocalVariableCommand(std::int8_t location, Variable* value)
 			: _location{ location }, _value{ value }
 		{
 		}
@@ -104,11 +103,11 @@ namespace hz
 	class GlobalVariableCommand : public IntermediateCommand
 	{
 	private:
-		register_t _location;
+		std::int8_t _location;
 		Variable* _value;
 
 	public:
-		GlobalVariableCommand(register_t location, Variable* value)
+		GlobalVariableCommand(std::int8_t location, Variable* value)
 			: _location{ location }, _value{ value }
 		{
 		}
@@ -121,11 +120,11 @@ namespace hz
 	class HeapReadCommand : public IntermediateCommand
 	{
 	private:
-		register_t _destination;
+		std::int8_t _destination;
 		std::uint32_t _pointer;
 
 	public:
-		HeapReadCommand(register_t destination, std::uint32_t pointer)
+		HeapReadCommand(std::int8_t destination, std::uint32_t pointer)
 			: _destination{ destination }, _pointer{ pointer }
 		{
 		}
@@ -139,10 +138,10 @@ namespace hz
 	{
 	private:
 		std::uint32_t _pointer;
-		register_t _source;
+		std::int8_t _source;
 
 	public:
-		HeapWriteCommand(std::uint32_t pointer, register_t source)
+		HeapWriteCommand(std::uint32_t pointer, std::int8_t source)
 			: _pointer{ pointer }, _source{ source }
 		{
 		}
@@ -155,11 +154,11 @@ namespace hz
 	class StackReadCommand : public IntermediateCommand
 	{
 	private:
-		register_t _destination;
+		std::int8_t _destination;
 		std::int32_t _offset;
 
 	public:
-		StackReadCommand(register_t destination, std::int32_t offset)
+		StackReadCommand(std::int8_t destination, std::int32_t offset)
 			: _destination{ destination }, _offset{ offset }
 		{
 		}
@@ -173,10 +172,10 @@ namespace hz
 	{
 	private:
 		std::int32_t _offset;
-		register_t _source;
+		std::int8_t _source;
 
 	public:
-		StackWriteCommand(std::int32_t offset, register_t source)
+		StackWriteCommand(std::int32_t offset, std::int8_t source)
 			: _offset{ offset }, _source{ source }
 		{
 		}
@@ -189,10 +188,10 @@ namespace hz
 	class BoolCommand : public IntermediateCommand
 	{
 	private:
-		register_t _destination, _source;
+		std::int8_t _destination, _source;
 
 	public:
-		BoolCommand(register_t destination, register_t source)
+		BoolCommand(std::int8_t destination, std::int8_t source)
 			: _destination{ destination }, _source{ source }
 		{
 		}
@@ -205,10 +204,10 @@ namespace hz
 	class BinaryCommand : public IntermediateCommand
 	{
 	protected:
-		register_t _lhs, _rhs, _destination;
+		std::int8_t _lhs, _rhs, _destination;
 
 	public:
-		BinaryCommand(register_t lhs, register_t rhs, register_t destination)
+		BinaryCommand(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
 			: _lhs{ lhs }, _rhs{ rhs }, _destination{ destination }
 		{
 		}
@@ -341,10 +340,10 @@ namespace hz
 	class IncrementCommand : public IntermediateCommand
 	{
 	private:
-		register_t _destination, _source;
+		std::int8_t _destination, _source;
 
 	public:
-		IncrementCommand(register_t destination, register_t source)
+		IncrementCommand(std::int8_t destination, std::int8_t source)
 			: _destination{ destination }, _source{ source }
 		{
 		}
@@ -357,10 +356,10 @@ namespace hz
 	class DecrementCommand : public IntermediateCommand
 	{
 	private:
-		register_t _destination, _source;
+		std::int8_t _destination, _source;
 
 	public:
-		DecrementCommand(register_t destination, register_t source)
+		DecrementCommand(std::int8_t destination, std::int8_t source)
 			: _destination{ destination }, _source{ source }
 		{
 		}
@@ -373,10 +372,10 @@ namespace hz
 	class CopyCommand : public IntermediateCommand
 	{
 	public:
-		register_t _destination, _source;
+		std::int8_t _destination, _source;
 
 	public:
-		CopyCommand(register_t destination, register_t source)
+		CopyCommand(std::int8_t destination, std::int8_t source)
 			: _destination{ destination }, _source{ source }
 		{
 		}
@@ -389,11 +388,11 @@ namespace hz
 	class MakeImmediateCommand : public IntermediateCommand
 	{
 	private:
-		register_t _destination;
+		std::int8_t _destination;
 		std::int32_t _immediate;
 
 	public:
-		MakeImmediateCommand(register_t destination, IntegerLiteral* immediate)
+		MakeImmediateCommand(std::int8_t destination, IntegerLiteral* immediate)
 			: _destination{ destination }
 		{
 			using enum IntegerLiteralType;
@@ -408,7 +407,7 @@ namespace hz
 				case UDWORD: _immediate = AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(immediate)->value; break;
 				case SDWORD: _immediate = AS_SIGNED_DOUBLE_WORD_INTEGER_LITERAL(immediate)->value; break;
 
-				// since x86 is building 32-bit, 64-bit immediates are not supported for now
+				// since x86/RISC-V is building 32-bit, 64-bit immediates are not supported for now
 				default:
 				{
 					CommonErrors::invalid_integer_literal_type(immediate->itype(), NULL_TOKEN);
@@ -424,13 +423,13 @@ namespace hz
 	class MakeArgumentCommand : public IntermediateCommand
 	{
 	private:
-		register_t _location;
+		std::int8_t _location;
 		// TODO: use this later to support custom-size objects
 		// in that case, each argument will need to know its own offset in the stack frame
 		//std::int32_t _offset;
 
 	public:
-		MakeArgumentCommand(register_t location)
+		MakeArgumentCommand(std::int8_t location)
 			: _location{ location }
 		{
 		}
@@ -443,11 +442,11 @@ namespace hz
 	class TakeArgumentCommand : public IntermediateCommand
 	{
 	private:
-		register_t _location;
+		std::int8_t _location;
 		std::int32_t _offset;
 
 	public:
-		TakeArgumentCommand(register_t location, std::int32_t offset)
+		TakeArgumentCommand(std::int8_t location, std::int32_t offset)
 			: _location{ location }, _offset{ offset }
 		{
 		}
@@ -511,15 +510,15 @@ namespace hz
 	class ValueReturnCommand : public BranchCommand
 	{
 	private:
-		register_t _location;
+		std::int8_t _location;
 
 	public:
-		ValueReturnCommand(const std::string& label, register_t location)
+		ValueReturnCommand(const std::string& label, std::int8_t location)
 			: BranchCommand{ label }, _location { location }
 		{
 		}
 
-		ValueReturnCommand(std::int32_t target_offset, register_t location)
+		ValueReturnCommand(std::int32_t target_offset, std::int8_t location)
 			: BranchCommand{ target_offset }, _location{ location }
 		{
 		}
@@ -533,15 +532,15 @@ namespace hz
 	{
 	private:
 		// location storing the value to compare
-		register_t _value;
+		std::int8_t _value;
 
 	public:
-		IfNotZeroCommand(const std::string& label, register_t value)
+		IfNotZeroCommand(const std::string& label, std::int8_t value)
 			: BranchCommand{ label }, _value{ value }
 		{
 		}
 
-		IfNotZeroCommand(std::int32_t target_offset, register_t value)
+		IfNotZeroCommand(std::int32_t target_offset, std::int8_t value)
 			: BranchCommand{ target_offset }, _value{ value }
 		{
 		}
@@ -555,15 +554,15 @@ namespace hz
 	{
 	private:
 		// location storing the value to compare
-		register_t _value;
+		std::int8_t _value;
 
 	public:
-		IfZeroCommand(const std::string& label, register_t value)
+		IfZeroCommand(const std::string& label, std::int8_t value)
 			: BranchCommand{ label }, _value{ value }
 		{
 		}
 
-		IfZeroCommand(std::int32_t target_offset, register_t value)
+		IfZeroCommand(std::int32_t target_offset, std::int8_t value)
 			: BranchCommand{ target_offset }, _value{ value }
 		{
 		}
@@ -628,10 +627,10 @@ namespace hz
 	class PrintNumberCommand : public IntermediateCommand
 	{
 	private:
-		register_t _value;
+		std::int8_t _value;
 
 	public:
-		PrintNumberCommand(register_t value)
+		PrintNumberCommand(std::int8_t value)
 			: _value{ value }
 		{
 		}
@@ -644,10 +643,10 @@ namespace hz
 	class ExitProgramCommand : public IntermediateCommand
 	{
 	private:
-		register_t _code;
+		std::int8_t _code;
 
 	public:
-		ExitProgramCommand(register_t code)
+		ExitProgramCommand(std::int8_t code)
 			: _code{ code }
 		{
 		}
