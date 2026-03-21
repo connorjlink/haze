@@ -9,7 +9,7 @@ namespace hz
 {
 	StatementType NullStatement::stype() const
 	{
-		return StatementType::NONE;
+		return StatementType::NUL;
 	}
 
 	NullStatement* NullStatement::copy() const

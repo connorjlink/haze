@@ -10,7 +10,7 @@ import std;
 #include <symbol/Symbol.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
-#include <toolchain/Linkable.h>
+#include <toolchain/models/Linkable.h>
 
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.

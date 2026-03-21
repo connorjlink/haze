@@ -13,6 +13,7 @@ namespace hz
 	class RISCVAssemblerParser : public AssemblerParser
 	{
 	protected:
+		virtual ArchitectureType ctype() const final override;
 		virtual Instruction* parse_instruction_command() final override;
 		virtual std::int8_t parse_register() final override;
 

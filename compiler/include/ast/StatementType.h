@@ -29,7 +29,7 @@ namespace hz
 		EXPRESSION,
 		PRINT,
 		HOOK,
-		NONE, // TODO: this is the NullStatement, let's fix that later
+		NUL,
 		EXIT,
 		STRUCT,
 	};
@@ -46,7 +46,7 @@ namespace hz
 		{ StatementType::EXPRESSION, "expression" },
 		{ StatementType::PRINT, "print" },
 		{ StatementType::HOOK, "hook" },
-		{ StatementType::NONE, "null" },
+		{ StatementType::NUL, "null" },
 		{ StatementType::EXIT, "exit" },
 		{ StatementType::STRUCT, "struct" },
 	};

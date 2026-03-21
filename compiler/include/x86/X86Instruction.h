@@ -118,11 +118,13 @@ namespace hz
 		private:
 			X86Operand* _destination;
 			X86Operand* _source;
+
 		public:
 			SubInstruction(X86Operand* destination, X86Operand* source)
 				: _destination{ destination }, _source{ source }
 			{
 			}
+
 		public:
 			virtual X86InstructionType itype() const final override;
 			virtual byterange emit() const final override;
@@ -134,11 +136,13 @@ namespace hz
 		private:
 			X86Operand* _destination;
 			X86Operand* _source;
+
 		public:
 			AndInstruction(X86Operand* destination, X86Operand* source)
 				: _destination{ destination }, _source{ source }
 			{
 			}
+
 		public:
 			virtual X86InstructionType itype() const final override;
 			virtual byterange emit() const final override;
@@ -155,6 +159,7 @@ namespace hz
 				: _destination{ destination }, _source{ source }
 			{
 			}
+
 		public:
 			virtual X86InstructionType itype() const final override;
 			virtual byterange emit() const final override;
@@ -166,11 +171,13 @@ namespace hz
 		private:
 			X86Operand* _destination;
 			X86Operand* _source;
+
 		public:
 			XorInstruction(X86Operand* destination, X86Operand* source)
 				: _destination{ destination }, _source{ source }
 			{
 			}
+
 		public:
 			virtual X86InstructionType itype() const final override;
 			virtual byterange emit() const final override;
@@ -210,6 +217,52 @@ namespace hz
 			virtual byterange emit() const final override;
 		};
 #define dec(op) DecInstruction{ op }
+
+		class SalInstruction : public X86Instruction
+		{
+		private:
+			X86Operand* _operand;
+			native_int _immediate;
+
+		public:
+			SalInstruction(X86Operand* operand)
+				: _operand{ operand }, _immediate{ 1 }
+			{
+			}
+
+			SalInstruction(X86Operand* operand, native_int immediate)
+				: _operand{ operand }, _immediate{ immediate }
+			{
+			}
+
+		public:
+			virtual X86InstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sal(op) SalInstruction{ op }
+
+		class SarInstruction : public X86Instruction
+		{
+		private:
+			X86Operand* _operand;
+			native_int _immediate;
+
+		public:
+			SarInstruction(X86Operand* operand)
+				: _operand{ operand }, _immediate{ -1 }
+			{
+			}
+
+			SarInstruction(X86Operand* operand, native_int immediate)
+				: _operand{ operand }, _immediate{ immediate }
+			{
+			}
+
+		public:
+			virtual X86InstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sar(op) SarInstruction{ op }
 
 		class TestInstruction : public X86Instruction
 		{
@@ -654,16 +707,16 @@ namespace hz
 		class RetInstruction : public X86Instruction
 		{
 		private:
-			native_int _imm;
+			native_int _immediate;
 
 		public:
 			RetInstruction()
-				: _imm{ -1 }
+				: _immediate{ -1 }
 			{
 			}
 
-			RetInstruction(native_int imm)
-				: _imm{ imm }
+			RetInstruction(native_int immediate)
+				: _immediate{ immediate }
 			{
 			}
 

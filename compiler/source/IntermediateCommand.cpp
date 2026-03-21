@@ -8,6 +8,7 @@ import std;
 #include <type/Type.h>
 #include <x86/X86Builder.h>
 #include <x86/X86Register.h>
+#include <x86/X86Instruction.h>
 
 // Haze IntermediateCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -79,13 +80,13 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::push_r(EBP));
-		PUT(X86Builder::mov_rr(EBP, ESP));
+		PUT(push(new X86RegisterOperand{ EBP }).emit());
+		PUT(push(new X86RegisterOperand{ EBP }, new X86RegisterOperand{ ESP }).emit());
 
 		if (locals_count > 0)
 		{
 			// set up a fixed-size stack frame of 4096 bytes
-			PUT(X86Builder::sub_ri(ESP, bytes));
+			PUT(sub(new X86RegisterOperand{ ESP }, new X86ImmediateOperand{ bytes }).emit());
 		}
 
 		return out;
@@ -124,11 +125,7 @@ namespace hz
 
 		byterange out{};
 
-		// NOTE: old method
-		/*PUT(X86Builder::mov_rr(ESP, EBP));
-		PUT(X86Builder::pop_r(EBP));*/
-
-		PUT(X86Builder::leave());
+		PUT(leave().emit());
 		
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -138,9 +135,8 @@ namespace hz
 		const auto arity = function_symbol->arity();
 		if (arity == 0)
 		{
-			PUT(X86Builder::ret());
+			PUT(ret().emit());
 		}
-
 		else
 		{
 			// pop all arguments pushed by the caller
@@ -148,9 +144,8 @@ namespace hz
 				| std::ranges::views::transform([](auto argument) { return AS_ARGUMENT_EXPRESSION(argument)->type->size(); })
 				| ::sum;
 
-			PUT(X86Builder::ret(size));
+			PUT(ret(size).emit());
 		}
-
 
 		return out;
 	}

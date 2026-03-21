@@ -24,9 +24,6 @@
     <ClCompile Include="source\ArgumentExpression.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\AssemblerLinker.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\AssemblerParser.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -61,9 +58,6 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\CommonToolchain.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CompilerLinker.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\CompilerParser.cpp">
@@ -285,9 +279,6 @@
     <ClCompile Include="source\X86Builder.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\X86BuilderValidator.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\X86Instruction.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -306,9 +297,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\validator\Validator.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\validator\X86BuilderValidator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Random.h">
@@ -372,9 +360,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\CommonToolchain.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\CompilerLinker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\CompilerParser.h">
@@ -708,6 +693,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86Register.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\toolchain\Initializer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

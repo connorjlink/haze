@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
 	for (auto& filepath : command_line_parser.files())
 	{
-		// TODO: break specified files into workgroups to spawn a thread pool
+#pragma message ("TODO: break specified files into workgroups to spawn a thread pool")
 
 		try
 		{

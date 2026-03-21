@@ -176,7 +176,7 @@ namespace hz
 
 		_client->on_message = [&](const std::string& message)
 		{
-			// TODO: talk to the toolchain to iniciate appropriate recompilation
+#pragma message("TODO: talk to the toolchain to iniciate appropriate recompilation")
 			// probably a full build for now of the specified path, but perhaps an incremental one might make sense
 			// I think the source would have to get passed through with the message for this
 			// Otherwise it would have to re-read from disk and that won't work once the server is a webworker

@@ -134,11 +134,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\toolchain\AssemblerParserType.h" />
+    <ClInclude Include="include\toolchain\Initializer.h" />
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h" />
     <ClCompile Include="source\AdjustExpression.cpp" />
     <ClCompile Include="source\Allocation.cpp" />
     <ClCompile Include="source\ArgumentExpression.cpp" />
-    <ClCompile Include="source\AssemblerLinker.cpp" />
     <ClCompile Include="source\AssemblerParser.cpp" />
     <ClCompile Include="source\AssemblerToolchain.cpp" />
     <ClCompile Include="source\AutoErrorContext.cpp" />
@@ -151,7 +151,6 @@
     <ClCompile Include="source\CommandLineParser.cpp" />
     <ClCompile Include="source\CommonErrors.cpp" />
     <ClCompile Include="source\CommonToolchain.cpp" />
-    <ClCompile Include="source\CompilerLinker.cpp" />
     <ClCompile Include="source\CompilerParser.cpp" />
     <ClCompile Include="source\CompilerToolchain.cpp" />
     <ClCompile Include="source\CompoundStatement.cpp" />
@@ -226,7 +225,6 @@
     <ClCompile Include="source\WebSocketServer.cpp" />
     <ClCompile Include="source\WhileStatement.cpp" />
     <ClCompile Include="source\X86Builder.cpp" />
-    <ClCompile Include="source\X86BuilderValidator.cpp" />
     <ClCompile Include="source\X86Instruction.cpp" />
     <ClCompile Include="source\X86Operand.cpp" />
     <ClInclude Include="include\x86\X86Builder.h" />
@@ -328,7 +326,6 @@
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
     <ClInclude Include="include\toolchain\AssemblerToolchain.h" />
     <ClInclude Include="include\toolchain\CommonToolchain.h" />
-    <ClInclude Include="include\toolchain\CompilerLinker.h" />
     <ClInclude Include="include\toolchain\CompilerParser.h" />
     <ClInclude Include="include\toolchain\CompilerToolchain.h" />
     <ClInclude Include="include\toolchain\Generator.h" />
@@ -365,7 +362,6 @@
     <ClInclude Include="include\validator\InstructionValidator.h" />
     <ClInclude Include="include\validator\Test.h" />
     <ClInclude Include="include\validator\Validator.h" />
-    <ClInclude Include="include\validator\X86BuilderValidator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

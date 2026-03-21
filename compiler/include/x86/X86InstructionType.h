@@ -23,6 +23,9 @@ namespace hz
 		INC,
 		DEC,
 
+		SAL,
+		SAR,
+
 		TEST,
 		CMP,
 
@@ -32,8 +35,8 @@ namespace hz
 		// setcc
 		SETE, SETNE, SETL, SETLE, SETG, SETGE, SETA, SETAE, SETB, SETBE,
 
+		NOP,
 		RET,
-		
 		LEAVE,
 	};
 }

@@ -4,6 +4,7 @@ import std;
 #include <x86/X86Instruction.h>
 #include <x86/X86Builder.h>
 #include <utility/BinaryUtilities.h>
+#include <utility/ExtendedInteger.h>
 
 // Haze X86Instruction.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -939,6 +940,110 @@ namespace hz::x86
 	}
 
 
+	X86InstructionType SalInstruction::itype() const
+	{
+		return X86InstructionType::SAL;
+	}
+
+	byterange SalInstruction::emit() const
+	{
+		using enum X86OperandType;
+		switch (_operand->otype())
+		{
+			case REGISTER:
+			{
+				const auto register_destination = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_destination->_register);
+
+				const auto ei = EI(static_cast<std::intmax_t>(_immediate));
+
+				if (ei == EI(std::intmax_t{ 1 }))
+				{
+					byterange out{};
+
+					// D1 /4 --> SAL r/m32, 1
+					PUT(range8(0xD1));
+					PUT(range8(X86Builder::modrm(0b11, 0b100, destination)));
+
+					return out;
+				}
+				else if (ei.is_within_range<std::int8_t>())
+				{
+					byterange out{};
+
+					// C1 /4 ib --> SAL r/m32, imm8
+					PUT(range8(0xC1));
+					PUT(range8(X86Builder::modrm(0b11, 0b100, destination)));
+					PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>()));
+
+					return out;
+				}
+
+				CommonErrors::unsupported_instruction_range("sal", ei.to_string());
+				return {};
+			} break;
+
+			default:
+			{
+				CommonErrors::unsupported_instruction_format("sal", _operand_type_map.at(_operand->otype()));
+				return {};
+			} break;
+		}
+	}
+
+
+	X86InstructionType SarInstruction::itype() const
+	{
+		return X86InstructionType::SAR;
+	}
+
+	byterange SarInstruction::emit() const
+	{
+		using enum X86OperandType;
+		switch (_operand->otype())
+		{
+		case REGISTER:
+		{
+			const auto register_destination = AS_REGISTER_OPERAND(_operand);
+			const auto destination = VERIFY_REGISTER(register_destination->_register);
+
+			const auto ei = EI(static_cast<std::intmax_t>(_immediate));
+
+			if (ei == EI(std::intmax_t{ 1 }))
+			{
+				byterange out{};
+
+				// D1 /7 --> SAR r/m32, 1
+				PUT(range8(0xD1));
+				PUT(range8(X86Builder::modrm(0b11, 0b111, destination)));
+
+				return out;
+			}
+			else if (ei.is_within_range<std::int8_t>())
+			{
+				byterange out{};
+
+				// C1 /7 ib --> SAR r/m32, imm8
+				PUT(range8(0xC1));
+				PUT(range8(X86Builder::modrm(0b11, 0b100, destination)));
+				PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>()));
+
+				return out;
+			}
+
+			CommonErrors::unsupported_instruction_range("sar", ei.to_string());
+			return {};
+		} break;
+
+		default:
+		{
+			CommonErrors::unsupported_instruction_format("sar", _operand_type_map.at(_operand->otype()));
+			return {};
+		} break;
+		}
+	}
+
+
 	X86InstructionType TestInstruction::itype() const
 	{
 		return X86InstructionType::TEST;
@@ -1096,6 +1201,9 @@ namespace hz::x86
 	{
 		byterange out{};
 
+		// E8 cd --> CALL rel32
+		PUT(range8(0xE8));
+		PUT(range32(std::bit_cast<std::uint32_t>(displacement)));
 
 		return out;
 	}
@@ -1110,6 +1218,10 @@ namespace hz::x86
 	{
 		byterange out{};
 
+		// FF /2 --> CALL r/m32
+		PUT(range8(0xFF));
+		PUT(range8(0x15));
+		PUT(range32(address));
 
 		return out;
 	}
@@ -1128,15 +1240,15 @@ namespace hz::x86
 
 		if (ei.is_within_range<std::int8_t>())
 		{
-			//EB cb --> JMP rel8
+			// EB cb --> JMP rel8
 			PUT(range8(0xEB));
-			PUT(range8(_displacement));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
 		}
 		else if (ei.is_within_range<std::int32_t>())
 		{
 			// E9 cd --> JMP rel32
 			PUT(range8(0xE9));
-			PUT(range32(_displacement));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
 		}
 		else
 		{
@@ -1147,147 +1259,371 @@ namespace hz::x86
 		return out;
 	}
 
-	byterange X86JmpInstruction::emit() const
+
+	X86InstructionType JeInstruction::itype() const
 	{
-		return X86Builder::jmp_relative(_displacement);
+		return X86InstructionType::JE;
+	}
+
+	byterange JeInstruction::emit() const
+	{
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 74 cb --> JE rel8
+			PUT(range8(0x74));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 84 cd --> JE rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x84));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("je", ei.to_string());
+			return {};
+		}
+
+		return out;
 	}
 
 
-	X86JccInstructionType X86JeInstruction::jtype() const
+	X86InstructionType JneInstruction::itype() const
 	{
-		return X86JccInstructionType::JE;
+		return X86InstructionType::JNE;
 	}
 
-	byterange X86JeInstruction::emit() const
+	byterange JneInstruction::emit() const
 	{
-		return X86Builder::je_relative(_displacement);
-	}
+		byterange out{};
 
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
-	X86JccInstructionType X86JneInstruction::jtype() const
-	{
-		return X86JccInstructionType::JNE;
-	}
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 75 cb --> JNE rel8
+			PUT(range8(0x75));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 85 cd --> JNE rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x85));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jne", ei.to_string());
+			return {};
+		}
 
-	byterange X86JneInstruction::emit() const
-	{
-		return X86Builder::jne_relative(_displacement);
-	}
-
-
-	X86JccInstructionType X86JlInstruction::jtype() const
-	{
-		return X86JccInstructionType::JL;
-	}
-
-	byterange X86JlInstruction::emit() const
-	{
-		return X86Builder::jl_relative(_displacement);
-	}
-
-
-	X86JccInstructionType X86JleInstruction::jtype() const
-	{
-		return X86JccInstructionType::JLE;
-	}
-
-	byterange X86JleInstruction::emit() const
-	{
-		return X86Builder::jle_relative(_displacement);
+		return out;
 	}
 
 
-	X86JccInstructionType X86JgInstruction::jtype() const
+	X86InstructionType JlInstruction::itype() const
 	{
-		return X86JccInstructionType::JG;
+		return X86InstructionType::JL;
 	}
 
-	byterange X86JgInstruction::emit() const
+	byterange JlInstruction::emit() const
 	{
-		return X86Builder::jg_relative(_displacement);
-	}
+		byterange out{};
 
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
-	X86JccInstructionType X86JgeInstruction::jtype() const
-	{
-		return X86JccInstructionType::JGE;
-	}
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 7C cb --> JL rel8
+			PUT(range8(0x7C));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 8C cd --> JL rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x8C));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jl", ei.to_string());
+			return {};
+		}
 
-	byterange X86JgeInstruction::emit() const
-	{
-		return X86Builder::jge_relative(_displacement);
-	}
-
-
-	X86JccInstructionType X86JaInstruction::jtype() const
-	{
-		return X86JccInstructionType::JA;
-	}
-
-	byterange X86JaInstruction::emit() const
-	{
-		return X86Builder::ja_relative(_displacement);
-	}
-
-
-	X86JccInstructionType X86JaeInstruction::jtype() const
-	{
-		return X86JccInstructionType::JAE;
-	}
-
-	byterange X86JaeInstruction::emit() const
-	{
-		return X86Builder::jae_relative(_displacement);
+		return out;
 	}
 
 
-	X86JccInstructionType X86JbInstruction::jtype() const
+	X86InstructionType JleInstruction::itype() const
 	{
-		return X86JccInstructionType::JB;
+		return X86InstructionType::JLE;
 	}
 
-	byterange X86JbInstruction::emit() const
+	byterange JleInstruction::emit() const
 	{
-		return X86Builder::jb_relative(_displacement);
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 7E cb --> JLE rel8
+			PUT(range8(0x7E));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 8E cd --> JLE rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x8E));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jle", ei.to_string());
+			return {};
+		}
+
+		return out;
 	}
 
 
-	X86JccInstructionType X86JbeInstruction::jtype() const
+	X86InstructionType JgInstruction::itype() const
 	{
-		return X86JccInstructionType::JBE;
+		return X86InstructionType::JG;
 	}
 
-	byterange X86JbeInstruction::emit() const
+	byterange JgInstruction::emit() const
 	{
-		return X86Builder::jbe_relative(_displacement);
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 7F cb --> JG rel8
+			PUT(range8(0x7F));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 8F cd --> JG rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x8F));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jg", ei.to_string());
+			return {};
+		}
+
+		return out;
 	}
 
 
-	X86InstructionType X86SetccInstruction::itype() const
+	X86InstructionType JgeInstruction::itype() const
 	{
-		return X86InstructionType::SETCC;
+		return X86InstructionType::JGE;
 	}
 
-	// NOTE: no implementation for instruction derived-base classes
-	/*byterange X86SetccInstruction::emit() const
+	byterange JgeInstruction::emit() const
 	{
-	}*/
+		byterange out{};
 
-	
-	X86SetccInstructionType X86SeteInstruction::stype() const
-	{
-		return X86SetccInstructionType::SETE;
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 7D cb --> JGE rel8
+			PUT(range8(0x7D));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 8D cd --> JGE rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x8D));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jge", ei.to_string());
+			return {};
+		}
+
+		return out;
 	}
 
-	byterange X86SeteInstruction::emit() const
+
+	X86InstructionType JaInstruction::itype() const
+	{
+		return X86InstructionType::JA;
+	}
+
+	byterange JaInstruction::emit() const
+	{
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 77 cb --> JA rel8
+			PUT(range8(0x77));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 87 cd --> JA rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x87));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("ja", ei.to_string());
+			return {};
+		}
+
+		return out;
+	}
+
+
+	X86InstructionType JaeInstruction::itype() const
+	{
+		return X86InstructionType::JAE;
+	}
+
+	byterange JaeInstruction::emit() const
+	{
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 73 cb --> JAE rel8
+			PUT(range8(0x73));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 83 cd --> JAE rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x83));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jae", ei.to_string());
+			return {};
+		}
+
+		return out;
+	}
+
+
+	X86InstructionType JbInstruction::itype() const
+	{
+		return X86InstructionType::JB;
+	}
+
+	byterange JbInstruction::emit() const
+	{
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 72 cb --> JB rel8
+			PUT(range8(0x72));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 82 cd --> JB rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x82));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jb", ei.to_string());
+			return {};
+		}
+
+		return out;
+	}
+
+
+	X86InstructionType JbeInstruction::itype() const
+	{
+		return X86InstructionType::JBE;
+	}
+
+	byterange JbeInstruction::emit() const
+	{
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			// 76 cb --> JBE rel8
+			PUT(range8(0x76));
+			PUT(range8(std::bit_cast<std::uint8_t>(ei.to_integral<std::int8_t>())));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// 0F 86 cd --> JBE rel32
+			PUT(range8(0x0F));
+			PUT(range8(0x86));
+			PUT(range32(std::bit_cast<std::uint32_t>(ei.to_integral<std::int32_t>())));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jbe", ei.to_string());
+			return {};
+		}
+
+		return out;
+	}
+
+
+	X86InstructionType SeteInstruction::itype() const
+	{
+		return X86InstructionType::SETE;
+	}
+
+	byterange SeteInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::sete_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 94 --> SETE r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x94));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1299,20 +1635,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetneInstruction::stype() const
+	X86InstructionType SetneInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETNE;
+		return X86InstructionType::SETNE;
 	}
 
-	byterange X86SetneInstruction::emit() const
+	byterange SetneInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setne_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 95 --> SETNE r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x95));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1324,20 +1669,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetlInstruction::stype() const
+	X86InstructionType SetlInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETL;
+		return X86InstructionType::SETL;
 	}
 
-	byterange X86SetlInstruction::emit() const
+	byterange SetlInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setl_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 9C --> SETL r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x9C));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1349,20 +1703,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetleInstruction::stype() const
+	X86InstructionType SetleInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETLE;
+		return X86InstructionType::SETLE;
 	}
 
-	byterange X86SetleInstruction::emit() const
+	byterange SetleInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setle_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 9E --> SETLE r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x9E));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1374,20 +1737,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetgInstruction::stype() const
+	X86InstructionType SetgInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETG;
+		return X86InstructionType::SETG;
 	}
 
-	byterange X86SetgInstruction::emit() const
+	byterange SetgInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setg_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 9F --> SETG r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x9F));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1399,20 +1771,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetgeInstruction::stype() const
+	X86InstructionType SetgeInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETGE;
+		return X86InstructionType::SETGE;
 	}
 
-	byterange X86SetgeInstruction::emit() const
+	byterange SetgeInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setge_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 9D --> SETGE r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x9D));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1424,20 +1805,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetaInstruction::stype() const
+	X86InstructionType SetaInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETA;
+		return X86InstructionType::SETA;
 	}
 
-	byterange X86SetaInstruction::emit() const
+	byterange SetaInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::seta_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 97 --> SETA r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x97));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1449,20 +1839,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetaeInstruction::stype() const
+	X86InstructionType SetaeInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETAE;
+		return X86InstructionType::SETAE;
 	}
 
-	byterange X86SetaeInstruction::emit() const
+	byterange SetaeInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setae_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 93 --> SETAE r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x93));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1474,20 +1873,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetbInstruction::stype() const
+	X86InstructionType SetbInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETB;
+		return X86InstructionType::SETB;
 	}
 
-	byterange X86SetbInstruction::emit() const
+	byterange SetbInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setb_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 92 --> SETB r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x92));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1499,20 +1907,29 @@ namespace hz::x86
 	}
 
 
-	X86SetccInstructionType X86SetbeInstruction::stype() const
+	X86InstructionType SetbeInstruction::itype() const
 	{
-		return X86SetccInstructionType::SETBE;
+		return X86InstructionType::SETBE;
 	}
 
-	byterange X86SetbeInstruction::emit() const
+	byterange SetbeInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::setbe_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 0F 96 --> SETBE r/m8
+				PUT(range8(0x0F));
+				PUT(range8(0x96));
+				PUT(range8(X86Builder::modrm_rr(destination, destination)));
+
+				return out;
 			} break;
 
 			default:
@@ -1521,5 +1938,61 @@ namespace hz::x86
 				return {};
 			} break;
 		}
+	}
+
+
+	X86InstructionType NopInstruction::itype() const
+	{
+		return X86InstructionType::NOP;
+	}
+
+	byterange NopInstruction::emit() const
+	{
+		byterange out{};
+
+		PUT(range8(0x90));
+
+		return out;
+	}
+
+
+	X86InstructionType RetInstruction::itype() const
+	{
+		return X86InstructionType::RET;
+	}
+
+	byterange RetInstruction::emit() const
+	{
+		byterange out{};
+		
+		if (_immediate != -1)
+		{
+			// C2 iw --> RET imm16
+			PUT(range8(0xC2));
+			PUT(range16(std::bit_cast<std::uint16_t>(_immediate)));
+		}
+		else
+		{
+			// C3 --> RET
+			PUT(range8(0xC3));
+		}
+		
+		return out;
+	}
+
+
+	X86InstructionType LeaveInstruction::itype() const
+	{
+		return X86InstructionType::LEAVE;
+	}
+
+	byterange LeaveInstruction::emit() const
+	{
+		byterange out{};
+		
+		// C9 --> LEAVE
+		PUT(range8(0xC9));
+		
+		return out;
 	}
 }

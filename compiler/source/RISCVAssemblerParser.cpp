@@ -13,6 +13,11 @@ import std;
 
 namespace hz
 {
+	ArchitectureType RISCVAssemblerParser::ctype() const
+	{
+		return ArchitectureType::RISCV;
+	}
+
 	Instruction* RISCVAssemblerParser::parse_instruction_command()
 	{
 		const auto& opcode_token = peek();

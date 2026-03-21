@@ -6,7 +6,7 @@
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/LinkerType.h>
-#include <toolchain/Linkable.h>
+#include <toolchain/models/Linkable.h>
 #include <utility/PlatformVariables.h>
 #include <cli/CommandLineOptions.h>
 

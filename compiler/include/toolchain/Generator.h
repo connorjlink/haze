@@ -4,7 +4,7 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
-#include <toolchain/Linkable.h>
+#include <toolchain/models/Linkable.h>
 #include <utility/Constants.h>
 
 // Haze Generator.h

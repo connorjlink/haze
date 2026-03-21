@@ -2,8 +2,8 @@ import std;
 
 #include <ast/InlineAsmStatement.h>
 #include <error/CommonErrors.h>
-#include <toolchain/AssemblerLinker.h>
 #include <toolchain/Generator.h>
+#include <toolchain/Linker.h>
 #include <utility/Constants.h>
 
 // Haze InlineAsmStatement.cpp
@@ -23,13 +23,14 @@ namespace hz
 
 	void InlineAsmStatement::generate(Allocation*)
 	{
-		auto linker = new AssemblerLinker{ std::move(_commands), _assembler_parser, _enclosing_file };
-		auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin(), UWORD_MAX); 
+		auto linker = new Linker{ std::move(_commands), _assembler_parser, _enclosing_file };
+		const auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin(), UWORD_MAX); 
 		
-		auto emitter = Emitter::from_architecture(std::move(commands), _enclosing_file);
-		auto object_code = emitter->emit();
+		const auto object_code = commands
+			| std::ranges::views::transform([&](auto command) { return command->object_code; })
+			| std::ranges::views::join;
 
-		REQUIRE_SAFE(Generator)->inline_assembly(std::move(object_code), linker->approximate_size());
+		REQUIRE_SAFE(Generator)->inline_assembly(std::move(object_code), object_code.size());
 	}
 
 	Statement* InlineAsmStatement::optimize()

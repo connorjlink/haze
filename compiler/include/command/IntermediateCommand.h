@@ -58,8 +58,7 @@ namespace hz
 	{
 	private:
 		std::int32_t _bytes;
-		// TODO: support dynamically resizable stack frame sizes
-		// for now it is fixed 16k per frame (will overflow quickly)
+#pragma message("TODO: implement dynamic stack frame resizing. for now it is fixed 16k per frame (will overflow quickly)")
 
 	public:
 		EnterScopeCommand(std::int32_t bytes = 0x1000)

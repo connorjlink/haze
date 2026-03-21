@@ -2,6 +2,7 @@
 #define HAZE_EXTENDED_INTEGER_H
 
 #include <utility/PlatformVariables.h>
+#include <error/ErrorReporter.h>
 
 // Haze ExtendedInteger.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -104,7 +105,7 @@ namespace hz
 			if (!is_within_range<T>())
 			{
 				// internal compiler error: crash out
-				USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format
+				USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
 					"extended integral value `{}{}` out of range", sign ? "+" : "-", magnitude), NULL_TOKEN);
 			}
 
