@@ -29,7 +29,7 @@ namespace hz
 		const auto object_code = commands
 			| std::ranges::views::transform([&](auto command) { return command->object_code; })
 			| std::ranges::views::join
-			| std::ranges::to<std::vector<std::uint8_t>>();
+			| std::ranges::to<byterange>();
 
 		REQUIRE_SAFE(Generator)->inline_assembly(std::move(object_code), object_code.size());
 	}
