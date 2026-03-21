@@ -17,7 +17,6 @@ import std;
 #include <toolchain/CompilerToolchain.h>
 #include <toolchain/AssemblerToolchain.h>
 #include <toolchain/Linker.h>
-#include <toolchain/CompilerLinker.h>
 #include <utility/ExitProgramException.h>
 #include <validator/X86BuilderValidator.h>
 
@@ -92,9 +91,10 @@ int main(int argc, char** argv)
 	{
 		case X86:
 		{
-			SingletonContainer::instance().register_singleton_polymorphic<Linker, CompilerLinker>([&]
+#error TODO FIGURE OUT HOW TO INSTANTIATE THE FILEPATH AND LINKABLES PROPERLY HERE. MAYBE LAZY LOAD AFTER COMPILATION DONE?
+			SingletonContainer::instance().register_singleton<Linker>([&]
 			{
-				return std::make_shared<CompilerLinker>();
+				return std::make_shared<Linker>();
 			});
 		} break;
 

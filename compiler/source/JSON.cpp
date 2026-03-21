@@ -96,7 +96,9 @@ namespace hz
 	{
 		const auto children = members
 			| std::ranges::views::transform([](const auto& pair) 
-				{ return std::format(R"("{}":{})", pair.first, pair.second->serialize()); })
+				{
+					return std::format(R"("{}":{})", pair.first, pair.second->serialize()); 
+				})
 			| std::ranges::views::join_with(std::string(","))
 			| std::ranges::to<std::string>();
 

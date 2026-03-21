@@ -22,6 +22,7 @@ import std;
 #include <symbol/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/AssemblerParser.h>
+#include <toolchain/Initializer.h>
 #include <utility/Random.h>
 
 // Haze CompilerParser.cpp
@@ -149,10 +150,20 @@ namespace hz
 		auto assembly = fetch_until(TokenType::RBRACE);
 		assembly.emplace_back(Token{ TokenType::END, "eof", peek().location });
 
-		auto assembler_parser = new AssemblerParser{ _filepath };
+		auto assembler_parser = create_assembler_parser(_filepath);
 		assembler_parser->reload(std::move(assembly), _filepath);
 
-		auto commands = assembler_parser->parse();
+		auto commands = assembler_parser->parse()
+			| std::ranges::views::transform([](auto node)
+				{
+					if (node->ntype() != NodeType::COMMAND)
+					{
+						CommonErrors::invalid_node_type(node->ntype(), asm_token);
+						return nullptr;
+					}
+					return static_cast<Command*>(node);
+				})
+			| std::ranges::to<std::vector<Command*>>();
 
 		consume(TokenType::RBRACE);
 
@@ -264,7 +275,7 @@ namespace hz
 
 	Statement* CompilerParser::parse_struct_declaration_statement(const std::string& enclosing_function)
 	{
-		consume(TokenType::STRUCT);
+		const auto declaration = consume(TokenType::STRUCT);
 
 		const auto identifier = parse_identifier_expression();
 
@@ -272,7 +283,7 @@ namespace hz
 		const auto member_declarations = parse_member_declaration_statements(enclosing_function);
 		consume(TokenType::RBRACE);
 
-		const auto symbol = new StructSymbol{ identifier->name };
+		const auto symbol = new StructSymbol{ identifier->name, declaration };
 		
 		USE_SAFE(SymbolDatabase)->add_struct(identifier->name, identifier->_token);
 
@@ -436,7 +447,7 @@ namespace hz
 		{
 			case BYTE: [[fallthrough]];
 			case WORD: [[fallthrough]];
-			case DWORD: [[fallthrough]];
+			case DWORD:
 			{
 				auto int_type = _type_specifier_int_map.at(specifier);
 				return new IntType{ qualifier, signedness, int_type, storage };

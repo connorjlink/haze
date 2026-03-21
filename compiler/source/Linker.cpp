@@ -7,8 +7,15 @@ import std;
 
 namespace hz
 {
-	Linker::Linker(const std::string& filepath)
+	Linker::Linker(std::vector<InstructionCommand*>&& commands, const std::string& filepath)
 	{
+#error TODO FALSIFY THE COMMANDS VECTOR INTO A FORGED LINKABLE
+		USE_SAFE(ErrorReporter)->open_context(filepath, "linking");
+	}
+
+	Linker::Linker(std::vector<Linkable>&& linkables, const std::string& filepath)
+	{
+#error TODO POPULATE THE LINKABLE UNORDERED MAPPING WITH THE GIVEN LINKABLES
 		USE_SAFE(ErrorReporter)->open_context(filepath, "linking");
 	}
 

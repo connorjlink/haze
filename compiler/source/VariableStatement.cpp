@@ -98,12 +98,6 @@ namespace hz
 							if (int_variable->signedness == UNSIGNED) variable = new UnsignedDoubleWordVariable{ 0 };
 							else variable = new SignedDoubleWordVariable{ 0 };
 						} break;
-
-						case INT64:
-						{
-							if (int_variable->signedness == UNSIGNED) variable = new UnsignedQuadWordVariable{ 0 };
-							else variable = new SignedQuadWordVariable{ 0 };
-						} break;
 					}
 				} break;
 

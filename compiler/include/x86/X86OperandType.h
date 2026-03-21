@@ -4,11 +4,11 @@
 // Haze X86OperandType.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define AS_IMMEDIATE_OPERAND(x) static_cast<X86ImmediateOperand*>(x)
-#define AS_INDIRECT_OPERAND(x) static_cast<X86IndirectOperand*>(x)
-#define AS_REGISTER_OPERAND(x) static_cast<X86RegisterOperand*>(x)
-#define AS_REGISTER_INDIRECT_OPERAND(x) static_cast<X86RegisterIndirectOperand*>(x)
-#define AS_REGISTER_DISPLACED_OPERAND(x) static_cast<X86RegisterDisplacedOperand*>(x)
+#define AS_IMMEDIATE_OPERAND(x) static_cast<x86::ImmediateOperand*>(x)
+#define AS_INDIRECT_OPERAND(x) static_cast<x86::IndirectOperand*>(x)
+#define AS_REGISTER_OPERAND(x) static_cast<x86::RegisterOperand*>(x)
+#define AS_REGISTER_INDIRECT_OPERAND(x) static_cast<x86::RegisterIndirectOperand*>(x)
+#define AS_REGISTER_DISPLACED_OPERAND(x) static_cast<x86::RegisterDisplacedOperand*>(x)
 
 namespace hz
 {

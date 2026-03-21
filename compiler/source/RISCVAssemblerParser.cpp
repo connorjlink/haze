@@ -13,6 +13,8 @@ import std;
 
 namespace hz
 {
+	using namespace riscv;
+
 	ArchitectureType RISCVAssemblerParser::ctype() const
 	{
 		return ArchitectureType::RISCV;

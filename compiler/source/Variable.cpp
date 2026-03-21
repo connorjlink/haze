@@ -73,28 +73,6 @@ namespace hz
 	}
 
 
-	VariableType UnsignedQuadWordVariable::vtype() const
-	{
-		return VariableType::UQWORD;
-	}
-
-	std::string UnsignedQuadWordVariable::format() const
-	{
-		return std::format("{}", value);
-	}
-
-
-	VariableType SignedQuadWordVariable::vtype() const
-	{
-		return VariableType::SQWORD;
-	}
-
-	std::string SignedQuadWordVariable::format() const
-	{
-		return std::format("{}", value);
-	}
-
-
 	VariableType StringVariable::vtype() const
 	{
 		return VariableType::STRING;

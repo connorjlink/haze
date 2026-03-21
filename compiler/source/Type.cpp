@@ -19,10 +19,9 @@ namespace hz
 		using enum IntTypeType;
 		switch (int_type)
 		{
-			case INT8: return 1;
-			case INT16: return 2;
-			case INT32: return 4;
-			case INT64: return 8;
+			case INT8: return sizeof(std::int8_t);
+			case INT16: return sizeof(std::uint16_t);
+			case INT32: return sizeof(std::int32_t);
 
 			default:
 			{

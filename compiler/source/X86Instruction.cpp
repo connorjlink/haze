@@ -38,7 +38,7 @@ namespace hz::x86
 		{
 			case IMMEDIATE:
 			{
-				const auto immediate_operand = AS_IMMEDIATE_OPERAND(_operand);
+				const auto immediate_operand = AS_IMMEDIATE_OPERAND(_operand.get());
 				const auto immediate = immediate_operand->_immediate;
 
 				// NOTE: 8- and 16-bits are implicitly sign-extended to 32-bits when executed
@@ -70,7 +70,7 @@ namespace hz::x86
 			// dereferencing pointer
 			case INDIRECT:
 			{
-				const auto indirect_operand = AS_INDIRECT_OPERAND(_operand);
+				const auto indirect_operand = AS_INDIRECT_OPERAND(_operand.get());
 				const auto address = indirect_operand->_address;
 
 				byterange out{};
@@ -85,7 +85,7 @@ namespace hz::x86
 
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto source = VERIFY_REGISTER(register_operand->_register);
 
 				// 50+rd --> PUSH r32
@@ -113,7 +113,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				// 58+ rd --> POP r32
@@ -142,13 +142,13 @@ namespace hz::x86
 			// dereferencing pointer
 			case INDIRECT:
 			{
-				const auto indirect_destination = AS_INDIRECT_OPERAND(_destination);
+				const auto indirect_destination = AS_INDIRECT_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = indirect_destination->_address;
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -171,13 +171,13 @@ namespace hz::x86
 
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -199,7 +199,7 @@ namespace hz::x86
 					// dereferencing pointer
 					case INDIRECT:
 					{
-						const auto indirect_source = AS_INDIRECT_OPERAND(_source);
+						const auto indirect_source = AS_INDIRECT_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = indirect_source->_address;
 
@@ -224,7 +224,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -239,7 +239,7 @@ namespace hz::x86
 
 					case REGISTER_DISPLACED:
 					{
-						const auto register_displaced_source = AS_REGISTER_DISPLACED_OPERAND(_source);
+						const auto register_displaced_source = AS_REGISTER_DISPLACED_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_displaced_source->_register);
 						const auto displacement = register_displaced_source->_displacement;
@@ -274,13 +274,13 @@ namespace hz::x86
 
 			case REGISTER_DISPLACED:
 			{
-				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(_destination);
+				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(_destination.get());
 				
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_displaced_destination->_register);
 						const auto displacement = register_displaced_destination->_displacement;
 						const auto immediate = immediate_source->_immediate;
@@ -338,13 +338,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -387,13 +387,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -445,7 +445,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -488,13 +488,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -546,7 +546,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -588,13 +588,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -646,7 +646,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -688,13 +688,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -746,7 +746,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -788,13 +788,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -846,7 +846,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -888,7 +888,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto source = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -920,7 +920,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto source = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -952,7 +952,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_operand);
+				const auto register_destination = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_destination->_register);
 
 				const auto ei = EI(static_cast<std::intmax_t>(_immediate));
@@ -1004,7 +1004,7 @@ namespace hz::x86
 		{
 		case REGISTER:
 		{
-			const auto register_destination = AS_REGISTER_OPERAND(_operand);
+			const auto register_destination = AS_REGISTER_OPERAND(_operand.get());
 			const auto destination = VERIFY_REGISTER(register_destination->_register);
 
 			const auto ei = EI(static_cast<std::intmax_t>(_immediate));
@@ -1056,13 +1056,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -1104,13 +1104,13 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->_immediate;
 
@@ -1162,7 +1162,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto register_source = AS_REGISTER_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -1613,7 +1613,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1647,7 +1647,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1681,7 +1681,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1715,7 +1715,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1749,7 +1749,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1783,7 +1783,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1817,7 +1817,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1851,7 +1851,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1885,7 +1885,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};
@@ -1919,7 +1919,7 @@ namespace hz::x86
 		{
 			case REGISTER:
 			{
-				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
 				byterange out{};

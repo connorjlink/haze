@@ -13,6 +13,8 @@ import std;
 // Haze IntermediateCommand.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+#define EMIT(x) PUT(x.emit())
+
 namespace
 {
 	using namespace hz;
@@ -52,6 +54,8 @@ namespace
 
 namespace hz
 {
+	using namespace x86;
+
 	IntermediateType BranchLabelCommand::itype() const
 	{
 		return IntermediateType::BRANCH_LABEL;
@@ -80,13 +84,13 @@ namespace hz
 
 		byterange out{};
 
-		PUT(push(new X86RegisterOperand{ EBP }).emit());
-		PUT(push(new X86RegisterOperand{ EBP }, new X86RegisterOperand{ ESP }).emit());
+		EMIT(push(std::make_unique<RegisterOperand>(EBP)));
+		EMIT(push(std::make_unique<RegisterOperand>(EBP), std::make_unique<RegisterOperand>(ESP)));
 
 		if (locals_count > 0)
 		{
-			// set up a fixed-size stack frame of 4096 bytes
-			PUT(sub(new X86RegisterOperand{ ESP }, new X86ImmediateOperand{ bytes }).emit());
+			// stack frame corresponds to total size of guaranteed local variables
+			EMIT(sub(std::make_unique<RegisterOperand>(ESP), std::make_unique<ImmediateOperand>(bytes)));
 		}
 
 		return out;
@@ -125,7 +129,7 @@ namespace hz
 
 		byterange out{};
 
-		PUT(leave().emit());
+		EMIT(leave());
 		
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -135,7 +139,7 @@ namespace hz
 		const auto arity = function_symbol->arity();
 		if (arity == 0)
 		{
-			PUT(ret().emit());
+			EMIT(ret());
 		}
 		else
 		{
@@ -144,7 +148,7 @@ namespace hz
 				| std::ranges::views::transform([](auto argument) { return AS_ARGUMENT_EXPRESSION(argument)->type->size(); })
 				| ::sum;
 
-			PUT(ret(size).emit());
+			EMIT(ret(size));
 		}
 
 		return out;
@@ -160,9 +164,8 @@ namespace hz
 	{
 		byterange out{};
 
-
-
 #pragma message("TODO: local variable code generation")
+
 		return out;
 	}
 
@@ -177,6 +180,7 @@ namespace hz
 		byterange out{};
 
 #pragma message("TODO: GLOBAL VARIABLE CODE GENERATION")
+
 		return out;
 	}
 
@@ -192,7 +196,7 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::mov_rm(_destination, _pointer));
+		EMIT(mov(std::make_unique<RegisterOperand>(_destination), std::make_unique<IndirectOperand>(_pointer)));
 
 		return out;
 	}
@@ -209,7 +213,7 @@ namespace hz
 
 		byterange out{};
 
-		PUT(X86Builder::mov_mr(_pointer, _source));
+		EMIT(mov(std::make_unique<IndirectOperand>(_pointer), std::make_unique<RegisterOperand>(_source)));
 
 		return out;
 	}
@@ -222,10 +226,11 @@ namespace hz
 
 	byterange StackReadCommand::emit() const
 	{
+		// mov destination, [ebp + offset]
+
 		byterange out{};
 
-		// mov destination, [ebp + offset]
-		PUT(X86Builder::mov_rbo(_destination, _offset));
+		EMIT(mov(std::make_unique<RegisterOperand>(_destination), std::make_unique<RegisterDisplacedOperand>(EBP, _offset)));
 
 		return out;
 	}
@@ -238,10 +243,12 @@ namespace hz
 
 	byterange StackWriteCommand::emit() const
 	{
+		// mov [ebp + offset], destination
+		
 		byterange out{};
 
-		// mov [ebp + offset], destination
 		PUT(X86Builder::mov_obr(_offset, _source));
+		EMIT(mov(std::make_unique<RegisterDisplacedOperand>(EBP, _offset), std::make_unique<RegisterOperand>(_destination)));
 
 		return out;
 	}

@@ -6,7 +6,7 @@ import std;
 #include <toolchain/CompilerToolchain.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Generator.h>
-#include <toolchain/Linkable.h>
+#include <toolchain/models/Linkable.h>
 
 // Haze CompilerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -59,7 +59,8 @@ namespace hz
 
 		const auto executable = commands
 			| std::ranges::views::transform([](auto command) { return command->object_code; })
-			| std::ranges::views::join;
+			| std::ranges::views::join
+			| std::ranges::to<std::vector<std::uint8_t>>();
 
 		REQUIRE_SAFE(JobManager)->end_job(link_task);
 

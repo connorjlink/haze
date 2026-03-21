@@ -26,7 +26,11 @@ namespace hz
 		std::unordered_map<std::string, Linkable> _linkables;
 
 	public:
-		Linker(const std::string&);
+		// assembler linker constructor
+		Linker(std::vector<InstructionCommand*>&&, const std::string&);
+		// compiler linker constructor
+		Linker(std::vector<Linkable>&&, const std::string&);
+		~Linker();
 
 	public:
 		LinkerType ltype() const;

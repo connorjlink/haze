@@ -28,11 +28,11 @@ namespace hz
 		class PushInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			PushInstruction(X86Operand* operand)
-				: _operand{ operand }
+			PushInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -45,11 +45,11 @@ namespace hz
 		class PopInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			PopInstruction(X86Operand* operand)
-				: _operand{ operand }
+			PopInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -62,12 +62,12 @@ namespace hz
 		class MovInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			MovInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			MovInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -80,12 +80,12 @@ namespace hz
 		class MovzxInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			MovzxInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			MovzxInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -98,12 +98,12 @@ namespace hz
 		class AddInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			AddInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			AddInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -116,12 +116,12 @@ namespace hz
 		class SubInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			SubInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			SubInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -134,12 +134,12 @@ namespace hz
 		class AndInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			AndInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			AndInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -152,11 +152,12 @@ namespace hz
 		class OrInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
+
 		public:
-			OrInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			OrInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -169,12 +170,12 @@ namespace hz
 		class XorInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			XorInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			XorInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -187,11 +188,11 @@ namespace hz
 		class IncInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			IncInstruction(X86Operand* operand)
-				: _operand{ operand }
+			IncInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -204,11 +205,11 @@ namespace hz
 		class DecInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			DecInstruction(X86Operand* operand)
-				: _operand{ operand }
+			DecInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -221,17 +222,17 @@ namespace hz
 		class SalInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 			native_int _immediate;
 
 		public:
-			SalInstruction(X86Operand* operand)
-				: _operand{ operand }, _immediate{ 1 }
+			SalInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }, _immediate{ 1 }
 			{
 			}
 
-			SalInstruction(X86Operand* operand, native_int immediate)
-				: _operand{ operand }, _immediate{ immediate }
+			SalInstruction(std::unique_ptr<X86Operand> operand, native_int immediate)
+				: _operand{ std::move(operand) }, _immediate{ immediate }
 			{
 			}
 
@@ -244,17 +245,17 @@ namespace hz
 		class SarInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 			native_int _immediate;
 
 		public:
-			SarInstruction(X86Operand* operand)
-				: _operand{ operand }, _immediate{ -1 }
+			SarInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }, _immediate{ -1 }
 			{
 			}
 
-			SarInstruction(X86Operand* operand, native_int immediate)
-				: _operand{ operand }, _immediate{ immediate }
+			SarInstruction(std::unique_ptr<X86Operand> operand, native_int immediate)
+				: _operand{ std::move(operand) }, _immediate{ immediate }
 			{
 			}
 
@@ -267,12 +268,12 @@ namespace hz
 		class TestInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			TestInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			TestInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -285,12 +286,12 @@ namespace hz
 		class CmpInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _destination;
-			X86Operand* _source;
+			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> _source;
 
 		public:
-			CmpInstruction(X86Operand* destination, X86Operand* source)
-				: _destination{ destination }, _source{ source }
+			CmpInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
+				: _destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -537,11 +538,11 @@ namespace hz
 		class SeteInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SeteInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SeteInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -554,11 +555,11 @@ namespace hz
 		class SetneInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetneInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetneInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -571,11 +572,11 @@ namespace hz
 		class SetlInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetlInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetlInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -588,11 +589,11 @@ namespace hz
 		class SetleInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetleInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetleInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -605,11 +606,11 @@ namespace hz
 		class SetgInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetgInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetgInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -622,11 +623,11 @@ namespace hz
 		class SetgeInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetgeInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetgeInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -639,11 +640,11 @@ namespace hz
 		class SetaInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetaInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetaInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -656,11 +657,11 @@ namespace hz
 		class SetaeInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetaeInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetaeInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -673,11 +674,11 @@ namespace hz
 		class SetbInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetbInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetbInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
@@ -690,11 +691,11 @@ namespace hz
 		class SetbeInstruction : public X86Instruction
 		{
 		private:
-			X86Operand* _operand;
+			std::unique_ptr<X86Operand> _operand;
 
 		public:
-			SetbeInstruction(X86Operand* operand)
-				: _operand{ operand }
+			SetbeInstruction(std::unique_ptr<X86Operand> operand)
+				: _operand{ std::move(operand) }
 			{
 			}
 
