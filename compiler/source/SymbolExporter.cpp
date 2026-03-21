@@ -126,7 +126,7 @@ namespace hz
 	void SymbolExporter::export_symbol(QueueEntry entry)
 	{
 		const auto symbol = entry.symbol;
-		const auto location = entry.token;
+		const auto& location = entry.token;
 
 		using enum SymbolType;
 		switch (symbol->ytype())

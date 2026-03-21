@@ -177,8 +177,6 @@ namespace hz
 		void inline_assembly(byterange&&, std::uint32_t);
 
 	public:
-		// get the current index for Command generation
-		std::int32_t resolve_origin_old() const;
 		// get the current index for IntermediateCommand generation
 		std::int32_t resolve_origin() const;
 

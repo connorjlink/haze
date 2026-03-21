@@ -107,6 +107,11 @@ namespace hz
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid type {} `{}`", component, token.text), token);
 	}
 
+	void CommonErrors::invalid_register(const std::string& message, const Token& token)
+	{
+		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid register index `{}`", message), token);
+	}
+
 	void CommonErrors::integer_size_mismatch(IntegerLiteralType lhs, IntegerLiteralType rhs, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("integer type mismatch between `{}` and `{}`",

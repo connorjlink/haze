@@ -40,9 +40,6 @@ namespace hz
 
 					case UDWORD: return new UnsignedDoubleWordVariable{ AS_UNSIGNED_DOUBLE_WORD_INTEGER_LITERAL(integer_literal)->value };
 					case SDWORD: return new SignedDoubleWordVariable{ AS_SIGNED_BYTE_INTEGER_LITERAL(integer_literal)->value };
-
-					case UQWORD: return new UnsignedQuadWordVariable{ AS_UNSIGNED_QUAD_WORD_INTEGER_LITERAL(integer_literal)->value };
-					case SQWORD: return new SignedQuadWordVariable{ AS_SIGNED_QUAD_WORD_INTEGER_LITERAL(integer_literal)->value };
 				}
 			} break;
 
@@ -125,18 +122,6 @@ namespace hz
 			{
 				auto signed_double_word_variable = AS_SDWORD_VARIABLE(variable);
 				return new IntegerLiteralExpression{ new SignedDoubleWordIntegerLiteral{ signed_double_word_variable->value }, NULL_TOKEN };
-			} break;
-				
-			case UQWORD:
-			{
-				auto unsigned_quad_word_variable = AS_UQWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ new UnsignedQuadWordIntegerLiteral{ unsigned_quad_word_variable->value }, NULL_TOKEN };
-			} break;
-				
-			case SQWORD: 
-			{
-				auto signed_quad_word_variable = AS_SQWORD_VARIABLE(variable);
-				return new IntegerLiteralExpression{ new SignedQuadWordIntegerLiteral{ signed_quad_word_variable->value }, NULL_TOKEN };
 			} break;
 				
 			default:

@@ -3,7 +3,6 @@ import std;
 #include <ast/InlineAsmStatement.h>
 #include <error/CommonErrors.h>
 #include <toolchain/AssemblerLinker.h>
-#include <toolchain/Emitter.h>
 #include <toolchain/Generator.h>
 #include <utility/Constants.h>
 

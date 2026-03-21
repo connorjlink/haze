@@ -33,11 +33,14 @@ namespace hz
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);
 
 		// NOTE: global singleton linker instance
-		SingletonContainer::instance().register_instance<Linker>(
-			std::make_shared<AssemblerLinker>(std::move(commands), AS_ASSEMBLER_PARSER(REQUIRE_SAFE(Parser).get()), filepath));
+		SingletonContainer::instance().register_instance<Linker>
+		(
+			std::make_shared<AssemblerLinker>(std::move(commands), AS_ASSEMBLER_PARSER(REQUIRE_SAFE(Parser).get()), filepath)
+		);
 
 		// shared environment with Assembler/Compiler
-		auto image = common_link(0, UWORD_MAX); // 64k region for assembly maximum
+		// 64k region for assembly maximum
+		auto image = common_link(0, UWORD_MAX);
 		auto executable = common_emit(std::move(image), filepath);
 
 		if (!USE_SAFE(ErrorReporter)->had_error())

@@ -17,7 +17,7 @@ import std;
 #include <toolchain/CompilerToolchain.h>
 #include <toolchain/AssemblerToolchain.h>
 #include <toolchain/Linker.h>
-#include <toolchain/X86Linker.h>
+#include <toolchain/CompilerLinker.h>
 #include <utility/ExitProgramException.h>
 #include <validator/X86BuilderValidator.h>
 
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
 	{
 		case X86:
 		{
-			SingletonContainer::instance().register_singleton_polymorphic<Linker>([&]
+			SingletonContainer::instance().register_singleton_polymorphic<Linker, CompilerLinker>([&]
 			{
 				return std::make_shared<CompilerLinker>();
 			});

@@ -437,7 +437,6 @@ namespace hz
 			case BYTE: [[fallthrough]];
 			case WORD: [[fallthrough]];
 			case DWORD: [[fallthrough]];
-			case QWORD:
 			{
 				auto int_type = _type_specifier_int_map.at(specifier);
 				return new IntType{ qualifier, signedness, int_type, storage };

@@ -6,6 +6,7 @@
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/LinkerType.h>
+#include <toolchain/Linkable.h>
 #include <utility/PlatformVariables.h>
 #include <cli/CommandLineOptions.h>
 
@@ -20,14 +21,17 @@ namespace hz
 		: public SingletonTag<Linker>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, CommandLineOptions>
 	{
-	public:
-		Linker(const std::string&);
-		virtual ~Linker();
+	private:
+		// mapping function name (global scope, shared across files) -> linkable
+		std::unordered_map<std::string, Linkable> _linkables;
 
 	public:
-		virtual LinkerType ltype() const = 0;
-		virtual bool optimize() = 0;
-		virtual std::vector<InstructionCommand*> link(native_uint, native_uint) = 0;
+		Linker(const std::string&);
+
+	public:
+		LinkerType ltype() const;
+		bool optimize();
+		std::vector<InstructionCommand*> link(native_uint, native_uint);
 	};
 }
 

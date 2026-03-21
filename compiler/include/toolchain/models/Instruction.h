@@ -2,6 +2,7 @@
 #define HAZE_INSTRUCTION_H
 
 #include <cli/ArchitectureType.h>
+#include <utility/Constants.h>
 
 // Haze Instruction.h
 // (c) Connor J. Link. All Rights Reserved.

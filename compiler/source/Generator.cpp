@@ -338,12 +338,6 @@ namespace hz
 	}
 
 
-	std::int32_t Generator::resolve_origin_old() const
-	{
-		UNSUPPORTED_OPERATION(__FUNCTION__);
-		//return static_cast<index_t>(_linkables[_linkables.size() - 1].commands.size());
-	}
-
 	std::int32_t Generator::resolve_origin() const
 	{
 		return static_cast<std::int32_t>(_linkables[_linkables.size() - 1].ir.size());
@@ -378,22 +372,21 @@ namespace hz
 		{
 			if (linkable.symbol->name == "main")
 			{
-				// NOTE: old method
-				// put a stop instruction at the end of main
-				//*(linkable.commands.end() - 1) = (new InstructionCommand{ NULL_TOKEN, Opcode::STOP, DC, DC });
 				return true;
 			}
 
 			return false;
 		});
 
-		return _linkables;	
+		return _linkables;
 	}
 
 
 	void Generator::reload(const std::vector<Node*>& program, const std::string& filepath)
 	{
 		_program = program;
-		// log the filepath for context?
+
+		USE_SAFE(ErrorReporter)->post_information(std::format(
+			"reloaded program from `{}` with {} top-level declarators", filepath, program.size()), NULL_TOKEN);
 	}
 }

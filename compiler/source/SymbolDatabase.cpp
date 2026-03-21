@@ -13,13 +13,13 @@ import std;
 
 namespace hz
 {
-	Symbol* SymbolDatabase::add_symbol(SymbolType type, const std::string& name, const Token& location)
+	Symbol* SymbolDatabase::add_symbol(SymbolType type, const std::string& name, const Token& token)
 	{
 		// does the symbol already exist in the registry?
 		if (_table.contains(name))
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format("symbol `{}` was already defined as a {}",
-				name, _symbol_type_map.at(_table.at(name)->ytype())), location);
+				name, _symbol_type_map.at(_table.at(name)->ytype())), token);
 			return nullptr;
 		}
 
@@ -28,22 +28,22 @@ namespace hz
 		using enum SymbolType;
 		switch (type)
 		{
-			case FUNCTION: new_symbol = _table[name] = new FunctionSymbol{ name, nullptr }; break;
-			case ARGUMENT: new_symbol = _table[name] = new ArgumentSymbol{ name, nullptr }; break;
-			case VARIABLE: new_symbol = _table[name] = new VariableSymbol{ name, nullptr, nullptr }; break;
-			case DEFINE: new_symbol = _table[name] = new DefineSymbol{ name, nullptr, ExtendedInteger{} }; break;
-			case LABEL: new_symbol = _table[name] = new LabelSymbol{ name, 0 }; break;
+			case FUNCTION: new_symbol = _table[name] = new FunctionSymbol{ name, token, nullptr }; break;
+			case ARGUMENT: new_symbol = _table[name] = new ArgumentSymbol{ name, token, nullptr }; break;
+			case VARIABLE: new_symbol = _table[name] = new VariableSymbol{ name, token, nullptr, nullptr }; break;
+			case DEFINE: new_symbol = _table[name] = new DefineSymbol{ name, token, nullptr, ExtendedInteger{} }; break;
+			case LABEL: new_symbol = _table[name] = new LabelSymbol{ name, token, 0 }; break;
 
 			default:
 			{
 				USE_SAFE(ErrorReporter)->post_error(std::format(
-					"invalid symbol type `{}`", location.text), location);
+					"invalid symbol type `{}`", token.text), token);
 			} break;
 		}
 
 		if (new_symbol != nullptr)
 		{
-			USE_SAFE(SymbolExporter)->enqueue(new_symbol, location);
+			USE_SAFE(SymbolExporter)->enqueue(new_symbol, token);
 		}
 
 		return new_symbol;

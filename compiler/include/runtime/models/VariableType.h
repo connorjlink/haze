@@ -25,8 +25,6 @@ namespace hz
 
 		UDWORD, SDWORD,
 
-		UQWORD, SQWORD,
-
 		STRING,
 
 		STRUCT,
@@ -40,8 +38,6 @@ namespace hz
 		{ VariableType::SWORD, "signed word" },
 		{ VariableType::UDWORD, "unsigned double word" },
 		{ VariableType::SDWORD, "signed double word" },
-		{ VariableType::UQWORD, "unsigned quad word" },
-		{ VariableType::SQWORD, "signed quad word" },
 		{ VariableType::STRING, "string" },
 		{ VariableType::STRUCT, "struct" },
 	};

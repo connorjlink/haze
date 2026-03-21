@@ -5,6 +5,7 @@ import std;
 #include <command/Command.h>
 #include <command/InstructionCommand.h>
 #include <command/LabelCommand.h>
+#include <command/IntermediateCommand.h>
 #include <symbol/Symbol.h>
 #include <toolchain/CompilerLinker.h>
 #include <error/ErrorReporter.h>
@@ -197,9 +198,8 @@ namespace hz
 							if (!instruction->marked_for_deletion)
 							{
 								instruction->offset = address_tracker;
-
 								// previously this was always 3 (since haze instructions are 24 bits)
-								address_tracker += instruction->length();
+								address_tracker += static_cast<native_uint>(instruction->length());
 							}
 						} break;
 
@@ -365,10 +365,10 @@ namespace hz
 		byterange final_image{};
 
 		// map of (label name -> address)
-		std::unordered_map<std::string, std::int32_t> branches;
+		std::unordered_map<std::string, native_int> branches;
 
 		// the first function starts at address 0
-		std::int32_t address_tracker = 0;
+		native_int address_tracker = 0;
 
 		for (auto& linkable : _linkables)
 		{
@@ -393,7 +393,7 @@ namespace hz
 					// The binary is wrong, but is at least of the correct 
 					// length for future label/target address resolution
 					const auto code = command->emit();
-					const auto size = static_cast<std::int32_t>(code.size());
+					const auto size = static_cast<native_int>(code.size());
 
 					command->offset = address_tracker;
 					command->size = size;
@@ -405,7 +405,7 @@ namespace hz
 			}
 		}
 
-		for (auto& command : ir_code)
+		for (auto command : ir_code)
 		{
 #pragma message("TODO: support branch commands that go directly to an index instead of only by label!")
 
@@ -421,9 +421,9 @@ namespace hz
 					// at this point it is unknown if the target label is a function or instruction label
 
 					const auto target_linkable = std::find_if(_linkables.begin(), _linkables.end(), [&](auto&& linkable)
-						{
-							return linkable.symbol->name == branch_command->label;
-						});
+					{
+						return linkable.symbol->name == branch_command->label;
+					});
 
 					// if the label was found, it is a function
 					if (target_linkable != _linkables.end())

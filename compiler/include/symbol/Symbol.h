@@ -22,12 +22,14 @@ namespace hz
 #pragma message("TODO: implement TOKEN confidence system. GOOD STATEMENT/FUNCTION++, error tokens--")
 
 	public:
+		SourceLocation location;
 		bool was_referenced;
 
 	public:
-		Symbol(const std::string& name)
+		Symbol(const std::string& name, const Token& token)
 			: name{ name }, was_referenced{ false }
 		{
+			location = token.location;
 		}
 		virtual ~Symbol() = default;
 
@@ -53,8 +55,8 @@ namespace hz
 		}
 
 	public:
-		FunctionSymbol(const std::string& name, Type* return_type)
-			: Symbol{ name }, return_type{ return_type }
+		FunctionSymbol(const std::string& name, const Token& token, Type* return_type)
+			: Symbol{ name, token }, return_type{ return_type }
 		{
 			entrypoint = { 0 };
 			arguments = {};
@@ -72,8 +74,8 @@ namespace hz
 		Type* type;
 
 	public:
-		ArgumentSymbol(const std::string& name, Type* type)
-			: Symbol{ name }, allocation{ nullptr }, type{ type }
+		ArgumentSymbol(const std::string& name, const Token& token, Type* type)
+			: Symbol{ name, token }, allocation{ nullptr }, type{ type }
 		{
 		}
 
@@ -88,8 +90,8 @@ namespace hz
 		Type* type;
 
 	public:
-		VariableSymbol(const std::string& name, Type* type, Allocation* allocation)
-			: Symbol{ name }, type{ type }, allocation{ allocation }
+		VariableSymbol(const std::string& name, const Token& token, Type* type, Allocation* allocation)
+			: Symbol{ name, token }, type{ type }, allocation{ allocation }
 		{
 		}
 
@@ -104,8 +106,8 @@ namespace hz
 		ExtendedInteger value;
 
 	public:
-		DefineSymbol(const std::string& name, Type* type, ExtendedInteger value)
-			: Symbol{ name }, type{ type }, value { value }
+		DefineSymbol(const std::string& name, const Token& token, Type* type, ExtendedInteger value)
+			: Symbol{ name, token }, type{ type }, value { value }
 		{
 		}
 
@@ -119,8 +121,8 @@ namespace hz
 		native_uint address;
 
 	public:
-		LabelSymbol(const std::string& name, native_uint address)
-			: Symbol{ name }, address{ address }
+		LabelSymbol(const std::string& name, const Token& token, native_uint address)
+			: Symbol{ name, token }, address{ address }
 		{
 		}
 
@@ -134,9 +136,10 @@ namespace hz
 		std::unordered_map<std::string, StructMember> members;
 
 	public:
-		StructSymbol(const std::string& name)
-			: Symbol{ name }, members{}
+		StructSymbol(const std::string& name, const Token& token)
+			: Symbol{ name, token }
 		{
+			members = {};
 		}
 
 	public:

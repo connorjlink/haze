@@ -18,7 +18,7 @@ namespace hz
 		SLLI, SLL, SRLI, SRL, SRAI, SRA,
 		JAL, JALR,
 		BEQ, BNE, BLT, BGE, BLTU, BGEU,
-		NOP, ECALL, EBREAK, WFI, FENCE,
+		NOP, ECALL, EBREAK, FENCE,
 
 		// M extension
 		MUL, MULH, MULHU, MULHSU, DIV, DIVU, REM, REMU,
@@ -44,8 +44,7 @@ namespace hz
 		FENCEI,
 
 		// U/S mode
-		URET, SRET, MRET,
-		SFENCEVMA,
+		URET, SRET, MRET, WFI,
 	};
 }
 

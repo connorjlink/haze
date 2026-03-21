@@ -9,6 +9,7 @@
 #include <toolchain/ToolchainType.h>
 #include <toolchain/Parser.h>
 #include <toolchain/models/Token.h>
+#include <toolchain/Linker.h>
 
 // Haze Toolchain.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -18,7 +19,7 @@ namespace hz
 	class Toolchain
 		: public ServiceTag<Toolchain>
 		, public InjectService<Generator, JobManager, Parser>
-		, public InjectSingleton<CommandLineOptions, ErrorReporter, FileManager>
+		, public InjectSingleton<CommandLineOptions, ErrorReporter, FileManager, Linker>
 	{
 	protected:
 		// filepath to vector<token> mapping

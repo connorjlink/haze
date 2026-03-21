@@ -5,17 +5,6 @@
 #include <utility/Constants.h>
 #include <utility/PlatformVariables.h>
 #include <riscv/RISCVInstructionType.h>
-#include <riscv/RISCVLoadInstructionType.h>
-#include <riscv/RISCVStoreInstructionType.h>
-#include <riscv/RISCVUpperInstructionType.h>
-#include <riscv/RISCVSetInstructionType.h>
-#include <riscv/RISCVJumpInstructionType.h>
-#include <riscv/RISCVArithmeticInstructionType.h>
-#include <riscv/RISCVBccInstructionType.h>
-#include <riscv/RISCVMExtensionInstructionType.h>
-#include <riscv/RISCVAExtensionInstructionType.h>
-#include <riscv/RISCVAmoInstructionType.h>
-#include <riscv/RISCVZicsrExtensionInstructionType.h>
 #include <riscv/RISCVRegister.h>
 
 // Haze RISCVInstruction.h
@@ -36,897 +25,1098 @@ namespace hz
 	};
 
 
-	class RISCVLoadInstruction : public RISCVInstruction
+	// I base instruction set instructions
+	namespace riscv
 	{
-	protected:
-		native_int _immediate;
-		RISCVRegister _rd;
-		RISCVRegister _rs1;
-
-	public:
-		RISCVLoadInstruction(native_int immediate, RISCVRegister rd, RISCVRegister rs1)
-			: _immediate{ immediate }, _rd{ rd }, _rs1{ rs1 }
+		class LbInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVLoadInstructionType ltype() const = 0;
-	};
+		public:
+			LbInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
 
-	class RISCVLbInstruction : public RISCVLoadInstruction
-	{
-	public:
-		using RISCVLoadInstruction::RISCVLoadInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lb(rd, imm, rs1) LbInstruction{ imm, rd, rs1 }
 
-	public:
-		virtual RISCVLoadInstructionType ltype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lb(rd, imm, rs1) RISCVLbInstruction{ imm, rd, rs1 }
-
-	class RISCVLhInstruction : public RISCVLoadInstruction
-	{
-	public:
-		using RISCVLoadInstruction::RISCVLoadInstruction;
-
-	public:
-		virtual RISCVLoadInstructionType ltype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lh(rd, imm, rs1) RISCVLhInstruction{ imm, rd, rs1 }
-
-	class RISCVLwInstruction : public RISCVLoadInstruction
-	{
-	public:
-		using RISCVLoadInstruction::RISCVLoadInstruction;
-
-	public:
-		virtual RISCVLoadInstructionType ltype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lw(rd, imm, rs1) RISCVLwInstruction{ imm, rd, rs1 }
-
-	class RISCVLbuInstruction : public RISCVLoadInstruction
-	{
-	public:
-		using RISCVLoadInstruction::RISCVLoadInstruction;
-
-	public:
-		virtual RISCVLoadInstructionType ltype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lbu(rd, imm, rs1) RISCVLbuInstruction{ imm, rd, rs1 }
-
-	class RISCVLhuInstruction : public RISCVLoadInstruction
-	{
-	public:
-		using RISCVLoadInstruction::RISCVLoadInstruction;
-
-	public:
-		virtual RISCVLoadInstructionType ltype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lhu(rd, imm, rs1) RISCVLhuInstruction{ imm, rd, rs1 }
-
-
-	class RISCVStoreInstruction : public RISCVInstruction
-	{
-	protected:
-		native_int _immediate;
-		RISCVRegister _rs1;
-		RISCVRegister _rs2;
-
-	public:
-		RISCVStoreInstruction(native_int immediate, RISCVRegister rs1, RISCVRegister rs2)
-			: _immediate{ immediate }, _rs1{ rs1 }, _rs2{ rs2 }
+		class LhInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVStoreInstructionType stype() const = 0;
-	};
+		public:
+			LhInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
 
-	class RISCVSbInstruction : public RISCVStoreInstruction
-	{
-	public:
-		using RISCVStoreInstruction::RISCVStoreInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lh(rd, imm, rs1) LhInstruction{ imm, rd, rs1 }
 
-	public:
-		virtual byterange emit() const final override;
-		virtual RISCVStoreInstructionType stype() const final override;
-	};
-#define sb(rs2, imm, rs1) RISCVSbInstruction{ imm, rs1, rs2 }
-
-	class RISCVShInstruction : public RISCVStoreInstruction
-	{
-	public:
-		using RISCVStoreInstruction::RISCVStoreInstruction;
-
-	public:
-		virtual byterange emit() const final override;
-		virtual RISCVStoreInstructionType stype() const final override;
-	};
-#define sh(rs2, imm, rs1) RISCVShInstruction{ imm, rs1, rs2 }
-
-	class RISCVSwInstruction : public RISCVStoreInstruction
-	{
-	public:
-		using RISCVStoreInstruction::RISCVStoreInstruction;
-
-	public:
-		virtual byterange emit() const final override;
-		virtual RISCVStoreInstructionType stype() const final override;
-	};
-#define sw(rs2, imm, rs1) RISCVSwInstruction{ imm, rs1, rs2 }
-
-
-	class RISCVUpperInstruction : public RISCVInstruction
-	{
-	protected:
-		native_int _immediate;
-		RISCVRegister _rd;
-
-	public:
-		RISCVUpperInstruction(native_int immediate, RISCVRegister rd)
-			: _immediate{ immediate }, _rd{ rd }
+		class LwInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+		public:
+			LwInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lw(rd, imm, rs1) LwInstruction{ imm, rd, rs1 }
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVUpperInstructionType utype() const = 0;
-	};
-
-	class RISCVLuiInstruction : public RISCVUpperInstruction
-	{
-	public:
-		using RISCVUpperInstruction::RISCVUpperInstruction;
-
-	public:
-		virtual RISCVUpperInstructionType utype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lui(rd, imm) RISCVLuiInstruction{ imm, rd }
-
-	class RISCVAuipcInstruction : public RISCVUpperInstruction
-	{
-	public:
-		using RISCVUpperInstruction::RISCVUpperInstruction;
-
-	public:
-		virtual RISCVUpperInstructionType utype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define auipc(rd, imm) RISCVAuipcInstruction{ imm, rd }
-
-
-	class RISCVArithmeticInstruction : public RISCVInstruction
-	{
-	protected:
-		RISCVRegister _rd;
-		RISCVRegister _rs1;
-
-	public:
-		RISCVArithmeticInstruction(RISCVRegister rd, RISCVRegister rs1)
-			: _rd{ rd }, _rs1{ rs1 }
+		class LbuInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+		public:
+			LbuInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lbu(rd, imm, rs1) LbuInstruction{ imm, rd, rs1 }
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVArithmeticInstructionType mtype() const = 0;
-	};
-
-	class RISCVRegisterArithmeticInstruction : public RISCVArithmeticInstruction
-	{
-	protected:
-		RISCVRegister _rs2;
-
-	public:
-		RISCVRegisterArithmeticInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
-			: RISCVArithmeticInstruction{ rd, rs1 }, _rs2{ rs2 }
+		class LhuInstruction : public RISCVInstruction
 		{
-		}
-	};
-
-	class RISCVAddInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define add(rd, rs1, rs2) RISCVAddInstruction{ rd, rs1, rs2 }
-
-	class RISCVSubInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define sub(rd, rs1, rs2) RISCVSubInstruction{ rd, rs1, rs2 }
-
-	class RISCVAndInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define and(rd, rs1, rs2) RISCVAndInstruction{ rd, rs1, rs2 }
-
-	class RISCVOrInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define or(rd, rs1, rs2) RISCVOrInstruction{ rd, rs1, rs2 }
-
-	class RISCVXorInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define xor(rd, rs1, rs2) RISCVXorInstruction{ rd, rs1, rs2 }
-
-	class RISCVSllInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define sll(rd, rs1, rs2) RISCVSllInstruction{ rd, rs1, rs2 }
-
-	class RISCVSrlInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define srl(rd, rs1, rs2) RISCVSrlInstruction{ rd, rs1, rs2 }
-
-	class RISCVSraInstruction : public RISCVRegisterArithmeticInstruction
-	{
-	public:
-		using RISCVRegisterArithmeticInstruction::RISCVRegisterArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define sra(rd, rs1, rs2) RISCVSraInstruction{ rd, rs1, rs2 }
-
-	class RISCVImmediateArithmeticInstruction : public RISCVArithmeticInstruction
-	{
-	protected:
-		native_int _immediate;
-
-	public:
-		RISCVImmediateArithmeticInstruction(RISCVRegister rd, RISCVRegister rs1, native_int immediate)
-			: RISCVArithmeticInstruction{ rd, rs1 }, _immediate{ immediate }
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+		public:
+			LhuInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lhu(rd, imm, rs1) LhuInstruction{ imm, rd, rs1 }
+	
+		class SbInstruction : public RISCVInstruction
 		{
-		}
-	};
+		private:
+			native_int _imm;
+			RISCVRegister _rs2;
+			RISCVRegister _rs1;
 
-	class RISCVAddiInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
+		public:
+			SbInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define addi(rd, rs1, imm) RISCVAddiInstruction{ rd, rs1, imm }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sb(rs2, imm, rs1) SbInstruction{ imm, rs1, rs2 }
 
-	class RISCVAndiInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define andi(rd, rs1, imm) RISCVAndiInstruction{ rd, rs1, imm }
-
-	class RISCVOriInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define ori(rd, rs1, imm) RISCVOriInstruction{ rd, rs1, imm }
-
-	class RISCVXoriInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define xori(rd, rs1, imm) RISCVXoriInstruction{ rd, rs1, imm }
-
-	class RISCVSlliInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define slli(rd, rs1, imm) RISCVSlliInstruction{ rd, rs1, imm }
-
-	class RISCVSrliInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define srli(rd, rs1, imm) RISCVSrliInstruction{ rd, rs1, imm }
-
-	class RISCVSraiInstruction : public RISCVImmediateArithmeticInstruction
-	{
-	public:
-		using RISCVImmediateArithmeticInstruction::RISCVImmediateArithmeticInstruction;
-
-	public:
-		virtual RISCVArithmeticInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define srai(rd, rs1, imm) RISCVSraiInstruction{ rd, rs1, imm }
-
-
-	class RISCVSetInstruction : public RISCVInstruction
-	{
-	protected:
-		native_int _immediate;
-		RISCVRegister _rd;
-		RISCVRegister _rs1;
-
-	public:
-		RISCVSetInstruction(native_int immediate, RISCVRegister rd, RISCVRegister rs1)
-			: _immediate{ immediate }, _rd{ rd }, _rs1{ rs1 }
+		class ShInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rs2;
+			RISCVRegister _rs1;
+		public:
+			ShInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sh(rs2, imm, rs1) ShInstruction{ imm, rs1, rs2 }
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVSetInstructionType stype() const = 0;
-	};
-
-	class RISCVSltiInstruction : public RISCVSetInstruction
-	{
-	public:
-		using RISCVSetInstruction::RISCVSetInstruction;
-
-	public:
-		virtual RISCVSetInstructionType stype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define slti(rd, rs1, imm) RISCVSltiInstruction{ imm, rd, rs1 }
-
-	class RISCVSltInstruction : public RISCVSetInstruction
-	{
-	public:
-		using RISCVSetInstruction::RISCVSetInstruction;
-
-	public:
-		virtual RISCVSetInstructionType stype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define slt(rd, rs1, imm) RISCVSltInstruction{ imm, rd, rs1 }
-
-	class RISCVSltiuInstruction : public RISCVSetInstruction
-	{
-	public:
-		using RISCVSetInstruction::RISCVSetInstruction;
-
-	public:
-		virtual RISCVSetInstructionType stype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define sltiu(rd, rs1, imm) RISCVSltiuInstruction{ imm, rd, rs1 }
-
-	class RISCVSltuInstruction : public RISCVSetInstruction
-	{
-	public:
-		using RISCVSetInstruction::RISCVSetInstruction;
-
-	public:
-		virtual RISCVSetInstructionType stype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define slti(rd, rs1, imm) RISCVSltiInstruction{ imm, rd, rs1 }
-
-
-	class RISCVJumpInstruction : public RISCVInstruction
-	{
-	protected:
-		native_int _immediate;
-		RISCVRegister _rd;
-
-	public:
-		RISCVJumpInstruction(native_int immediate, RISCVRegister rd)
-			: _immediate{ immediate }, _rd{ rd }
+		class SwInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rs2;
+			RISCVRegister _rs1;
+		public:
+			SwInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sw(rs2, imm, rs1) SwInstruction{ imm, rs1, rs2 }
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVJumpInstructionType jtype() const = 0;
-	};
-
-	class RISCVJalInstruction : public RISCVJumpInstruction
-	{
-	public:
-		using RISCVJumpInstruction::RISCVJumpInstruction;
-
-	public:
-		virtual RISCVJumpInstructionType jtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define jal(rd, imm) RISCVJalInstruction{ imm, rd }
-
-	class RISCVJalrInstruction : public RISCVJumpInstruction
-	{
-	private:
-		RISCVRegister _rs1;
-
-	public:
-		RISCVJalrInstruction(native_int immediate, RISCVRegister rd, RISCVRegister rs1)
-			: RISCVJumpInstruction{ immediate, rd }, _rs1{ rs1 }
+		class LuiInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
 
-	public:
-		virtual RISCVJumpInstructionType jtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define jalr(rd, imm, rs1) RISCVJalrInstruction{ imm, rd, rs1 }
+		public:
+			LuiInstruction(native_int imm, RISCVRegister rd)
+				: _imm{ imm }, _rd{ rd }
+			{
+			}
 
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lui(rd, imm) LuiInstruction{ imm, rd }
 
-
-	class RISCVBccInstruction : public RISCVInstruction
-	{
-	protected:
-		native_int _immediate;
-		RISCVRegister _rs1;
-		RISCVRegister _rs2;
-
-	public:
-		RISCVBccInstruction(native_int immediate, RISCVRegister rs1, RISCVRegister rs2)
-			: _immediate{ immediate }, _rs1{ rs1 }, _rs2{ rs2 }
+		class AuipcInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+		public:
+			AuipcInstruction(native_int imm, RISCVRegister rd)
+				: _imm{ imm }, _rd{ rd }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define auipc(rd, imm) AuipcInstruction{ imm, rd }
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVBccInstructionType btype() const = 0;
-	};
+		class AddInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
 
-	class RISCVBeqInstruction : public RISCVBccInstruction
-	{
-	public:
-		using RISCVBccInstruction::RISCVBccInstruction;
+		public:
+			AddInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	public:
-		virtual RISCVBccInstructionType btype() const final override;
-		virtual byterange emit() const final override;
-	}; 
-#define beq(rs1, rs2, imm) RISCVBeqInstruction{ imm, rs1, rs2 }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define add(rd, rs1, rs2) AddInstruction{ rd, rs1, rs2
 
-	class RISCVBneInstruction : public RISCVBccInstruction
-	{
-	public:
-		using RISCVBccInstruction::RISCVBccInstruction;
+		class SubInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
 
-	public:
-		virtual RISCVBccInstructionType btype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define bne(rs1, rs2, imm) RISCVBneInstruction{ imm, rs1, rs2 }
+		public:
+			SubInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	class RISCVBltInstruction : public RISCVBccInstruction
-	{
-	public:
-		using RISCVBccInstruction::RISCVBccInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sub(rd, rs1, rs2) SubInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVBccInstructionType btype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define blt(rs1, rs2, imm) RISCVBltInstruction{ imm, rs1, rs2 }
+		class AndInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
 
-	class RISCVBgeInstruction : public RISCVBccInstruction
-	{
-	public:
-		using RISCVBccInstruction::RISCVBccInstruction;
+		public:
+			AndInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	public:
-		virtual RISCVBccInstructionType btype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define bge(rs1, rs2, imm) RISCVBgeInstruction{ imm, rs1, rs2 }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define and(rd, rs1, rs2) AndInstruction{ rd, rs1, rs2 }
 
-	class RISCVBltuInstruction : public RISCVBccInstruction
-	{
-	public:
-		using RISCVBccInstruction::RISCVBccInstruction;
+		class OrInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
 
-	public:
-		virtual RISCVBccInstructionType btype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define bltu(rs1, rs2, imm) RISCVBltuInstruction{ imm, rs1, rs2 }
+		public:
+			OrInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	class RISCVBgeuInstruction : public RISCVBccInstruction
-	{
-	public:
-		using RISCVBccInstruction::RISCVBccInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define or(rd, rs1, rs2) OrInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVBccInstructionType btype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define bgeu(rs1, rs2, imm) RISCVBgeuInstruction{ imm, rs1, rs2 }
+		class XorInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			XorInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define xor(rd, rs1, rs2) XorInstruction{ rd, rs1, rs2 }
 
+		class SllInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			SllInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sll(rd, rs1, rs2) SllInstruction{ rd, rs1, rs2 }
 
-	class RISCVNopInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
+		class SrlInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			SrlInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define srl(rd, rs1, rs2) SrlInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
+		class SraInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			SraInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sra(rd, rs1, rs2) SraInstruction{ rd, rs1, rs2 }
+
+		class AddiInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			AddiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define addi(rd, rs1, imm) AddiInstruction{ imm, rd, rs1 }
+
+		class AndiInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			AndiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define andi(rd, rs1, imm) AndiInstruction{ imm, rd, rs1 }
+
+		class OriInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			OriInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define ori(rd, rs1, imm) OriInstruction{ imm, rd, rs1 }
+
+		class XoriInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			XoriInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define xori(rd, rs1, imm) XoriInstruction{ imm, rd, rs1 }
+
+		class SlliInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			SlliInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define slli(rd, rs1, imm) SlliInstruction{ imm, rd, rs1 }
+
+		class SrliInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			SrliInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define srli(rd, rs1, imm) SrliInstruction{ imm, rd, rs1 }
+
+		class SraiInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+		public:
+			SraiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define srai(rd, rs1, imm) SraiInstruction{ imm, rd, rs1 }
+
+		class SltInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+
+		public:
+			SltInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define slt(rd, rs1, rs2) SltInstruction{ rd, rs1, rs2 }
+
+		class SltuInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+
+		public:
+			SltuInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sltu(rd, rs1, rs2) SltuInstruction{ rd, rs1, rs2 }
+
+		class SltiInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			SltiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define slti(rd, rs1, imm) SltiInstruction{ imm, rd, rs1 }
+
+		class SltiuInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+
+		public:
+			SltiuInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sltiu(rd, rs1, imm) SltiuInstruction{ imm, rd, rs1 }
+
+		class JalInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+
+		public:
+			JalInstruction(native_int imm, RISCVRegister rd)
+				: _imm{ imm }, _rd{ rd }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define jal(rd, imm) JalInstruction{ imm, rd }
+
+		class JalrInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+		public:
+			JalrInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define jalr(rd, imm, rs1) JalrInstruction{ imm, rd, rs1 }
+
+		class BeqInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+
+		public:
+			BeqInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define beq(rs1, rs2, imm) BeqInstruction{ imm, rs1, rs2 }
+
+		class BneInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+
+		public:
+			BneInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define bne(rs1, rs2, imm) BneInstruction{ imm, rs1, rs2 }
+
+		class BltInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+
+		public:
+			BltInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define blt(rs1, rs2, imm) BltInstruction{ imm, rs1, rs2 }
+
+		class BgeInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			BgeInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define bge(rs1, rs2, imm) BgeInstruction{ imm, rs1, rs2 }
+
+		class BltuInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			BltuInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define bltu(rs1, rs2, imm) BltuInstruction{ imm, rs1, rs2 }
+
+		class BgeuInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _imm;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			BgeuInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define bgeu(rs1, rs2, imm) BgeuInstruction { imm, rs1, rs2 }
+
+		class RISCVNopInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
 #define nop() RISCVNopInstruction{}
 
-	class RISCVEcallInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
+		class RISCVEcallInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
 #define ecall() RISCVEcallInstruction{}
 
-	class RISCVEbreakInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
+		class RISCVEbreakInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
 #define ebreak() RISCVEbreakInstruction{}
 
-	class RISCVWfiInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
+		class RISCVFenceInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define wfi() RISCVWfiInstruction{}
-
-	class RISCVFenceInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
-
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
 #define fence() RISCVFenceInstruction{}
+	}
 
-
-	class RISCVMExtensionInstruction : public RISCVInstruction
+	// M extension instructions
+	namespace riscv
 	{
-	protected:
-		RISCVRegister _rd;
-		RISCVRegister _rs1;
-		RISCVRegister _rs2;
-
-	public:
-		RISCVMExtensionInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
-			: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+		class MulInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVMExtensionInstructionType mtype() const = 0;
-	};
+		public:
+			MulInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	class RISCVMulInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define mul(rd, rs1, rs2) MulInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define mul(rd, rs1, rs2) RISCVMulInstruction{ rd, rs1, rs2 }
-	
-	class RISCVMulhInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define mulh(rd, rs1, rs2) RISCVMulhInstruction{ rd, rs1, rs2 }
-
-	class RISCVMulhuInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define mulhu(rd, rs1, rs2) RISCVMulhuInstruction{ rd, rs1, rs2 }
-
-	class RISCVMulhsuInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define mulhsu(rd, rs1, rs2) RISCVMulhsuInstruction{ rd, rs1, rs2 }
-
-	class RISCVDivInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define div(rd, rs1, rs2) RISCVDivInstruction{ rd, rs1, rs2 }
-
-	class RISCVDivuInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define divu(rd, rs1, rs2) RISCVDivuInstruction{ rd, rs1, rs2 }
-
-	class RISCVRemInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define rem(rd, rs1, rs2) RISCVRemInstruction{ rd, rs1, rs2 }
-
-	class RISCVRemuInstruction : public RISCVMExtensionInstruction
-	{
-	public:
-		using RISCVMExtensionInstruction::RISCVMExtensionInstruction;
-	public:
-		virtual RISCVMExtensionInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define remu(rd, rs1, rs2) RISCVRemuInstruction{ rd, rs1, rs2 }
-
-
-
-	class RISCVAExtensionInstruction : public RISCVInstruction
-	{
-	protected:
-		RISCVRegister _rd;
-		RISCVRegister _rs1;
-		bool _acquire;
-		bool _release;
-
-	public:
-		RISCVAExtensionInstruction(RISCVRegister rd, RISCVRegister rs1, bool acquire, bool release)
-			: _rd{ rd }, _rs1{ rs1 }, _acquire{ acquire }, _release{ release }
+		class MulhInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVAExtensionInstructionType atype() const = 0;
-	};
+		public:
+			MulhInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
 
-	class RISCVLrwInstruction : public RISCVAExtensionInstruction
-	{
-	public:
-		using RISCVAExtensionInstruction::RISCVAExtensionInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define mulh(rd, rs1, rs2) MulhInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVAExtensionInstructionType atype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define lrw(rd, rs1, acquire, release) RISCVLrwInstruction{ rd, rs1, acquire, release }
-
-	class RISCVScwInstruction : public RISCVAExtensionInstruction
-	{
-	protected:
-		RISCVRegister _rs2;
-
-	public:
-		RISCVScwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
-			: RISCVAExtensionInstruction{ rd, rs1, acquire, release }, _rs2{ rs2 }
+		class MulhuInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			MulhuInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define mulhu(rd, rs1, rs2) MulhuInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVAExtensionInstructionType atype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define scw(rd, rs2, rs1, acquire, release) RISCVScwInstruction{ rd, rs1, rs2, acquire, release }
-
-	class RISCVAmoInstruction : public RISCVAExtensionInstruction
-	{
-	protected:
-		RISCVRegister _rs2;
-
-	public:
-		RISCVAmoInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
-			: RISCVAExtensionInstruction{ rd, rs1, acquire, release }, _rs2{ rs2 }
+		class MulhsuInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			MulhsuInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define mulhsu(rd, rs1, rs2) MulhsuInstruction{ rd, rs1, rs2 }
 
-	public:
-		virtual RISCVAExtensionInstructionType atype() const final override;
-		virtual RISCVAmoInstructionType mtype() const = 0;
-	};
+		class DivInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			DivInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define div(rd, rs1, rs2) DivInstruction{ rd, rs1, rs2 }
 
-	class RISCVAmoswapwInstruction : public RISCVAmoInstruction
+		class DivuInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			DivuInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define divu(rd, rs1, rs2) DivuInstruction{ rd, rs1, rs2 }
+
+		class RemInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			RemInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define rem(rd, rs1, rs2) RemInstruction{ rd, rs1, rs2 }
+
+		class RemuInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+		public:
+			RemuInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define remu(rd, rs1, rs2) RemuInstruction{ rd, rs1, rs2 }
+	}
+
+	// A extension instructions
+	namespace riscv
 	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		class LrwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			bool _acquire;
+			bool _release;
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amoswapw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		public:
+			LrwInstruction(RISCVRegister rd, RISCVRegister rs1, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _acquire{ acquire }, _release{ release }
+			{
+			}
 
-	class RISCVAmoaddwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define lrw(rd, rs1, acquire, release) LrwInstruction{ rd, rs1, acquire, release }
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amoaddw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		class ScwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
+		public:
+			ScwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define scw(rd, rs2, rs1, acquire, release) ScwInstruction{ rd, rs1, rs2, acquire, release }
 
-	class RISCVAmoandwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		class AmoswapwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amoandw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		public:
+			AmoswapwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
 
-	class RISCVAmoorwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amoswapw(rd, rs2, rs1, acquire, release) AmoswapwInstruction{ rd, rs1, rs2, acquire, release }
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amoorw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		class AmoaddwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
 
-	class RISCVAmoxorwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		public:
+			AmoaddwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amoxorw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amoaddw(rd, rs2, rs1, acquire, release) AmoaddwInstruction{ rd, rs1, rs2, acquire, release }
 
-	class RISCVAmominwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		class AmoandwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amominw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		public:
+			AmoandwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
 
-	class RISCVAmomaxwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amoandw(rd, rs2, rs1, acquire, release) AmoandwInstruction{ rd, rs1, rs2, acquire, release }
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amomaxw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		class AmoorwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
 
-	class RISCVAmominuwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		public:
+			AmoorwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amominuw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amoorw(rd, rs2, rs1, acquire, release) AmoorwInstruction{ rd, rs1, rs2, acquire, release }
 
-	class RISCVAmomaxuwInstruction : public RISCVAmoInstruction
-	{
-	public:
-		using RISCVAmoInstruction::RISCVAmoInstruction;
+		class AmoxorwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
 
-	public:
-		virtual RISCVAmoInstructionType mtype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define amomaxuw(rd, rs2, rs1, acquire, release) RISCVAmoInstruction{ rd, rs1, rs2, acquire, release }
+		public:
+			AmoxorwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
 
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amoxorw(rd, rs2, rs1, acquire, release) AmoxorwInstruction{ rd, rs1, rs2, acquire, release }
+
+		class AmominwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
+
+		public:
+			AmominwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amominw(rd, rs2, rs1, acquire, release) AmominwInstruction{ rd, rs1, rs2, acquire, release }
+
+		class AmomaxwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
+
+		public:
+			AmomaxwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amomaxw(rd, rs2, rs1, acquire, release) AmomaxwInstruction{ rd, rs1, rs2, acquire, release }
+
+		class AmominuwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
+
+		public:
+			AmominuwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amominuw(rd, rs2, rs1, acquire, release) AmominuwInstruction{ rd, rs1, rs2, acquire, release }
+		class AmomaxuwInstruction : public RISCVInstruction
+		{
+		private:
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+			RISCVRegister _rs2;
+			bool _acquire;
+			bool _release;
+
+		public:
+			AmomaxuwInstruction(RISCVRegister rd, RISCVRegister rs1, RISCVRegister rs2, bool acquire, bool release)
+				: _rd{ rd }, _rs1{ rs1 }, _rs2{ rs2 }, _acquire{ acquire }, _release{ release }
+			{
+			}
+
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define amomaxuw(rd, rs2, rs1, acquire, release) AmomaxuwInstruction{ rd, rs1, rs2, acquire, release }
+	}
 
 	// C extension instructions
 	namespace riscv
@@ -1401,154 +1591,177 @@ namespace hz
 #define cebreak() CebreakInstruction{}
 	}
 
-
-	class RISCVZicsrExtensionInstruction : public RISCVInstruction
+	// Zicsr extension instructions
+	namespace riscv
 	{
-	protected:
-		native_int _csr;
-		RISCVRegister _rd;
-
-	public:
-		RISCVZicsrExtensionInstruction(native_int csr, RISCVRegister rd)
-			: _csr{ csr }, _rd{ rd }
+		class CsrrwInstruction : public RISCVInstruction
 		{
-		}
+		private:
+			native_int _csr;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual RISCVZicsrExtensionInstructionType ztype() const = 0;
-	};
+		public:
+			CsrrwInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
+				: _csr{ csr }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
 
-	class RISCVRegisterZicsrExtensionInstruction : public RISCVZicsrExtensionInstruction
-	{
-	protected:
-		RISCVRegister _rs1;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define cssrw(rd, csr, rs1) CssrwInstruction{ csr, rd, rs1 }
 
-	public:
-		RISCVRegisterZicsrExtensionInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
-			: RISCVZicsrExtensionInstruction{ csr, rd }, _rs1{ rs1 }
+		class CsrrsInstruction : public RISCVInstruction
 		{
-		}
-	};
+		private:
+			native_int _csr;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
 
-	class RISCVCssrwInstruction : public RISCVRegisterZicsrExtensionInstruction
-	{
-	public:
-		using RISCVRegisterZicsrExtensionInstruction::RISCVRegisterZicsrExtensionInstruction;
+		public:
+			CsrrsInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
+				: _csr{ csr }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
 
-	public:
-		virtual RISCVZicsrExtensionInstructionType ztype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define csrrw(rd, csr, rs1) RISCVCssrwInstruction{ csr, rd, rs1 }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define csrrs(rd, csr, rs1) CsrrsInstruction{ csr, rd, rs1 }
 
-	class RISCVCsrrsInstruction : public RISCVRegisterZicsrExtensionInstruction
-	{
-	public:
-		using RISCVRegisterZicsrExtensionInstruction::RISCVRegisterZicsrExtensionInstruction;
-	public:
-		virtual RISCVZicsrExtensionInstructionType ztype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define csrrs(rd, csr, rs1) RISCVCsrrsInstruction{ csr, rd, rs1 }
-
-	class RISCVCsrrcInstruction : public RISCVRegisterZicsrExtensionInstruction
-	{
-	public:
-		using RISCVRegisterZicsrExtensionInstruction::RISCVRegisterZicsrExtensionInstruction;
-	public:
-		virtual RISCVZicsrExtensionInstructionType ztype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define csrrc(rd, csr, rs1) RISCVCsrrcInstruction{ csr, rd, rs1 }
-
-	class RISCVImmediateZicsrExtensionInstruction : public RISCVZicsrExtensionInstruction
-	{
-	protected:
-		native_int _immediate;
-
-	public:
-		RISCVImmediateZicsrExtensionInstruction(native_int csr, RISCVRegister rd, native_int immediate)
-			: RISCVZicsrExtensionInstruction{ csr, rd }, _immediate{ immediate }
+		class CsrrcInstruction : public RISCVInstruction
 		{
-		}
-	};
+		private:
+			native_int _csr;
+			RISCVRegister _rd;
+			RISCVRegister _rs1;
+		public:
+			CsrrcInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
+				: _csr{ csr }, _rd{ rd }, _rs1{ rs1 }
+			{
+			}
 
-	class RISCVCsrrwiInstruction : public RISCVImmediateZicsrExtensionInstruction
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define csrrc(rd, csr, rs1) CsrrcInstruction{ csr, rd, rs1 }
+
+		class CsrrwiInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _csr;
+			RISCVRegister _rd;
+			native_int _immediate;
+		public:
+			CsrrwiInstruction(native_int csr, RISCVRegister rd, native_int immediate)
+				: _csr{ csr }, _rd{ rd }, _immediate{ immediate }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define csrrwi(rd, csr, imm) CsrrwiInstruction{ csr, rd, imm }
+
+		class CsrrsiInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _csr;
+			RISCVRegister _rd;
+			native_int _immediate;
+		public:
+			CsrrsiInstruction(native_int csr, RISCVRegister rd, native_int immediate)
+				: _csr{ csr }, _rd{ rd }, _immediate{ immediate }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define csrrsi(rd, csr, imm) CsrrsiInstruction{ csr, rd, imm }
+
+		class CsrrciInstruction : public RISCVInstruction
+		{
+		private:
+			native_int _csr;
+			RISCVRegister _rd;
+			native_int _immediate;
+		public:
+			CsrrciInstruction(native_int csr, RISCVRegister rd, native_int immediate)
+				: _csr{ csr }, _rd{ rd }, _immediate{ immediate }
+			{
+			}
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define csrrci(rd, csr, imm) CsrrciInstruction{ csr, rd, imm }
+	}
+
+	// Zifencei extension instructions
+	namespace riscv
 	{
-	public:
-		using RISCVImmediateZicsrExtensionInstruction::RISCVImmediateZicsrExtensionInstruction;
+		class FenceiInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
 
-	public:
-		virtual RISCVZicsrExtensionInstructionType ztype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define csrrwi(rd, csr, imm) RISCVCsrrwiInstruction{ csr, rd, imm }
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define fencei() FenceiInstruction{}
+	}
 
-	class RISCVCsrrsiInstruction : public RISCVImmediateZicsrExtensionInstruction
+	// Priv extension instructions
+	namespace riscv
 	{
-	public:
-		using RISCVImmediateZicsrExtensionInstruction::RISCVImmediateZicsrExtensionInstruction;
-	public:
-		virtual RISCVZicsrExtensionInstructionType ztype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define csrrsi(rd, csr, imm) RISCVCsrrsiInstruction{ csr, rd, imm }
+		class UretInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
 
-	class RISCVCsrrciInstruction : public RISCVImmediateZicsrExtensionInstruction
-	{
-	public:
-		using RISCVImmediateZicsrExtensionInstruction::RISCVImmediateZicsrExtensionInstruction;
-	public:
-		virtual RISCVZicsrExtensionInstructionType ztype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define csrrci(rd, csr, imm) RISCVCsrrciInstruction{ csr, rd, imm }
-	
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define uret() UretInstruction{}
 
-	class RISCVFenceiInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
+		class SretInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define sret() SretInstruction{}
 
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define fencei() RISCVFenceiInstruction{}
+		class MretInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define mret() MretInstruction{}
 
+		class RISCVWfiInstruction : public RISCVInstruction
+		{
+		public:
+			using RISCVInstruction::RISCVInstruction;
 
-	class RISCVUretInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
-
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define uret() RISCVUretInstruction{}
-
-	class RISCVSretInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define sret() RISCVSretInstruction{}
-
-	class RISCVMretInstruction : public RISCVInstruction
-	{
-	public:
-		using RISCVInstruction::RISCVInstruction;
-	public:
-		virtual RISCVInstructionType itype() const final override;
-		virtual byterange emit() const final override;
-	};
-#define mret() RISCVMretInstruction{}
-
+		public:
+			virtual RISCVInstructionType itype() const final override;
+			virtual byterange emit() const final override;
+		};
+#define wfi() RISCVWfiInstruction{}
+	}
 }
 
 #endif

@@ -75,6 +75,61 @@ namespace hz
 		friend bool operator>=(ExtendedInteger, const ExtendedInteger&);
 		friend bool operator<(ExtendedInteger, const ExtendedInteger&);
 		friend bool operator<=(ExtendedInteger, const ExtendedInteger&);
+
+	public:
+		template<typename T>
+			requires std::integral<T>
+		bool is_within_range() const
+		{
+			if constexpr (std::is_signed_v<T>)
+			{
+				if (sign)
+				{
+					// positive
+					return magnitude <= static_cast<std::uintmax_t>(std::numeric_limits<T>::max());
+				}
+
+				return magnitude >= static_cast<std::uintmax_t>(-static_cast<std::intmax_t>(std::numeric_limits<T>::min()));
+			}
+			else
+			{
+				return magnitude <= static_cast<std::uintmax_t>(std::numeric_limits<T>::max());
+			}
+		}
+
+		template<typename T>
+			requires std::integral<T>
+		T to_integral() const
+		{
+			if (!is_within_range<T>())
+			{
+				// internal compiler error: crash out
+				USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format
+					"extended integral value `{}{}` out of range", sign ? "+" : "-", magnitude), NULL_TOKEN);
+			}
+
+			if constexpr (std::is_signed_v<T>)
+			{
+				if (sign)
+				{
+					return static_cast<T>(magnitude);
+				}
+				else
+				{
+					return static_cast<T>(-static_cast<std::intmax_t>(magnitude));
+				}
+			}
+			else
+			{
+				return static_cast<T>(magnitude);
+			}
+		}
+
+	public:
+		std::string to_string() const
+		{
+			return std::format("{}{}", sign ? "+" : "-", magnitude);
+		}
 	};
 
 	template<typename T>

@@ -57,6 +57,7 @@ namespace hz
 
 	public:
 		static void invalid_type(const std::string&, const Token&);
+		static void invalid_register(const std::string&, const Token&);
 
 	public:
 		static void integer_size_mismatch(IntegerLiteralType, IntegerLiteralType, const Token&);

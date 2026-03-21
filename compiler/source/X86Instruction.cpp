@@ -3,49 +3,92 @@ import std;
 #include <error/CommonErrors.h>
 #include <x86/X86Instruction.h>
 #include <x86/X86Builder.h>
+#include <utility/BinaryUtilities.h>
 
 // Haze X86Instruction.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace hz
+#define VERIFY_REGISTER(x) ([&] -> decltype(x) { \
+	if (x & ~0b111) \
+	{ \
+		CommonErrors::invalid_register(std::to_string(x), NULL_TOKEN); \
+		return {}; \
+	} \
+	return x; \
+	}())
+
+namespace
 {
-	X86InstructionType X86PushInstruction::itype() const
+	static constexpr std::uint8_t OPERAND_SIZE_OVERRIDE_PREFIX = 0x66;
+	static constexpr std::uint8_t ADDRESS_SIZE_OVERRIDE_PREFIX = 0x67;
+}
+
+namespace hz::x86
+{
+	X86InstructionType PushInstruction::itype() const
 	{
 		return X86InstructionType::PUSH;
 	}
 
-	byterange X86PushInstruction::emit() const
+	byterange PushInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case IMMEDIATE:
 			{
-				auto immediate_operand = AS_IMMEDIATE_OPERAND(_operand);
+				const auto immediate_operand = AS_IMMEDIATE_OPERAND(_operand);
 				const auto immediate = immediate_operand->_immediate;
-				if (immediate < EI(static_cast<std::uintmax_t>(std::numeric_limits<std::uint32_t>::min())))
+
+				// NOTE: 8- and 16-bits are implicitly sign-extended to 32-bits when executed
+				if (immediate.is_within_range<std::int8_t>())
 				{
-					return X86Builder::push_i32(static_cast<std::uint32_t>(immediate.magnitude));
-				}
-				else if (immediate < EI(static_cast<std::uintmax_t>(std::numeric_limits<std::uint8_t>::max())))
+					byterange out{};
+
+					// 6A --> PUSH imm8
+					PUT(range8(0x6A));
+					PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+
+					return out;
+				} 
+				else if (immediate.is_within_range<std::int32_t>())
 				{
-					return X86Builder::push_i8(static_cast<std::uint8_t>(immediate.magnitude));
+					byterange out{};
+
+					// 6A --> PUSH imm8
+					PUT(range8(0x6A));
+					PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+					return out;
 				}
 
-				CommonErrors::unsupported_instruction_range("push", std::to_string(immediate.magnitude));
+				CommonErrors::unsupported_instruction_range("push", immediate.to_string());
 				return {};
 			} break;
 
+			// dereferencing pointer
 			case INDIRECT:
 			{
-				auto indirect_operand = AS_INDIRECT_OPERAND(_operand);
-				return X86Builder::push_m(indirect_operand->_address);
+				const auto indirect_operand = AS_INDIRECT_OPERAND(_operand);
+				const auto address = indirect_operand->_address;
+
+				byterange out{};
+
+				// FF /6 --> PUSH r/m32
+				PUT(range8(0xFF));
+				PUT(range8(0x35));
+				PUT(range32(address));
+
+				return out;
 			} break;
 
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::push_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto source = VERIFY_REGISTER(register_operand->_register);
+
+				// 50+rd --> PUSH r32
+				return { static_cast<std::uint8_t>(0x50 | source) };
 			} break;
 
 			default:
@@ -57,20 +100,23 @@ namespace hz
 	}
 
 
-	X86InstructionType X86PopInstruction::itype() const
+	X86InstructionType PopInstruction::itype() const
 	{
 		return X86InstructionType::POP;
 	}
 
-	byterange X86PopInstruction::emit() const
+	byterange PopInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::pop_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto destination = VERIFY_REGISTER(register_operand->_register);
+
+				// 58+ rd --> POP r32
+				return { static_cast<std::uint8_t>(0x58 | destination) };
 			} break;
 
 			default:
@@ -82,26 +128,36 @@ namespace hz
 	}
 
 
-	X86InstructionType X86MovInstruction::itype() const
+	X86InstructionType MovInstruction::itype() const
 	{
 		return X86InstructionType::MOV;
 	}
 
-	byterange X86MovInstruction::emit() const
+	byterange MovInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
+			// dereferencing pointer
 			case INDIRECT:
 			{
-				auto indirect_destination = AS_INDIRECT_OPERAND(_destination);
+				const auto indirect_destination = AS_INDIRECT_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::mov_mr(indirect_destination->_address, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = indirect_destination->_address;
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 89 /r --> MOV r/m32, r32
+						PUT(range8(0x89));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -114,32 +170,97 @@ namespace hz
 
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::mov_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// B8+rd id --> MOV r32, imm32
+							PUT(range8(0xB8 | destination));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("mov", immediate.to_string());
+						return {};
 					} break;
 
+					// dereferencing pointer
 					case INDIRECT:
 					{
-						auto indirect_source = AS_INDIRECT_OPERAND(_source);
-						return X86Builder::mov_rm(register_destination->_register, indirect_source->_address);
+						const auto indirect_source = AS_INDIRECT_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = indirect_source->_address;
+
+						byterange out{};
+
+						if (destination == EAX)
+						{
+							// A1 --> MOV EAX, moffs32*
+							PUT(range8(0xA1));
+							PUT(range32(source));
+						}
+						else
+						{
+							// 8B /r --> MOV r32, r/m32
+							PUT(range8(0x8B));
+							PUT(range8(X86Builder::modrm(0b00, destination, 0b101)));
+							PUT(range32(source));
+						}
+
+						return out;
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::mov_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 89 /r --> MOV r/m32, r32
+						PUT(range8(0x89));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					case REGISTER_DISPLACED:
 					{
-						auto register_displaced_source = AS_REGISTER_DISPLACED_OPERAND(_source);
-						return X86Builder::mov_rbd(register_destination->_register, register_displaced_source->_register, register_displaced_source->_displacement);
+						const auto register_displaced_source = AS_REGISTER_DISPLACED_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_displaced_source->_register);
+						const auto displacement = register_displaced_source->_displacement;
+
+						byterange out{};
+
+						if (EI(static_cast<std::intmax_t>(displacement)).is_within_range<std::int8_t>())
+						{
+							// 8B /r --> MOV r32, r/m32
+							PUT(range8(0x8B));
+							PUT(range8(X86Builder::modrm(0b01, destination, source)));
+							PUT(range32(std::bit_cast<std::uint32_t>(displacement)));
+						}
+						else
+						{
+							// 8B /r --> MOV r32, r/m32
+							PUT(range8(0x8B));
+							PUT(range8(X86Builder::modrm(0b10, destination, source)));
+							PUT(range32(std::bit_cast<std::uint32_t>(displacement)));
+						}
+						
+						return out;
 					} break;
 
 					default:
@@ -152,14 +273,39 @@ namespace hz
 
 			case REGISTER_DISPLACED:
 			{
-				auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(_destination);
+				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(_destination);
 				
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::mov_bdi(register_displaced_destination->_register, register_displaced_destination->_displacement, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_displaced_destination->_register);
+						const auto displacement = register_displaced_destination->_displacement;
+						const auto immediate = immediate_source->_immediate;
+
+						if (!EI(static_cast<std::intmax_t>(displacement)).is_within_range<std::int8_t>())
+						{
+							CommonErrors::unsupported_instruction_range("mov", std::to_string(displacement));
+							return {};
+						}
+
+
+						if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// C7 /0 --> MOV r/m32, imm32
+							PUT(range8(0xC7));
+							PUT(range8(X86Builder::modrm(0b01, 0b000, destination)));
+							PUT(range8(displacement));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("mov", immediate.to_string());
+						return {};
 					} break;
 
 					default:
@@ -179,26 +325,36 @@ namespace hz
 	}
 
 
-	X86InstructionType X86MovzxInstruction::itype() const
+	X86InstructionType MovzxInstruction::itype() const
 	{
 		return X86InstructionType::MOVZX;
 	}
 
-	byterange X86MovzxInstruction::emit() const
+	byterange MovzxInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::movzx_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 0F B6 /r --> MOVZX r32, r/m8
+						PUT(range8(0x0F));
+						PUT(range8(0xB6));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -218,32 +374,88 @@ namespace hz
 	}
 
 
-	X86InstructionType X86AddInstruction::itype() const
+	X86InstructionType AddInstruction::itype() const
 	{
 		return X86InstructionType::ADD;
 	}
 
-	byterange X86AddInstruction::emit() const
+	byterange AddInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::add_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (destination == EAX)
+						{
+							if (immediate.is_within_range<std::int32_t>())
+							{
+								byterange out{};
+
+								// 05 id --> ADD EAX, imm32
+								PUT(range8(0x05));
+								PUT(range32(value));
+
+								return out;
+							}
+							else
+							{
+								CommonErrors::unsupported_instruction_range("add", immediate.to_string());
+								return {};
+							}
+						}
+
+						if (immediate.is_within_range<std::int8_t>())
+						{
+							byterange out{};
+							
+							// 83 /0 ib --> ADD r/m32, imm8
+							PUT(range8(0x83));
+							PUT(range8(X86Builder::modrm(0b11, 0b000, destination)));
+							PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+							
+							return out;
+						}
+						else if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+							
+							// 81 /0 id --> ADD r/m32, imm32
+							PUT(range8(0x81));
+							PUT(range8(X86Builder::modrm(0b11, 0b000, destination)));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+							
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("add", immediate.to_string());
+						return {};
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::add_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 01 /r --> ADD r/m32, r32
+						PUT(range8(0x01));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
+
 					} break;
 
 					default:
@@ -263,32 +475,87 @@ namespace hz
 	}
 
 
-	X86InstructionType X86SubInstruction::itype() const
+	X86InstructionType SubInstruction::itype() const
 	{
 		return X86InstructionType::SUB;
 	}
 
-	byterange X86SubInstruction::emit() const
+	byterange SubInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::sub_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (destination == EAX)
+						{
+							if (immediate.is_within_range<std::int32_t>())
+							{
+								byterange out{};
+
+								// 2D id --> SUB EAX, imm32
+								PUT(range8(0x2D));
+								PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+								return out;
+							}
+							else
+							{
+								CommonErrors::unsupported_instruction_range("sub", immediate.to_string());
+								return {};
+							}
+						}
+
+						if (immediate.is_within_range<std::int8_t>())
+						{
+							byterange out{};
+
+							// 83 /5 ib --> SUB r/m32, imm8
+							PUT(range8(0x83));
+							PUT(range8(X86Builder::modrm(0b11, 0b101, destination)));
+							PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+
+							return out;
+						}
+						else if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// 81 /5 id --> SUB r/m32, imm32
+							PUT(range8(0x81));
+							PUT(range8(X86Builder::modrm(0b11, 0b101, destination)));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("sub", immediate.to_string());
+						return {};
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::sub_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 29 /r --> SUB r/m32, r32
+						PUT(range8(0x29));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -308,32 +575,87 @@ namespace hz
 	}
 
 
-	X86InstructionType X86OrInstruction::itype() const
+	X86InstructionType OrInstruction::itype() const
 	{
 		return X86InstructionType::OR;
 	}
 
-	byterange X86OrInstruction::emit() const
+	byterange OrInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::or_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (destination == EAX)
+						{
+							if (immediate.is_within_range<std::int32_t>())
+							{
+								byterange out{};
+
+								// 0D id --> OR EAX, imm32
+								PUT(range8(0x0D));
+								PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+								return out;
+							}
+							else
+							{
+								CommonErrors::unsupported_instruction_range("or", immediate.to_string());
+								return {};
+							}
+						}
+
+						if (immediate.is_within_range<std::int8_t>())
+						{
+							byterange out{};
+
+							// 83 /1 ib --> OR r/m32, imm8
+							PUT(range8(0x83));
+							PUT(range8(X86Builder::modrm(0b11, 0b001, destination)));
+							PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+
+							return out;
+						}
+						else if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// 81 /1 id --> OR r/m32, imm32
+							PUT(range8(0x81));
+							PUT(range8(X86Builder::modrm(0b11, 0b001, destination)));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("or", immediate.to_string());
+						return {};
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::or_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 09 /r --> OR r/m32, r32
+						PUT(range8(0x09));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -353,32 +675,87 @@ namespace hz
 	}
 
 
-	X86InstructionType X86AndInstruction::itype() const
+	X86InstructionType AndInstruction::itype() const
 	{
 		return X86InstructionType::AND;
 	}
 
-	byterange X86AndInstruction::emit() const
+	byterange AndInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::and_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (destination == EAX)
+						{
+							if (immediate.is_within_range<std::int32_t>())
+							{
+								byterange out{};
+
+								// 25 id --> AND EAX, imm32
+								PUT(range8(0x25));
+								PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+								return out;
+							}
+							else
+							{
+								CommonErrors::unsupported_instruction_range("and", immediate.to_string());
+								return {};
+							}
+						}
+						
+						if (immediate.is_within_range<std::int8_t>())
+						{
+							byterange out{};
+
+							// 83 /4 ib --> AND r/m32, imm8
+							PUT(range8(0x83));
+							PUT(range8(X86Builder::modrm(0b11, 0b100, destination)));
+							PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+
+							return out;
+						}
+						else if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// 81 /4 id --> AND r/m32, imm32
+							PUT(range8(0x81));
+							PUT(range8(X86Builder::modrm(0b11, 0b100, destination)));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("and", immediate.to_string());
+						return {};
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::and_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 21 /r --> AND r/m32, r32
+						PUT(range8(0x21));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -398,32 +775,87 @@ namespace hz
 	}
 
 
-	X86InstructionType X86XorInstruction::itype() const
+	X86InstructionType XorInstruction::itype() const
 	{
 		return X86InstructionType::XOR;
 	}
 
-	byterange X86XorInstruction::emit() const
+	byterange XorInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::xor_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (destination == EAX)
+						{
+							if (immediate.is_within_range<std::int32_t>())
+							{
+								byterange out{};
+
+								// 35 id --> XOR EAX, imm32
+								PUT(range8(0x35));
+								PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+								return out;
+							}
+							else
+							{
+								CommonErrors::unsupported_instruction_range("xor", immediate.to_string());
+								return {};
+							}
+						}
+
+						if (immediate.is_within_range<std::int8_t>())
+						{
+							byterange out{};
+
+							// 83 /6 ib --> XOR r/m32, imm8
+							PUT(range8(0x83));
+							PUT(range8(X86Builder::modrm(0b11, 0b110, destination)));
+							PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+
+							return out;
+						}
+						else if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// 81 /6 id --> XOR r/m32, imm32
+							PUT(range8(0x81));
+							PUT(range8(X86Builder::modrm(0b11, 0b110, destination)));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("xor", immediate.to_string());
+						return {};
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::xor_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// XOR --> r/m32, r32
+						PUT(range8(0x31));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -443,20 +875,27 @@ namespace hz
 	}
 
 
-	X86InstructionType X86IncInstruction::itype() const
+	X86InstructionType IncInstruction::itype() const
 	{
 		return X86InstructionType::INC;
 	}
 
-	byterange X86IncInstruction::emit() const
+	byterange IncInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::inc_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto source = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 40+rd --> INC r32
+				PUT(range8(0x40 | source));
+
+				return out;
 			} break;
 			
 			default:
@@ -468,20 +907,27 @@ namespace hz
 	}
 
 
-	X86InstructionType X86DecInstruction::itype() const
+	X86InstructionType DecInstruction::itype() const
 	{
 		return X86InstructionType::DEC;
 	}
 
-	byterange X86DecInstruction::emit() const
+	byterange DecInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
 		{
 			case REGISTER:
 			{
-				auto register_operand = AS_REGISTER_OPERAND(_operand);
-				return X86Builder::dec_r(register_operand->_register);
+				const auto register_operand = AS_REGISTER_OPERAND(_operand);
+				const auto source = VERIFY_REGISTER(register_operand->_register);
+
+				byterange out{};
+
+				// 48+rd --> DEC r32
+				PUT(range8(0x48 | source));
+
+				return out;
 			} break;
 
 			default:
@@ -493,26 +939,35 @@ namespace hz
 	}
 
 
-	X86InstructionType X86TestInstruction::itype() const
+	X86InstructionType TestInstruction::itype() const
 	{
 		return X86InstructionType::TEST;
 	}
 
-	byterange X86TestInstruction::emit() const
+	byterange TestInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::test_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 85 /r --> TEST r/m32, r32
+						PUT(range8(0x85));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -532,32 +987,87 @@ namespace hz
 	}
 
 
-	X86InstructionType X86CmpInstruction::itype() const
+	X86InstructionType CmpInstruction::itype() const
 	{
 		return X86InstructionType::CMP;
 	}
 
-	byterange X86CmpInstruction::emit() const
+	byterange CmpInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
 		{
 			case REGISTER:
 			{
-				auto register_destination = AS_REGISTER_OPERAND(_destination);
+				const auto register_destination = AS_REGISTER_OPERAND(_destination);
 
 				switch (_source->otype())
 				{
 					case IMMEDIATE:
 					{
-						auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
-						return X86Builder::cmp_ri(register_destination->_register, immediate_source->_immediate);
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto immediate = immediate_source->_immediate;
+
+						if (destination == EAX)
+						{
+							if (immediate.is_within_range<std::int32_t>())
+							{
+								byterange out{};
+
+								// 3D id --> CMP EAX, imm32
+								PUT(range8(0x3D));
+								PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+								return out;
+							}
+							else
+							{
+								CommonErrors::unsupported_instruction_range("cmp", immediate.to_string());
+								return {};
+							}
+						}
+
+						if (immediate.is_within_range<std::int8_t>())
+						{
+							byterange out{};
+
+							// 83 /7 ib --> CMP r/m32, imm8
+							PUT(range8(0x83));
+							PUT(range8(X86Builder::modrm(0b11, 0b111, destination)));
+							PUT(range8(std::bit_cast<std::uint8_t>(immediate.to_integral<std::int8_t>())));
+
+							return out;
+						}
+						else if (immediate.is_within_range<std::int32_t>())
+						{
+							byterange out{};
+
+							// 81 /7 id --> CMP r/m32, imm32
+							PUT(range8(0x81));
+							PUT(range8(X86Builder::modrm(0b11, 0b111, destination)));
+							PUT(range32(std::bit_cast<std::uint32_t>(immediate.to_integral<std::int32_t>())));
+
+							return out;
+						}
+
+						CommonErrors::unsupported_instruction_range("cmp", immediate.to_string());
+						return {};
 					} break;
 
 					case REGISTER:
 					{
-						auto register_source = AS_REGISTER_OPERAND(_source);
-						return X86Builder::cmp_rr(register_destination->_register, register_source->_register);
+						const auto register_source = AS_REGISTER_OPERAND(_source);
+						const auto destination = VERIFY_REGISTER(register_destination->_register);
+						const auto source = VERIFY_REGISTER(register_source->_register);
+
+						byterange out{};
+
+						// 39 /r --> CMP r/m32, r32
+						PUT(range8(0x39));
+						PUT(range8(X86Builder::modrm_rr(destination, source)));
+
+						return out;
 					} break;
 
 					default:
@@ -577,42 +1087,64 @@ namespace hz
 	}
 
 
-	X86InstructionType X86JccInstruction::itype() const
+	X86InstructionType CallInstruction::itype() const
 	{
-		return X86InstructionType::JCC;
+		return X86InstructionType::CALL;
 	}
 
-	// NOTE: no implementation for instruction derived-base classes
-	/*byterange X86JccInstruction::emit() const
+	byterange CallInstruction::emit() const
 	{
-	}*/
+		byterange out{};
 
 
-	X86JccInstructionType X86ApiCallInstruction::jtype() const
-	{
-		return X86JccInstructionType::API_CALL;
-	}
-
-	byterange X86ApiCallInstruction::emit() const
-	{
-		return X86Builder::call_absolute(_displacement);
+		return out;
 	}
 
 
-	X86JccInstructionType X86CallInstruction::jtype() const
+	X86InstructionType ApicallInstruction::itype() const
 	{
-		return X86JccInstructionType::CALL;
+		return X86InstructionType::APICALL;
 	}
 
-	byterange X86CallInstruction::emit() const
+	byterange ApicallInstruction::emit() const
 	{
-		return X86Builder::call_relative(_displacement);
+		byterange out{};
+
+
+		return out;
 	}
 
 
-	X86JccInstructionType X86JmpInstruction::jtype() const
+	X86InstructionType JmpInstruction::itype() const
 	{
-		return X86JccInstructionType::JMP;
+		return X86InstructionType::JMP;
+	}
+
+	byterange JmpInstruction::emit() const
+	{
+		byterange out{};
+
+		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+
+		if (ei.is_within_range<std::int8_t>())
+		{
+			//EB cb --> JMP rel8
+			PUT(range8(0xEB));
+			PUT(range8(_displacement));
+		}
+		else if (ei.is_within_range<std::int32_t>())
+		{
+			// E9 cd --> JMP rel32
+			PUT(range8(0xE9));
+			PUT(range32(_displacement));
+		}
+		else
+		{
+			CommonErrors::unsupported_instruction_range("jmp", ei.to_string());
+			return {};
+		}
+
+		return out;
 	}
 
 	byterange X86JmpInstruction::emit() const

@@ -1,21 +1,20 @@
 #ifndef HAZE_LINKABLE_H
 #define HAZE_LINKABLE_H
 
-#include <command/Command.h>
-
 // Haze Linkable.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Symbol;
+	class FunctionSymbol;
+	class Command;
 	class IntermediateCommand;
 
 	class Linkable
 	{
 	public:
 		// a reference to the FunctionSymbol associated with this
-		Symbol* symbol;
+		FunctionSymbol* symbol;
 		// object code for the function
 		std::vector<Command*> commands;
 		// ir code of the function
@@ -27,7 +26,7 @@ namespace hz
 		void optimize(void);
 
 	public:
-		Linkable(Symbol* symbol, std::vector<Command*>&& commands, std::vector<IntermediateCommand*>&& ir, std::uint32_t offset)
+		Linkable(FunctionSymbol* symbol, std::vector<Command*>&& commands, std::vector<IntermediateCommand*>&& ir, std::uint32_t offset)
 			: symbol{ symbol }, commands{ std::move(commands) }, ir{ std::move(ir) }, offset{ offset }
 		{
 		}

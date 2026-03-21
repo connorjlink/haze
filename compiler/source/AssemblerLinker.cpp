@@ -85,7 +85,8 @@ namespace hz
 				{
 					auto label_command = AS_LABEL_COMMAND(command);
 
-					label_command->offset = address_tracker; // TODO: this assignment might be unnecessary
+					// TODO: this assignment might be unnecessary
+					label_command->offset = address_tracker;
 					USE_SAFE(SymbolDatabase)->reference_label(label_command->identifier, NULL_TOKEN)->address = address_tracker;
 				} break;
 			}

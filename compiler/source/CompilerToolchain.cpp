@@ -7,8 +7,6 @@ import std;
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Generator.h>
 #include <toolchain/Linkable.h>
-#include <toolchain/X86Emitter.h>
-#include <toolchain/X86Linker.h>
 
 // Haze CompilerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -53,22 +51,16 @@ namespace hz
 		}
 		REQUIRE_SAFE(JobManager)->end_job(optimize_task);
 
-		// NOTE: old method;
-		/*byterange out{};
-		for (auto& linkable : linkables)
-		{
-			for (auto command : linkable.ir)
-			{
-				out.append_range(command->emit());
-			}
-		}*/
 
 		const auto link_task = REQUIRE_SAFE(JobManager)->begin_job("linking");
-#pragma message ("TODO: replace with singleton linker service instead!. so as to not require an architecture-specific linker instace")
-		auto linker = new X86Linker{ linkables };
-		auto executable = X86Emitter::emit_init();
-		auto out = linker->link();
-		executable.append_range(out);
+
+		const auto origin = REQUIRE_SAFE(Generator)->resolve_origin();
+		const auto commands = USE_SAFE(Linker)->link(origin, UDWORD_MAX);
+
+		const auto executable = commands
+			| std::ranges::views::transform([](auto command) { return command->object_code; })
+			| std::ranges::views::join;
+
 		REQUIRE_SAFE(JobManager)->end_job(link_task);
 
 
@@ -96,10 +88,6 @@ namespace hz
 			//entrypoint = 0x1000;
 			entrypoint = 0x41000;
 		}
-
-		// shared environment with Assembler/Compiler
-		/*auto image = common_link(entrypoint);
-		auto executable = common_emit(std::move(image), _filepath);*/
 
 		if (!USE_SAFE(ErrorReporter)->had_error())
 		{
