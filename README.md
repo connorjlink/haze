@@ -2,10 +2,11 @@
 > A bespoke, from-scratch, full-stack, machine-code–level x86 & RISC-V optimizing compiler for Windows and bare metal.
 
 ## MAIN FEATURES
-- Fully custom assembly language and assembler
-- Fully custom optimizing compiler
+- Fully custom RISC-V assembly language and assembler
+- Fully custom optimizing compiler, parallelized across translation units
   - x86 and RISC-V CPU support
-  - Custom Win32 PE .exe exporter
+  - Custom linker and Win32 PE .exe exporter
+  - Support for exporting bare-metal object code
 - Fully custom interpreter
   - Used for constant evaluation optimizations
 
