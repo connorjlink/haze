@@ -10,12 +10,60 @@
 #include <cstdint>
 #include <type_traits>
 #include <iostream>
+#include <format>
 
 namespace hz
 {
-    // maximum 255 AST node types (0 reserved for invalid)
-    using ASTTag = std::uint8_t;
-    using ASTIndexType = std::uint32_t;
+    // meta type traits
+    template<typename T, typename Tuple>
+    struct TypeIndex;
+
+    template<typename T, typename... Types>
+    struct TypeIndex<T, std::tuple<T, Types...>> 
+        : public std::integral_constant<std::size_t, 0> 
+    {
+    };
+
+    template<typename T, typename U, typename... Types>
+    struct TypeIndex<T, std::tuple<U, Types...>> 
+        : public std::integral_constant<std::size_t, 1 + TypeIndex<T, std::tuple<Types...>>::value> 
+    {
+    };
+
+    template<typename T, typename Tuple>
+    using TypeIndexV = TypeIndex<T, Tuple>::value;
+
+
+    // function type traits
+    template<auto MethodPointer, typename Signature>
+    struct Method;
+
+    template<auto MethodPointer, typename R, typename... Args>
+    struct Method<MethodPointer, R(Args...)>
+    {
+        static constexpr auto pointer = MethodPointer;
+        using return_type = R;
+    };
+
+
+    // node dispatch type traits
+    template<typename T, typename Sum, typename Fn>
+    concept ImplementsMethod = requires(const T& node, const Sum& sum)
+    {
+        { (node.*Fn::pointer)(sum) } -> std::same_as<typename Fn::return_type>;
+    };
+
+    template<typename T, typename Sum, typename Tuple, std::size_t... Is>
+    concept SumTupleImpl = (ImplementsMethod<T, Sum, std::tuple_element_t<Is, Tuple>> && ...);
+
+    template<typename T, typename Sum, typename Tuple>
+    concept SumTuple = SumTupleImpl<T, Sum, Tuple, std::make_index_sequence<std::tuple_size_v<Tuple>>{}>;
+
+
+
+    // maximum 255 subtypes (0 reserved for invalid)
+    using TagType = std::uint8_t;
+    using RegisterIndex = std::uint32_t;
 
     class AdjustExpression;
     class ArgumentExpression;
@@ -60,6 +108,9 @@ namespace hz
     template<std::size_t I>
     using ExpressionTypeAt = std::tuple_element_t<I, ExpressionType>;
 
+    template<typename T>
+    using ExpressionIndex = TypeIndex<T, ExpressionType>;
+
 
     class NullStatement;
     class ExpressionStatement;
@@ -96,77 +147,31 @@ namespace hz
     template<std::size_t I>
     using StatementTypeAt = std::tuple_element_t<I, StatementType>;
 
-
-    // map AST node template types to AST tag
-    template<typename T, typename Tuple>
-    struct TypeIndex;
-
-    template<typename T, typename... Types>
-    struct TypeIndex<T, std::tuple<T, Types...>> : 
-        public std::integral_constant<std::size_t, 0> 
-    {
-    };
-
-    template<typename T, typename U, typename... Types>
-    struct TypeIndex<T, std::tuple<U, Types...>> : 
-        public std::integral_constant<std::size_t, 1 + TypeIndex<T, std::tuple<Types...>>::value> 
-    {
-    };
-
-    template<typename T, typename Tuple>
-    using TypeIndexV = TypeIndex<T, Tuple>::value;
-
-    template<typename T>
-    using ExpressionIndex = TypeIndex<T, ExpressionType>;
-
     template<typename T>
     using StatementIndex = TypeIndex<T, StatementType>;
 
 
-
     // expose a strict polymorphic interface for AST nodes
-    template<auto MethodPointer, typename Signature>
-    struct ASTMethod;
-
-    template<auto MethodPointer, typename R, typename... Args>
-    struct ASTMethod<MethodPointer, R(Args...)>
-    {
-        static constexpr auto pointer = MethodPointer;
-        using return_type = R;
-    };
-
-    template<typename Anchor>
-    using ASTMethods = std::tuple<
-        ASTMethod<&Anchor::print, void(const ExpressionAST&)>,
-        ASTMethod<&Anchor::evaluate, Anchor(const ExpressionAST&)>,
-        ASTMethod<&Anchor::optimize, Anchor(const ExpressionAST&)>,
-        ASTMethod<&Anchor::check_types, bool(const ExpressionAST&)>
+    template<typename Sum, typename Anchor>
+    using ASTMethods = std::tuple
+    <
+        Method<&Anchor::atype, TagType()>,
+        Method<&Anchor::format, std::string()>,
+        Method<&Anchor::evaluate, Sum(const Sum&)>,
+        Method<&Anchor::optimize, std::optional<Sum>(const Sum&)>,
+        Method<&Anchor::check_types, bool(const Sum&)>
     >;
 
-    using ExpressionMethods = ASTMethods<ExpressionAnchor>;
-    using StatementMethods = ASTMethods<StatementAnchor>;
+    using ExpressionMethods = ASTMethods<ExpressionStorage, ExpressionAnchor>;
+    using StatementMethods = ASTMethods<StatementStorage, StatementAnchor>;
+
+    template<typename T, typename Sum, typename Anchor>
+    concept ASTNode = SumTuple<T, Sum, ASTMethods<Sum, Anchor>>;
 
 
-    template<typename T, typename Ast, typename Method>
-    concept ImplementsMethod = requires(const T& node, const Ast& ast)
-    {
-        { (node.*Method::pointer)(ast) } -> std::same_as<typename Method::return_type>;
-    };
-
-    template<typename T, typename Ast, typename Tuple, std::size_t... Is>
-    concept ASTNodeImplTupleHelper =
-        (ImplementsMethod<T, Ast, std::tuple_element_t<Is, Tuple>> && ...);
-
-    template<typename T, typename Ast, typename Tuple>
-    concept ASTNodeImplTuple =
-        ASTNodeImplTupleHelper<T, Ast, Tuple, std::make_index_sequence<std::tuple_size_v<Tuple>>{}>;
-
-    template<typename T, typename Ast, typename Anchor>
-    concept ASTNode = ASTNodeImplTuple<T, Ast, ASTMethods<Anchor>>;
-
-
+    // TODO: verify that all of the SumStorage members are of StatementStorage/ExpressionAST (and by proxy that they implement the required methods)
     template<typename... Ts>
-    struct ASTStorage 
+    struct SumStorage 
     {
     public:
         static constexpr std::size_t size = sizeof...(Ts);
@@ -203,48 +208,40 @@ namespace hz
         }
     };
 
-    struct ExpressionAST
-    {   
-    public:
-        using Type = ExpressionType;
-
-    public:
-        ExpressionTypes<ASTStorage> storage;
-    };
 
 
-
-    template<typename Method, typename Ast, typename Tuple, std::size_t... Is>
+    template<typename Fn, typename Sum, typename Tuple, std::size_t... Is>
     consteval auto make_dispatch_table_impl(std::index_sequence<Is...>)
     {
-        return std::array{
-            [](const Ast& ast, ASTIndexType index) -> typename Method::return_type
+        return std::array
+        {
+            [](const Sum& ast, RegisterIndex index) -> typename Fn::return_type
             {
-                using T = std::tuple_element_t<Is, Tuple>;
+                using T = typename std::tuple_element_t<Is, Tuple>;
                 const auto& vector = ast.storage.template get<T>();
                 return (vector[index].*Method::pointer)(ast);
             }...
         };
     }
 
-    template<typename Method, typename Ast, typename Tuple>
+    template<typename Fn, typename Sum, typename Tuple>
     consteval auto make_dispatch_table()
     {
-        return make_dispatch_table_impl<Method, Ast, Tuple>(
+        return make_dispatch_table_impl<Fn, Sum, Tuple>(
             std::make_index_sequence<std::tuple_size_v<Tuple>>{});
     }
 
 
 
-    template<typename Ast, typename Tuple>
-    struct ASTHandle
+    template<typename Sum, typename Tuple>
+    struct SumHandle
     {
     public:
         using Anchor = std::tuple_element_t<0, Tuple>;
 
     public:
-        const Ast& ast;
-        ASTIndexType index;
+        const Sum& ast;
+        RegisterIndex index;
         std::size_t tag;
 
     public:
@@ -252,7 +249,7 @@ namespace hz
         decltype(auto) call() const
         {
             static constinit auto table =
-                make_dispatch_table<Method, Ast, Tuple>();
+                make_dispatch_table<Method, Sum, Tuple>();
 
             return table[tag](ast, index);
         }
@@ -278,54 +275,170 @@ namespace hz
 
 
     // entry point into AST node dispatch
-    template<typename Node, typename Ast, typename Tuple>
-    ASTHandle<Ast, Tuple> make_handle(const Ast& ast, ASTIndexType index)
+    template<typename Node, typename Sum, typename Tuple>
+    SumHandle<Sum, Tuple> make_handle(const Sum& ast, RegisterIndex index)
     {
-        return ASTHandle<Ast, Tuple>{ast, index, TypeIndex<Node, Tuple>::value};
+        return SumHandle<Sum, Tuple>{ast, index, TypeIndex<Node, Tuple>::value};
     }
 
 
+    // TODO: integrate Expression and Statement families
+    struct ExpressionStorage : public ExpressionTypes<SumStorage>
+    {   
+    public:
+        using Type = ExpressionType;
+    };
 
+    struct StatementStorage : public StatementTypes<SumStorage>
+    {
+    public:
+        using Type = StatementType;
+    };
+
+
+    struct ValueStorage : public ValueTypes<SumStorage>
+    {
+    public:
+        using Type = ValueType;
+    };
+
+
+
+#define MAKE_HANDLE(ast, index) make_handle<decltype(*this), std::decay_t<decltype(ast)>, typename std::decay_t<decltype(ast)>::Type>(ast, index)
+
+    // TODO: Remake
     struct BinaryExpression
     {
     private:
         static constexpr auto tag = ExpressionIndex<BinaryExpression>::value;
 
     public:
-        ASTIndexType left_index;   // index of left expression in the ExpressionAST storage
-        ASTIndexType right_index;  // index of right expression
+        RegisterIndex left_index;   // index of left expression in the ExpressionAST storage
+        RegisterIndex right_index;  // index of right expression
         char op;                   // '+', '-', '*', '/' etc.
 
-        void print(const ExpressionAST& ast) const {
-            ASTHandle<ExpressionAST, ExpressionType> left(ast, left_index, tag);
-            ASTHandle<ExpressionAST, ExpressionType> right(ast, right_index, tag);
+        void print(const ExpressionStorage& ast) const
+        {
+            SumHandle<ExpressionStorage, ExpressionType> left(ast, left_index, tag);
+            SumHandle<ExpressionStorage, ExpressionType> right(ast, right_index, tag);
             left.print();
             std::cout << " " << op << " ";
             right.print();
         }
 
-        BinaryExpression evaluate(const ExpressionAST& ast) const {
-            ASTHandle<ExpressionAST, ExpressionType> left_handle(ast, left_index, tag);
-            ASTHandle<ExpressionAST, ExpressionType> right_handle(ast, right_index, tag);
-            auto left_val = left_handle.evaluate();
-            auto right_val = right_handle.evaluate();
+        BinaryExpression evaluate(const ExpressionStorage& ast) const
+        {
+            const auto left_handle = MAKE_HANDLE(ast, left_index);
+            const auto right_handle = MAKE_HANDLE(ast, right_index);
+
+            const auto left_val = left_handle.evaluate();
+            const auto right_val = right_handle.evaluate();
+
+            // TODO: perform the operation based upon 'op'
+
             return *this;
         }
 
-        BinaryExpression optimize(const ExpressionAST& ast) const {
-            ASTHandle<ExpressionAST, ExpressionType> left_handle(ast, left_index, tag);
-            ASTHandle<ExpressionAST, ExpressionType> right_handle(ast, right_index, tag);
+        BinaryExpression optimize(const ExpressionStorage& ast) const
+        {
+            SumHandle<ExpressionStorage, ExpressionType> left_handle(ast, left_index, tag);
+            SumHandle<ExpressionStorage, ExpressionType> right_handle(ast, right_index, tag);
             auto left_opt = left_handle.optimize();
             auto right_opt = right_handle.optimize();
             return *this;
         }
 
-        bool check_types(const ExpressionAST& ast) const {
-            ASTHandle<ExpressionAST, ExpressionType> left_handle(ast, left_index, tag);
-            ASTHandle<ExpressionAST, ExpressionType> right_handle(ast, right_index, tag);
+        bool check_types(const ExpressionStorage& ast) const
+        {
+            SumHandle<ExpressionStorage, ExpressionType> left_handle(ast, left_index, tag);
+            SumHandle<ExpressionStorage, ExpressionType> right_handle(ast, right_index, tag);
             return left_handle.check_types() && right_handle.check_types();
         }
     };
+
+
+    // VALUE CLASS
+
+    struct RegisterValue;
+    struct StackValue;
+    // global object in the data segment
+    struct StaticValue;
+
+    template<template<typename...> class T>
+    using ValueTypes = T
+    <
+        RegisterValue,
+        StackValue,
+        StaticValue
+    >;
+
+    using ValueType = ValueTypes<std::tuple>;
+    using ValueAnchor = std::tuple_element_t<0, ValueType>;
+
+    // value mapper
+    template<std::size_t I>
+    using ValueTypeAt = std::tuple_element_t<I, ValueType>;
+
+    template<typename T>
+    using ValueIndex = TypeIndex<T, ValueType>;
+
+
+    // expose a strict polymorphic interface for values
+    template<typename Sum, typename Anchor>
+    using ValueMethods = std::tuple
+    <
+        Method<&Anchor::vtype, TagType()>
+        Method<&Anchor::format, std::string()>,
+        Method<&Anchor::load_into, void(Generator&, RegisterIndex)>,
+        Method<&Anchor::store_from, void(Generator&, RegisterIndex)>,
+    >;
+
+    using ValueMethod = ValueMethods<ValueStorage, ValueAnchor>;
+
+
+    template<typename T, typename Sum, typename Anchor>
+    concept Value = SumTuple<T, Sum, ValueMethods<Sum, Anchor>>;
+
+
+
+    struct RegisterValue
+    {
+    public:
+        using RegisterIndex = std::uint8_t;
+
+    public:
+        RegisterIndex index;
+
+    public:
+        TagType vtype() const
+        {
+            return 
+        }
+
+        std::string format() const
+        {
+            return std::format("r{}", index);
+        }
+
+        void load_into(Generator& generator, RegisterIndex destination) const
+        {
+            if (destination != index)
+            {
+                generator.move(destination, index);
+            }
+        }
+
+        void store_from(Generator& generator, RegisterIndex source) const
+        {
+            if (source != index)
+            {
+                generator.move(index, source);
+            }
+        }
+    };
+
+
+
 }
 
 #endif
