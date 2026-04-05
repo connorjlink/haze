@@ -179,7 +179,7 @@ namespace hz
         { t.get_tag() } -> std::same_as<TagType>;
     };
 
-    // base class 
+    // base class for dispatching methods on sum members
     template<typename SumStorageT>
     struct SumDispatcher
         : public InjectSingleton<ErrorReporter>
@@ -235,7 +235,7 @@ namespace hz
     };
 
 
-    // a type-specifc slim wrapper under the sum handle
+    // type-specifc slim wrapper for static dispatch on sum members
     template<typename T, typename SumStorageT>
     struct SumReference 
         : public SumDispatcher<SumStorageT>
