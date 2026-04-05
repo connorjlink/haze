@@ -1,6 +1,9 @@
 #ifndef HAZE_SUM_H
 #define HAZE_SUM_H
 
+#include <error/ErrorReporter.h>
+#include <data/DependencyInjector.h>
+
 // Haze Sum.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -17,6 +20,13 @@ namespace hz
     // sum vector storage definitions: 255 subtypes, 4GiO nodes per subtype
     using TagType = std::uint8_t;
     using IndexType = std::uint32_t;
+
+    struct IndexHandle
+    {
+        IndexType index : WORD_BIT - 1;
+        IndexType is_valid : 1;
+    };
+    static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
     template<template<typename> typename Index, typename This>
     struct InjectTagType 
@@ -163,97 +173,191 @@ namespace hz
     };
 
 
+    template<typename T>
+    concept HasGetTag = requires(const T& t)
+    {
+        { t.get_tag() } -> std::same_as<TagType>;
+    };
 
-    // dynamic dispatch wrapper type for sum families
+    // base class 
     template<typename SumStorageT>
-    struct SumHandle
+    struct SumDispatcher
+        : public InjectSingleton<ErrorReporter>
     {
     public:
-        using Type = typename SumStorageT::Type;
         using Anchor = typename SumStorageT::Anchor;
 
     public:
         const SumStorageT& sum_storage;
-        IndexType index;
-        TagType tag;
-        bool is_valid;
+        IndexHandle index;
 
     public:
-        operator bool() const
+        void validate() const
         {
-            return is_valid;
+            if (!index.is_valid)
+            {
+                USE_SAFE(ErrorReporter)->post_uncorrectable(
+                    std::format("invalid sum reference: tag {}, index {}", tag, index.index));
+            }
+        }
+
+    private:
+        template<typename Self>
+            requires HasGetTag<Self>
+        const Self& self(this Self&& self) const
+        {
+            return self;
         }
 
     public:
-        template<typename Method>
+        template<typename MethodT>
         decltype(auto) call() const
         {
             static constinit auto table =
-                make_dispatch_table<Method, SumStorageT, Type>();
+                make_dispatch_table<MethodT, SumStorageT, typename SumStorageT::Type>();
 
-            return table[tag](sum_storage, index);
+            validate();
+            return table[self().get_tag()](sum_storage, index);
+        }
+
+#define SUM_HANDLE_METHOD(name) \
+        decltype(auto) name() const \
+        { \
+            return call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
+        }
+
+        SUM_HANDLE_METHOD(print)
+        SUM_HANDLE_METHOD(evaluate)
+        SUM_HANDLE_METHOD(optimize)
+        SUM_HANDLE_METHOD(check_types)
+
+#undef SUM_HANDLE_METHOD
+    };
+
+
+    // a type-specifc slim wrapper under the sum handle
+    template<typename T, typename SumStorageT>
+    struct SumReference 
+        : public SumDispatcher<SumStorageT>
+    {
+    public:
+        static constexpr TagType tag =
+            TypeIndexV<T, typename SumStorageT::Type>;
+
+        constexpr TagType get_tag() const 
+        {
+            return tag;
         }
 
     public:
-        #define SUM_HANDLE_METHODS(X) \
-            X(print) \
-            X(evaluate) \
-            X(optimize) \
-            X(check_types)
+        const T& get() const
+        {
+            return sum_storage.template get<T>()[index];
+        }
 
-        #define SUM_HANDLE_METHOD(name) \
-            decltype(auto) name() const \
-            { \
-                return call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
+        T& get()
+        {
+            return sum_storage.template get<T>()[index];
+        }
+
+        SumHandle<SumStorageT> erase() const
+        {
+            return SumHandle<SumStorageT>{ sum_storage, index, tag };
+        }
+
+    public:
+        SumReference(const SumStorageT& sum_storage, IndexType index)
+            : SumDispatcher<SumStorageT>{ sum_storage, { index, true } }
+        {
+            // valid reference
+        }
+
+        SumReference(const SumStorageT& sum_storage)
+            : SumDispatcher<SumStorageT>{ sum_storage, { 0, false } }
+        {
+            // invalid reference
+        }
+    };
+
+    // dynamic dispatch wrapper type for sum families
+    template<typename SumStorageT>
+    struct SumHandle
+        : public SumDispatcher<SumStorageT>
+    {
+    public:
+        TagType tag;
+
+        constexpr TagType get_tag() const 
+        {
+            return tag;
+        }
+
+    private:
+        template<typename T>
+        void validate_tag() const
+        {   
+            // runtime error
+            if (tag != TypeIndexV<T, typename SumStorageT::Type>)
+            {
+                USE_SAFE(ErrorReporter)->post_uncorrectable(
+                    std::format("invalid sum reference: expected tag {}, actual tag {}, index {}",
+                        TypeIndexV<T, typename SumStorageT::Type>, tag, index.index));
             }
+        }
 
-        SUM_HANDLE_METHODS(SUM_HANDLE_METHOD)
+    public:
+        template<typename T>
+        const T& get() const
+        {
+            validate_tag<T>();
+            return sum_storage.template get<T>()[index];
+        }
 
-        #undef SUM_HANDLE_METHOD
-        #undef SUM_HANDLE_METHODS
+        template<typename T>
+        T& get()
+        {
+            validate_tag<T>();
+            return sum_storage.template get<T>()[index];
+        }
+
+    public:
+        SumHandle(const SumStorageT& sum_storage, IndexType index, TagType tag)
+            : SumDispatcher<SumStorageT>{ sum_storage, { index, true } }, tag{ tag }
+        {
+            // valid handle
+        }
+
+        SumHandle(const SumStorageT& sum_storage)
+            : SumDispatcher<SumStorageT>{ sum_storage, { 0, false } }, tag{ 0 }
+        {
+            // invalid handle
+        }
     };
 
     // entry point into sum dynamic dispatch
-    template<typename SumMemberT, typename SumStorageT>
+    template<typename T, typename SumStorageT>
+    SumReference<T, SumStorageT> make_reference(const SumStorageT& sum_storage, IndexType index)
+    {
+        return SumReference<T, SumStorageT>{ sum_storage, index };
+    }
+
+    template<typename T, typename SumStorageT>
+    SumReference<T, SumStorageT> make_invalid_reference(const SumStorageT& sum_storage)
+    {
+        return SumReference<T, SumStorageT>{ sum_storage };
+    }
+
+    template<typename T, typename SumStorageT>
     SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, IndexType index)
     {
-        return SumHandle<SumStorageT>{ sum_storage, index, TypeIndex<SumMemberT, typename SumStorageT::Type>::value, true };
+        return SumHandle<SumStorageT>{ sum_storage, index, TypeIndexV<T, typename SumStorageT::Type> };
     }
-#define MAKE_HANDLE(sum_storage, index) make_handle<decltype(*this), std::decay_t<decltype(sum_storage)>, typename std::decay_t<decltype(sum_storage)>::Type>(sum_storage, index)
 
-    template<typename SumMemberT, typename SumStorageT>
+    template<typename T, typename SumStorageT>
     SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
     {
-        return SumHandle<SumStorageT>{ sum_storage, 0, 0, false };
+        return SumHandle<SumStorageT>{ sum_storage };
     }
-#define MAKE_INVALID_HANDLE(sum_storage) make_invalid_handle<decltype(*this), std::decay_t<decltype(sum_storage)>, typename std::decay_t<decltype(sum_storage)>::Type>(sum_storage)
-
-
-    // a type-specifc slim wrapper under the sun handle
-    template<typename T, typename SumStorageT>
-    struct SumReference
-    {
-    public:
-        IndexType index;
-
-    public:
-        const T& get(const SumStorageT& sum_storage) const
-        {
-            return sum_storage.template get<T>()[index];
-        }
-
-        T& get(SumStorageT& sum_storage) const
-        {
-            return sum_storage.template get<T>()[index];
-        }
-
-    public:
-        SumHandle<SumStorageT> erase(const SumStorageT& sum_storage) const
-        {
-            return make_handle<T, SumStorageT>(sum_storage, index);
-        }
-    };
-
 }
 
 #endif
