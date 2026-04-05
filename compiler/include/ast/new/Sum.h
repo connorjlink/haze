@@ -22,10 +22,20 @@ namespace hz
     struct InjectTagType 
     {
     public:
-        TagType ttype() const
+        constexpr TagType ttype() const
         {
             return Index<This>::value;
         }
+    };
+
+    template<typename SumT>
+    struct InjectStorage
+    {
+    public:
+        using Storage = typename SumT::Storage;
+
+        template<typename T>
+        using SumReference = SumReference<T, Storage>;
     };
 
 
@@ -56,10 +66,6 @@ namespace hz
     template<typename... Ts>
     struct SumStorage 
     {   
-    public:
-        using Type = std::tuple<Ts...>;
-        using Anchor = std::tuple_element_t<0, Type>;
-
     public:
         static constexpr std::size_t size = sizeof...(Ts);
 
@@ -103,11 +109,11 @@ namespace hz
         { (node.*Fn::pointer)(sum) } -> std::same_as<typename Fn::ReturnType>;
     };
 
-    template<typename T, typename Sum, typename Tuple, std::size_t... Is>
-    concept SumTupleImpl = (ImplementsMethod<T, Sum, std::tuple_element_t<Is, Tuple>> && ...);
+    template<typename T, typename Sum, typename MethodsT, std::size_t... Is>
+    concept SumTupleImpl = (ImplementsMethod<T, Sum, std::tuple_element_t<Is, MethodsT>> && ...);
 
-    template<typename T, typename Sum, typename Tuple>
-    concept SumTuple = SumTupleImpl<T, Sum, Tuple, std::make_index_sequence<std::tuple_size_v<Tuple>>{}>;
+    template<typename T, typename Sum, typename MethodsT>
+    concept SumTuple = SumTupleImpl<T, Sum, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
 
 
     // sum type and dispatch family
@@ -119,11 +125,10 @@ namespace hz
         template<std::size_t I>
         using TypeAt = std::tuple_element_t<I, Type>;
 
-        template<typename T>
-        using TypeIndexV = TypeIndex<T, Type>::value;
-
     public:
         using Storage = SumStorage<Ts...>;
+        using Type = typename Storage::Type;
+        using Anchor = typename Storage::Anchor;
 
     public:
         using Methods = MethodsT<Sum, Anchor>;
@@ -141,13 +146,17 @@ namespace hz
     template<typename... Ts>
     struct SumTypeList
     {
-        using Anchor = std::tuple_element_t<0, std::tuple<Ts...>>;
+        using Type = std::tuple<Ts...>;
+        using Anchor = std::tuple_element_t<0, Type>;
+
+        template<typename T>
+        using Index = TypeIndexV<T, Type>;
     };
 
-    template<template<typename, typename> typename MethodsT, typename TypeList>
+    template<template<typename> typename MethodsT, typename TypeList>
     struct MakeSum;
 
-    template<template<typename, typename> typename MethodsT, typename... Ts>
+    template<template<typename> typename MethodsT, typename... Ts>
     struct MakeSum<MethodsT, SumTypeList<Ts...>>
     {
         using Type = Sum<MethodsT, Ts...>;
@@ -156,11 +165,12 @@ namespace hz
 
 
     // dynamic dispatch wrapper type for sum families
-    template<typename SumStorageT, typename Tuple>
+    template<typename SumStorageT>
     struct SumHandle
     {
     public:
-        using Anchor = std::tuple_element_t<0, Tuple>;
+        using Type = typename SumStorageT::Type;
+        using Anchor = typename SumStorageT::Anchor;
 
     public:
         const SumStorageT& sum_storage;
@@ -179,7 +189,7 @@ namespace hz
         decltype(auto) call() const
         {
             static constinit auto table =
-                make_dispatch_table<Method, SumStorageT, Tuple>();
+                make_dispatch_table<Method, SumStorageT, Type>();
 
             return table[tag](sum_storage, index);
         }
@@ -204,19 +214,45 @@ namespace hz
     };
 
     // entry point into sum dynamic dispatch
-    template<typename SumMemberT, typename SumStorageT, typename Tuple>
-    SumHandle<SumStorageT, Tuple> make_handle(const SumStorageT& sum_storage, IndexType index)
+    template<typename SumMemberT, typename SumStorageT>
+    SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, IndexType index)
     {
-        return SumHandle<SumStorageT, Tuple>{ sum_storage, index, TypeIndex<SumMemberT, Tuple>::value, true };
+        return SumHandle<SumStorageT>{ sum_storage, index, TypeIndex<SumMemberT, typename SumStorageT::Type>::value, true };
     }
-#define MAKE_HANDLE(sum, index) make_handle<decltype(*this), std::decay_t<decltype(sum)>, typename std::decay_t<decltype(sum)>::Type>(sum, index)
+#define MAKE_HANDLE(sum_storage, index) make_handle<decltype(*this), std::decay_t<decltype(sum_storage)>, typename std::decay_t<decltype(sum_storage)>::Type>(sum_storage, index)
 
-    template<typename SumMemberT, typename SumStorageT, typename Tuple>
-    SumHandle<SumStorageT, Tuple> make_invalid_handle(const SumStorageT& sum_storage)
+    template<typename SumMemberT, typename SumStorageT>
+    SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
     {
-        return SumHandle<SumStorageT, Tuple>{ sum_storage, 0, 0, false };
+        return SumHandle<SumStorageT>{ sum_storage, 0, 0, false };
     }
-#define MAKE_INVALID_HANDLE(sum) make_invalid_handle<decltype(*this), std::decay_t<decltype(sum)>, typename std::decay_t<decltype(sum)>::Type>(sum)
+#define MAKE_INVALID_HANDLE(sum_storage) make_invalid_handle<decltype(*this), std::decay_t<decltype(sum_storage)>, typename std::decay_t<decltype(sum_storage)>::Type>(sum_storage)
+
+
+    // a type-specifc slim wrapper under the sun handle
+    template<typename T, typename SumStorageT>
+    struct SumReference
+    {
+    public:
+        IndexType index;
+
+    public:
+        const T& get(const SumStorageT& sum_storage) const
+        {
+            return sum_storage.template get<T>()[index];
+        }
+
+        T& get(SumStorageT& sum_storage) const
+        {
+            return sum_storage.template get<T>()[index];
+        }
+
+    public:
+        SumHandle<SumStorageT> erase(const SumStorageT& sum_storage) const
+        {
+            return make_handle<T, SumStorageT>(sum_storage, index);
+        }
+    };
 
 }
 

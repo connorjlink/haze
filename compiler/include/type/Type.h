@@ -15,6 +15,106 @@
 
 namespace hz
 {
+#pragma message("TODO: refactor the below type system to use a sum type?")
+
+	struct Type
+	{
+		enum class TypeQualifier
+		{
+			CONST,
+			VOLATILE,
+			RESTRICT,
+		} qualifier;
+		
+		enum class StorageClass 
+		{
+			AUTO,
+			REGISTER,
+			STATIC,
+			EXTERN,
+			TYPEDEF,
+		} storage;
+
+		enum class TypeSpecifier
+		{
+			VOID,
+			
+			// initializes member .integer
+			INTEGER,
+
+			// initializes member .floating_point
+			FLOATING_POINT,
+			
+			// initializes member .struct_or_union
+			STRUCT_OR_UNION,
+
+			// initializes member .enum
+			ENUM,
+
+			// initializes member .typedef_name
+			TYPEDEF_NAME,
+		} specifier;
+		
+		union
+		{
+			struct
+			{
+				enum class TypeSignedness
+				{
+					SIGNED,
+					UNSIGNED,
+				} signedness;
+
+				enum class TypeWidth
+				{
+					CHAR,
+					SHORT,
+					INT,
+					LONG,
+					LONG_LONG,
+				} width;
+
+			} integer;
+
+			struct
+			{
+				enum class TypeWidth
+				{
+					FLOAT,
+					DOUBLE,
+					LONG_DOUBLE,
+				} width;
+
+			} floating_point;
+			
+			struct 
+			{
+				enum class Kind
+				{
+					STRUCT,
+					UNION,
+				} kind;
+
+				std::string tag;
+
+			} struct_or_union;
+
+			struct 
+			{
+				std::string tag;
+
+			} enum_specifier;
+			
+			struct
+			{
+				std::string name;
+
+			} typedef_name;
+
+		} as;
+	};
+
+
 	class Type
 		: public InjectSingleton<SymbolDatabase>
 	{

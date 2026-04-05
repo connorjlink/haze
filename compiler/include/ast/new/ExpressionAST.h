@@ -2,6 +2,8 @@
 #define HAZE_EXPRESSION_AST_H
 
 #include <ast/new/AST.h>
+#include <runtime/Context.h>
+#include <type/Type.h>
 
 // Haze ExpressionAST.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -41,9 +43,65 @@ namespace hz
         ArrayAccessExpression
     >;
 
-    using ExpressionMethods = ASTMethods<ExpressionTypes::Anchor>;
+    using ExpressionSum = MakeSum<ASTMethods, ExpressionTypes>::Type;
 
-    using ExpressionSum = MakeSum<ExpressionMethods, ExpressionTypes>::Type;
+    template<typename This>
+    struct ExpressionBase
+        : public InjectTagType<ExpressionTypes::Index, This>
+        , public InjectStorage<ExpressionSum>
+    {
+    };
+
+    class AdjustExpression 
+        : public ExpressionBase<AdjustExpression>
+    {
+    public:
+        enum class AdjustType
+        {
+            Increment,
+            Decrement
+        };
+
+    public:
+        AdjustType adjust_type;
+        SumHandle<Storage> target;
+
+    public:
+        std::string format(void) const;
+        SumHandle<Storage> evaluate(const Storage&, Context&) const;
+        AdjustExpression optimize(const Storage&) const;
+        bool check_types(const Storage&) const;
+    };
+
+    class ArgumentExpression
+        : public ExpressionBase<ArgumentExpression>
+    {
+    public:
+        Type type;
+        IdentifierExpression identifier;
+
+    public:
+        std::string format(void) const;
+        ArgumentExpression evaluate(const Storage&, Context&) const;
+        ArgumentExpression optimize(const Storage&) const;
+        bool check_types(const Storage&) const;
+    };
+
+    class FunctionArgumentExpression
+        : public ExpressionBase<FunctionArgumentExpression>
+    {
+    public:
+        Type type;
+        SumReference<IdentifierExpression> identifier;
+        SumHandle<Storage> value;
+
+    public:
+        std::string format(void) const;
+        FunctionArgumentExpression evaluate(const Storage&, Context&) const;
+        FunctionArgumentExpression optimize(const Storage&) const;
+        bool check_types(const Storage&) const;
+    };
+
 }
 
 #endif

@@ -313,7 +313,6 @@
     <ClInclude Include="include\riscv\RISCVInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVRegister.h" />
     <ClInclude Include="include\runtime\Context.h" />
-    <ClInclude Include="include\runtime\Disassembler.h" />
     <ClInclude Include="include\runtime\Evaluator.h" />
     <ClInclude Include="include\runtime\models\Variable.h" />
     <ClInclude Include="include\runtime\models\VariableType.h" />

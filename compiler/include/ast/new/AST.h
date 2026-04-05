@@ -9,19 +9,21 @@
 
 namespace hz
 {
+#pragma message("TODO: figure out a better way to enforce a single ground truth anchor function signature set")
+
     // expose a strict polymorphic interface for AST nodes
-    template<typename SumStorageT>
+    template<typename AnchorT>
     using ASTMethods = std::tuple
     <
-        Method<&(typename SumStorageT::Anchor)::ttype, TagType()>,
-        Method<&(typename SumStorageT::Anchor)::format, std::string()>,
-        Method<&(typename SumStorageT::Anchor)::evaluate, SumHandle<SumStorageT, typename SumStorageT::Type>(const SumStorageT&)>,
-        Method<&(typename SumStorageT::Anchor)::optimize, SumHandle<SumStorageT, typename SumStorageT::Type>(const SumStorageT&)>, // will return a handle
-        Method<&(typename SumStorageT::Anchor)::check_types, bool(const SumStorageT&)>
+        Method<&AnchorT::ttype, decltype(&AnchorT::ttype)>,
+        Method<&AnchorT::format, decltype(&AnchorT::format)>,
+        Method<&AnchorT::evaluate, decltype(&AnchorT::evaluate)>,
+        Method<&AnchorT::optimize, decltype(&AnchorT::optimize)>,
+        Method<&AnchorT::check_types, decltype(&AnchorT::check_types)>
     >;
     
-    template<typename SumMemberT, typename SumStorageT, typename Anchor>
-    concept ASTNode = SumTuple<SumMemberT, SumStorageT, ASTMethods<SumStorageT>>;
+    template<typename SumMemberT, typename SumStorageT, typename MethodsT>
+    concept ASTNode = SumTuple<SumMemberT, SumStorageT, MethodsT>;
 }
 
 #endif

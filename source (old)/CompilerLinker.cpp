@@ -71,13 +71,6 @@ namespace hz
 
 					if (auto instructions = gather(function); !instructions.empty())
 					{
-						//Log::info(std::format("Instruction sequence prior to pass {}", _global_pass));
-						//for (auto ii : instructions)
-						//{
-						//	std::cout << Disassembler::disassemble_instruction(ii.instruction->bytes()) << std::endl;
-						//}
-						//std::cout << "---------------------" << std::endl;
-
 						for (auto j = 0; j < instructions.size(); j++)
 						{
 							auto c0 = instructions[j + 0];

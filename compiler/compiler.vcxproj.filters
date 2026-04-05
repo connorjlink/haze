@@ -431,9 +431,6 @@
     <ClInclude Include="include\runtime\Context.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\runtime\Disassembler.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\runtime\Evaluator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
