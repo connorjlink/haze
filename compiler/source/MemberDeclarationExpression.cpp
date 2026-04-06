@@ -23,11 +23,6 @@ namespace hz
 		return type->ttype();
 	}
 
-	MemberDeclarationExpression* MemberDeclarationExpression::copy() const
-	{
-		return new MemberDeclarationExpression{ *this };
-	}
-
 	void MemberDeclarationExpression::generate(Allocation*)
 	{
 		// No direct code generation for a struct member declaration

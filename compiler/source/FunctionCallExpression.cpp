@@ -26,11 +26,6 @@ namespace hz
 		return function_symbol->return_type->ttype();
 	}
 
-	FunctionCallExpression* FunctionCallExpression::copy() const
-	{
-		return new FunctionCallExpression{ *this };
-	}
-
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
 		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, _token, true);

@@ -16,11 +16,6 @@ namespace hz
 		return StatementType::INLINEASM;
 	}
 
-	InlineAsmStatement* InlineAsmStatement::copy() const
-	{
-		return new InlineAsmStatement{ *this };
-	}
-
 	void InlineAsmStatement::generate(Allocation*)
 	{
 		auto linker = new Linker{ std::move(_commands), _enclosing_file };

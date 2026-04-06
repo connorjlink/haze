@@ -18,11 +18,6 @@ namespace hz
 		return StatementType::WHILE;
 	}
 
-	WhileStatement* WhileStatement::copy() const
-	{
-		return new WhileStatement{ *this };
-	}
-
 	void WhileStatement::generate(Allocation*)
 	{
 		// 3 digits of randomness for now

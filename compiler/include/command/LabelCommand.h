@@ -22,7 +22,6 @@ namespace hz
 
 	public:
 		virtual CommandType ctype() const final override;
-		virtual LabelCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual LabelCommand* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;

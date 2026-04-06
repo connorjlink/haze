@@ -24,11 +24,6 @@ namespace hz
 		return TypeType::INT;
 	}
 
-	AdjustExpression* AdjustExpression::copy() const
-	{
-		return new AdjustExpression{ *this };
-	}
-
 	void AdjustExpression::generate(Allocation* allocation)
 	{
 		target->generate(allocation);

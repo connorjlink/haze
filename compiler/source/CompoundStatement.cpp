@@ -13,11 +13,6 @@ namespace hz
 		return StatementType::COMPOUND;
 	}
 
-	CompoundStatement* CompoundStatement::copy() const
-	{
-		return new CompoundStatement{ *this };
-	}
-
 	void CompoundStatement::generate(Allocation*)
 	{
 		//_generator->begin_scope();

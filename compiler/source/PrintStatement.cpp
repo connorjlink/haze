@@ -15,11 +15,6 @@ namespace hz
 		return StatementType::PRINT;
 	}
 
-	PrintStatement* PrintStatement::copy() const
-	{
-		return new PrintStatement{ *this };
-	}
-
 	void PrintStatement::generate(Allocation*)
 	{
 		AutoStackAllocation temp{};

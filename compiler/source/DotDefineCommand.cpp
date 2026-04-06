@@ -15,11 +15,6 @@ namespace hz
 		return CommandType::DOTDEFINE;
 	}
 
-	DotDefineCommand* DotDefineCommand::copy() const
-	{
-		return new DotDefineCommand{ *this };
-	}
-
 	void DotDefineCommand::generate(Allocation*)
 	{
 		CommonErrors::invalid_command_type(ctype(), _token);

@@ -244,7 +244,6 @@ namespace hz
 		}
 	}
 
-	
 	void StaticAllocation::copy(Allocation* allocation) const 
 	{
 		switch (allocation->atype())

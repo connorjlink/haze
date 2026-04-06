@@ -25,7 +25,6 @@ namespace hz
 
 	public:
 		virtual CommandType ctype() const final override;
-		virtual DotDefineCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Command* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;

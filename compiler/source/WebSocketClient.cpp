@@ -27,9 +27,7 @@ namespace hz
 
 		WinHttpCrackUrl(url.c_str(), 0, 0, &components);
 
-		session = WinHttpOpen(L"WinHttp WebSocket Client/1.0",
-			WINHTTP_ACCESS_TYPE_NO_PROXY, nullptr, nullptr, 0);
-
+		session = WinHttpOpen(L"WinHttp WebSocket Client/1.0", WINHTTP_ACCESS_TYPE_NO_PROXY, nullptr, nullptr, 0);
 		if (!session)
 		{
 			emit_error("Failed to open WinHttp session.");
@@ -43,17 +41,14 @@ namespace hz
 			return false;
 		}
 
-		request = WinHttpOpenRequest(connection, L"GET", path.c_str(),
-			nullptr, nullptr,
-			nullptr,
-			(components.nScheme == INTERNET_SCHEME_HTTPS) ? WINHTTP_FLAG_SECURE : 0);
+		request = WinHttpOpenRequest(connection, L"GET", path.c_str(), nullptr, nullptr, nullptr, (components.nScheme == INTERNET_SCHEME_HTTPS) ? WINHTTP_FLAG_SECURE : 0);
 		if (!request)
 		{
 			emit_error("Failed to open request.");
 			return false;
 		}
 
-		auto result = WinHttpSetOption(request, WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET, nullptr, 0);
+		const auto result = WinHttpSetOption(request, WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET, nullptr, 0);
 		if (!result)
 		{
 			emit_error("Failed to set WebSocket upgrade option.");
@@ -68,7 +63,8 @@ namespace hz
 		}
 
 		websocket = WinHttpWebSocketCompleteUpgrade(request, 0);
-		request = nullptr; // WinHttpWebSocketCompleteUpgrade takes ownership; null here to prevent duplicate deletion
+		// WinHttpWebSocketCompleteUpgrade takes ownership; null here to prevent duplicate deletion
+		request = nullptr;
 		if (!websocket) 
 		{
 			emit_error("Failed to complete WebSocket upgrade.");
@@ -96,11 +92,9 @@ namespace hz
 			return false;
 		}
 
-		auto res = WinHttpWebSocketSend(websocket,
-			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
-			(PVOID)message.c_str(), (DWORD)message.length());
+		const auto result = WinHttpWebSocketSend(websocket, WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE, (PVOID)message.c_str(), (DWORD)message.length());
 
-		return res == NO_ERROR;
+		return result == NO_ERROR;
 	}
 
 	void WebSocketClient::close()
@@ -123,10 +117,22 @@ namespace hz
 			receiver.join();
 		}
 
-		if (websocket) WinHttpCloseHandle(websocket);
-		if (request) WinHttpCloseHandle(request);
-		if (connection) WinHttpCloseHandle(connection);
-		if (session) WinHttpCloseHandle(session);
+		if (websocket) 
+		{
+			WinHttpCloseHandle(websocket);
+		}
+		if (request) 
+		{
+			WinHttpCloseHandle(request);
+		}
+		if (connection) 
+		{
+			WinHttpCloseHandle(connection);
+		}
+		if (session) 
+		{
+			WinHttpCloseHandle(session);
+		}
 
 		websocket = nullptr;
 		request = nullptr;
@@ -150,9 +156,9 @@ namespace hz
 			WINHTTP_WEB_SOCKET_BUFFER_TYPE buffer_type{};
 
 			// NOTE: this function blocks until a message is received or the connection is closed
-			// For this reason, this client MUST sit in another thread
-			auto res = WinHttpWebSocketReceive(websocket, buffer, buffer_size, &bytes_read, &buffer_type);
-			if (res != NO_ERROR)
+			// for this reason, this client MUST sit in another thread
+			const auto result = WinHttpWebSocketReceive(websocket, buffer, buffer_size, &bytes_read, &buffer_type);
+			if (result != NO_ERROR)
 			{
 				emit_error("WebSocket receive error.");
 				break;

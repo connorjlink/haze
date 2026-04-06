@@ -17,11 +17,6 @@ namespace hz
 		return StatementType::IF;
 	}
 
-	IfStatement* IfStatement::copy() const
-	{
-		return new IfStatement{ *this };
-	}
-
 	void IfStatement::generate(Allocation*)
 	{
 		// 3 digits of randomness for now

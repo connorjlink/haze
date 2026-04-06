@@ -12,11 +12,6 @@ namespace hz
 		return CommandType::DOTORG;
 	}
 
-	DotOrgCommand* DotOrgCommand::copy() const
-	{
-		return new DotOrgCommand{ *this };
-	}
-
 	void DotOrgCommand::generate(Allocation*)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported compiler command type `.org`", _token);

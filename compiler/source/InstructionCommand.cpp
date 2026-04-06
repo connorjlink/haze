@@ -17,11 +17,6 @@ namespace hz
 		return CommandType::INSTRUCTION;
 	}
 
-	InstructionCommand* InstructionCommand::copy() const
-	{
-		return new InstructionCommand{ *this };
-	}
-
 	void InstructionCommand::generate(Allocation*)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported generation command type `instruction`", _token);

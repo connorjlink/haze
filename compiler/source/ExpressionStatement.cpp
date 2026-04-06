@@ -13,11 +13,6 @@ namespace hz
 		return StatementType::EXPRESSION;
 	}
 
-	ExpressionStatement* ExpressionStatement::copy() const
-	{
-		return new ExpressionStatement{ *this };
-	}
-
 	void ExpressionStatement::generate(Allocation*)
 	{
 		AutoStackAllocation temp{};

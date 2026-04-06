@@ -147,13 +147,13 @@ namespace hz
 		const auto asm_token = consume(TokenType::ASM);
 		consume(TokenType::LBRACE);
 
-		auto assembly = fetch_until(TokenType::RBRACE);
+		const auto assembly = fetch_until(TokenType::RBRACE);
 		assembly.emplace_back(Token{ TokenType::END, "eof", peek().location });
 
-		auto assembler_parser = create_assembler_parser(_filepath);
+		const auto assembler_parser = create_assembler_parser(_filepath);
 		assembler_parser->reload(std::move(assembly), _filepath);
 
-		auto commands = assembler_parser->parse()
+		const auto commands = assembler_parser->parse()
 			| std::ranges::views::transform([](auto node)
 				{
 					if (node->ntype() != NodeType::COMMAND)
@@ -175,11 +175,11 @@ namespace hz
 		consume(TokenType::WHILE);
 		consume(TokenType::LPAREN);
 
-		auto condition = parse_expression();
+		const auto condition = parse_expression();
 
 		consume(TokenType::RPAREN);
 
-		auto body = parse_statement(enclosing_function);
+		const auto body = parse_statement(enclosing_function);
 
 		return new WhileStatement{ condition, body, condition->_token };
 	}
@@ -189,16 +189,16 @@ namespace hz
 		consume(TokenType::FOR);
 		consume(TokenType::LPAREN);
 
-		auto initialization = parse_variabledeclaration_statement(enclosing_function);
-		auto condition = parse_expression();
+		const auto initialization = parse_variabledeclaration_statement(enclosing_function);
+		const auto condition = parse_expression();
 
 		consume(TokenType::SEMICOLON);
 
-		auto expression = parse_expression();
+		const auto expression = parse_expression();
 
 		consume(TokenType::RPAREN);
 
-		auto body = parse_statement(enclosing_function);
+		const auto body = parse_statement(enclosing_function);
 
 		return new ForStatement{ initialization, condition, expression, body, initialization->_token };
 	}
@@ -208,11 +208,11 @@ namespace hz
 		consume(TokenType::IF);
 		consume(TokenType::LPAREN);
 
-		auto condition = parse_expression();
+		const auto condition = parse_expression();
 
 		consume(TokenType::RPAREN);
 
-		auto if_body = parse_statement(enclosing_function);
+		const auto if_body = parse_statement(enclosing_function);
 		Statement* else_body = nullptr;
 
 		if (peek().type == TokenType::ELSE)
@@ -229,7 +229,7 @@ namespace hz
 		consume(TokenType::PRINT);
 		consume(TokenType::LPAREN);
 
-		auto expression = parse_expression();
+		const auto expression = parse_expression();
 
 		consume(TokenType::RPAREN);
 		consume(TokenType::SEMICOLON);
@@ -239,7 +239,7 @@ namespace hz
 
 	Statement* CompilerParser::parse_expression_statement(const std::string& enclosing_function)
 	{
-		auto expression = parse_expression();
+		const auto expression = parse_expression();
 		consume(TokenType::SEMICOLON);
 
 		if (expression != nullptr)
@@ -248,6 +248,19 @@ namespace hz
 		}
 
 		return nullptr;
+	}
+
+	Statement* CompilerParser::parse_exit_statement(const std::string& enclosing_function)
+	{
+		const auto exit_token = consume(TokenType::EXIT);
+		
+		consume(TokenType::LPAREN);
+		const auto expression = parse_expression();
+		consume(TokenType::RPAREN);
+		
+		consume(TokenType::SEMICOLON);
+
+		return new ExitStatement{ expression, exit_token };
 	}
 
 	MemberDeclarationExpression* CompilerParser::parse_member_declaration_statement(const std::string& enclosing_function)

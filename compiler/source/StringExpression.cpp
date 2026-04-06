@@ -22,11 +22,6 @@ namespace hz
 		return TypeType::STRING;
 	}
 
-	StringExpression* StringExpression::copy() const
-	{
-		return new StringExpression{ *this };
-	}
-
 	void StringExpression::generate(Allocation* allocation)
 	{
 		// add an extra byte for the null terminator byte

@@ -31,11 +31,6 @@ namespace hz
 		return StatementType::STRUCT;
 	}
 
-	StructDeclarationStatement* StructDeclarationStatement::copy() const
-	{
-		return new StructDeclarationStatement{ *this };
-	}
-
 	void StructDeclarationStatement::generate(Allocation*)
 	{
 		// No direct code generation for a struct declaration

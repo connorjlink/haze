@@ -15,11 +15,6 @@ namespace hz
 		return StatementType::VARIABLE;
 	}
 
-	VariableStatement* VariableStatement::copy() const
-	{
-		return new VariableStatement{ *this };
-	}
-
 	void VariableStatement::generate(Allocation*)
 	{
 		// NOTE: old method

@@ -31,6 +31,7 @@ namespace hz
 		Statement* parse_for_statement(const std::string&);
 		Statement* parse_if_statement(const std::string&);
 		Statement* parse_expression_statement(const std::string&);
+		Statement* parse_exit_statement(const std::string&);
 
 	private:
 		MemberDeclarationExpression* parse_member_declaration_statement(const std::string&);

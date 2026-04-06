@@ -12,11 +12,6 @@ namespace hz
 		return StatementType::NUL;
 	}
 
-	NullStatement* NullStatement::copy() const
-	{
-		return new NullStatement{ *this };
-	}
-
 	void NullStatement::generate(Allocation*)
 	{
 		// No code generated for a no-op

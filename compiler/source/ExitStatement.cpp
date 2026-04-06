@@ -15,11 +15,6 @@ namespace hz
 	{
 		return StatementType::EXIT;
 	}
-	
-	ExitStatement* ExitStatement::copy() const
-	{
-		return new ExitStatement{ *this };
-	}
 
 	void ExitStatement::generate(Allocation*)
 	{

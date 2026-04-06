@@ -19,11 +19,6 @@ namespace hz
 		return TypeType::INT;
 	}
 
-	IntegerLiteralExpression* IntegerLiteralExpression::copy() const
-	{
-		return new IntegerLiteralExpression{ *this };
-	}
-
 	void IntegerLiteralExpression::generate(Allocation* allocation)
 	{
 		REQUIRE_SAFE(Generator)->make_immediate(allocation->read(), value);

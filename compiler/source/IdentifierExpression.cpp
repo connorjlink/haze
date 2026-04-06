@@ -54,11 +54,6 @@ namespace hz
 		return TypeType::VOID;
 	}
 
-	IdentifierExpression* IdentifierExpression::copy() const
-	{
-		return new IdentifierExpression{ *this };
-	}
-
 	void IdentifierExpression::generate(Allocation* allocation)
 	{
 		// NOTE: old method

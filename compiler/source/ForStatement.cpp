@@ -18,11 +18,6 @@ namespace hz
 		return StatementType::FOR;
 	}
 
-	ForStatement* ForStatement::copy() const
-	{
-		return new ForStatement{ *this };
-	}
-
 	void ForStatement::generate(Allocation*)
 	{
 		// 3 digits of randomness for now

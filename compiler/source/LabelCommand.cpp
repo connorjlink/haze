@@ -12,11 +12,6 @@ namespace hz
 		return CommandType::LABEL;
 	}
 
-	LabelCommand* LabelCommand::copy() const
-	{
-		return new LabelCommand{ *this };
-	}
-
 	void LabelCommand::generate(Allocation*)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported compiler command type `label`", _token);

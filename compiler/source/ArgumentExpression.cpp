@@ -19,11 +19,6 @@ namespace hz
 		return type->ttype();
 	}
 
-	ArgumentExpression* ArgumentExpression::copy() const
-	{
-		return new ArgumentExpression{ *this };
-	}
-
 	void ArgumentExpression::generate(Allocation*)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported compiler expression type `argument`", _token);

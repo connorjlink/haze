@@ -33,7 +33,6 @@ namespace hz
 
 	public:
 		virtual CommandType ctype() const final override;
-		virtual InstructionCommand* copy() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual InstructionCommand* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;

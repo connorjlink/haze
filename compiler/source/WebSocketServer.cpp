@@ -100,44 +100,49 @@ namespace hz
 
 	void WebSocketServer::handle_client(SOCKET client)
 	{
-		std::string req;
+		std::string request;
 		char buffer[4096];
 		while (true)
 		{
-			int received = recv(client, buffer, sizeof(buffer), 0);
+			const auto received = recv(client, buffer, sizeof(buffer), 0);
 			if (received <= 0)
 			{
 				closesocket(client);
 				return;
 			}
-			req.append(buffer, received);
+			request.append(buffer, received);
 
 			// HTTP request ends with two breaks
-			if (req.find("\r\n\r\n") != std::string::npos)
+			if (request.find("\r\n\r\n") != std::string::npos)
+			{
 				break;
+			}
 		}
 
 		std::vector<std::string> header_names;
 		std::vector<std::string> header_values;
-		std::istringstream iss(req);
+		std::istringstream stream(request);
 		std::string line;
 
-		// Saltar la línea de petición (GET / HTTP/1.1)
-		if (!std::getline(iss, line))
+		if (!std::getline(stream, line))
 		{
 			closesocket(client);
 			return;
 		}
 
-		while (std::getline(iss, line))
+		while (std::getline(stream, line))
 		{
-			// El final de las cabeceras HTTP es una línea vacía
+			// last line may be empty or just a break
 			if (line == "\r" || line.empty())
+			{
 				break;
+			}
 
 			const auto colon = line.find(':');
 			if (colon == std::string::npos)
-				continue; // Saltar líneas mal formateadas
+			{
+				continue;
+			}
 
 			std::string name = line.substr(0, colon);
 			std::string value = line.substr(colon + 1);
@@ -147,11 +152,13 @@ namespace hz
 			// trim trailing whitespace
 			value.erase(value.find_last_not_of(" \t\r\n") + 1);
 
-			// trim trailing whitespace in name también
+			// trim trailing whitespace in name
 			name.erase(name.find_last_not_of(" \t\r\n") + 1);
 
 			if (name.empty() || value.empty())
-				continue; // Saltar cabeceras vacías
+			{
+				continue;
+			}
 
 			header_names.push_back(name);
 			header_values.push_back(value);
@@ -161,7 +168,7 @@ namespace hz
 		for (std::size_t i = 0; i < header_names.size(); ++i)
 		{
 			request_headers.push_back(
-				{
+			{
 				const_cast<PCHAR>(header_names[i].c_str()), static_cast<ULONG>(header_names[i].size()),
 				const_cast<PCHAR>(header_values[i].c_str()), static_cast<ULONG>(header_values[i].size())
 			});
@@ -176,12 +183,7 @@ namespace hz
 
 		PWEB_SOCKET_HTTP_HEADER response_headers = nullptr;
 		ULONG response_header_count = 0;
-		if (WebSocketBeginServerHandshake(
-			websocket_handle,
-			nullptr, 
-			nullptr, 0,
-			request_headers.data(), static_cast<ULONG>(request_headers.size()),
-			&response_headers, &response_header_count) != S_OK)
+		if (WebSocketBeginServerHandshake(websocket_handle, nullptr, nullptr, 0, request_headers.data(), static_cast<ULONG>(request_headers.size()), &response_headers, &response_header_count) != S_OK)
 		{
 			WebSocketDeleteHandle(websocket_handle);
 			closesocket(client);
@@ -232,7 +234,7 @@ namespace hz
 			timeout.tv_sec = 1;
 			timeout.tv_usec = 0;
 
-			int ready = select(0, &readfds, nullptr, nullptr, &timeout);
+			const auto ready = select(0, &readfds, nullptr, nullptr, &timeout);
 			if (ready < 0)
 			{
 				break;
@@ -248,12 +250,7 @@ namespace hz
 			ULONG bufferCount = 1;
 			PVOID appContext = nullptr, action_context = nullptr;
 
-			if (WebSocketGetAction(
-				websocket_handle,
-				WEB_SOCKET_RECEIVE_ACTION_QUEUE,
-				&buffer, &bufferCount,
-				&action, &buffer_type,
-				&appContext, &action_context) != S_OK)
+			if (WebSocketGetAction(websocket_handle, WEB_SOCKET_RECEIVE_ACTION_QUEUE, &buffer, &bufferCount, &action, &buffer_type, &appContext, &action_context) != S_OK)
 			{
 				break;
 			}

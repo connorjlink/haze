@@ -27,11 +27,6 @@ namespace hz
 		return NodeType::FUNCTION;
 	}
 
-	Function* Function::copy() const
-	{
-		return new Function{ *this };
-	}
-
 	void Function::generate(Allocation*)
 	{
 		REQUIRE_SAFE(Generator)->begin_function(name);

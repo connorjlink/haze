@@ -1,8 +1,7 @@
 #ifndef HAZE_PEBUILDER_H
 #define HAZE_PEBUILDER_H
 
-#include <data/DependencyInjector.h>
-#include <error/ErrorReporter.h>
+#include <builder/Builder.h>
 #include <utility/Constants.h>
 
 // Haze PEBuilder.h
@@ -10,8 +9,7 @@
 
 namespace hz
 {
-	class PEBuilder
-		: public InjectSingleton<ErrorReporter>
+	class PEBuilder : public Builder
 	{
 	// pe utilities
 	private:
@@ -41,20 +39,10 @@ namespace hz
 		byterange data_section();
 
 	private:
-		const byterange& _code_section;
-		byterange _binary;
-
-	public:
-		PEBuilder(const byterange& executable)
-			: _code_section{ executable }, _binary{}
-		{
-		}
-
-	private:
 		void build_pe();
 
 	public:
-		void export_exe(const std::string&);
+		virtual void export_exe(const std::string&) override;
 	};
 }
 

@@ -12,11 +12,6 @@ namespace hz
 		return ExpressionType::FUNCTION_ARGUMENT;
 	}
 
-	FunctionArgumentExpression* FunctionArgumentExpression::copy() const
-	{
-		return new FunctionArgumentExpression{ *this };
-	}
-
 	Expression* FunctionArgumentExpression::optimize()
 	{
 		if (auto value_optimized = value->optimize())

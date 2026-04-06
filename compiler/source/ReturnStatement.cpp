@@ -19,11 +19,6 @@ namespace hz
 		return StatementType::RETURN;
 	}
 
-	ReturnStatement* ReturnStatement::copy() const
-	{
-		return new ReturnStatement{ *this };
-	}
-
 	void ReturnStatement::generate(Allocation*)
 	{
 		if (REQUIRE_SAFE(Parser)->ptype() == ParserType::COMPILER)
