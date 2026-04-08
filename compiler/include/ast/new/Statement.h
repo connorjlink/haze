@@ -1,6 +1,10 @@
 #ifndef HAZE_STATEMENT_AST_H
 #define HAZE_STATEMENT_AST_H
 
+#include <ast/new/AST.h>
+#include <runtime/Context.h>
+#include <type/Type.h>
+
 // Haze StatementAST.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -18,8 +22,7 @@ namespace hz
     class VariableDeclarationStatement;
     class InlineAssemblyStatement;
 
-    template<template<typename...> class T>
-    using StatementTypes = T
+    using StatementTypes = SumTypeList
     <
         NullStatement,
         ExpressionStatement,
@@ -33,6 +36,9 @@ namespace hz
         VariableDeclarationStatement,
         InlineAssemblyStatement
     >;
+
+    using StatementSum = MakeSum<ASTMethods, StatementTypes>::Type;
+    using StatementBase = SumMemberBase<StatementSum>;
 }
 
 #endif

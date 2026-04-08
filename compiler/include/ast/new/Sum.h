@@ -3,6 +3,7 @@
 
 #include <error/ErrorReporter.h>
 #include <data/DependencyInjector.h>
+#include <ast/new/Typing.h>
 
 // Haze Sum.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -28,13 +29,14 @@ namespace hz
     };
     static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
-    template<template<typename> typename Index, typename This>
     struct InjectTagType 
     {
     public:
-        constexpr TagType ttype() const
+        template<typename Self>
+        constexpr TagType ttype(this Self&& self)
         {
-            return Index<This>::value;
+            using This = std::remove_cvref_t<Self>;
+            return TypeIndexV<This>;
         }
     };
 
@@ -170,6 +172,14 @@ namespace hz
     struct MakeSum<MethodsT, SumTypeList<Ts...>>
     {
         using Type = Sum<MethodsT, Ts...>;
+    };
+
+    // common base class recommended for sum member classes
+    template<typename SumT>
+    struct SumMemberBase
+        : public InjectTagType
+        , public InjectStorage<SumT>
+    {
     };
 
 

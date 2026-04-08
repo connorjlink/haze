@@ -44,16 +44,9 @@ namespace hz
     >;
 
     using ExpressionSum = MakeSum<ASTMethods, ExpressionTypes>::Type;
+    using ExpressionBase = SumMemberBase<ExpressionSum>;
 
-    template<typename This>
-    struct ExpressionBase
-        : public InjectTagType<ExpressionTypes::Index, This>
-        , public InjectStorage<ExpressionSum>
-    {
-    };
-
-    class AdjustExpression 
-        : public ExpressionBase<AdjustExpression>
+    class AdjustExpression : public ExpressionBase
     {
     public:
         enum class AdjustType
@@ -73,8 +66,7 @@ namespace hz
         bool check_types(const Storage&) const;
     };
 
-    class ArgumentExpression
-        : public ExpressionBase<ArgumentExpression>
+    class ArgumentExpression : public ExpressionBase
     {
     public:
         Type type;
@@ -87,8 +79,7 @@ namespace hz
         bool check_types(const Storage&) const;
     };
 
-    class FunctionArgumentExpression
-        : public ExpressionBase<FunctionArgumentExpression>
+    class FunctionArgumentExpression : public ExpressionBase
     {
     public:
         Type type;
