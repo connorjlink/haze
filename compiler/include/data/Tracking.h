@@ -282,7 +282,7 @@ namespace hz
 	protected:
 		// manually notify the change tracker that the object has been modified to forcibly flush its changes
 		template<typename Self>
-		void commit(this Self&& self)
+		void commit(this Self& self)
 		{
 			if (_is_enabled)
 			{
@@ -296,7 +296,7 @@ namespace hz
 
 		// manually notify the change tracker that the object is done being used but will remain alive and allocated longer
 		template<typename Self>
-		void retire(this Self&& self)
+		void retire(this Self& self)
 		{
 			if (_is_enabled)
 			{
