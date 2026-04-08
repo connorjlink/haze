@@ -9,8 +9,10 @@
 
 namespace hz
 {
-	using tracking_id = std::size_t;
-	using tracking_time_point = std::chrono::time_point<std::chrono::system_clock>;
+	using TrackingId = std::size_t;
+	using TrackingTimePoint = std::chrono::time_point<std::chrono::system_clock>;
+
+	static constexpr inline TrackingTimePoint NEVER = TrackingTimePoint::min();
 
 #ifndef NDEBUG
 	static constexpr inline bool ENABLE_TRACKING = true;
@@ -18,7 +20,7 @@ namespace hz
 	static constexpr inline bool ENABLE_TRACKING = false;
 #endif
 
-	tracking_time_point system_timestamp(void);
+	TrackingTimePoint system_timestamp(void);
 
 	class Trackable;
 
@@ -35,24 +37,35 @@ namespace hz
 			std::size_t number_retired;
 			std::size_t number_deleted;
 
-		public:
 			// specifies the first ever time this entity was created
-			tracking_time_point created;
+			TrackingTimePoint created;
 			// specifies the most recent transaction for modified and retired
-			tracking_time_point modified;
-			tracking_time_point retired;
+			TrackingTimePoint modified;
+			TrackingTimePoint retired;
 			// specifies the last ever time this entity was deleted
-			tracking_time_point deleted;
+			TrackingTimePoint deleted;
+
+			// false if the entity is retired or deleted
+			bool is_active;
 
 		public:
-			bool is_active;
+			TrackingInformation(std::size_t number_created, TrackingTimePoint created, bool is_active) 
+				: number_created{ number_created }, created{ created }, is_active{ is_active }
+			{
+				number_retired = 0;
+				number_deleted = 0;
+
+				modified = NEVER;
+				retired = NEVER;
+				deleted = NEVER;
+			}
 		};
 
 	private:
-		std::unordered_map<tracking_id, TrackingInformation> _database;
+		std::unordered_map<TrackingId, TrackingInformation> _database;
 
 	private:
-		bool validate_exists(tracking_id id)
+		bool validate_exists(TrackingId id)
 		{
 			if (!_database.contains(id))
 			{
@@ -119,15 +132,8 @@ namespace hz
 
 			if (!_database.contains(entity->_id))
 			{
-				TrackingInformation entry
-				{
-					.number_created = 1,
-					.created = system_timestamp(),
-					// let others default initialize since they don't matter for now
-					.is_active = true,
-				};
-
-				_database.emplace(entity->_id, entry);
+				// 1 created @ now, active
+				_database.try_emplace(entity->_id, 1, system_timestamp(), true);
 			}
 
 			else
@@ -262,21 +268,21 @@ namespace hz
 	{
 	private:
 		friend Tracker;
-		tracking_id _id;
+		TrackingId _id;
 		bool _is_enabled;
 
 	private:
-		static tracking_id generate_id(void)
+		static TrackingId generate_id(void)
 		{
 			// thread-safe! generated per Trackable type template instantiation
-			static std::atomic<tracking_id> index{ 0 };
+			static std::atomic<TrackingId> index{ 0 };
 			return ++index;
 		}
 
 	protected:
 		// manually notify the change tracker that the object has been modified to forcibly flush its changes
 		template<typename Self>
-		void commit(this Self self)
+		void commit(this Self&& self)
 		{
 			if (_is_enabled)
 			{
@@ -290,7 +296,7 @@ namespace hz
 
 		// manually notify the change tracker that the object is done being used but will remain alive and allocated longer
 		template<typename Self>
-		void retire(this Self self)
+		void retire(this Self&& self)
 		{
 			if (_is_enabled)
 			{
