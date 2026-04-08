@@ -35,7 +35,7 @@ namespace hz
         template<typename Self>
         constexpr TagType ttype(this Self&& self)
         {
-            using This = std::remove_cvref_t<Self>;
+            using This = std::remove_cvref_t<std::remove_pointer_t<Self>>;
             return TypeIndexV<This>;
         }
     };
@@ -59,7 +59,7 @@ namespace hz
         {
             [](const SumStorageT& sum, IndexType index) -> typename Fn::ReturnType
             {
-                using T = typename std::tuple_element_t<Is, Tuple>;
+                using T = std::tuple_element_t<Is, Tuple>;
                 const auto& vector = sum.storage.template get<T>();
                 return (vector[index].*Method::pointer)(sum);
             }...
