@@ -100,7 +100,7 @@ namespace hz
 				return false;
 			}
 
-			if (!validate_exists(entity->_id))
+			if (!validate_exists(entity->id))
 			{
 				return false;
 			}
@@ -111,7 +111,6 @@ namespace hz
 	public:
 		template<typename T>
 			requires std::derived_from<T, Trackable>
-		//and requires { std::declval<T*>()->_id; } // not necessary since the trackable base will grant this
 		bool notify_created(T* entity)
 		{
 			if (!validate_notnull(entity))
@@ -119,26 +118,18 @@ namespace hz
 				return false;
 			}
 
-			// NOTE: since the tracking indexes by type, it must allow duplicates to multiple instantiations
-			/*if (_database.contains(entity->_id))
-			{
-				_error_reporter->post_error(std::format(
-					"invalid duplicate tracking instance of entity with id `{}`", entity._id), NULL_TOKEN);
-				return false;
-			}*/
-
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			if (!_database.contains(entity->_id))
+			if (!_database.contains(entity->id))
 			{
 				// 1 created @ now, active
-				_database.try_emplace(entity->_id, 1, system_timestamp(), true);
+				_database.try_emplace(entity->id, 1, system_timestamp(), true);
 			}
 
 			else
 			{
-				auto& entry = _database.at(entity->_id);
+				auto& entry = _database.at(entity->id);
 				entry.number_created++;
 				// don't update the timestamp to keep the tracked time from the very first instantiation
 				//entry.created = system_timestamp();
@@ -160,7 +151,7 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			auto& entry = _database.at(entity->_id);
+			auto& entry = _database.at(entity->id);
 			entry.number_modified++;
 			entry.modified = system_timestamp();
 			// active flag always reflects the results of the most recent transaction
@@ -181,7 +172,7 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			auto& entry = _database.at(entity->_id);
+			auto& entry = _database.at(entity->id);
 			entry.number_retired++;
 			entry.retired = system_timestamp();
 			entry.is_active = false;
@@ -201,7 +192,7 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			auto& entry = _database.at(entity->_id);
+			auto& entry = _database.at(entity->id);
 			entry.number_deleted++;
 			entry.is_active = false;
 
@@ -268,7 +259,7 @@ namespace hz
 	{
 	private:
 		friend Tracker;
-		TrackingId _id;
+		TrackingId id;
 		bool _is_enabled;
 
 	private:
@@ -311,7 +302,7 @@ namespace hz
 		{
 			if (_is_enabled)
 			{
-				_id = generate_id();
+				id = generate_id();
 				USE_SAFE(Tracker)->notify_created(this);
 			}
 		}

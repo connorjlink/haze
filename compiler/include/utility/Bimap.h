@@ -10,8 +10,8 @@ namespace hz
 		requires (!std::is_same_v<T, U>)
 	struct bimap_t
 	{
-		T _first;
-		U _second;
+		T first;
+		U second;
 	};
 
 	template<typename T, typename U>
@@ -68,8 +68,8 @@ namespace hz
 	public:
 		void add(bimap_t<T, U> set)
 		{
-			_forward[set._first] = set._second;
-			_backward[set._second] = set._first;
+			_forward[set.first] = set.second;
+			_backward[set.second] = set.first;
 		}
 
 	public:

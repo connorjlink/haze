@@ -11,8 +11,8 @@ namespace hz
 	{
 	private:
 		// front = redoable states, back = undoable states
-		std::deque<State> _history;
-		std::size_t _current_state{ 0uz };
+		std::deque<State> history;
+		std::size_t current_state{ 0uz };
 
 	public:
 		template<typename Self>
@@ -20,8 +20,8 @@ namespace hz
 		{
 			if (self.can_undo())
 			{
-				self._current_state++;
-				self.set_state(self._history[self._current_state]);
+				self.current_state++;
+				self.set_state(self.history[self.current_state]);
 			}
 		}
 
@@ -30,8 +30,8 @@ namespace hz
 		{
 			if (self.can_redo())
 			{
-				self._current_state++;
-				self.set_state(self._history[self._current_state]);
+				self.current_state++;
+				self.set_state(self.history[self.current_state]);
 			}
 		}
 
@@ -41,29 +41,29 @@ namespace hz
 			// truncate forward history to avoid branching states
 			while (self.can_redo())
 			{
-				self._history.pop_front();
-				//_history.erase(_history.begin() + _current_state + 1, _history.end());
+				self.history.pop_front();
+				//history.erase(history.begin() + current_state + 1, history.end());
 			}
 
-			if (self._history.size() == MaxHistory)
+			if (self.history.size() == MaxHistory)
 			{
-				self._history.pop_back();
-				//_history.erase(_history.begin());
-				self._current_state--;
+				self.history.pop_back();
+				//history.erase(history.begin());
+				self.current_state--;
 			}
 
-			self._history.emplace_back(self.get_state());
-			self._current_state++;
+			self.history.emplace_back(self.get_state());
+			self.current_state++;
 		}
 
 		bool can_undo(void) const
 		{
-			return _current_state > 0;
+			return current_state > 0;
 		}
 
 		bool can_redo(void) const
 		{
-			return _current_state + 1 < _history.size();
+			return current_state + 1 < history.size();
 		}
 
 	protected:
