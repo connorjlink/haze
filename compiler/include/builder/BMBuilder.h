@@ -11,7 +11,7 @@ namespace hz
     class BMBuilder : public Builder
     {
     public:
-        BMBuilder(const byterange& executable)
+        BMBuilder(const ByteRange& executable)
             : Builder{ executable }
         {
         }

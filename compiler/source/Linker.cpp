@@ -194,7 +194,7 @@ namespace hz
 //
 //			for (auto i = 0; i < function.size(); i++)
 //			{
-//				const auto architecture = USE_SAFE(CommandLineOptions)->_architecture;
+//				const auto architecture = USE_SAFE(CommandLineOptions)->architecture;
 //				const auto extrema = get_register_extrema(architecture);
 //
 //				for (auto r = extrema.first; r <= extrema.second; r++)
@@ -297,7 +297,7 @@ namespace hz
 //
 //			if (symbol->was_referenced)
 //			{
-//				if (USE_UNSAFE(CommandLineOptions)->_optimization & OptimizationType::LTO)
+//				if (USE_UNSAFE(CommandLineOptions)->optimization & OptimizationType::LTO)
 //				{
 //					while (optimize())
 //						;
@@ -483,11 +483,11 @@ namespace hz
 //		return executable;
 //	}
 //
-//	byterange link()
+//	ByteRange link()
 //	{
 //		std::vector<IntermediateCommand*> ir_code{};
-//		std::vector<byterange> object_code{};
-//		byterange final_image{};
+//		std::vector<ByteRange> object_code{};
+//		ByteRange final_image{};
 //
 //		// map of (label name -> address)
 //		std::unordered_map<std::string, native_int> branches;

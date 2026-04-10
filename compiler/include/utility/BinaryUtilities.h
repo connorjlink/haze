@@ -10,11 +10,11 @@
 
 namespace hz
 {
-	constexpr byterange range8(std::uint8_t);
-	constexpr byterange range16(std::uint16_t);
-	constexpr byterange range32(std::uint32_t);
-	constexpr byterange range64(std::uint64_t);
-	byterange range_of(const std::string&);
+	constexpr ByteRange range8(std::uint8_t);
+	constexpr ByteRange range16(std::uint16_t);
+	constexpr ByteRange range32(std::uint32_t);
+	constexpr ByteRange range64(std::uint64_t);
+	ByteRange range_of(const std::string&);
 
 	inline static const auto pad8 = range8(0);
 	inline static const auto pad16 = range16(0);

@@ -98,7 +98,7 @@ namespace hz
 							continue;
 						}
 
-						USE_SAFE(CommandLineOptions)->_architecture = _architecture_map.at(value);
+						USE_SAFE(CommandLineOptions)->architecture = _architecture_map.at(value);
 					} break;
 
 					case VERBOSITY:
@@ -110,7 +110,7 @@ namespace hz
 							continue;
 						}
 
-						USE_SAFE(CommandLineOptions)->_verbosity = _verbosity_type_map.at(value);
+						USE_SAFE(CommandLineOptions)->verbosity = _verbosity_type_map.at(value);
 					} break;
 
 					case EXECUTION:
@@ -122,7 +122,7 @@ namespace hz
 							continue;
 						}
 
-						USE_SAFE(CommandLineOptions)->_execution = _execution_map.at(value);
+						USE_SAFE(CommandLineOptions)->execution = _execution_map.at(value);
 					} break;
 
 					case OUTPUT:
@@ -145,7 +145,7 @@ namespace hz
 						}
 
 						auto flag = _optimization_map.at(value);
-						USE_SAFE(CommandLineOptions)->_optimization |= flag;
+						USE_SAFE(CommandLineOptions)->optimization |= flag;
 					} break;
 				}
 			}

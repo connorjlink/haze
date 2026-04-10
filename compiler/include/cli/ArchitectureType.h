@@ -2,6 +2,9 @@
 #define HAZE_ARCHITECTURETYPE_H
 
 #include <error/ErrorReporter.h>
+#include <x86/X86Register.h>
+#include <riscv/RISCVRegister.h>
+#include <utility/Constants.h>
 
 // Haze ArchitectureType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -32,6 +35,23 @@ namespace hz
 		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"unknown architecture type `{}`", static_cast<int>(type)), NULL_TOKEN);
 	}
+
+#define NAMEOF(x) #x
+
+	inline constexpr std::string_view get_stack_pointer(ArchitectureType type)
+	{
+		using enum ArchitectureType;
+		switch (type)
+		{
+			case X86: return NAMEOF(ESP);
+			case RISCV: return NAMEOF(SP); 
+		}
+
+		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
+			"unknown architecture type `{}`", static_cast<int>(type)), NULL_TOKEN);
+	}
+
+#undef NAMEOF
 }
 
 #endif 

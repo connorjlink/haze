@@ -10,7 +10,7 @@ import std;
 
 namespace hz
 {
-	byterange PEBuilder::make_section(
+	ByteRange PEBuilder::make_section(
 		std::string name, std::uint32_t virtual_size, std::uint32_t virtual_address,
 		std::uint32_t raw_size, std::uint32_t raw_pointer, std::uint32_t characteristics)
 	{
@@ -22,7 +22,7 @@ namespace hz
 		name.resize(7, '\0');
 		// if the string was too big, then make sure there is a terminator byte still
 
-		byterange out{};
+		ByteRange out{};
 
 		// insert section name char by char
 		PUT(range_of(name));
@@ -41,9 +41,9 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::make_import_descriptor(std::uint32_t int_pointer, std::uint32_t dll_pointer, std::uint32_t iat_pointer)
+	ByteRange PEBuilder::make_import_descriptor(std::uint32_t int_pointer, std::uint32_t dll_pointer, std::uint32_t iat_pointer)
 	{
-		byterange out{};
+		ByteRange out{};
 
 		PUT(range32(int_pointer));
 		PUT(pad32);
@@ -55,11 +55,11 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::dos_header()
+	ByteRange PEBuilder::dos_header()
 	{
 		const auto magic = range16(0x5A4D);
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(magic);
 		PUT(pad16);
@@ -70,11 +70,11 @@ namespace hz
 		return out;
 	}
 
-	byterange PEBuilder::dos_footer()
+	ByteRange PEBuilder::dos_footer()
 	{
 		const auto lfanew = range32(0x00000040);
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(pad32);
 		PUT(pad32);
@@ -85,7 +85,7 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::pe_header()
+	ByteRange PEBuilder::pe_header()
 	{
 		const auto signature = range32(0x00004550);
 		const auto machine = range16(0x014C);
@@ -93,7 +93,7 @@ namespace hz
 		const auto optional_size = range16(0x00E0);
 		const auto characteristics = range16(0x0102);
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(signature);
 		PUT(machine);
@@ -109,7 +109,7 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::optional_header()
+	ByteRange PEBuilder::optional_header()
 	{
 		const auto magic = range16(0x010B);
 		const auto entrypoint = range32(0x00001000);
@@ -127,7 +127,7 @@ namespace hz
 
 #pragma message("TODO: support growing the stack here to make overflowing at fixed 16k frame size harder!")
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(magic);
 		PUT(pad16);
@@ -167,11 +167,11 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::data_directories()
+	ByteRange PEBuilder::data_directories()
 	{
 		const auto imports_va = range32(0x00002000);
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(pad32);
 		PUT(pad32);
@@ -190,7 +190,7 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::sections_table()
+	ByteRange PEBuilder::sections_table()
 	{
 		/*return std::vector<std::uint8_t>
 		{
@@ -204,7 +204,7 @@ namespace hz
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0xC0,
 		};*/
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(make_section(".text", 0x1000, 0x1000, 0x200, CODE_OFFSET, 0x60000020)); // code execute read
 		PUT(make_section(".rdata", 0x1000, 0x2000, 0x200, IMPORTS_OFFSET, 0x40000040)); // initialized read
@@ -214,7 +214,7 @@ namespace hz
 	}
 
 
-	byterange PEBuilder::imports_section()
+	ByteRange PEBuilder::imports_section()
 	{
 		/*return std::vector<std::uint8_t>
 		{
@@ -229,7 +229,7 @@ namespace hz
 			0x2E, 0x64, 0x6C, 0x6C, 0x00, 0x75, 0x73, 0x65, 0x72, 0x33, 0x32, 0x2E, 0x64, 0x6C, 0x6C, 0x00,
 		};*/
 
-		byterange out{};
+		ByteRange out{};
 		out.resize(0x200);
 
 		auto head = out.begin();
@@ -322,9 +322,9 @@ namespace hz
 	}
 
 	// compile-time ROM strings section
-	byterange PEBuilder::data_section()
+	ByteRange PEBuilder::data_section()
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto logo_string = range_of("Haze Optimizing Compiler Executable\n(c) Connor J. Link. All Rights Reserved.\n");
 		PUT(logo_string);

@@ -13,30 +13,30 @@ namespace hz
 	{
 	// pe utilities
 	private:
-		byterange make_section(std::string, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
+		ByteRange make_section(std::string, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t, std::uint32_t);
 
 	private:
-		byterange make_import_descriptor(std::uint32_t, std::uint32_t, std::uint32_t);
+		ByteRange make_import_descriptor(std::uint32_t, std::uint32_t, std::uint32_t);
 
 	private:
-		byterange dos_header();
-		byterange dos_footer();
+		ByteRange dos_header();
+		ByteRange dos_footer();
 
 	private:
-		byterange pe_header();
+		ByteRange pe_header();
 
 	private:
-		byterange optional_header();
+		ByteRange optional_header();
 
 	private:
 		// points to the imports VA
-		byterange data_directories();
+		ByteRange data_directories();
 
 	private:
-		byterange sections_table();
+		ByteRange sections_table();
 		// sections
-		byterange imports_section();
-		byterange data_section();
+		ByteRange imports_section();
+		ByteRange data_section();
 
 	private:
 		void build_pe();

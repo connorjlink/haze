@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 	
 	// require explicit opt-in to run tests; takes about 300us otherwise
-	if (USE_UNSAFE(CommandLineOptions)->_execution == ExecutionType::VALIDATE)
+	if (USE_UNSAFE(CommandLineOptions)->execution == ExecutionType::VALIDATE)
 	{
 		AutoJob test_task{ "unit testing" };
 
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 	auto is_error = false;
 
 	using enum ArchitectureType;
-	switch (USE_UNSAFE(CommandLineOptions)->_architecture)
+	switch (USE_UNSAFE(CommandLineOptions)->architecture)
 	{
 		case X86:
 		{

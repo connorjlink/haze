@@ -170,11 +170,11 @@ namespace hz
 
 	public:
 		// { assembly code }
-		void raw_binary(byterange&&);
+		void raw_binary(ByteRange&&);
 
 	public:
 		// { assembly code, bytecount }
-		void inline_assembly(byterange&&, std::uint32_t);
+		void inline_assembly(ByteRange&&, std::uint32_t);
 
 	public:
 		// get the current index for IntermediateCommand generation

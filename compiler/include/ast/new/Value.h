@@ -6,7 +6,9 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/Generator.h>
-#include <utility/String.h>
+#include <cli/ArchitectureType.h>
+#include <utility/Constants.h>
+#include <utility/Strings.h>
 
 // Haze ValueSum.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -46,9 +48,6 @@ namespace hz
     class RegisterValue : public ValueBase
     {
     public:
-        using RegisterIndex = std::uint8_t;
-
-    public:
         RegisterIndex index;
 
     public:
@@ -74,21 +73,38 @@ namespace hz
         }
     };
 
-    class StackValue : public ValueBase
+    class StackValue 
+        : public ValueBase
+        , public InjectSingleton<CommandLineOptions>
     {
+    public:
+        // relative offset from the stack pointer, negative is below the current stack frame
+        StackIndex index;
 
+    public:
+        std::string format() const
+        {
+            const auto architecture_type = USE_SAFE(CommandLineOptions)->architecture;
+            const auto format = get_stack_pointer(architecture_type);
+
+            return std::format("[{} + {}]", format, index);
+        }
+
+        void load_into(Generator& generator, RegisterIndex destination) const
+        {
+
+        }
+
+        void store_from(Generator& generator, RegisterIndex source) const
+        {
+
+        }
     };
 
     class StaticValue 
         : public ValueBase
         , public InjectSingleton<ErrorReporter>
     {
-    public:
-        using MemoryIndex = std::uint32_t;
-
-    private:
-        
-
     public:
         MemoryIndex index;
 
@@ -98,10 +114,7 @@ namespace hz
             static constexpr unsigned bits_per_hex_digit = std::countr_zero(16) + 1;
             static constexpr unsigned hex_digits = (sizeof(MemoryIndex) * CHAR_BIT + bits_per_hex_digit - 1) / bits_per_hex_digit;
             static constexpr const char* format_number = IntegerToStringLiteral<hex_digits>::value;
-            static constexpr const char* left_half = "[{0:";
-            static constexpr const char* right_half = "X}]";
-            static constexpr auto left_format = compile_time_concat<compile_time_strlen(left_half), compile_time_strlen(format_number)>(left_half, format_number);
-            static constexpr auto full_format = compile_time_concat<compile_time_strlen(left_format), compile_time_strlen(right_half)>(left_format, right_half);
+            static constexpr auto full_format = compile_time_concatenate("[{0:", format_number, "X}]");
 
             return std::format(full_format.data(), index);
         }

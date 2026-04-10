@@ -43,7 +43,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lb(rd, imm, rs1) LbInstruction{ imm, rd, rs1 }
 
@@ -62,7 +62,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lh(rd, imm, rs1) LhInstruction{ imm, rd, rs1 }
 
@@ -79,7 +79,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lw(rd, imm, rs1) LwInstruction{ imm, rd, rs1 }
 
@@ -96,7 +96,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lbu(rd, imm, rs1) LbuInstruction{ imm, rd, rs1 }
 
@@ -113,7 +113,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lhu(rd, imm, rs1) LhuInstruction{ imm, rd, rs1 }
 	
@@ -132,7 +132,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sb(rs2, imm, rs1) SbInstruction{ imm, rs1, rs2 }
 
@@ -149,7 +149,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sh(rs2, imm, rs1) ShInstruction{ imm, rs1, rs2 }
 
@@ -166,7 +166,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sw(rs2, imm, rs1) SwInstruction{ imm, rs1, rs2 }
 
@@ -184,7 +184,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lui(rd, imm) LuiInstruction{ imm, rd }
 
@@ -200,7 +200,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define auipc(rd, imm) AuipcInstruction{ imm, rd }
 
@@ -219,7 +219,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define add(rd, rs1, rs2) AddInstruction{ rd, rs1, rs2
 
@@ -238,7 +238,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sub(rd, rs1, rs2) SubInstruction{ rd, rs1, rs2 }
 
@@ -257,7 +257,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define and(rd, rs1, rs2) AndInstruction{ rd, rs1, rs2 }
 
@@ -276,7 +276,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define or(rd, rs1, rs2) OrInstruction{ rd, rs1, rs2 }
 
@@ -293,7 +293,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define xor(rd, rs1, rs2) XorInstruction{ rd, rs1, rs2 }
 
@@ -310,7 +310,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sll(rd, rs1, rs2) SllInstruction{ rd, rs1, rs2 }
 
@@ -327,7 +327,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define srl(rd, rs1, rs2) SrlInstruction{ rd, rs1, rs2 }
 
@@ -344,7 +344,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sra(rd, rs1, rs2) SraInstruction{ rd, rs1, rs2 }
 
@@ -363,7 +363,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define addi(rd, rs1, imm) AddiInstruction{ imm, rd, rs1 }
 
@@ -382,7 +382,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define andi(rd, rs1, imm) AndiInstruction{ imm, rd, rs1 }
 
@@ -401,7 +401,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define ori(rd, rs1, imm) OriInstruction{ imm, rd, rs1 }
 
@@ -420,7 +420,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define xori(rd, rs1, imm) XoriInstruction{ imm, rd, rs1 }
 
@@ -439,7 +439,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define slli(rd, rs1, imm) SlliInstruction{ imm, rd, rs1 }
 
@@ -458,7 +458,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define srli(rd, rs1, imm) SrliInstruction{ imm, rd, rs1 }
 
@@ -475,7 +475,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define srai(rd, rs1, imm) SraiInstruction{ imm, rd, rs1 }
 
@@ -494,7 +494,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define slt(rd, rs1, rs2) SltInstruction{ rd, rs1, rs2 }
 
@@ -513,7 +513,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sltu(rd, rs1, rs2) SltuInstruction{ rd, rs1, rs2 }
 
@@ -532,7 +532,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define slti(rd, rs1, imm) SltiInstruction{ imm, rd, rs1 }
 
@@ -551,7 +551,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sltiu(rd, rs1, imm) SltiuInstruction{ imm, rd, rs1 }
 
@@ -569,7 +569,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jal(rd, imm) JalInstruction{ imm, rd }
 
@@ -586,7 +586,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jalr(rd, imm, rs1) JalrInstruction{ imm, rd, rs1 }
 
@@ -605,7 +605,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define beq(rs1, rs2, imm) BeqInstruction{ imm, rs1, rs2 }
 
@@ -624,7 +624,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define bne(rs1, rs2, imm) BneInstruction{ imm, rs1, rs2 }
 
@@ -643,7 +643,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define blt(rs1, rs2, imm) BltInstruction{ imm, rs1, rs2 }
 
@@ -660,7 +660,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define bge(rs1, rs2, imm) BgeInstruction{ imm, rs1, rs2 }
 
@@ -677,7 +677,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define bltu(rs1, rs2, imm) BltuInstruction{ imm, rs1, rs2 }
 
@@ -694,7 +694,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define bgeu(rs1, rs2, imm) BgeuInstruction { imm, rs1, rs2 }
 
@@ -705,7 +705,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define nop() RISCVNopInstruction{}
 
@@ -716,7 +716,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define ecall() RISCVEcallInstruction{}
 
@@ -727,7 +727,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define ebreak() RISCVEbreakInstruction{}
 
@@ -738,7 +738,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define fence() RISCVFenceInstruction{}
 	}
@@ -761,7 +761,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define mul(rd, rs1, rs2) MulInstruction{ rd, rs1, rs2 }
 
@@ -780,7 +780,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define mulh(rd, rs1, rs2) MulhInstruction{ rd, rs1, rs2 }
 
@@ -797,7 +797,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define mulhu(rd, rs1, rs2) MulhuInstruction{ rd, rs1, rs2 }
 
@@ -814,7 +814,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define mulhsu(rd, rs1, rs2) MulhsuInstruction{ rd, rs1, rs2 }
 
@@ -831,7 +831,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define div(rd, rs1, rs2) DivInstruction{ rd, rs1, rs2 }
 
@@ -848,7 +848,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define divu(rd, rs1, rs2) DivuInstruction{ rd, rs1, rs2 }
 
@@ -865,7 +865,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define rem(rd, rs1, rs2) RemInstruction{ rd, rs1, rs2 }
 
@@ -882,7 +882,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define remu(rd, rs1, rs2) RemuInstruction{ rd, rs1, rs2 }
 	}
@@ -906,7 +906,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define lrw(rd, rs1, acquire, release) LrwInstruction{ rd, rs1, acquire, release }
 
@@ -925,7 +925,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define scw(rd, rs2, rs1, acquire, release) ScwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -946,7 +946,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amoswapw(rd, rs2, rs1, acquire, release) AmoswapwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -967,7 +967,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amoaddw(rd, rs2, rs1, acquire, release) AmoaddwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -988,7 +988,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amoandw(rd, rs2, rs1, acquire, release) AmoandwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -1009,7 +1009,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amoorw(rd, rs2, rs1, acquire, release) AmoorwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -1030,7 +1030,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amoxorw(rd, rs2, rs1, acquire, release) AmoxorwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -1051,7 +1051,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amominw(rd, rs2, rs1, acquire, release) AmominwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -1072,7 +1072,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amomaxw(rd, rs2, rs1, acquire, release) AmomaxwInstruction{ rd, rs1, rs2, acquire, release }
 
@@ -1093,7 +1093,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amominuw(rd, rs2, rs1, acquire, release) AmominuwInstruction{ rd, rs1, rs2, acquire, release }
 		class AmomaxuwInstruction : public RISCVInstruction
@@ -1113,7 +1113,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define amomaxuw(rd, rs2, rs1, acquire, release) AmomaxuwInstruction{ rd, rs1, rs2, acquire, release }
 	}
@@ -1135,7 +1135,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define clwsp(rd, imm) ClwspInstruction{ rd, imm }
 
@@ -1153,7 +1153,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cswsp(rs2, imm) CswspInstruction{ rs2, imm }
 
@@ -1172,7 +1172,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define clw(rd, imm, rs1) ClwInstruction{ rd, imm, rs1 }
 
@@ -1191,7 +1191,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csw(rs2, imm, rs1) CswInstruction{ rs2, imm, rs1 }
 
@@ -1208,7 +1208,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cj(imm) CjInstruction{ imm }
 
@@ -1225,7 +1225,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cjal(imm) CjalInstruction{ imm }
 
@@ -1242,7 +1242,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cjr(rs1) CjrInstruction{ rs1 }
 
@@ -1259,7 +1259,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cjalr(rs1) CjalrInstruction{ rs1 }
 
@@ -1277,7 +1277,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cbeqz(rs2, imm) CbeqzInstruction{ rs2, imm }
 
@@ -1295,7 +1295,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cbnez(rs2, imm) CbnezInstruction{ rs2, imm }
 
@@ -1313,7 +1313,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cli(rd, imm) CliInstruction{ rd, imm }
 
@@ -1331,7 +1331,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define clui(rd, imm) CluiInstruction{ rd, imm }
 
@@ -1349,7 +1349,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define caddi(rd, imm) CaddiInstruction{ rd, imm }
 
@@ -1366,7 +1366,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define caddi16sp(imm) Caddi16spInstruction{ imm }
 
@@ -1384,7 +1384,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define caddi4spn(rd, imm) Caddi4spnInstruction{ rd, imm }
 
@@ -1402,7 +1402,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cslli(rd, shamt) CslliInstruction{ rd, shamt }
 
@@ -1420,7 +1420,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrli(rd, shamt) CsrliInstruction{ rd, shamt }
 
@@ -1438,7 +1438,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrai(rd, shamt) CsraiInstruction{ rd, shamt }
 
@@ -1456,7 +1456,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define candi(rd, imm) CandiInstruction{ rd, imm }
 
@@ -1474,7 +1474,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cmv(rd, rs2) CmvInstruction{ rd, rs2 }
 
@@ -1492,7 +1492,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cadd(rd, rs2) CaddInstruction{ rd, rs2 }
 
@@ -1510,7 +1510,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csub(rd, rs2) CsubInstruction{ rd, rs2 }
 
@@ -1528,7 +1528,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cxor(rd, rs2) CxorInstruction{ rd, rs2 }
 
@@ -1546,7 +1546,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cor(rd, rs2) CorInstruction{ rd, rs2 }
 
@@ -1564,7 +1564,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cand(rd, rs2) CandInstruction{ rd, rs2 }
 
@@ -1575,7 +1575,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cnop() CnopInstruction{}
 
@@ -1586,7 +1586,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cebreak() CebreakInstruction{}
 	}
@@ -1609,7 +1609,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cssrw(rd, csr, rs1) CssrwInstruction{ csr, rd, rs1 }
 
@@ -1628,7 +1628,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrrs(rd, csr, rs1) CsrrsInstruction{ csr, rd, rs1 }
 
@@ -1646,7 +1646,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrrc(rd, csr, rs1) CsrrcInstruction{ csr, rd, rs1 }
 
@@ -1663,7 +1663,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrrwi(rd, csr, imm) CsrrwiInstruction{ csr, rd, imm }
 
@@ -1680,7 +1680,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrrsi(rd, csr, imm) CsrrsiInstruction{ csr, rd, imm }
 
@@ -1697,7 +1697,7 @@ namespace hz
 			}
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define csrrci(rd, csr, imm) CsrrciInstruction{ csr, rd, imm }
 	}
@@ -1712,7 +1712,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define fencei() FenceiInstruction{}
 	}
@@ -1727,7 +1727,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define uret() UretInstruction{}
 
@@ -1737,7 +1737,7 @@ namespace hz
 			using RISCVInstruction::RISCVInstruction;
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sret() SretInstruction{}
 
@@ -1747,7 +1747,7 @@ namespace hz
 			using RISCVInstruction::RISCVInstruction;
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define mret() MretInstruction{}
 
@@ -1758,7 +1758,7 @@ namespace hz
 
 		public:
 			virtual RISCVInstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define wfi() RISCVWfiInstruction{}
 	}

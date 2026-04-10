@@ -14,7 +14,7 @@ namespace hz
 {
 	inline AssemblerParser* create_assembler_parser(const std::string& filepath)
 	{
-		const auto architecture = USE_UNSAFE(CommandLineOptions)->_architecture;
+		const auto architecture = USE_UNSAFE(CommandLineOptions)->architecture;
 		switch (architecture)
 		{
 		case ArchitectureType::RISCV:

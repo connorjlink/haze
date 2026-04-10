@@ -31,7 +31,7 @@ namespace hz::x86
 		return X86InstructionType::PUSH;
 	}
 
-	byterange PushInstruction::emit() const
+	ByteRange PushInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -44,7 +44,7 @@ namespace hz::x86
 				// NOTE: 8- and 16-bits are implicitly sign-extended to 32-bits when executed
 				if (immediate.is_within_range<std::int8_t>())
 				{
-					byterange out{};
+					ByteRange out{};
 
 					// 6A --> PUSH imm8
 					PUT(range8(0x6A));
@@ -54,7 +54,7 @@ namespace hz::x86
 				} 
 				else if (immediate.is_within_range<std::int32_t>())
 				{
-					byterange out{};
+					ByteRange out{};
 
 					// 6A --> PUSH imm8
 					PUT(range8(0x6A));
@@ -73,7 +73,7 @@ namespace hz::x86
 				const auto indirect_operand = AS_INDIRECT_OPERAND(_operand.get());
 				const auto address = indirect_operand->_address;
 
-				byterange out{};
+				ByteRange out{};
 
 				// FF /6 --> PUSH r/m32
 				PUT(range8(0xFF));
@@ -106,7 +106,7 @@ namespace hz::x86
 		return X86InstructionType::POP;
 	}
 
-	byterange PopInstruction::emit() const
+	ByteRange PopInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -134,7 +134,7 @@ namespace hz::x86
 		return X86InstructionType::MOV;
 	}
 
-	byterange MovInstruction::emit() const
+	ByteRange MovInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -152,7 +152,7 @@ namespace hz::x86
 						const auto destination = indirect_destination->_address;
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 89 /r --> MOV r/m32, r32
 						PUT(range8(0x89));
@@ -183,7 +183,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// B8+rd id --> MOV r32, imm32
 							PUT(range8(0xB8 | destination));
@@ -203,7 +203,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = indirect_source->_address;
 
-						byterange out{};
+						ByteRange out{};
 
 						if (destination == EAX)
 						{
@@ -228,7 +228,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 89 /r --> MOV r/m32, r32
 						PUT(range8(0x89));
@@ -244,7 +244,7 @@ namespace hz::x86
 						const auto source = VERIFY_REGISTER(register_displaced_source->_register);
 						const auto displacement = register_displaced_source->_displacement;
 
-						byterange out{};
+						ByteRange out{};
 
 						if (EI(static_cast<std::intmax_t>(displacement)).is_within_range<std::int8_t>())
 						{
@@ -294,7 +294,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// C7 /0 --> MOV r/m32, imm32
 							PUT(range8(0xC7));
@@ -331,7 +331,7 @@ namespace hz::x86
 		return X86InstructionType::MOVZX;
 	}
 
-	byterange MovzxInstruction::emit() const
+	ByteRange MovzxInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -348,7 +348,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 0F B6 /r --> MOVZX r32, r/m8
 						PUT(range8(0x0F));
@@ -380,7 +380,7 @@ namespace hz::x86
 		return X86InstructionType::ADD;
 	}
 
-	byterange AddInstruction::emit() const
+	ByteRange AddInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -401,7 +401,7 @@ namespace hz::x86
 						{
 							if (immediate.is_within_range<std::int32_t>())
 							{
-								byterange out{};
+								ByteRange out{};
 
 								// 05 id --> ADD EAX, imm32
 								PUT(range8(0x05));
@@ -418,7 +418,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int8_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 							
 							// 83 /0 ib --> ADD r/m32, imm8
 							PUT(range8(0x83));
@@ -429,7 +429,7 @@ namespace hz::x86
 						}
 						else if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 							
 							// 81 /0 id --> ADD r/m32, imm32
 							PUT(range8(0x81));
@@ -449,7 +449,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 01 /r --> ADD r/m32, r32
 						PUT(range8(0x01));
@@ -481,7 +481,7 @@ namespace hz::x86
 		return X86InstructionType::SUB;
 	}
 
-	byterange SubInstruction::emit() const
+	ByteRange SubInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -502,7 +502,7 @@ namespace hz::x86
 						{
 							if (immediate.is_within_range<std::int32_t>())
 							{
-								byterange out{};
+								ByteRange out{};
 
 								// 2D id --> SUB EAX, imm32
 								PUT(range8(0x2D));
@@ -519,7 +519,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int8_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 83 /5 ib --> SUB r/m32, imm8
 							PUT(range8(0x83));
@@ -530,7 +530,7 @@ namespace hz::x86
 						}
 						else if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 81 /5 id --> SUB r/m32, imm32
 							PUT(range8(0x81));
@@ -550,7 +550,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 29 /r --> SUB r/m32, r32
 						PUT(range8(0x29));
@@ -581,7 +581,7 @@ namespace hz::x86
 		return X86InstructionType::OR;
 	}
 
-	byterange OrInstruction::emit() const
+	ByteRange OrInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -602,7 +602,7 @@ namespace hz::x86
 						{
 							if (immediate.is_within_range<std::int32_t>())
 							{
-								byterange out{};
+								ByteRange out{};
 
 								// 0D id --> OR EAX, imm32
 								PUT(range8(0x0D));
@@ -619,7 +619,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int8_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 83 /1 ib --> OR r/m32, imm8
 							PUT(range8(0x83));
@@ -630,7 +630,7 @@ namespace hz::x86
 						}
 						else if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 81 /1 id --> OR r/m32, imm32
 							PUT(range8(0x81));
@@ -650,7 +650,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 09 /r --> OR r/m32, r32
 						PUT(range8(0x09));
@@ -681,7 +681,7 @@ namespace hz::x86
 		return X86InstructionType::AND;
 	}
 
-	byterange AndInstruction::emit() const
+	ByteRange AndInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -702,7 +702,7 @@ namespace hz::x86
 						{
 							if (immediate.is_within_range<std::int32_t>())
 							{
-								byterange out{};
+								ByteRange out{};
 
 								// 25 id --> AND EAX, imm32
 								PUT(range8(0x25));
@@ -719,7 +719,7 @@ namespace hz::x86
 						
 						if (immediate.is_within_range<std::int8_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 83 /4 ib --> AND r/m32, imm8
 							PUT(range8(0x83));
@@ -730,7 +730,7 @@ namespace hz::x86
 						}
 						else if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 81 /4 id --> AND r/m32, imm32
 							PUT(range8(0x81));
@@ -750,7 +750,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 21 /r --> AND r/m32, r32
 						PUT(range8(0x21));
@@ -781,7 +781,7 @@ namespace hz::x86
 		return X86InstructionType::XOR;
 	}
 
-	byterange XorInstruction::emit() const
+	ByteRange XorInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -802,7 +802,7 @@ namespace hz::x86
 						{
 							if (immediate.is_within_range<std::int32_t>())
 							{
-								byterange out{};
+								ByteRange out{};
 
 								// 35 id --> XOR EAX, imm32
 								PUT(range8(0x35));
@@ -819,7 +819,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int8_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 83 /6 ib --> XOR r/m32, imm8
 							PUT(range8(0x83));
@@ -830,7 +830,7 @@ namespace hz::x86
 						}
 						else if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 81 /6 id --> XOR r/m32, imm32
 							PUT(range8(0x81));
@@ -850,7 +850,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// XOR --> r/m32, r32
 						PUT(range8(0x31));
@@ -881,7 +881,7 @@ namespace hz::x86
 		return X86InstructionType::INC;
 	}
 
-	byterange IncInstruction::emit() const
+	ByteRange IncInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -891,7 +891,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto source = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 40+rd --> INC r32
 				PUT(range8(0x40 | source));
@@ -913,7 +913,7 @@ namespace hz::x86
 		return X86InstructionType::DEC;
 	}
 
-	byterange DecInstruction::emit() const
+	ByteRange DecInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -923,7 +923,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto source = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 48+rd --> DEC r32
 				PUT(range8(0x48 | source));
@@ -945,7 +945,7 @@ namespace hz::x86
 		return X86InstructionType::SAL;
 	}
 
-	byterange SalInstruction::emit() const
+	ByteRange SalInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -959,7 +959,7 @@ namespace hz::x86
 
 				if (ei == EI(std::intmax_t{ 1 }))
 				{
-					byterange out{};
+					ByteRange out{};
 
 					// D1 /4 --> SAL r/m32, 1
 					PUT(range8(0xD1));
@@ -969,7 +969,7 @@ namespace hz::x86
 				}
 				else if (ei.is_within_range<std::int8_t>())
 				{
-					byterange out{};
+					ByteRange out{};
 
 					// C1 /4 ib --> SAL r/m32, imm8
 					PUT(range8(0xC1));
@@ -997,7 +997,7 @@ namespace hz::x86
 		return X86InstructionType::SAR;
 	}
 
-	byterange SarInstruction::emit() const
+	ByteRange SarInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1011,7 +1011,7 @@ namespace hz::x86
 
 			if (ei == EI(std::intmax_t{ 1 }))
 			{
-				byterange out{};
+				ByteRange out{};
 
 				// D1 /7 --> SAR r/m32, 1
 				PUT(range8(0xD1));
@@ -1021,7 +1021,7 @@ namespace hz::x86
 			}
 			else if (ei.is_within_range<std::int8_t>())
 			{
-				byterange out{};
+				ByteRange out{};
 
 				// C1 /7 ib --> SAR r/m32, imm8
 				PUT(range8(0xC1));
@@ -1049,7 +1049,7 @@ namespace hz::x86
 		return X86InstructionType::TEST;
 	}
 
-	byterange TestInstruction::emit() const
+	ByteRange TestInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -1066,7 +1066,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 85 /r --> TEST r/m32, r32
 						PUT(range8(0x85));
@@ -1097,7 +1097,7 @@ namespace hz::x86
 		return X86InstructionType::CMP;
 	}
 
-	byterange CmpInstruction::emit() const
+	ByteRange CmpInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_destination->otype())
@@ -1118,7 +1118,7 @@ namespace hz::x86
 						{
 							if (immediate.is_within_range<std::int32_t>())
 							{
-								byterange out{};
+								ByteRange out{};
 
 								// 3D id --> CMP EAX, imm32
 								PUT(range8(0x3D));
@@ -1135,7 +1135,7 @@ namespace hz::x86
 
 						if (immediate.is_within_range<std::int8_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 83 /7 ib --> CMP r/m32, imm8
 							PUT(range8(0x83));
@@ -1146,7 +1146,7 @@ namespace hz::x86
 						}
 						else if (immediate.is_within_range<std::int32_t>())
 						{
-							byterange out{};
+							ByteRange out{};
 
 							// 81 /7 id --> CMP r/m32, imm32
 							PUT(range8(0x81));
@@ -1166,7 +1166,7 @@ namespace hz::x86
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
-						byterange out{};
+						ByteRange out{};
 
 						// 39 /r --> CMP r/m32, r32
 						PUT(range8(0x39));
@@ -1197,9 +1197,9 @@ namespace hz::x86
 		return X86InstructionType::CALL;
 	}
 
-	byterange CallInstruction::emit() const
+	ByteRange CallInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		// E8 cd --> CALL rel32
 		PUT(range8(0xE8));
@@ -1214,9 +1214,9 @@ namespace hz::x86
 		return X86InstructionType::APICALL;
 	}
 
-	byterange ApicallInstruction::emit() const
+	ByteRange ApicallInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		// FF /2 --> CALL r/m32
 		PUT(range8(0xFF));
@@ -1232,9 +1232,9 @@ namespace hz::x86
 		return X86InstructionType::JMP;
 	}
 
-	byterange JmpInstruction::emit() const
+	ByteRange JmpInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1265,9 +1265,9 @@ namespace hz::x86
 		return X86InstructionType::JE;
 	}
 
-	byterange JeInstruction::emit() const
+	ByteRange JeInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1299,9 +1299,9 @@ namespace hz::x86
 		return X86InstructionType::JNE;
 	}
 
-	byterange JneInstruction::emit() const
+	ByteRange JneInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1333,9 +1333,9 @@ namespace hz::x86
 		return X86InstructionType::JL;
 	}
 
-	byterange JlInstruction::emit() const
+	ByteRange JlInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1367,9 +1367,9 @@ namespace hz::x86
 		return X86InstructionType::JLE;
 	}
 
-	byterange JleInstruction::emit() const
+	ByteRange JleInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1401,9 +1401,9 @@ namespace hz::x86
 		return X86InstructionType::JG;
 	}
 
-	byterange JgInstruction::emit() const
+	ByteRange JgInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1435,9 +1435,9 @@ namespace hz::x86
 		return X86InstructionType::JGE;
 	}
 
-	byterange JgeInstruction::emit() const
+	ByteRange JgeInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1470,9 +1470,9 @@ namespace hz::x86
 		return X86InstructionType::JA;
 	}
 
-	byterange JaInstruction::emit() const
+	ByteRange JaInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1504,9 +1504,9 @@ namespace hz::x86
 		return X86InstructionType::JAE;
 	}
 
-	byterange JaeInstruction::emit() const
+	ByteRange JaeInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1538,9 +1538,9 @@ namespace hz::x86
 		return X86InstructionType::JB;
 	}
 
-	byterange JbInstruction::emit() const
+	ByteRange JbInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1572,9 +1572,9 @@ namespace hz::x86
 		return X86InstructionType::JBE;
 	}
 
-	byterange JbeInstruction::emit() const
+	ByteRange JbeInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
 
@@ -1606,7 +1606,7 @@ namespace hz::x86
 		return X86InstructionType::SETE;
 	}
 
-	byterange SeteInstruction::emit() const
+	ByteRange SeteInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1616,7 +1616,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 94 --> SETE r/m8
 				PUT(range8(0x0F));
@@ -1640,7 +1640,7 @@ namespace hz::x86
 		return X86InstructionType::SETNE;
 	}
 
-	byterange SetneInstruction::emit() const
+	ByteRange SetneInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1650,7 +1650,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 95 --> SETNE r/m8
 				PUT(range8(0x0F));
@@ -1674,7 +1674,7 @@ namespace hz::x86
 		return X86InstructionType::SETL;
 	}
 
-	byterange SetlInstruction::emit() const
+	ByteRange SetlInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1684,7 +1684,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 9C --> SETL r/m8
 				PUT(range8(0x0F));
@@ -1708,7 +1708,7 @@ namespace hz::x86
 		return X86InstructionType::SETLE;
 	}
 
-	byterange SetleInstruction::emit() const
+	ByteRange SetleInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1718,7 +1718,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 9E --> SETLE r/m8
 				PUT(range8(0x0F));
@@ -1742,7 +1742,7 @@ namespace hz::x86
 		return X86InstructionType::SETG;
 	}
 
-	byterange SetgInstruction::emit() const
+	ByteRange SetgInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1752,7 +1752,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 9F --> SETG r/m8
 				PUT(range8(0x0F));
@@ -1776,7 +1776,7 @@ namespace hz::x86
 		return X86InstructionType::SETGE;
 	}
 
-	byterange SetgeInstruction::emit() const
+	ByteRange SetgeInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1786,7 +1786,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 9D --> SETGE r/m8
 				PUT(range8(0x0F));
@@ -1810,7 +1810,7 @@ namespace hz::x86
 		return X86InstructionType::SETA;
 	}
 
-	byterange SetaInstruction::emit() const
+	ByteRange SetaInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1820,7 +1820,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 97 --> SETA r/m8
 				PUT(range8(0x0F));
@@ -1844,7 +1844,7 @@ namespace hz::x86
 		return X86InstructionType::SETAE;
 	}
 
-	byterange SetaeInstruction::emit() const
+	ByteRange SetaeInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1854,7 +1854,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 93 --> SETAE r/m8
 				PUT(range8(0x0F));
@@ -1878,7 +1878,7 @@ namespace hz::x86
 		return X86InstructionType::SETB;
 	}
 
-	byterange SetbInstruction::emit() const
+	ByteRange SetbInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1888,7 +1888,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 92 --> SETB r/m8
 				PUT(range8(0x0F));
@@ -1912,7 +1912,7 @@ namespace hz::x86
 		return X86InstructionType::SETBE;
 	}
 
-	byterange SetbeInstruction::emit() const
+	ByteRange SetbeInstruction::emit() const
 	{
 		using enum X86OperandType;
 		switch (_operand->otype())
@@ -1922,7 +1922,7 @@ namespace hz::x86
 				const auto register_operand = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_operand->_register);
 
-				byterange out{};
+				ByteRange out{};
 
 				// 0F 96 --> SETBE r/m8
 				PUT(range8(0x0F));
@@ -1946,9 +1946,9 @@ namespace hz::x86
 		return X86InstructionType::NOP;
 	}
 
-	byterange NopInstruction::emit() const
+	ByteRange NopInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		PUT(range8(0x90));
 
@@ -1961,9 +1961,9 @@ namespace hz::x86
 		return X86InstructionType::RET;
 	}
 
-	byterange RetInstruction::emit() const
+	ByteRange RetInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 		
 		if (_immediate != -1)
 		{
@@ -1986,9 +1986,9 @@ namespace hz::x86
 		return X86InstructionType::LEAVE;
 	}
 
-	byterange LeaveInstruction::emit() const
+	ByteRange LeaveInstruction::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 		
 		// C9 --> LEAVE
 		PUT(range8(0xC9));

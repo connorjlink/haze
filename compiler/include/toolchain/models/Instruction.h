@@ -13,7 +13,7 @@ namespace hz
 	{
 	public:
 		virtual ArchitectureType ctype() const = 0;
-		virtual byterange emit() const = 0;
+		virtual ByteRange emit() const = 0;
 	};
 }
 

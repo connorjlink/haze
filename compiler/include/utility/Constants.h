@@ -9,26 +9,12 @@
 
 namespace hz
 {
-	using byterange = std::vector<std::uint8_t>;
+	using ByteRange = std::vector<std::uint8_t>;
 
-	using ubyte = std::uint8_t;
-	using uword = std::uint16_t;
-	using udword = std::uint32_t;
-
-	using sbyte = std::int8_t;
-	using sword = std::int16_t;
-	using sdword = std::int32_t;
-
-	enum Limit : std::uint64_t
-	{
-		UBYTE_MAX  = std::numeric_limits<ubyte>::max(),
-		UWORD_MAX  = std::numeric_limits<uword>::max(),
-		UDWORD_MAX = std::numeric_limits<udword>::max(),
-
-		SBYTE_MAX  = std::numeric_limits<sbyte>::max(),
-		SWORD_MAX  = std::numeric_limits<sword>::max(),
-		SDWORD_MAX = std::numeric_limits<sdword>::max(),
-	};
+	using RegisterIndex = std::uint8_t;
+	// pointer type
+	using MemoryIndex = std::uint32_t;
+	using StackIndex = std::int32_t;
 }
 
 #endif

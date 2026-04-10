@@ -18,11 +18,11 @@ namespace hz
 	public:
 		bool marked_for_deletion;
 		std::string branch_target;
-		byterange object_code;
+		ByteRange object_code;
 
 	public:
 		InstructionCommand() = delete;
-		InstructionCommand(Token, byterange&&, const std::string& = "");
+		InstructionCommand(Token, ByteRange&&, const std::string& = "");
 
 	public:
 		inline std::size_t length() const

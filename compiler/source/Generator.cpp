@@ -344,7 +344,7 @@ namespace hz
 	}
 
 
-	void Generator::raw_binary(byterange&& object_code)
+	void Generator::raw_binary(ByteRange&& object_code)
 	{
 		const auto approximate_length = static_cast<std::uint32_t>(object_code.size());
 
@@ -352,7 +352,7 @@ namespace hz
 		inline_assembly(std::move(object_code), approximate_length);
 	}
 
-	void Generator::inline_assembly(byterange&& object_code, std::uint32_t approximate_size)
+	void Generator::inline_assembly(ByteRange&& object_code, std::uint32_t approximate_size)
 	{
 		auto command = new InlineAssemblyCommand{ std::move(object_code), approximate_size };
 		COMPOSE(command);

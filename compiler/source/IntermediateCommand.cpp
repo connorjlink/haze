@@ -61,7 +61,7 @@ namespace hz
 		return IntermediateType::BRANCH_LABEL;
 	}
 
-	byterange BranchLabelCommand::emit() const
+	ByteRange BranchLabelCommand::emit() const
 	{
 		// No binary code is generated for a label
 		return {};
@@ -73,7 +73,7 @@ namespace hz
 		return IntermediateType::ENTER_SCOPE;
 	}
 
-	constexpr byterange EnterScopeCommand::_emit(std::uint32_t locals_count, std::int32_t bytes) const
+	constexpr ByteRange EnterScopeCommand::_emit(std::uint32_t locals_count, std::int32_t bytes) const
 	{
 		// push ebp
 		// mov ebp, esp
@@ -82,7 +82,7 @@ namespace hz
 		// NOTE: equivalent to -->
 		// enter 0, N (size of local variables)
 
-		byterange out{};
+		ByteRange out{};
 
 		EMIT(push(std::make_unique<RegisterOperand>(EBP)));
 		EMIT(push(std::make_unique<RegisterOperand>(EBP), std::make_unique<RegisterOperand>(ESP)));
@@ -96,7 +96,7 @@ namespace hz
 		return out;
 	}
 
-	byterange EnterScopeCommand::emit() const
+	ByteRange EnterScopeCommand::emit() const
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -119,7 +119,7 @@ namespace hz
 		return IntermediateType::LEAVE_SCOPE;
 	}
 
-	byterange LeaveScopeCommand::emit() const
+	ByteRange LeaveScopeCommand::emit() const
 	{
 		// mov esp, ebp
 		// pop ebp
@@ -127,7 +127,7 @@ namespace hz
 		// NOTE: equivalent to -->
 		// leave
 
-		byterange out{};
+		ByteRange out{};
 
 		EMIT(leave());
 		
@@ -160,9 +160,9 @@ namespace hz
 		return IntermediateType::LOCAL_VARIABLE;
 	}
 
-	byterange LocalVariableCommand::emit() const
+	ByteRange LocalVariableCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 #pragma message("TODO: local variable code generation")
 
@@ -175,9 +175,9 @@ namespace hz
 		return IntermediateType::GLOBAL_VARIABLE;
 	}
 
-	byterange GlobalVariableCommand::emit() const
+	ByteRange GlobalVariableCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 #pragma message("TODO: GLOBAL VARIABLE CODE GENERATION")
 
@@ -190,11 +190,11 @@ namespace hz
 		return IntermediateType::HEAP_READ;
 	}
 
-	byterange HeapReadCommand::emit() const
+	ByteRange HeapReadCommand::emit() const
 	{
 		// mov destination, [pointer]
 
-		byterange out{};
+		ByteRange out{};
 
 		EMIT(mov(std::make_unique<RegisterOperand>(_destination), std::make_unique<IndirectOperand>(_pointer)));
 
@@ -207,11 +207,11 @@ namespace hz
 		return IntermediateType::HEAP_WRITE;
 	}
 
-	byterange HeapWriteCommand::emit() const
+	ByteRange HeapWriteCommand::emit() const
 	{
 		// mov [pointer], destination
 
-		byterange out{};
+		ByteRange out{};
 
 		EMIT(mov(std::make_unique<IndirectOperand>(_pointer), std::make_unique<RegisterOperand>(_source)));
 
@@ -224,11 +224,11 @@ namespace hz
 		return IntermediateType::STACK_READ;
 	}
 
-	byterange StackReadCommand::emit() const
+	ByteRange StackReadCommand::emit() const
 	{
 		// mov destination, [ebp + offset]
 
-		byterange out{};
+		ByteRange out{};
 
 		EMIT(mov(std::make_unique<RegisterOperand>(_destination), std::make_unique<RegisterDisplacedOperand>(EBP, _offset)));
 
@@ -241,11 +241,11 @@ namespace hz
 		return IntermediateType::STACK_WRITE;
 	}
 
-	byterange StackWriteCommand::emit() const
+	ByteRange StackWriteCommand::emit() const
 	{
 		// mov [ebp + offset], destination
 		
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::mov_obr(_offset, _source));
 		EMIT(mov(std::make_unique<RegisterDisplacedOperand>(EBP, _offset), std::make_unique<RegisterOperand>(_destination)));
@@ -259,13 +259,13 @@ namespace hz
 		return IntermediateType::BOOL;
 	}
 
-	byterange BoolCommand::emit() const
+	ByteRange BoolCommand::emit() const
 	{
 		// test source, source
 		// sete destination
 		// movzx destination, destination
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::test_rr(_source, _source));
 		PUT(X86Builder::sete_r(_destination));
@@ -286,9 +286,9 @@ namespace hz
 		return BinaryCommandType::ADD;
 	}
 
-	byterange AddCommand::emit() const
+	ByteRange AddCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination == _lhs)
 		{
@@ -320,9 +320,9 @@ namespace hz
 		return BinaryCommandType::SUBTRACT;
 	}
 
-	byterange SubtractCommand::emit() const
+	ByteRange SubtractCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination == _lhs)
 		{
@@ -353,9 +353,9 @@ namespace hz
 		return BinaryCommandType::MULTIPLY;
 	}
 
-	byterange MultiplyCommand::emit() const
+	ByteRange MultiplyCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 #pragma message("TODO: imul instruction")
 
@@ -368,9 +368,9 @@ namespace hz
 		return BinaryCommandType::BITOR;
 	}
 
-	byterange BitorCommand::emit() const
+	ByteRange BitorCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination == _lhs)
 		{
@@ -402,9 +402,9 @@ namespace hz
 		return BinaryCommandType::BITAND;
 	}
 
-	byterange BitandCommand::emit() const
+	ByteRange BitandCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination == _lhs)
 		{
@@ -436,9 +436,9 @@ namespace hz
 		return BinaryCommandType::BITXOR;
 	}
 
-	byterange BitxorCommand::emit() const
+	ByteRange BitxorCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination == _lhs)
 		{
@@ -470,9 +470,9 @@ namespace hz
 		return BinaryCommandType::BITLSHIFT;
 	}
 
-	byterange BitlshiftCommand::emit() const
+	ByteRange BitlshiftCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::mov_rr(_destination, _lhs));
 		PUT(X86Builder::sal_imm(_destination, _rhs));
@@ -486,9 +486,9 @@ namespace hz
 		return BinaryCommandType::BITRSHIFT;
 	}
 
-	byterange BitrshiftCommand::emit() const
+	ByteRange BitrshiftCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::mov_rr(_destination, _lhs));
 		PUT(X86Builder::sar_imm(_destination, _rhs));
@@ -502,13 +502,13 @@ namespace hz
 		return BinaryCommandType::EQUALITY;
 	}
 
-	byterange EqualityCommand::emit() const
+	ByteRange EqualityCommand::emit() const
 	{
 		// cmp lhs, rhs
 		// sete destination
 		// movzx destination, destination
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::sete_r(_destination));
@@ -523,13 +523,13 @@ namespace hz
 		return BinaryCommandType::INEQUALITY;
 	}
 
-	byterange InequalityCommand::emit() const
+	ByteRange InequalityCommand::emit() const
 	{
 		// cmp lhs, rhs
 		// setne destination
 		// movzx destination, destination
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::setne_r(_destination));
@@ -544,7 +544,7 @@ namespace hz
 		return BinaryCommandType::LESS;
 	}
 
-	byterange LessCommand::emit() const
+	ByteRange LessCommand::emit() const
 	{
 		// NOTE: comparison is for two SIGNED integers
 		// use set(above|below) for unsigned comparisons
@@ -553,7 +553,7 @@ namespace hz
 		// setl destination
 		// movzx destination, destination
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::setl_r(_destination));
@@ -568,7 +568,7 @@ namespace hz
 		return BinaryCommandType::GREATER;
 	}
 
-	byterange GreaterCommand::emit() const
+	ByteRange GreaterCommand::emit() const
 	{
 		// NOTE: comparison is for two SIGNED integers
 		// use set(above|below) for unsigned comparisons
@@ -577,7 +577,7 @@ namespace hz
 		// setg destination
 		// movzx destination, destination
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
 		PUT(X86Builder::setg_r(_destination));
@@ -592,9 +592,9 @@ namespace hz
 		return IntermediateType::INCREMENT;
 	}
 
-	byterange IncrementCommand::emit() const
+	ByteRange IncrementCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination != _source)
 		{
@@ -614,9 +614,9 @@ namespace hz
 		return IntermediateType::DECREMENT;
 	}
 
-	byterange DecrementCommand::emit() const
+	ByteRange DecrementCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination != _source)
 		{
@@ -636,10 +636,10 @@ namespace hz
 		return IntermediateType::COPY;
 	}
 
-	byterange CopyCommand::emit() const
+	ByteRange CopyCommand::emit() const
 	{
 
-		byterange out{};
+		ByteRange out{};
 
 		if (_destination != _source)
 		{
@@ -656,9 +656,9 @@ namespace hz
 		return IntermediateType::MAKE_IMMEDIATE;
 	}
 
-	byterange MakeImmediateCommand::emit() const
+	ByteRange MakeImmediateCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::mov_ri(_destination, _immediate));
 
@@ -671,11 +671,11 @@ namespace hz
 		return IntermediateType::MAKE_ARGUMENT;
 	}
 
-	byterange MakeArgumentCommand::emit() const
+	ByteRange MakeArgumentCommand::emit() const
 	{
 		// push location
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::push_r(_location));
 
@@ -688,11 +688,11 @@ namespace hz
 		return IntermediateType::TAKE_ARGUMENT;
 	}
 
-	byterange TakeArgumentCommand::emit() const
+	ByteRange TakeArgumentCommand::emit() const
 	{
 		// mov _location, [ebp + offset]
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::mov_rbo(_location, _offset));
 
@@ -711,9 +711,9 @@ namespace hz
 		return BranchCommandType::CALL_FUNCTION;
 	}
 
-	byterange CallFunctionCommand::emit() const
+	ByteRange CallFunctionCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 		// NOTE: old method
 		//const auto target = _generator->query_branch_target(function);
@@ -735,14 +735,14 @@ namespace hz
 		return BranchCommandType::VOID_RETURN;
 	}
 
-	byterange VoidReturnCommand::emit() const
+	ByteRange VoidReturnCommand::emit() const
 	{
 		// NOTE: old method
 		// ret
 
 		// jmp end_function_label
 
-		byterange out{};
+		ByteRange out{};
 
 		// NOTE: old methood
 		// tearing down the stack frame is now done in `LeaveScopeCommand`
@@ -778,7 +778,7 @@ namespace hz
 		return BranchCommandType::VALUE_RETURN;
 	}
 
-	byterange ValueReturnCommand::emit() const
+	ByteRange ValueReturnCommand::emit() const
 	{
 		// NOTE: old method
 		// mov eax, location
@@ -786,7 +786,7 @@ namespace hz
 
 		// jmp end_function_label
 
-		byterange out{};
+		ByteRange out{};
 
 		// NOTE: old method
 		// NOTE: this will clobber anything currently in the EAX register
@@ -831,12 +831,12 @@ namespace hz
 		return BranchCommandType::IF_NOT_ZERO;
 	}
 
-	byterange IfNotZeroCommand::emit() const
+	ByteRange IfNotZeroCommand::emit() const
 	{
 		// test value, value
 		// jne target_offset
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
 		::assert(target_offset.has_value(), "Ifnz conditional statement relative jump target offset was not defined");
@@ -851,12 +851,12 @@ namespace hz
 		return BranchCommandType::IF_ZERO;
 	}
 
-	byterange IfZeroCommand::emit() const
+	ByteRange IfZeroCommand::emit() const
 	{
 		// test value, value
 		// je target_offset
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
 		::assert(target_offset.has_value(), "Ifz conditional statement relative jump target offset was not defined");
@@ -871,11 +871,11 @@ namespace hz
 		return BranchCommandType::GOTO;
 	}
 
-	byterange GotoCommand::emit() const
+	ByteRange GotoCommand::emit() const
 	{
 		// jmp target_offset
 
-		byterange out{};
+		ByteRange out{};
 
 		::assert(target_offset.has_value(), "Goto statement relative jump target offset was not defined");
 		PUT(X86Builder::jmp_relative(target_offset.value()));
@@ -889,9 +889,9 @@ namespace hz
 		return IntermediateType::MAKE_MESSAGE;
 	}
 
-	byterange MakeMessageCommand::emit() const
+	ByteRange MakeMessageCommand::emit() const
 	{
-		byterange out{};
+		ByteRange out{};
 
 #pragma message("TODO: make message code generation")
 
@@ -904,7 +904,7 @@ namespace hz
 		return IntermediateType::PRINT_MESSAGE;
 	}
 
-	byterange PrintMessageCommand::emit() const
+	ByteRange PrintMessageCommand::emit() const
 	{
 		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL)
 		// push NULL
@@ -914,7 +914,7 @@ namespace hz
 		// push [0x004032F0] ; provided console stdout handle
 		// call [WriteConsole]
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::push_i8(0x00));
 		PUT(X86Builder::push_i8(0x00));
@@ -932,7 +932,7 @@ namespace hz
 		return IntermediateType::PRINT_NUMBER;
 	}
 
-	byterange PrintNumberCommand::emit() const
+	ByteRange PrintNumberCommand::emit() const
 	{
 		// wnsprintfA(buffer, 0xF, "%d\n", _value)
 		// push value
@@ -949,7 +949,7 @@ namespace hz
 		// push [0x4032F0] ; provided console stdout handle
 		// call [WriteConsole]
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::push_r(EAX));
 
@@ -987,12 +987,12 @@ namespace hz
 		return IntermediateType::EXIT_PROGRAM;
 	}
 
-	byterange ExitProgramCommand::emit() const
+	ByteRange ExitProgramCommand::emit() const
 	{
 		// push code
 		// call [ExitProcess]
 
-		byterange out{};
+		ByteRange out{};
 
 		PUT(X86Builder::push_r(_code));
 		PUT(X86Builder::call_absolute(PROCEDURE(exitprocess_iat_va)));
@@ -1006,7 +1006,7 @@ namespace hz
 		return IntermediateType::INLINE_ASSEMBLY;
 	}
 
-	byterange InlineAssemblyCommand::emit() const
+	ByteRange InlineAssemblyCommand::emit() const
 	{
 		return _code;
 	}

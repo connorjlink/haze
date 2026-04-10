@@ -83,7 +83,7 @@ namespace hz
 
 		auto entrypoint = 0;
 
-		if (USE_SAFE(CommandLineOptions)->_architecture == ArchitectureType::X86)
+		if (USE_SAFE(CommandLineOptions)->architecture == ArchitectureType::X86)
 		{
 			//entrypoint = 0x401000 + 0x200;
 			//entrypoint = 0x1000;

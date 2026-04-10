@@ -38,7 +38,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define push(op) PushInstruction{ op }
 
@@ -55,7 +55,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define pop(op) PopInstruction{ op }
 
@@ -73,7 +73,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define mov(dst, src) MovInstruction{ dst, src }
 
@@ -91,7 +91,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define movzx(dst, src) MovzxInstruction{ dst, src }
 
@@ -109,7 +109,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define add(dst, src) AddInstruction{ dst, src }
 
@@ -127,7 +127,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sub(dst, src) SubInstruction{ dst, src }
 
@@ -145,7 +145,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define and(dst, src) AndInstruction{ dst, src }
 
@@ -163,7 +163,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define or(dst, src) OrInstruction{ dst, src }
 
@@ -181,7 +181,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define xor(dst, src) XorInstruction{ dst, src }
 
@@ -198,7 +198,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define inc(op) IncInstruction{ op }
 
@@ -215,7 +215,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define dec(op) DecInstruction{ op }
 
@@ -238,7 +238,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sal(op) SalInstruction{ op }
 
@@ -261,7 +261,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sar(op) SarInstruction{ op }
 
@@ -279,7 +279,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define test(dst, src) TestInstruction{ dst, src }
 
@@ -297,7 +297,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define cmp(dst, src) CmpInstruction{ dst, src }
 
@@ -315,7 +315,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define call(label, disp) CallInstruction{ label, disp }
 
@@ -333,7 +333,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define apicall(label, disp) ApicallInstruction{ label, disp }
 
@@ -351,7 +351,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jmp(label, disp) JmpInstruction{ label, disp }
 
@@ -369,7 +369,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define je(label, disp) JeInstruction{ label, disp }
 
@@ -387,7 +387,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jne(label, disp) JneInstruction{ label, disp }
 
@@ -405,7 +405,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jl(label, disp) JlInstruction{ label, disp }
 
@@ -423,7 +423,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jle(label, disp) JleInstruction{ label, disp }
 
@@ -441,7 +441,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jg(label, disp) JgInstruction{ label, disp }
 
@@ -459,7 +459,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jge(label, disp) JgeInstruction{ label, disp }
 
@@ -477,7 +477,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define ja(label, disp) JaInstruction{ label, disp }
 
@@ -495,7 +495,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jae(label, disp) JaeInstruction{ label, disp }
 
@@ -513,7 +513,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jb(label, disp) JbInstruction{ label, disp }
 
@@ -531,7 +531,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define jbe(label, disp) JbeInstruction{ label, disp }
 
@@ -548,7 +548,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define sete(op) SeteInstruction{ op }
 
@@ -565,7 +565,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setne(op) SetneInstruction{ op }
 
@@ -582,7 +582,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setl(op) SetlInstruction{ op }
 
@@ -599,7 +599,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setle(op) SetleInstruction{ op }
 
@@ -616,7 +616,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setg(op) SetgInstruction{ op }
 
@@ -633,7 +633,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setge(op) SetgeInstruction{ op }
 
@@ -650,7 +650,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define seta(op) SetaInstruction{ op }
 
@@ -667,7 +667,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setae(op) SetaeInstruction{ op }
 
@@ -684,7 +684,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setb(op) SetbInstruction{ op }
 
@@ -701,7 +701,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define setbe(op) SetbeInstruction{ op }
 
@@ -723,7 +723,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define ret() RetInstruction{}
 
@@ -734,7 +734,7 @@ namespace hz
 
 		public:
 			virtual X86InstructionType itype() const final override;
-			virtual byterange emit() const final override;
+			virtual ByteRange emit() const final override;
 		};
 #define leave() LeaveInstruction{}
 	}

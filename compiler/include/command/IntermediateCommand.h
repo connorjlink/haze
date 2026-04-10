@@ -30,7 +30,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const = 0;
-		virtual byterange emit() const = 0;
+		virtual ByteRange emit() const = 0;
 		virtual constexpr std::int32_t bytes() const
 		{
 			return -1;
@@ -51,7 +51,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class EnterScopeCommand : public IntermediateCommand
@@ -67,11 +67,11 @@ namespace hz
 		}
 
 	private:
-		constexpr byterange _emit(std::uint32_t, std::int32_t) const;
+		constexpr ByteRange _emit(std::uint32_t, std::int32_t) const;
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 		//virtual constexpr std::int32_t bytes() const final override;
 	};
 
@@ -79,7 +79,7 @@ namespace hz
 	{
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class LocalVariableCommand : public IntermediateCommand
@@ -96,7 +96,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class GlobalVariableCommand : public IntermediateCommand
@@ -113,7 +113,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class HeapReadCommand : public IntermediateCommand
@@ -130,7 +130,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class HeapWriteCommand : public IntermediateCommand
@@ -147,7 +147,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class StackReadCommand : public IntermediateCommand
@@ -164,7 +164,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class StackWriteCommand : public IntermediateCommand
@@ -181,7 +181,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BoolCommand : public IntermediateCommand
@@ -197,7 +197,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BinaryCommand : public IntermediateCommand
@@ -223,7 +223,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class SubtractCommand : public BinaryCommand
@@ -233,7 +233,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class MultiplyCommand : public BinaryCommand
@@ -243,7 +243,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BitorCommand : public BinaryCommand
@@ -253,7 +253,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BitandCommand : public BinaryCommand
@@ -263,7 +263,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BitxorCommand : public BinaryCommand
@@ -273,7 +273,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BitlshiftCommand : public BinaryCommand
@@ -283,7 +283,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BitrshiftCommand : public BinaryCommand
@@ -293,7 +293,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class EqualityCommand : public BinaryCommand
@@ -303,7 +303,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class InequalityCommand : public BinaryCommand
@@ -313,7 +313,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class LessCommand : public BinaryCommand
@@ -323,7 +323,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class GreaterCommand : public BinaryCommand
@@ -333,7 +333,7 @@ namespace hz
 
 	public:
 		virtual BinaryCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class IncrementCommand : public IntermediateCommand
@@ -349,7 +349,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class DecrementCommand : public IntermediateCommand
@@ -365,7 +365,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class CopyCommand : public IntermediateCommand
@@ -381,7 +381,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class MakeImmediateCommand : public IntermediateCommand
@@ -416,7 +416,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class MakeArgumentCommand : public IntermediateCommand
@@ -435,7 +435,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class TakeArgumentCommand : public IntermediateCommand
@@ -452,7 +452,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class BranchCommand : public IntermediateCommand
@@ -493,7 +493,7 @@ namespace hz
 
 	public:
 		virtual BranchCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class VoidReturnCommand : public BranchCommand
@@ -503,7 +503,7 @@ namespace hz
 
 	public:
 		virtual BranchCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class ValueReturnCommand : public BranchCommand
@@ -524,7 +524,7 @@ namespace hz
 
 	public:
 		virtual BranchCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class IfNotZeroCommand : public BranchCommand
@@ -546,7 +546,7 @@ namespace hz
 
 	public:
 		virtual BranchCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class IfZeroCommand : public BranchCommand
@@ -568,7 +568,7 @@ namespace hz
 
 	public:
 		virtual BranchCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class GotoCommand : public BranchCommand
@@ -586,7 +586,7 @@ namespace hz
 
 	public:
 		virtual BranchCommandType btype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class MakeMessageCommand : public IntermediateCommand
@@ -603,7 +603,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class PrintMessageCommand : public IntermediateCommand
@@ -620,7 +620,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class PrintNumberCommand : public IntermediateCommand
@@ -636,7 +636,7 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class ExitProgramCommand : public IntermediateCommand
@@ -652,24 +652,24 @@ namespace hz
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 
 	class InlineAssemblyCommand : public IntermediateCommand
 	{
 	private:
-		byterange _code;
+		ByteRange _code;
 		std::uint32_t _approximate_size;
 
 	public:
-		InlineAssemblyCommand(byterange&& code, std::uint32_t approximate_size)
+		InlineAssemblyCommand(ByteRange&& code, std::uint32_t approximate_size)
 			: _code{ std::move(code) }, _approximate_size{ approximate_size }
 		{
 		}
 
 	public:
 		virtual IntermediateType itype() const final override;
-		virtual byterange emit() const final override;
+		virtual ByteRange emit() const final override;
 	};
 }
 

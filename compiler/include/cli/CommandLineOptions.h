@@ -15,17 +15,17 @@ namespace hz
 		: public SingletonTag<CommandLineOptions>
 	{
 		// --architecture=
-		ArchitectureType _architecture = ArchitectureType::X86;
+		ArchitectureType architecture = ArchitectureType::X86;
 		// --verbosity=
-		VerbosityType _verbosity = VerbosityType::NORMAL;
+		VerbosityType verbosity = VerbosityType::NORMAL;
 		// --execution=
-		ExecutionType _execution = ExecutionType::COMPILE;
+		ExecutionType execution = ExecutionType::COMPILE;
 
 		// --output=raw
-		bool _raw_output = false;
+		bool raw_output = false;
 
 		// bit flags by optimization category of OptimizationType
-		std::uint32_t _optimization{};
+		std::uint32_t optimization{};
 	};
 }
 

@@ -13,7 +13,7 @@ namespace hz
 
 	// shared between compiler and assembler
 	std::vector<InstructionCommand*> common_link(native_uint, native_uint);
-	void common_finalize(const byterange&, const std::string&);
+	void common_finalize(const ByteRange&, const std::string&);
 }
 
 #endif 

@@ -537,7 +537,7 @@ namespace hz
 			//at bare minimum, we must compile main() since it's the entrypoint
 			USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
 
-			if (USE_SAFE(CommandLineOptions)->_optimization & OptimizationType::AST)
+			if (USE_SAFE(CommandLineOptions)->optimization & OptimizationType::AST)
 			{
 				for (auto& node : program)
 				{

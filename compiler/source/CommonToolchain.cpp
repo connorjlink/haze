@@ -30,7 +30,7 @@ namespace hz
 		const auto fullpath = std::filesystem::path(filepath);
 		const auto basename = fullpath.stem().string();
 
-		if (USE_UNSAFE(CommandLineOptions)->_raw_output)
+		if (USE_UNSAFE(CommandLineOptions)->raw_output)
 		{
 			const auto filepath_out = std::format("{}.hzb", basename);
 
@@ -46,7 +46,7 @@ namespace hz
 		}
 
 		using enum ExecutionType;
-		switch (USE_UNSAFE(CommandLineOptions)->_execution)
+		switch (USE_UNSAFE(CommandLineOptions)->execution)
 		{
 			case COMPILE:
 			{

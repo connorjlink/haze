@@ -52,7 +52,7 @@ namespace hz
     };
 
     template<CompileTimeString String, CompileTimeString... Strings>
-    consteval auto compile_time_concatenate(String&& string, Strings&&... strings) -> 
+    consteval auto compile_time_concatenate(String&& string, Strings&&... strings)
     {
         constexpr std::size_t total_size = (String.size + Strings.size + ...);
         std::array<char, total_size + 1> result{};
@@ -82,6 +82,12 @@ namespace hz
         }
 
         return result;
+    }
+
+    template<typename T, typename... Ts>
+    consteval auto compile_time_concat(T&& first, Ts&&... rest)
+    {
+        return compile_time_concatenate(CompileTimeString{ first }, CompileTimeString{ rest }...);
     }
 }
 

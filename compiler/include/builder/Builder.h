@@ -14,11 +14,11 @@ namespace hz
         : public InjectSingleton<ErrorReporter>
     {
 	protected:
-		const byterange& _code_section;
-		byterange _binary;
+		const ByteRange& _code_section;
+		ByteRange _binary;
         
     public:
-		Builder(const byterange& executable)
+		Builder(const ByteRange& executable)
 			: _code_section{ executable }, _binary{}
 		{
 		}

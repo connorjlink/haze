@@ -10,12 +10,12 @@ namespace
 	using namespace hz;
 
 	template<typename T>
-	constexpr byterange range(T input)
+	constexpr ByteRange range(T input)
 	{
 		static constexpr auto bitcount = std::numeric_limits<std::uint8_t>::digits;
 		static constexpr auto bytecount = std::numeric_limits<T>::digits / bitcount;
 
-		byterange out{};
+		ByteRange out{};
 
 		T mask = 0xFF;
 
@@ -32,29 +32,29 @@ namespace
 
 namespace hz
 {
-	constexpr byterange range8(std::uint8_t value)
+	constexpr ByteRange range8(std::uint8_t value)
 	{
 		return ::range(value);
 	}
 
-	constexpr byterange range16(std::uint16_t value)
+	constexpr ByteRange range16(std::uint16_t value)
 	{
 		return ::range(value);
 	}
 
-	constexpr byterange range32(std::uint32_t value)
+	constexpr ByteRange range32(std::uint32_t value)
 	{
 		return ::range(value);
 	}
 
-	constexpr byterange range64(std::uint64_t value)
+	constexpr ByteRange range64(std::uint64_t value)
 	{
 		return ::range(value);
 	}
 
-	byterange range_of(const std::string& s)
+	ByteRange range_of(const std::string& s)
 	{
-		byterange out{};
+		ByteRange out{};
 
 		for (auto c : s)
 		{
