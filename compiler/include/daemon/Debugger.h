@@ -1,8 +1,6 @@
 #ifndef HAZE_DEBUGGER_H
 #define HAZE_DEBUGGER_H
 
-#include <utility/PlatformVariables.h>
-
 // Haze Debugger.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -17,8 +15,8 @@ namespace hz
 		
 		// breakpoint subsystem
 		__declspec(dllimport) void mist_clear_function_symbols();
-		__declspec(dllimport) void mist_register_function_symbol_rva(const char* name, native_uint address);
-		__declspec(dllimport) void mist_register_function_symbol_va(const char* name, native_uint address);
+		__declspec(dllimport) void mist_register_function_symbol_rva(const char* name, Address address);
+		__declspec(dllimport) void mist_register_function_symbol_va(const char* name, Address address);
 	}
 }
 

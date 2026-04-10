@@ -196,7 +196,7 @@ namespace hz
 
 		ByteRange out{};
 
-		EMIT(mov(std::make_unique<RegisterOperand>(_destination), std::make_unique<IndirectOperand>(_pointer)));
+		EMIT(mov(std::make_unique<RegisterOperand>(destination), std::make_unique<IndirectOperand>(pointer)));
 
 		return out;
 	}
@@ -213,7 +213,7 @@ namespace hz
 
 		ByteRange out{};
 
-		EMIT(mov(std::make_unique<IndirectOperand>(_pointer), std::make_unique<RegisterOperand>(_source)));
+		EMIT(mov(std::make_unique<IndirectOperand>(pointer), std::make_unique<RegisterOperand>(_source)));
 
 		return out;
 	}
@@ -230,7 +230,7 @@ namespace hz
 
 		ByteRange out{};
 
-		EMIT(mov(std::make_unique<RegisterOperand>(_destination), std::make_unique<RegisterDisplacedOperand>(EBP, _offset)));
+		EMIT(mov(std::make_unique<RegisterOperand>(destination), std::make_unique<RegisterDisplacedOperand>(EBP, offset)));
 
 		return out;
 	}
@@ -247,8 +247,8 @@ namespace hz
 		
 		ByteRange out{};
 
-		PUT(X86Builder::mov_obr(_offset, _source));
-		EMIT(mov(std::make_unique<RegisterDisplacedOperand>(EBP, _offset), std::make_unique<RegisterOperand>(_destination)));
+		PUT(X86Builder::mov_obr(offset, _source));
+		EMIT(mov(std::make_unique<RegisterDisplacedOperand>(EBP, offset), std::make_unique<RegisterOperand>(destination)));
 
 		return out;
 	}
@@ -268,8 +268,8 @@ namespace hz
 		ByteRange out{};
 
 		PUT(X86Builder::test_rr(_source, _source));
-		PUT(X86Builder::sete_r(_destination));
-		PUT(X86Builder::movzx_rr(_destination, _source));
+		PUT(X86Builder::sete_r(destination));
+		PUT(X86Builder::movzx_rr(destination, _source));
 
 		return out;
 	}
@@ -290,25 +290,25 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination == _lhs)
+		if (destination == _lhs)
 		{
 			// NOTE: the lhs is already in the destination register, so add rhs directly
 			// add destination, rhs
-			PUT(X86Builder::add_rr(_destination, _rhs));
+			PUT(X86Builder::add_rr(destination, _rhs));
 		}
 
-		else if (_destination == _rhs)
+		else if (destination == _rhs)
 		{
 			// NOTE: the rhs is already in the destination register, so add lhs directly
-			PUT(X86Builder::add_rr(_destination, _lhs));
+			PUT(X86Builder::add_rr(destination, _lhs));
 		}
 
 		else
 		{
 			// mov destination, lhs
 			// add destination, rhs
-			PUT(X86Builder::mov_rr(_destination, _lhs));
-			PUT(X86Builder::add_rr(_destination, _rhs));
+			PUT(X86Builder::mov_rr(destination, _lhs));
+			PUT(X86Builder::add_rr(destination, _rhs));
 		}
 
 		return out;
@@ -324,15 +324,15 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination == _lhs)
+		if (destination == _lhs)
 		{
 			// NOTE: the lhs is already in the destination register, so sub rhs directly
 			// sub destination, rhs
-			PUT(X86Builder::sub_rr(_destination, _rhs));
+			PUT(X86Builder::sub_rr(destination, _rhs));
 		}
 		
 		// NOTE: since subtraction is anti-commutative swapping operand order here is less efficient than just moving
-		/*else if (_destination == _rhs)
+		/*else if (destination == _rhs)
 		{
 		}*/
 
@@ -340,8 +340,8 @@ namespace hz
 		{
 			// mov destination, lhs
 			// sub destination, rhs
-			PUT(X86Builder::mov_rr(_destination, _lhs));
-			PUT(X86Builder::sub_rr(_destination, _rhs));
+			PUT(X86Builder::mov_rr(destination, _lhs));
+			PUT(X86Builder::sub_rr(destination, _rhs));
 		}
 
 		return out;
@@ -372,25 +372,25 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination == _lhs)
+		if (destination == _lhs)
 		{
 			// NOTE: the lhs is already in the destination register, so or rhs directly
 			// or destination, rhs
-			PUT(X86Builder::or_rr(_destination, _rhs));
+			PUT(X86Builder::or_rr(destination, _rhs));
 		}
 
-		else if (_destination == _rhs)
+		else if (destination == _rhs)
 		{
 			// NOTE: the rhs is already in the destination register, so add lhs directly
-			PUT(X86Builder::or_rr(_destination, _lhs));
+			PUT(X86Builder::or_rr(destination, _lhs));
 		}
 
 		else
 		{
 			// mov destination, lhs
 			// or destination, rhs
-			PUT(X86Builder::mov_rr(_destination, _lhs));
-			PUT(X86Builder::or_rr(_destination, _rhs));
+			PUT(X86Builder::mov_rr(destination, _lhs));
+			PUT(X86Builder::or_rr(destination, _rhs));
 		}
 
 		return out;
@@ -406,25 +406,25 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination == _lhs)
+		if (destination == _lhs)
 		{
 			// NOTE: the lhs is already in the destination register, so and rhs directly
 			// and destination, rhs
-			PUT(X86Builder::and_rr(_destination, _rhs));
+			PUT(X86Builder::and_rr(destination, _rhs));
 		}
 
-		else if (_destination == _rhs)
+		else if (destination == _rhs)
 		{
 			// NOTE: the rhs is already in the destination register, so and lhs directly
-			PUT(X86Builder::and_rr(_destination, _lhs));
+			PUT(X86Builder::and_rr(destination, _lhs));
 		}
 
 		else
 		{
 			// mov destination, lhs
 			// and destination, rhs
-			PUT(X86Builder::mov_rr(_destination, _lhs));
-			PUT(X86Builder::and_rr(_destination, _rhs));
+			PUT(X86Builder::mov_rr(destination, _lhs));
+			PUT(X86Builder::and_rr(destination, _rhs));
 		}
 
 		return out;
@@ -440,25 +440,25 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination == _lhs)
+		if (destination == _lhs)
 		{
 			// NOTE: the lhs is already in the destination register, so xor rhs directly
 			// xor destination, rhs
-			PUT(X86Builder::xor_rr(_destination, _rhs));
+			PUT(X86Builder::xor_rr(destination, _rhs));
 		}
 
-		else if (_destination == _rhs)
+		else if (destination == _rhs)
 		{
 			// NOTE: the rhs is already in the destination register, so xor lhs directly
-			PUT(X86Builder::xor_rr(_destination, _lhs));
+			PUT(X86Builder::xor_rr(destination, _lhs));
 		}
 
 		else
 		{
 			// mov destination, lhs
 			// xor destination, rhs
-			PUT(X86Builder::mov_rr(_destination, _lhs));
-			PUT(X86Builder::xor_rr(_destination, _rhs));
+			PUT(X86Builder::mov_rr(destination, _lhs));
+			PUT(X86Builder::xor_rr(destination, _rhs));
 		}
 
 		return out;
@@ -474,8 +474,8 @@ namespace hz
 	{
 		ByteRange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::sal_imm(_destination, _rhs));
+		PUT(X86Builder::mov_rr(destination, _lhs));
+		PUT(X86Builder::sal_imm(destination, _rhs));
 
 		return out;
 	}
@@ -490,8 +490,8 @@ namespace hz
 	{
 		ByteRange out{};
 
-		PUT(X86Builder::mov_rr(_destination, _lhs));
-		PUT(X86Builder::sar_imm(_destination, _rhs));
+		PUT(X86Builder::mov_rr(destination, _lhs));
+		PUT(X86Builder::sar_imm(destination, _rhs));
 		
 		return out;
 	}
@@ -511,8 +511,8 @@ namespace hz
 		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
-		PUT(X86Builder::sete_r(_destination));
-		PUT(X86Builder::movzx_rr(_destination, _destination));
+		PUT(X86Builder::sete_r(destination));
+		PUT(X86Builder::movzx_rr(destination, destination));
 
 		return out;
 	}
@@ -532,8 +532,8 @@ namespace hz
 		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
-		PUT(X86Builder::setne_r(_destination));
-		PUT(X86Builder::movzx_rr(_destination, _destination));
+		PUT(X86Builder::setne_r(destination));
+		PUT(X86Builder::movzx_rr(destination, destination));
 
 		return out;
 	}
@@ -556,8 +556,8 @@ namespace hz
 		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
-		PUT(X86Builder::setl_r(_destination));
-		PUT(X86Builder::movzx_rr(_destination, _destination));
+		PUT(X86Builder::setl_r(destination));
+		PUT(X86Builder::movzx_rr(destination, destination));
 
 		return out;
 	}
@@ -580,8 +580,8 @@ namespace hz
 		ByteRange out{};
 
 		PUT(X86Builder::cmp_rr(_lhs, _rhs));
-		PUT(X86Builder::setg_r(_destination));
-		PUT(X86Builder::movzx_rr(_destination, _destination));
+		PUT(X86Builder::setg_r(destination));
+		PUT(X86Builder::movzx_rr(destination, destination));
 
 		return out;
 	}
@@ -596,14 +596,14 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination != _source)
+		if (destination != _source)
 		{
 			// mov destination, source
-			PUT(X86Builder::mov_rr(_destination, _source));
+			PUT(X86Builder::mov_rr(destination, _source));
 		}
 
 		// inc destination
-		PUT(X86Builder::inc_r(_destination));
+		PUT(X86Builder::inc_r(destination));
 
 		return out;
 	}
@@ -618,14 +618,14 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (_destination != _source)
+		if (destination != _source)
 		{
 			// mov destination, source
-			PUT(X86Builder::mov_rr(_destination, _source));
+			PUT(X86Builder::mov_rr(destination, _source));
 		}
 
 		// dec destination
-		PUT(X86Builder::dec_r(_destination));
+		PUT(X86Builder::dec_r(destination));
 
 		return out;
 	}
@@ -641,10 +641,10 @@ namespace hz
 
 		ByteRange out{};
 
-		if (_destination != _source)
+		if (destination != _source)
 		{
 			// mov destination, src
-			PUT(X86Builder::mov_rr(_destination, _source));
+			PUT(X86Builder::mov_rr(destination, _source));
 		}
 
 		return out;
@@ -660,7 +660,7 @@ namespace hz
 	{
 		ByteRange out{};
 
-		PUT(X86Builder::mov_ri(_destination, _immediate));
+		PUT(X86Builder::mov_ri(destination, immediate));
 
 		return out;
 	}
@@ -673,11 +673,11 @@ namespace hz
 
 	ByteRange MakeArgumentCommand::emit() const
 	{
-		// push location
+		// push source
 
 		ByteRange out{};
 
-		PUT(X86Builder::push_r(_location));
+		PUT(X86Builder::push_r(source));
 
 		return out;
 	}
@@ -690,11 +690,11 @@ namespace hz
 
 	ByteRange TakeArgumentCommand::emit() const
 	{
-		// mov _location, [ebp + offset]
+		// mov destination, [ebp + offset]
 
 		ByteRange out{};
 
-		PUT(X86Builder::mov_rbo(_location, _offset));
+		PUT(X86Builder::mov_rbo(destination, offset));
 
 		return out;
 	}
@@ -737,34 +737,11 @@ namespace hz
 
 	ByteRange VoidReturnCommand::emit() const
 	{
-		// NOTE: old method
-		// ret
+		// NOTE: not directly `ret` 
 
 		// jmp end_function_label
 
 		ByteRange out{};
-
-		// NOTE: old methood
-		// tearing down the stack frame is now done in `LeaveScopeCommand`
-		/*const auto& current_function = _generator->current_function();
-
-		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
-		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
-
-		const auto arity = function_symbol->arity();
-
-		if (arity == 0)
-		{
-			PUT(X86Builder::ret());
-		}
-
-		else
-		{
-#pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
-			// pop all arguments pushed by the caller
-			const auto bytes = arity * 4;
-			PUT(X86Builder::ret(bytes));
-		}*/
 
 		::assert(target_offset.has_value(), "Return statement relative jump target offset was not defined");
 		PUT(X86Builder::jmp_relative(target_offset.value()));
@@ -780,44 +757,9 @@ namespace hz
 
 	ByteRange ValueReturnCommand::emit() const
 	{
-		// NOTE: old method
-		// mov eax, location
-		// ret
-
 		// jmp end_function_label
 
 		ByteRange out{};
-
-		// NOTE: old method
-		// NOTE: this will clobber anything currently in the EAX register
-		// but this should be OK since they are locals anyway
-
-		/*if (_location != EAX)
-		{
-			PUT(X86Builder::mov_rr(EAX, _location));
-		}*/
-		
-		// NOTE: old method
-		// now this is done when tearing down the stack frame in `LeaveScopeCommand`
-		/*const auto& current_function = _generator->current_function();
-
-		const auto symbol = _parser->reference_symbol(SymbolType::FUNCTION, current_function, NULL_TOKEN);
-		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
-
-		const auto arity = function_symbol->arity();
-
-		if (arity == 0)
-		{
-			PUT(X86Builder::ret());
-		}
-
-		else
-		{
-#pragma message("TODO: compute the correct number of bytes to pop based on argument sizes")
-			// pop all arguments pushed by the caller
-			const auto bytes = arity * 4;
-			PUT(X86Builder::ret(bytes));
-		}*/
 
 		::assert(target_offset.has_value(), "Return statement relative jump target offset was not defined");
 		PUT(X86Builder::jmp_relative(target_offset.value()));
@@ -918,8 +860,8 @@ namespace hz
 
 		PUT(X86Builder::push_i8(0x00));
 		PUT(X86Builder::push_i8(0x00));
-		PUT(X86Builder::push_i8(_length));
-		PUT(X86Builder::push_i32(_pointer));
+		PUT(X86Builder::push_i8(length));
+		PUT(X86Builder::push_i32(pointer));
 		PUT(X86Builder::push_m(STDOUT_HANDLE));
 		PUT(X86Builder::call_absolute(PROCEDURE(writeconsole_iat_va)));
 
@@ -1008,6 +950,6 @@ namespace hz
 
 	ByteRange InlineAssemblyCommand::emit() const
 	{
-		return _code;
+		return code;
 	}
 }

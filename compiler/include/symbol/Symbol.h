@@ -4,7 +4,6 @@
 #include <symbol/SymbolType.h>
 #include <ast/models/StructMember.h>
 #include <utility/ExtendedInteger.h>
-#include <utility/PlatformVariables.h>
 
 // Haze Symbol.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -118,10 +117,10 @@ namespace hz
 	class LabelSymbol : public Symbol
 	{
 	public:
-		native_uint address;
+		Address address;
 
 	public:
-		LabelSymbol(const std::string& name, const Token& token, native_uint address)
+		LabelSymbol(const std::string& name, const Token& token, Address address)
 			: Symbol{ name, token }, address{ address }
 		{
 		}

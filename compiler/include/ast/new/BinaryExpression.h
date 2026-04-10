@@ -14,8 +14,8 @@ namespace hz
         static constexpr auto tag = ExpressionIndex<BinaryExpression>::value;
 
     public:
-        RegisterIndex left_index;   // index of left expression in the ExpressionAST storage
-        RegisterIndex right_index;  // index of right expression
+        Register left_index;   // index of left expression in the ExpressionAST storage
+        Register right_index;  // index of right expression
         char op;                   // '+', '-', '*', '/' etc.
 
         void print(const ExpressionStorage& ast) const

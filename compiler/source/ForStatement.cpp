@@ -5,7 +5,6 @@ import std;
 #include <ast/NullStatement.h>
 #include <ast/IntegerLiteralExpression.h>
 #include <runtime/Context.h>
-#include <utility/ExtendedInteger.h>
 #include <utility/Random.h>
 
 // Haze ForStatement.cpp

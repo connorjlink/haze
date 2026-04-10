@@ -38,13 +38,13 @@ namespace hz
 
 #define NAMEOF(x) #x
 
-	inline constexpr std::string_view get_stack_pointer(ArchitectureType type)
+	inline constexpr std::string_view get_stack_frame_pointer(ArchitectureType type)
 	{
 		using enum ArchitectureType;
 		switch (type)
 		{
-			case X86: return NAMEOF(ESP);
-			case RISCV: return NAMEOF(SP); 
+			case X86: return NAMEOF(EBP);
+			case RISCV: return NAMEOF(FP); 
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(

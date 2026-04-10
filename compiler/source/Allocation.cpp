@@ -115,19 +115,19 @@ namespace hz
 
 	void StackAllocation::write(Variable* value) const
 	{
-		IntegerLiteral* integer_literal = nullptr;
+		BigInteger integer{};
 
 		using enum VariableType;
 		switch (value->vtype())
 		{
-			case UBYTE: integer_literal = new UnsignedByteIntegerLiteral{ AS_UBYTE_VARIABLE(value)->value }; break;
-			case SBYTE: integer_literal = new SignedByteIntegerLiteral{ AS_SBYTE_VARIABLE(value)->value }; break;
+			case UBYTE: integer = AS_UBYTE_VARIABLE(value)->value; break;
+			case SBYTE: integer = AS_SBYTE_VARIABLE(value)->value; break;
 
-			case UWORD: integer_literal = new UnsignedWordIntegerLiteral{ AS_UWORD_VARIABLE(value)->value }; break;
-			case SWORD: integer_literal = new SignedWordIntegerLiteral{ AS_SWORD_VARIABLE(value)->value }; break;
+			case UWORD: integer = AS_UWORD_VARIABLE(value)->value; break;
+			case SWORD: integer = AS_SWORD_VARIABLE(value)->value; break;
 
-			case UDWORD: integer_literal = new UnsignedDoubleWordIntegerLiteral{ AS_UDWORD_VARIABLE(value)->value }; break;
-			case SDWORD: integer_literal = new SignedDoubleWordIntegerLiteral{ AS_SDWORD_VARIABLE(value)->value }; break;
+			case UDWORD: integer = AS_UDWORD_VARIABLE(value)->value; break;
+			case SDWORD: integer = AS_SDWORD_VARIABLE(value)->value; break;
 
 			case STRING: [[fallthrough]];
 			case STRUCT: USE_SAFE(ErrorReporter)->post_error(std::format("invalid stack allocation write type variant `{}`", _variable_type_map.at(value->vtype())), NULL_TOKEN);

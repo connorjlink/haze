@@ -7,7 +7,6 @@
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/LinkerType.h>
 #include <toolchain/models/Linkable.h>
-#include <utility/PlatformVariables.h>
 #include <cli/CommandLineOptions.h>
 
 // Haze Linker.h
@@ -35,7 +34,7 @@ namespace hz
 	public:
 		LinkerType ltype() const;
 		bool optimize();
-		std::vector<InstructionCommand*> link(native_uint, native_uint);
+		std::vector<InstructionCommand*> link(Address, Address);
 	};
 }
 

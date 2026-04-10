@@ -15,10 +15,10 @@ namespace hz
 	{
 	private:
 		std::string identifier;
-		IntegerLiteral* value;
+		BigInteger value;
 
 	public:
-		DotDefineCommand(const std::string& identifier, IntegerLiteral* value, Token token)
+		DotDefineCommand(const std::string& identifier, BigInteger value, Token token)
 			: Command{ token }, identifier{ identifier }, value{ value }
 		{
 		}

@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	enum X86Register : std::int8_t
+	enum X86Register : std::uint8_t
 	{
 		EAX = 0,
 		ECX = 1,

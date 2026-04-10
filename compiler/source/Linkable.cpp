@@ -111,7 +111,7 @@ namespace hz
 				const auto copy_command = static_cast<CopyCommand*>(command);
 
 				// remove any copy commands wherefor the source and destination match
-				if (copy_command->_destination == copy_command->_source)
+				if (copy_command->destination == copy_command->_source)
 				{
 					copy_command->marked_for_deletion = true;
 				}

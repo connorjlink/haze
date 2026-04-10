@@ -21,11 +21,11 @@ namespace hz
 		class ImmediateOperand : public X86Operand
 		{
 		public:
-			ExtendedInteger _immediate;
+			ExtendedInteger immediate;
 
 		public:
 			ImmediateOperand(const ExtendedInteger& immediate)
-				: _immediate{ immediate }
+				: immediate{ immediate }
 			{
 			}
 
@@ -36,11 +36,11 @@ namespace hz
 		class IndirectOperand : public X86Operand
 		{
 		public:
-			native_uint _address;
+			Address address;
 
 		public:
-			IndirectOperand(native_uint address)
-				: _address{ address }
+			IndirectOperand(Address address)
+				: address{ address }
 			{
 			}
 
@@ -51,11 +51,11 @@ namespace hz
 		class RegisterOperand : public X86Operand
 		{
 		public:
-			X86Register _register;
+			X86Register register;
 
 		public:
 			RegisterOperand(X86Register reg)
-				: _register{ reg }
+				: register{ reg }
 			{
 			}
 
@@ -75,11 +75,11 @@ namespace hz
 		class RegisterDisplacedOperand : public RegisterOperand
 		{
 		public:
-			native_int _displacement;
+			Offset displacement;
 
 		public:
-			RegisterDisplacedOperand(X86Register reg, native_int displacement)
-				: RegisterOperand{ reg }, _displacement{ displacement }
+			RegisterDisplacedOperand(X86Register reg, Offset displacement)
+				: RegisterOperand{ reg }, displacement{ displacement }
 			{
 			}
 			

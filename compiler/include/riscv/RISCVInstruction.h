@@ -3,7 +3,6 @@
 
 #include <toolchain/models/Instruction.h>
 #include <utility/Constants.h>
-#include <utility/PlatformVariables.h>
 #include <riscv/RISCVInstructionType.h>
 #include <riscv/RISCVRegister.h>
 
@@ -31,12 +30,12 @@ namespace hz
 		class LbInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			LbInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			LbInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -50,12 +49,12 @@ namespace hz
 		class LhInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			LhInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			LhInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -69,11 +68,11 @@ namespace hz
 		class LwInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 		public:
-			LwInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			LwInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -86,11 +85,11 @@ namespace hz
 		class LbuInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 		public:
-			LbuInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			LbuInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -103,11 +102,11 @@ namespace hz
 		class LhuInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 		public:
-			LhuInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			LhuInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -120,12 +119,12 @@ namespace hz
 		class SbInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs2;
 			RISCVRegister _rs1;
 
 		public:
-			SbInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			SbInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -139,11 +138,11 @@ namespace hz
 		class ShInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs2;
 			RISCVRegister _rs1;
 		public:
-			ShInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			ShInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -156,11 +155,11 @@ namespace hz
 		class SwInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs2;
 			RISCVRegister _rs1;
 		public:
-			SwInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			SwInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -173,11 +172,11 @@ namespace hz
 		class LuiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 
 		public:
-			LuiInstruction(native_int imm, RISCVRegister rd)
+			LuiInstruction(Offset imm, RISCVRegister rd)
 				: _imm{ imm }, _rd{ rd }
 			{
 			}
@@ -191,10 +190,10 @@ namespace hz
 		class AuipcInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 		public:
-			AuipcInstruction(native_int imm, RISCVRegister rd)
+			AuipcInstruction(Offset imm, RISCVRegister rd)
 				: _imm{ imm }, _rd{ rd }
 			{
 			}
@@ -351,12 +350,12 @@ namespace hz
 		class AddiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			AddiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			AddiInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -370,12 +369,12 @@ namespace hz
 		class AndiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			AndiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			AndiInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -389,12 +388,12 @@ namespace hz
 		class OriInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			OriInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			OriInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -408,12 +407,12 @@ namespace hz
 		class XoriInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			XoriInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			XoriInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -427,12 +426,12 @@ namespace hz
 		class SlliInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			SlliInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			SlliInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -446,12 +445,12 @@ namespace hz
 		class SrliInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			SrliInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			SrliInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -465,11 +464,11 @@ namespace hz
 		class SraiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 		public:
-			SraiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			SraiInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -520,12 +519,12 @@ namespace hz
 		class SltiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			SltiInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			SltiInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -539,12 +538,12 @@ namespace hz
 		class SltiuInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			SltiuInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			SltiuInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -558,11 +557,11 @@ namespace hz
 		class JalInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 
 		public:
-			JalInstruction(native_int imm, RISCVRegister rd)
+			JalInstruction(Offset imm, RISCVRegister rd)
 				: _imm{ imm }, _rd{ rd }
 			{
 			}
@@ -576,11 +575,11 @@ namespace hz
 		class JalrInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 		public:
-			JalrInstruction(native_int imm, RISCVRegister rd, RISCVRegister rs1)
+			JalrInstruction(Offset imm, RISCVRegister rd, RISCVRegister rs1)
 				: _imm{ imm }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -593,12 +592,12 @@ namespace hz
 		class BeqInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
 
 		public:
-			BeqInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			BeqInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -612,12 +611,12 @@ namespace hz
 		class BneInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
 
 		public:
-			BneInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			BneInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -631,12 +630,12 @@ namespace hz
 		class BltInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
 
 		public:
-			BltInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			BltInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -650,11 +649,11 @@ namespace hz
 		class BgeInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
 		public:
-			BgeInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			BgeInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -667,11 +666,11 @@ namespace hz
 		class BltuInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
 		public:
-			BltuInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			BltuInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -684,11 +683,11 @@ namespace hz
 		class BgeuInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _imm;
+			Offset _imm;
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
 		public:
-			BgeuInstruction(native_int imm, RISCVRegister rs1, RISCVRegister rs2)
+			BgeuInstruction(Offset imm, RISCVRegister rs1, RISCVRegister rs2)
 				: _imm{ imm }, _rs1{ rs1 }, _rs2{ rs2 }
 			{
 			}
@@ -1125,11 +1124,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			ClwspInstruction(RISCVRegister rd, native_int immediate)
-				: _rd{ rd }, _immediate{ immediate }
+			ClwspInstruction(RISCVRegister rd, Offset immediate)
+				: _rd{ rd }, immediate{ immediate }
 			{
 			}
 
@@ -1143,11 +1142,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rs2;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CswspInstruction(RISCVRegister rs2, native_int immediate)
-				: _rs2{ rs2 }, _immediate{ immediate }
+			CswspInstruction(RISCVRegister rs2, Offset immediate)
+				: _rs2{ rs2 }, immediate{ immediate }
 			{
 			}
 
@@ -1162,11 +1161,11 @@ namespace hz
 		private:
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			ClwInstruction(RISCVRegister rd, native_int immediate, RISCVRegister rs1)
-				: _rd{ rd }, _rs1{ rs1 }, _immediate{ immediate }
+			ClwInstruction(RISCVRegister rd, Offset immediate, RISCVRegister rs1)
+				: _rd{ rd }, _rs1{ rs1 }, immediate{ immediate }
 			{
 			}
 
@@ -1181,11 +1180,11 @@ namespace hz
 		private:
 			RISCVRegister _rs1;
 			RISCVRegister _rs2;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CswInstruction(RISCVRegister rs2, native_int immediate, RISCVRegister rs1)
-				: _rs1{ rs1 }, _rs2{ rs2 }, _immediate{ immediate }
+			CswInstruction(RISCVRegister rs2, Offset immediate, RISCVRegister rs1)
+				: _rs1{ rs1 }, _rs2{ rs2 }, immediate{ immediate }
 			{
 			}
 
@@ -1198,11 +1197,11 @@ namespace hz
 		class CjInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CjInstruction(native_int immediate)
-				: _immediate{ immediate }
+			CjInstruction(Offset immediate)
+				: immediate{ immediate }
 			{
 			}
 
@@ -1215,11 +1214,11 @@ namespace hz
 		class CjalInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CjalInstruction(native_int immediate)
-				: _immediate{ immediate }
+			CjalInstruction(Offset immediate)
+				: immediate{ immediate }
 			{
 			}
 
@@ -1267,11 +1266,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rs2;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CbeqzInstruction(RISCVRegister rs2, native_int immediate)
-				: _rs2{ rs2 }, _immediate{ immediate }
+			CbeqzInstruction(RISCVRegister rs2, Offset immediate)
+				: _rs2{ rs2 }, immediate{ immediate }
 			{
 			}
 
@@ -1285,11 +1284,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rs2;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CbnezInstruction(RISCVRegister rs2, native_int immediate)
-				: _rs2{ rs2 }, _immediate{ immediate }
+			CbnezInstruction(RISCVRegister rs2, Offset immediate)
+				: _rs2{ rs2 }, immediate{ immediate }
 			{
 			}
 
@@ -1303,11 +1302,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CliInstruction(RISCVRegister rd, native_int immediate)
-				: _rd{ rd }, _immediate{ immediate }
+			CliInstruction(RISCVRegister rd, Offset immediate)
+				: _rd{ rd }, immediate{ immediate }
 			{
 			}
 
@@ -1321,11 +1320,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CluiInstruction(RISCVRegister rd, native_int immediate)
-				: _rd{ rd }, _immediate{ immediate }
+			CluiInstruction(RISCVRegister rd, Offset immediate)
+				: _rd{ rd }, immediate{ immediate }
 			{
 			}
 
@@ -1339,11 +1338,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CaddiInstruction(RISCVRegister rd, native_int immediate)
-				: _rd{ rd }, _immediate{ immediate }
+			CaddiInstruction(RISCVRegister rd, Offset immediate)
+				: _rd{ rd }, immediate{ immediate }
 			{
 			}
 
@@ -1356,11 +1355,11 @@ namespace hz
 		class Caddi16spInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			Caddi16spInstruction(native_int immediate)
-				: _immediate{ immediate }
+			Caddi16spInstruction(Offset immediate)
+				: immediate{ immediate }
 			{
 			}
 
@@ -1374,11 +1373,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			Caddi4spnInstruction(RISCVRegister rd, native_int immediate)
-				: _rd{ rd }, _immediate{ immediate }
+			Caddi4spnInstruction(RISCVRegister rd, Offset immediate)
+				: _rd{ rd }, immediate{ immediate }
 			{
 			}
 
@@ -1392,10 +1391,10 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _shamt;
+			Offset _shamt;
 
 		public:
-			CslliInstruction(RISCVRegister rd, native_int shamt)
+			CslliInstruction(RISCVRegister rd, Offset shamt)
 				: _rd{ rd }, _shamt{ shamt }
 			{
 			}
@@ -1410,10 +1409,10 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _shamt;
+			Offset _shamt;
 
 		public:
-			CsrliInstruction(RISCVRegister rd, native_int shamt)
+			CsrliInstruction(RISCVRegister rd, Offset shamt)
 				: _rd{ rd }, _shamt{ shamt }
 			{
 			}
@@ -1428,10 +1427,10 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _shamt;
+			Offset _shamt;
 
 		public:
-			CsraiInstruction(RISCVRegister rd, native_int shamt)
+			CsraiInstruction(RISCVRegister rd, Offset shamt)
 				: _rd{ rd }, _shamt{ shamt }
 			{
 			}
@@ -1446,11 +1445,11 @@ namespace hz
 		{
 		private:
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
-			CandiInstruction(RISCVRegister rd, native_int immediate)
-				: _rd{ rd }, _immediate{ immediate }
+			CandiInstruction(RISCVRegister rd, Offset immediate)
+				: _rd{ rd }, immediate{ immediate }
 			{
 			}
 
@@ -1597,12 +1596,12 @@ namespace hz
 		class CsrrwInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _csr;
+			Offset _csr;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			CsrrwInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
+			CsrrwInstruction(Offset csr, RISCVRegister rd, RISCVRegister rs1)
 				: _csr{ csr }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -1616,12 +1615,12 @@ namespace hz
 		class CsrrsInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _csr;
+			Offset _csr;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 
 		public:
-			CsrrsInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
+			CsrrsInstruction(Offset csr, RISCVRegister rd, RISCVRegister rs1)
 				: _csr{ csr }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -1635,11 +1634,11 @@ namespace hz
 		class CsrrcInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _csr;
+			Offset _csr;
 			RISCVRegister _rd;
 			RISCVRegister _rs1;
 		public:
-			CsrrcInstruction(native_int csr, RISCVRegister rd, RISCVRegister rs1)
+			CsrrcInstruction(Offset csr, RISCVRegister rd, RISCVRegister rs1)
 				: _csr{ csr }, _rd{ rd }, _rs1{ rs1 }
 			{
 			}
@@ -1653,12 +1652,12 @@ namespace hz
 		class CsrrwiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _csr;
+			Offset _csr;
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 		public:
-			CsrrwiInstruction(native_int csr, RISCVRegister rd, native_int immediate)
-				: _csr{ csr }, _rd{ rd }, _immediate{ immediate }
+			CsrrwiInstruction(Offset csr, RISCVRegister rd, Offset immediate)
+				: _csr{ csr }, _rd{ rd }, immediate{ immediate }
 			{
 			}
 		public:
@@ -1670,12 +1669,12 @@ namespace hz
 		class CsrrsiInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _csr;
+			Offset _csr;
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 		public:
-			CsrrsiInstruction(native_int csr, RISCVRegister rd, native_int immediate)
-				: _csr{ csr }, _rd{ rd }, _immediate{ immediate }
+			CsrrsiInstruction(Offset csr, RISCVRegister rd, Offset immediate)
+				: _csr{ csr }, _rd{ rd }, immediate{ immediate }
 			{
 			}
 		public:
@@ -1687,12 +1686,12 @@ namespace hz
 		class CsrrciInstruction : public RISCVInstruction
 		{
 		private:
-			native_int _csr;
+			Offset _csr;
 			RISCVRegister _rd;
-			native_int _immediate;
+			Offset immediate;
 		public:
-			CsrrciInstruction(native_int csr, RISCVRegister rd, native_int immediate)
-				: _csr{ csr }, _rd{ rd }, _immediate{ immediate }
+			CsrrciInstruction(Offset csr, RISCVRegister rd, Offset immediate)
+				: _csr{ csr }, _rd{ rd }, immediate{ immediate }
 			{
 			}
 		public:

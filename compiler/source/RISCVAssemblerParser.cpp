@@ -34,7 +34,7 @@ namespace hz
 				const auto rd = PARSE_REGISTER();
 				consume(TokenType::COMMA);
 				const auto integer_literal = parse_integerliteral_expression();
-				const auto immediate = static_cast<native_int>(integer_literal_int(integer_literal->value));
+				const auto immediate = static_cast<Offset>(integer_literal_int(integer_literal->value));
 				consume(TokenType::LPAREN);
 				const auto rs1 = PARSE_REGISTER();
 				consume(TokenType::RPAREN);

@@ -88,7 +88,7 @@ namespace hz
 
 	std::uint16_t StringType::size() const
 	{
-		const auto address_size = sizeof(native_uint);
+		const auto address_size = sizeof(Address);
 		return address_size;
 	}
 

@@ -59,7 +59,7 @@ namespace hz
 //		return false;
 //	}
 //
-//	std::vector<InstructionCommand*> AssemblerLinker::link(native_uint base_pointer, native_uint size)
+//	std::vector<InstructionCommand*> AssemblerLinker::link(Address base_pointer, Address size)
 //	{
 //		std::vector<InstructionCommand*> executable(size);
 //
@@ -132,7 +132,7 @@ namespace hz
 //			}
 //		}
 //
-//		for (auto i = native_uint{ 0 }; i < size / 2; i++)
+//		for (auto i = Address{ 0 }; i < size / 2; i++)
 //		{
 //			if (executable[i] != 0)
 //			{
@@ -283,11 +283,11 @@ namespace hz
 //	}
 //
 //	// intentionally ignoring the size parameter since the compiler can just take as required and generate the EXE appropriately
-//	std::vector<InstructionCommand*> CompilerLinker::link(native_uint base_pointer, native_uint)
+//	std::vector<InstructionCommand*> CompilerLinker::link(Address base_pointer, Address)
 //	{
 //		std::vector<InstructionCommand*> executable{};
 //
-//		native_uint address_tracker = 0;
+//		Address address_tracker = 0;
 //
 //		// resolve the length of each instruction to compute each label's address
 //		for (auto& [name, linkable] : _linkables)
@@ -324,7 +324,7 @@ namespace hz
 //						{
 //							instruction->offset = address_tracker;
 //							// previously this was always 3 (since haze instructions are 24 bits)
-//							address_tracker += static_cast<native_uint>(instruction->length());
+//							address_tracker += static_cast<Address>(instruction->length());
 //						}
 //					} break;
 //
@@ -490,10 +490,10 @@ namespace hz
 //		ByteRange final_image{};
 //
 //		// map of (label name -> address)
-//		std::unordered_map<std::string, native_int> branches;
+//		std::unordered_map<std::string, Offset> branches;
 //
 //		// the first function starts at address 0
-//		native_int address_tracker = 0;
+//		Offset address_tracker = 0;
 //
 //		for (auto& linkable : _linkables)
 //		{
@@ -518,7 +518,7 @@ namespace hz
 //					// The binary is wrong, but is at least of the correct 
 //					// length for future label/target address resolution
 //					const auto code = command->emit();
-//					const auto size = static_cast<native_int>(code.size());
+//					const auto size = static_cast<Offset>(code.size());
 //
 //					command->offset = address_tracker;
 //					command->size = size;

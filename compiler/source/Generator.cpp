@@ -68,152 +68,146 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_global(std::int8_t location, Variable* value)
+	void Generator::make_global(Register location, Variable* value)
 	{
 		auto command = new GlobalVariableCommand{ location, value };
 		COMPOSE(command);
 	}
 
-	void Generator::heap_read(std::int8_t destination, std::uint32_t pointer)
+	void Generator::heap_read(Register destination, Address pointer)
 	{
 		auto command = new HeapReadCommand{ destination, pointer };
 		COMPOSE(command);
 	}
 
-	void Generator::heap_write(std::uint32_t pointer, std::int8_t source)
+	void Generator::heap_write(Address pointer, Register source)
 	{
 		auto command = new HeapWriteCommand{ pointer, source };
 		COMPOSE(command);
 	}
 
-	void Generator::stack_read(std::int8_t destination, std::int32_t offset)
+	void Generator::stack_read(Register destination, Offset offset)
 	{
 		auto command = new StackReadCommand{ destination, offset };
 		COMPOSE(command);
 	}
 
-	void Generator::stack_write(std::int32_t offset, std::int8_t source)
+	void Generator::stack_write(Offset offset, Register source)
 	{
 		auto command = new StackWriteCommand{ offset, source };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_add(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_add(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new AddCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_subtract(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_subtract(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new SubtractCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_multiplication(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_multiplication(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new MultiplyCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitor(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_bitor(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new BitorCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitand(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_bitand(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new BitandCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitlshift(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_bitlshift(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new BitlshiftCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitrshift(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_bitrshift(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new BitrshiftCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitxor(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_bitxor(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new BitxorCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_equality(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_equality(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new EqualityCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_inequality(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_inequality(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new InequalityCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_less(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_less(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new LessCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_greater(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
+	void Generator::compute_greater(Register lhs, Register rhs, Register destination)
 	{
 		auto command = new GreaterCommand{ lhs, rhs, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bool(std::int8_t destination, std::int8_t source)
+	void Generator::compute_bool(Register destination, Register source)
 	{
 		auto command = new BoolCommand{ destination, source };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_increment(std::int8_t destination, std::int8_t source)
+	void Generator::compute_increment(Register destination, Register source)
 	{
 		auto command = new IncrementCommand{ destination, source };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_decrement(std::int8_t destination, std::int8_t source)
+	void Generator::compute_decrement(Register destination, Register source)
 	{
 		auto command = new DecrementCommand{ destination, source };
 		COMPOSE(command);
 	}
 
-	void Generator::make_copy(std::int8_t destination, std::int8_t source)
+	void Generator::make_copy(Register destination, Register source)
 	{
 		auto command = new CopyCommand{ destination, source };
 		COMPOSE(command);
 	}
 
-	void Generator::make_immediate(std::int8_t destination, IntegerLiteral* immediate)
+	void Generator::make_immediate(Register destination, BigInteger value)
 	{
-		auto command = new MakeImmediateCommand{ destination, immediate };
+		auto command = new MakeImmediateCommand{ destination, value };
 		COMPOSE(command);
 	}
 
-	void Generator::make_argument(const std::string& name, std::int8_t location)
+	void Generator::make_argument(const std::string& name, Register location)
 	{
-		// NOTE: old method
-		//define_local(name, location);
-		
 		auto command = new MakeArgumentCommand{ location };
 		COMPOSE(command);
 	}
 
-	void Generator::take_argument(const std::string& name, std::int8_t location, std::int32_t offset)
+	void Generator::take_argument(const std::string& name, Register location, Offset offset)
 	{
-		// NOTE: old method
-		//define_local(name, location);
-
 		auto command = new TakeArgumentCommand{ location, offset };
 		COMPOSE(command);
 	}
@@ -302,7 +296,7 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_message(std::uint32_t pointer, std::string message)
+	void Generator::make_message(std::uint32_t pointer, const std::string& message)
 	{
 		// including an extra byte for the implicit NULL terminator
 		const auto length = message.length() + 1;
@@ -338,9 +332,9 @@ namespace hz
 	}
 
 
-	std::int32_t Generator::resolve_origin() const
+	Address Generator::resolve_origin() const
 	{
-		return static_cast<std::int32_t>(_linkables[_linkables.size() - 1].ir.size());
+		return static_cast<Address>(_linkables[_linkables.size() - 1].ir.size());
 	}
 
 

@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	enum RISCVRegister : std::int8_t
+	enum RISCVRegister : std::uint8_t
 	{
 		X0  = 0,  ZERO = 0,
 		X1  = 1,  RA   = 1,

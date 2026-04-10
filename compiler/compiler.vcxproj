@@ -356,7 +356,6 @@
     <ClInclude Include="include\utility\ExitProgramException.h" />
     <ClInclude Include="include\utility\ExtendedInteger.h" />
     <ClInclude Include="include\utility\JSON.h" />
-    <ClInclude Include="include\utility\PlatformVariables.h" />
     <ClInclude Include="include\utility\Random.h" />
     <ClInclude Include="include\validator\InstructionValidator.h" />
     <ClInclude Include="include\validator\Test.h" />

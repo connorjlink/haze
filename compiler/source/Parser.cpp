@@ -13,7 +13,6 @@ import std;
 #include <toolchain/Parser.h>
 #include <toolchain/CompilerParser.h>
 #include <type/Type.h>
-#include <utility/ExtendedInteger.h>
 
 // Haze Parser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -162,42 +161,19 @@ namespace hz
 		const auto integer_literal_token = consume(TokenType::INT);
 		const auto& integer_string = integer_literal_token.text;
 
-		std::int64_t integer_value{};
-		auto [ptr, ec] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
+		BigInteger integer_value{};
 
-		if (ec != std::errc())
+		const auto [pointer, error] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
+		if (error != std::errc())
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
 			return nullptr;
 		}
 
-		// NOTE: hazels-server handles integer literal "symbols" instead
-
-		IntegerLiteral* integer_literal = nullptr;
-
 		const auto& specifier = peek();
-		
-		using enum TokenType;
-		switch (specifier.type)
-		{
-			case U8: integer_literal = new UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(integer_value) }; break;
-			case U16: integer_literal = new UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(integer_value) }; break;
-			case U32: integer_literal = new UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(integer_value) }; break;
-
-			case S8: integer_literal = new SignedByteIntegerLiteral{ static_cast<std::int8_t>(integer_value) }; break;
-			case S16: integer_literal = new SignedWordIntegerLiteral{ static_cast<std::int16_t>(integer_value) }; break;
-			case S32: integer_literal = new SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(integer_value) }; break;
-
-			default:
-			{
-				CommonErrors::invalid_token_type(specifier.type, specifier);
-				integer_literal = nullptr;
-			} break;
-		}
-
 		consume(specifier.type);
 
-		return new IntegerLiteralExpression{ integer_literal, integer_literal_token };
+		return new IntegerLiteralExpression{ integer_value, integer_literal_token };
 	}
 
 	StringExpression* Parser::parse_string_expression()

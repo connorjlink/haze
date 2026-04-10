@@ -6,7 +6,6 @@ import std;
 #include <symbol/SymbolExporter.h>
 #include <symbol/Symbol.h>
 #include <error/ErrorReporter.h>
-#include <utility/ExtendedInteger.h>
 
 // Haze SymbolDatabase.cpp
 // (c) Connor J. Link. All Rights Reserved.

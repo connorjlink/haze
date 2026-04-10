@@ -1,7 +1,6 @@
 #ifndef HAZE_EXTENDED_INTEGER_H
 #define HAZE_EXTENDED_INTEGER_H
 
-#include <utility/PlatformVariables.h>
 #include <error/ErrorReporter.h>
 
 // Haze ExtendedInteger.h
@@ -9,14 +8,14 @@
 
 namespace hz
 {
-	inline consteval native_int native(std::integral auto x)
+	inline consteval Offset native(std::integral auto x)
 	{
-		return native_int{ static_cast<native_int>(x) };
+		return Offset{ static_cast<Offset>(x) };
 	}
 
-	inline consteval native_uint unative(std::integral auto x)
+	inline consteval Address unative(std::integral auto x)
 	{
-		return native_uint{ static_cast<native_uint>(x) };
+		return Address{ static_cast<Address>(x) };
 	}
 
 	class ExtendedInteger

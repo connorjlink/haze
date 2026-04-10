@@ -9,37 +9,9 @@ import std;
 #include <runtime/Context.h>
 #include <runtime/Evaluator.h>
 #include <toolchain/Generator.h>
-#include <utility/ExtendedInteger.h>
-#include <utility/PlatformVariables.h>
 
 // Haze BinaryExpression.cpp
 // (c) Connor J. Link. All Rights Reserved.
-
-namespace
-{
-	using namespace hz;
-
-	void generate_error(const std::string& op, Token token)
-	{
-		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported compiler binary operator `{}`", op), token);
-	}
-
-	const IntegerLiteral& match_type(IntegerLiteral* matchee, native_uint value)
-	{
-		using enum IntegerLiteralType;
-		switch (matchee->itype())
-		{
-			case UBYTE: return UnsignedByteIntegerLiteral{ static_cast<std::uint8_t>(value) };
-			case SBYTE: return SignedByteIntegerLiteral{ static_cast<std::int8_t>(value) };
-
-			case UWORD: return UnsignedWordIntegerLiteral{ static_cast<std::uint16_t>(value) };
-			case SWORD: return SignedWordIntegerLiteral{ static_cast<std::int16_t>(value) };
-
-			case UDWORD: return UnsignedDoubleWordIntegerLiteral{ static_cast<std::uint32_t>(value)};
-			case SDWORD: return SignedDoubleWordIntegerLiteral{ static_cast<std::int32_t>(value) };
-		}
-	}
-}
 
 namespace hz
 {

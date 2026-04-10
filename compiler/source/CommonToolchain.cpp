@@ -5,14 +5,13 @@ import std;
 #include <job/JobManager.h>
 #include <toolchain/CommonToolchain.h>
 #include <toolchain/Linker.h>
-#include <utility/PlatformVariables.h>
 
 // Haze CommonToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	std::vector<InstructionCommand*> common_link(native_uint entrypoint, native_uint size)
+	std::vector<InstructionCommand*> common_link(Address entrypoint, Address size)
 	{
 		const auto link_task = REQUIRE_UNSAFE(JobManager)->begin_job("linking");
 		// begin writing commands at $8000 for haze

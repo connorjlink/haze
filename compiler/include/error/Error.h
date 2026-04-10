@@ -12,9 +12,9 @@ namespace hz
 	struct Error
 	{
 	private:
-		SourceLocation _location;
+		SourceLocation location;
 		std::string _erroring_line;
-		std::string _message;
+		std::string message;
 		ErrorType _severity;
 
 	public:
@@ -22,7 +22,7 @@ namespace hz
 
 	public:
 		Error(SourceLocation location, const std::string& erroring_line, const std::string& message, ErrorType severity)
-			: _location{ location }, _erroring_line { erroring_line }, _message{ message }, _severity{ severity }
+			: location{ location }, _erroring_line { erroring_line }, message{ message }, _severity{ severity }
 		{
 		}
 	};

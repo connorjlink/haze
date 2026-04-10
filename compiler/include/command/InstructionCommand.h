@@ -2,7 +2,6 @@
 #define HAZE_INSTRUCTION_H
 
 #include <command/Command.h>
-#include <utility/PlatformVariables.h>
 #include <utility/Constants.h>
 
 // Haze InstructionCommand.h

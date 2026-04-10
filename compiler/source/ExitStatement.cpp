@@ -19,13 +19,13 @@ namespace hz
 	void ExitStatement::generate(Allocation*)
 	{
 		AutoStackAllocation temp{};
-		_code->generate(temp.source());
+		code->generate(temp.source());
 		REQUIRE_SAFE(Generator)->exit_program(temp.source()->read());
 	}
 
 	Statement* ExitStatement::optimize()
 	{
-		if (auto code_optimized = _code->optimize();
+		if (auto code_optimized = code->optimize();
 			code_optimized != nullptr)
 		{
 			return new ExitStatement{ AS_EXPRESSION(code_optimized), _token };
@@ -36,7 +36,7 @@ namespace hz
 
 	Node* ExitStatement::evaluate(Context* context) const
 	{
-		auto value = _code->evaluate(context);
+		auto value = code->evaluate(context);
 		context->exit_program(node_to_variable(value));
 		return nullptr;
 	}

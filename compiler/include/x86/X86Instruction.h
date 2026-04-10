@@ -62,12 +62,12 @@ namespace hz
 		class MovInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			MovInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -80,12 +80,12 @@ namespace hz
 		class MovzxInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			MovzxInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -98,12 +98,12 @@ namespace hz
 		class AddInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			AddInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -116,12 +116,12 @@ namespace hz
 		class SubInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			SubInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -134,12 +134,12 @@ namespace hz
 		class AndInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			AndInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -152,12 +152,12 @@ namespace hz
 		class OrInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			OrInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -170,12 +170,12 @@ namespace hz
 		class XorInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			XorInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -223,16 +223,16 @@ namespace hz
 		{
 		private:
 			std::unique_ptr<X86Operand> _operand;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
 			SalInstruction(std::unique_ptr<X86Operand> operand)
-				: _operand{ std::move(operand) }, _immediate{ 1 }
+				: _operand{ std::move(operand) }, immediate{ 1 }
 			{
 			}
 
-			SalInstruction(std::unique_ptr<X86Operand> operand, native_int immediate)
-				: _operand{ std::move(operand) }, _immediate{ immediate }
+			SalInstruction(std::unique_ptr<X86Operand> operand, Offset immediate)
+				: _operand{ std::move(operand) }, immediate{ immediate }
 			{
 			}
 
@@ -246,16 +246,16 @@ namespace hz
 		{
 		private:
 			std::unique_ptr<X86Operand> _operand;
-			native_int _immediate;
+			Offset immediate;
 
 		public:
 			SarInstruction(std::unique_ptr<X86Operand> operand)
-				: _operand{ std::move(operand) }, _immediate{ -1 }
+				: _operand{ std::move(operand) }, immediate{ -1 }
 			{
 			}
 
-			SarInstruction(std::unique_ptr<X86Operand> operand, native_int immediate)
-				: _operand{ std::move(operand) }, _immediate{ immediate }
+			SarInstruction(std::unique_ptr<X86Operand> operand, Offset immediate)
+				: _operand{ std::move(operand) }, immediate{ immediate }
 			{
 			}
 
@@ -268,12 +268,12 @@ namespace hz
 		class TestInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			TestInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -286,12 +286,12 @@ namespace hz
 		class CmpInstruction : public X86Instruction
 		{
 		private:
-			std::unique_ptr<X86Operand> _destination;
+			std::unique_ptr<X86Operand> destination;
 			std::unique_ptr<X86Operand> _source;
 
 		public:
 			CmpInstruction(std::unique_ptr<X86Operand> destination, std::unique_ptr<X86Operand> source)
-				: _destination{ std::move(destination) }, _source{ std::move(source) }
+				: destination{ std::move(destination) }, _source{ std::move(source) }
 			{
 			}
 
@@ -708,16 +708,16 @@ namespace hz
 		class RetInstruction : public X86Instruction
 		{
 		private:
-			native_int _immediate;
+			Offset immediate;
 
 		public:
 			RetInstruction()
-				: _immediate{ -1 }
+				: immediate{ -1 }
 			{
 			}
 
-			RetInstruction(native_int immediate)
-				: _immediate{ immediate }
+			RetInstruction(Offset immediate)
+				: immediate{ immediate }
 			{
 			}
 

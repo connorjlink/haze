@@ -1,8 +1,6 @@
 #ifndef HAZE_STATISTIC_H
 #define HAZE_STATISTIC_H
 
-#include <utility/PlatformVariables.h>
-
 // Haze Statistic.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -13,22 +11,22 @@ namespace hz
 	struct TimedTask
 	{
 		std::string task;
-		native_int microseconds;
+		Offset microseconds;
 	};
 
 	struct InternalStatistic
 	{
-		native_int memory_allocated;
-		native_int memory_freed;
+		Offset memory_allocated;
+		Offset memory_freed;
 
-		native_int tracked_entity_instantiations;
-		native_int tracked_entity_retirements;
-		native_int tracked_entity_destructions;
+		Offset tracked_entity_instantiations;
+		Offset tracked_entity_retirements;
+		Offset tracked_entity_destructions;
 
-		native_int functions_count;
-		native_int statements_count;
-		native_int expressions_count;
-		native_int symbols_count;
+		Offset functions_count;
+		Offset statements_count;
+		Offset expressions_count;
+		Offset symbols_count;
 
 		std::vector<TimedTask> elapsed;
 	};

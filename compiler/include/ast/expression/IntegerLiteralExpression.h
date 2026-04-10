@@ -12,10 +12,10 @@ namespace hz
 	class IntegerLiteralExpression : public Expression
 	{
 	public:
-		IntegerLiteral* value;
+		BigInteger value;
 
 	public:
-		IntegerLiteralExpression(IntegerLiteral* value, const Token& token)
+		IntegerLiteralExpression(BigInteger value, const Token& token)
 			: Expression{ token }, value{ value }
 		{
 		}

@@ -59,70 +59,70 @@ namespace hz
 
 	public:
 		// push a new variable public to the entire program
-		void make_global(std::int8_t, Variable*);
+		void make_global(Register, Variable*);
 
 	public:
 		// destination = memory[pointer]
-		void heap_read(std::int8_t, std::uint32_t);
+		void heap_read(Register, Address);
 		// memory[pointer] = source
-		void heap_write(std::uint32_t, std::int8_t);
+		void heap_write(Address, Register);
 
 	public:
 		// destination = stack[ebp + offset]
-		void stack_read(std::int8_t, std::int32_t);
+		void stack_read(Register, Offset);
 		// stack[ebp + offset] = source
-		void stack_write(std::int32_t, std::int8_t);
+		void stack_write(Offset, Register);
 
 	public:
 		// NOTE: all math operations are { LHS, RHS, destination }
 		// destination = lhs + rhs
-		void compute_add(std::int8_t, std::int8_t, std::int8_t);
+		void compute_add(Register, Register, Register);
 		// destination = lhs - rhs
-		void compute_subtract(std::int8_t, std::int8_t, std::int8_t);
+		void compute_subtract(Register, Register, Register);
 		// destination = lhs * rhs
-		void compute_multiplication(std::int8_t, std::int8_t, std::int8_t);
+		void compute_multiplication(Register, Register, Register);
 		// destination = lhs | rhs
-		void compute_bitor(std::int8_t, std::int8_t, std::int8_t);
+		void compute_bitor(Register, Register, Register);
 		// destination = lhs ^ rhs
-		void compute_bitxor(std::int8_t, std::int8_t, std::int8_t);
+		void compute_bitxor(Register, Register, Register);
 		// destination = lhs & rhs
-		void compute_bitand(std::int8_t, std::int8_t, std::int8_t);
+		void compute_bitand(Register, Register, Register);
 		// destination = lhs << rhs
-		void compute_bitlshift(std::int8_t, std::int8_t, std::int8_t);
+		void compute_bitlshift(Register, Register, Register);
 		// destination = lhs >> rhs
-		void compute_bitrshift(std::int8_t, std::int8_t, std::int8_t);
+		void compute_bitrshift(Register, Register, Register);
 
 	public:
 		// destination = lhs == rhs
-		void compute_equality(std::int8_t, std::int8_t, std::int8_t);
+		void compute_equality(Register, Register, Register);
 		// destination = lhs != rhs
-		void compute_inequality(std::int8_t, std::int8_t, std::int8_t);
+		void compute_inequality(Register, Register, Register);
 		// destination = lhs < rhs
-		void compute_less(std::int8_t, std::int8_t, std::int8_t);
+		void compute_less(Register, Register, Register);
 		// destination = lhs > rhs
-		void compute_greater(std::int8_t, std::int8_t, std::int8_t);
+		void compute_greater(Register, Register, Register);
 
 	private:
 		// destination = (bool)source
-		void compute_bool(std::int8_t, std::int8_t);
+		void compute_bool(Register, Register);
 
 	public:
 		// destination = source + 1
-		void compute_increment(std::int8_t, std::int8_t);
+		void compute_increment(Register, Register);
 		// destination = source - 1
-		void compute_decrement(std::int8_t, std::int8_t);
+		void compute_decrement(Register, Register);
 
 	public:
 		// destination = source
-		void make_copy(std::int8_t, std::int8_t);
+		void make_copy(Register, Register);
 		// destination = immediate
-		void make_immediate(std::int8_t, IntegerLiteral*);
+		void make_immediate(Register, BigInteger);
 
 	public:
 		// position a new function argument for the next call
-		void make_argument(const std::string&, std::int8_t);
+		void make_argument(const std::string&, Register);
 		// pull a function argument during call from those prepared
-		void take_argument(const std::string&, std::int8_t, std::int32_t);
+		void take_argument(const std::string&, Register, Offset);
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function
@@ -130,43 +130,43 @@ namespace hz
 		// return from a call to a `nvr` function
 		void make_return(const std::string&);
 		// return from a call to a `nvr` function
-		void make_return(std::int32_t);
+		void make_return(Offset);
 		// return from a call to a value-typed function
-		void make_return(const std::string&, std::int8_t);
+		void make_return(const std::string&, Register);
 		// return from a call to a value-typed function
-		void make_return(std::int32_t, std::int8_t);
+		void make_return(Offset, Register);
 
 	public:
 		// { target_offset, condition }
-		void check_ifnz(std::int32_t, std::int8_t);
+		void check_ifnz(Offset, Register);
 		// { label, condition }
-		void check_ifnz(const std::string&, std::int8_t);
+		void check_ifnz(const std::string&, Register);
 
 	public:
 		// { target_offset, condition }
-		void check_ifz(std::int32_t, std::int8_t);
+		void check_ifz(Offset, Register);
 		// { label, condition }
-		void check_ifz(const std::string&, std::int8_t);
+		void check_ifz(const std::string&, Register);
 
 	public:
 		// target_offset
-		void goto_command(std::int32_t);
+		void goto_command(Offset);
 		// label to which to jump
 		void goto_command(const std::string&);
 
 	public:
 		// memory[pointer] = message
-		void make_message(std::uint32_t, std::string);
+		void make_message(Address, const std::string&);
 		// print(pointer)
-		void print_message(std::uint32_t);
+		void print_message(Address);
 
 	public:
 		// print(integer)
-		void print_number(std::int8_t);
+		void print_number(Register);
 
 	public:
 		// exit(code)
-		void exit_program(std::int8_t);
+		void exit_program(Register);
 
 	public:
 		// { assembly code }
@@ -174,11 +174,11 @@ namespace hz
 
 	public:
 		// { assembly code, bytecount }
-		void inline_assembly(ByteRange&&, std::uint32_t);
+		void inline_assembly(ByteRange&&, Address);
 
 	public:
 		// get the current index for IntermediateCommand generation
-		std::int32_t resolve_origin() const;
+		Address resolve_origin() const;
 
 	public:
 		// ast, filepath

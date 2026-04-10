@@ -326,9 +326,6 @@
     <ClInclude Include="include\utility\JSON.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\PlatformVariables.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\type\IntTypeType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>

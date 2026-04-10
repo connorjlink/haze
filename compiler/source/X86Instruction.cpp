@@ -4,7 +4,6 @@ import std;
 #include <x86/X86Instruction.h>
 #include <x86/X86Builder.h>
 #include <utility/BinaryUtilities.h>
-#include <utility/ExtendedInteger.h>
 
 // Haze X86Instruction.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -39,7 +38,7 @@ namespace hz::x86
 			case IMMEDIATE:
 			{
 				const auto immediate_operand = AS_IMMEDIATE_OPERAND(_operand.get());
-				const auto immediate = immediate_operand->_immediate;
+				const auto immediate = immediate_operand->immediate;
 
 				// NOTE: 8- and 16-bits are implicitly sign-extended to 32-bits when executed
 				if (immediate.is_within_range<std::int8_t>())
@@ -137,12 +136,12 @@ namespace hz::x86
 	ByteRange MovInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			// dereferencing pointer
 			case INDIRECT:
 			{
-				const auto indirect_destination = AS_INDIRECT_OPERAND(_destination.get());
+				const auto indirect_destination = AS_INDIRECT_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -171,7 +170,7 @@ namespace hz::x86
 
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -179,7 +178,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (immediate.is_within_range<std::int32_t>())
 						{
@@ -274,7 +273,7 @@ namespace hz::x86
 
 			case REGISTER_DISPLACED:
 			{
-				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(_destination.get());
+				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(destination.get());
 				
 				switch (_source->otype())
 				{
@@ -283,7 +282,7 @@ namespace hz::x86
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_displaced_destination->_register);
 						const auto displacement = register_displaced_destination->_displacement;
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (!EI(static_cast<std::intmax_t>(displacement)).is_within_range<std::int8_t>())
 						{
@@ -319,7 +318,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -334,11 +333,11 @@ namespace hz::x86
 	ByteRange MovzxInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -368,7 +367,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -383,11 +382,11 @@ namespace hz::x86
 	ByteRange AddInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -395,7 +394,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (destination == EAX)
 						{
@@ -469,7 +468,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -484,11 +483,11 @@ namespace hz::x86
 	ByteRange SubInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -496,7 +495,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (destination == EAX)
 						{
@@ -569,7 +568,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -584,11 +583,11 @@ namespace hz::x86
 	ByteRange OrInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -596,7 +595,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (destination == EAX)
 						{
@@ -669,7 +668,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -684,11 +683,11 @@ namespace hz::x86
 	ByteRange AndInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -696,7 +695,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (destination == EAX)
 						{
@@ -769,7 +768,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -784,11 +783,11 @@ namespace hz::x86
 	ByteRange XorInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -796,7 +795,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (destination == EAX)
 						{
@@ -869,7 +868,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -955,7 +954,7 @@ namespace hz::x86
 				const auto register_destination = AS_REGISTER_OPERAND(_operand.get());
 				const auto destination = VERIFY_REGISTER(register_destination->_register);
 
-				const auto ei = EI(static_cast<std::intmax_t>(_immediate));
+				const auto ei = EI(static_cast<std::intmax_t>(immediate));
 
 				if (ei == EI(std::intmax_t{ 1 }))
 				{
@@ -1007,7 +1006,7 @@ namespace hz::x86
 			const auto register_destination = AS_REGISTER_OPERAND(_operand.get());
 			const auto destination = VERIFY_REGISTER(register_destination->_register);
 
-			const auto ei = EI(static_cast<std::intmax_t>(_immediate));
+			const auto ei = EI(static_cast<std::intmax_t>(immediate));
 
 			if (ei == EI(std::intmax_t{ 1 }))
 			{
@@ -1052,11 +1051,11 @@ namespace hz::x86
 	ByteRange TestInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -1085,7 +1084,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -1100,11 +1099,11 @@ namespace hz::x86
 	ByteRange CmpInstruction::emit() const
 	{
 		using enum X86OperandType;
-		switch (_destination->otype())
+		switch (destination->otype())
 		{
 			case REGISTER:
 			{
-				const auto register_destination = AS_REGISTER_OPERAND(_destination.get());
+				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
 				switch (_source->otype())
 				{
@@ -1112,7 +1111,7 @@ namespace hz::x86
 					{
 						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
-						const auto immediate = immediate_source->_immediate;
+						const auto immediate = immediate_source->immediate;
 
 						if (destination == EAX)
 						{
@@ -1185,7 +1184,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(_destination->otype()));
+				CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(destination->otype()));
 				return {};
 			} break;
 		}
@@ -1965,11 +1964,11 @@ namespace hz::x86
 	{
 		ByteRange out{};
 		
-		if (_immediate != -1)
+		if (immediate != -1)
 		{
 			// C2 iw --> RET imm16
 			PUT(range8(0xC2));
-			PUT(range16(std::bit_cast<std::uint16_t>(_immediate)));
+			PUT(range16(std::bit_cast<std::uint16_t>(immediate)));
 		}
 		else
 		{
