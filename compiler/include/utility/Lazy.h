@@ -21,7 +21,8 @@ namespace hz
         {
             if (!self.value)
             {
-                self.value.emplace(std::apply([&](auto&... args) {
+                self.value.emplace(std::apply([&](auto&... args)
+                {
                     return std::invoke(self.functor, args...);
                 }, self.arguments));
             }
