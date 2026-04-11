@@ -34,7 +34,7 @@ namespace hz
 		STRUCT,
 	};
 
-	static const std::unordered_map<StatementType, std::string> _statement_type_map
+	static const std::unordered_map<StatementType, std::string_view> _statement_type_map
 	{
 		{ StatementType::COMPOUND, "compound" },
 		{ StatementType::VARIABLE, "variable" },

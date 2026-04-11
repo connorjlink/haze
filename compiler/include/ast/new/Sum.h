@@ -48,6 +48,8 @@ namespace hz
 
         template<typename T>
         using SumReference = SumReference<T, Storage>;
+
+        using SumHandle = SumHandle<Storage>;
     };
 
 
@@ -100,16 +102,21 @@ namespace hz
         }
 
     public:
+        // NOTE: the return value for these functions is "wrong" per the STL, but it is useful for making external references to sum members
         template<typename T, typename... Args>
-        T& emplace_back(Args&&... args)
+        IndexType emplace_back(Args&&... args)
         {
-            return get<T>().emplace_back(std::forward<Args>(args)...);
+            const auto new_index = get<T>().size();
+            get<T>().emplace_back(std::forward<Args>(args)...);
+            return new_index;
         }
 
         template<typename T>
-        void push_back(T&& value)
+        IndexType push_back(T&& value)
         {
+            const auto new_index = get<T>().size();
             get<T>().push_back(std::forward<T>(value));
+            return new_index;
         }
     };
 
@@ -152,7 +159,7 @@ namespace hz
     public:
         struct Storage : public SumStorage<Ts...>
         {
-        };
+        } storage;
     };
 
     template<typename... Ts>
@@ -346,26 +353,32 @@ namespace hz
 
     // entry point into sum dynamic dispatch
     template<typename T, typename SumStorageT>
-    SumReference<T, SumStorageT> make_reference(const SumStorageT& sum_storage, IndexType index)
+    SumReference<T, SumStorageT> make_reference(const SumStorageT& sum_storage, T&& value)
     {
+        // add it to the sum storage
+        const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
         return SumReference<T, SumStorageT>{ sum_storage, index };
     }
 
     template<typename T, typename SumStorageT>
     SumReference<T, SumStorageT> make_invalid_reference(const SumStorageT& sum_storage)
     {
+        // does not participate in sum storage
         return SumReference<T, SumStorageT>{ sum_storage };
     }
 
     template<typename T, typename SumStorageT>
-    SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, IndexType index)
+    SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, T&& value)
     {
+        // add it to the sum storage
+        const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
         return SumHandle<SumStorageT>{ sum_storage, index, TypeIndexV<T, typename SumStorageT::Type> };
     }
 
     template<typename T, typename SumStorageT>
     SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
     {
+        // does not participate in sum storage
         return SumHandle<SumStorageT>{ sum_storage };
     }
 }

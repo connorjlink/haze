@@ -57,11 +57,11 @@ namespace hz
 
     public:
         AdjustType adjust_type;
-        SumHandle<Storage> target;
+        SumHandle target;
 
     public:
         std::string format(void) const;
-        SumHandle<Storage> evaluate(const Storage&, Context&) const;
+        SumHandle evaluate(const Storage&, Context&) const;
         AdjustExpression optimize(const Storage&) const;
         bool check_types(const Storage&) const;
     };
@@ -84,7 +84,7 @@ namespace hz
     public:
         Type type;
         SumReference<IdentifierExpression> identifier;
-        SumHandle<Storage> value;
+        SumHandle value;
 
     public:
         std::string format(void) const;

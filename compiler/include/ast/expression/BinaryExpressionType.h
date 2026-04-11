@@ -30,7 +30,7 @@ namespace hz
 		LESS,
 	};
 
-	static const std::unordered_map<BinaryExpressionType, std::string> _binary_expression_type_map
+	static const std::unordered_map<BinaryExpressionType, std::string_view> _binary_expression_type_map
 	{
 		{ BinaryExpressionType::PLUS, "+" },
 		{ BinaryExpressionType::MINUS, "-" },

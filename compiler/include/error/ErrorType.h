@@ -18,7 +18,7 @@ namespace hz
 		UNCORRECTABLE,
 	};
 
-	static const std::unordered_map<ErrorType, std::string> _error_type_map
+	static const std::unordered_map<ErrorType, std::string_view> _error_type_map
 	{
 		{ ErrorType::OUTPUT, "output" },
 		{ ErrorType::INFORMATION, "information" },

@@ -21,7 +21,7 @@ namespace hz
 		INSTRUCTION,
 	};
 
-	static const std::unordered_map<CommandType, std::string> _command_type_map
+	static const std::unordered_map<CommandType, std::string_view> _command_type_map
 	{
 		{ CommandType::DOTORG, ".org" },
 		{ CommandType::DOTDEFINE, ".define" },

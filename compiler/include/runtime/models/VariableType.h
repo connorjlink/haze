@@ -30,7 +30,7 @@ namespace hz
 		STRUCT,
 	};
 
-	static const std::unordered_map<VariableType, std::string> _variable_type_map
+	static const std::unordered_map<VariableType, std::string_view> _variable_type_map
 	{
 		{ VariableType::UBYTE, "unsigned byte" },
 		{ VariableType::SBYTE, "signed byte" },

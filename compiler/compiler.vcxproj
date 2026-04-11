@@ -345,7 +345,6 @@
     <ClInclude Include="include\type\TypeCheck.h" />
     <ClInclude Include="include\type\TypeQualifier.h" />
     <ClInclude Include="include\type\TypeSignedness.h" />
-    <ClInclude Include="include\type\TypeSpecifier.h" />
     <ClInclude Include="include\type\TypeStorage.h" />
     <ClInclude Include="include\type\TypeType.h" />
     <ClInclude Include="include\utility\AutoJSON.h" />

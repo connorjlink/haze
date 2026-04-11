@@ -17,7 +17,7 @@ namespace hz
 		INTERPRETER,
 	};
 
-	static const std::unordered_map<ParserType, std::string> _parser_type_map
+	static const std::unordered_map<ParserType, std::string_view> _parser_type_map
 	{
 		{ ParserType::COMPILER, "compiler" },
 		{ ParserType::ASSEMBLER, "assembler" },

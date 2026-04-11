@@ -4,10 +4,10 @@ import std;
 #include <ast/Expression.h>
 #include <ast/StatementType.h>
 #include <symbol/SymbolType.h>
-#include <command/models/IntegerLiteralType.h>
 #include <error/CommonErrors.h>
 #include <toolchain/ParserType.h>
-#include <type/IntTypeType.h>
+#include <type/IntWidth.h>
+#include <type/StructOrUnion.h>
 #include <type/Type.h>
 #include <type/TypeCheck.h>
 
@@ -85,6 +85,11 @@ namespace hz
 	void CommonErrors::invalid_symbol_type(SymbolType stype, const Token& token)
 	{
 		internal_compiler_error(invalid_generic_type("symbol", _symbol_type_map.at(stype)), token);
+	}
+
+	void CommonErrors::invalid_struct_or_union_type(StructOrUnionType sotype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("struct or union", _struct_or_union_type_map.at(sotype)), token);
 	}
 
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)

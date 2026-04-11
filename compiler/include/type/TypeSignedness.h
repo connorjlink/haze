@@ -18,7 +18,7 @@ namespace hz
 		{ TokenType::UNSIGNED, TypeSignedness::UNSIGNED },
 	};
 
-	static const std::unordered_map<TypeSignedness, std::string> _type_signedness_map
+	static const std::unordered_map<TypeSignedness, std::string_view> _type_signedness_map
 	{
 		{ TypeSignedness::SIGNED, "signed" },
 		{ TypeSignedness::UNSIGNED, "unsigned" },

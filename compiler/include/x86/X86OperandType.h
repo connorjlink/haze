@@ -21,7 +21,7 @@ namespace hz
 		REGISTER_DISPLACED,
 	};
 
-	static const std::unordered_map<X86OperandType, std::string> _operand_type_map
+	static const std::unordered_map<X86OperandType, std::string_view> _operand_type_map
 	{
 		{ X86OperandType::IMMEDIATE, "immediate" },
 		{ X86OperandType::INDIRECT, "indirect" },

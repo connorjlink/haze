@@ -341,9 +341,6 @@
     <ClInclude Include="include\type\TypeSignedness.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\type\TypeSpecifier.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\type\TypeStorage.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>

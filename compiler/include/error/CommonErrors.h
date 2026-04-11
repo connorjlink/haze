@@ -13,9 +13,10 @@ namespace hz
 	enum class BinaryExpressionType;
 	enum class IntegerLiteralType;
 	enum class CommandType;
-	enum class IntTypeType;
+	enum class IntWidth;
 	enum class TokenType;
 	enum class SymbolType;
+	enum class StructOrUnionType;
 
 	class Type;
 	class Expression;
@@ -44,9 +45,10 @@ namespace hz
 
 	public:
 		static void invalid_integer_literal_type(IntegerLiteralType, const Token&);
-		static void invalid_int_type(IntTypeType, const Token&);
+		static void invalid_int_type(IntWidth, const Token&);
 		static void invalid_token_type(TokenType, const Token&);
 		static void invalid_symbol_type(SymbolType, const Token&);
+		static void invalid_struct_or_union_type(StructOrUnionType, const Token&);
 
 	public:
 		static void must_be_lvalue(const std::string&, const Token&);
