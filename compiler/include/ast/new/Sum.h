@@ -63,7 +63,7 @@ namespace hz
             {
                 using T = std::tuple_element_t<Is, Tuple>;
                 const auto& vector = sum.storage.template get<T>();
-                return (vector[index].*Method::pointer)(sum);
+                return (vector[index].*Fn::pointer)(sum);
             }...
         };
     }
@@ -122,17 +122,17 @@ namespace hz
 
 
     // node dispatch type traits
-    template<typename T, typename Sum, typename Fn>
-    concept ImplementsMethod = requires(const T& node, const Sum& sum)
+    template<typename T, typename SumT, typename Fn>
+    concept ImplementsMethod = requires(const T& node, const SumT& sum)
     {
         { (node.*Fn::pointer)(sum) } -> std::same_as<typename Fn::ReturnType>;
     };
 
-    template<typename T, typename Sum, typename MethodsT, std::size_t... Is>
-    concept SumTupleImpl = (ImplementsMethod<T, Sum, std::tuple_element_t<Is, MethodsT>> && ...);
+    template<typename T, typename SumT, typename MethodsT, std::size_t... Is>
+    concept SumTupleImpl = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
 
-    template<typename T, typename Sum, typename MethodsT>
-    concept SumTuple = SumTupleImpl<T, Sum, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
+    template<typename T, typename SumT, typename MethodsT>
+    concept SumTuple = SumTupleImpl<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
 
 
     // sum type and dispatch family
