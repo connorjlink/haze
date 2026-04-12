@@ -21,6 +21,15 @@ namespace hz
         static bool validate_function(ErrorFrame);
         static bool validate_array(ErrorFrame);
 
+    public:
+        static bool validate_parse_primitive(ErrorFrame);
+        static bool validate_parse_pointer(ErrorFrame);
+        static bool validate_parse_enum(ErrorFrame);
+        static bool validate_parse_struct(ErrorFrame);
+        static bool validate_parse_union(ErrorFrame);
+        static bool validate_parse_function(ErrorFrame);
+        static bool validate_parse_array(ErrorFrame);
+
     private:
         TypeSum sum;
         SumHandle<TypeSum::Storage> _int;

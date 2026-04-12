@@ -19,9 +19,11 @@ import std;
 
 namespace
 {
-	bool is_binary_operator(hz::TokenType type)
+	using namespace hz;
+
+	bool is_binary_operator(TokenType type)
 	{
-		return hz::_binary_expression_map.contains(type);
+		return _binary_expression_map.contains(type);
 	}
 }
 
@@ -46,7 +48,8 @@ namespace hz
 			return _tokens[cursor - 1];
 		}
 
-		USE_SAFE(ErrorReporter)->post_uncorrectable("invalid token backtrack", peek());
+		USE_SAFE(ErrorReporter)->post_uncorrectable(
+			"invalid token backtrack", peek());
 	}
 
 	Token& Parser::peek()
@@ -61,7 +64,8 @@ namespace hz
 			return _tokens[cursor + 1];
 		}
 
-		USE_SAFE(ErrorReporter)->post_uncorrectable("unexpectedly reached the end of file", peek());
+		USE_SAFE(ErrorReporter)->post_uncorrectable(
+			"unexpectedly reached the end of file", peek());
 	}
 
 	Token Parser::consume(TokenType type)
@@ -86,8 +90,9 @@ namespace hz
 			return { "[error]" };
 		};
 
-		USE_SAFE(ErrorReporter)->post_error(std::format("expected token `{}` but got `{}`",
-			convert(type), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"expected token `{}` but got `{}`",
+				convert(type), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
 		return current;
 	}
 
@@ -166,7 +171,8 @@ namespace hz
 		const auto [pointer, error] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
 		if (error != std::errc())
 		{
-			USE_SAFE(ErrorReporter)->post_error(std::format("unparseable integer literal `{}`", integer_string), integer_literal_token);
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"unparseable integer literal `{}`", integer_string), integer_literal_token);
 			return nullptr;
 		}
 
@@ -187,12 +193,13 @@ namespace hz
 		const auto name_token = consume(TokenType::IDENTIFIER);
 
 		consume(TokenType::LPAREN);
-		auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
+		const auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
 		consume(TokenType::RPAREN);
 
 		if (!USE_SAFE(SymbolDatabase)->has_symbol(name_token.text))
 		{
-			USE_SAFE(ErrorReporter)->post_error(std::format("function `{}` is undefined", name_token.text), name_token);
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"function `{}` is undefined", name_token.text), name_token);
 			return nullptr;
 		}
 
@@ -200,8 +207,9 @@ namespace hz
 
 		if (function_symbol->arity() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter)->post_error(std::format("function `{}` was defined with {} arguments but called with {}",
-				name_token.text, function_symbol->arity(), arguments.size()), name_token);
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"function `{}` was defined with {} arguments but called with {}",
+					name_token.text, function_symbol->arity(), arguments.size()), name_token);
 			return nullptr;
 		}
 
@@ -226,13 +234,13 @@ namespace hz
 		
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			auto identifier_expression = parse_identifier_expression();
+			const auto identifier_expression = parse_identifier_expression();
 			return new AdjustExpression{ true, identifier_expression, identifier_expression->_token };
 		}
 
 		else if (peek().type == TokenType::INT)
 		{
-			auto integer_literal_expression = parse_integerliteral_expression();
+			const auto integer_literal_expression = parse_integerliteral_expression();
 			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
 		}
 
@@ -246,13 +254,13 @@ namespace hz
 
 		if (peek().type == TokenType::IDENTIFIER)
 		{
-			auto identifier_expression = parse_identifier_expression();
+			const auto identifier_expression = parse_identifier_expression();
 			return new AdjustExpression{ false, identifier_expression, identifier_expression->_token };
 		}
 
 		else if (peek().type == TokenType::INT)
 		{
-			auto integer_literal_expression = parse_integerliteral_expression();
+			const auto integer_literal_expression = parse_integerliteral_expression();
 			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
 		}
 
@@ -325,7 +333,7 @@ namespace hz
 	Expression* Parser::parse_expression()
 	{
 		// parse until the minimum precedence level is reached (so parse everything possible basically)
-		auto infix_expression = parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
+		const auto infix_expression = parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
 
 		if (infix_expression != nullptr)
 		{
