@@ -57,17 +57,17 @@ namespace hz
 	class EnterScopeCommand : public IntermediateCommand
 	{
 	private:
-		std::int32_t _bytes;
+		Offset bytes;
 #pragma message("TODO: implement dynamic stack frame resizing. for now it is fixed 16k per frame (will overflow quickly). I think this should just be doable by checking the largest offset in the RuntimeAllocator's current_function buffer")
 
 	public:
-		EnterScopeCommand(std::int32_t bytes = 0x1000)
-			: _bytes{ bytes }
+		EnterScopeCommand(Offset bytes = 0x1000)
+			: bytes{ bytes }
 		{
 		}
 
 	private:
-		constexpr ByteRange _emit(std::uint32_t, std::int32_t) const;
+		constexpr ByteRange _emit(Address, Offset) const;
 
 	public:
 		virtual IntermediateType itype() const final override;
@@ -85,12 +85,12 @@ namespace hz
 	class LocalVariableCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t location;
-		Variable* _value;
+		Register location;
+		Variable* value;
 
 	public:
-		LocalVariableCommand(std::int8_t location, Variable* value)
-			: location{ location }, _value{ value }
+		LocalVariableCommand(Register location, Variable* value)
+			: location{ location }, value{ value }
 		{
 		}
 
@@ -102,12 +102,12 @@ namespace hz
 	class GlobalVariableCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t location;
-		Variable* _value;
+		Register location;
+		Variable* value;
 
 	public:
-		GlobalVariableCommand(std::int8_t location, Variable* value)
-			: location{ location }, _value{ value }
+		GlobalVariableCommand(Register location, Variable* value)
+			: location{ location }, value{ value }
 		{
 		}
 
@@ -119,11 +119,11 @@ namespace hz
 	class HeapReadCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t destination;
-		std::uint32_t pointer;
+		Address pointer;
+		Register destination;
 
 	public:
-		HeapReadCommand(std::int8_t destination, std::uint32_t pointer)
+		HeapReadCommand(Register destination, Address pointer)
 			: destination{ destination }, pointer{ pointer }
 		{
 		}
@@ -136,12 +136,12 @@ namespace hz
 	class HeapWriteCommand : public IntermediateCommand
 	{
 	private:
-		std::uint32_t pointer;
-		std::int8_t _source;
+		Address pointer;
+		Register source;
 
 	public:
-		HeapWriteCommand(std::uint32_t pointer, std::int8_t source)
-			: pointer{ pointer }, _source{ source }
+		HeapWriteCommand(Address pointer, Register source)
+			: pointer{ pointer }, source{ source }
 		{
 		}
 
@@ -153,12 +153,12 @@ namespace hz
 	class StackReadCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t destination;
-		std::int32_t _offset;
+		Offset offset;
+		Register destination;
 
 	public:
-		StackReadCommand(std::int8_t destination, std::int32_t offset)
-			: destination{ destination }, _offset{ offset }
+		StackReadCommand(Register destination, Offset offset)
+			: destination{ destination }, offset{ offset }
 		{
 		}
 
@@ -170,12 +170,12 @@ namespace hz
 	class StackWriteCommand : public IntermediateCommand
 	{
 	private:
-		std::int32_t _offset;
-		std::int8_t _source;
+		Offset offset;
+		Register source;
 
 	public:
-		StackWriteCommand(std::int32_t offset, std::int8_t source)
-			: _offset{ offset }, _source{ source }
+		StackWriteCommand(Offset offset, Register source)
+			: offset{ offset }, source{ source }
 		{
 		}
 
@@ -339,11 +339,11 @@ namespace hz
 	class IncrementCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t destination, _source;
+		Register destination, source;
 
 	public:
-		IncrementCommand(std::int8_t destination, std::int8_t source)
-			: destination{ destination }, _source{ source }
+		IncrementCommand(Register destination, Register source)
+			: destination{ destination }, source{ source }
 		{
 		}
 
@@ -355,11 +355,11 @@ namespace hz
 	class DecrementCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t destination, _source;
+		Register destination, source;
 
 	public:
-		DecrementCommand(std::int8_t destination, std::int8_t source)
-			: destination{ destination }, _source{ source }
+		DecrementCommand(Register destination, Register source)
+			: destination{ destination }, source{ source }
 		{
 		}
 
@@ -371,11 +371,11 @@ namespace hz
 	class CopyCommand : public IntermediateCommand
 	{
 	public:
-		std::int8_t destination, _source;
+		Register destination, source;
 
 	public:
-		CopyCommand(std::int8_t destination, std::int8_t source)
-			: destination{ destination }, _source{ source }
+		CopyCommand(Register destination, Register source)
+			: destination{ destination }, source{ source }
 		{
 		}
 
