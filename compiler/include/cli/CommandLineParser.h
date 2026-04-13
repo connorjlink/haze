@@ -23,11 +23,6 @@ namespace hz
 		}
 
 	public:
-		CommandLineParser()
-		{
-		}
-
-	public:
 		void parse(int, char**);
 	};
 }

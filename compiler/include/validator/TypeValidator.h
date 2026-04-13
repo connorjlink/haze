@@ -1,7 +1,7 @@
 #ifndef HAZE_TYPEVALIDATOR_H
 #define HAZE_TYPEVALIDATOR_H
 
-#include "Validator.h"
+#include <validator/Validator.h>
 
 // Haze TypeValidator.h
 // (c) Connor J. Link. All Rights Reserved.

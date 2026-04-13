@@ -12,13 +12,13 @@ namespace hz
 	{
 	public:
 		// mod R/M byte
-		static std::uint8_t modrm(std::uint8_t, std::uint8_t, std::uint8_t);
+		static Register modrm(Register, Register, Register);
 		// register-register mod R/M byte
-		static std::uint8_t modrm_rr(std::uint8_t, std::uint8_t);
+		static Register modrm_rr(Register, Register);
 
 	public:
 		// scale-index byte
-		static std::uint8_t sib(std::uint8_t, std::uint8_t, std::uint8_t);
+		static Register sib(Register, Register, Register);
 	};
 }
 

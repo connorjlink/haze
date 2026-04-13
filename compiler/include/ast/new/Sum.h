@@ -8,14 +8,6 @@
 // Haze Sum.h
 // (c) Connor J. Link. All Rights Reserved.
 
-// TODO: REMOVE
-#include <tuple>
-#include <vector>
-#include <cstdint>
-#include <type_traits>
-#include <iostream>
-#include <format>
-
 namespace hz
 {
     // sum vector storage definitions: 255 subtypes, 4GiO nodes per subtype

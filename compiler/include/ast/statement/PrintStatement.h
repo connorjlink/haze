@@ -1,7 +1,7 @@
 #ifndef HAZE_PRINTSTATEMENT_H
 #define HAZE_PRINTSTATEMENT_H
 
-#include "Statement.h"
+#include <ast/statement/Statement.h>
 
 // Haze PrintStatement.h
 // (c) Connor J. Link. All Rights Reserved.

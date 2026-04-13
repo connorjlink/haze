@@ -1,7 +1,7 @@
 #ifndef HAZE_INSTRUCTIONVALIDATOR_H
 #define HAZE_INSTRUCTIONVALIDATOR_H
 
-#include "Validator.h"
+#include <validator/Validator.h>
 
 // Haze InstructionValidator.h
 // (c) Connor J. Link. All Rights Reserved.

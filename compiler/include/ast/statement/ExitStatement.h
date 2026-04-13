@@ -1,7 +1,7 @@
 #ifndef HAZE_EXITSTATEMENT_H
 #define HAZE_EXITSTATEMENT_H
 
-#include "Statement.h"
+#include <ast/statement/Statement.h>
 
 // Haze ExitStatement.h
 // (c) Connor J. Link. All Rights Reserved.

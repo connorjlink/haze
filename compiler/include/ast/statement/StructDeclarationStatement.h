@@ -1,7 +1,7 @@
 #ifndef HAZE_STRUCTDECLARATIONSTATEMENT_H
 #define HAZE_STRUCTDECLARATIONSTATEMENT_H
 
-#include "Statement.h"
+#include <ast/statement/Statement.h>
 
 // Haze StructDeclarationStatement.h
 // (c) Connor J. Link. All Rights Reserved.

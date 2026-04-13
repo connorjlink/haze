@@ -1,8 +1,8 @@
 #ifndef HAZE_WHILESTATEMENT_H
 #define HAZE_WHILESTATEMENT_H
 
-#include "Statement.h"
-#include "Expression.h"
+#include <ast/statement/Statement.h>
+#include <ast/expression/Expression.h>
 
 // Haze WhileStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.

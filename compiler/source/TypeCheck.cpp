@@ -73,18 +73,9 @@ namespace hz
 
 					// this would only be valid if there were a decltype expression
 					//case STRUCT:
-					//{
-					//	const auto struct_symbol = _parser->reference_struct(identifier, expression->_token);
-					//	// structure types are implitly of pointer type (but are still statically allocated)
-					//	return new StructType{ IMMUTABLE, identifier, PTR };
-					//} break;
 
 					// same for this case
 					//case FUNCTION:
-					//{
-					//	const auto function_symbol = _parser->reference_function(identifier, expression->_token);
-					//	return function_symbol->return_type;
-					//} break;
 
 					default:
 					{

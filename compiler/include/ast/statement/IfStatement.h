@@ -1,8 +1,8 @@
 #ifndef HAZE_IFSTATEMENT_H
 #define HAZE_IFSTATEMENT_H
 
-#include "Expression.h"
-#include "Statement.h"
+#include <ast/statement/Statement.h>
+#include <ast/expression/Expression.h>
 
 // Haze IfStatement.h
 // (c) Connor J. Link. All Rights Reserved.

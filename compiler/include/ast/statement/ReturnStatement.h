@@ -1,8 +1,8 @@
 ﻿#ifndef HAZE_RETURNSTATEMENT_H
 #define HAZE_RETURNSTATEMENT_H
 
-#include "Statement.h"
-#include "Expression.h"
+#include <ast/statement/Statement.h>
+#include <ast/expression/Expression.h>
 
 // Haze ReturnStatement.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -9,8 +9,6 @@
 
 namespace hz
 {
-#pragma message("TODO: figure out a better way to enforce a single ground truth anchor function signature set")
-
     // expose a strict polymorphic interface for AST nodes
     template<typename AnchorT>
     using ASTMethods = std::tuple

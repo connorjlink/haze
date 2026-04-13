@@ -1,7 +1,7 @@
 #ifndef HAZE_VARIABLESTATEMENT_H
 #define HAZE_VARIABLESTATEMENT_H
 
-#include "Statement.h"
+#include <ast/statement/Statement.h>
 
 // Haze VariableStatement.h
 // (c) Connor J. Link. All Rights Reserved.

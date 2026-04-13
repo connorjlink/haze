@@ -51,12 +51,9 @@ namespace hz
 
 	void CommandLineParser::parse(int argc, char** argv)
 	{
-		static constexpr auto TASK = "identifying arguments";
-		//const auto identify_task = REQUIRE_SAFE(JobManager)->begin_job(TASK);
-
 		const auto arguments = convert(argc, argv);
 		
-		USE_SAFE(ErrorReporter)->open_context("command line", TASK);
+		USE_SAFE(ErrorReporter)->open_context("command line", "identifying arguments");
 
 		for (auto& argument : arguments)
 		{
@@ -147,6 +144,11 @@ namespace hz
 						auto flag = _optimization_map.at(value);
 						USE_SAFE(CommandLineOptions)->optimization |= flag;
 					} break;
+
+					case OUTFILE:
+					{
+						USE_SAFE(CommandLineOptions)->output_filepath = value;
+					} break;
 				}
 			}
 
@@ -158,6 +160,5 @@ namespace hz
 		}
 
 		USE_SAFE(ErrorReporter)->close_context();
-		//REQUIRE_SAFE(JobManager)->end_job(identify_task);
 	}
 }

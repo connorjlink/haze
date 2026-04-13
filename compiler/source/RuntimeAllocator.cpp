@@ -1,7 +1,6 @@
 import std;
 
 #include <allocator/RuntimeAllocator.h>
-#include <toolchain/Generator.h>
 #include <error/ErrorReporter.h>
 
 // Haze RuntimeAllocator.cpp
@@ -24,16 +23,11 @@ namespace
 
 namespace hz
 {
-	std::uint32_t RuntimeAllocator::allocate(std::uint32_t bytes)
-	{
-		UNSUPPORTED_OPERATION(__FUNCTION__);
-	}
-
 	void RuntimeAllocator::define_local(const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 		
-		if (_locals_offsets[current_function].contains(name))
+		if (locals_offsets[current_function].contains(name))
 		{
 			::already_defined_error(name, NULL_TOKEN);
 			return;
@@ -41,84 +35,75 @@ namespace hz
 
 		// NOTE: intentionally leaving `undefined` state to show that it is currently unmapped
 		// but want to indicate that the variable exists at least
-		_locals_offsets[REQUIRE_SAFE(Generator)->current_function()][name] = -1;
+		locals_offsets[REQUIRE_SAFE(Generator)->current_function()][name] = -1;
 	}
 
-	void RuntimeAllocator::define_local(const std::string& name, std::int8_t source)
+	void RuntimeAllocator::define_local(const std::string& name, Register source)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
-		if (_locals_offsets[current_function].contains(name))
+		auto& locals = locals_offsets[current_function];
+
+		if (locals.contains(name))
 		{
 			::already_defined_error(name, NULL_TOKEN);
 			return;
 		}
 
-#pragma message("TODO: replace this hack with a more efficient algorithm to find the new offset to use!")
+		// figure out how much memory is required for the current local 
+		const auto symbol = USE_SAFE(SymbolDatabase)->reference_variable(name, NULL_TOKEN);
+		const auto size = symbol->type.size();
+		
+		stack_size[current_function] += size;
 
-		auto& map = _locals_offsets[current_function];
-
-		auto lowest_offset = 0;
-
-		for (auto& [key, value] : map)
-		{
-			if (value < lowest_offset)
-			{
-				lowest_offset = value;
-			}
-		}
-
-#pragma message("TODO: compute the size of the previous element (so probably our variables should be in an ordered map")
-		const auto previous_size = 4;
-		const auto offset = lowest_offset - previous_size;
-
+		const auto offset = -stack_size[current_function];
 		REQUIRE_SAFE(Generator)->stack_write(offset, source);
-		_locals_offsets[current_function][name] = offset;
+		locals[name] = offset;
 	}
 
-	void RuntimeAllocator::attach_local(const std::string& name, std::int32_t offset)
+	void RuntimeAllocator::attach_local(const std::string& name, Offset offset)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
-		if (_locals_offsets[current_function].contains(name))
+		if (locals_offsets[current_function].contains(name))
 		{
 			::already_defined_error(name, NULL_TOKEN);
 			return;
 		}
 
-		_locals_offsets[current_function][name] = offset;
+		locals_offsets[current_function][name] = offset;
 	}
 
 	void RuntimeAllocator::destroy_local(const std::string& name)
 	{
-		_locals_offsets.erase(name);
+		locals_offsets.erase(name);
 	}
 
-	void RuntimeAllocator::read_local(std::int8_t destination, const std::string& name)
+	void RuntimeAllocator::read_local(Register destination, const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
-		if (!_locals_offsets[current_function].contains(name))
+		if (!locals_offsets[current_function].contains(name))
 		{
 			::not_defined_error(name, NULL_TOKEN);
 			return;
 		}
 
-		const auto offset = _locals_offsets[current_function].at(name);
+		const auto offset = locals_offsets[current_function].at(name);
 		REQUIRE_SAFE(Generator)->stack_read(destination, offset);
 	}
 
-	void RuntimeAllocator::write_local(const std::string& name, std::int8_t source)
+	void RuntimeAllocator::write_local(const std::string& name, Register source)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
-		if (!_locals_offsets[current_function].contains(name))
+		if (!locals_offsets[current_function].contains(name))
 		{
 			::not_defined_error(name, NULL_TOKEN);
 			return;
 		}
 
-		const auto offset = _locals_offsets[current_function].at(name);
+		const auto offset = locals_offsets[current_function].at(name);
 		REQUIRE_SAFE(Generator)->stack_write(offset, source);
 	}
 }

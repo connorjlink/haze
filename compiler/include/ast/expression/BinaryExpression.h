@@ -1,8 +1,8 @@
 #ifndef HAZE_BINARYEXPRESSION_H
 #define HAZE_BINARYEXPRESSION_H
 
-#include "Expression.h"
-#include "BinaryExpressionType.h"
+#include <ast/expression/Expression.h>
+#include <ast/expression/BinaryExpressionType.h>
 
 // Haze BinaryExpression.h
 // (c) Connor J. Link. All Rights Reserved.

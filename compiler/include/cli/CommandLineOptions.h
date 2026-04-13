@@ -24,6 +24,9 @@ namespace hz
 		// --output=raw
 		bool raw_output = false;
 
+		// --outfile=
+		std::string output_filepath{};
+
 		// bit flags by optimization category of OptimizationType
 		std::uint32_t optimization{};
 	};

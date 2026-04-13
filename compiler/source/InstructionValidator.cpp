@@ -9,6 +9,7 @@ namespace hz
 {
 	InstructionValidator::InstructionValidator()
 	{
+#pragma message("TODO: implement instruction validator tests")
 		add_test(Test{ "Instruction()", validate_constructor });
 		add_test(Test{ ".bytes()", validate_bytes });
 

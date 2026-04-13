@@ -3,6 +3,7 @@
 
 #include <data/DependencyInjector.h>
 #include <toolchain/Generator.h>
+#include <utility/Constants.h>
 
 // Haze RuntimeAllocator.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -15,26 +16,25 @@ namespace hz
 	{
 	private:
 		// map of (function -> (map of variables -> offset))
-		std::unordered_map<std::string, std::unordered_map<std::string, std::int32_t>> _locals_offsets;
-
-	public:
-		std::uint32_t allocate(std::uint32_t bytes);
+		std::unordered_map<std::string, std::unordered_map<std::string, Offset>> locals_offsets;
+		// map of (function -> current stack size)
+		std::unordered_map<std::string, Offset> stack_size;
 
 	public:
 		void define_local(const std::string&);
-		void define_local(const std::string&, std::int8_t);
-		void attach_local(const std::string&, std::int32_t);
+		void define_local(const std::string&, Register);
+		void attach_local(const std::string&, Offset);
 
 	public:
 		void destroy_local(const std::string&);
 
 	public:
-		void read_local(std::int8_t, const std::string&);
-		void write_local(const std::string&, std::int8_t);
+		void read_local(Register, const std::string&);
+		void write_local(const std::string&, Register);
 
 	public:
 		RuntimeAllocator()
-			: _locals_offsets{}
+			: locals_offsets{}
 		{
 		}
 	};

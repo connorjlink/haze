@@ -12,9 +12,21 @@ namespace
 {
 	using namespace hz;
 
+	AutoJSONObject export_location(const Token& token)
+	{
+		AutoJSONObject location{};
+		location.upsert("position", new NumberJSONValue{ static_cast<std::int32_t>(token.location.position) });
+		location.upsert("line", new NumberJSONValue{ token.location.line });
+		location.upsert("column", new NumberJSONValue{ token.location.column });
+		location.upsert("filepath", new StringJSONValue{ token.location.filepath });
+		location.upsert("stage", new StringJSONValue{ "source" });
+
+		return location;
+	}
+
 	std::string export_function_symbol(FunctionSymbol* function_symbol, Token token)
 	{
-		/*
+		/* Example JSON output for a function symbol
 			{
 				"name": "function",
 				"value": null,
@@ -28,7 +40,6 @@ namespace
 				},
 				"confidence": 100
 			}
-			
 		*/
 
 		AutoJSONObject function{};
@@ -36,14 +47,7 @@ namespace
 		function.upsert("value", new NullJSONValue{});
 		function.upsert("type", new StringJSONValue{ "function" });
 		function.upsert("text", new StringJSONValue{ function_symbol->name });
-
-		AutoJSONObject location{};
-		location.upsert("position", new NumberJSONValue{ static_cast<std::int32_t>(token.location.position) });
-		location.upsert("line", new NumberJSONValue{ token.location.line });
-		location.upsert("column", new NumberJSONValue{ token.location.column });
-		location.upsert("filepath", new StringJSONValue{ token.location.filepath });
-		location.upsert("stage", new StringJSONValue{ "source" });
-
+		const auto location = export_location(token);
 		function.upsert("location", location.get_object());
 		function.upsert("confidence", new NumberJSONValue{ function_symbol->confidence });
 
@@ -52,11 +56,37 @@ namespace
 
 	std::string export_argument_symbol(ArgumentSymbol* argument_symbol, Token token)
 	{
-		return "";
+		/* Example JSON output for an argument symbol
+		{
+			"name": "arg",
+			"value": null,
+			"type": "argument",
+			"text": "arg",
+			"location": {
+				"line": 1,
+				"column": 10,
+				"filepath": "haze.hz",
+				"stage": "source"
+			},
+			"confidence": 100
+		}
+		*/
+
+		AutoJSONObject argument{};
+		argument.upsert("name", new StringJSONValue{ argument_symbol->name });
+		argument.upsert("value", new NullJSONValue{});
+		argument.upsert("type", new StringJSONValue{ "argument" });
+		argument.upsert("text", new StringJSONValue{ argument_symbol->name });
+		const auto location = export_location(token);
+		argument.upsert("location", location.get_object());
+		argument.upsert("confidence", new NumberJSONValue{ argument_symbol->confidence });
+
+		return argument.serialize();
 	}
 
 	std::string export_variable_symbol(VariableSymbol* variable_symbol, Token token)
 	{
+#pragma message("TODO: implement the rest of the export functions")
 		return "";
 	}
 
@@ -164,6 +194,8 @@ namespace hz
 		// not considering running out of attempts an error because it might just be that the server gracefully shut down
 		if (retry_attempts == 0)
 		{
+			USE_SAFE(ErrorReporter)->post_information(
+				"failed to connect to the server after multiple attempts; symbol information will not be exported", NULL_TOKEN);
 			return;
 		}
 

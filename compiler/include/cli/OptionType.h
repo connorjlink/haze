@@ -12,7 +12,8 @@ namespace hz
 		VERBOSITY,
 		EXECUTION,
 		OPTIMIZATION,
-		OUTPUT
+		OUTPUT,
+		OUTFILE,
 	};
 
 	static const std::unordered_map<std::string_view, OptionType> _option_map
@@ -22,6 +23,7 @@ namespace hz
 		{ "execution", OptionType::EXECUTION },
 		{ "output", OptionType::OUTPUT },
 		{ "optimization", OptionType::OPTIMIZATION },
+		{ "outfile", OptionType::OUTFILE },
 	};
 }
 

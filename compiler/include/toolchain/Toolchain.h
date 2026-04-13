@@ -41,8 +41,7 @@ namespace hz
 
 	public:
 		virtual ToolchainType ttype() const = 0;
-		// entry point filepath
-		virtual void run(const std::string&) = 0;
+		virtual std::vector<Linkable> run(const std::string&) = 0;
 
 	public:
 		// entry point filepath

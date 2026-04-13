@@ -35,7 +35,7 @@ namespace hz
             const auto left_val = left_handle.evaluate();
             const auto right_val = right_handle.evaluate();
 
-            // TODO: perform the operation based upon 'op'
+#pragma message("TODO: implement binary expression evaluation")
 
             return *this;
         }

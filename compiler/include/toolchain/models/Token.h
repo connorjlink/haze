@@ -67,7 +67,6 @@ namespace hz
 		GEOMETRY,
 
 		DOTDEFINE, DOTORG,
-		DOTHOOK, DOTUNHOOK,
 
 		ASM,
 
@@ -175,9 +174,6 @@ namespace hz
 		
 		bimap_t{ S(".define"), TokenType::DOTDEFINE },
 		bimap_t{ S(".org"), TokenType::DOTORG },
-		
-		bimap_t{ S(".hook"), TokenType::DOTHOOK },
-		bimap_t{ S(".unhook"), TokenType::DOTUNHOOK },
 		
 		bimap_t{ S("x0"), TokenType::X0 },
 		bimap_t{ S("x1"), TokenType::X1 },

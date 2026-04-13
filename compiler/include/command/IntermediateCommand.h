@@ -21,7 +21,7 @@ namespace hz
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
-		std::int32_t offset;
+		Offset offset;
 		std::uint8_t size;
 		bool marked_for_deletion = false;
 

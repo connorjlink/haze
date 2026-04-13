@@ -51,6 +51,19 @@ namespace hz
 			"unknown architecture type `{}`", static_cast<int>(type)), NULL_TOKEN);
 	}
 
+	inline constexpr Address get_linker_origin(ArchitectureType type)
+	{
+		using enum ArchitectureType;
+		switch (type)
+		{
+			case X86: return 0x401000; // default image base for PE files
+			case RISCV: return 0x10000; // arbitrary choice aligned with RARS
+		}
+
+		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
+			"unknown architecture type `{}`", static_cast<int>(type)), NULL_TOKEN);
+	}
+
 #undef NAMEOF
 }
 
