@@ -2,6 +2,7 @@ import std;
 
 #include <ast/Expression.h>
 #include <ast/IdentifierExpression.h>
+#include <ast/ArgumentExpression.h>
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
 #include <symbol/Symbol.h>
@@ -48,14 +49,19 @@ namespace hz
 		return new_symbol;
 	}
 
-	FunctionSymbol* SymbolDatabase::add_function(const std::string& name, const Token& location, Type* return_type)
+	FunctionSymbol* SymbolDatabase::add_function(const std::string& name, const Token& location, Type* return_type, const std::vector<ArgumentExpression*>& arguments)
 	{
-		return AS_FUNCTION_SYMBOL(add_symbol(SymbolType::FUNCTION, name, location));
+		auto function_symbol = AS_FUNCTION_SYMBOL(add_symbol(SymbolType::FUNCTION, name, location));
+		function_symbol->return_type = return_type;
+		function_symbol->arguments = arguments;
+		return function_symbol;
 	}
 
-	ArgumentSymbol* SymbolDatabase::add_argument(const std::string& name, const Token& location)
+	ArgumentSymbol* SymbolDatabase::add_argument(const std::string& name, const Token& location, Type* type)
 	{
-		return AS_ARGUMENT_SYMBOL(add_symbol(SymbolType::ARGUMENT, name, location));
+		auto argument_symbol = AS_ARGUMENT_SYMBOL(add_symbol(SymbolType::ARGUMENT, name, location));
+		argument_symbol->type = type;
+		return argument_symbol;
 	}
 
 	VariableSymbol* SymbolDatabase::add_variable(const std::string& name, const Token& location)

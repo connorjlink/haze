@@ -333,9 +333,7 @@ namespace hz
 				const auto type = parse_type();
 				const auto identifier = parse_identifier_expression();
 
-				USE_SAFE(SymbolDatabase)->add_argument(identifier->name, lookbehind());
-				auto symbol = USE_SAFE(SymbolDatabase)->reference_argument(identifier->name, peek());
-				symbol->type = type;
+				USE_SAFE(SymbolDatabase)->add_argument(identifier->name, lookbehind(), type);
 
 				// exports the argument identifier symbol only
 				USE_SAFE(SymbolExporter)->enqueue(symbol, identifier->_token);
@@ -488,7 +486,7 @@ namespace hz
 	{
 		consume(TokenType::FUNCTION);
 
-		auto return_type = parse_type();
+		const auto return_type = parse_type();
 
 		const auto name_token = consume(TokenType::IDENTIFIER);
 
@@ -497,23 +495,17 @@ namespace hz
 		const auto end_function_label = std::format("end_function_{:05d}", uuid);
 		_function_label_map[name_token.text] = end_function_label;
 
-#pragma message("TODO: implement a more efficient way of modifying the return type than this mess")
-
-		USE_SAFE(SymbolDatabase)->add_function(name_token.text, lookbehind(), return_type);
-
 		consume(TokenType::EQUALS);
 
 		consume(TokenType::LPAREN);
 		auto arguments = parse_arguments(true);
 		consume(TokenType::RPAREN);
 
-		// inform the parser of the function arguments
-		// creates a local copy of them for future reference
-		auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name_token.text, peek());
-		function_symbol->arguments = arguments;
+		// update the symbol map
+		USE_SAFE(SymbolDatabase)->add_function(name_token.text, lookbehind(), return_type, arguments);
 
 		const auto body = parse_compound_statement(name_token.text);
-		return new Function{ name_token.text, return_type, std::move(arguments), body, name_token };
+		return new Function{ name_token.text, return_type, arguments, body, name_token };
 	}
 
 	std::vector<Node*> CompilerParser::parse_functions()

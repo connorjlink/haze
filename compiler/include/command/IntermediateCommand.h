@@ -58,7 +58,7 @@ namespace hz
 	{
 	private:
 		std::int32_t _bytes;
-#pragma message("TODO: implement dynamic stack frame resizing. for now it is fixed 16k per frame (will overflow quickly)")
+#pragma message("TODO: implement dynamic stack frame resizing. for now it is fixed 16k per frame (will overflow quickly). I think this should just be doable by checking the largest offset in the RuntimeAllocator's current_function buffer")
 
 	public:
 		EnterScopeCommand(std::int32_t bytes = 0x1000)
@@ -203,11 +203,11 @@ namespace hz
 	class BinaryCommand : public IntermediateCommand
 	{
 	protected:
-		std::int8_t _lhs, _rhs, destination;
+		std::int8_t lhs, rhs, destination;
 
 	public:
 		BinaryCommand(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
-			: _lhs{ lhs }, _rhs{ rhs }, destination{ destination }
+			: lhs{ lhs }, rhs{ rhs }, destination{ destination }
 		{
 		}
 

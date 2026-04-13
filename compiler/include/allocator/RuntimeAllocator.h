@@ -23,6 +23,7 @@ namespace hz
 	public:
 		void define_local(const std::string&);
 		void define_local(const std::string&, Register);
+		// view but do not allocate space for a new local
 		void attach_local(const std::string&, Offset);
 
 	public:

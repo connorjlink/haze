@@ -23,42 +23,43 @@ namespace
 
 namespace hz
 {
-	void RuntimeAllocator::define_local(const std::string& name)
+	bool RuntimeAllocator::define_local(const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 		
 		if (locals_offsets[current_function].contains(name))
 		{
 			::already_defined_error(name, NULL_TOKEN);
-			return;
+			return false;
 		}
 
 		// NOTE: intentionally leaving `undefined` state to show that it is currently unmapped
 		// but want to indicate that the variable exists at least
-		locals_offsets[REQUIRE_SAFE(Generator)->current_function()][name] = -1;
+		locals_offsets[current_function][name] = -1;
+		
+		return true;
 	}
 
-	void RuntimeAllocator::define_local(const std::string& name, Register source)
+	bool RuntimeAllocator::define_local(const std::string& name, Register source)
 	{
-		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
-
-		auto& locals = locals_offsets[current_function];
-
-		if (locals.contains(name))
+		if (!define_local(name))
 		{
-			::already_defined_error(name, NULL_TOKEN);
-			return;
+			return false;
 		}
+
+		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		// figure out how much memory is required for the current local 
 		const auto symbol = USE_SAFE(SymbolDatabase)->reference_variable(name, NULL_TOKEN);
 		const auto size = symbol->type.size();
-		
+
 		stack_size[current_function] += size;
 
 		const auto offset = -stack_size[current_function];
 		REQUIRE_SAFE(Generator)->stack_write(offset, source);
-		locals[name] = offset;
+		locals_offsets[current_function][name] = offset;
+
+		return true;
 	}
 
 	void RuntimeAllocator::attach_local(const std::string& name, Offset offset)

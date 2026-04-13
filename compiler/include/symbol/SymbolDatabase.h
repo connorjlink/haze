@@ -21,6 +21,7 @@ namespace hz
 	class LabelSymbol;
 	class StructSymbol;
 	class Expression;
+	class ArgumentExpression;
 
 	class SymbolDatabase
 		: public SingletonTag<SymbolDatabase>
@@ -31,8 +32,8 @@ namespace hz
 
 	public:
 		Symbol* add_symbol(SymbolType, const std::string&, const Token&);
-		FunctionSymbol* add_function(const std::string&, const Token&, Type*);
-		ArgumentSymbol* add_argument(const std::string&, const Token&);
+		FunctionSymbol* add_function(const std::string&, const Token&, Type*, const std::vector<ArgumentExpression*>& arguments);
+		ArgumentSymbol* add_argument(const std::string&, const Token&, Type*);
 		VariableSymbol* add_variable(const std::string&, const Token&);
 		DefineSymbol* add_define(const std::string&, const Token&);
 		LabelSymbol* add_label(const std::string&, const Token&);

@@ -43,44 +43,17 @@ namespace hz
 
 		REQUIRE_SAFE(Generator)->begin_scope();
 
-		auto current_argument = 0;
+		// map stack space for the formals
 		for (auto argument : arguments)
 		{
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(argument);
-			REQUIRE_SAFE(RuntimeAllocator)->attach_local(argument_expression->identifier->name, ((current_argument + 2) * 4));
-
-			current_argument++;
+			REQUIRE_SAFE(RuntimeAllocator)->define_local(argument_expression->identifier->name);
 		}
 
 
-		// NOTE: old method
-		// create a register allocation for every one of our arguments
-		/*std::vector<AutoStackAllocation> argument_allocations{arity};
-
-		for (auto i = 0; i < arity; i++)
-		{
-			auto argument_expression = AS_ARGUMENT_EXPRESSION(arguments[i]);
-
-			// NOTE: the 0-th local variable is stored at [ebp - 4]
-#pragma message("TODO: use a different size other than 4 for non-32-bit values (custom types)")
-
-			_generator->take_argument(argument_expression->identifier->name, 
-				argument_allocations[i].source()->read(), (i + 2) * 4);
-
-			// TODO: does this support recursion properly
-			// all arguments are of ->etype() == ExpressionType::ARGUMENT
-			AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT,
-				argument_expression->identifier->name, NULL_TOKEN))->allocation 
-					= argument_allocations[i].source();
-		}*/
-
 		body->generate();
 
-		//_generator->branch_label();
-
-		// NOTE: old method
-		//_generator->end_scope();
-
+#pragma message("TODO: store function labels in a common dependency to avoid this hack")
 		if (REQUIRE_SAFE(Parser)->ptype() == ParserType::COMPILER)
 		{
 			auto compiler_parser = AS_COMPILER_PARSER(REQUIRE_SAFE(Parser).get());
@@ -90,7 +63,6 @@ namespace hz
 
 			REQUIRE_SAFE(Generator)->end_scope();
 		}
-
 		else
 		{
 			CommonErrors::invalid_parser_type(REQUIRE_SAFE(Parser)->ptype(), _token);
@@ -103,18 +75,9 @@ namespace hz
 #pragma message("TODO: figure out if there was not a return statement")
 		if constexpr (false)
 		{
-			USE_SAFE(ErrorReporter)->post_warning(std::format("implicit return generated for function `{}`", name), body->_token);
+			USE_SAFE(ErrorReporter)->post_warning(std::format(
+				"implicit return generated for function `{}`", name), body->_token);
 			
-			Expression* return_value = nullptr;
-
-#pragma message("TODO: determin fi the return type is valid or not")
-			/*using enum TypeSpecifier;
-			switch (return_type)
-			{
-				case BYTE: return_value = new IntegerLiteralExpression{ 0, NULL_TOKEN }; break;
-				default: _error_reporter->post_error("invalid return type", _token); return;
-			}*/
-
 			auto implicit_return = new ReturnStatement{ name, return_value, new ObserverAllocation{ EAX }, NULL_TOKEN};
 			// NOTE: generating a statement, so no need to pass an allocation
 			implicit_return->generate(nullptr);
