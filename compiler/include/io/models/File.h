@@ -15,7 +15,7 @@ namespace hz
 		: public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::string _filepath;
+		std::string filepath;
 		ToolchainType _type;
 		std::optional<std::string> _raw_contents = std::nullopt;
 		std::optional<std::string> _processed_contents = std::nullopt;
@@ -35,7 +35,7 @@ namespace hz
 	public:
 		File(const std::string& filepath)
 			//: Trackable{ ENABLE_TRACKING },
-			: _filepath{ filepath }, _type{}
+			: filepath{ filepath }, _type{}
 		{
 		}
 	};

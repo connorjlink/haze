@@ -41,7 +41,7 @@ namespace hz
 		std::vector<Token> _tokens;
 
 	protected:
-		std::string _filepath;
+		std::string filepath;
 
 	protected:
 		// explicitly mutable!

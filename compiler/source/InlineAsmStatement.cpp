@@ -18,15 +18,18 @@ namespace hz
 
 	void InlineAsmStatement::generate(Allocation*)
 	{
-		auto linker = new Linker{ std::move(_commands), _enclosing_file };
+		auto linker = new Linker{ commands, enclosing_file };
 		const auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin(), UWORD_MAX); 
 		
 		const auto object_code = commands
-			| std::ranges::views::transform([&](auto command) { return command->object_code; })
+			| std::ranges::views::transform([](auto command) 
+			{ 
+				return command->object_code; 
+			})
 			| std::ranges::views::join
 			| std::ranges::to<ByteRange>();
 
-		REQUIRE_SAFE(Generator)->inline_assembly(std::move(object_code), object_code.size());
+		REQUIRE_SAFE(Generator)->inline_assembly(object_code, object_code.size());
 	}
 
 	Statement* InlineAsmStatement::optimize()

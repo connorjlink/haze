@@ -32,7 +32,7 @@ namespace hz
 	public:
 		template<typename OnOpen, typename OnMessage, typename OnClose, typename OnError>
 		WebSocketServer(OnOpen onopen, OnMessage onmessage, OnClose onclose, OnError onerror)
-			: on_open(std::move(onopen)), on_message(std::move(onmessage)), on_close(std::move(onclose)), on_error(std::move(onerror))
+			: on_open{ std::move(onopen) }, on_message{ std::move(onmessage) }, on_close{ std::move(onclose) }, on_error{ std::move(onerror) }
 		{
 		}
 

@@ -50,10 +50,10 @@ namespace hz
 			return _raw_contents.value();
 		}
 
-		if (auto file = std::ifstream(_filepath, std::ios::in); 
+		if (auto file = std::ifstream(filepath, std::ios::in); 
 			file.good())
 		{
-			const auto filesize = std::filesystem::file_size(_filepath);
+			const auto filesize = std::filesystem::file_size(filepath);
 
 			std::string source(filesize, '\0');
 			source.assign((std::istreambuf_iterator<char>(file)),
@@ -65,7 +65,7 @@ namespace hz
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"file {} not found", _filepath), NULL_TOKEN);
+			"file {} not found", filepath), NULL_TOKEN);
 	}
 
 	std::string File::processed_contents(void)
@@ -76,7 +76,7 @@ namespace hz
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"file {} not yet processed", _filepath), NULL_TOKEN);
+			"file {} not yet processed", filepath), NULL_TOKEN);
 	}
 
 	void File::process(const std::string& contents)
@@ -88,7 +88,7 @@ namespace hz
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"file {} not yet loaded", _filepath), NULL_TOKEN);
+			"file {} not yet loaded", filepath), NULL_TOKEN);
 	}
 
 	void File::reload(void)
@@ -101,12 +101,12 @@ namespace hz
 		_processed_contents.reset();
 
 		USE_SAFE(ErrorReporter)->post_information(std::format(
-			"reloading file `{}` for the {} time", _filepath, ::friendlify_ordinal(_reload_count)), NULL_TOKEN);
+			"reloading file `{}` for the {} time", filepath, ::friendlify_ordinal(_reload_count)), NULL_TOKEN);
 	}
 
 	void File::compute_type(void)
 	{
-		const auto filepath = std::filesystem::path(_filepath);
+		const auto filepath = std::filesystem::path(filepath);
 		const auto extension = filepath.extension().string();
 
 		if (!_toolchain_map.contains(extension))

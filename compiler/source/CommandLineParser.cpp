@@ -155,7 +155,7 @@ namespace hz
 			// parsing a source code filepath
 			else
 			{
-				_filepaths.emplace_back(argument);
+				filepaths.emplace_back(argument);
 			}
 		}
 

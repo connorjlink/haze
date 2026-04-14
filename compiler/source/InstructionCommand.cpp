@@ -7,8 +7,8 @@ import std;
 
 namespace hz
 {
-	InstructionCommand::InstructionCommand(Token token, ByteRange&& object_code, const std::string& branch_target)
-		: Command{ token }, object_code{ std::move(object_code) }, marked_for_deletion{false}, branch_target{std::move(branch_target)}
+	InstructionCommand::InstructionCommand(Token token, const ByteRange& object_code, const std::string& branch_target)
+		: Command{ token }, object_code{ object_code }, marked_for_deletion{false}, branch_target{ branch_target }
 	{
 	}
 

@@ -21,7 +21,7 @@ namespace hz
 
 	public:
 		InstructionCommand() = delete;
-		InstructionCommand(Token, ByteRange&&, const std::string& = "");
+		InstructionCommand(Token, const ByteRange&, const std::string& = "");
 
 	public:
 		inline std::size_t length() const

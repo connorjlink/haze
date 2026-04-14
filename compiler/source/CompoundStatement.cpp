@@ -60,7 +60,7 @@ namespace hz
 			return nullptr;
 		}
 
-		return new CompoundStatement{ std::move(substatements_optimized), _token };
+		return new CompoundStatement{ substatements_optimized, _token };
 	}
 
 	Node* CompoundStatement::evaluate(Context* context) const

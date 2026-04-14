@@ -365,8 +365,6 @@ namespace hz
 		const auto data = data_section();
 
 		
-		// NOTE: not using std::move() here since profiling shows its slower here
-
 		std::copy(header.begin(), header.end(), head + DOS_HEADER_OFFSET);
 		std::copy(footer.begin(), footer.end(), head + DOS_FOOTER_OFFSET);
 

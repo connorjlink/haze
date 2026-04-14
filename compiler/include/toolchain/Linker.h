@@ -29,7 +29,7 @@ namespace hz
 		~Linker();
 
 	public:
-		void reload(std::vector<Linkable>&&);
+		void reload(const std::vector<Linkable>&);
 		LinkerType ltype() const;
 		bool optimize();
 		std::vector<InstructionCommand*> link(Address, Address);

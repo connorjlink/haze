@@ -29,7 +29,7 @@ namespace hz
 		Statement* body;
 
 	public:
-		Function(const std::string&, Type*, std::vector<Expression*>&&, Statement*, const Token&);
+		Function(const std::string&, Type*, const std::vector<Expression*>&, Statement*, const Token&);
 
 	public:
 		virtual NodeType ntype() const final override;

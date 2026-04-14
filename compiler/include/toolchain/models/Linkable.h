@@ -26,8 +26,8 @@ namespace hz
 		void optimize(void);
 
 	public:
-		Linkable(FunctionSymbol* symbol, std::vector<Command*>&& commands, std::vector<IntermediateCommand*>&& ir, std::uint32_t offset)
-			: symbol{ symbol }, commands{ std::move(commands) }, ir{ std::move(ir) }, offset{ offset }
+		Linkable(FunctionSymbol* symbol,const  std::vector<Command*>& commands, const std::vector<IntermediateCommand*>& ir, std::uint32_t offset)
+			: symbol{ symbol }, commands{ commands }, ir{ ir }, offset{ offset }
 		{
 		}
 	};

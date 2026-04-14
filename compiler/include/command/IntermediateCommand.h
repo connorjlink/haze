@@ -640,8 +640,8 @@ namespace hz
 		ByteRange code;
 
 	public:
-		InlineAssemblyCommand(ByteRange&& code)
-			: code{ std::move(code) }
+		InlineAssemblyCommand(const ByteRange& code)
+			: code{ code }
 		{
 		}
 

@@ -12,7 +12,7 @@
 
 namespace hz
 {
-	inline AssemblerParser* create_assembler_parser(const std::string& filepath)
+	inline AssemblerParser* createassembler_parser(const std::string& filepath)
 	{
 		const auto architecture = USE_UNSAFE(CommandLineOptions)->architecture;
 		switch (architecture)

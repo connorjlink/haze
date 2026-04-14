@@ -112,7 +112,7 @@ namespace hz
 
 		consume(TokenType::RBRACE);
 
-		return new CompoundStatement{ std::move(statements), lbrace_token };
+		return new CompoundStatement{ statements, lbrace_token };
 	}
 
 	Statement* CompilerParser::parse_return_statement(const std::string& enclosing_function)
@@ -150,8 +150,8 @@ namespace hz
 		const auto assembly = fetch_until(TokenType::RBRACE);
 		assembly.emplace_back(Token{ TokenType::END, "eof", peek().location });
 
-		const auto assembler_parser = create_assembler_parser(_filepath);
-		assembler_parser->reload(std::move(assembly), _filepath);
+		const auto assembler_parser = createassembler_parser(filepath);
+		assembler_parser->reload(assembly, filepath);
 
 		const auto commands = assembler_parser->parse()
 			| std::ranges::views::transform([](auto node)
@@ -167,7 +167,7 @@ namespace hz
 
 		consume(TokenType::RBRACE);
 
-		return new InlineAsmStatement{ std::move(commands), assembler_parser, _filepath, asm_token };
+		return new InlineAsmStatement{ commands, assembler_parser, filepath, asm_token };
 	}
 
 	Statement* CompilerParser::parse_while_statement(const std::string& enclosing_function)

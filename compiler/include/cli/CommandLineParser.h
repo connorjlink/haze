@@ -14,12 +14,12 @@ namespace hz
 		: public InjectSingleton<ErrorReporter, CommandLineOptions>
 	{
 	private:
-		std::vector<std::string> _filepaths;
+		std::vector<std::string> filepaths;
 
 	public:
 		const std::vector<std::string>& files() const
 		{
-			return _filepaths;
+			return filepaths;
 		}
 
 	public:

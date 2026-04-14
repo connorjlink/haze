@@ -17,13 +17,13 @@ namespace hz
 		USE_SAFE(ErrorReporter)->close_context();
 	}
 
-	Linker::reload(std::vector<Linkable&& linkables)
+	Linker::reload(const std::vector<Linkable&>& linkables)
 	{
-		_linkables = std::move(linkables);
+		_linkables = linkables;
 	}
 
-//	AssemblerLinker::AssemblerLinker(std::vector<Node*>&& commands, AssemblerParser* assembler_parser, const std::string& filepath)
-//		: Linker{ filepath }, commands{ std::move(commands) }, assembler_parser{ assembler_parser }
+//	AssemblerLinker::AssemblerLinker(cosnt std::vector<Node*>& commands, AssemblerParser* assembler_parser, const std::string& filepath)
+//		: Linker{ filepath }, commands{ commands }, assembler_parser{ assembler_parser }
 //	{
 //		commands.erase(std::remove_if(commands.begin(), commands.end(), [&](auto&& val)
 //			{

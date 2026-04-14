@@ -13,13 +13,13 @@ namespace hz
 	class InlineAsmStatement : public Statement
 	{
 	private:
-		const std::string& _enclosing_file;
-		std::vector<Command*> _commands;
-		AssemblerParser* _assembler_parser;
+		const std::string& enclosing_file;
+		std::vector<Command*> commands;
+		AssemblerParser* assembler_parser;
 
 	public:
-		InlineAsmStatement(std::vector<Command*>&& commands, AssemblerParser* assembler_parser, const std::string& enclosing_file, Token token)
-			: Statement{ token }, _commands{ std::move(commands) }, _assembler_parser{ assembler_parser }, _enclosing_file{ enclosing_file }
+		InlineAsmStatement(const std::vector<Command*>& commands, AssemblerParser* assembler_parser, const std::string& enclosing_file, Token token)
+			: Statement{ token }, commands{ commands }, assembler_parser{ assembler_parser }, enclosing_file{ enclosing_file }
 		{
 		}
 

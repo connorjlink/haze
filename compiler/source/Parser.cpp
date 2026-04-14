@@ -30,7 +30,7 @@ namespace
 namespace hz
 {
 	Parser::Parser(const std::string& filepath)
-		: cursor{ 0 }, _tokens{ _tokens }, _filepath{ filepath }
+		: cursor{ 0 }, _tokens{ _tokens }, filepath{ filepath }
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
 	}
@@ -185,7 +185,7 @@ namespace hz
 	StringExpression* Parser::parse_string_expression()
 	{
 		const auto message_token = consume(TokenType::STRING);
-		return new StringExpression{ std::move(message_token.text), message_token };
+		return new StringExpression{ message_token.text, message_token };
 	}
 
 	FunctionCallExpression* Parser::parse_functioncall_expression()
@@ -216,7 +216,7 @@ namespace hz
 		// NOTE: exports the function name symbol only
 		USE_SAFE(SymbolExporter)->enqueue(function_symbol, name_token);
 
-		return new FunctionCallExpression{ name_token.text, std::move(arguments), name_token };
+		return new FunctionCallExpression{ name_token.text, arguments, name_token };
 	}
 
 	Expression* Parser::parse_parenthesis_expression()
@@ -406,6 +406,6 @@ namespace hz
 	void Parser::reload(const std::vector<Token>& tokens, const std::string& filepath)
 	{
 		_tokens = tokens;
-		_filepath = filepath;
+		filepath = filepath;
 	}
 }

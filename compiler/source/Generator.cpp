@@ -338,17 +338,17 @@ namespace hz
 	}
 
 
-	void Generator::raw_binary(ByteRange&& object_code)
+	void Generator::raw_binary(const ByteRange& object_code)
 	{
 		const auto approximate_length = static_cast<std::uint32_t>(object_code.size());
 
 		// emplacing a bitstream is basically the same as compiled inline assembly
-		inline_assembly(std::move(object_code), approximate_length);
+		inline_assembly(object_code, approximate_length);
 	}
 
-	void Generator::inline_assembly(ByteRange&& object_code, std::uint32_t approximate_size)
+	void Generator::inline_assembly(const ByteRange& object_code, std::uint32_t approximate_size)
 	{
-		auto command = new InlineAssemblyCommand{ std::move(object_code), approximate_size };
+		auto command = new InlineAssemblyCommand{ object_code, approximate_size };
 		COMPOSE(command);
 	}
 

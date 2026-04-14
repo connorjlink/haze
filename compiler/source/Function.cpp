@@ -17,8 +17,8 @@ import std;
 
 namespace hz
 {
-	Function::Function(const std::string& name, Type* return_type, std::vector<Expression*>&& arguments, Statement* body, const Token& token)
-		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+	Function::Function(const std::string& name, Type* return_type, const std::vector<Expression*>& arguments, Statement* body, const Token& token)
+		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ arguments }, body{ body }
 	{
 	}
 
@@ -88,7 +88,7 @@ namespace hz
 	{
 		if (auto body_optimized = body->optimize())
 		{
-			return new Function{ name, return_type, std::move(arguments), AS_STATEMENT(body_optimized), _token };
+			return new Function{ name, return_type, arguments, AS_STATEMENT(body_optimized), _token };
 		}
 
 		return nullptr;

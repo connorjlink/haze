@@ -4,7 +4,7 @@
 // Haze ParserType.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define AS_ASSEMBLER_PARSER(x) static_cast<AssemblerParser*>(x)
+#define ASassembler_parser(x) static_cast<AssemblerParser*>(x)
 #define AS_COMPILER_PARSER(x) static_cast<CompilerParser*>(x)
 #define AS_INTERPRETER_PARSER(x) static_cast<InterpreterParser*>(x)
 
