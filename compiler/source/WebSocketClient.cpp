@@ -173,7 +173,7 @@ namespace hz
 				buffer_type == WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE)
 			{
 				// this is safe because string will make a copy and not take ownership
-				std::string message(reinterpret_cast<char*>(buffer), bytes_read);
+				std::string message{ reinterpret_cast<char*>(buffer), bytes_read };
 				if (on_message)
 				{
 					on_message(message);

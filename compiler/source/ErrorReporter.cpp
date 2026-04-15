@@ -19,7 +19,7 @@ namespace hz
 
 	void ErrorReporter::close_these_contexts()
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		close_these_contexts(thread_id);
@@ -27,7 +27,7 @@ namespace hz
 
 	void ErrorReporter::close_all_contexts()
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 		
 		for (const auto& [thread_id, _] : _active_frames)
 		{
@@ -37,7 +37,7 @@ namespace hz
 
 	std::size_t ErrorReporter::get_context_count(void)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		return _active_frames[thread_id].size();
@@ -45,7 +45,7 @@ namespace hz
 
 	ErrorFrame ErrorReporter::open_context(const std::string& file, const std::string& task)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		auto& existing_contexts = _open_frames[thread_id][file];
@@ -59,7 +59,7 @@ namespace hz
 
 	void ErrorReporter::close_context()
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		_closed_frames[thread_id].emplace_back(_active_frames[thread_id].top());
@@ -68,7 +68,7 @@ namespace hz
 
 	std::string ErrorReporter::generate_report()
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		std::string report(0x2000, '\0');
 
@@ -89,7 +89,7 @@ namespace hz
 
 	void ErrorReporter::post_information(const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		const auto& frame = _active_frames[thread_id].top();
@@ -98,7 +98,7 @@ namespace hz
 
 	void ErrorReporter::post_information(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		if (context != nullptr)
 		{
@@ -111,7 +111,7 @@ namespace hz
 
 	void ErrorReporter::post_warning(const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		const auto& frame = _active_frames[thread_id].top();
@@ -131,7 +131,7 @@ namespace hz
 
 	void ErrorReporter::post_error(const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		const auto& frame = _active_frames[thread_id].top();
@@ -140,7 +140,7 @@ namespace hz
 
 	void ErrorReporter::post_error(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		_error_count++;
 		validate_error_count();
@@ -156,7 +156,7 @@ namespace hz
 
 	void ErrorReporter::post_uncorrectable(const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		const auto thread_id = std::this_thread::get_id();
 		const auto& frame = _active_frames[thread_id].top();
@@ -165,7 +165,7 @@ namespace hz
 
 	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::string& file, const std::string& message, const Token& token)
 	{
-		const auto _ = std::scoped_lock{ _mutex };
+		std::scoped_lock lock{ mutex };
 
 		// not checking validating the error count here since that would be recursive uncorrectable!
 		_error_count++;

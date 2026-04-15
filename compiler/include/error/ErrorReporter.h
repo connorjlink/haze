@@ -35,7 +35,7 @@ namespace hz
 		}
 
 	private:
-		std::mutex _mutex;
+		std::mutex mutex;
 
 	private:
 		std::unordered_map<std::thread::id, std::unordered_map<std::string, std::list<ErrorContext>>> _open_frames;

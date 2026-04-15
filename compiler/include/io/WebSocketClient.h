@@ -47,7 +47,7 @@ namespace hz
 
 	public:
 		WebSocketClient()
-			: session(nullptr), connection(nullptr), request(nullptr), websocket(nullptr), running(false)
+			: session{ nullptr }, connection{ nullptr }, request{ nullptr }, websocket{ nullptr }, running{ false }
 		{
 		}
 

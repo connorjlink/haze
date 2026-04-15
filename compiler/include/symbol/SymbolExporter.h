@@ -26,16 +26,15 @@ namespace hz
 		};
 
 	private:
-		std::queue<QueueEntry> _queue;
-		std::mutex _queue_mutex;
-		std::condition_variable_any _listener;
-		std::jthread _worker;
+		std::queue<QueueEntry> queue;
+		std::condition_variable_any listener;
+		std::jthread worker;
 
 	private:
 		// optional to allow dynamic disablement
-		std::optional<std::osyncstream> _stream;
-		std::optional<WebSocketClient> _client;
-		std::wstring _path;
+		std::optional<std::osyncstream> stream;
+		std::optional<WebSocketClient> client;
+		std::filesystem::path path;
 
 	// producer operations
 	public:

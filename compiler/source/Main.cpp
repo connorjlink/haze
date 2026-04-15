@@ -34,20 +34,20 @@ int main(int argc, char** argv)
 {
 	WebSocketServer server{ [](SOCKET client)
 	{
-		std::cout << "New client connected: " << client << std::endl;
+		std::cerr << std::format("New client connected: {}", client);
 	}, [](SOCKET client, const std::string& message)
 	{
-		std::cout << "Received message from client " << client << ": " << message << std::endl;
+		std::cerr << std::format("Received message from client {}: {}", client, message);
 	}, [](SOCKET client)
 	{
-		std::cout << "Client disconnected: " << client << std::endl;
+		std::cerr << std::format("Client disconnected: {}", client);
 	}, [](const std::string& error)
 	{
-		std::cerr << "Error: " << error << std::endl;
+		std::cerr << std::format("WebSocketServer error: {}", error);
 	} };
 
 	/*server.start(8080);
-	std::cout << "WebSocket server started on port 8080." << std::endl;
+	std::cerr << std::format("WebSocket server started on port 8080.");
 	std::cin.get();*/
 
 	// minimal global (thread-shared) startup for singletons required to parse command line arguments

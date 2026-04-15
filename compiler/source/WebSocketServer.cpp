@@ -250,7 +250,7 @@ namespace hz
 			ULONG bufferCount = 1;
 			PVOID appContext = nullptr, action_context = nullptr;
 
-			if (WebSocketGetAction(websocket_handle, WEB_SOCKET_RECEIVE_ACTION_QUEUE, &buffer, &bufferCount, &action, &buffer_type, &appContext, &action_context) != S_OK)
+			if (WebSocketGetAction(websocket_handle, WEB_SOCKET_RECEIVE_ACTIONqueue, &buffer, &bufferCount, &action, &buffer_type, &appContext, &action_context) != S_OK)
 			{
 				break;
 			}
@@ -316,6 +316,7 @@ namespace hz
 		{
 			on_error(message);
 		}
-		std::cerr << message << std::endl;
+
+		std::cerr << std::format("WebSocketServer error: {}", message);
 	}
 }

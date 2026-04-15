@@ -39,7 +39,7 @@ namespace hz
 	class FunctionSymbol : public Symbol
 	{
 	private:
-		std::uint32_t entrypoint;
+		Address entrypoint;
 
 	public:
 		Type* return_type;
