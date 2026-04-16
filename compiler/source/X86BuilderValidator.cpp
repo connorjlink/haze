@@ -25,7 +25,7 @@ namespace
 {
 	using namespace hz;
 
-	std::string bytestring(byterange bytes)
+	std::string bytestring(ByteRange bytes)
 	{
 		std::string result = "{ ";
 
