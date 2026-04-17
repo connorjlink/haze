@@ -74,7 +74,7 @@ namespace hz
 	private:
 		std::unordered_map<TypeIndex, std::function<std::shared_ptr<void>()>> factories;
 		// has to be a recursive mutex to allow the same thread to register nested services
-		std::recursivemutex mutex;
+		std::recursive_mutex mutex;
 
 	public:
 		template<typename T>
@@ -134,7 +134,8 @@ namespace hz
 	{
 	private:
 		std::unordered_map<TypeIndex, std::shared_ptr<void>> instances;
-		std::mutex mutex;
+		// nested services are a lot less likely for singletons, but still posible maybe?
+		std::recursive_mutex mutex;
 
 	public:
 		template<typename T, typename U = T>
@@ -290,6 +291,38 @@ namespace hz
 		{
 		}
 	};
+
+	// Autoregistration is kinda dangerous so not sure if the following is ready for deployment yet
+
+	// template<typename T, bool AutoRegisterB, typename... Args>
+	// struct ServiceTag
+	// {
+	// 	// this will be automatically called if there are no args to pass
+	// 	ServiceTag(Args&&... args)
+	// 	{
+	// 		if constexpr (AutoRegisterB)
+	// 		{
+	// 			ServiceContainer::instance().register_factory<T>([args... = std::forward<Args>(args)]() mutable
+	// 			{
+	// 				return std::make_shared<T>(std::forward<Args>(args)...);
+	// 			});
+	// 		}
+	// 	}
+	// };
+
+	// template<typename T, bool AutoRegisterB, typename... Args>
+	// struct SingletonTag
+	// {
+	// 	// this will be automatically called if there are no args to pass
+	// 	SingletonTag(Args&&... args)
+	// 	{
+	// 		if constexpr (AutoRegisterB)
+	// 		{
+	// 			SingletonContainer::instance().register_singleton<T>(
+	// 				std::forward<Args>(args)...)
+	// 		}
+	// 	}
+	// };
 
 #define REQUIRE_SAFE(x) using_service<x>()
 //#define REQUIRE_UNSAFE(x) ServiceContainer::instance().get<x>()

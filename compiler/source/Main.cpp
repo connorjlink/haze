@@ -1,7 +1,6 @@
 import std;
 
-#include <async/include/Task.h>
-
+#include <async/Task.h>
 #include <allocator/HeapAllocator.h>
 #include <allocator/RuntimeAllocator.h>
 #include <allocator/StackAllocator.h>
@@ -122,13 +121,13 @@ int main(int argc, char** argv)
 	// no need to spawn more threads than there are files
 	thread_count = std::min(thread_count, command_line_parser.files().size());
 
-	using ThreadWork = std::vector<std::string>;
-
+	
 	// create the threadpool and pin work items 
+	using ThreadWork = std::vector<std::string>;
 	std::vector<ThreadWork> thread_work{};
 	thread_work.reserve(thread_count);
 
-	for (auto i = decltype(thread_count){ 0 }; i < thread_count; i++)
+	for (auto i = 0uz; i < thread_count; i++)
 	{
 		ThreadWork work{};
 
@@ -139,10 +138,6 @@ int main(int argc, char** argv)
 
 		thread_work.push_back(work);
 	}
-
-
-	// quiesce on file manager
-	co_await loader;
 
 
 	// run once per thread
@@ -218,6 +213,10 @@ int main(int argc, char** argv)
 			REQUIRE_UNSAFE(Toolchain)->panic();
 		}
 	};
+
+	// quiesce on file manager
+	co_await loader;
+	
 
 
 	// launch the thread pool

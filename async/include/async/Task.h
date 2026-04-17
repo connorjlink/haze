@@ -18,11 +18,11 @@ namespace hz
 	class Task
 	{
 	public:
-		struct promise_type;
-		using handle_type = std::coroutine_handle<promise_type>;
+		struct PromiseType;
+		using HandleType = std::coroutine_handle<PromiseType>;
 
 	private:
-		handle_type coroutine;
+		HandleType coroutine;
 
 	public:
 		Task& operator=(Task&& t) noexcept
@@ -79,7 +79,7 @@ namespace hz
 		}
 
 	public:
-		Task(handle_type handle)
+		Task(HandleType handle)
 			: coroutine(handle)
 		{
 		}
@@ -100,7 +100,7 @@ namespace hz
 	};
 
 	template<typename T>
-	struct Task<T>::promise_type
+	struct Task<T>::PromiseType
 	{
 		T value;
 		std::exception_ptr exception;
@@ -108,7 +108,7 @@ namespace hz
 		
 		auto get_return_object()
 		{
-			return Task{ handle_type::from_promise(*this) };
+			return Task{ HandleType::from_promise(*this) };
 		}
 
 		auto initial_suspend()
@@ -156,14 +156,14 @@ namespace hz
 	};
 
 	template<>
-	struct Task<void>::promise_type
+	struct Task<void>::PromiseType
 	{
 		std::exception_ptr exception;
 		std::coroutine_handle<> continuation;
 
 		auto get_return_object() 
 		{ 
-			return Task{ handle_type::from_promise(*this) }; 
+			return Task{ HandleType::from_promise(*this) }; 
 		}
 		
 		auto initial_suspend() 
