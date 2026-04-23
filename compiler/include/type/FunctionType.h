@@ -1,12 +1,12 @@
-#ifndef HAZE_FUNCTION_H
-#define HAZE_FUNCTION_H
+#ifndef HAZE_FUNCTIONTYPE_H
+#define HAZE_FUNCTIONTYPE_H
 
-// Haze Function.h
+// Haze FunctionType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-    class Function : public TypeBase
+    class FunctionType : public TypeBase
     {
     public:
         std::vector<SumHandle> parameters;

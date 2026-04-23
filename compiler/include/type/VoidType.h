@@ -1,9 +1,9 @@
-#ifndef HAZE_VOID_H
-#define HAZE_VOID_H
+#ifndef HAZE_VOIDTYPE_H
+#define HAZE_VOIDTYPE_H
 
 #include <type/Type.h>
 
-// Haze Void.h
+// Haze VoidType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

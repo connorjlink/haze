@@ -1,15 +1,15 @@
-#ifndef HAZE_ENUM_H
-#define HAZE_ENUM_H
+#ifndef HAZE_ENUMTYPE_H
+#define HAZE_ENUMTYPE_H
 
 #include <type/Type.h>
 #include <utility/Constants.h>
 
-// Haze Enum.h
+// Haze EnumType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-    class Enum : public TypeBase
+    class EnumType : public TypeBase
     {
     public:
         struct EnumMember

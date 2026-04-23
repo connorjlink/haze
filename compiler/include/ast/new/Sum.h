@@ -201,12 +201,18 @@ namespace hz
         IndexHandle index;
 
     public:
+        bool is_valid() const
+        {
+            return index.is_valid;
+        }
+
+    public:
         void validate() const
         {
-            if (!index.is_valid)
+            if (!is_valid())
             {
-                USE_SAFE(ErrorReporter)->post_uncorrectable(
-                    std::format("invalid sum reference: tag {}, index {}", tag, index.index));
+                USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
+                    "invalid sum reference: tag {}, index {}", tag, index.index));
             }
         }
 
@@ -308,8 +314,8 @@ namespace hz
             // runtime error
             if (tag != TypeIndexV<T, typename SumStorageT::Type>)
             {
-                USE_SAFE(ErrorReporter)->post_uncorrectable(
-                    std::format("invalid sum reference: expected tag {}, actual tag {}, index {}",
+                USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
+                    "invalid sum reference: expected tag {}, actual tag {}, index {}",
                         TypeIndexV<T, typename SumStorageT::Type>, tag, index.index));
             }
         }

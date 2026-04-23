@@ -27,7 +27,7 @@ namespace hz
 	<
 		Method<&AnchorT::ttype, TypeType()>,
 		Method<&AnchorT::size, Offset()>,
-		Method<&AnchorT::is_complete, bool()>
+		Method<&AnchorT::is_complete, bool()>,
 	>;
 
 	template<typename SumMemberT, typename SumStorageT>

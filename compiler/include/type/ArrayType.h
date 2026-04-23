@@ -1,14 +1,14 @@
-#ifndef HAZE_ARRAY_H
-#define HAZE_ARRAY_H
+#ifndef HAZE_ARRAYTYPE_H
+#define HAZE_ARRAYTYPE_H
 
 #include <type/Type.h>
 
-// Haze Array.h
+// Haze ArrayType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-    class Array : public TypeBase
+    class ArrayType : public TypeBase
     {
     public:
         SumHandle element_type;

@@ -1,14 +1,14 @@
-#ifndef HAZE_POINTER_H
-#define HAZE_POINTER_H
+#ifndef HAZE_POINTERTYPE_H
+#define HAZE_POINTERTYPE_H
 
 #include <type/Type.h>
 
-// Haze Pointer.h
+// Haze PointerType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-    class Pointer : public TypeBase
+    class PointerType : public TypeBase
     {
     public:
         SumHandle pointee;
