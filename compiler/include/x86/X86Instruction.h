@@ -3,29 +3,271 @@
 
 #include <toolchain/models/Instruction.h>
 #include <utility/Constants.h>
-#include <x86/X86InstructionType.h>
-#include <x86/X86Operand.h>
 
 // Haze X86Instruction.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class X86Instruction : public Instruction
+	enum class X86OperandType
 	{
-	public:
-		virtual ArchitectureType ctype() const final override
-		{
-			return ArchitectureType::X86;
-		}
-
-	public:
-		virtual X86InstructionType itype() const = 0;
+		IMMEDIATE,
+		INDIRECT,
+		REGISTER,
+		REGISTER_INDIRECT,
+		REGISTER_DISPLACED,
 	};
+
+	static const std::unordered_map<X86OperandType, std::string_view> operand_type_map
+	{
+		{ X86OperandType::IMMEDIATE, "immediate" },
+		{ X86OperandType::INDIRECT, "indirect" },
+		{ X86OperandType::REGISTER, "register" },
+		{ X86OperandType::REGISTER_INDIRECT, "register-indirect" },
+		{ X86OperandType::REGISTER_DISPLACED, "register-displaced" },
+	};
+
+
+	enum class X86InstructionType
+	{
+		PUSH, POP,
+		MOV, MOVZX,
+		ADD, SUB,
+		OR, AND, XOR,
+		INC, DEC,
+		SAL, SAR,
+		TEST, CMP,
+		// jcc
+		CALL, APICALL, JMP, JE, JNE, JL, JLE, JG, JGE, JA, JAE, JB, JBE,
+		// setcc
+		SETE, SETNE, SETL, SETLE, SETG, SETGE, SETA, SETAE, SETB, SETBE,
+		NOP,
+		RET,
+		LEAVE,
+	};
+
+	static const std::unordered_map<X86InstructionType, std::string_view> instruction_type_map
+	{
+		{ X86InstructionType::PUSH, "push" },
+		{ X86InstructionType::POP, "pop" },
+		{ X86InstructionType::MOV, "mov" },
+		{ X86InstructionType::MOVZX, "movzx" },
+		{ X86InstructionType::ADD, "add" },
+		{ X86InstructionType::SUB, "sub" },
+		{ X86InstructionType::OR, "or" },
+		{ X86InstructionType::AND, "and" },
+		{ X86InstructionType::XOR, "xor" },
+		{ X86InstructionType::INC, "inc" },
+		{ X86InstructionType::DEC, "dec" },
+		{ X86InstructionType::SAL, "sal" },
+		{ X86InstructionType::SAR, "sar" },
+		{ X86InstructionType::TEST, "test" },
+		{ X86InstructionType::CMP, "cmp" },
+		{ X86InstructionType::CALL, "call" },
+		{ X86InstructionType::APICALL, "apicall" },
+		{ X86InstructionType::JMP, "jmp" },
+		{ X86InstructionType::JE, "je" },
+		{ X86InstructionType::JNE, "jne" },
+		{ X86InstructionType::JL, "jl" },
+		{ X86InstructionType::JLE, "jle" },
+		{ X86InstructionType::JG, "jg" },
+		{ X86InstructionType::JGE, "jge" },
+		{ X86InstructionType::JA, "ja" },
+		{ X86InstructionType::JAE, "jae" },
+		{ X86InstructionType::JB, "jb" },
+		{ X86InstructionType::JBE, "jbe" },
+		{ X86InstructionType::SETE, "sete" },
+		{ X86InstructionType::SETNE, "setne" },
+		{ X86InstructionType::SETL, "setl" },
+		{ X86InstructionType::SETLE, "setle" },
+		{ X86InstructionType::SETG, "setg" },
+		{ X86InstructionType::SETGE, "setge" },
+		{ X86InstructionType::SETA, "seta" },
+		{ X86InstructionType::SETAE, "setae" },
+		{ X86InstructionType::SETB, "setb" },
+		{ X86InstructionType::SETBE, "setbe" },
+		{ X86InstructionType::NOP, "nop" },
+		{ X86InstructionType::RET, "ret" },
+		{ X86InstructionType::LEAVE, "leave" },
+	};
+
+
+	template<typename T>
+	concept X86OperandVariant = requires(const T& t)
+	{
+		{ t.otype() } -> std::same_as<X86OperandType>;
+	};
+
+	template<typename T>
+	concept X86InstructionVariant = requires(const T& t)
+	{
+		{ t.itype() } -> std::same_as<X86InstructionType>;
+		{ t.emit() } -> std::same_as<ByteRange>;
+	};
+
+	template<template<typename> typename Concept, typename... Ts>
+		requires (Concept<Ts> && ...)
+	using ConstrainedVariant = std::variant<Ts...>;
+
+	using X86Operand = ConstrainedVariant<X86OperandVariant,
+		x86::ImmediateOperand,
+		x86::IndirectOperand,
+		x86::RegisterOperand,
+		x86::RegisterIndirectOperand,
+		x86::RegisterDisplacedOperand
+	>;
+
+	X86OperandType operand_type(const X86Operand& operand)
+	{
+		return std::visit([]<X86OperandVariant T>(const T& variant)
+		{
+			return variant.otype();
+		}, operand);
+	}
+
+
+	using X86Instruction = ConstrainedVariant<X86InstructionVariant,
+		x86::PushInstruction,
+		x86::PopInstruction,
+		x86::MovInstruction,
+		x86::MovzxInstruction,
+		x86::AddInstruction,
+		x86::SubInstruction,
+		x86::AndInstruction,
+		x86::OrInstruction,
+		x86::XorInstruction,
+		x86::IncInstruction,
+		x86::DecInstruction,
+		x86::SalInstruction,
+		x86::SarInstruction,
+		x86::TestInstruction,
+		x86::CmpInstruction,
+		x86::CallInstruction,
+		x86::ApicallInstruction,
+		x86::JmpInstruction,
+		x86::JeInstruction,
+		x86::JneInstruction,
+		x86::JlInstruction,
+		x86::JleInstruction,
+		x86::JgInstruction,
+		x86::JgeInstruction,
+		x86::JaInstruction,
+		x86::JaeInstruction,
+		x86::JbInstruction,
+		x86::JbeInstruction,
+		x86::SeteInstruction,
+		x86::SetneInstruction,
+		x86::SetlInstruction,
+		x86::SetleInstruction,
+		x86::SetgInstruction,
+		x86::SetgeInstruction,
+		x86::SetaInstruction,
+		x86::SetaeInstruction,
+		x86::SetbInstruction,
+		x86::SetbeInstruction,
+		x86::RetInstruction,
+		x86::LeaveInstruction
+	>;
+
+	X86InstructionType instruction_type(const X86Instruction& instruction)
+	{
+		return std::visit([]<X86InstructionVariant T>(const T& variant)
+		{
+			return variant.itype();
+		}, instruction);
+	}
+
+	ByteRange emit(const X86Instruction& instruction)
+	{
+		return std::visit([]<X86InstructionVariant T>(const T& variant)
+		{
+			return variant.emit();
+		}, instruction);
+	}
+
 
 	namespace x86
 	{
-		class PushInstruction : public X86Instruction
+		class ImmediateOperand
+		{
+		public:
+			ExtendedInteger immediate;
+
+		public:
+			ImmediateOperand(const ExtendedInteger& immediate)
+				: immediate{ immediate }
+			{
+			}
+
+		public:
+			X86OperandType otype() const;
+		};
+#define imm(val) ImmediateOperand{ val }
+
+		class IndirectOperand
+		{
+		public:
+			Address address;
+
+		public:
+			IndirectOperand(Address address)
+				: address{ address }
+			{
+			}
+
+		public:
+			X86OperandType otype() const;
+		};
+#define indirect(addr) IndirectOperand{ addr }
+
+		class RegisterOperand
+		{
+		public:
+			X86Register register_;
+
+		public:
+			RegisterOperand(X86Register register_)
+				: register_{ register_ }
+			{
+			}
+
+		public:
+			X86OperandType otype() const;
+		};
+#define reg(reg) RegisterOperand{ reg }
+
+		class RegisterIndirectOperand : public RegisterOperand
+		{
+		public:
+			using RegisterOperand::RegisterOperand;
+
+		public:
+			X86OperandType otype() const;
+		};
+#define reg_indirect(reg) RegisterIndirectOperand{ reg }
+
+		class RegisterDisplacedOperand : public RegisterOperand
+		{
+		public:
+			Offset displacement;
+
+		public:
+			RegisterDisplacedOperand(X86Register reg, Offset displacement)
+				: RegisterOperand{ reg }, displacement{ displacement }
+			{
+			}
+			
+
+		public:
+			X86OperandType otype() const;
+		};
+#define reg_disp(reg, disp) RegisterDisplacedOperand{ reg, disp }
+	}
+
+
+	namespace x86
+	{
+		class PushInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -37,12 +279,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define push(op) PushInstruction{ op }
 
-		class PopInstruction : public X86Instruction
+		class PopInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -54,12 +296,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define pop(op) PopInstruction{ op }
 
-		class MovInstruction : public X86Instruction
+		class MovInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -72,12 +314,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define mov(dst, src) MovInstruction{ dst, src }
 
-		class MovzxInstruction : public X86Instruction
+		class MovzxInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -90,12 +332,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define movzx(dst, src) MovzxInstruction{ dst, src }
 
-		class AddInstruction : public X86Instruction
+		class AddInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -108,12 +350,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define add(dst, src) AddInstruction{ dst, src }
 
-		class SubInstruction : public X86Instruction
+		class SubInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -126,12 +368,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define sub(dst, src) SubInstruction{ dst, src }
 
-		class AndInstruction : public X86Instruction
+		class AndInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -144,12 +386,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define and(dst, src) AndInstruction{ dst, src }
 
-		class OrInstruction : public X86Instruction
+		class OrInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -162,12 +404,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define or(dst, src) OrInstruction{ dst, src }
 
-		class XorInstruction : public X86Instruction
+		class XorInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -180,12 +422,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define xor(dst, src) XorInstruction{ dst, src }
 
-		class IncInstruction : public X86Instruction
+		class IncInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -197,12 +439,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define inc(op) IncInstruction{ op }
 
-		class DecInstruction : public X86Instruction
+		class DecInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -214,12 +456,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define dec(op) DecInstruction{ op }
 
-		class SalInstruction : public X86Instruction
+		class SalInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -237,12 +479,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define sal(op) SalInstruction{ op }
 
-		class SarInstruction : public X86Instruction
+		class SarInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -260,12 +502,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define sar(op) SarInstruction{ op }
 
-		class TestInstruction : public X86Instruction
+		class TestInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -278,12 +520,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define test(dst, src) TestInstruction{ dst, src }
 
-		class CmpInstruction : public X86Instruction
+		class CmpInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> destination;
@@ -296,12 +538,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define cmp(dst, src) CmpInstruction{ dst, src }
 
-		class CallInstruction : public X86Instruction
+		class CallInstruction
 		{
 		private:
 			const std::string& _label;
@@ -314,12 +556,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define call(label, disp) CallInstruction{ label, disp }
 
-		class ApicallInstruction : public X86Instruction
+		class ApicallInstruction
 		{
 		private:
 			const std::string& _label;
@@ -332,12 +574,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define apicall(label, disp) ApicallInstruction{ label, disp }
 
-		class JmpInstruction : public X86Instruction
+		class JmpInstruction
 		{
 		private:
 			const std::string& _label;
@@ -350,12 +592,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jmp(label, disp) JmpInstruction{ label, disp }
 
-		class JeInstruction : public X86Instruction
+		class JeInstruction
 		{
 		private:
 			const std::string& _label;
@@ -368,12 +610,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define je(label, disp) JeInstruction{ label, disp }
 
-		class JneInstruction : public X86Instruction
+		class JneInstruction
 		{
 		private:
 			const std::string& _label;
@@ -386,12 +628,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jne(label, disp) JneInstruction{ label, disp }
 
-		class JlInstruction : public X86Instruction
+		class JlInstruction
 		{
 		private:
 			const std::string& _label;
@@ -404,12 +646,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jl(label, disp) JlInstruction{ label, disp }
 
-		class JleInstruction : public X86Instruction
+		class JleInstruction
 		{
 		private:
 			const std::string& _label;
@@ -422,12 +664,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jle(label, disp) JleInstruction{ label, disp }
 
-		class JgInstruction : public X86Instruction
+		class JgInstruction
 		{
 		private:
 			const std::string& _label;
@@ -440,12 +682,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jg(label, disp) JgInstruction{ label, disp }
 
-		class JgeInstruction : public X86Instruction
+		class JgeInstruction
 		{
 		private:
 			const std::string& _label;
@@ -458,12 +700,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jge(label, disp) JgeInstruction{ label, disp }
 
-		class JaInstruction : public X86Instruction
+		class JaInstruction
 		{
 		private:
 			const std::string& _label;
@@ -476,12 +718,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define ja(label, disp) JaInstruction{ label, disp }
 
-		class JaeInstruction : public X86Instruction
+		class JaeInstruction
 		{
 		private:
 			const std::string& _label;
@@ -494,12 +736,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jae(label, disp) JaeInstruction{ label, disp }
 
-		class JbInstruction : public X86Instruction
+		class JbInstruction
 		{
 		private:
 			const std::string& _label;
@@ -512,12 +754,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jb(label, disp) JbInstruction{ label, disp }
 
-		class JbeInstruction : public X86Instruction
+		class JbeInstruction
 		{
 		private:
 			const std::string& _label;
@@ -530,12 +772,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define jbe(label, disp) JbeInstruction{ label, disp }
 
-		class SeteInstruction : public X86Instruction
+		class SeteInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -547,12 +789,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define sete(op) SeteInstruction{ op }
 
-		class SetneInstruction : public X86Instruction
+		class SetneInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -564,12 +806,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setne(op) SetneInstruction{ op }
 
-		class SetlInstruction : public X86Instruction
+		class SetlInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -581,12 +823,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setl(op) SetlInstruction{ op }
 
-		class SetleInstruction : public X86Instruction
+		class SetleInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -598,12 +840,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setle(op) SetleInstruction{ op }
 
-		class SetgInstruction : public X86Instruction
+		class SetgInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -615,12 +857,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setg(op) SetgInstruction{ op }
 
-		class SetgeInstruction : public X86Instruction
+		class SetgeInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -632,12 +874,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setge(op) SetgeInstruction{ op }
 
-		class SetaInstruction : public X86Instruction
+		class SetaInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -649,12 +891,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define seta(op) SetaInstruction{ op }
 
-		class SetaeInstruction : public X86Instruction
+		class SetaeInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -666,12 +908,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setae(op) SetaeInstruction{ op }
 
-		class SetbInstruction : public X86Instruction
+		class SetbInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -683,12 +925,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setb(op) SetbInstruction{ op }
 
-		class SetbeInstruction : public X86Instruction
+		class SetbeInstruction
 		{
 		private:
 			std::unique_ptr<X86Operand> operand;
@@ -700,12 +942,12 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define setbe(op) SetbeInstruction{ op }
 
-		class RetInstruction : public X86Instruction
+		class RetInstruction
 		{
 		private:
 			Offset immediate;
@@ -722,19 +964,19 @@ namespace hz
 			}
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define ret() RetInstruction{}
 
-		class LeaveInstruction : public X86Instruction
+		class LeaveInstruction
 		{
 		public:
 			using X86Instruction::X86Instruction;
 
 		public:
-			virtual X86InstructionType itype() const final override;
-			virtual ByteRange emit() const final override;
+			X86InstructionType itype() const;
+			ByteRange emit() const;
 		};
 #define leave() LeaveInstruction{}
 	}
