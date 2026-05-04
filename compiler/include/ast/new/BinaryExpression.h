@@ -174,8 +174,11 @@ namespace hz
         {
             if (!left.check_types(ast) || !right.check_types(ast))
             {
-                return false;
+                return make_invalid_handle(ast);
             }
+
+            const left_type = left.type(ast);
+            const right_type = right.type(ast);
 
 #pragma message("TODO: implement binary expression type checking")
 
@@ -190,34 +193,34 @@ namespace hz
                 {
                     // semantically, arithmetic operators apply to any combination of integral and floating point types
 
-                    if (left.type(ast).is_floating_point())
+                    if (left_type.is_floating_point())
                     {
                         // if either operand is floating point, the result is floating point
-                        if (right.type(ast).is_floating_point())
+                        if (right_type.is_floating_point())
                         {
-                            return left.type(ast);
+                            return left_type;
                         }
-                        else if (right.type(ast).is_integral())
+                        else if (right_type.is_integral())
                         {
-                            return left.type(ast);
+                            return left_type;
                         }
                     }
-                    else if (left.type(ast).is_integral())
+                    else if (left_type.is_integral())
                     {
-                        if (right.type(ast).is_integral())
+                        if (right_type.is_integral())
                         {
                             // if both operands are integral, the result is the type of the larger operand
-                            return Type::get_larger_integral_type(left.type(ast), right.type(ast));
+                            return Type::get_larger_integral_type(left_type, right_type);
                         }
-                        else if (right.type(ast).is_floating_point())
+                        else if (right_type.is_floating_point())
                         {
-                            return right.type(ast);
+                            return right_type;
                         }
                     }
 
                     USE_SAFE(ErrorReporter)->post_error(std::format(
                         "invalid operand types for binary operator `{}`: `{}` and `{}`", 
-                            _binary_expression_type_map.at(binary_type), left.type(ast).string(), right.type(ast).string()), NULL_TOKEN);
+                            _binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
                     return make_invalid_handle(ast);
                 } break;
 
@@ -228,13 +231,21 @@ namespace hz
                 case BITWISE_XOR:
                 {
                     // for now, only allow these operations on integers
-                    return left.type(ast).is_integral() && right.type(ast).is_integral();
+                    if (!(left_type.is_integral() && right_type.is_integral()))
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "invalid operand types for bitwise operator `{}`: `{}` and `{}`", 
+                                _binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    return Type::get_larger_integral_type(left_type, right_type);
                 } break;
 
                 case EQUAL:
                 case NOT_EQUAL:
                 {
-
+                    // TODO:
 
                 } break;
 
@@ -244,75 +255,98 @@ namespace hz
                 case GREATER_EQUAL:
                 {
                     // semantically, relational operators apply to any scalar (integral or compatible pointer-to types)
-                    if (left.type(ast).is_pointer() && right.type(ast).is_pointer())
+                    if (left_type.is_pointer() && right_type.is_pointer())
                     {
-                        return Type::is_compatible(left.type(ast).pointee_type(), right.type(ast).pointee_type());
+                        if (!Type::is_compatible(left_type.pointee_type(), right_type.pointee_type()))
+                        {
+                            USE_SAFE(ErrorReporter)->post_error(std::format(
+                                "cannot compare pointers of incompatible types `{}` and `{}`", left_type.string(), right_type.string()), NULL_TOKEN);
+                            return make_invalid_handle(ast);
+                        }
+
+                        return Type::get_pointer_integral_type(left_type, right_type);
                     }
 
-                    return left.type(ast).is_integral() && right.type(ast).is_integral();
+                    if (!(left_type.is_integral() && right_type.is_integral()))
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "invalid operand types for relational operator `{}`: `{}` and `{}`", 
+                                _binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    return Type::get_promoted_integral_type(left_type, right_type);
                 } break;
 
                 case LOGICAL_AND:
                 case LOGICAL_OR:
                 {
                     // semantically, boolean operators apply to any scalar (integral or pointer-to types)
-                    return left.type(ast).is_scalar() && right.type(ast).is_scalar();
+                    if (!(left_type.is_scalar() && right_type.is_scalar()))
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "invalid operand types for logical operator `{}`: `{}` and `{}`", 
+                                _binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    return Type::get_promoted_integral_type(left_type, right_type);
                 } break;
 
                 case DOT:
                 {
-                    if (const auto type = left.type(ast); type.is_struct_or_union())
+                    if (!left_type.is_struct_or_union())
                     {
-                        if (!right.type(ast).is_identifier())
-                        {
-                            USE_SAFE(ErrorReporter)->post_error(std::format(
-                                "right operand of member access operator must be an identifier, got `{}`", right.type(ast).string()), NULL_TOKEN);
-                            return false;
-                        }
-
-                        const auto members = type.members().value();
-                        const auto member_name = right.identifier(ast).name;
-                        if (!members.contains(member_name))
-                        {
-                            USE_SAFE(ErrorReporter)->post_error(std::format(
-                                "type `{}` has no member named `{}`", type.string(), member_name), NULL_TOKEN);
-                            return false;
-                        }
-
-                        return true;
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "left operand of member access operator must be a struct or union type, got `{}`", left_type.string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
                     }
 
-                    USE_SAFE(ErrorReporter)->post_error(std::format(
-                        "left operand of member access operator must be a struct or union type, got `{}`", left.type(ast).string()), NULL_TOKEN);
-                    return false;
+                    if (!right_type.is_identifier())
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "right operand of member access operator must be an identifier, got `{}`", right_type.string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    const auto members = left_type.members().value();
+                    const auto member_name = right.identifier(ast).name;
+                    if (!members.contains(member_name))
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "type `{}` has no member named `{}`", left_type.string(), member_name), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    return members.at(member_name).type;
                 } break;
 
                 case ARROW:
                 {
-                    if (const auto type = left.type(ast); type.is_pointer() && type.pointee_type().is_struct_or_union())
+                    if (!(left_type.is_pointer() && left_type.pointee_type().is_struct_or_union()))
                     {
-                        if (!right.type(ast).is_identifier())
-                        {
-                            USE_SAFE(ErrorReporter)->post_error(std::format(
-                                "right operand of member access operator must be an identifier, got `{}`", right.type(ast).string()), NULL_TOKEN);
-                            return false;
-                        }
-
-                        const auto members = type.pointee_type().members().value();
-                        const auto member_name = right.identifier(ast).name;
-                        if (!members.contains(member_name))
-                        {
-                            USE_SAFE(ErrorReporter)->post_error(std::format(
-                                "type `{}` has no member named `{}`", type.string(), member_name), NULL_TOKEN);
-                            return false;
-                        }
-
-                        return true;
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "left operand of member access operator must be a pointer to struct or union type, got `{}`", left_type.string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
                     }
 
-                    USE_SAFE(ErrorReporter)->post_error(std::format(
-                        "left operand of member access operator must be a pointer to struct or union type, got `{}`", left.type(ast).string()), NULL_TOKEN);
-                    return false;
+                    if (!right.type(ast).is_identifier())
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "right operand of member access operator must be an identifier, got `{}`", right.type(ast).string()), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    const auto members = left_type.pointee_type().members().value();
+                    const auto member_name = right.identifier(ast).name;
+                    if (!members.contains(member_name))
+                    {
+                        USE_SAFE(ErrorReporter)->post_error(std::format(
+                            "type `{}` has no member named `{}`", left_type.string(), member_name), NULL_TOKEN);
+                        return make_invalid_handle(ast);
+                    }
+
+                    return members.at(member_name).type;
                 } break;
 
                 default:
@@ -320,7 +354,7 @@ namespace hz
                     // unknown, semi-panic
                     USE_SAFE(ErrorReporter)->post_error(std::format(
                         "cannot check type of type `{}`", _binary_expression_type_map.at(binary_type)), NULL_TOKEN);
-                    return false;
+                    return make_invalid_handle(ast);
                 } break;
             }
             
