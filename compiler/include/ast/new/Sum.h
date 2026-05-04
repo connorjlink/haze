@@ -27,7 +27,7 @@ namespace hz
         template<typename Self>
         constexpr TagType ttype(this Self&& self)
         {
-            using This = std::remove_cvref_t<std::remove_pointer_t<Self>>;
+            using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
             return TypeIndexV<This>;
         }
     };
@@ -80,14 +80,14 @@ namespace hz
 
     public:
         template<typename T>
-        std::vector<T>& get()
+        constexpr std::vector<T>& get()
         {
             constexpr auto I = TypeIndex<T, std::tuple<Ts...>>::value;
             return std::get<I>(storage);
         }
 
         template<typename T>
-        const std::vector<T>& get() const
+        constexpr const std::vector<T>& get() const
         {
             constexpr auto I = TypeIndex<T, std::tuple<Ts...>>::value;
             return std::get<I>(storage);
@@ -96,7 +96,7 @@ namespace hz
     public:
         // NOTE: the return value for these functions is "wrong" per the STL, but it is useful for making external references to sum members
         template<typename T, typename... Args>
-        IndexType emplace_back(Args&&... args)
+        constexpr IndexType emplace_back(Args&&... args)
         {
             const auto new_index = get<T>().size();
             get<T>().emplace_back(std::forward<Args>(args)...);
@@ -104,7 +104,7 @@ namespace hz
         }
 
         template<typename T>
-        IndexType push_back(T&& value)
+        constexpr IndexType push_back(T&& value)
         {
             const auto new_index = get<T>().size();
             get<T>().push_back(std::forward<T>(value));
@@ -201,13 +201,13 @@ namespace hz
         IndexHandle index;
 
     public:
-        bool is_valid() const
+        constexpr bool is_valid() const
         {
             return index.is_valid;
         }
 
     public:
-        void validate() const
+        constexpr void validate() const
         {
             if (!is_valid())
             {
@@ -219,14 +219,14 @@ namespace hz
     private:
         template<typename Self>
             requires HasGetTag<Self>
-        const Self& self(this Self&& self) const
+        constexpr const Self& self(this Self&& self) const
         {
             return self;
         }
 
     public:
         template<typename MethodT>
-        decltype(auto) call() const
+        constexpr decltype(auto) call() const
         {
             static constinit auto table =
                 make_dispatch_table<MethodT, SumStorageT, typename SumStorageT::Type>();
@@ -236,7 +236,7 @@ namespace hz
         }
 
 #define SUM_HANDLE_METHOD(name) \
-        decltype(auto) name() const \
+        constexpr decltype(auto) name() const \
         { \
             return call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
         }
@@ -265,29 +265,29 @@ namespace hz
         }
 
     public:
-        const T& get() const
+        constexpr const T& get() const
         {
             return sum_storage.template get<T>()[index];
         }
 
-        T& get()
+        constexpr T& get()
         {
             return sum_storage.template get<T>()[index];
         }
 
-        SumHandle<SumStorageT> erase() const
+        constexpr SumHandle<SumStorageT> erase() const
         {
             return SumHandle<SumStorageT>{ sum_storage, index, tag };
         }
 
     public:
-        SumReference(const SumStorageT& sum_storage, IndexType index)
+        constexpr SumReference(const SumStorageT& sum_storage, IndexType index)
             : SumDispatcher<SumStorageT>{ sum_storage, { index, true } }
         {
             // valid reference
         }
 
-        SumReference(const SumStorageT& sum_storage)
+        constexpr SumReference(const SumStorageT& sum_storage)
             : SumDispatcher<SumStorageT>{ sum_storage, { 0, false } }
         {
             // invalid reference
@@ -309,7 +309,7 @@ namespace hz
 
     private:
         template<typename T>
-        void validate_tag() const
+        constexpr void validate_tag() const
         {   
             // runtime error
             if (tag != TypeIndexV<T, typename SumStorageT::Type>)
@@ -322,27 +322,27 @@ namespace hz
 
     public:
         template<typename T>
-        const T& get() const
+        constexpr const T& get() const
         {
             validate_tag<T>();
             return sum_storage.template get<T>()[index];
         }
 
         template<typename T>
-        T& get()
+        constexpr T& get()
         {
             validate_tag<T>();
             return sum_storage.template get<T>()[index];
         }
 
     public:
-        SumHandle(const SumStorageT& sum_storage, IndexType index, TagType tag)
+        constexpr SumHandle(const SumStorageT& sum_storage, IndexType index, TagType tag)
             : SumDispatcher<SumStorageT>{ sum_storage, { index, true } }, tag{ tag }
         {
             // valid handle
         }
 
-        SumHandle(const SumStorageT& sum_storage)
+        constexpr SumHandle(const SumStorageT& sum_storage)
             : SumDispatcher<SumStorageT>{ sum_storage, { 0, false } }, tag{ 0 }
         {
             // invalid handle
@@ -351,7 +351,7 @@ namespace hz
 
     // entry point into sum dynamic dispatch
     template<typename T, typename SumStorageT>
-    SumReference<T, SumStorageT> make_reference(const SumStorageT& sum_storage, T&& value)
+    constexpr SumReference<T, SumStorageT> make_reference(const SumStorageT& sum_storage, T&& value)
     {
         // add it to the sum storage
         const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
@@ -359,14 +359,14 @@ namespace hz
     }
 
     template<typename T, typename SumStorageT>
-    SumReference<T, SumStorageT> make_invalid_reference(const SumStorageT& sum_storage)
+    constexpr SumReference<T, SumStorageT> make_invalid_reference(const SumStorageT& sum_storage)
     {
         // does not participate in sum storage
         return SumReference<T, SumStorageT>{ sum_storage };
     }
 
     template<typename T, typename SumStorageT>
-    SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, T&& value)
+    constexpr SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, T&& value)
     {
         // add it to the sum storage
         const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
@@ -374,7 +374,7 @@ namespace hz
     }
 
     template<typename T, typename SumStorageT>
-    SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
+    constexpr SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
     {
         // does not participate in sum storage
         return SumHandle<SumStorageT>{ sum_storage };
