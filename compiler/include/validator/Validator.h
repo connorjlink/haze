@@ -3,7 +3,7 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <validator/Test.h>
+#include <validator/models/Test.h>
 
 // Haze Validator.h
 // (c) Connor J. Link. All Rights Reserved.

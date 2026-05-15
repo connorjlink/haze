@@ -1,6 +1,6 @@
 import std;
 
-#include <ast/VariableStatement.h>
+#include <ast/statement/Statement.h>
 #include <runtime/Evaluator.h>
 #include <type/Type.h>
 
@@ -49,7 +49,7 @@ namespace hz
 		{
 			Variable* variable = nullptr;
 
-			using enum TypeType;
+			using enum TypeKind;
 			switch (type->ttype())
 			{
 				case INT:
@@ -57,7 +57,7 @@ namespace hz
 					auto int_variable = AS_INT_TYPE(type);
 					
 					using enum TypeSignedness;
-					using enum IntTypeType;
+					using enum IntTypeKind;
 					switch (int_variable->int_type)
 					{
 						case INT8:

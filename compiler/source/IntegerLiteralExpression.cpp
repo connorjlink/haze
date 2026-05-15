@@ -1,7 +1,7 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/IntegerLiteralExpression.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/expression/Expression.h>
 #include <toolchain/Generator.h>
 
 // Haze IntegerLiteralExpression.cpp
@@ -14,9 +14,9 @@ namespace hz
 		return ExpressionType::INTEGER_LITERAL;
 	}
 
-	TypeType IntegerLiteralExpression::ttype() const
+	TypeKind IntegerLiteralExpression::ttype() const
 	{
-		return TypeType::INT;
+		return TypeKind::INT;
 	}
 
 	void IntegerLiteralExpression::generate(Allocation* allocation)

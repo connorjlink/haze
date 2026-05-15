@@ -19,7 +19,7 @@ namespace hz
 
 		const auto read_task = REQUIRE_SAFE(JobManager)->begin_job("file reading");
 		auto& file = USE_SAFE(FileManager)->get_file(filepath);
-		const auto& source = file.raw_contents();
+		const auto& source = file.get_raw_contents();
 		REQUIRE_SAFE(JobManager)->end_job(read_task);
 
 

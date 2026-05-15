@@ -13,7 +13,7 @@ namespace hz
 		return ExpressionType::ARGUMENT;
 	}
 
-	TypeType ArgumentExpression::ttype() const
+	TypeKind ArgumentExpression::ttype() const
 	{
 		return type->ttype();
 	}

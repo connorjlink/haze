@@ -39,6 +39,11 @@ namespace hz
 
 	using StatementSum = MakeSum<ASTMethods, StatementTypes>::Type;
 	using StatementBase = SumMemberBase<StatementSum>;
+
+	template<typename T>
+	using StatementReference = StatementSum::template Reference<T>;
+
+	using StatementHandle = StatementSum::Handle;
 }
 
 #endif

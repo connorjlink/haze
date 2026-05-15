@@ -17,12 +17,12 @@ namespace hz
 		static constexpr auto MAX_ERRORS = 5;
 
 	private:
-		std::atomic<std::int32_t> _error_count;
+		std::atomic<std::int32_t> error_count;
 
 	private:
 		void validate_error_count()
 		{
-			if (_error_count > MAX_ERRORS)
+			if (error_count > MAX_ERRORS)
 			{
 				post_uncorrectable(std::format("compilation stopped because of excessive errors ({})", MAX_ERRORS), NULL_TOKEN);
 			}
@@ -31,18 +31,18 @@ namespace hz
 	public:
 		bool had_error() const
 		{
-			return _error_count > 0;
+			return error_count > 0;
 		}
 
 	private:
 		std::mutex mutex;
 
 	private:
-		std::unordered_map<std::thread::id, std::unordered_map<std::string, std::list<ErrorContext>>> _open_frames;
-		std::unordered_map<std::thread::id, std::vector<ErrorFrame>> _closed_frames;
+		std::unordered_map<std::thread::id, std::unordered_map<std::string, std::list<ErrorContext>>> open_frames;
+		std::unordered_map<std::thread::id, std::vector<ErrorFrame>> closed_frames;
 
 	private:
-		std::unordered_map<std::thread::id, std::stack<ErrorFrame>> _active_frames;
+		std::unordered_map<std::thread::id, std::stack<ErrorFrame>> active_frames;
 
 	private:
 		void close_these_contexts(std::thread::id);
@@ -76,12 +76,12 @@ namespace hz
 	public:
 		ErrorReporter()
 		{
-			_error_count = 0;
+			error_count = 0;
 
-			_open_frames = {};
-			_closed_frames = {};
+			open_frames = {};
+			closed_frames = {};
 
-			_active_frames = {};
+			active_frames = {};
 		}
 	};
 }

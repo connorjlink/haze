@@ -23,7 +23,7 @@ namespace hz
 	};
 
 	template<typename T, typename Tuple>
-	using TypeIndexV = TypeIndex<T, Tuple>::value;
+	inline constexpr auto TypeIndexV = TypeIndex<T, Tuple>::value;
 
 
 	// function type traits

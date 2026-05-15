@@ -1,9 +1,8 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/IntegerLiteralExpression.h>
-#include <ast/WhileStatement.h>
-#include <command/models/IntegerLiteral.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/expression/Expression.h>
+#include <ast/statement/Statement.h>
 #include <error/CommonErrors.h>
 #include <toolchain/Generator.h>
 #include <utility/Random.h>

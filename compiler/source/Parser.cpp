@@ -77,7 +77,7 @@ namespace hz
 			return current;
 		}
 
-		auto convert = [&](auto v) -> std::string_view
+		auto convert = [&](auto v) -> const std::string&
 		{
 			const auto item = _token_map.at(v);
 
@@ -125,7 +125,7 @@ namespace hz
 		else
 		{
 			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
-			type = new IntType{ TypeQualifier::IMMUTABLE, TypeSignedness::UNSIGNED, IntTypeType::INT32, TypeStorage::VALUE };
+			type = new IntType{ TypeQualifier::IMMUTABLE, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
 		}
 		
 		const auto identifier_expression = parse_identifier_expression();

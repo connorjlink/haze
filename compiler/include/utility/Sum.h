@@ -3,7 +3,7 @@
 
 #include <error/ErrorReporter.h>
 #include <data/DependencyInjector.h>
-#include <ast/Typing.h>
+#include <utility/Typing.h>
 
 // Haze Sum.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -16,34 +16,11 @@ namespace hz
 
 	struct IndexHandle
 	{
-		IndexType index : WORD_BIT - 1;
+		// 31 bits index, 1 bit flag ensured by static_assert
+		IndexType index : (std::numeric_limits<unsigned char>::digits * sizeof(std::uint32_t)) - 1;
 		IndexType is_valid : 1;
 	};
 	static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
-
-	struct InjectTagType
-	{
-	public:
-		template<typename Self>
-		constexpr TagType ttype(this Self&& self)
-		{
-			using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
-			return TypeIndexV<This>;
-		}
-	};
-
-	template<typename SumT>
-	struct InjectStorage
-	{
-	public:
-		using Storage = typename SumT::Storage;
-
-		template<typename T>
-		using Reference = SumReference<T, Storage>;
-
-		using Handle = SumHandle<Storage>;
-	};
-
 
 	// dynamic dispatch generator for sum families
 	template<typename Fn, typename SumStorageT, typename Tuple, std::size_t... Is>
@@ -128,29 +105,29 @@ namespace hz
 
 
 	// sum type and dispatch family
+	template<typename T, typename SumT, template<typename, typename> typename MethodsT, typename AnchorT>
+	concept SumElement = SumTuple<T, SumT, MethodsT<SumT, AnchorT>>;
+
 	template<template<typename, typename> typename MethodsT, typename... Ts>
 		requires (sizeof...(Ts) > std::numeric_limits<TagType>::min() && sizeof...(Ts) <= std::numeric_limits<TagType>::max())
 	struct Sum
 	{
-	public:
-		template<std::size_t I>
-		using TypeAt = std::tuple_element_t<I, Type>;
-
 	public:
 		using Storage = SumStorage<Ts...>;
 		using Type = typename Storage::Type;
 		using Anchor = typename Storage::Anchor;
 
 	public:
+		template<std::size_t I>
+		using TypeAt = std::tuple_element_t<I, Type>;
+
+	public:
 		using Methods = MethodsT<Sum, Anchor>;
 
 	public:
-		template<typename T, typename Sum, typename Anchor>
-		concept Element = SumTuple<T, Sum, Methods<Sum, Anchor>>;
-
-	public:
 		struct Storage : public SumStorage<Ts...>
-		{} storage;
+		{
+		} storage;
 	};
 
 	template<typename... Ts>
@@ -160,26 +137,17 @@ namespace hz
 		using Anchor = std::tuple_element_t<0, Type>;
 
 		template<typename T>
-		using Index = TypeIndexV<T, Type>;
+		inline static constexpr auto Index = TypeIndexV<T, Type>;
 	};
 
-	template<template<typename> typename MethodsT, typename TypeList>
+	template<template<typename, typename> typename MethodsT, typename TypeList>
 	struct MakeSum;
 
-	template<template<typename> typename MethodsT, typename... Ts>
+	template<template<typename, typename> typename MethodsT, typename... Ts>
 	struct MakeSum<MethodsT, SumTypeList<Ts...>>
 	{
 		using Type = Sum<MethodsT, Ts...>;
 	};
-
-	// common base class recommended for sum member classes
-	template<typename SumT>
-	struct SumMemberBase
-		: public InjectTagType
-		, public InjectStorage<SumT>
-	{
-	};
-
 
 	template<typename T>
 	concept HasGetTag = requires(const T & t)
@@ -211,14 +179,14 @@ namespace hz
 			if (!is_valid())
 			{
 				USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-					"invalid sum reference: tag {}, index {}", tag, index.index));
+					"invalid sum reference: tag {}, index {}", self().get_tag(), index.index));
 			}
 		}
 
 	private:
 		template<typename Self>
 			requires HasGetTag<Self>
-		constexpr const Self& self(this Self&& self) const
+		constexpr const Self& self(this Self&& self)
 		{
 			return self;
 		}
@@ -248,6 +216,63 @@ namespace hz
 #undef SUM_HANDLE_METHOD
 	};
 
+	// dynamic dispatch wrapper type for sum families
+	template<typename SumStorageT>
+	struct SumHandle
+		: public SumDispatcher<SumStorageT>
+	{
+	public:
+		TagType tag;
+
+		constexpr TagType get_tag() const
+		{
+			return tag;
+		}
+
+	private:
+		template<typename T>
+		constexpr void validate_tag() const
+		{
+			static constexpr TagType expected_tag =
+				TypeIndexV<T, typename SumStorageT::Type>;
+
+			// runtime error
+			if (tag != expected_tag)
+			{
+				this->USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
+					"invalid sum reference: expected tag {}, actual tag {}, index {}",
+						expected_tag, tag, this->index.index));
+			}
+		}
+
+	public:
+		template<typename T>
+		constexpr const T& get() const
+		{
+			validate_tag<T>();
+			return this->sum_storage.template get<T>()[this->index];
+		}
+
+		template<typename T>
+		constexpr T& get()
+		{
+			validate_tag<T>();
+			return this->sum_storage.template get<T>()[this->index];
+		}
+
+	public:
+		constexpr SumHandle(const SumStorageT& sum_storage, IndexType index, TagType tag)
+			: SumDispatcher<SumStorageT>{ sum_storage, { index, true } }, tag{ tag }
+		{
+			// valid handle
+		}
+
+		constexpr SumHandle(const SumStorageT& sum_storage)
+			: SumDispatcher<SumStorageT>{ sum_storage, { 0, false } }, tag{ 0 }
+		{
+			// invalid handle
+		}
+	};
 
 	// type-specifc slim wrapper for static dispatch on sum members
 	template<typename T, typename SumStorageT>
@@ -266,17 +291,17 @@ namespace hz
 	public:
 		constexpr const T& get() const
 		{
-			return sum_storage.template get<T>()[index];
+			return this->sum_storage.template get<T>()[this->index];
 		}
 
 		constexpr T& get()
 		{
-			return sum_storage.template get<T>()[index];
+			return this->sum_storage.template get<T>()[this->index];
 		}
 
 		constexpr SumHandle<SumStorageT> erase() const
 		{
-			return SumHandle<SumStorageT>{ sum_storage, index, tag };
+			return SumHandle<SumStorageT>{ this->sum_storage, this->index, tag };
 		}
 
 	public:
@@ -293,62 +318,22 @@ namespace hz
 		}
 	};
 
-	// dynamic dispatch wrapper type for sum families
-	template<typename SumStorageT>
-	struct SumHandle
-		: public SumDispatcher<SumStorageT>
-	{
-	public:
-		TagType tag;
-
-		constexpr TagType get_tag() const
-		{
-			return tag;
-		}
-
-	private:
-		template<typename T>
-		constexpr void validate_tag() const
-		{
-			// runtime error
-			if (tag != TypeIndexV<T, typename SumStorageT::Type>)
-			{
-				USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-					"invalid sum reference: expected tag {}, actual tag {}, index {}",
-					TypeIndexV<T, typename SumStorageT::Type>, tag, index.index));
-			}
-		}
-
-	public:
-		template<typename T>
-		constexpr const T& get() const
-		{
-			validate_tag<T>();
-			return sum_storage.template get<T>()[index];
-		}
-
-		template<typename T>
-		constexpr T& get()
-		{
-			validate_tag<T>();
-			return sum_storage.template get<T>()[index];
-		}
-
-	public:
-		constexpr SumHandle(const SumStorageT& sum_storage, IndexType index, TagType tag)
-			: SumDispatcher<SumStorageT>{ sum_storage, { index, true } }, tag{ tag }
-		{
-			// valid handle
-		}
-
-		constexpr SumHandle(const SumStorageT& sum_storage)
-			: SumDispatcher<SumStorageT>{ sum_storage, { 0, false } }, tag{ 0 }
-		{
-			// invalid handle
-		}
-	};
-
 	// entry point into sum dynamic dispatch
+	template<typename T, typename SumStorageT>
+	constexpr SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, T&& value)
+	{
+		// add it to the sum storage
+		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
+		return SumHandle<SumStorageT>{ sum_storage, index, TypeIndexV<T, typename SumStorageT::Type> };
+	}
+
+	template<typename T, typename SumStorageT>
+	constexpr SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
+	{
+		// does not participate in sum storage
+		return SumHandle<SumStorageT>{ sum_storage };
+	}
+
 	template<typename T, typename SumStorageT>
 	constexpr SumReference<T, SumStorageT> make_reference(const SumStorageT& sum_storage, T&& value)
 	{
@@ -364,20 +349,38 @@ namespace hz
 		return SumReference<T, SumStorageT>{ sum_storage };
 	}
 
-	template<typename T, typename SumStorageT>
-	constexpr SumHandle<SumStorageT> make_handle(const SumStorageT& sum_storage, T&& value)
-	{
-		// add it to the sum storage
-		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
-		return SumHandle<SumStorageT>{ sum_storage, index, TypeIndexV<T, typename SumStorageT::Type> };
-	}
 
-	template<typename T, typename SumStorageT>
-	constexpr SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
+	template<typename TupleT>
+	struct InjectTagType
 	{
-		// does not participate in sum storage
-		return SumHandle<SumStorageT>{ sum_storage };
-	}
+	public:
+		template<typename Self>
+		constexpr TagType ttype(this Self&& self)
+		{
+			using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
+			return TypeIndexV<This, TupleT>;
+		}
+	};
+
+	template<typename SumT>
+	struct InjectStorage
+	{
+	public:
+		using Storage = typename SumT::Storage;
+
+		template<typename T>
+		using ThisSumReference = SumReference<T, Storage>;
+
+		using ThisSumHandle = SumHandle<Storage>;
+	};
+
+	// common base class recommended for sum member classes
+	template<typename SumT>
+	struct SumMemberBase
+		: public InjectTagType<typename SumT::Type>
+		, public InjectStorage<SumT>
+	{
+	};
 }
 
 #endif

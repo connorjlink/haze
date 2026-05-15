@@ -6,6 +6,7 @@ import std;
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
 #include <toolchain/Preprocessor.h>
+#include <token/Token.h>
 
 // Haze Preprocessor.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -19,7 +20,7 @@ namespace
 			return;
 		}
 
-		std::size_t start_pos = 0;
+		auto start_pos = 0uz;
 
 		while ((start_pos = str.find(from, start_pos)) != std::string::npos)
 		{
@@ -29,8 +30,6 @@ namespace
 	}
 
 	static constexpr auto ws = " \t\n\r";
-	static constexpr std::string_view MACRO_KEYWORD = ".macro";
-	static constexpr std::string_view INCLUDE_KEYWORD = ".include";
 
 	// Thanks https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring :)
 	// trim from end of string (right)
@@ -57,9 +56,10 @@ namespace
 namespace hz
 {
 	Preprocessor::Preprocessor(const std::string& filepath)
-		: Scanner{ filepath }, _files_to_process{}
+		: Scanner{ filepath }, files_to_process{}
 	{
-		const auto contents = USE_SAFE(FileManager)->get_file(filepath).raw_contents();
+		auto contents = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents();
+
 		// moving the contents is safe because the filemanager returns a copy
 		set_state(SourceContext{ .source = std::move(contents), .location = { filepath, 0, 1, 1 } });
 		save_state();
@@ -93,46 +93,60 @@ namespace hz
 	void Preprocessor::load_file(const std::string& filepath)
 	{
 		USE_SAFE(FileManager)->open_file(filepath);
-		const auto contents = USE_SAFE(FileManager)->get_file(filepath).raw_contents();
-		_files_to_process.emplace(SourceContext{ .source = contents, .location = { filepath, 0, 1, 1 } });
+		const auto contents = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents();
+		files_to_process.emplace(SourceContext{ .source = contents, .location = { filepath, 0, 1, 1 } });
 	}
 
 	void Preprocessor::preprocess(const std::string& initial_file)
 	{
 		load_file(initial_file);
 
-		while (!_files_to_process.empty())
+		while (!files_to_process.empty())
 		{
-			auto& context = _files_to_process.top();
+			auto& context = files_to_process.top();
 
 			// only pop once advanced past the last virtual location of the file in question
 			if (eof())
 			{
 				USE_SAFE(FileManager)->update_file(context.location.filepath, context.source);
-				_files_to_process.pop();
+				files_to_process.pop();
 				continue;
 			}
 
-			char c = context.current();
 			switch (auto c = context.current())
 			{
-				case '.':
+				case '#':
 				{
-					if (match_keyword(INCLUDE_KEYWORD))
+					// consume #
+					advance();
+
+					if (const auto include_keyword = _token_map.at(TokenType::INCLUDE).value();
+						match_keyword(include_keyword))
 					{
+						advance(include_keyword.length());
+						skip_whitespace();
+
 						handle_include();
 					}
-					else if (match_keyword(MACRO_KEYWORD))
+					else if (const auto define_keyword = _token_map.at(TokenType::DEFINE).value();
+							 match_keyword(define_keyword))
 					{
+						advance(define_keyword.length());
+						skip_whitespace();
+
 						handle_macro_definition();
 					}
-					else
+					else if (const auto if_keyword = _token_map.at(TokenType::IF).value();
+							 match_keyword(if_keyword))
 					{
-						advance();
+						advance(if_keyword.length());
+						skip_whitespace();
+
+						handle_conditional_compilation();
 					}
 				} break;
 
-				case '$':
+				default:
 				{
 					if (match_macro_invokation())
 					{
@@ -143,26 +157,26 @@ namespace hz
 						advance();
 					}
 				} break;
-
-				default:
-				{
-					advance();
-				} break;
 			}
 		}
 	}
 
 	void Preprocessor::handle_include(void)
 	{
-		// consume keyword ".include" and any trailing whitespace
-		advance(INCLUDE_KEYWORD.length());
-		skip_whitespace();
+		auto include_filepath = std::string{};
 
-		expect('"');
-
-		// e.g., test_file.hz
-		const auto include_filepath = substring_until('"');
-		expect('"');
+		if (current() == '<')
+		{
+			expect('<');
+			include_filepath = substring_until('>');
+			expect('>');
+		}
+		else
+		{
+			expect('"');
+			include_filepath = substring_until('"');
+			expect('>');
+		}
 		
 		if (include_filepath == wherein())
 		{
@@ -176,15 +190,22 @@ namespace hz
 
 	void Preprocessor::handle_macro_definition(void)
 	{
-		// consume keyword ".macro" and any trailing whitespace
-		advance(MACRO_KEYWORD.length());
-		skip_whitespace();
-
 		const auto name = read_identifier();
 		advance(name.length());
 		skip_whitespace();
-		
-		expect('=');
+
+		if (current() == '(')
+		{
+			handle_functionlike_macro_definition(name);
+		}
+		else
+		{
+			handle_objectlike_macro_definition(name);
+		}
+	}
+
+	void Preprocessor::handle_functionlike_macro_definition(const std::string& name)
+	{
 		expect('(');
 
 		// greedily consume until a closing parenthesis
@@ -198,12 +219,8 @@ namespace hz
 		}
 
 		expect(')');
-		expect(':');
 
-		expect('{');
-
-		const auto body = substring_until('}');
-		expect('}');
+		const auto body = substring_until('\n');
 
 		Macro macro{ name, arguments, body, forge_token() };
 		defined_macros.try_emplace(name, macro);
@@ -212,13 +229,21 @@ namespace hz
 		register_macro_definition(macro);
 	}
 
-	void Preprocessor::handle_macro_invokation()
+	void Preprocessor::handle_objectlike_macro_definition(const std::string& name)
 	{
-		const auto start = whereat();
-		expect('$');
+#pragma message("TODO: combine lines together with \ character")
+		const auto value = substring_until('\n');
 
-		const auto name = read_identifier();
+	}
 
+	void Preprocessor::handle_objectlike_macro_invokation(const std::string& name)
+	{
+		advance(name.length());
+
+	}
+
+	void Preprocessor::handle_functionlike_macro_invokation(const std::string& name)
+	{
 		expect('(');
 
 		// greedily consume until a closing parenthesis
@@ -234,33 +259,37 @@ namespace hz
 
 		// explicitly forbid any macro recursion at all. if this macro was called anywhere in the current
 		// macro callstack, error out! this is the easiest way to prevent infinite recursion
-		if (_macro_invokations.contains(name))
+		if (macro_invokations.contains(name))
 		{
-			USE_SAFE(ErrorReporter)->post_error(std::format("invalid recursive macro `{}`", name), forge_token());
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"invalid recursive macro `{}`", name), forge_token());
 			return;
 		}
 
 		if (!defined_macros.contains(name))
 		{
-			USE_SAFE(ErrorReporter)->post_error(std::format("macro `{}` is undefined", name), forge_token());
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"macro `{}` is undefined", name), forge_token());
 			return;
 		}
 
 		const auto& macro = defined_macros.at(name);
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter)->post_error("macro argument count mismatch", forge_token());
+			USE_SAFE(ErrorReporter)->post_error(
+				"macro argument count mismatch", forge_token());
 			return;
 		}
 
 		if (macro.args.size() != arguments.size())
 		{
-			USE_SAFE(ErrorReporter)->post_error(std::format("macro `{}` was defined with {} arguments but called with {}",
-				macro.name, macro.args.size(), arguments.size()), forge_token());
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"macro `{}` was defined with {} arguments but called with {}",
+					macro.name, macro.args.size(), arguments.size()), forge_token());
 			return;
 		}
 
-		_macro_invokations.emplace(name);
+		macro_invokations.emplace(name);
 
 		// intentional copy
 		auto expanded = macro.code;
@@ -273,7 +302,7 @@ namespace hz
 		insert_adjacent(expanded);
 		register_macro_invokation(name);
 
-		_macro_invokations.erase(name);
+		macro_invokations.erase(name);
 
 		// NOTE: explicitly not advancing past the test substition because the new text might contains macros that need to again expand
 		//advance(context, expanded.length());

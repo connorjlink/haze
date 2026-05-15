@@ -70,9 +70,14 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("integer literal", _integer_literal_type_map.at(itype)), token);
 	}
 
-	void CommonErrors::invalid_int_type(IntTypeType itype, const Token& token)
+	void CommonErrors::invalid_int_type(IntKind itype, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("integer", _int_type_type_map.at(itype)), token);
+		internal_compiler_error(invalid_generic_type("integer", _int_kind_map.at(itype)), token);
+	}
+
+	void CommonErrors::invalid_float_type(FloatKind ftype, const Token& token)
+	{
+		internal_compiler_error(invalid_generic_type("float", _float_kind_map.at(ftype)), token);
 	}
 
 	void CommonErrors::invalid_token_type(TokenType ttype, const Token& token)

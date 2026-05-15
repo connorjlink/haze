@@ -1,7 +1,6 @@
 #ifndef HAZE_COMMAND_H
 #define HAZE_COMMAND_H
 
-#include <ast/Node.h>
 #include <command/CommandType.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
@@ -12,20 +11,19 @@
 namespace hz
 {
 	class Command 
-		: public Node
-		, public InjectSingleton<ErrorReporter>
+		: public InjectSingleton<ErrorReporter>
 	{
 	public:
 		std::uint32_t offset;
+		Token token;
 
 	public:
 		Command(Token token)
-			: Node{ token }
+			: token{ std::move(token) }
 		{
 		}
 
 	public:
-		virtual NodeType ntype() const final override;
 		virtual CommandType ctype() const = 0;
 	};
 }

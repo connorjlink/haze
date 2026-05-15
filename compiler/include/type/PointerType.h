@@ -11,13 +11,13 @@ namespace hz
 	class PointerType : public TypeBase
 	{
 	public:
-		SumHandle pointee;
+		TypeHandle pointee;
 		TypeQualifier qualifier;
 
 	public:
-		TypeType ttype() const
+		TypeKind ttype() const
 		{
-			return TypeType::POINTER;
+			return TypeKind::POINTER;
 		}
 
 		static Offset size()

@@ -8,16 +8,16 @@
 
 namespace hz
 {
-    class VoidType : public TypeBase
+	class VoidType : public TypeBase
 	{
 	public:
 		StorageClass storage;
 		TypeQualifier qualifier;
 
 	public:
-		TypeType ttype() const
+		TypeKind ttype() const
 		{
-			return TypeType::VOID;
+			return TypeKind::VOID;
 		}
 
 		Offset size() const
@@ -28,7 +28,7 @@ namespace hz
 		std::string string() const
 		{
 			return std::format("{} {} void", 
-				_type_storage_map.at(storage),
+				_storage_class_map.at(storage),
 				_type_qualifier_map.at(qualifier));
 		}
 

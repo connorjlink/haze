@@ -17,7 +17,7 @@
 #include <type/StorageClass.h>
 #include <type/TypeQualifier.h>
 #include <type/TypeSignedness.h>
-#include <ast/Sum.h>
+#include <utility/Sum.h>
 
 // Haze Type.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -28,7 +28,7 @@ namespace hz
 	template<typename AnchorT>
 	using TypeMethods = std::tuple
 	<
-		Method<&AnchorT::ttype, TypeType()>,
+		Method<&AnchorT::ttype, TypeKind()>,
 		Method<&AnchorT::size, Offset()>,
 		Method<&AnchorT::is_complete, bool()>,
 	>;
@@ -40,29 +40,35 @@ namespace hz
 	class IntType;
 	class FloatType;
 	class StructOrUnionType;
-	class EnumTypeType;
+	class EnumTypeKind;
 	class TypedefNameType;
 	class PointerType;
 	class ArrayType;
 	class FunctionType;
 
-	using TypeTypes = SumTypeList
+	using TypeKinds = SumTypeList
 	<
 		VoidType,
 		IntType,
 		FloatType,
 		StructOrUnionType,
-		EnumTypeType,
+		EnumTypeKind,
 		TypedefNameType,
 		PointerType,
 		ArrayType,
 		FunctionType,
 	>;
 
-	using TypeSum = MakeSum<TypeMethods, TypeTypes>::Type;
+	using TypeSum = MakeSum<TypeMethods, TypeKinds>::Type;
 	using TypeBase = SumMemberBase<TypeSum>;
 
-	enum class TypeType
+	template<typename T>
+	using TypeReference = TypeSum::template Reference<T>;
+
+	using TypeHandle = TypeSum::Handle;
+
+
+	enum class TypeKind
 	{
 		VOID,
 		INT,
@@ -75,7 +81,7 @@ namespace hz
 		FUNCTION,
 	};
 
-	enum class Precedence
+	enum class TypePrecedence
 	{
 		LOWEST,
 		POINTER,
@@ -85,28 +91,28 @@ namespace hz
 		LEAF,
 	};
 
-	Precedence precedence(const TypeBase& type)
+	TypePrecedence precedence(const TypeBase& type)
 	{
-		using enum TypeType;
+		using enum TypeKind;
 		switch (type.ttype())
 		{
-			case VOID:            return Precedence::LEAF;
-			case INT:             return Precedence::LEAF;
-			case FLOAT:           return Precedence::LEAF;
-			case STRUCT_OR_UNION: return Precedence::LEAF;
-			case ENUM:            return Precedence::LEAF;
-			case TYPEDEF_NAME:    return Precedence::LEAF;
-			case POINTER:         return Precedence::POINTER;
-			case ARRAY:           return Precedence::ARRAY;
-			case FUNCTION:        return Precedence::FUNCTION;
+			case VOID:            return TypePrecedence::LEAF;
+			case INT:             return TypePrecedence::LEAF;
+			case FLOAT:           return TypePrecedence::LEAF;
+			case STRUCT_OR_UNION: return TypePrecedence::LEAF;
+			case ENUM:            return TypePrecedence::LEAF;
+			case TYPEDEF_NAME:    return TypePrecedence::LEAF;
+			case POINTER:         return TypePrecedence::POINTER;
+			case ARRAY:           return TypePrecedence::ARRAY;
+			case FUNCTION:        return TypePrecedence::FUNCTION;
 		}
 
-		return Precedence::LOWEST;
+		return TypePrecedence::LOWEST;
 	}
 
-	std::string format_type(const TypeBase& type, const std::string& name = "", Precedence parent_predence = Precedence::LOWEST)
+	std::string format_type(const TypeBase& type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST)
 	{
-		using enum TypeType;
+		using enum TypeKind;
 		switch (type.ttype())
 		{
 			case VOID:
@@ -120,10 +126,10 @@ namespace hz
 
 				// <storage-class> <type-qualifier> <type-specifier> <type-width>
 				return std::format("{} {} {} {}",
-					_type_storage_map.at(int_type.storage),
+					_storage_class_map.at(int_type.storage),
 					format_type_qualifier(int_type.qualifier),
 					_type_signedness_map.at(int_type.signedness),
-					_int_width_map.at(int_type.int_type));
+					_int_kind_map.at(int_type.int_kind));
 			} break;
 
 			case FLOAT:
@@ -132,7 +138,7 @@ namespace hz
 
 				// <storage-class> <type-qualifier> <type-width>
 				return std::format("{} {} {}",
-					_type_storage_map.at(float_type.storage),
+					_storage_class_map.at(float_type.storage),
 					format_type_qualifier(float_type.qualifier),
 					_float_width_map.at(float_type.float_type));
 			} break;
@@ -143,7 +149,7 @@ namespace hz
 
 				if (!struct_or_union_type.members.has_value())
 				{
-					CommonErrors::invalid_struct_or_union_type(struct_or_union_type.struct_or_union_type, NULL_TOKEN);
+					CommonErrors::invalid_struct_or_union_type(struct_or_union_type.struct_or_union_kind, NULL_TOKEN);
 					return "";
 				}
 
@@ -158,20 +164,20 @@ namespace hz
 				//     members...
 				// }
 				return std::format("{} {} {} {{\n{}}}",
-					_type_storage_map.at(struct_or_union_type.storage),
+					_storage_class_map.at(struct_or_union_type.storage),
 					format_type_qualifier(struct_or_union_type.qualifier),
-					_struct_or_union_type_map.at(struct_or_union_type.struct_or_union_type),
+					_struct_or_union_type_map.at(struct_or_union_type.struct_or_union_kind),
 					members);
 			} break;
 
 			case ENUM:
 			{
-				const auto& enum_type = static_cast<const Enum&>(type);
+				const auto& enum_type = static_cast<const EnumType&>(type);
 
 				// <storage-class> <type-qualifier> enum tag 
 				// NOTE: enumerators not shown since they don't fundamentally affect the type
 				return std::format("{} {} enum {}", 
-					_type_storage_map.at(enum_type.storage),
+					_storage_class_map.at(enum_type.storage),
 					format_type_qualifier(enum_type.qualifier),
 					name);
 			} break;
@@ -186,7 +192,7 @@ namespace hz
 
 			case POINTER:
 			{
-				const auto& pointer_type = static_cast<const Pointer&>(type);
+				const auto& pointer_type = static_cast<const PointerType&>(type);
 				const auto qualifier_string = format_type_qualifier(pointer_type.qualifier);
 
 				// <pointee-type>* <pointer-qualifiers>
@@ -195,17 +201,17 @@ namespace hz
 					qualifier_string,
 					name);
 
-				if (parent_predence > Precedence::POINTER && parent_predence != Precedence::LEAF)
+				if (parent_predence > TypePrecedence::POINTER && parent_predence != TypePrecedence::LEAF)
 				{
 					pointer_string = std::format("({})", pointer_string);
 				}
 
-				return format_type(pointer_type.pointee, pointer_string, Precedence::POINTER);
+				return format_type(pointer_type.pointee, pointer_string, TypePrecedence::POINTER);
 			} break;
 
 			case ARRAY:
 			{
-				const auto& array_type = static_cast<const Array&>(type);
+				const auto& array_type = static_cast<const ArrayType&>(type);
 				const auto array_length = array_type.length.has_value() 
 					? std::to_string(array_type.length.value()) 
 					: "";
@@ -213,17 +219,17 @@ namespace hz
 				// <element-type> [ <array-size> ]
 				const auto name_string = std::format("{}[{}]", name, array_length);
 
-				return format_type(array_type.element_type, name_string, Precedence::ARRAY);
+				return format_type(array_type.element_type, name_string, TypePrecedence::ARRAY);
 			} break;
 
 			case FUNCTION:
 			{
-				const auto& function_type = static_cast<const Function&>(type);
+				const auto& function_type = static_cast<const FunctionType&>(type);
 
 				auto parameters = function_type.parameters
 					| std::views::transform([](const auto& parameter) 
 					{ 
-						return format_type(parameter, "", Precedence::FUNCTION); 
+						return format_type(parameter, "", TypePrecedence::FUNCTION); 
 					})
 					| std::views::join(std::string(", "))
 					| std::ranges::to<std::string>();
@@ -239,7 +245,7 @@ namespace hz
 				}
 
 				const auto name_string = std::format("{}({})", name, parameters);
-				return format_type(function_type.return_type, name_string, Precedence::FUNCTION);
+				return format_type(function_type.return_type, name_string, TypePrecedence::FUNCTION);
 			}
 		}
 

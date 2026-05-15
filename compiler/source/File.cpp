@@ -40,14 +40,14 @@ namespace hz
 {
 	ToolchainType File::ttype(void) const
 	{
-		return _type;
+		return type;
 	}
 
-	std::string File::raw_contents(void) 
+	std::string File::get_raw_contents(void) 
 	{
-		if (_raw_contents.has_value())
+		if (raw_contents.has_value())
 		{
-			return _raw_contents.value();
+			return raw_contents.value();
 		}
 
 		if (auto file = std::ifstream(filepath, std::ios::in); 
@@ -59,7 +59,7 @@ namespace hz
 			source.assign((std::istreambuf_iterator<char>(file)),
 						   std::istreambuf_iterator<char>());
 
-			_raw_contents = { source };
+			raw_contents = { source };
 
 			return source;
 		}
@@ -68,11 +68,11 @@ namespace hz
 			"file {} not found", filepath), NULL_TOKEN);
 	}
 
-	std::string File::processed_contents(void)
+	std::string File::get_processed_contents(void)
 	{
-		if (_processed_contents.has_value())
+		if (processed_contents.has_value())
 		{
-			return _processed_contents.value();
+			return processed_contents.value();
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
@@ -81,9 +81,9 @@ namespace hz
 
 	void File::process(const std::string& contents)
 	{
-		if (_raw_contents.has_value())
+		if (raw_contents.has_value())
 		{
-			_processed_contents = contents;
+			processed_contents = contents;
 			return;
 		}
 
@@ -93,21 +93,21 @@ namespace hz
 
 	void File::reload(void)
 	{
-		_reload_count++;
+		reload_count++;
 
 		// since the file contents lazy-load and cache as needed, simply deleting the cache 
 		// will force a reload upon next access
-		_raw_contents.reset();
-		_processed_contents.reset();
+		raw_contents.reset();
+		processed_contents.reset();
 
 		USE_SAFE(ErrorReporter)->post_information(std::format(
-			"reloading file `{}` for the {} time", filepath, ::friendlify_ordinal(_reload_count)), NULL_TOKEN);
+			"reloading file `{}` for the {} time", filepath, ::friendlify_ordinal(reload_count)), NULL_TOKEN);
 	}
 
 	void File::compute_type(void)
 	{
-		const auto filepath = std::filesystem::path(filepath);
-		const auto extension = filepath.extension().string();
+		const auto path = std::filesystem::path(filepath);
+		const auto extension = path.extension().string();
 
 		if (!_toolchain_map.contains(extension))
 		{
@@ -115,6 +115,6 @@ namespace hz
 				"unrecognized file extension {}", extension), NULL_TOKEN);
 		}
 
-		_type = _toolchain_map.at(extension);
+		type = _toolchain_map.at(extension);
 	}
 }

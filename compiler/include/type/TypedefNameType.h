@@ -11,13 +11,13 @@ namespace hz
 	class TypedefName : public TypeBase
 	{
 	public:
-		SumHandle type;
+		Handle type;
 		std::string name;
 
 	public:
-		TypeType ttype() const
+		TypeKind ttype() const
 		{
-			return TypeType::TYPEDEF_NAME;
+			return TypeKind::TYPEDEF_NAME;
 		}
 
 		Offset size() const

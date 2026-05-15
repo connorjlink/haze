@@ -21,6 +21,9 @@ namespace hz
 		std::unordered_map<std::string, Offset> stack_size;
 
 	public:
+		std::optional<Offset> get_function_stack_size(const std::string&);
+
+	public:
 		void define_local(const std::string&);
 		void define_local(const std::string&, Register);
 		// view but do not allocate space for a new local

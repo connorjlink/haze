@@ -11,13 +11,13 @@ namespace hz
 	class ArrayType : public TypeBase
 	{
 	public:
-		SumHandle element_type;
+		TypeHandle element_type;
 		std::optional<Address> length;
 
 	public:
-		TypeType ttype() const
+		TypeKind ttype() const
 		{
-			return TypeType::ARRAY;
+			return TypeKind::ARRAY;
 		}
 
 		Offset size() const
@@ -27,16 +27,15 @@ namespace hz
 				return PointerType::size();
 			}
 
-			return element_type.size() * length.value();
+			return element_type.get().size() * length.value();
 		}
 
 		std::string string() const
 		{
 			const auto length_string = length.has_value() ? std::to_string(length.value()) : "";
 
-			return std::format("{} {}[{}]",
-				_type_qualifier_map.at(qualifier),
-				element_type->string(),
+			return std::format("{}[{}]",
+				element_type.get().string(),
 				length_string);
 		}
 
@@ -49,7 +48,7 @@ namespace hz
 				return false;
 			}
 
-			return element_type->is_complete();
+			return element_type.get().is_complete();
 		}
 	};
 }

@@ -138,9 +138,9 @@
     <ClInclude Include="include\ast\expression\BinaryExpression.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
-    <ClInclude Include="include\ast\Sum.h" />
-    <ClInclude Include="include\ast\Typing.h" />
-    <ClInclude Include="include\ast\Value.h" />
+    <ClInclude Include="include\utility\Sum.h" />
+    <ClInclude Include="include\utility\Typing.h" />
+    <ClInclude Include="include\allocator\Value.h" />
     <ClInclude Include="include\ast\statement\CompoundStatement.h" />
     <ClInclude Include="include\ast\statement\ExitStatement.h" />
     <ClInclude Include="include\ast\statement\ExpressionStatement.h" />
@@ -170,22 +170,18 @@
     <ClCompile Include="source\BinaryExpression.cpp" />
     <ClCompile Include="source\BinaryUtilities.cpp" />
     <ClCompile Include="source\BMBuilder.cpp" />
-    <ClCompile Include="source\Command.cpp" />
     <ClCompile Include="source\CommandLineParser.cpp" />
     <ClCompile Include="source\CommonErrors.cpp" />
-    <ClCompile Include="source\CommonToolchain.cpp" />
     <ClCompile Include="source\CompilerParser.cpp" />
     <ClCompile Include="source\CompilerToolchain.cpp" />
     <ClCompile Include="source\CompoundStatement.cpp" />
     <ClCompile Include="source\Context.cpp" />
     <ClCompile Include="source\Daemon.cpp" />
-    <ClCompile Include="source\DependencyInjector.cpp" />
     <ClCompile Include="source\DotDefineCommand.cpp" />
     <ClCompile Include="source\DotOrgCommand.cpp" />
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\ErrorContext.cpp" />
     <ClCompile Include="source\ErrorReporter.cpp" />
-    <ClCompile Include="source\Evaluator.cpp" />
     <ClCompile Include="source\ExitProgramException.cpp" />
     <ClCompile Include="source\ExitStatement.cpp" />
     <ClCompile Include="source\Expression.cpp" />
@@ -198,13 +194,11 @@
     <ClCompile Include="source\FunctionArgumentExpression.cpp" />
     <ClCompile Include="source\FunctionCallExpression.cpp" />
     <ClCompile Include="source\Generator.cpp" />
-    <ClCompile Include="source\HeapAllocator.cpp" />
     <ClCompile Include="source\IdentifierExpression.cpp" />
     <ClCompile Include="source\IfStatement.cpp" />
     <ClCompile Include="source\InlineAsmStatement.cpp" />
     <ClCompile Include="source\InstructionCommand.cpp" />
     <ClCompile Include="source\InstructionValidator.cpp" />
-    <ClCompile Include="source\IntegerLiteral.cpp" />
     <ClCompile Include="source\IntegerLiteralExpression.cpp" />
     <ClCompile Include="source\IntermediateCommand.cpp" />
     <ClCompile Include="source\Job.cpp" />
@@ -227,11 +221,9 @@
     <ClCompile Include="source\RISCVAssemblerParser.cpp" />
     <ClCompile Include="source\RuntimeAllocator.cpp" />
     <ClCompile Include="source\Scanner.cpp" />
-    <ClCompile Include="source\StackAllocator.cpp" />
     <ClCompile Include="source\Statement.cpp" />
     <ClCompile Include="source\StringExpression.cpp" />
     <ClCompile Include="source\StructDeclarationStatement.cpp" />
-    <ClCompile Include="source\StructMember.cpp" />
     <ClCompile Include="source\Symbol.cpp" />
     <ClCompile Include="source\SymbolDatabase.cpp" />
     <ClCompile Include="source\SymbolExporter.cpp" />
@@ -239,11 +231,9 @@
     <ClCompile Include="source\Toolchain.cpp" />
     <ClCompile Include="source\Tracking.cpp" />
     <ClCompile Include="source\Type.cpp" />
-    <ClCompile Include="source\TypeCheck.cpp" />
     <ClCompile Include="source\TypeValidator.cpp" />
     <ClCompile Include="source\UndoableRedoable.cpp" />
     <ClCompile Include="source\Validator.cpp" />
-    <ClCompile Include="source\Variable.cpp" />
     <ClCompile Include="source\VariableStatement.cpp" />
     <ClCompile Include="source\WebSocketClient.cpp" />
     <ClCompile Include="source\WebSocketServer.cpp" />
@@ -251,7 +241,6 @@
     <ClCompile Include="source\X86Builder.cpp" />
     <ClCompile Include="source\X86BuilderValidator.cpp" />
     <ClCompile Include="source\X86Instruction.cpp" />
-    <ClCompile Include="source\X86Operand.cpp" />
     <ClInclude Include="include\type\ArrayType.h" />
     <ClInclude Include="include\type\EnumType.h" />
     <ClInclude Include="include\type\FloatType.h" />
@@ -277,16 +266,13 @@
   <ItemGroup>
     <ClInclude Include="include\allocator\Allocation.h" />
     <ClInclude Include="include\allocator\AllocationType.h" />
-    <ClInclude Include="include\allocator\HeapAllocator.h" />
     <ClInclude Include="include\allocator\RuntimeAllocator.h" />
-    <ClInclude Include="include\allocator\StackAllocator.h" />
     <ClInclude Include="include\ast\AdjustExpression.h" />
     <ClInclude Include="include\ast\ArgumentExpression.h" />
     <ClInclude Include="include\ast\BinaryExpression.h" />
     <ClInclude Include="include\ast\BinaryExpressionType.h" />
     <ClInclude Include="include\ast\CompoundStatement.h" />
     <ClInclude Include="include\ast\ExitStatement.h" />
-    <ClInclude Include="include\ast\Expression.h" />
     <ClInclude Include="include\ast\ExpressionStatement.h" />
     <ClInclude Include="include\ast\ExpressionType.h" />
     <ClInclude Include="include\ast\ForStatement.h" />
@@ -352,9 +338,6 @@
     <ClInclude Include="include\riscv\RISCVInstructionType.h" />
     <ClInclude Include="include\riscv\RISCVRegister.h" />
     <ClInclude Include="include\runtime\Context.h" />
-    <ClInclude Include="include\runtime\Evaluator.h" />
-    <ClInclude Include="include\runtime\models\Variable.h" />
-    <ClInclude Include="include\runtime\models\VariableType.h" />
     <ClInclude Include="include\statistic\models\Statistic.h" />
     <ClInclude Include="include\statistic\StatisticExporter.h" />
     <ClInclude Include="include\symbol\Symbol.h" />
@@ -396,7 +379,7 @@
     <ClInclude Include="include\utility\JSON.h" />
     <ClInclude Include="include\utility\Random.h" />
     <ClInclude Include="include\validator\InstructionValidator.h" />
-    <ClInclude Include="include\validator\Test.h" />
+    <ClInclude Include="include\validator\models\Test.h" />
     <ClInclude Include="include\validator\Validator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

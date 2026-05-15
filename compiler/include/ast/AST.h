@@ -1,8 +1,8 @@
 #ifndef HAZE_AST_H
 #define HAZE_AST_H
 
-#include <ast/Sum.h>
-#include <ast/Typing.h>
+#include <utility/Sum.h>
+#include <utility/Typing.h>
 
 // Haze AST.h
 // (c) Connor J. Link. All Rights Reserved.

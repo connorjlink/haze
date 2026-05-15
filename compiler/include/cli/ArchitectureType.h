@@ -38,7 +38,7 @@ namespace hz
 
 #define NAMEOF(x) #x
 
-	inline constexpr std::string_view get_stack_frame_pointer(ArchitectureType type)
+	inline constexpr const std::string& get_stack_frame_pointer(ArchitectureType type)
 	{
 		using enum ArchitectureType;
 		switch (type)

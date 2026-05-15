@@ -9,38 +9,38 @@
 
 namespace hz
 {
-    class EnumType : public TypeBase
-    {
-    public:
-        struct EnumMember
-        {
-            std::string name;
-            BigInteger value;
-        };
+	class EnumType : public TypeBase
+	{
+	public:
+		struct EnumMember
+		{
+			std::string name;
+			BigInteger value;
+		};
 
-    public:
-        StorageClass storage;
-        TypeQualifier qualifier;
-        std::optional<std::vector<EnumMember>> members;
-        std::string tag;
+	public:
+		StorageClass storage;
+		TypeQualifier qualifier;
+		std::optional<std::vector<EnumMember>> members;
+		std::string tag;
 
-    public:
-        TypeType ttype() const
-        {
-            return TypeType::ENUM;
-        }
+	public:
+		TypeKind ttype() const
+		{
+			return TypeKind::ENUM;
+		}
 
-        Offset size() const
-        {
-            // C (until C23?) doesn't support specifying the underlying type of enumerators
-            return sizeof(EnumMember::value);
-        }
+		Offset size() const
+		{
+			// C (until C23?) doesn't support specifying the underlying type of enumerators, so no need to check
+			return sizeof(EnumMember::value);
+		}
 
-        bool is_complete() const
-        {
-            return members.has_value();
-        }
-    };
+		bool is_complete() const
+		{
+			return members.has_value();
+		}
+	};
 }
 
 #endif

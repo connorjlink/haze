@@ -21,13 +21,13 @@ namespace hz
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
-		std::string_view name;
+		const std::string& name;
 		Type* return_type;
 		std::vector<Expression*> arguments;
 		Statement* body;
 
 	public:
-		Function(std::string_view, Type*, const std::vector<Expression*>&, Statement*, const Token&)
+		Function(const std::string&, Type*, const std::vector<Expression*>&, Statement*, const Token&)
 
 	public:
 		virtual NodeType ntype() const final override;

@@ -15,7 +15,7 @@ namespace hz
 		// transact an initial state for undoing
 		commit<void>([&](auto& context) -> void
 		{
-			context.source = USE_SAFE(FileManager)->get_file(filepath).processed_contents();
+			context.source = USE_SAFE(FileManager)->get_file(filepath).get_processed_contents();
 			context.location = null_location(filepath);
 		});
 	}

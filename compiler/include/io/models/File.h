@@ -16,14 +16,14 @@ namespace hz
 	{
 	private:
 		std::string filepath;
-		ToolchainType _type;
-		std::optional<std::string> _raw_contents = std::nullopt;
-		std::optional<std::string> _processed_contents = std::nullopt;
-		int _reload_count = 0;
+		ToolchainType type;
+		std::optional<std::string> raw_contents = std::nullopt;
+		std::optional<std::string> processed_contents = std::nullopt;
+		std::uint32_t reload_count = 0;
 
 	public:
-		std::string raw_contents(void);
-		std::string processed_contents(void);
+		std::string get_raw_contents(void);
+		std::string get_processed_contents(void);
 		// only one toolchain can claim proprietership of a file for now
 		ToolchainType ttype(void) const;
 
@@ -35,7 +35,7 @@ namespace hz
 	public:
 		File(const std::string& filepath)
 			//: Trackable{ ENABLE_TRACKING },
-			: filepath{ filepath }, _type{}
+			: filepath{ filepath }, type{}
 		{
 		}
 	};

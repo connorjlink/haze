@@ -3,7 +3,6 @@ import std;
 #include <job/JobManager.h>
 #include <toolchain/AssemblerToolchain.h>
 #include <toolchain/AssemblerParser.h>
-#include <toolchain/CommonToolchain.h>
 
 // Haze AssemblerToolchain.cpp
 // (c) Connor J. Link. All Rights Reserved.

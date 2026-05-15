@@ -1,9 +1,8 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/IdentifierExpression.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/expression/Expression.h>
 #include <runtime/Context.h>
-#include <runtime/Evaluator.h>
 #include <type/Type.h>
 #include <symbol/Symbol.h>
 #include <error/ErrorReporter.h>
@@ -18,7 +17,7 @@ namespace hz
 		return ExpressionType::IDENTIFIER;
 	}
 
-	TypeType IdentifierExpression::ttype() const
+	TypeKind IdentifierExpression::ttype() const
 	{
 		const auto type = USE_SAFE(SymbolDatabase)->query_symbol_type(name, _token);
 		switch (type)
@@ -45,13 +44,13 @@ namespace hz
 			} break;
 			case SymbolType::STRUCT:
 			{
-				return TypeType::STRUCT;
+				return TypeKind::STRUCT;
 			} break;
 		}
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"invalid identifier symbol type `{}`", _symbol_type_map.at(type)), _token);
-		return TypeType::VOID;
+		return TypeKind::VOID;
 	}
 
 	void IdentifierExpression::generate(Allocation* allocation)
@@ -96,9 +95,9 @@ namespace hz
 
 	Node* IdentifierExpression::evaluate(Context* context) const
 	{
-		if (context->variables().contains(name))
+		if (context->get_variables().contains(name))
 		{
-			const auto value = context->variables().at(name);
+			const auto value = context->get_variables().at(name);
 
 			if (value != nullptr)
 			{

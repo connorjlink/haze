@@ -1,7 +1,6 @@
 import std;
 
 #include <command/DotDefineCommand.h>
-#include <command/models/IntegerLiteral.h>
 #include <error/CommonErrors.h>
 #include <runtime/Context.h>
 

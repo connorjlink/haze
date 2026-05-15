@@ -23,6 +23,15 @@ namespace
 
 namespace hz
 {
+	std::optional<Offset> RuntimeAllocator::get_function_stack_size(const std::string& name)
+	{
+		if (!stack_size.contains(name))
+		{
+			return std::nullopt;
+		}
+		return { stack_size.at(name) };
+	}
+
 	bool RuntimeAllocator::define_local(const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();

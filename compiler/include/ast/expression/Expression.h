@@ -51,6 +51,11 @@ namespace hz
 	using ExpressionSum = MakeSum<ASTMethods, ExpressionTypes>::Type;
 	using ExpressionSumBase = SumMemberBase<ExpressionSum>;
 
+	template<typename T>
+	using ExpressionReference = ExpressionSum::template Reference<T>;
+
+	using ExpressionHandle = ExpressionSum::Handle;
+
 
 	class ExpressionBase
 		: public ExpressionSumBase
@@ -79,12 +84,11 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		SumHandle get_type(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
-#define MAKE_INTEGER_LITERAL_EXPRESSION(value) IntegerLiteralExpression{ MAKE_HANDLE(ast, value) }
-
+#define MAKE_INTEGER_LITERAL_EXPRESSION(value) IntegerLiteralExpression{ value }
 
 	class IdentifierExpression : public ExpressionBase
 	{
@@ -112,9 +116,9 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		SumHandle get_type(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
 #define MAKE_IDENTIFIER_EXPRESSION(identifier_kind, name) IdentifierExpression{ identifier_kind, name }
 
@@ -131,10 +135,10 @@ namespace hz
 
 	public:
 		Kind adjust_kind;
-		SumHandle target;
+		ExpressionHandle target;
 
 	public:
-		AdjustType(Type adjust_kind, SumHandle target)
+		AdjustExpression(Kind adjust_kind, ExpressionHandle target)
 			: adjust_kind{ adjust_kind }, target{ target }
 		{
 		}
@@ -142,20 +146,20 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		SumHandle get_type(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
 #define MAKE_ADJUST_EXPRESSION(target, adjust_kind) AdjustExpression{ adjust_kind, MAKE_HANDLE(ast, target) }
 
 	class ArgumentExpression : public ExpressionBase
 	{
 	public:
-		Type type;
-		IdentifierExpression identifier;
+		TypeHandle type;
+		ExpressionReference<IdentifierExpression> identifier;
 
 	public:
-		ArgumentExpression(Type type, IdentifierExpression identifier)
+		ArgumentExpression(TypeHandle type, ExpressionReference<IdentifierExpression> identifier)
 			: type{ type }, identifier{ identifier }
 		{
 		}
@@ -163,21 +167,21 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		SumHandle get_type(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
 #define MAKE_ARGUMENT_EXPRESSION(type, identifier) ArgumentExpression{ type, identifier }
 
 	class FunctionArgumentExpression : public ExpressionBase
 	{
 	public:
-		Type type;
-		SumReference<IdentifierExpression> identifier;
-		SumHandle value;
+		TypeHandle type;
+		ExpressionReference<IdentifierExpression> identifier;
+		ExpressionHandle value;
 
 	public:
-		FunctionArgumentExpression(Type type, SumReference<IdentifierExpression> identifier, SumHandle value)
+		FunctionArgumentExpression(TypeHandle type, ExpressionReference<IdentifierExpression> identifier, ExpressionHandle value)
 			: type{ type }, identifier{ identifier }, value{ value }
 		{
 		}
@@ -185,20 +189,20 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		bool check_types(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
 #define MAKE_FUNCTION_ARGUMENT_EXPRESSION(type, identifier, value) FunctionArgumentExpression{ type, MAKE_REFERENCE(ast, identifier), MAKE_HANDLE(ast, value) }
 
 	class FunctionCallExpression : public ExpressionBase
 	{
 	public:
-		SumReference<IdentifierExpression> identifier;
-		std::vector<SumHandle<Expression>> arguments;
+		ExpressionReference<IdentifierExpression> identifier;
+		std::vector<ExpressionHandle> arguments;
 
 	public:
-		FunctionCallExpression(SumHandle<IdentifierExpression> identifier, std::vector<SumHandle<Expression>> arguments)
+		FunctionCallExpression(ExpressionReference<IdentifierExpression> identifier, std::vector<ExpressionHandle> arguments)
 			: identifier{ identifier }, arguments{ arguments }
 		{
 		}
@@ -206,25 +210,25 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		bool check_types(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
 #define MAKE_FUNCTION_CALL_EXPRESSION(identifier, arguments) FunctionCallExpression{ MAKE_HANDLE(ast, identifier), arguments }
 
 	class TernaryExpression : public ExpressionBase
 	{
 	public:
-		SumHandle condition;
-		SumHandle true_branch;
-		SumHandle false_branch;
+		ExpressionHandle condition;
+		ExpressionHandle true_branch;
+		ExpressionHandle false_branch;
 
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		SumHandle evaluate(const Storage&, Context&) const;
-		SumHandle optimize(const Storage&) const;
-		bool check_types(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		ExpressionHandle get_type(const Storage&) const;
 	};
 #define MAKE_TERNARY_EXPRESSION(condition, true_expression, false_expression) TernaryExpression{ MAKE_HANDLE(ast, condition), MAKE_HANDLE(ast, true_expression), MAKE_HANDLE(ast, false_expression) }
 }

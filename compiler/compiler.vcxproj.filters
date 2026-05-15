@@ -18,9 +18,6 @@
     <ClCompile Include="source\AdjustExpression.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\Allocation.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\ArgumentExpression.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -48,16 +45,10 @@
     <ClCompile Include="source\BinaryUtilities.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\Command.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\CommandLineParser.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\CommonErrors.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CommonToolchain.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\CompilerParser.cpp">
@@ -91,9 +82,6 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\ErrorReporter.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Evaluator.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\ExitProgramException.cpp">
@@ -228,9 +216,6 @@
     <ClCompile Include="source\StructDeclarationStatement.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\StructMember.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\Symbol.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -252,16 +237,10 @@
     <ClCompile Include="source\Type.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\TypeCheck.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\UndoableRedoable.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\Validator.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Variable.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\VariableStatement.cpp">
@@ -282,9 +261,6 @@
     <ClCompile Include="source\X86Instruction.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\X86Operand.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\RISCVAssemblerParser.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -302,7 +278,7 @@
     <ClInclude Include="include\validator\InstructionValidator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\validator\Test.h">
+    <ClInclude Include="include\validator\models\Test.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\validator\Validator.h">
@@ -425,16 +401,7 @@
     <ClInclude Include="include\statistic\StatisticExporter.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\runtime\models\Variable.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\runtime\models\VariableType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\runtime\Context.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\runtime\Evaluator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\job\AutoJob.h">
@@ -779,7 +746,7 @@
     <ClInclude Include="include\ast\statement\WhileStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\Value.h">
+    <ClInclude Include="include\allocator\Value.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\AST.h">
@@ -794,10 +761,10 @@
     <ClInclude Include="include\ast\Statement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\Sum.h">
+    <ClInclude Include="include\utility\Sum.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\Typing.h">
+    <ClInclude Include="include\utility\Typing.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\function\Function.h">

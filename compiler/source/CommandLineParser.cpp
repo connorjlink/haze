@@ -14,7 +14,7 @@ namespace
 		return text
 			| std::ranges::views::split(delimiter)
 			| std::ranges::views::transform([](auto&& str) 
-				{ return std::string_view(&*str.begin(), std::ranges::distance(str)); })
+				{ return const std::string&(&*str.begin(), std::ranges::distance(str)); })
 			| std::ranges::to<std::vector<std::string>>();
 	}
 

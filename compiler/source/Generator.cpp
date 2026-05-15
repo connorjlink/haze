@@ -1,12 +1,9 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/ArgumentExpression.h>
-#include <ast/Expression.h>
-#include <ast/IdentifierExpression.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/expression/Expression.h>
 #include <command/IntermediateCommand.h>
 #include <command/LabelCommand.h>
-#include <command/models/IntegerLiteral.h>
 #include <symbol/Symbol.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>

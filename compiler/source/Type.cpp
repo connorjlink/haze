@@ -9,14 +9,14 @@ import std;
 
 namespace hz
 {
-	TypeType IntType::ttype() const
+	TypeKind IntType::ttype() const
 	{
-		return TypeType::INT;
+		return TypeKind::INT;
 	}
 
 	std::uint16_t IntType::size() const
 	{
-		using enum IntTypeType;
+		using enum IntTypeKind;
 		switch (int_type)
 		{
 			case INT8: return sizeof(std::int8_t);
@@ -42,9 +42,9 @@ namespace hz
 	}
 
 
-	TypeType StructType::ttype() const
+	TypeKind StructType::ttype() const
 	{
-		return TypeType::STRUCT;
+		return TypeKind::STRUCT;
 	}
 
 	std::uint16_t StructType::size() const
@@ -81,9 +81,9 @@ namespace hz
 	}
 
 
-	TypeType StringType::ttype() const
+	TypeKind StringType::ttype() const
 	{
-		return TypeType::STRING;
+		return TypeKind::STRING;
 	}
 
 	std::uint16_t StringType::size() const

@@ -52,9 +52,11 @@ namespace hz
 		AUTO,
 		REGISTER,
 		VOLATILE,
+		RESTRICT,
 		CONST,
 		ASM,
 
+		TYPEDEF,
 		STRUCT,
 		UNION,
 		ENUM,
@@ -131,9 +133,9 @@ namespace hz
 		END,
 	};
 
-#define S(x) std::string_view{ x }
+#define S(x) const std::string&{ x }
 
-	static const Bimap<std::string_view, TokenType> _token_map
+	static const Bimap<const std::string&, TokenType> _token_map
 	{
 		bimap_t{ S("int"), TokenType::INT },
 		bimap_t{ S("identifier"), TokenType::IDENTIFIER },
@@ -193,9 +195,11 @@ namespace hz
 		bimap_t{ S("auto"), TokenType::AUTO },
 		bimap_t{ S("register"), TokenType::REGISTER },
 		bimap_t{ S("volatile"), TokenType::VOLATILE },
+		bimap_t{ S("restrict"), TokenType::RESTRICT },
 		bimap_t{ S("const"), TokenType::CONST },
 		bimap_t{ S("asm"), TokenType::ASM },
 
+		bimap_t{ S("typedef"), TokenType::TYPEDEF },
 		bimap_t{ S("struct"), TokenType::STRUCT },
 		bimap_t{ S("union"), TokenType::UNION },
 		bimap_t{ S("enum"), TokenType::ENUM },

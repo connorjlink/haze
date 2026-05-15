@@ -15,10 +15,10 @@ namespace hz
 
 	void Context::define_variable(const std::string& identifier, Variable* value)
 	{
-		_variables[identifier] = value;
+		variables[identifier] = value;
 	}
 
-	const decltype(Context::_variables)& Context::variables() const
+	const decltype(Context::_variables)& Context::get_variables() const
 	{
 		return _variables;
 	}

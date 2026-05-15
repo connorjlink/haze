@@ -14,16 +14,16 @@ namespace hz
 	struct ErrorFrame
 	{
 		ErrorContext* context;
-		std::string filepath;
+		const std::string& filepath;
 	};
 
 	class ErrorContext
 	{
 	private:
-		std::string _task;
+		std::string task;
 	
 	private:
-		std::vector<Error> _errors;
+		std::vector<Error> errors;
 
 	public:
 		std::string format() const;
@@ -36,7 +36,7 @@ namespace hz
 
 	public:
 		ErrorContext(const std::string& task)
-			: _task{ task }
+			: task{ task }
 		{
 		}
 	};

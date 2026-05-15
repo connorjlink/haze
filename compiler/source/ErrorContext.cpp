@@ -11,9 +11,9 @@ namespace hz
 	{
 		std::string result{};
 
-		for (auto& error : _errors)
+		for (auto& error : errors)
 		{
-			result += std::format("  while {}\n  {}", _task, error.format());
+			result += std::format("  while {}\n  {}", task, error.format());
 		}
 
 		return result;
@@ -21,12 +21,12 @@ namespace hz
 
 	std::size_t ErrorContext::error_count() const
 	{
-		return _errors.size();
+		return errors.size();
 	}
 
-	void ErrorContext::post(ErrorType severity, const std::string& message, const std::string& file, const Token& token)
+	void ErrorContext::post(ErrorType severity, const std::string& message, const std::string& filepath, const Token& token)
 	{
-		const auto location = SourceLocation{ file, token.location.position, token.location.line, token.location.column };
-		_errors.emplace_back(Error{ location, token.text, message, severity });
+		const auto location = SourceLocation{ filepath, token.location.position, token.location.line, token.location.column };
+		errors.emplace_back(Error{ location, token.text, message, severity });
 	}
 }

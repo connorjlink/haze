@@ -1,7 +1,8 @@
 #ifndef HAZE_PARSER_H
 #define HAZE_PARSER_H
 
-#include <ast/IdentifierExpression.h>
+#include <ast/AST.h>
+#include <ast/expression/Expression.h>
 #include <cli/CommandLineOptions.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
@@ -18,19 +19,10 @@ namespace hz
 	class Symbol;
 	class FunctionSymbol;
 	class ArgumentSymbol;
-	class VariableSymbol; 
+	class VariableSymbol;
 	class StructSymbol;
 	class DefineSymbol;
 	class LabelSymbol;
-
-	class Node;
-	class Expression;
-	class IdentifierExpression;
-	class IntegerLiteralExpression;
-	class StringExpression;
-	class FunctionCallExpression;
-	class AdjustExpression;
-	class Type;
 
 	class Parser
 		: public ServiceTag<Parser>
@@ -68,11 +60,13 @@ namespace hz
 		Node* parse_dotdefine_command();
 
 	protected:
-		IdentifierExpression* parse_identifier_expression(IdentifierType = IdentifierType::UNKNOWN); // explicit contextual type override
-		IntegerLiteralExpression* parse_integerliteral_expression();
-		StringExpression* parse_string_expression();
-		FunctionCallExpression* parse_functioncall_expression();
-		Expression* parse_parenthesis_expression();
+		SumReference<IdentifierExpression> parse_identifier_expression(IdentifierType = IdentifierType::UNKNOWN); // explicit contextual type override
+		SumReference<IntegerLiteralExpression> parse_integerliteral_expression();
+		SumReference<StringLiteralExpression> parse_string_expression();
+		SumReference<FunctionCallExpression> parse_functioncall_expression();
+		
+		
+		Expression parse_parenthesis_expression();
 
 	protected:
 		AdjustExpression* parse_increment_expression();

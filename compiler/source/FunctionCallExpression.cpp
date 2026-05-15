@@ -1,11 +1,8 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/FunctionCallExpression.h>
-#include <ast/FunctionArgumentExpression.h>
-#include <ast/ArgumentExpression.h>
-#include <ast/Function.h>
-#include <runtime/Evaluator.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/expression/Expression.h>
+#include <ast/function/Function.h>
 #include <symbol/Symbol.h>
 #include <toolchain/Generator.h>
 #include <type/TypeCheck.h>
@@ -20,7 +17,7 @@ namespace hz
 		return ExpressionType::FUNCTION_CALL;
 	}
 
-	TypeType FunctionCallExpression::ttype() const
+	TypeKind FunctionCallExpression::ttype() const
 	{
 		const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name, _token);
 		return function_symbol->return_type->ttype();

@@ -20,32 +20,32 @@ namespace hz
 
 	bool Scanner::eof(void) const
 	{
-		return _current_context.eof();
+		return current_context.eof();
 	}
 
 	char Scanner::current(void) const
 	{
-		return _current_context.current();
+		return current_context.current();
 	}
 
 	char Scanner::lookahead(void) const
 	{
-		return _current_context.lookahead();
+		return current_context.lookahead();
 	}
 
 	std::size_t Scanner::whereat(void) const
 	{
-		return _current_context.whereat();
+		return current_context.whereat();
 	}
 
-	std::string Scanner::wherein(void) const
+	const std::string& Scanner::wherein(void) const
 	{
-		return _current_context.wherein();
+		return current_context.wherein();
 	}
 
 	void Scanner::insert_adjacent(const std::string& source)
 	{
-		_current_context.source.insert(whereat(), source);
+		current_context.source.insert(whereat(), source);
 		save_state();
 	}
 
@@ -56,15 +56,15 @@ namespace hz
 			// NOTE: this will not correctly handle Windows \r\n
 			if (current() == '\n')
 			{
-				_current_context.location.line++;
-				_current_context.location.column = 1;
+				current_context.location.line++;
+				current_context.location.column = 1;
 			}
 			else
 			{
-				_current_context.location.column++;
+				current_context.location.column++;
 			}
 			// although line and column updates vary by input, the running index always increments
-			_current_context.location.position++;
+			current_context.location.position++;
 		}
 		
 		save_state();
@@ -125,7 +125,7 @@ namespace hz
 		{
 			.type = type,
 			.text = text,
-			.location = _current_context.location,
+			.location = current_context.location,
 		};
 	}
 
@@ -136,18 +136,17 @@ namespace hz
 
 	Token Scanner::error_token(const std::string& value)
 	{
-		Token token{};
-
-		token.type = TokenType::ERROR;
-		token.text = value;
-		token.location = _current_context.location;
-
-		return token;
+		return Token
+		{
+			.type = TokenType::ERROR,
+			.text = value,
+			.location = current_context.location,
+		};
 	}
 
-	std::string Scanner::read_identifier(bool advance_context)
+	const std::string& Scanner::read_identifier(bool advance_context)
 	{
-		auto& content = _current_context.source;
+		auto& content = current_context.source;
 
 		const auto start = whereat();
 		auto position = start;
@@ -176,12 +175,12 @@ namespace hz
 		return content.substr(start, length);
 	}
 
-	bool Scanner::match_keyword(std::string_view keyword)
+	bool Scanner::match_keyword(const std::string& keyword)
 	{
 		const auto length = keyword.length();
 
-		if (_current_context.source.compare(whereat(), length, keyword) == 0 &&
-			(std::isspace(_current_context.source[whereat() + length]) || _current_context.source[whereat() + length] == '"'))
+		if (current_context.source.compare(whereat(), length, keyword) == 0 &&
+			(std::isspace(current_context.source[whereat() + length]) || current_context.source[whereat() + length] == '"'))
 		{
 			return true;
 		}
@@ -222,13 +221,13 @@ namespace hz
 		}
 	}
 
-	std::string Scanner::substring_until(char c, bool advance_until)
+	const std::string& Scanner::substring_until(char c, bool advance_until)
 	{
-		const auto source_length = _current_context.source.length();
+		const auto source_length = current_context.source.length();
 		const auto start = whereat();
 
 		auto position = start;
-		while (position < source_length && _current_context.source[position] != c)
+		while (position < source_length && current_context.source[position] != c)
 		{
 			position++;
 		}
@@ -240,16 +239,16 @@ namespace hz
 		}
 
 		// enforce URVO
-		return _current_context.source.substr(start, length);
+		return current_context.source.substr(start, length);
 	}
 
-	std::string Scanner::substring_while(bool(*functor)(char), bool advance_while)
+	const std::string& Scanner::substring_while(bool(*functor)(char), bool advance_while)
 	{
-		const auto source_length = _current_context.source.length();
+		const auto source_length = current_context.source.length();
 		const auto start = whereat();
 
 		auto position = start;
-		while (position < source_length && functor(_current_context.source[position]))
+		while (position < source_length && functor(current_context.source[position]))
 		{
 			position++;
 		}
@@ -261,6 +260,6 @@ namespace hz
 		}
 
 		// enforce URVO
-		return _current_context.source.substr(start, length);
+		return current_context.source.substr(start, length);
 	}
 }

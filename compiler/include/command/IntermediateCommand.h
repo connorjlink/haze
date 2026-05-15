@@ -1,10 +1,10 @@
 #ifndef HAZE_INTERMEDIATECOMMAND_H
 #define HAZE_INTERMEDIATECOMMAND_H
 
+#include <allocator/RuntimeAllocator.h>
 #include <command/BranchCommandType.h>
 #include <command/BinaryCommandType.h>
 #include <command/IntermediateType.h>
-#include <command/models/IntegerLiteral.h>
 #include <data/DependencyInjector.h>
 #include <error/CommonErrors.h>
 #include <symbol/SymbolDatabase.h>
@@ -17,7 +17,7 @@
 namespace hz
 {
 	class IntermediateCommand 
-		: public InjectService<Generator>
+		: public InjectService<Generator, RuntimeAllocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
@@ -58,12 +58,20 @@ namespace hz
 	{
 	private:
 		Offset bytes;
-#pragma message("TODO: implement dynamic stack frame resizing. for now it is fixed 16k per frame (will overflow quickly). I think this should just be doable by checking the largest offset in the RuntimeAllocator's current_function buffer")
+
+	private:
+		inline static constexpr Offset MINIMUM_STACK_SIZE = 0x1000;
 
 	public:
-		EnterScopeCommand(Offset bytes = 0x1000)
-			: bytes{ bytes }
+		EnterScopeCommand()
+			: bytes{ MINIMUM_STACK_SIZE }
 		{
+		}
+
+		EnterScopeCommand(const std::string& function_name)
+		{
+			bytes = REQUIRE_SAFE(RuntimeAllocator)->get_function_stack_size(function_name)
+				.value_or(MINIMUM_STACK_SIZE);
 		}
 
 	private:

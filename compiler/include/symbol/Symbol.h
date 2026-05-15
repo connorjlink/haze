@@ -2,7 +2,6 @@
 #define HAZE_SYMBOL_H
 
 #include <symbol/SymbolType.h>
-#include <ast/models/StructMember.h>
 #include <utility/ExtendedInteger.h>
 
 // Haze Symbol.h
@@ -69,12 +68,11 @@ namespace hz
 	class ArgumentSymbol : public Symbol
 	{
 	public:
-		Allocation* allocation;
 		Type* type;
 
 	public:
 		ArgumentSymbol(const std::string& name, const Token& token, Type* type)
-			: Symbol{ name, token }, allocation{ nullptr }, type{ type }
+			: Symbol{ name, token }, type{ type }
 		{
 		}
 

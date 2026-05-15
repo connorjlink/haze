@@ -31,7 +31,8 @@ namespace hz
 		template<typename T>
 		static constexpr TypeId type_id_with_cvr()
 		{
-			static int id;
+			// sizeof does not matter, this merely requires a unique address per type
+			static std::uint8_t id;
 			return { static_cast<TypeHandle>(&id) };
 		};
 	};

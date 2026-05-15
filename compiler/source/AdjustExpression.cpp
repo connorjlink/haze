@@ -2,7 +2,6 @@ import std;
 
 #include <ast/expression/Expression.h>
 #include <runtime/Context.h>
-#include <runtime/Evaluator.h>
 #include <toolchain/Generator.h>
 #include <allocator/RuntimeAllocator.h>
 #include <error/ErrorReporter.h>
@@ -17,9 +16,9 @@ namespace hz
 		return ExpressionType::ADJUST;
 	}
 
-	TypeType AdjustExpression::ttype() const
+	TypeKind AdjustExpression::ttype() const
 	{
-		return TypeType::INT;
+		return TypeKind::INT;
 	}
 
 	void AdjustExpression::generate(Allocation* allocation)

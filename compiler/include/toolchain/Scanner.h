@@ -23,7 +23,7 @@ namespace hz
 	struct SourceContext
 	{
 	public:
-		std::string source;
+		const std::string& source;
 		SourceLocation location;
 
 	public:
@@ -32,7 +32,7 @@ namespace hz
 			return location.position;
 		}
 
-		std::string wherein(void) const
+		const std::string& wherein(void) const
 		{
 			return location.filepath;
 		}
@@ -66,24 +66,24 @@ namespace hz
 		, public InjectSingleton<ErrorReporter, FileManager, SymbolDatabase, SymbolExporter>
 	{
 	private:
-		SourceContext _current_context;
+		SourceContext current_context;
 
 	public:
 		const SourceContext& get_state(void) const
 		{
-			return _current_context;
+			return current_context;
 		}
 		void set_state(const SourceContext& context)
 		{
-			_current_context = context;
+			current_context = context;
 		}
 
 	protected:
 		template<typename T>
 		T commit(std::function<T(SourceContext&)> callable)
 		{
-			callable(_current_context);
-			set_state(_current_context);
+			callable(current_context);
+			set_state(current_context);
 			save_state();
 		}
 
@@ -112,7 +112,7 @@ namespace hz
 	protected:
 		// advance the cursor context?
 		std::string read_identifier(bool = false);
-		bool match_keyword(std::string_view);
+		bool match_keyword(const std::string&);
 		void skip_whitespace(bool = false);
 		void skip_until(char);
 		void skip_while(bool(*)(char));

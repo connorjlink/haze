@@ -27,9 +27,9 @@ namespace hz
 	private:
 		// filepath -> contents lazy-load :)
 		std::unordered_map<std::string, std::string> _raw_file_cache;
-		std::stack<SourceContext> _files_to_process;
+		std::stack<SourceContext> files_to_process;
 		// used to prohibit recursive macros
-		std::unordered_set<std::string> _macro_invokations;
+		std::unordered_set<std::string> macro_invokations;
 
 	private:
 		void register_macro_definition(const Macro&);
@@ -42,7 +42,12 @@ namespace hz
 		bool match_macro_invokation(void);
 		void handle_include(void);
 		void handle_macro_definition(void);
+		void handle_functionlike_macro_definition(const std::string&);
+		void handle_objectlike_macro_definition(const std::string&);
 		void handle_macro_invokation(void);
+		void handle_functionlike_macro_invokation(const std::string&);
+		void handle_objectlike_macro_invokation(const std::string&);
+		void handle_conditional_compilation(void);
 
 	public:
 		void preprocess(const std::string&); // initial file

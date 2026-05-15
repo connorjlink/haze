@@ -3,7 +3,6 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <runtime/models/Variable.h>
 
 // Haze Context.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -18,12 +17,12 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::unordered_map<std::string, Variable*> _variables;
-		std::vector<Function*> _functions;
+		std::unordered_map<std::string, Variable*> variables;
+		std::vector<Function*> functions;
 
 #pragma message("TODO: refactor the context to not maintain a state--should work on pure functions only!")
-		std::stack<Variable*> _returns;
-		std::stack<std::vector<Expression*>> _arguments;
+		std::stack<Variable*> returns;
+		std::stack<std::vector<Expression*>> arguments;
 
 	private:
 		bool _executing = true;
@@ -31,10 +30,16 @@ namespace hz
 	public:
 		void declare_variable(const std::string&);
 		void define_variable(const std::string&, Variable*);
-		const decltype(_variables)& variables() const;
+		inline const std::unordered_map<std::string, Variable*>& get_variables() const
+		{
+			return variables;
+		}
 
 		void define_function(Function*);
-		const decltype(_functions)& functions() const;
+		inline const std::vector<Function*>& get_functions() const
+		{
+			return functions;
+		}
 
 	public:
 		void push_return(Variable*);
@@ -50,7 +55,7 @@ namespace hz
 
 	public:
 		Context()
-			: _variables{}, _functions{}, _returns{}, _arguments{}
+			: variables{}, functions{}, returns{}, arguments{}
 		{
 		}
 	};

@@ -16,9 +16,9 @@ namespace hz
 		return ExpressionType::STRING;
 	}
 
-	TypeType StringExpression::ttype() const
+	TypeKind StringExpression::ttype() const
 	{
-		return TypeType::STRING;
+		return TypeKind::STRING;
 	}
 
 	void StringExpression::generate(Allocation* allocation)

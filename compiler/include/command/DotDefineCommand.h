@@ -2,6 +2,7 @@
 #define HAZE_DOTDEFINECOMMAND_H
 
 #include <command/Command.h>
+#include <utility/Constants.h>
 
 // Haze DotDefineCommand.h
 // (c) Connor J. Link. All Rights Reserved.

@@ -17,7 +17,7 @@ namespace hz
 		LONG_LONG,
 	};
 
-	static const std::unordered_map<IntKind, std::string_view> width_map
+	static const std::unordered_map<IntKind, std::string_view> _int_kind_map
 	{
 		{ IntKind::CHAR, "char" },
 		{ IntKind::SHORT, "short" },
@@ -39,9 +39,9 @@ namespace hz
 		IntKind int_kind;
 
 	public:
-		TypeType ttype() const
+		TypeKind ttype() const
 		{
-			return TypeType::INT;
+			return TypeKind::INT;
 		}
 
 		Offset size() const

@@ -1,6 +1,7 @@
 #ifndef HAZE_FLOATTYPE_H
 #define HAZE_FLOATTYPE_H
 
+#include <error/CommonErrors.h>
 #include <type/Type.h>
 #include <utility/Constants.h>
 
@@ -16,7 +17,7 @@ namespace hz
 		LONG_DOUBLE,
 	};
 
-	static const std::unordered_map<FloatKind, std::string_view> _float_width_map
+	static const std::unordered_map<FloatKind, std::string_view> _float_kind_map
 	{
 		{ FloatKind::FLOAT, "float" },
 		{ FloatKind::DOUBLE, "double" },
@@ -31,9 +32,9 @@ namespace hz
 		FloatKind float_type;
 
 	public:
-		TypeType ttype() const
+		TypeKind ttype() const
 		{
-			return TypeType::FLOAT;
+			return TypeKind::FLOAT;
 		}
 
 		Offset size() const

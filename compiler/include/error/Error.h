@@ -13,16 +13,16 @@ namespace hz
 	{
 	private:
 		SourceLocation location;
-		std::string _erroring_line;
+		const std::string& erroring_line;
 		std::string message;
-		ErrorType _severity;
+		ErrorType severity;
 
 	public:
 		std::string format() const;
 
 	public:
 		Error(SourceLocation location, const std::string& erroring_line, const std::string& message, ErrorType severity)
-			: location{ location }, _erroring_line { erroring_line }, message{ message }, _severity{ severity }
+			: location{ location }, erroring_line{ erroring_line }, message{ message }, severity{ severity }
 		{
 		}
 	};
