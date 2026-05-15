@@ -1,12 +1,10 @@
 import std;
 
-#include <ast/AdjustExpression.h>
-#include <ast/IntegerLiteralExpression.h>
-#include <ast/IdentifierExpression.h>
+#include <ast/expression/Expression.h>
 #include <runtime/Context.h>
 #include <runtime/Evaluator.h>
 #include <toolchain/Generator.h>
-#include <allocator/Allocation.h>
+#include <allocator/RuntimeAllocator.h>
 #include <error/ErrorReporter.h>
 
 // Haze AdjustExpression.cpp

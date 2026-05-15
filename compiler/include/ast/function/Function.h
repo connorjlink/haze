@@ -2,7 +2,6 @@
 #define HAZE_FUNCTION_H
 
 #include <allocator/RuntimeAllocator.h>
-#include <ast/Node.h>
 #include <data/DependencyInjector.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
@@ -18,18 +17,17 @@ namespace hz
 	class Type;
 
 	class Function 
-		: public Node
-		, public InjectService<Generator, Parser, RuntimeAllocator>
+		: public InjectService<Generator, Parser, RuntimeAllocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
-		std::string name;
+		std::string_view name;
 		Type* return_type;
 		std::vector<Expression*> arguments;
 		Statement* body;
 
 	public:
-		Function(const std::string&, Type*, const std::vector<Expression*>&, Statement*, const Token&);
+		Function(std::string_view, Type*, const std::vector<Expression*>&, Statement*, const Token&)
 
 	public:
 		virtual NodeType ntype() const final override;

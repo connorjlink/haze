@@ -1,7 +1,6 @@
 import std;
 
-#include <ast/ArgumentExpression.h>
-#include <ast/IdentifierExpression.h>
+#include <ast/expression/Expression.h>
 #include <type/Type.h>
 
 // Haze ArgumentExpression.cpp

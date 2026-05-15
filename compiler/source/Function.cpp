@@ -17,7 +17,7 @@ import std;
 
 namespace hz
 {
-	Function::Function(const std::string& name, Type* return_type, const std::vector<Expression*>& arguments, Statement* body, const Token& token)
+	Function::Function(std::string_view name, Type* return_type, const std::vector<Expression*>& arguments, Statement* body, const Token& token)
 		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ arguments }, body{ body }
 	{
 	}

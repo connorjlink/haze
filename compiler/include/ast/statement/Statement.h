@@ -1,37 +1,44 @@
-#ifndef HAZE_STATEMENT_H
-#define HAZE_STATEMENT_H
+#ifndef HAZE_STATEMENT_AST_H
+#define HAZE_STATEMENT_AST_H
 
-#include <allocator/RuntimeAllocator.h>
-#include <ast/Node.h>
-#include <ast/StatementType.h>
-#include <data/DependencyInjector.h>
-#include <error/ErrorReporter.h>
+#include <ast/AST.h>
 #include <runtime/Context.h>
-#include <symbol/SymbolDatabase.h>
-#include <toolchain/Generator.h>
-#include <toolchain/Parser.h>
-#include <toolchain/models/Token.h>
+#include <type/Type.h>
 
 // Haze Statement.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Statement 
-		: public Node
-		, public InjectService<Generator, RuntimeAllocator, Parser>
-		, public InjectSingleton<Context, ErrorReporter, SymbolDatabase>
-	{
-	public:
-		Statement(Token token)
-			: Node{ token }
-		{
-		}
+	class NullStatement;
+	class ExpressionStatement;
+	class ReturnStatement;
+	class IfStatement;
+	class WhileStatement;
+	class ForStatement;
+	class CompoundStatement;
+	class FunctionDeclarationStatement;
+	class StructDeclarationStatement;
+	class VariableDeclarationStatement;
+	class InlineAssemblyStatement;
 
-	public:
-		virtual NodeType ntype() const final override;
-		virtual StatementType stype() const = 0;
-	};
+	using StatementTypes = SumTypeList
+	<
+		NullStatement,
+		ExpressionStatement,
+		ReturnStatement,
+		IfStatement,
+		WhileStatement,
+		ForStatement,
+		CompoundStatement,
+		FunctionDeclarationStatement,
+		StructDeclarationStatement,
+		VariableDeclarationStatement,
+		InlineAssemblyStatement
+	>;
+
+	using StatementSum = MakeSum<ASTMethods, StatementTypes>::Type;
+	using StatementBase = SumMemberBase<StatementSum>;
 }
 
 #endif

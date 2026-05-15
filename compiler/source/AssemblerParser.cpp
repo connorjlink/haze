@@ -1,7 +1,6 @@
 import std;
 
-#include <ast/IdentifierExpression.h>
-#include <ast/IntegerLiteralExpression.h>
+#include <ast/expression/Expression.h>
 #include <command/DotOrgCommand.h>
 #include <command/LabelCommand.h>
 #include <command/InstructionCommand.h>

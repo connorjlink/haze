@@ -1,10 +1,8 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/BinaryExpression.h>
-#include <ast/IdentifierExpression.h>
-#include <ast/IntegerLiteralExpression.h>
-#include <ast/StringExpression.h>
+#include <allocator/RuntimeAllocator.h>
+#include <ast/expression/BinaryExpression.h>
+#include <ast/expression/Expression.h>
 #include <error/CommonErrors.h>
 #include <runtime/Context.h>
 #include <runtime/Evaluator.h>

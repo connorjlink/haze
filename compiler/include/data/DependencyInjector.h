@@ -6,43 +6,43 @@
 
 namespace hz
 {
-	using TypeIndexId = void*;
+	using TypeHandle = void*;
 
-	class TypeIndex
+	class TypeId
 	{
 	private:
-		TypeIndexId id;
+		TypeHandle id;
 
 	private:
 		// NOTE: must be private to enforce explicit creation through thread-safe means
-		TypeIndex(TypeIndexId id)
+		TypeId(TypeHandle id)
 			: id(id)
 		{
 		}
 
 	public:
-		auto operator<=>(const TypeIndex& t) const = default;
+		auto operator<=>(const TypeId& t) const = default;
 
 		std::size_t hash_code() const
 		{
-			return std::hash<TypeIndexId>{}(id);
+			return std::hash<TypeHandle>{}(id);
 		}
 
 		template<typename T>
-		static constexpr TypeIndex type_id_with_cvr()
+		static constexpr TypeId type_id_with_cvr()
 		{
 			static int id;
-			return { static_cast<TypeIndexId>(&id) };
+			return { static_cast<TypeHandle>(&id) };
 		};
 	};
 
 	// NOTE: this cannot be constexpr because it relies on statis instance data!!
 	// MSVC GIVES TERRIBLE ERRORS IF YOU TRY
 	template<typename T>
-	TypeIndex type_id()
+	TypeId type_id()
 	{
 		using Type = std::remove_cvref_t<T>;
-		return TypeIndex::type_id_with_cvr<Type>();
+		return TypeId::type_id_with_cvr<Type>();
 	};
 }
 
@@ -51,9 +51,9 @@ namespace std
 	// IMPORTANT NOTE: must be defined before the usage in the container below! hence the separate namespace
 	// std extension provides a clean means by which to interop with containers (like maps)
 	template<>
-	struct hash<hz::TypeIndex>
+	struct hash<hz::TypeId>
 	{
-		size_t operator()(const hz::TypeIndex& t) const
+		size_t operator()(const hz::TypeId& t) const
 		{
 			return t.hash_code();
 		}
@@ -72,7 +72,7 @@ namespace hz
 	class ServiceContainer
 	{
 	private:
-		std::unordered_map<TypeIndex, std::function<std::shared_ptr<void>()>> factories;
+		std::unordered_map<TypeId, std::function<std::shared_ptr<void>()>> factories;
 		// has to be a recursive mutex to allow the same thread to register nested services
 		std::recursive_mutex mutex;
 
@@ -133,7 +133,7 @@ namespace hz
 	class SingletonContainer
 	{
 	private:
-		std::unordered_map<TypeIndex, std::shared_ptr<void>> instances;
+		std::unordered_map<TypeId, std::shared_ptr<void>> instances;
 		// nested services are a lot less likely for singletons, but still posible maybe?
 		std::recursive_mutex mutex;
 
@@ -216,7 +216,7 @@ namespace hz
 	{
 	private:
 		// type erasure is fine since shared ptr stores type-specific deleter
-		std::unordered_map<TypeIndex, std::shared_ptr<void>> instances;
+		std::unordered_map<TypeId, std::shared_ptr<void>> instances;
 
 	public:
 		template<typename T>

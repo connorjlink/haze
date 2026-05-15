@@ -1,22 +1,8 @@
 import std;
 
-#include <ast/Expression.h>
-#include <ast/ArgumentExpression.h>
-#include <ast/MemberDeclarationExpression.h>
-#include <ast/Function.h>
-#include <ast/Statement.h>
-#include <ast/ExitStatement.h>
-#include <ast/CompoundStatement.h>
-#include <ast/ExpressionStatement.h>
-#include <ast/ForStatement.h>
-#include <ast/IfStatement.h>
-#include <ast/InlineAsmStatement.h>
-#include <ast/NullStatement.h>
-#include <ast/PrintStatement.h>
-#include <ast/ReturnStatement.h>
-#include <ast/StructDeclarationStatement.h>
-#include <ast/VariableStatement.h>
-#include <ast/WhileStatement.h>
+#include <ast/expression/Expression.h>
+#include <ast/function/Function.h>
+#include <ast/statement/Statement.h>
 #include <cli/OptimizationType.h>
 #include <error/CommonErrors.h>
 #include <symbol/Symbol.h>
@@ -70,7 +56,7 @@ namespace hz
 	Statement* CompilerParser::parse_null_statement(const std::string& enclosing_function)
 	{
 		const auto semicolon_token = consume(TokenType::SEMICOLON);
-		return new NullStatement{ semicolon_token };
+		return MAKE_NULL_STATEMENT(semicolon_token);
 	}
 
 	Statement* CompilerParser::parse_variabledeclaration_statement(const std::string& enclosing_function)

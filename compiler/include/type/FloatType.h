@@ -9,27 +9,26 @@
 
 namespace hz
 {
-    class Float : public TypeBase
+	enum class FloatKind
 	{
-	public:
-		enum class Width
-		{
-			FLOAT,
-			DOUBLE,
-			LONG_DOUBLE,
-		};
+		FLOAT,
+		DOUBLE,
+		LONG_DOUBLE,
+	};
 
-		static const std::unordered_map<Width, std::string_view> _float_width_map
-		{
-			{ Width::FLOAT, "float" },
-			{ Width::DOUBLE, "double" },
-			{ Width::LONG_DOUBLE, "long double" },
-		};
+	static const std::unordered_map<FloatKind, std::string_view> _float_width_map
+	{
+		{ FloatKind::FLOAT, "float" },
+		{ FloatKind::DOUBLE, "double" },
+		{ FloatKind::LONG_DOUBLE, "long double" },
+	};
 
+	class FloatType : public TypeBase
+	{
 	public:
 		StorageClass storage;
 		TypeQualifier qualifier;
-		Width float_type;
+		FloatKind float_type;
 
 	public:
 		TypeType ttype() const
@@ -39,7 +38,7 @@ namespace hz
 
 		Offset size() const
 		{
-			using enum Width;
+			using enum FloatKind;
 			switch (float_type)
 			{
 				case FLOAT:
@@ -49,15 +48,16 @@ namespace hz
 				case LONG_DOUBLE:
 					return sizeof(long double);
 				default:
-					CommonErrors::invalid_float_type(float_type, NULL_TOKEN); 
+					CommonErrors::invalid_float_type(float_type, NULL_TOKEN);
 					return -1;
 			}
 		}
-		
-        bool is_complete() const
-        {
-            return true;
-        }
+
+		bool is_complete() const
+		{
+			return true;
+		}
 	};
 }
+
 #endif

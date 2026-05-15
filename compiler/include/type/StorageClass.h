@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	enum class StorageClass 
+	enum class StorageClass
 	{
 		AUTO,
 		REGISTER,
@@ -31,7 +31,7 @@ namespace hz
 		{ StorageClass::STATIC, "static" },
 		{ StorageClass::EXTERN, "extern" },
 		{ StorageClass::TYPEDEF, "typedef" },
-	};    
+	};
 }
 
 #endif

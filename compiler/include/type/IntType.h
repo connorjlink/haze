@@ -8,33 +8,35 @@
 
 namespace hz
 {
-    class IntType : public TypeBase
+	enum class IntKind
+	{
+		CHAR,
+		SHORT,
+		INT,
+		LONG,
+		LONG_LONG,
+	};
+
+	static const std::unordered_map<IntKind, std::string_view> width_map
+	{
+		{ IntKind::CHAR, "char" },
+		{ IntKind::SHORT, "short" },
+		{ IntKind::INT, "int" },
+		{ IntKind::LONG, "long" },
+		{ IntKind::LONG_LONG, "long long" },
+	};
+
+	class IntType : public TypeBase
 	{
 	public:
-		enum class Width
-		{
-			CHAR,
-			SHORT,
-			INT,
-			LONG,
-			LONG_LONG,
-		};
-
-		static const std::unordered_map<Width, std::string_view> width_map
-		{
-			{ Width::CHAR, "char" },
-			{ Width::SHORT, "short" },
-			{ Width::INT, "int" },
-			{ Width::LONG, "long" },
-			{ Width::LONG_LONG, "long long" },
-		};
+		
 
 	public:
 		StorageClass storage;
 		TypeQualifier qualifier;
 		// C defaults to signed
 		TypeSignedness signedness = TypeSignedness::SIGNED;
-		IntWidth int_type;
+		IntKind int_kind;
 
 	public:
 		TypeType ttype() const
@@ -44,8 +46,8 @@ namespace hz
 
 		Offset size() const
 		{
-			using enum Width;
-			switch (int_type)
+			using enum IntKind;
+			switch (int_kind)
 			{
 				case CHAR:
 					return sizeof(char);
@@ -58,7 +60,7 @@ namespace hz
 				case LONG_LONG:
 					return sizeof(long long);
 				default:
-					CommonErrors::invalid_int_type(int_type, NULL_TOKEN); 
+					CommonErrors::invalid_int_type(int_kind, NULL_TOKEN);
 					return -1;
 			}
 		}

@@ -1,6 +1,5 @@
 import std;
 
-#include <allocator/Allocation.h>
 #include <ast/VariableStatement.h>
 #include <runtime/Evaluator.h>
 #include <type/Type.h>
@@ -17,27 +16,12 @@ namespace hz
 
 	void VariableStatement::generate(Allocation*)
 	{
-		// NOTE: old method
-		// Make some space on the heap and notify the parser
-		// also will need to support byte sizes other than 4
-		/*allocation = new HeapAllocation{ 4 };
-		AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, NULL_TOKEN))->allocation = allocation;
-
-		if (value)
-		{
-			AutoStackAllocation temp{};
-			value->generate(temp.source());
-			temp.source()->copy_into(allocation);
-		}*/
-
-
 		if (value)
 		{
 			AutoStackAllocation temp{};
 			value->generate(temp.source());
 			REQUIRE_SAFE(RuntimeAllocator)->define_local(name, temp.source()->read());
 		}
-
 		else
 		{
 			REQUIRE_SAFE(RuntimeAllocator)->define_local(name);

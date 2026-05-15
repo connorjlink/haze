@@ -3,18 +3,21 @@
 
 #include <data/DependencyInjector.h>
 #include <symbol/SymbolDatabase.h>
-#include <type/Void.h>
-#include <type/Int.h>
-#include <type/Float.h>
-#include <type/Pointer.h>
-#include <type/Float.h>
-#include <type/StructOrUnion.h>
-#include <type/Enum.h>
-#include <type/TypedefName.h>
-#include <type/Array.h>
-#include <type/Pointer.h>
-#include <type/Function.h>
-#include <ast/new/Sum.h>
+#include <type/VoidType.h>
+#include <type/IntType.h>
+#include <type/FloatType.h>
+#include <type/PointerType.h>
+#include <type/FloatType.h>
+#include <type/StructOrUnionType.h>
+#include <type/EnumType.h>
+#include <type/TypedefNameType.h>
+#include <type/ArrayType.h>
+#include <type/PointerType.h>
+#include <type/FunctionType.h>
+#include <type/StorageClass.h>
+#include <type/TypeQualifier.h>
+#include <type/TypeSignedness.h>
+#include <ast/Sum.h>
 
 // Haze Type.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -33,27 +36,27 @@ namespace hz
 	template<typename SumMemberT, typename SumStorageT>
 	concept Type = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
 
-	class Void;
-	class Int;
-	class Float;
-	class StructOrUnion;
-	class Enum;
-	class TypedefName;
-	class Pointer;
-	class Array;
-	class Function;
+	class VoidType;
+	class IntType;
+	class FloatType;
+	class StructOrUnionType;
+	class EnumTypeType;
+	class TypedefNameType;
+	class PointerType;
+	class ArrayType;
+	class FunctionType;
 
 	using TypeTypes = SumTypeList
 	<
-		Void,
-		Int,
-		Float,
-		StructOrUnion,
-		Enum,
-		TypedefName,
-		Pointer,
-		Array,
-		Function,
+		VoidType,
+		IntType,
+		FloatType,
+		StructOrUnionType,
+		EnumTypeType,
+		TypedefNameType,
+		PointerType,
+		ArrayType,
+		FunctionType,
 	>;
 
 	using TypeSum = MakeSum<TypeMethods, TypeTypes>::Type;
@@ -75,10 +78,11 @@ namespace hz
 	enum class Precedence
 	{
 		LOWEST,
-		POINTER,	
+		POINTER,
 		ARRAY,
 		FUNCTION,
-		LEAF, // base type	
+		// base type
+		LEAF,
 	};
 
 	Precedence precedence(const TypeBase& type)
@@ -112,7 +116,7 @@ namespace hz
 
 			case INT:
 			{
-				const auto& int_type = static_cast<const Int&>(type);
+				const auto& int_type = static_cast<const IntType&>(type);
 
 				// <storage-class> <type-qualifier> <type-specifier> <type-width>
 				return std::format("{} {} {} {}",
@@ -124,7 +128,7 @@ namespace hz
 
 			case FLOAT:
 			{
-				const auto& float_type = static_cast<const Float&>(type);
+				const auto& float_type = static_cast<const FloatType&>(type);
 
 				// <storage-class> <type-qualifier> <type-width>
 				return std::format("{} {} {}",
@@ -135,7 +139,7 @@ namespace hz
 
 			case STRUCT_OR_UNION:
 			{
-				const auto& struct_or_union_type = static_cast<const StructOrUnion&>(type);
+				const auto& struct_or_union_type = static_cast<const StructOrUnionType&>(type);
 
 				if (!struct_or_union_type.members.has_value())
 				{

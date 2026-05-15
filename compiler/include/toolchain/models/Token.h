@@ -10,8 +10,6 @@ namespace hz
 {
 	enum class TokenType
 	{
-		INT,
-
 		IDENTIFIER,
 
 		SEMICOLON,
@@ -19,56 +17,74 @@ namespace hz
 		COMMA,
 		EQUALS,
 
-		AMPERSAND,
-		POUND,
+		POUND, POUNDPOUND,
 
-		PERCENT,
-
-		PIPE,
-
-		CARET,
+		AMPERSAND, AMPERSANDEQUALS,
+		AMPERSANDAMPERSAND,
+		
+		PIPE, PIPEEQUALS,
+		PIPEPIPE,
 
 		LPAREN, RPAREN,
 		LBRACE, RBRACE,
 		LBRACKET, RBRACKET,
 
-		PLUS, MINUS, STAR, SLASH,
+		PLUS, MINUS, STAR, SLASH, PERCENT,
+		PLUSEQUALS, MINUSEQUALS, STAREQUALS, SLASHEQUALS, PERCENTEQUALS,
+
+		CARET, CARETEQUALS,
 
 		EQUALSEQUALS, EXCLAMATIONEQUALS,
 
 		GREATER, LESS,
 
 		LESSLESS, GREATERGREATER,
+		LESSLESSEQUALS, GREATERGREATEREQUALS,
 
 		TILDE, EXCLAMATION,
-
-		FUNCTION,
-
-		IMMUTABLE,
-		MUTABLE,
 
 		UNSIGNED,
 		SIGNED,
 
-		VALUE,
-		PTR,
+		INLINE,
+		EXTERN,
+		STATIC,
+		AUTO,
+		REGISTER,
+		VOLATILE,
+		CONST,
+		ASM,
 
-		STRING,
 		STRUCT,
-		NVR,
+		UNION,
+		ENUM,
+		VOID,
+		INT,
+		CHAR,
+		SHORT,
+		LONG,
+		FLOAT,
+		DOUBLE,
 
 		RETURN,
+		DO,
 		WHILE,
 		FOR,
 		IF,
 		ELSE,
 
-		INTRINSIC,
-		GEOMETRY,
-
-		DOTDEFINE, DOTORG,
-
-		ASM,
+		ENDIF,
+		IFDEF,
+		IFNDEF,
+		ELIF,
+		ERROR,
+		WARNING,
+		INCLUDE,
+		PRAGMA,
+		DEFINE,
+		UNDEF,
+		LINE,
+		DEFINED,
 
 		// riscv register set
 		X0,   X1, X2, X3, X4, X5, X6, X7, X8,     X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31,
@@ -112,68 +128,104 @@ namespace hz
 		// U/S mode
 		URET, SRET, MRET,
 
-		PRINT,
-
-		END, ERROR,
-
-		DECLARE,
-
-		U8, U16, U32, U64,
-		/*S8,*/ S16, S32, S64,
+		END,
 	};
 
 #define S(x) std::string_view{ x }
 
 	static const Bimap<std::string_view, TokenType> _token_map
 	{
+		bimap_t{ S("int"), TokenType::INT },
+		bimap_t{ S("identifier"), TokenType::IDENTIFIER },
+
 		bimap_t{ S(";"), TokenType::SEMICOLON },
 		bimap_t{ S(":"), TokenType::COLON },
 		bimap_t{ S(","), TokenType::COMMA },
+		bimap_t{ S("~"), TokenType::TILDE },
+		bimap_t{ S("!"), TokenType::EXCLAMATION },
 		bimap_t{ S("="), TokenType::EQUALS },
-		bimap_t{ S("&"), TokenType::AMPERSAND },
+		bimap_t{ S("=="), TokenType::EQUALSEQUALS },
+		bimap_t{ S("!="), TokenType::EXCLAMATIONEQUALS },
+		bimap_t{ S(">"), TokenType::GREATER },
+		bimap_t{ S(">="), TokenType::GREATERGREATEREQUALS },
+		bimap_t{ S("<"), TokenType::LESS },
+		bimap_t{ S("<="), TokenType::LESSLESSEQUALS },
+
 		bimap_t{ S("#"), TokenType::POUND },
-		bimap_t{ S("("), TokenType::LPAREN  },
+		bimap_t{ S("##"), TokenType::POUNDPOUND },
+
+		bimap_t{ S("("), TokenType::LPAREN },
 		bimap_t{ S(")"), TokenType::RPAREN },
 		bimap_t{ S("{"), TokenType::LBRACE },
 		bimap_t{ S("}"), TokenType::RBRACE },
 		bimap_t{ S("["), TokenType::LBRACKET },
 		bimap_t{ S("]"), TokenType::RBRACKET },
+
 		bimap_t{ S("+"), TokenType::PLUS },
+		bimap_t{ S("+="), TokenType::PLUSEQUALS },
 		bimap_t{ S("-"), TokenType::MINUS },
+		bimap_t{ S("-="), TokenType::MINUSEQUALS },
 		bimap_t{ S("*"), TokenType::STAR },
-		bimap_t{ S("=="), TokenType::EQUALSEQUALS },
-		bimap_t{ S("!="), TokenType::EXCLAMATIONEQUALS },
-		bimap_t{ S(">"), TokenType::GREATER },
-		bimap_t{ S("<"), TokenType::LESS },
-		bimap_t{ S("~"), TokenType::TILDE },
-		bimap_t{ S("!"), TokenType::EXCLAMATION },
-		
-		bimap_t{ S("immutable"), TokenType::IMMUTABLE },
-		bimap_t{ S("mutable"), TokenType::MUTABLE },
+		bimap_t{ S("*="), TokenType::STAREQUALS },
+		bimap_t{ S("/"), TokenType::SLASH },
+		bimap_t{ S("/="), TokenType::SLASHEQUALS },
+		bimap_t{ S("%"), TokenType::PERCENT },
+		bimap_t{ S("%="), TokenType::PERCENTEQUALS },
+		bimap_t{ S("^"), TokenType::CARET },
+		bimap_t{ S("^="), TokenType::CARETEQUALS },
+		bimap_t{ S("&"), TokenType::AMPERSAND },
+		bimap_t{ S("&="), TokenType::AMPERSANDEQUALS },
+		bimap_t{ S("&&"), TokenType::AMPERSANDAMPERSAND },
+		bimap_t{ S("|"), TokenType::PIPE },
+		bimap_t{ S("|="), TokenType::PIPEEQUALS },
+		bimap_t{ S("||"), TokenType::PIPEPIPE },
+		bimap_t{ S("<<"), TokenType::LESSLESS },
+		bimap_t{ S("<<="), TokenType::LESSLESSEQUALS },
+		bimap_t{ S(">>"), TokenType::GREATERGREATER },
+		bimap_t{ S(">>="), TokenType::GREATERGREATEREQUALS },
 
 		bimap_t{ S("unsigned"), TokenType::UNSIGNED },
 		bimap_t{ S("signed"), TokenType::SIGNED },
-
-		bimap_t{ S("value"), TokenType::VALUE },
-		bimap_t{ S("ptr"), TokenType::PTR },
+		
+		bimap_t{ S("inline"), TokenType::INLINE },
+		bimap_t{ S("extern"), TokenType::EXTERN },
+		bimap_t{ S("static"), TokenType::STATIC },
+		bimap_t{ S("auto"), TokenType::AUTO },
+		bimap_t{ S("register"), TokenType::REGISTER },
+		bimap_t{ S("volatile"), TokenType::VOLATILE },
+		bimap_t{ S("const"), TokenType::CONST },
+		bimap_t{ S("asm"), TokenType::ASM },
 
 		bimap_t{ S("struct"), TokenType::STRUCT },
+		bimap_t{ S("union"), TokenType::UNION },
+		bimap_t{ S("enum"), TokenType::ENUM },
+		bimap_t{ S("void"), TokenType::VOID },
+		bimap_t{ S("int"), TokenType::INT },
+		bimap_t{ S("char"), TokenType::CHAR },
+		bimap_t{ S("short"), TokenType::SHORT },
+		bimap_t{ S("long"), TokenType::LONG },
+		bimap_t{ S("float"), TokenType::FLOAT },
+		bimap_t{ S("double"), TokenType::DOUBLE },
 
-		bimap_t{ S("function"), TokenType::FUNCTION },
-		bimap_t{ S("nvr"), TokenType::NVR},
 		bimap_t{ S("return"), TokenType::RETURN },
+		bimap_t{ S("do"), TokenType::DO },
 		bimap_t{ S("while"), TokenType::WHILE },
 		bimap_t{ S("for"), TokenType::FOR },
 		bimap_t{ S("if"), TokenType::IF },
 		bimap_t{ S("else"), TokenType::ELSE },
-		bimap_t{ S("asm"), TokenType::ASM },
-		
-		bimap_t{ S("intrinsic"), TokenType::INTRINSIC },
-		bimap_t{ S("print"), TokenType::PRINT },
-		bimap_t{ S("declare"), TokenType::DECLARE },
-		
-		bimap_t{ S(".define"), TokenType::DOTDEFINE },
-		bimap_t{ S(".org"), TokenType::DOTORG },
+
+		bimap_t{ S("ifdef"), TokenType::IFDEF },
+		bimap_t{ S("ifndef"), TokenType::IFNDEF },
+		bimap_t{ S("elif"), TokenType::ELIF },
+		bimap_t{ S("endif"), TokenType::ENDIF },
+		bimap_t{ S("error"), TokenType::ERROR },
+		bimap_t{ S("warning"), TokenType::WARNING },
+		bimap_t{ S("include"), TokenType::INCLUDE },
+		bimap_t{ S("pragma"), TokenType::PRAGMA },
+		bimap_t{ S("define"), TokenType::DEFINE },
+		bimap_t{ S("undef"), TokenType::UNDEF },
+		bimap_t{ S("line"), TokenType::LINE },
+		bimap_t{ S("defined"), TokenType::DEFINED },
 		
 		bimap_t{ S("x0"), TokenType::X0 },
 		bimap_t{ S("x1"), TokenType::X1 },
@@ -313,20 +365,9 @@ namespace hz
 		bimap_t{ S("sret"), TokenType::SRET },
 		bimap_t{ S("mret"), TokenType::MRET },
 
-		bimap_t{ S("string"), TokenType::STRING },
 		bimap_t{ S("[identifier]"), TokenType::IDENTIFIER },
 
 		bimap_t{ S("eof"), TokenType::END },
-
-		bimap_t{ S("u8"), TokenType::U8 },
-		bimap_t{ S("u16"), TokenType::U16 },
-		bimap_t{ S("u32"), TokenType::U32 },
-		bimap_t{ S("u64"), TokenType::U64 },
-
-		bimap_t{ S("s8"), TokenType::S8 },
-		bimap_t{ S("s16"), TokenType::S16 },
-		bimap_t{ S("s32"), TokenType::S32 },
-		bimap_t{ S("s64"), TokenType::S64 },
 	};
 
 	struct SourceLocation

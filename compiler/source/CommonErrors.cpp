@@ -1,13 +1,11 @@
 import std;
 
-#include <ast/BinaryExpressionType.h>
-#include <ast/Expression.h>
-#include <ast/StatementType.h>
+#include <ast/expression/BinaryExpression.h>
+#include <ast/expression/Expression.h>
+#include <ast/statement/Statement.h>
 #include <symbol/SymbolType.h>
 #include <error/CommonErrors.h>
 #include <toolchain/ParserType.h>
-#include <type/IntWidth.h>
-#include <type/StructOrUnion.h>
 #include <type/Type.h>
 #include <type/TypeCheck.h>
 

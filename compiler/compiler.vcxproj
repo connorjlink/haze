@@ -133,11 +133,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\ast\function\Function.h" />
+    <ClInclude Include="include\ast\AST.h" />
+    <ClInclude Include="include\ast\expression\BinaryExpression.h" />
+    <ClInclude Include="include\ast\expression\Expression.h" />
+    <ClInclude Include="include\ast\statement\Statement.h" />
+    <ClInclude Include="include\ast\Sum.h" />
+    <ClInclude Include="include\ast\Typing.h" />
+    <ClInclude Include="include\ast\Value.h" />
+    <ClInclude Include="include\ast\statement\CompoundStatement.h" />
+    <ClInclude Include="include\ast\statement\ExitStatement.h" />
+    <ClInclude Include="include\ast\statement\ExpressionStatement.h" />
+    <ClInclude Include="include\ast\statement\ForStatement.h" />
+    <ClInclude Include="include\ast\statement\IfStatement.h" />
+    <ClInclude Include="include\ast\statement\InlineAsmStatement.h" />
+    <ClInclude Include="include\ast\statement\NullStatement.h" />
+    <ClInclude Include="include\ast\statement\PrintStatement.h" />
+    <ClInclude Include="include\ast\statement\ReturnStatement.h" />
+    <ClInclude Include="include\ast\statement\StatementType.h" />
+    <ClInclude Include="include\ast\statement\StructDeclarationStatement.h" />
+    <ClInclude Include="include\ast\statement\VariableStatement.h" />
+    <ClInclude Include="include\ast\statement\WhileStatement.h" />
+    <ClInclude Include="include\builder\BMBuilder.h" />
+    <ClInclude Include="include\builder\Builder.h" />
     <ClInclude Include="include\toolchain\AssemblerParserType.h" />
     <ClInclude Include="include\toolchain\Initializer.h" />
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h" />
     <ClCompile Include="source\AdjustExpression.cpp" />
-    <ClCompile Include="source\Allocation.cpp" />
     <ClCompile Include="source\ArgumentExpression.cpp" />
     <ClCompile Include="source\AssemblerParser.cpp" />
     <ClCompile Include="source\AssemblerToolchain.cpp" />
@@ -147,6 +169,7 @@
     <ClCompile Include="source\Bimap.cpp" />
     <ClCompile Include="source\BinaryExpression.cpp" />
     <ClCompile Include="source\BinaryUtilities.cpp" />
+    <ClCompile Include="source\BMBuilder.cpp" />
     <ClCompile Include="source\Command.cpp" />
     <ClCompile Include="source\CommandLineParser.cpp" />
     <ClCompile Include="source\CommonErrors.cpp" />
@@ -217,6 +240,7 @@
     <ClCompile Include="source\Tracking.cpp" />
     <ClCompile Include="source\Type.cpp" />
     <ClCompile Include="source\TypeCheck.cpp" />
+    <ClCompile Include="source\TypeValidator.cpp" />
     <ClCompile Include="source\UndoableRedoable.cpp" />
     <ClCompile Include="source\Validator.cpp" />
     <ClCompile Include="source\Variable.cpp" />
@@ -225,8 +249,24 @@
     <ClCompile Include="source\WebSocketServer.cpp" />
     <ClCompile Include="source\WhileStatement.cpp" />
     <ClCompile Include="source\X86Builder.cpp" />
+    <ClCompile Include="source\X86BuilderValidator.cpp" />
     <ClCompile Include="source\X86Instruction.cpp" />
     <ClCompile Include="source\X86Operand.cpp" />
+    <ClInclude Include="include\type\ArrayType.h" />
+    <ClInclude Include="include\type\EnumType.h" />
+    <ClInclude Include="include\type\FloatType.h" />
+    <ClInclude Include="include\type\FunctionType.h" />
+    <ClInclude Include="include\type\IntType.h" />
+    <ClInclude Include="include\type\PointerType.h" />
+    <ClInclude Include="include\type\StorageClass.h" />
+    <ClInclude Include="include\type\StructOrUnionType.h" />
+    <ClInclude Include="include\type\TypedefNameType.h" />
+    <ClInclude Include="include\type\VoidType.h" />
+    <ClInclude Include="include\utility\Lazy.h" />
+    <ClInclude Include="include\utility\Ranges.h" />
+    <ClInclude Include="include\utility\Strings.h" />
+    <ClInclude Include="include\validator\TypeValidator.h" />
+    <ClInclude Include="include\validator\X86BuilderValidator.h" />
     <ClInclude Include="include\x86\X86Builder.h" />
     <ClInclude Include="include\x86\X86Instruction.h" />
     <ClInclude Include="include\x86\X86InstructionType.h" />
@@ -258,7 +298,6 @@
     <ClInclude Include="include\ast\InlineAsmStatement.h" />
     <ClInclude Include="include\ast\IntegerLiteralExpression.h" />
     <ClInclude Include="include\ast\MemberDeclarationExpression.h" />
-    <ClInclude Include="include\ast\models\StructMember.h" />
     <ClInclude Include="include\ast\Node.h" />
     <ClInclude Include="include\ast\NodeType.h" />
     <ClInclude Include="include\ast\NullStatement.h" />

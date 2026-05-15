@@ -1,195 +1,372 @@
 #ifndef HAZE_BINARYEXPRESSION_H
 #define HAZE_BINARYEXPRESSION_H
 
+#include <ast/AST.h>
 #include <ast/expression/Expression.h>
-#include <ast/expression/BinaryExpressionType.h>
+#include <type/Type.h>
 
 // Haze BinaryExpression.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class BinaryExpression : public Expression
+	enum class BinaryKind
+	{
+		ADD,
+		ADD_ASSIGNMENT,
+		SUBTRACT,
+		SUBTRACT_ASSIGNMENT,
+		MULTIPLY,
+		MULTIPLY_ASSIGNMENT,
+		DIVIDE,
+		DIVIDE_ASSIGNMENT,
+		MODULO,
+		MODULO_ASSIGNMENT,
+		LEFT_SHIFT,
+		LEFT_SHIFT_ASSIGNMENT,
+		RIGHT_SHIFT,
+		RIGHT_SHIFT_ASSIGNMENT,
+		BITWISE_AND,
+		BITWISE_AND_ASSIGNMENT,
+		BITWISE_OR,
+		BITWISE_OR_ASSIGNMENT,
+		BITWISE_XOR,
+		BITWISE_XOR_ASSIGNMENT,
+		LOGICAL_AND,
+		LOGICAL_OR,
+		EQUAL,
+		NOT_EQUAL,
+		LESS,
+		LESS_EQUAL,
+		GREATER,
+		GREATER_EQUAL,
+		DOT,
+		ARROW,
+		COMMA,
+	};
+
+	static const std::unordered_map<BinaryKind, std::string_view> _binary_expression_type_map
+	{
+		{ BinaryKind::ADD, " + " },
+		{ BinaryKind::ADD_ASSIGNMENT, " += " },
+		{ BinaryKind::SUBTRACT, " - " },
+		{ BinaryKind::SUBTRACT_ASSIGNMENT, " -= " },
+		{ BinaryKind::MULTIPLY, " * " },
+		{ BinaryKind::MULTIPLY_ASSIGNMENT, " *= " },
+		{ BinaryKind::DIVIDE, " / " },
+		{ BinaryKind::DIVIDE_ASSIGNMENT, " /= " },
+		{ BinaryKind::MODULO, " % " },
+		{ BinaryKind::MODULO_ASSIGNMENT, " %= " },
+		{ BinaryKind::LEFT_SHIFT, " << " },
+		{ BinaryKind::LEFT_SHIFT_ASSIGNMENT, " <<= " },
+		{ BinaryKind::RIGHT_SHIFT, " >> " },
+		{ BinaryKind::RIGHT_SHIFT_ASSIGNMENT, " >>= " },
+		{ BinaryKind::BITWISE_AND, " & " },
+		{ BinaryKind::BITWISE_AND_ASSIGNMENT, " &= " },
+		{ BinaryKind::BITWISE_OR, " | " },
+		{ BinaryKind::BITWISE_OR_ASSIGNMENT, " |= " },
+		{ BinaryKind::BITWISE_XOR, " ^ " },
+		{ BinaryKind::BITWISE_XOR_ASSIGNMENT, " ^= " },
+		{ BinaryKind::LOGICAL_AND, " && " },
+		{ BinaryKind::LOGICAL_OR, " || " },
+		{ BinaryKind::EQUAL, " == " },
+		{ BinaryKind::NOT_EQUAL, " != " },
+		{ BinaryKind::LESS, " < " },
+		{ BinaryKind::LESS_EQUAL, " <= " },
+		{ BinaryKind::GREATER, " > " },
+		{ BinaryKind::GREATER_EQUAL, " >= " },
+		{ BinaryKind::DOT, "." },
+		{ BinaryKind::ARROW, "->" },
+		{ BinaryKind::COMMA, ", " }
+	};
+
+	class BinaryExpression : public ExpressionBase
 	{
 	public:
-		Expression* left;
-		Expression* right;
+		Handle left;
+		Handle right;
+		BinaryKind binary_type;
 
 	public:
-		BinaryExpression(Expression* left, Expression* right, const Token& token)
-			: Expression{ token }, left{ left }, right{ right }
+		std::string format() const
 		{
+			return std::format("{} {} {}",
+				left.format(),
+				_binary_expression_type_map.at(binary_type),
+				right.format());
+		}
+
+		void generate(const Storage& ast) const
+		{
+#pragma message("TODO: implement binary expression code generation")
+		}
+
+		SumHandle evaluate(const Storage& ast, const Context& context) const
+		{
+			const auto left_value = left.evaluate(ast, context);
+			const auto right_value = right.evaluate(ast, context);
+
+			using enum Type;
+			switch (binary_type)
+			{
+				case ADD:
+				{
+					return left_value + right_value;
+				} break;
+
+				case SUBTRACT:
+				{
+					return left_value - right_value;
+				} break;
+
+				case MULTIPLY:
+				{
+					return left_value * right_value;
+				} break;
+
+				case DIVIDE:
+				{
+					return left_value / right_value;
+				} break;
+
+				case MODULO:
+				{
+					return left_value % right_value;
+				} break;
+
+				case LEFT_SHIFT:
+				{
+					return left_value << right_value;
+				} break;
+
+				case RIGHT_SHIFT:
+				{
+					return left_value >> right_value;
+				} break;
+
+				case BITWISE_AND:
+				{
+					return left_value & right_value;
+				} break;
+			}
+
+#pragma message("TODO: implement binary expression evaluation")
+
+			return *this;
+		}
+
+		Handle optimize(const Storage& ast) const
+		{
+			const auto left_value = left.optimize(ast);
+			const auto right_value = right.optimize(ast);
+
+			// fold valid constant expressions
+			if (left_value.is_constant() && right_value.is_constant())
+			{
+				auto context = Context{};
+			}
+
+			return make_invalid_handle(ast);
+		}
+
+		Handle get_type(const Storage& ast) const
+		{
+			if (!left.check_types(ast) || !right.check_types(ast))
+			{
+				return make_invalid_handle(ast);
+			}
+
+			const left_type = left.type(ast);
+			const right_type = right.type(ast);
+
+#pragma message("TODO: implement binary expression type checking")
+
+			using enum Type;
+			switch (binary_type)
+			{
+				case ADD:
+				case SUBTRACT:
+				case MULTIPLY:
+				case DIVIDE:
+				case MODULO:
+				{
+					// semantically, arithmetic operators apply to any combination of integral and floating point types
+
+					if (left_type.is_floating_point())
+					{
+						// if either operand is floating point, the result is floating point
+						if (right_type.is_floating_point())
+						{
+							return left_type;
+						}
+						else if (right_type.is_integral())
+						{
+							return left_type;
+						}
+					}
+					else if (left_type.is_integral())
+					{
+						if (right_type.is_integral())
+						{
+							// if both operands are integral, the result is the type of the larger operand
+							return Type::get_larger_integral_type(left_type, right_type);
+						}
+						else if (right_type.is_floating_point())
+						{
+							return right_type;
+						}
+					}
+
+					USE_SAFE(ErrorReporter)->post_error(std::format(
+						"invalid operand types for binary operator `{}`: `{}` and `{}`",
+						_binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+					return make_invalid_handle(ast);
+				} break;
+
+				case LEFT_SHIFT:
+				case RIGHT_SHIFT:
+				case BITWISE_AND:
+				case BITWISE_OR:
+				case BITWISE_XOR:
+				{
+					// for now, only allow these operations on integers
+					if (!(left_type.is_integral() && right_type.is_integral()))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"invalid operand types for bitwise operator `{}`: `{}` and `{}`",
+							_binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					return Type::get_larger_integral_type(left_type, right_type);
+				} break;
+
+				case EQUAL:
+				case NOT_EQUAL:
+				{
+					// TODO:
+
+				} break;
+
+				case LESS:
+				case LESS_EQUAL:
+				case GREATER:
+				case GREATER_EQUAL:
+				{
+					// semantically, relational operators apply to any scalar (integral or compatible pointer-to types)
+					if (left_type.is_pointer() && right_type.is_pointer())
+					{
+						if (!Type::is_compatible(left_type.pointee_type(), right_type.pointee_type()))
+						{
+							USE_SAFE(ErrorReporter)->post_error(std::format(
+								"cannot compare pointers of incompatible types `{}` and `{}`", left_type.string(), right_type.string()), NULL_TOKEN);
+							return make_invalid_handle(ast);
+						}
+
+						return Type::get_pointer_integral_type(left_type, right_type);
+					}
+
+					if (!(left_type.is_integral() && right_type.is_integral()))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"invalid operand types for relational operator `{}`: `{}` and `{}`",
+							_binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					return Type::get_promoted_integral_type(left_type, right_type);
+				} break;
+
+				case LOGICAL_AND:
+				case LOGICAL_OR:
+				{
+					// semantically, boolean operators apply to any scalar (integral or pointer-to types)
+					if (!(left_type.is_scalar() && right_type.is_scalar()))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"invalid operand types for logical operator `{}`: `{}` and `{}`",
+							_binary_expression_type_map.at(binary_type), left_type.string(), right_type.string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					return Type::get_promoted_integral_type(left_type, right_type);
+				} break;
+
+				case DOT:
+				{
+					if (!left_type.is_struct_or_union())
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"left operand of member access operator must be a struct or union type, got `{}`", left_type.string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					if (!right_type.is_identifier())
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"right operand of member access operator must be an identifier, got `{}`", right_type.string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					const auto members = left_type.members().value();
+					const auto member_name = right.identifier(ast).name;
+					if (!members.contains(member_name))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"type `{}` has no member named `{}`", left_type.string(), member_name), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					return members.at(member_name).type;
+				} break;
+
+				case ARROW:
+				{
+					if (!(left_type.is_pointer() && left_type.pointee_type().is_struct_or_union()))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"left operand of member access operator must be a pointer to struct or union type, got `{}`", left_type.string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					if (!right.type(ast).is_identifier())
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"right operand of member access operator must be an identifier, got `{}`", right.type(ast).string()), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					const auto members = left_type.pointee_type().members().value();
+					const auto member_name = right.identifier(ast).name;
+					if (!members.contains(member_name))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"type `{}` has no member named `{}`", left_type.string(), member_name), NULL_TOKEN);
+						return make_invalid_handle(ast);
+					}
+
+					return members.at(member_name).type;
+				} break;
+
+				default:
+				{
+					// unknown, semi-panic
+					USE_SAFE(ErrorReporter)->post_error(std::format(
+						"cannot check type of type `{}`", _binary_expression_type_map.at(binary_type)), NULL_TOKEN);
+					return make_invalid_handle(ast);
+				} break;
+			}
+
 		}
 
 	public:
-		virtual BinaryExpressionType btype() const = 0;
-		virtual ExpressionType etype() const final override
+		BinaryExpression(Handle left, Handle right, BinaryExpressionType type)
+			: left{ left }, right{ right }, type{ type }
 		{
-			return ExpressionType::BINARY;
-		}
-		virtual TypeType ttype() const final override
-		{
-			// NOTE: always the type of the left hand side
-			// this will support things like ("1234" + 1) in the future -> string "234"
-			return left->ttype();
 		}
 	};
+#define MAKE_BINARY_EXPRESSION(left, right, type) BinaryExpression{ MAKE_HANDLE(ast, left), MAKE_HANDLE(ast, right), type }
 
-	class PlusBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class MinusBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class TimesBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class OrBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class XorBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class AndBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class LeftShiftBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class RightShiftBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class AssignBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class EqualityBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class InequalityBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class GreaterBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
-
-	class LessBinaryExpression : public BinaryExpression
-	{
-	public:
-		using BinaryExpression::BinaryExpression;
-
-	public:
-		virtual BinaryExpressionType btype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Expression* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
-	};
 }
 
 #endif

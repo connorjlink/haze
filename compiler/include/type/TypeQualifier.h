@@ -8,6 +8,7 @@
 
 namespace hz
 {
+#undef CONST
 	enum class TypeQualifier
 	{
 		NONE = 0,

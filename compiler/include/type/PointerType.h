@@ -8,29 +8,29 @@
 
 namespace hz
 {
-    class PointerType : public TypeBase
-    {
-    public:
-        SumHandle pointee;
-        TypeQualifier qualifier;
+	class PointerType : public TypeBase
+	{
+	public:
+		SumHandle pointee;
+		TypeQualifier qualifier;
 
-    public:
-        TypeType ttype() const
-        {
-            return TypeType::POINTER;
-        }
+	public:
+		TypeType ttype() const
+		{
+			return TypeType::POINTER;
+		}
 
-        Offset size() const
-        {
-            return sizeof(Address);
-        }
+		static Offset size()
+		{
+			return sizeof(Address);
+		}
 
-        bool is_complete() const
-        {
-            // pointer has a fixed size, so it's always complete to allow for things like void*
-            return true;
-        }
-    };
+		bool is_complete() const
+		{
+			// pointer has a fixed size, so it's always complete to allow for things like void*
+			return true;
+		}
+	};
 }
 
 #endif

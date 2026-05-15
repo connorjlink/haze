@@ -22,16 +22,17 @@ namespace hz
 		std::vector<Statement*> parse_statements(const std::string&);
 
 	protected:
-		Statement* parse_null_statement(const std::string&);
-		Statement* parse_variabledeclaration_statement(const std::string&);
-		Statement* parse_compound_statement(const std::string&);
-		Statement* parse_return_statement(const std::string&);
-		Statement* parse_inline_asm_statement(const std::string&);
-		Statement* parse_while_statement(const std::string&);
-		Statement* parse_for_statement(const std::string&);
-		Statement* parse_if_statement(const std::string&);
-		Statement* parse_expression_statement(const std::string&);
-		Statement* parse_exit_statement(const std::string&);
+		SumHandle<Statement> parse_null_statement(const std::string&);
+		SumHandle<Statement> parse_variabledeclaration_statement(const std::string&);
+		SumHandle<Statement> parse_compound_statement(const std::string&);
+		SumHandle<Statement> parse_return_statement(const std::string&);
+		SumHandle<Statement> parse_inline_asm_statement(const std::string&);
+		SumHandle<Statement> parse_do_while_statement(const std::string&);
+		SumHandle<Statement> parse_while_statement(const std::string&);
+		SumHandle<Statement> parse_for_statement(const std::string&);
+		SumHandle<Statement> parse_if_statement(const std::string&);
+		SumHandle<Statement> parse_expression_statement(const std::string&);
+		SumHandle<Statement> parse_exit_statement(const std::string&);
 
 	private:
 		MemberDeclarationExpression* parse_member_declaration_statement(const std::string&);
