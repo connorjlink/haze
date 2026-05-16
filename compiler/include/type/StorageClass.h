@@ -12,7 +12,6 @@ namespace hz
 		REGISTER,
 		STATIC,
 		EXTERN,
-		TYPEDEF,
 	};
 
 	static const std::unordered_map<TokenType, StorageClass> _storage_class_token_map
@@ -21,7 +20,6 @@ namespace hz
 		{ TokenType::REGISTER, StorageClass::REGISTER },
 		{ TokenType::STATIC, StorageClass::STATIC },
 		{ TokenType::EXTERN, StorageClass::EXTERN },
-		{ TokenType::TYPEDEF, StorageClass::TYPEDEF },
 	};
 
 	static const std::unordered_map<StorageClass, std::string_view> _storage_class_map
@@ -30,7 +28,6 @@ namespace hz
 		{ StorageClass::REGISTER, "register" },
 		{ StorageClass::STATIC, "static" },
 		{ StorageClass::EXTERN, "extern" },
-		{ StorageClass::TYPEDEF, "typedef" },
 	};
 }
 
