@@ -1,7 +1,9 @@
 #ifndef HAZE_VOIDTYPE_H
 #define HAZE_VOIDTYPE_H
 
-#include <type/Type.h>
+#include <type/StorageClass.h>
+#include <type/TypeQualifier.h>
+#include <type/TypeKind.h>
 
 // Haze VoidType.h
 // (c) Connor J. Link. All Rights Reserved.

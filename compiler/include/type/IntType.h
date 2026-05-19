@@ -1,7 +1,10 @@
 #ifndef HAZE_INTTYPE_H
 #define HAZE_INTTYPE_H
 
-#include <type/Type.h>
+#include <type/StorageClass.h>
+#include <type/TypeQualifier.h>
+#include <type/TypeSignedness.h>
+#include <type/TypeKind.h>
 
 // Haze IntType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -28,9 +31,6 @@ namespace hz
 
 	class IntType : public TypeBase
 	{
-	public:
-		
-
 	public:
 		StorageClass storage;
 		TypeQualifier qualifier;

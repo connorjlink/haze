@@ -3,20 +3,10 @@
 
 #include <data/DependencyInjector.h>
 #include <symbol/SymbolDatabase.h>
-#include <type/VoidType.h>
-#include <type/IntType.h>
-#include <type/FloatType.h>
-#include <type/PointerType.h>
-#include <type/FloatType.h>
-#include <type/StructOrUnionType.h>
-#include <type/EnumType.h>
-#include <type/TypedefNameType.h>
-#include <type/ArrayType.h>
-#include <type/PointerType.h>
-#include <type/FunctionType.h>
 #include <type/StorageClass.h>
 #include <type/TypeQualifier.h>
 #include <type/TypeSignedness.h>
+#include <type/TypeKind.h>
 #include <utility/Sum.h>
 
 // Haze Type.h
@@ -24,6 +14,35 @@
 
 namespace hz
 {
+	// forward declare sum storage and self-referential types for facade
+
+	struct TypeSumStorage;
+
+	using TypeHandle = SumHandle<TypeSumStorage>;
+
+	template<typename T>
+	using TypeReference = SumReference<T, TypeSumStorage>;
+
+	using TypeBase = SumMemberBase<TypeSumStorage>;
+}
+
+// NOTE: this secondary include block is mandatory to allow the incomplete type facade
+#include <type/VoidType.h>
+#include <type/IntType.h>
+#include <type/FloatType.h>
+#include <type/PointerType.h>
+#include <type/StructOrUnionType.h>
+#include <type/EnumType.h>
+#include <type/TypedefNameType.h>
+#include <type/ArrayType.h>
+#include <type/FunctionType.h>
+
+namespace hz
+{
+	// not for public consumption
+	template<typename SumMemberT, typename SumStorageT>
+	concept Type = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
+
 	// expose a strict polymorphic interface for types
 	template<typename AnchorT>
 	using TypeMethods = std::tuple
@@ -33,53 +52,29 @@ namespace hz
 		Method<&AnchorT::is_complete, bool()>,
 	>;
 
-	template<typename SumMemberT, typename SumStorageT>
-	concept Type = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
-
-	class VoidType;
-	class IntType;
-	class FloatType;
-	class StructOrUnionType;
-	class EnumTypeKind;
-	class TypedefNameType;
-	class PointerType;
-	class ArrayType;
-	class FunctionType;
-
 	using TypeKinds = SumTypeList
 	<
 		VoidType,
 		IntType,
 		FloatType,
 		StructOrUnionType,
-		EnumTypeKind,
+		EnumType,
 		TypedefNameType,
 		PointerType,
 		ArrayType,
 		FunctionType,
 	>;
 
-	using TypeSum = MakeSum<TypeMethods, TypeKinds>::Type;
-	using TypeBase = SumMemberBase<TypeSum>;
+	using TypeSumImplementation = MakeSum<TypeMethods, TypeKinds>::Type;
 
-	template<typename T>
-	using TypeReference = TypeSum::template Reference<T>;
-
-	using TypeHandle = TypeSum::Handle;
-
-
-	enum class TypeKind
+	struct TypeSumStorage : public TypeSumImplementation::Storage
 	{
-		VOID,
-		INT,
-		FLOAT,
-		STRUCT_OR_UNION,
-		ENUM,
-		TYPEDEF_NAME,
-		POINTER,
-		ARRAY,
-		FUNCTION,
+		using MakeSum<TypeMethods, TypeKinds>::Type::Storage::Storage;
+
+		using Type = TypeSumImplementation::Type;
+		using Anchor = TypeSumImplementation::Anchor;
 	};
+
 
 	enum class TypePrecedence
 	{

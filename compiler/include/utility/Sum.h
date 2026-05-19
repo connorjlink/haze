@@ -161,9 +161,6 @@ namespace hz
 		: public InjectSingleton<ErrorReporter>
 	{
 	public:
-		using Anchor = typename SumStorageT::Anchor;
-
-	public:
 		const SumStorageT& sum_storage;
 		IndexHandle index;
 
@@ -205,6 +202,7 @@ namespace hz
 #define SUM_HANDLE_METHOD(name) \
 		constexpr decltype(auto) name() const \
 		{ \
+			using Anchor = typename SumStorageT::Anchor; \
 			return call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
 		}
 
@@ -280,12 +278,9 @@ namespace hz
 		: public SumDispatcher<SumStorageT>
 	{
 	public:
-		static constexpr TagType tag =
-			TypeIndexV<T, typename SumStorageT::Type>;
-
 		constexpr TagType get_tag() const
 		{
-			return tag;
+			return TypeIndexV<T, typename SumStorageT::Type>;
 		}
 
 	public:
@@ -301,7 +296,7 @@ namespace hz
 
 		constexpr SumHandle<SumStorageT> erase() const
 		{
-			return SumHandle<SumStorageT>{ this->sum_storage, this->index, tag };
+			return SumHandle<SumStorageT>{ this->sum_storage, this->index, get_tag() };
 		}
 
 	public:
@@ -349,37 +344,18 @@ namespace hz
 		return SumReference<T, SumStorageT>{ sum_storage };
 	}
 
-
-	template<typename TupleT>
-	struct InjectTagType
+	// common base class recommended for sum member classes
+	template<typename SumFacadeT>
+	struct SumMemberBase
 	{
-	public:
+		using Storage = typename SumFacadeT::Storage;
+
 		template<typename Self>
 		constexpr TagType ttype(this Self&& self)
 		{
 			using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
-			return TypeIndexV<This, TupleT>;
+			return TypeIndexV<This, typename SumFacadeT::Type>;
 		}
-	};
-
-	template<typename SumT>
-	struct InjectStorage
-	{
-	public:
-		using Storage = typename SumT::Storage;
-
-		template<typename T>
-		using ThisSumReference = SumReference<T, Storage>;
-
-		using ThisSumHandle = SumHandle<Storage>;
-	};
-
-	// common base class recommended for sum member classes
-	template<typename SumT>
-	struct SumMemberBase
-		: public InjectTagType<typename SumT::Type>
-		, public InjectStorage<SumT>
-	{
 	};
 }
 

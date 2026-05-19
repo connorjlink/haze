@@ -66,9 +66,6 @@
     <ClCompile Include="source\Daemon.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\DependencyInjector.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\DotDefineCommand.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -120,9 +117,6 @@
     <ClCompile Include="source\Generator.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\HeapAllocator.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\IdentifierExpression.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -136,9 +130,6 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\InstructionValidator.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="source\IntegerLiteral.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\IntegerLiteralExpression.cpp">
@@ -202,9 +193,6 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\Scanner.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="source\StackAllocator.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="source\Statement.cpp">
@@ -614,13 +602,7 @@
     <ClInclude Include="include\allocator\AllocationType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\allocator\HeapAllocator.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\allocator\RuntimeAllocator.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\allocator\StackAllocator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\RISCVInstructionType.h">
@@ -755,9 +737,6 @@
     <ClInclude Include="include\ast\BinaryExpression.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\Expression.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\ast\Statement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -774,6 +753,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\builder\Builder.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type\TypeKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

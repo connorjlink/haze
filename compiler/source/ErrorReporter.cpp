@@ -51,7 +51,7 @@ namespace hz
 		auto& existing_contexts = open_frames[thread_id][filepath];
 		auto* new_context = &existing_contexts.emplace_back(ErrorContext{ task });
 
-		const ErrorFrame frame{ new_context, filepath };
+		const auto frame = ErrorFrame{ new_context, filepath };
 		active_frames[thread_id].emplace(frame);
 
 		return { new_context, filepath };

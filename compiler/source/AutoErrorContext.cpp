@@ -9,22 +9,22 @@ import std;
 namespace hz
 {
 	AutoErrorContext::AutoErrorContext(const std::string& file, const std::string& task)
+		: frame{ USE_SAFE(ErrorReporter)->open_context(file, task) }
 	{
-		_initial_context_count = USE_SAFE(ErrorReporter)->get_context_count();
-		_frame = USE_SAFE(ErrorReporter)->open_context(file, task);
+		initial_context_count = USE_SAFE(ErrorReporter)->get_context_count();
 	}
 
 	AutoErrorContext::~AutoErrorContext()
 	{
 		auto current_context_count = USE_SAFE(ErrorReporter)->get_context_count();
 
-		if (current_context_count != _initial_context_count)
+		if (current_context_count != initial_context_count)
 		{
-			USE_SAFE(ErrorReporter)->post_warning(_frame.context, _file, "encountered a mismatched error context; attempting to correct", NULL_TOKEN);
+			USE_SAFE(ErrorReporter)->post_warning(frame.context, file, "encountered a mismatched error context; attempting to correct", NULL_TOKEN);
 
 			// close until we have matched
 			while (current_context_count = USE_SAFE(ErrorReporter)->get_context_count(),
-				current_context_count >= _initial_context_count)
+				current_context_count >= initial_context_count)
 			{
 				USE_SAFE(ErrorReporter)->close_context();
 			}

@@ -19,20 +19,20 @@ namespace hz
 	class Bimap
 	{
 	private:
-		std::unordered_map<T, U> _forward;
-		std::unordered_map<U, T> _backward;
+		std::unordered_map<T, U> forward;
+		std::unordered_map<U, T> backward;
 
 	public:
 		bool contains(const T& value) const
 		{
-			return _forward.contains(value);
+			return forward.contains(value);
 		}
 
 		std::optional<U> at(const T& value) const
 		{
-			if (_forward.contains(value))
+			if (forward.contains(value))
 			{
-				return { _forward.at(value) };
+				return { forward.at(value) };
 			}
 
 			return std::nullopt;
@@ -40,14 +40,14 @@ namespace hz
 
 		bool contains(const U& value) const
 		{
-			return _backward.contains(value);
+			return backward.contains(value);
 		}
 
 		std::optional<T> at(const U& value) const
 		{
-			if (_backward.contains(value))
+			if (backward.contains(value))
 			{
-				return { _backward.at(value) };
+				return { backward.at(value) };
 			}
 
 			return std::nullopt;
@@ -68,8 +68,8 @@ namespace hz
 	public:
 		void add(bimap_t<T, U> set)
 		{
-			_forward[set.first] = set.second;
-			_backward[set.second] = set.first;
+			forward[set.first] = set.second;
+			backward[set.second] = set.first;
 		}
 
 	public:

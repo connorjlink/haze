@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 
 	// offload the loading process now to a background thread, await after initializing the rest of the components
-	auto loader = Task<std::unordered_map<const std::string&, File>>{ [&]()
+	auto loader = Task<std::unordered_map<std::string, File>>{ [&]()
 	{	
 		for (auto& filepath : command_line_parser.files())
 		{

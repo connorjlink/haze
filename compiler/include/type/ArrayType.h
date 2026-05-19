@@ -1,7 +1,7 @@
 #ifndef HAZE_ARRAYTYPE_H
 #define HAZE_ARRAYTYPE_H
 
-#include <type/Type.h>
+#include <type/TypeKind.h>
 
 // Haze ArrayType.h
 // (c) Connor J. Link. All Rights Reserved.

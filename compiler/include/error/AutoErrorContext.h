@@ -14,11 +14,11 @@ namespace hz
 	class AutoErrorContext : public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::size_t _initial_context_count;
-		ErrorFrame _frame;
+		std::size_t initial_context_count;
+		ErrorFrame frame;
 
 	private:
-		std::string _file, _task;
+		std::string file, task;
 
 	public:
 		AutoErrorContext(const std::string&, const std::string&);

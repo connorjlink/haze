@@ -133,9 +133,9 @@ namespace hz
 		END,
 	};
 
-#define S(x) const std::string&{ x }
+#define S(x) std::string_view{ x }
 
-	static const Bimap<const std::string&, TokenType> _token_map
+	static const Bimap<std::string_view, TokenType> _token_map
 	{
 		bimap_t{ S("int"), TokenType::INT },
 		bimap_t{ S("identifier"), TokenType::IDENTIFIER },

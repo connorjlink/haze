@@ -138,6 +138,7 @@
     <ClInclude Include="include\ast\expression\BinaryExpression.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
+    <ClInclude Include="include\type\TypeKind.h" />
     <ClInclude Include="include\utility\Sum.h" />
     <ClInclude Include="include\utility\Typing.h" />
     <ClInclude Include="include\allocator\Value.h" />

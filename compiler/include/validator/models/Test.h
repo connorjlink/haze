@@ -15,7 +15,7 @@ namespace hz
 		std::function<bool(ErrorFrame)> _test;
 
 	private:
-		ErrorFrame _frame;
+		ErrorFrame frame;
 
 	public:
 		void attach(const ErrorFrame&);

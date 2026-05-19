@@ -1,17 +1,17 @@
 #ifndef HAZE_TYPEDEFNAMETYPE_H
 #define HAZE_TYPEDEFNAMETYPE_H
 
-#include <type/Type.h>
+#include <type/TypeKind.h>
 
 // Haze TypedefName.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class TypedefName : public TypeBase
+	class TypedefNameType : public TypeBase
 	{
 	public:
-		Handle type;
+		TypeHandle type;
 		std::string name;
 
 	public:

@@ -2,7 +2,9 @@
 #define HAZE_FLOATTYPE_H
 
 #include <error/CommonErrors.h>
-#include <type/Type.h>
+#include <type/StorageClass.h>
+#include <type/TypeQualifier.h>
+#include <type/TypeKind.h>
 #include <utility/Constants.h>
 
 // Haze FloatType.h

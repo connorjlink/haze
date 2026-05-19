@@ -11,6 +11,20 @@
 
 namespace hz
 {
+	// forward declare sum storage and self-referential types for facade
+
+	struct ExpressionSumStorage;
+
+	using ExpressionHandle = SumHandle<ExpressionSumStorage>;
+
+	template<typename T>
+	using ExpressionReference = SumReference<T, ExpressionSumStorage>;
+
+	using ExpressionBase = SumMemberBase<ExpressionSumStorage>;
+}
+
+namespace hz
+{
 	class AdjustExpression;
 	class ArgumentExpression;
 	class FunctionArgumentExpression;

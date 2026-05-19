@@ -2,7 +2,6 @@
 #define HAZE_STATEMENT_AST_H
 
 #include <ast/AST.h>
-#include <runtime/Context.h>
 #include <type/Type.h>
 
 // Haze Statement.h

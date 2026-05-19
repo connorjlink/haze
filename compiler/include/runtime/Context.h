@@ -25,7 +25,7 @@ namespace hz
 		std::stack<std::vector<Expression*>> arguments;
 
 	private:
-		bool _executing = true;
+		bool executing = true;
 
 	public:
 		void declare_variable(const std::string&);

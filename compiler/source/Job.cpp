@@ -25,6 +25,6 @@ namespace hz
 
 	std::string Job::format() const
 	{
-		return std::format("{} completed in {}", _task, duration());
+		return std::format("{} completed in {}", task, duration());
 	}
 }
