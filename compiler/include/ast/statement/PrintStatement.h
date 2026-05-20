@@ -16,7 +16,7 @@ namespace hz
 		Expression* message;
 
 	public:
-		PrintStatement(Expression* message, Token token)
+		PrintStatement(Expression* message, const Token& token)
 			: Statement{ token }, message{ message }
 		{
 		}

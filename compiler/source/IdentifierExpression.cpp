@@ -1,6 +1,6 @@
 import std;
 
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <ast/expression/Expression.h>
 #include <runtime/Context.h>
 #include <type/Type.h>
@@ -79,7 +79,7 @@ namespace hz
 			} break;
 		}*/
 
-		REQUIRE_SAFE(RuntimeAllocator)->read_local(allocation->read(), name);
+		REQUIRE_SAFE(Allocator)->read_local(allocation->read(), name);
 	}
 
 	Expression* IdentifierExpression::optimize()

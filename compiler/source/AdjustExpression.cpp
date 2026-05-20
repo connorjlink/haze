@@ -3,7 +3,7 @@ import std;
 #include <ast/expression/Expression.h>
 #include <runtime/Context.h>
 #include <toolchain/Generator.h>
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <error/ErrorReporter.h>
 
 // Haze AdjustExpression.cpp

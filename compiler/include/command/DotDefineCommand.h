@@ -19,7 +19,7 @@ namespace hz
 		BigInteger value;
 
 	public:
-		DotDefineCommand(const std::string& identifier, BigInteger value, Token token)
+		DotDefineCommand(const std::string& identifier, BigInteger value, const Token& token)
 			: Command{ token }, identifier{ identifier }, value{ value }
 		{
 		}

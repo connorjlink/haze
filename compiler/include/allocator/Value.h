@@ -1,25 +1,36 @@
 #ifndef HAZE_VALUESUM_H
 #define HAZE_VALUESUM_H
 
-#include <ast/Sum.h>
-#include <ast/Typing.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/Generator.h>
 #include <cli/ArchitectureType.h>
 #include <utility/Constants.h>
 #include <utility/Strings.h>
+#include <utility/Sum.h>
+#include <utility/Typing.h>
 
 // Haze Value.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	// forward declare sum storage and self-referential types for facade
+
+	struct ValueSumStorage;
+
+	using ValueHandle = SumHandle<ValueSumStorage>;
+
+	template<typename T>
+	using ValueReference = SumReference<T, ValueSumStorage>;
+
+	using ValueBase = SumMemberBase<ValueSumStorage>;
+	
 	// expose a strict polymorphic interface for values
 	template<typename AnchorT>
 	using ValueMethods = std::tuple
 	<
-		Method<&AnchorT::ttype, TagType()>,
+		Method<&AnchorT::tag_type, TagType()>,
 		Method<&AnchorT::format, std::string()>,
 		Method<&AnchorT::load_into, void(Generator&, Register)>,
 		Method<&AnchorT::store_from, void(Generator&, Register)>,
@@ -27,22 +38,23 @@ namespace hz
 
 	template<typename SumMemberT, typename SumStorageT>
 	concept Value = SumTuple<SumMemberT, SumStorageT, ValueMethods<SumStorageT>>;
+}
 
+namespace hz
+{
+	enum class ValueTag : TagType
+	{
+		REGISTER,
+		STACK,
+		STATIC,
+	};
 
-	class RegisterValue;
-	class StackValue;
-	// global object in the data segment
-	class StaticValue;
-
-	using ValueTypes = SumTypeList
-	<
-		RegisterValue,
-		StackValue,
-		StaticValue
-	>;
-
-	using ValueSum = MakeSum<ValueMethods, ValueTypes>::Type;
-	using ValueBase = SumMemberBase<ValueSum>;
+	static const std::unordered_map<ValueTag, std::string> ValueTagNames
+	{
+		{ ValueTag::REGISTER, "register" },
+		{ ValueTag::STACK, "stack" },
+		{ ValueTag::STATIC, "static" },
+	};
 
 
 	class RegisterValue : public ValueBase
@@ -51,6 +63,11 @@ namespace hz
 		Register index;
 
 	public:
+		ValueTag tag_type() const
+		{
+			return ValueTag::REGISTER;
+		}
+
 		std::string format() const
 		{
 			return std::format("r{}", index);
@@ -82,6 +99,11 @@ namespace hz
 		Offset index;
 
 	public:
+		ValueTag tag_type() const
+		{
+			return ValueTag::STACK;
+		}
+
 		std::string format() const
 		{
 			const auto architecture_type = USE_SAFE(CommandLineOptions)->architecture;
@@ -109,6 +131,11 @@ namespace hz
 		Address index;
 
 	public:
+		ValueTag tag_type() const
+		{
+			return ValueTag::STATIC;
+		}
+
 		std::string format() const
 		{
 			static constexpr auto bits_per_hex_digit = std::countr_zero(16);
@@ -128,6 +155,18 @@ namespace hz
 			USE_SAFE(ErrorReporter)->post_uncorrectable("cannot write to static (read-only) data region", NULL_TOKEN);
 		}
 	};
+
+
+	using ValueTypes = SumTypeList
+	<
+		RegisterValue,
+		StackValue,
+		StaticValue
+	>;
+
+	using ValueSum = MakeSum<ValueMethods, ValueTypes>::Type;
+	using ValueBase = SumMemberBase<ValueSum>;
+
 }
 
 #endif

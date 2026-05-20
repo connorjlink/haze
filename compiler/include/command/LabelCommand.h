@@ -15,7 +15,7 @@ namespace hz
 		std::uint32_t address;
 
 	public:
-		LabelCommand(const std::string& identifier, Token token)
+		LabelCommand(const std::string& identifier, const Token& token)
 			: Command{ token }, identifier{ identifier }
 		{
 		}

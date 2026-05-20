@@ -1,6 +1,6 @@
 import std;
 
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <ast/expression/Expression.h>
 #include <ast/function/Function.h>
 #include <symbol/Symbol.h>

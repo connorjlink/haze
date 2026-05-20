@@ -1,21 +1,18 @@
 #ifndef HAZE_STRUCTDECLARATIONSTATEMENT_H
 #define HAZE_STRUCTDECLARATIONSTATEMENT_H
 
-#include <ast/statement/Statement.h>
+#include <ast/expression/Expression.h>
 
 // Haze StructDeclarationStatement.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class IdentifierExpression;
-	class MemberDeclarationExpression;
-
-	class StructDeclarationStatement : public Statement
+	class StructDeclarationStatement : public StatementBase
 	{
 	public:
-		IdentifierExpression* identifier;
-		std::vector<MemberDeclarationExpression*> members;
+		ExpressionReference<IdentifierExpression> identifier;
+		std::vector<ExpressionReference<MemberDeclarationExpression>> members;
 
 	public:
 		std::uint16_t members_size() const;
@@ -23,7 +20,7 @@ namespace hz
 
 	public:
 		StructDeclarationStatement(IdentifierExpression* identifier, const std::vector<MemberDeclarationExpression*>& members, const Token& token)
-			: Statement{ token }, identifier{ identifier }, members{ members }
+			: StatementBase{ token }, identifier{ identifier }, members{ members }
 		{
 		}
 

@@ -1,6 +1,5 @@
 import std;
 
-#include <ast/expression/BinaryExpression.h>
 #include <ast/expression/Expression.h>
 #include <ast/statement/Statement.h>
 #include <symbol/SymbolType.h>
@@ -43,11 +42,6 @@ namespace hz
 	void CommonErrors::invalid_parser_type(ParserType ptype, const Token& token)
 	{
 		internal_compiler_error(invalid_generic_type("parser", _parser_type_map.at(ptype)), token);
-	}
-
-	void CommonErrors::invalid_node_type(NodeType ntype, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("node", _node_type_map.at(ntype)), token);
 	}
 
 	void CommonErrors::invalid_statement_type(StatementType stype, const Token& token)
@@ -129,7 +123,7 @@ namespace hz
 	void CommonErrors::invalid_binary_expression(ExpressionType lhs, ExpressionType rhs, BinaryExpressionType op, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid binary expression `{}` between `{}` and `{}`",
-			_binary_expression_type_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
+			binary_expression_kind_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
 	}
 
 	void CommonErrors::type_qualifier_mismatch(Type* type, Expression* expression, const Token& token)

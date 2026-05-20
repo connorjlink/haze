@@ -47,7 +47,7 @@ namespace hz
 		for (auto argument : arguments)
 		{
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(argument);
-			REQUIRE_SAFE(RuntimeAllocator)->define_local(argument_expression->identifier->name);
+			REQUIRE_SAFE(Allocator)->define_local(argument_expression->identifier->name);
 		}
 
 

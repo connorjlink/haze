@@ -1,31 +1,31 @@
 ﻿#ifndef HAZE_COMPOUNDSTATEMENT_H
 #define HAZE_COMPOUNDSTATEMENT_H
 
-#include <ast/Statement.h>
+#include <ast/statement/Statement.h>
 
 // Haze CompoundStatement.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Allocation;
-
-	class CompoundStatement : public Statement
+	class CompoundStatement : public StatementBase
 	{
 	public:
-		std::vector<Statement*> substatements;
+		std::vector<StatementHandle> substatements;
 
 	public:
-		CompoundStatement(const std::vector<Statement*>& substatements, Token token)
-			: Statement{ token }, substatements{ substatements }
+		CompoundStatement(const std::vector<StatementHandle>& substatements, const Token& token)
+			: StatementBase{ token }, substatements{ substatements }
 		{
 		}
 
 	public:
-		virtual StatementType stype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Statement* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
+		StatementType tag_type(void) const;
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		StatementHandle evaluate(const Storage&, Context&) const;
+		StatementHandle optimize(const Storage&) const;
+		StatementHandle get_type(const Storage&) const;
 	};
 }
 

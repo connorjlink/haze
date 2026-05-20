@@ -1,7 +1,7 @@
 #ifndef HAZE_INTERMEDIATECOMMAND_H
 #define HAZE_INTERMEDIATECOMMAND_H
 
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <command/BranchCommandType.h>
 #include <command/BinaryCommandType.h>
 #include <command/IntermediateType.h>
@@ -17,7 +17,7 @@
 namespace hz
 {
 	class IntermediateCommand 
-		: public InjectService<Generator, RuntimeAllocator>
+		: public InjectService<Generator, Allocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
@@ -70,7 +70,7 @@ namespace hz
 
 		EnterScopeCommand(const std::string& function_name)
 		{
-			bytes = REQUIRE_SAFE(RuntimeAllocator)->get_function_stack_size(function_name)
+			bytes = REQUIRE_SAFE(Allocator)->get_function_stack_size(function_name)
 				.value_or(MINIMUM_STACK_SIZE);
 		}
 

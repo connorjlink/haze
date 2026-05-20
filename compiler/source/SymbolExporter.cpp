@@ -24,7 +24,7 @@ namespace
 		return location;
 	}
 
-	std::string export_function_symbol(FunctionSymbol* function_symbol, Token token)
+	std::string export_function_symbol(FunctionSymbol* function_symbol, const Token& token)
 	{
 		/* Example JSON output for a function symbol
 			{
@@ -54,7 +54,7 @@ namespace
 		return function.serialize();
 	}
 
-	std::string export_argument_symbol(ArgumentSymbol* argument_symbol, Token token)
+	std::string export_argument_symbol(ArgumentSymbol* argument_symbol, const Token& token)
 	{
 		/* Example JSON output for an argument symbol
 		{
@@ -84,23 +84,23 @@ namespace
 		return argument.serialize();
 	}
 
-	std::string export_variable_symbol(VariableSymbol* variable_symbol, Token token)
+	std::string export_variable_symbol(VariableSymbol* variable_symbol, const Token& token)
 	{
 #pragma message("TODO: implement the rest of the export functions")
 		return "";
 	}
 
-	std::string export_define_symbol(DefineSymbol* define_symbol, Token token)
+	std::string export_define_symbol(DefineSymbol* define_symbol, const Token& token)
 	{
 		return "";
 	}
 
-	std::string export_label_symbol(LabelSymbol* label_symbol, Token token)
+	std::string export_label_symbol(LabelSymbol* label_symbol, const Token& token)
 	{
 		return "";
 	}
 
-	std::string export_struct_symbol(StructSymbol* struct_symbol, Token token)
+	std::string export_struct_symbol(StructSymbol* struct_symbol, const Token& token)
 	{
 		return "";
 	}
@@ -108,7 +108,7 @@ namespace
 
 namespace hz
 {
-	void SymbolExporter::enqueue(Symbol* symbol, Token token)
+	void SymbolExporter::enqueue(Symbol* symbol, const Token& token)
 	{
 		// lock
 		{

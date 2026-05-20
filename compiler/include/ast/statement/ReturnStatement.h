@@ -1,32 +1,35 @@
 ﻿#ifndef HAZE_RETURNSTATEMENT_H
 #define HAZE_RETURNSTATEMENT_H
 
-#include <ast/statement/Statement.h>
 #include <ast/expression/Expression.h>
+#include <ast/statement/Statement.h>
+#include <allocator/Value.h>
 
 // Haze ReturnStatement.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class ReturnStatement : public Statement
+	class ReturnStatement : public StatementBase
 	{
 	private:
 		std::string enclosing_function;
-		Expression* value;
-		Allocation* allocation;
+		ExpressionHandle expression;
+		ValueHandle value;
 
 	public:
-		ReturnStatement(const std::string& enclosing_function, Expression* value, Allocation* allocation, Token token)
-			: Statement{ token }, enclosing_function{ enclosing_function }, value{ value }, allocation{ allocation }
+		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, ValueHandle value, const Token& token)
+			: StatementBase{ token }, enclosing_function{ enclosing_function }, expression{ expression }, value{ value }
 		{
 		}
 
 	public:
-		virtual StatementType stype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Statement* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
+		StatementType tag_type(void) const;
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		StatementHandle evaluate(const Storage&, Context&) const;
+		StatementHandle optimize(const Storage&) const;
+		StatementHandle get_type(const Storage&) const;
 	};
 }
 

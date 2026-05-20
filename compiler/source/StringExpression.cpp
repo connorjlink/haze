@@ -1,7 +1,7 @@
 import std;
 
 #include <allocator/Allocation.h>
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <ast/StringExpression.h>
 #include <command/models/IntegerLiteral.h>
 #include <toolchain/Generator.h>
@@ -26,7 +26,7 @@ namespace hz
 		// add an extra byte for the null terminator byte
 		const auto bytes = message.length() + 1;
 
-		const auto address = REQUIRE_SAFE(RuntimeAllocator)->allocate(static_cast<Address>(bytes));
+		const auto address = REQUIRE_SAFE(Allocator)->allocate(static_cast<Address>(bytes));
 		const auto integer_literal = static_cast<BigInteger>(address);
 
 		REQUIRE_SAFE(Generator)->make_message(address, message);

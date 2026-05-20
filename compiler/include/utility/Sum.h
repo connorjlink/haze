@@ -322,7 +322,7 @@ namespace hz
 		return SumHandle<SumStorageT>{ sum_storage, index, TypeIndexV<T, typename SumStorageT::Type> };
 	}
 
-	template<typename T, typename SumStorageT>
+	template<typename SumStorageT>
 	constexpr SumHandle<SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
 	{
 		// does not participate in sum storage

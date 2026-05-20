@@ -1,21 +1,21 @@
 import std;
 
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <error/ErrorReporter.h>
 
-// Haze RuntimeAllocator.cpp
+// Haze Allocator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace 
 {
 	using namespace hz;
 
-	void already_defined_error(const std::string& name, Token token)
+	void already_defined_error(const std::string& name, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("variable `{}` was already defined in the current scope", name), token);
 	}
 
-	void not_defined_error(const std::string& name, Token token)
+	void not_defined_error(const std::string& name, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("variable `{}` was not defined in the current scope", name), token);
 	}
@@ -23,7 +23,7 @@ namespace
 
 namespace hz
 {
-	std::optional<Offset> RuntimeAllocator::get_function_stack_size(const std::string& name)
+	std::optional<Offset> Allocator::get_function_stack_size(const std::string& name)
 	{
 		if (!stack_size.contains(name))
 		{
@@ -32,7 +32,7 @@ namespace hz
 		return { stack_size.at(name) };
 	}
 
-	bool RuntimeAllocator::define_local(const std::string& name)
+	bool Allocator::define_local(const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 		
@@ -49,7 +49,7 @@ namespace hz
 		return true;
 	}
 
-	bool RuntimeAllocator::define_local(const std::string& name, Register source)
+	bool Allocator::define_local(const std::string& name, Register source)
 	{
 		if (!define_local(name))
 		{
@@ -71,7 +71,7 @@ namespace hz
 		return true;
 	}
 
-	void RuntimeAllocator::attach_local(const std::string& name, Offset offset)
+	void Allocator::attach_local(const std::string& name, Offset offset)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -84,12 +84,12 @@ namespace hz
 		locals_offsets[current_function][name] = offset;
 	}
 
-	void RuntimeAllocator::destroy_local(const std::string& name)
+	void Allocator::destroy_local(const std::string& name)
 	{
 		locals_offsets.erase(name);
 	}
 
-	void RuntimeAllocator::read_local(Register destination, const std::string& name)
+	void Allocator::read_local(Register destination, const std::string& name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
@@ -103,7 +103,7 @@ namespace hz
 		REQUIRE_SAFE(Generator)->stack_read(destination, offset);
 	}
 
-	void RuntimeAllocator::write_local(const std::string& name, Register source)
+	void Allocator::write_local(const std::string& name, Register source)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 

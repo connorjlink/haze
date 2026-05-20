@@ -1,9 +1,6 @@
 import std;
 
 #include <async/Task.h>
-#include <allocator/HeapAllocator.h>
-#include <allocator/RuntimeAllocator.h>
-#include <allocator/StackAllocator.h>
 #include <cli/CommandLineParser.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
@@ -152,7 +149,7 @@ int main(int argc, char** argv)
 	};
 
 	// run once per translation unit
-	auto thread_work = [&](const std::string& filepath)
+	auto thread_translation = [&](const std::string& filepath)
 	{
 		const auto& file = USE_UNSAFE(FileManager)->get_file(filepath);
 
@@ -160,9 +157,9 @@ int main(int argc, char** argv)
 		{
 			return std::make_shared<Generator>(filepath);
 		});
-		ServiceContainer::instance().register_factory<RuntimeAllocator>([]
+		ServiceContainer::instance().register_factory<Allocator>([]
 		{
-			return std::make_shared<RuntimeAllocator>();
+			return std::make_shared<Allocator>();
 		});
 		switch (file.ttype())
 		{
@@ -229,7 +226,7 @@ int main(int argc, char** argv)
 
 			for (auto& filepath : work)
 			{
-				thread_work(filepath);
+				thread_translation(filepath);
 			}
 		});
 	}

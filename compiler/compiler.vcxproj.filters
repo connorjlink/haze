@@ -39,9 +39,6 @@
     <ClCompile Include="source\Bimap.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\BinaryExpression.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\BinaryUtilities.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -515,9 +512,6 @@
     <ClInclude Include="include\ast\ArgumentExpression.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\expression\BinaryExpression.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\ast\BinaryExpressionType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -692,9 +686,6 @@
     <ClInclude Include="include\ast\statement\CompoundStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\statement\ExitStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\ast\statement\ExpressionStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -704,7 +695,7 @@
     <ClInclude Include="include\ast\statement\IfStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\statement\InlineAsmStatement.h">
+    <ClInclude Include="include\ast\statement\InlineAssemblyStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\statement\NullStatement.h">

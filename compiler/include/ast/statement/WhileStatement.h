@@ -1,31 +1,33 @@
 #ifndef HAZE_WHILESTATEMENT_H
 #define HAZE_WHILESTATEMENT_H
 
-#include <ast/statement/Statement.h>
 #include <ast/expression/Expression.h>
+#include <ast/statement/Statement.h>
 
 // Haze WhileStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class WhileStatement : public Statement
+	class WhileStatement : public StatementBase
 	{
 	private:
-		Expression* condition;
-		Statement* body;
+		ExpressionHandle condition;
+		StatementHandle body;
 
 	public:
-		WhileStatement(Expression* condition, Statement* body, Token token)
-			: Statement{ token }, condition{ condition }, body{ body }
+		WhileStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
+			: StatementBase{ token }, condition{ condition }, body{ body }
 		{
 		}
 
 	public:
-		virtual StatementType stype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Statement* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
+		StatementType tag_type(void) const;
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		StatementHandle evaluate(const Storage&, Context&) const;
+		StatementHandle optimize(const Storage&) const;
+		StatementHandle get_type(const Storage&) const;
 	};
 }
 

@@ -1,30 +1,32 @@
 #ifndef HAZE_EXPRESSIONSTATEMENT_H
 #define HAZE_EXPRESSIONSTATEMENT_H
 
-#include <ast/statement/Statement.h>
 #include <ast/expression/Expression.h>
+#include <ast/statement/Statement.h>
 
-// Haze ExpressionStatement.cpp
+// Haze ExpressionStatement.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class ExpressionStatement : public Statement
+	class ExpressionStatement : public StatementBase
 	{
 	private:
-		Expression* expression;
+		ExpressionHandle expression;
 
 	public:
-		ExpressionStatement(Expression* expression, Token token)
-			: Statement{ token }, expression{ expression }
+		ExpressionStatement(ExpressionHandle expression, const Token& token)
+			: StatementBase{ token }, expression{ expression }
 		{
 		}
 
 	public:
-		virtual StatementType stype() const final override;
-		virtual void generate(Allocation*) final override;
-		virtual Statement* optimize() final override;
-		virtual Node* evaluate(Context*) const final override;
+		StatementType tag_type(void) const;
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		StatementHandle evaluate(const Storage&, Context&) const;
+		StatementHandle optimize(const Storage&) const;
+		StatementHandle get_type(const Storage&) const;
 	};
 }
 

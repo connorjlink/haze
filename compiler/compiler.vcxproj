@@ -105,7 +105,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <BuildStlModules>true</BuildStlModules>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\async\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -124,7 +124,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <BuildStlModules>true</BuildStlModules>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\async\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -135,7 +135,6 @@
   <ItemGroup>
     <ClInclude Include="include\ast\function\Function.h" />
     <ClInclude Include="include\ast\AST.h" />
-    <ClInclude Include="include\ast\expression\BinaryExpression.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
     <ClInclude Include="include\type\TypeKind.h" />
@@ -143,11 +142,10 @@
     <ClInclude Include="include\utility\Typing.h" />
     <ClInclude Include="include\allocator\Value.h" />
     <ClInclude Include="include\ast\statement\CompoundStatement.h" />
-    <ClInclude Include="include\ast\statement\ExitStatement.h" />
     <ClInclude Include="include\ast\statement\ExpressionStatement.h" />
     <ClInclude Include="include\ast\statement\ForStatement.h" />
     <ClInclude Include="include\ast\statement\IfStatement.h" />
-    <ClInclude Include="include\ast\statement\InlineAsmStatement.h" />
+    <ClInclude Include="include\ast\statement\InlineAssemblyStatement.h" />
     <ClInclude Include="include\ast\statement\NullStatement.h" />
     <ClInclude Include="include\ast\statement\PrintStatement.h" />
     <ClInclude Include="include\ast\statement\ReturnStatement.h" />
@@ -168,7 +166,6 @@
     <ClCompile Include="source\AutoJob.cpp" />
     <ClCompile Include="source\AutoJSON.cpp" />
     <ClCompile Include="source\Bimap.cpp" />
-    <ClCompile Include="source\BinaryExpression.cpp" />
     <ClCompile Include="source\BinaryUtilities.cpp" />
     <ClCompile Include="source\BMBuilder.cpp" />
     <ClCompile Include="source\CommandLineParser.cpp" />

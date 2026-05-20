@@ -1,17 +1,17 @@
-#ifndef HAZE_RUNTIMEALLOCATOR_H
-#define HAZE_RUNTIMEALLOCATOR_H
+#ifndef HAZE_ALLOCATOR_H
+#define HAZE_ALLOCATOR_H
 
 #include <data/DependencyInjector.h>
 #include <toolchain/Generator.h>
 #include <utility/Constants.h>
 
-// Haze RuntimeAllocator.h
+// Haze Allocator.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class RuntimeAllocator 
-		: public ServiceTag<RuntimeAllocator>
+	class Allocator 
+		: public ServiceTag<Allocator>
 		, public InjectService<Generator>
 	{
 	private:
@@ -37,7 +37,7 @@ namespace hz
 		void write_local(const std::string&, Register);
 
 	public:
-		RuntimeAllocator()
+		Allocator()
 			: locals_offsets{}
 		{
 		}

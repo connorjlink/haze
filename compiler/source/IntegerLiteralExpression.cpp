@@ -1,6 +1,6 @@
 import std;
 
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <ast/expression/Expression.h>
 #include <toolchain/Generator.h>
 

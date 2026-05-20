@@ -1,7 +1,7 @@
 #ifndef HAZE_FUNCTION_H
 #define HAZE_FUNCTION_H
 
-#include <allocator/RuntimeAllocator.h>
+#include <allocator/Allocator.h>
 #include <data/DependencyInjector.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
@@ -17,7 +17,7 @@ namespace hz
 	class Type;
 
 	class Function 
-		: public InjectService<Generator, Parser, RuntimeAllocator>
+		: public InjectService<Generator, Parser, Allocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
