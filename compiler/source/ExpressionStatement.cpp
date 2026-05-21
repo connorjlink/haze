@@ -8,9 +8,9 @@ import std;
 
 namespace hz
 {
-	StatementType ExpressionStatement::stype() const
+	StatementKind ExpressionStatement::stype() const
 	{
-		return StatementType::EXPRESSION;
+		return StatementKind::EXPRESSION;
 	}
 
 	void ExpressionStatement::generate(Allocation*)

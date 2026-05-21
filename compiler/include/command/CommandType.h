@@ -4,23 +4,22 @@
 // Haze CommandType.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define AS_COMMAND(x) static_cast<Command*>(x)
-
-#define AS_LABEL_COMMAND(x) static_cast<LabelCommand*>(x)
-#define AS_INSTRUCTION_COMMAND(x) static_cast<InstructionCommand*>(x)
-
 namespace hz
 {
-	enum class CommandType
+	enum class CommandKind
 	{
 		LABEL,
 		INSTRUCTION,
+		DOTORG,
+		DOTDEFINE,
 	};
 
-	static const std::unordered_map<CommandType, std::string_view> _command_type_map
+	static const std::unordered_map<CommandKind, std::string_view> command_kind_map
 	{
-		{ CommandType::LABEL, "label" },
-		{ CommandType::INSTRUCTION, "instruction" },
+		{ CommandKind::LABEL, "label" },
+		{ CommandKind::INSTRUCTION, "instruction" },
+		{ CommandKind::DOTORG, ".org" },
+		{ CommandKind::DOTDEFINE, ".define" },
 	};
 }
 

@@ -41,7 +41,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_INTEGER_LITERAL_EXPRESSION(value) IntegerLiteralExpression{ value }
 
@@ -61,7 +61,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_FLOAT_LITERAL_EXPRESSION(value) FloatLiteralExpression{ value }
 
@@ -81,7 +81,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_STRING_LITERAL_EXPRESSION(value) StringLiteralExpression{ value }
 
@@ -113,7 +113,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_IDENTIFIER_EXPRESSION(identifier_kind, name) IdentifierExpression{ identifier_kind, name }
 
@@ -143,7 +143,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_ADJUST_EXPRESSION(target, adjust_kind) AdjustExpression{ adjust_kind, MAKE_HANDLE(ast, target) }
 
@@ -164,7 +164,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_ARGUMENT_EXPRESSION(type, identifier) ArgumentExpression{ type, identifier }
 
@@ -186,7 +186,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_FUNCTION_ARGUMENT_EXPRESSION(type, identifier, value) FunctionArgumentExpression{ type, MAKE_REFERENCE(ast, identifier), MAKE_HANDLE(ast, value) }
 
@@ -207,7 +207,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_FUNCTION_CALL_EXPRESSION(identifier, arguments) FunctionCallExpression{ MAKE_HANDLE(ast, identifier), arguments }
 
@@ -315,7 +315,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_TERNARY_EXPRESSION(condition, true_expression, false_expression) TernaryExpression{ MAKE_HANDLE(ast, condition), MAKE_HANDLE(ast, true_expression), MAKE_HANDLE(ast, false_expression) }
 
@@ -336,7 +336,7 @@ namespace hz
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
-		ExpressionHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_CAST_EXPRESSION(target, type) CastExpression{ MAKE_HANDLE(ast, target), type }
 
@@ -361,7 +361,6 @@ namespace hz
 	>;
 
 	using ExpressionSum = MakeSum<ASTMethods, ExpressionTypes>::Type;
-	using ExpressionSumBase = SumMemberBase<ExpressionSum>;
 
 	template<typename T>
 	using ExpressionReference = ExpressionSum::template Reference<T>;

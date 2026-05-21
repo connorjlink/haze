@@ -22,12 +22,12 @@ namespace hz
 		}
 
 	public:
-		StatementType tag_type(void) const;
+		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		StatementHandle get_type(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
 	};
 }
 

@@ -596,7 +596,7 @@
     <ClInclude Include="include\allocator\AllocationType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\allocator\RuntimeAllocator.h">
+    <ClInclude Include="include\allocator\Allocator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\RISCVInstructionType.h">

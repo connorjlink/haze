@@ -3,6 +3,7 @@
 
 #include <toolchain/Parser.h>
 #include <cli/ArchitectureType.h>
+#include <command/Command.h>
 #include <utility/Constants.h>
 
 // Haze AssemblerParser.h
@@ -15,12 +16,12 @@ namespace hz
 	class AssemblerParser : public Parser
 	{
 	private:
-		Expression* parse_literal();
+		ExpressionHandle parse_literal();
 
 	private:
-		Node* parse_dotorg_command();
-		Node* parse_label_command();
-		Node* parse_command();
+		CommandHandle parse_dotorg_command();
+		CommandHandle parse_label_command();
+		CommandHandle parse_command();
 
 	public:
 		virtual ParserType ptype() const final override;
@@ -31,7 +32,7 @@ namespace hz
 
 	protected:
 		virtual Instruction* parse_instruction_command() = 0;
-		virtual std::int8_t parse_register() = 0;
+		virtual Register parse_register() = 0;
 
 	public:
 		using Parser::Parser;

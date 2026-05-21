@@ -14,9 +14,9 @@
 
 namespace hz
 {
-	StatementType ReturnStatement::stype() const
+	StatementKind ReturnStatement::stype() const
 	{
-		return StatementType::RETURN;
+		return StatementKind::RETURN;
 	}
 
 	void ReturnStatement::generate(Allocation*)

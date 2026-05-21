@@ -156,7 +156,8 @@ namespace hz
 		}
 	};
 
-
+	
+	// nonfacade types for public consumption
 	using ValueTypes = SumTypeList
 	<
 		RegisterValue,
@@ -166,7 +167,6 @@ namespace hz
 
 	using ValueSum = MakeSum<ValueMethods, ValueTypes>::Type;
 	using ValueBase = SumMemberBase<ValueSum>;
-
 }
 
 #endif

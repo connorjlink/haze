@@ -11,9 +11,9 @@ import std;
 
 namespace hz
 {
-	StatementType IfStatement::stype() const
+	StatementKind IfStatement::stype() const
 	{
-		return StatementType::IF;
+		return StatementKind::IF;
 	}
 
 	void IfStatement::generate(Allocation*)

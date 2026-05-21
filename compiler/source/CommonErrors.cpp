@@ -44,9 +44,9 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("parser", _parser_type_map.at(ptype)), token);
 	}
 
-	void CommonErrors::invalid_statement_type(StatementType stype, const Token& token)
+	void CommonErrors::invalid_statement_type(StatementKind stype, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("statement", _statement_type_map.at(stype)), token);
+		internal_compiler_error(invalid_generic_type("statement", statement_kind_map.at(stype)), token);
 	}
 
 	void CommonErrors::invalid_expression_type(ExpressionType etype, const Token& token)

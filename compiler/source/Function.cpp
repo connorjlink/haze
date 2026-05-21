@@ -17,11 +17,6 @@ import std;
 
 namespace hz
 {
-	Function::Function(const std::string& name, Type* return_type, const std::vector<Expression*>& arguments, Statement* body, const Token& token)
-		: Node{ token }, name{ name }, return_type{ return_type }, arguments{ arguments }, body{ body }
-	{
-	}
-
 	NodeType Function::ntype() const
 	{
 		return NodeType::FUNCTION;
@@ -32,7 +27,7 @@ namespace hz
 		REQUIRE_SAFE(Generator)->begin_function(name);
 
 		// ensure each function implicitly has its own scope block
-		if (body->stype() != StatementType::COMPOUND)
+		if (body->stype() != StatementKind::COMPOUND)
 		{
 			body = new CompoundStatement{ { body }, body->_token };
 		}

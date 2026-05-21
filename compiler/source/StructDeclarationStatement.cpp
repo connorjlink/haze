@@ -26,9 +26,9 @@ namespace hz
 		return -1;
 	}
 
-	StatementType StructDeclarationStatement::stype() const
+	StatementKind StructDeclarationStatement::stype() const
 	{
-		return StatementType::STRUCT;
+		return StatementKind::STRUCT;
 	}
 
 	void StructDeclarationStatement::generate(Allocation*)

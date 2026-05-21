@@ -8,9 +8,9 @@
 namespace hz
 {
 
-	StatementType CompoundStatement::stype() const
+	StatementKind CompoundStatement::stype() const
 	{
-		return StatementType::COMPOUND;
+		return StatementKind::COMPOUND;
 	}
 
 	void CompoundStatement::generate(Allocation*)

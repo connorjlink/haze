@@ -7,7 +7,7 @@
 namespace hz
 {
 	enum class ParserType;
-	enum class StatementType;
+	enum class StatementKind;
 	enum class ExpressionType;
 	enum class BinaryExpressionKind;
 	enum class IntegerLiteralType;
@@ -38,7 +38,7 @@ namespace hz
 
 	public:
 		static void invalid_parser_type(ParserType, const Token&);
-		static void invalid_statement_type(StatementType, const Token&);
+		static void invalid_statement_type(StatementKind, const Token&);
 		static void invalid_expression_type(ExpressionType, const Token&);
 		static void invalid_command_type(CommandType, const Token&);
 

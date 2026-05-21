@@ -11,9 +11,9 @@ import std;
 
 namespace hz
 {
-	StatementType ExitStatement::stype() const
+	StatementKind ExitStatement::stype() const
 	{
-		return StatementType::EXIT;
+		return StatementKind::EXIT;
 	}
 
 	void ExitStatement::generate(Allocation*)

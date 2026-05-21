@@ -7,9 +7,9 @@ import std;
 
 namespace hz
 {
-	StatementType NullStatement::stype() const
+	StatementKind NullStatement::stype() const
 	{
-		return StatementType::NUL;
+		return StatementKind::NUL;
 	}
 
 	void NullStatement::generate(Allocation*)

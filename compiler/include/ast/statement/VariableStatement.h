@@ -27,7 +27,7 @@ namespace hz
 		}
 
 	public:
-		virtual StatementType stype() const final override;
+		virtual StatementKind stype() const final override;
 		virtual void generate(Allocation*) final override;
 		virtual Statement* optimize() final override;
 		virtual Node* evaluate(Context*) const final override;

@@ -9,9 +9,9 @@ import std;
 
 namespace hz
 {
-	StatementType VariableStatement::stype() const
+	StatementKind VariableStatement::stype() const
 	{
-		return StatementType::VARIABLE;
+		return StatementKind::VARIABLE;
 	}
 
 	void VariableStatement::generate(Allocation*)

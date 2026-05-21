@@ -12,9 +12,9 @@ import std;
 
 namespace hz
 {
-	StatementType ForStatement::stype() const
+	StatementKind ForStatement::stype() const
 	{
-		return StatementType::FOR;
+		return StatementKind::FOR;
 	}
 
 	void ForStatement::generate(Allocation*)

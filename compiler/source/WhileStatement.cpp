@@ -12,9 +12,9 @@ import std;
 
 namespace hz
 {
-	StatementType WhileStatement::stype() const
+	StatementKind WhileStatement::stype() const
 	{
-		return StatementType::WHILE;
+		return StatementKind::WHILE;
 	}
 
 	void WhileStatement::generate(Allocation*)

@@ -1,0 +1,16 @@
+// Haze StatementKind.def
+// (c) Connor J. Link. All Rights Reserved.
+
+X(NULL, NullStatement, null)
+X(EXPRESSION, ExpressionStatement, expression)
+X(IF, IfStatement, if)
+X(WHILE, WhileStatement, while)
+X(DO, DoStatement, do)
+X(FOR, ForStatement, for)
+X(SWITCH, SwitchStatement, switch)
+X(BREAK, BreakStatement, break)
+X(CONTINUE, ContinueStatement, continue)
+X(GOTO, GotoStatement, goto)
+X(RETURN, ReturnStatement, return)
+X(COMPOUND, CompoundStatement, compound)
+X(LABELED, LabeledStatement, labeled)

@@ -10,9 +10,9 @@ import std;
 
 namespace hz
 {
-	StatementType PrintStatement::stype() const
+	StatementKind PrintStatement::stype() const
 	{
-		return StatementType::PRINT;
+		return StatementKind::PRINT;
 	}
 
 	void PrintStatement::generate(Allocation*)

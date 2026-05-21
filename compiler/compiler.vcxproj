@@ -264,7 +264,7 @@
   <ItemGroup>
     <ClInclude Include="include\allocator\Allocation.h" />
     <ClInclude Include="include\allocator\AllocationType.h" />
-    <ClInclude Include="include\allocator\RuntimeAllocator.h" />
+    <ClInclude Include="include\allocator\Allocator.h" />
     <ClInclude Include="include\ast\AdjustExpression.h" />
     <ClInclude Include="include\ast\ArgumentExpression.h" />
     <ClInclude Include="include\ast\BinaryExpression.h" />

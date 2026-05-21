@@ -11,9 +11,9 @@ import std;
 
 namespace hz
 {
-	StatementType InlineAsmStatement::stype() const
+	StatementKind InlineAsmStatement::stype() const
 	{
-		return StatementType::INLINEASM;
+		return StatementKind::INLINEASM;
 	}
 
 	void InlineAsmStatement::generate(Allocation*)

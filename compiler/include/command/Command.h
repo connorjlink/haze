@@ -18,8 +18,8 @@ namespace hz
 		Token token;
 
 	public:
-		Command(Token token)
-			: token{ std::move(token) }
+		Command(const Token& token)
+			: token{ token }
 		{
 		}
 

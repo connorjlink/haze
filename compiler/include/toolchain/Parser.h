@@ -60,13 +60,11 @@ namespace hz
 		Node* parse_dotdefine_command();
 
 	protected:
-		SumReference<IdentifierExpression> parse_identifier_expression(IdentifierType = IdentifierType::UNKNOWN); // explicit contextual type override
-		SumReference<IntegerLiteralExpression> parse_integerliteral_expression();
-		SumReference<StringLiteralExpression> parse_string_expression();
-		SumReference<FunctionCallExpression> parse_functioncall_expression();
-		
-		
-		Expression parse_parenthesis_expression();
+		ExpressionReference<IdentifierExpression> parse_identifier_expression(IdentifierType = IdentifierType::UNKNOWN); // explicit contextual type override
+		ExpressionReference<IntegerLiteralExpression> parse_integerliteral_expression();
+		ExpressionReference<StringLiteralExpression> parse_string_expression();
+		ExpressionReference<FunctionCallExpression> parse_functioncall_expression();
+		ExpressionHandle parse_parenthesis_expression();
 
 	protected:
 		AdjustExpression* parse_increment_expression();
