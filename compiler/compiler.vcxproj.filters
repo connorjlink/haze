@@ -464,9 +464,6 @@
     <ClInclude Include="include\command\CommandType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\command\DotDefineCommand.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\command\DotOrgCommand.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -683,31 +680,10 @@
     <ClInclude Include="include\type\VoidType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\statement\CompoundStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\ExpressionStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\ForStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\IfStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\ast\statement\InlineAssemblyStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\statement\NullStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\PrintStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\ReturnStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\StatementType.h">
+    <ClInclude Include="include\ast\statement\StatementKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\statement\StructDeclarationStatement.h">
@@ -749,5 +725,19 @@
     <ClInclude Include="include\type\TypeKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="include\ast\function\FunctionKind.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\ast\statement\StatementKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\ast\function\FunctionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\ast\expression\ExpressionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
   </ItemGroup>
 </Project>

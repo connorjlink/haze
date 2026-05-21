@@ -136,20 +136,14 @@
     <ClInclude Include="include\ast\function\Function.h" />
     <ClInclude Include="include\ast\AST.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
+    <ClInclude Include="include\ast\function\FunctionKind.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
     <ClInclude Include="include\type\TypeKind.h" />
     <ClInclude Include="include\utility\Sum.h" />
     <ClInclude Include="include\utility\Typing.h" />
     <ClInclude Include="include\allocator\Value.h" />
-    <ClInclude Include="include\ast\statement\CompoundStatement.h" />
-    <ClInclude Include="include\ast\statement\ExpressionStatement.h" />
-    <ClInclude Include="include\ast\statement\ForStatement.h" />
-    <ClInclude Include="include\ast\statement\IfStatement.h" />
     <ClInclude Include="include\ast\statement\InlineAssemblyStatement.h" />
-    <ClInclude Include="include\ast\statement\NullStatement.h" />
-    <ClInclude Include="include\ast\statement\PrintStatement.h" />
-    <ClInclude Include="include\ast\statement\ReturnStatement.h" />
-    <ClInclude Include="include\ast\statement\StatementType.h" />
+    <ClInclude Include="include\ast\statement\StatementKind.h" />
     <ClInclude Include="include\ast\statement\StructDeclarationStatement.h" />
     <ClInclude Include="include\ast\statement\VariableStatement.h" />
     <ClInclude Include="include\ast\statement\WhileStatement.h" />
@@ -305,7 +299,6 @@
     <ClInclude Include="include\command\BranchCommandType.h" />
     <ClInclude Include="include\command\Command.h" />
     <ClInclude Include="include\command\CommandType.h" />
-    <ClInclude Include="include\command\DotDefineCommand.h" />
     <ClInclude Include="include\command\DotOrgCommand.h" />
     <ClInclude Include="include\command\InstructionCommand.h" />
     <ClInclude Include="include\command\IntermediateCommand.h" />
@@ -379,6 +372,11 @@
     <ClInclude Include="include\validator\InstructionValidator.h" />
     <ClInclude Include="include\validator\models\Test.h" />
     <ClInclude Include="include\validator\Validator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\ast\expression\ExpressionKind.def" />
+    <None Include="include\ast\function\FunctionKind.def" />
+    <None Include="include\ast\statement\StatementKind.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
