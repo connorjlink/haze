@@ -9,49 +9,28 @@
 namespace hz
 {
 #undef CONST
+
 	enum class TypeQualifier
 	{
-		NONE = 0,
-		CONST = 1 << 0,
-		VOLATILE = 1 << 1,
-		RESTRICT = 1 << 2,
+#define X(enumerator, name, value) name = value,
+#include <type/TypeQualifier.def>
+#undef X
 	};
 
-	TypeQualifier operator|(TypeQualifier lhs, TypeQualifier rhs)
+	constexpr std::string_view format_type_qualifier(TypeQualifier qualifier)
 	{
-		return static_cast<TypeQualifier>(
-			static_cast<std::underlying_type_t<TypeQualifier>>(lhs) | 
-			static_cast<std::underlying_type_t<TypeQualifier>>(rhs));
+		using enum TypeQualifier;
+		switch (qualifier)
+		{
+#define X(enumerator, name, value) case TypeQualifier::name: return #name;
+#include <type/TypeQualifier.def>
+#undef X
+		}
+
+		return "<unknown type qualifier>";
 	}
 
-	TypeQualifier operator|=(TypeQualifier& lhs, TypeQualifier rhs)
-	{
-		lhs = lhs | rhs;
-		return lhs;
-	}
-
-	bool operator&(TypeQualifier lhs, TypeQualifier rhs)
-	{
-		return static_cast<bool>(
-			static_cast<std::underlying_type_t<TypeQualifier>>(lhs) & 
-			static_cast<std::underlying_type_t<TypeQualifier>>(rhs));
-	}
-
-	static const std::unordered_map<TokenType, TypeQualifier> _type_qualifier_token_map
-	{
-		{ TokenType::CONST, TypeQualifier::CONST },
-		{ TokenType::VOLATILE, TypeQualifier::VOLATILE },
-		{ TokenType::RESTRICT, TypeQualifier::RESTRICT },
-	};
-
-	static const std::unordered_map<TypeQualifier, std::string_view> _type_qualifier_map
-	{
-		{ TypeQualifier::CONST, "const" },
-		{ TypeQualifier::VOLATILE, "volatile" },
-		{ TypeQualifier::RESTRICT, "restrict" },
-	};
-
-	std::string format_type_qualifier(TypeQualifier qualifier)
+	constexpr std::string to_string(TypeQualifier qualifier)
 	{
 		using enum TypeQualifier;
 
@@ -59,6 +38,26 @@ namespace hz
 			(qualifier & CONST) ? "const " : "",
 			(qualifier & VOLATILE) ? "volatile " : "",
 			(qualifier & RESTRICT) ? "restrict " : "");
+	}
+
+	constexpr TypeQualifier operator|(TypeQualifier lhs, TypeQualifier rhs)
+	{
+		return static_cast<TypeQualifier>(
+			static_cast<std::underlying_type_t<TypeQualifier>>(lhs) | 
+			static_cast<std::underlying_type_t<TypeQualifier>>(rhs));
+	}
+
+	constexpr TypeQualifier operator|=(TypeQualifier& lhs, TypeQualifier rhs)
+	{
+		lhs = lhs | rhs;
+		return lhs;
+	}
+
+	constexpr bool operator&(TypeQualifier lhs, TypeQualifier rhs)
+	{
+		return static_cast<bool>(
+			static_cast<std::underlying_type_t<TypeQualifier>>(lhs) & 
+			static_cast<std::underlying_type_t<TypeQualifier>>(rhs));
 	}
 }
 

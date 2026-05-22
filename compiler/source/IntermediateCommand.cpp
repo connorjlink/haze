@@ -4,7 +4,6 @@ import std;
 #include <symbol/Symbol.h>
 #include <utility/BinaryUtilities.h>
 #include <utility/BinaryConstants.h>
-#include <ast/ArgumentExpression.h>
 #include <type/Type.h>
 #include <x86/X86Builder.h>
 #include <x86/X86Register.h>
@@ -33,7 +32,7 @@ namespace
 #endif
 	}
 
-	struct sum_fn
+	struct SumFn
 	{
 		template<std::ranges::input_range R>
 		constexpr auto operator()(R&& r) const
@@ -43,13 +42,13 @@ namespace
 		}
 
 		template<std::ranges::input_range R>
-		friend constexpr auto operator|(R&& r, const sum_fn& fn)
+		friend constexpr auto operator|(R&& r, const SumFn& fn)
 		{
 			return fn(std::forward<R>(r));
 		}
 	};
 
-	inline constexpr sum_fn sum{};
+	inline constexpr SumFn sum{};
 }
 
 namespace hz
@@ -213,7 +212,7 @@ namespace hz
 
 		ByteRange out{};
 
-		EMIT(mov(std::make_unique<IndirectOperand>(pointer), std::make_unique<RegisterOperand>(_source)));
+		EMIT(mov(std::make_unique<IndirectOperand>(pointer), std::make_unique<RegisterOperand>(source)));
 
 		return out;
 	}
@@ -247,7 +246,7 @@ namespace hz
 		
 		ByteRange out{};
 
-		PUT(X86Builder::mov_obr(offset, _source));
+		PUT(X86Builder::mov_obr(offset, source));
 		EMIT(mov(std::make_unique<RegisterDisplacedOperand>(EBP, offset), std::make_unique<RegisterOperand>(destination)));
 
 		return out;
@@ -267,9 +266,9 @@ namespace hz
 
 		ByteRange out{};
 
-		PUT(X86Builder::test_rr(_source, _source));
+		PUT(X86Builder::test_rr(source, source));
 		PUT(X86Builder::sete_r(destination));
-		PUT(X86Builder::movzx_rr(destination, _source));
+		PUT(X86Builder::movzx_rr(destination, source));
 
 		return out;
 	}
@@ -596,10 +595,10 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (destination != _source)
+		if (destination != source)
 		{
 			// mov destination, source
-			PUT(X86Builder::mov_rr(destination, _source));
+			PUT(X86Builder::mov_rr(destination, source));
 		}
 
 		// inc destination
@@ -618,10 +617,10 @@ namespace hz
 	{
 		ByteRange out{};
 
-		if (destination != _source)
+		if (destination != source)
 		{
 			// mov destination, source
-			PUT(X86Builder::mov_rr(destination, _source));
+			PUT(X86Builder::mov_rr(destination, source));
 		}
 
 		// dec destination
@@ -641,10 +640,10 @@ namespace hz
 
 		ByteRange out{};
 
-		if (destination != _source)
+		if (destination != source)
 		{
 			// mov destination, src
-			PUT(X86Builder::mov_rr(destination, _source));
+			PUT(X86Builder::mov_rr(destination, source));
 		}
 
 		return out;

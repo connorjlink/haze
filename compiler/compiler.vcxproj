@@ -219,7 +219,6 @@
     <ClCompile Include="source\Symbol.cpp" />
     <ClCompile Include="source\SymbolDatabase.cpp" />
     <ClCompile Include="source\SymbolExporter.cpp" />
-    <ClCompile Include="source\Test.cpp" />
     <ClCompile Include="source\Toolchain.cpp" />
     <ClCompile Include="source\Tracking.cpp" />
     <ClCompile Include="source\Type.cpp" />
@@ -377,6 +376,9 @@
     <None Include="include\ast\expression\ExpressionKind.def" />
     <None Include="include\ast\function\FunctionKind.def" />
     <None Include="include\ast\statement\StatementKind.def" />
+    <None Include="include\type\TypeQualifier.def" />
+    <None Include="include\x86\X86InstructionKind.def" />
+    <None Include="include\x86\X86OperandKind.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

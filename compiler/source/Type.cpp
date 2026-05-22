@@ -35,7 +35,7 @@ namespace hz
 	{
 		// qualifier signedness int_type storage
 		return std::format("{} {} {} {}",
-			_type_qualifier_map.at(qualifier), 
+			type_qualifier_map.at(qualifier), 
 			_type_signedness_map.at(signedness),
 			_int_type_type_map.at(int_type),
 			_type_storage_map.at(storage));
@@ -74,7 +74,7 @@ namespace hz
 	{
 		// qualifier struct tag storage
 		return std::format("{} {} {} {}",
-			_type_qualifier_map.at(qualifier),
+			type_qualifier_map.at(qualifier),
 			"struct",
 			tag,
 			_type_storage_map.at(storage));
@@ -96,7 +96,7 @@ namespace hz
 	{
 		// qualifier string storage
 		return std::format("{} {} {}",
-			_type_qualifier_map.at(qualifier),
+			type_qualifier_map.at(qualifier),
 			"string",
 			_type_storage_map.at(storage));
 	}

@@ -15,7 +15,7 @@ namespace hz
 
 	void Validator::add_test(const Test& test)
 	{
-		_tests.emplace_back(test);
+		tests.emplace_back(test);
 		_num_tests++;
 	}
 
@@ -23,7 +23,7 @@ namespace hz
 	{
 		auto had_error = false;
 
-		for (auto& test : _tests)
+		for (auto& test : tests)
 		{
 			if (test.run_test())
 			{

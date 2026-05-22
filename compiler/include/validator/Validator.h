@@ -14,7 +14,7 @@ namespace hz
 		: public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::vector<Test> _tests;
+		std::vector<Test> tests;
 		static inline std::size_t _num_tests = 0;
 
 	protected:

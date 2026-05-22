@@ -1,12 +1,14 @@
 #ifndef HAZE_X86REGISTER_H
 #define HAZE_X86REGISTER_H
 
+#include <utility/Constants.h>
+
 // Haze X86Register.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum X86Register : std::uint8_t
+	enum X86Register : Register
 	{
 		EAX = 0,
 		ECX = 1,

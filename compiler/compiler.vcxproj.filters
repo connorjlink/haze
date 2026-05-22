@@ -210,9 +210,6 @@
     <ClCompile Include="source\SymbolExporter.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="source\Test.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="source\Toolchain.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -737,6 +734,15 @@
       <Filter>Archivos de origen</Filter>
     </None>
     <None Include="include\ast\expression\ExpressionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\x86\X86OperandKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\x86\X86InstructionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\TypeQualifier.def">
       <Filter>Archivos de origen</Filter>
     </None>
   </ItemGroup>

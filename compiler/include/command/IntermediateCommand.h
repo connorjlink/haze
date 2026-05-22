@@ -195,11 +195,11 @@ namespace hz
 	class BoolCommand : public IntermediateCommand
 	{
 	private:
-		std::int8_t destination, _source;
+		std::int8_t destination, source;
 
 	public:
 		BoolCommand(std::int8_t destination, std::int8_t source)
-			: destination{ destination }, _source{ source }
+			: destination{ destination }, source{ source }
 		{
 		}
 

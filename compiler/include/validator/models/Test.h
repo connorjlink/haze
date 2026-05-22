@@ -8,21 +8,33 @@
 
 namespace hz
 {
+	template<typename ParametersT>
 	class Test
 	{
 	private:
-		std::string _name;
-		std::function<bool(ErrorFrame)> _test;
+		std::string name;
+		std::function<bool(ParametersT&)> test;
 
 	private:
-		ErrorFrame frame;
+		ParametersT parameters;
 
 	public:
-		void attach(const ErrorFrame&);
-		bool run_test() const;
+		void attach(ParametersT& parameters)
+		{
+			this->parameters = parameters;
+		}
+
+		bool run_test() const
+		{
+			return test(frame);
+		}
 
 	public:
-		Test(const std::string&, std::function<bool(ErrorFrame)>);
+		Test(const std::string& name, std::function<bool(ParametersT&)> test)
+			: name{ name }, test{ test }, parameters{}
+		{
+			// explicit default on parameters
+		}
 	};
 }
 

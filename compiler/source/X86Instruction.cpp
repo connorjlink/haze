@@ -25,40 +25,40 @@ namespace
 
 namespace hz::x86
 {
-	X86OperandType ImmediateOperand::otype() const
+	X86OperandKind ImmediateOperand::otype() const
 	{
-		return X86OperandType::IMMEDIATE;
+		return X86OperandKind::IMMEDIATE;
 	}
 
-	X86OperandType IndirectOperand::otype() const
+	X86OperandKind IndirectOperand::otype() const
 	{
-		return X86OperandType::INDIRECT;
+		return X86OperandKind::INDIRECT;
 	}
 
-	X86OperandType RegisterOperand::otype() const
+	X86OperandKind RegisterOperand::otype() const
 	{
-		return X86OperandType::REGISTER;
+		return X86OperandKind::REGISTER;
 	}
 
-	X86OperandType RegisterIndirectOperand::otype() const
+	X86OperandKind RegisterIndirectOperand::otype() const
 	{
-		return X86OperandType::REGISTER_INDIRECT;
+		return X86OperandKind::REGISTER_INDIRECT;
 	}
 
-	X86OperandType RegisterDisplacedOperand::otype() const
+	X86OperandKind RegisterDisplacedOperand::otype() const
 	{
-		return X86OperandType::REGISTER_DISPLACED;
+		return X86OperandKind::REGISTER_DISPLACED;
 	}
 
 
-	X86InstructionType PushInstruction::itype() const
+	X86InstructionKind PushInstruction::itype() const
 	{
-		return X86InstructionType::PUSH;
+		return X86InstructionKind::PUSH;
 	}
 
 	ByteRange PushInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case IMMEDIATE:
@@ -126,14 +126,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType PopInstruction::itype() const
+	X86InstructionKind PopInstruction::itype() const
 	{
-		return X86InstructionType::POP;
+		return X86InstructionKind::POP;
 	}
 
 	ByteRange PopInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -154,14 +154,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType MovInstruction::itype() const
+	X86InstructionKind MovInstruction::itype() const
 	{
-		return X86InstructionType::MOV;
+		return X86InstructionKind::MOV;
 	}
 
 	ByteRange MovInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			// dereferencing pointer
@@ -169,11 +169,11 @@ namespace hz::x86
 			{
 				const auto indirect_destination = AS_INDIRECT_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = indirect_destination->_address;
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -188,7 +188,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -198,11 +198,11 @@ namespace hz::x86
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -224,7 +224,7 @@ namespace hz::x86
 					// dereferencing pointer
 					case INDIRECT:
 					{
-						const auto indirect_source = AS_INDIRECT_OPERAND(_source.get());
+						const auto indirect_source = AS_INDIRECT_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = indirect_source->_address;
 
@@ -249,7 +249,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -264,10 +264,10 @@ namespace hz::x86
 
 					case REGISTER_DISPLACED:
 					{
-						const auto register_displaced_source = AS_REGISTER_DISPLACED_OPERAND(_source.get());
+						const auto register_displaced_source = AS_REGISTER_DISPLACED_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_displaced_source->_register);
-						const auto displacement = register_displaced_source->_displacement;
+						const auto displacement = register_displaced_source->displacement;
 
 						ByteRange out{};
 
@@ -291,7 +291,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -301,13 +301,13 @@ namespace hz::x86
 			{
 				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(destination.get());
 				
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_displaced_destination->_register);
-						const auto displacement = register_displaced_destination->_displacement;
+						const auto displacement = register_displaced_destination->displacement;
 						const auto immediate = immediate_source->immediate;
 
 						if (!EI(static_cast<std::intmax_t>(displacement)).is_within_range<std::int8_t>())
@@ -336,7 +336,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -351,25 +351,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType MovzxInstruction::itype() const
+	X86InstructionKind MovzxInstruction::itype() const
 	{
-		return X86InstructionType::MOVZX;
+		return X86InstructionKind::MOVZX;
 	}
 
 	ByteRange MovzxInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -385,7 +385,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -400,25 +400,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType AddInstruction::itype() const
+	X86InstructionKind AddInstruction::itype() const
 	{
-		return X86InstructionType::ADD;
+		return X86InstructionKind::ADD;
 	}
 
 	ByteRange AddInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -470,7 +470,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -486,7 +486,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -501,25 +501,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SubInstruction::itype() const
+	X86InstructionKind SubInstruction::itype() const
 	{
-		return X86InstructionType::SUB;
+		return X86InstructionKind::SUB;
 	}
 
 	ByteRange SubInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -571,7 +571,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -586,7 +586,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -601,25 +601,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType OrInstruction::itype() const
+	X86InstructionKind OrInstruction::itype() const
 	{
-		return X86InstructionType::OR;
+		return X86InstructionKind::OR;
 	}
 
 	ByteRange OrInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -671,7 +671,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -686,7 +686,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -701,25 +701,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType AndInstruction::itype() const
+	X86InstructionKind AndInstruction::itype() const
 	{
-		return X86InstructionType::AND;
+		return X86InstructionKind::AND;
 	}
 
 	ByteRange AndInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -771,7 +771,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -786,7 +786,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -801,25 +801,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType XorInstruction::itype() const
+	X86InstructionKind XorInstruction::itype() const
 	{
-		return X86InstructionType::XOR;
+		return X86InstructionKind::XOR;
 	}
 
 	ByteRange XorInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -871,7 +871,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -886,7 +886,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -901,14 +901,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType IncInstruction::itype() const
+	X86InstructionKind IncInstruction::itype() const
 	{
-		return X86InstructionType::INC;
+		return X86InstructionKind::INC;
 	}
 
 	ByteRange IncInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -933,14 +933,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType DecInstruction::itype() const
+	X86InstructionKind DecInstruction::itype() const
 	{
-		return X86InstructionType::DEC;
+		return X86InstructionKind::DEC;
 	}
 
 	ByteRange DecInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -965,14 +965,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SalInstruction::itype() const
+	X86InstructionKind SalInstruction::itype() const
 	{
-		return X86InstructionType::SAL;
+		return X86InstructionKind::SAL;
 	}
 
 	ByteRange SalInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1017,14 +1017,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SarInstruction::itype() const
+	X86InstructionKind SarInstruction::itype() const
 	{
-		return X86InstructionType::SAR;
+		return X86InstructionKind::SAR;
 	}
 
 	ByteRange SarInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 		case REGISTER:
@@ -1069,25 +1069,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType TestInstruction::itype() const
+	X86InstructionKind TestInstruction::itype() const
 	{
-		return X86InstructionType::TEST;
+		return X86InstructionKind::TEST;
 	}
 
 	ByteRange TestInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -1102,7 +1102,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -1117,25 +1117,25 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType CmpInstruction::itype() const
+	X86InstructionKind CmpInstruction::itype() const
 	{
-		return X86InstructionType::CMP;
+		return X86InstructionKind::CMP;
 	}
 
 	ByteRange CmpInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (destination->otype())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (_source->otype())
+				switch (source->otype())
 				{
 					case IMMEDIATE:
 					{
-						const auto immediate_source = AS_IMMEDIATE_OPERAND(_source.get());
+						const auto immediate_source = AS_IMMEDIATE_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto immediate = immediate_source->immediate;
 
@@ -1187,7 +1187,7 @@ namespace hz::x86
 
 					case REGISTER:
 					{
-						const auto register_source = AS_REGISTER_OPERAND(_source.get());
+						const auto register_source = AS_REGISTER_OPERAND(source.get());
 						const auto destination = VERIFY_REGISTER(register_destination->_register);
 						const auto source = VERIFY_REGISTER(register_source->_register);
 
@@ -1202,7 +1202,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(_source->otype()));
+						CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(source->otype()));
 						return {};
 					} break;
 				}
@@ -1217,9 +1217,9 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType CallInstruction::itype() const
+	X86InstructionKind CallInstruction::itype() const
 	{
-		return X86InstructionType::CALL;
+		return X86InstructionKind::CALL;
 	}
 
 	ByteRange CallInstruction::emit() const
@@ -1234,9 +1234,9 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType ApicallInstruction::itype() const
+	X86InstructionKind ApicallInstruction::itype() const
 	{
-		return X86InstructionType::APICALL;
+		return X86InstructionKind::APICALL;
 	}
 
 	ByteRange ApicallInstruction::emit() const
@@ -1252,16 +1252,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JmpInstruction::itype() const
+	X86InstructionKind JmpInstruction::itype() const
 	{
-		return X86InstructionType::JMP;
+		return X86InstructionKind::JMP;
 	}
 
 	ByteRange JmpInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1285,16 +1285,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JeInstruction::itype() const
+	X86InstructionKind JeInstruction::itype() const
 	{
-		return X86InstructionType::JE;
+		return X86InstructionKind::JE;
 	}
 
 	ByteRange JeInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1319,16 +1319,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JneInstruction::itype() const
+	X86InstructionKind JneInstruction::itype() const
 	{
-		return X86InstructionType::JNE;
+		return X86InstructionKind::JNE;
 	}
 
 	ByteRange JneInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1353,16 +1353,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JlInstruction::itype() const
+	X86InstructionKind JlInstruction::itype() const
 	{
-		return X86InstructionType::JL;
+		return X86InstructionKind::JL;
 	}
 
 	ByteRange JlInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1387,16 +1387,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JleInstruction::itype() const
+	X86InstructionKind JleInstruction::itype() const
 	{
-		return X86InstructionType::JLE;
+		return X86InstructionKind::JLE;
 	}
 
 	ByteRange JleInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1421,16 +1421,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JgInstruction::itype() const
+	X86InstructionKind JgInstruction::itype() const
 	{
-		return X86InstructionType::JG;
+		return X86InstructionKind::JG;
 	}
 
 	ByteRange JgInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1455,16 +1455,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JgeInstruction::itype() const
+	X86InstructionKind JgeInstruction::itype() const
 	{
-		return X86InstructionType::JGE;
+		return X86InstructionKind::JGE;
 	}
 
 	ByteRange JgeInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1490,16 +1490,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JaInstruction::itype() const
+	X86InstructionKind JaInstruction::itype() const
 	{
-		return X86InstructionType::JA;
+		return X86InstructionKind::JA;
 	}
 
 	ByteRange JaInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1524,16 +1524,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JaeInstruction::itype() const
+	X86InstructionKind JaeInstruction::itype() const
 	{
-		return X86InstructionType::JAE;
+		return X86InstructionKind::JAE;
 	}
 
 	ByteRange JaeInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1558,16 +1558,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JbInstruction::itype() const
+	X86InstructionKind JbInstruction::itype() const
 	{
-		return X86InstructionType::JB;
+		return X86InstructionKind::JB;
 	}
 
 	ByteRange JbInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1592,16 +1592,16 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType JbeInstruction::itype() const
+	X86InstructionKind JbeInstruction::itype() const
 	{
-		return X86InstructionType::JBE;
+		return X86InstructionKind::JBE;
 	}
 
 	ByteRange JbeInstruction::emit() const
 	{
 		ByteRange out{};
 
-		const auto ei = EI(static_cast<std::intmax_t>(_displacement));
+		const auto ei = EI(static_cast<std::intmax_t>(displacement));
 
 		if (ei.is_within_range<std::int8_t>())
 		{
@@ -1626,14 +1626,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SeteInstruction::itype() const
+	X86InstructionKind SeteInstruction::itype() const
 	{
-		return X86InstructionType::SETE;
+		return X86InstructionKind::SETE;
 	}
 
 	ByteRange SeteInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1660,14 +1660,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetneInstruction::itype() const
+	X86InstructionKind SetneInstruction::itype() const
 	{
-		return X86InstructionType::SETNE;
+		return X86InstructionKind::SETNE;
 	}
 
 	ByteRange SetneInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1694,14 +1694,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetlInstruction::itype() const
+	X86InstructionKind SetlInstruction::itype() const
 	{
-		return X86InstructionType::SETL;
+		return X86InstructionKind::SETL;
 	}
 
 	ByteRange SetlInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1728,14 +1728,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetleInstruction::itype() const
+	X86InstructionKind SetleInstruction::itype() const
 	{
-		return X86InstructionType::SETLE;
+		return X86InstructionKind::SETLE;
 	}
 
 	ByteRange SetleInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1762,14 +1762,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetgInstruction::itype() const
+	X86InstructionKind SetgInstruction::itype() const
 	{
-		return X86InstructionType::SETG;
+		return X86InstructionKind::SETG;
 	}
 
 	ByteRange SetgInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1796,14 +1796,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetgeInstruction::itype() const
+	X86InstructionKind SetgeInstruction::itype() const
 	{
-		return X86InstructionType::SETGE;
+		return X86InstructionKind::SETGE;
 	}
 
 	ByteRange SetgeInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1830,14 +1830,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetaInstruction::itype() const
+	X86InstructionKind SetaInstruction::itype() const
 	{
-		return X86InstructionType::SETA;
+		return X86InstructionKind::SETA;
 	}
 
 	ByteRange SetaInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1864,14 +1864,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetaeInstruction::itype() const
+	X86InstructionKind SetaeInstruction::itype() const
 	{
-		return X86InstructionType::SETAE;
+		return X86InstructionKind::SETAE;
 	}
 
 	ByteRange SetaeInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1898,14 +1898,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetbInstruction::itype() const
+	X86InstructionKind SetbInstruction::itype() const
 	{
-		return X86InstructionType::SETB;
+		return X86InstructionKind::SETB;
 	}
 
 	ByteRange SetbInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1932,14 +1932,14 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType SetbeInstruction::itype() const
+	X86InstructionKind SetbeInstruction::itype() const
 	{
-		return X86InstructionType::SETBE;
+		return X86InstructionKind::SETBE;
 	}
 
 	ByteRange SetbeInstruction::emit() const
 	{
-		using enum X86OperandType;
+		using enum X86OperandKind;
 		switch (operand->otype())
 		{
 			case REGISTER:
@@ -1966,9 +1966,9 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType NopInstruction::itype() const
+	X86InstructionKind NopInstruction::itype() const
 	{
-		return X86InstructionType::NOP;
+		return X86InstructionKind::NOP;
 	}
 
 	ByteRange NopInstruction::emit() const
@@ -1981,9 +1981,9 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType RetInstruction::itype() const
+	X86InstructionKind RetInstruction::itype() const
 	{
-		return X86InstructionType::RET;
+		return X86InstructionKind::RET;
 	}
 
 	ByteRange RetInstruction::emit() const
@@ -2006,9 +2006,9 @@ namespace hz::x86
 	}
 
 
-	X86InstructionType LeaveInstruction::itype() const
+	X86InstructionKind LeaveInstruction::itype() const
 	{
-		return X86InstructionType::LEAVE;
+		return X86InstructionKind::LEAVE;
 	}
 
 	ByteRange LeaveInstruction::emit() const

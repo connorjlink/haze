@@ -134,7 +134,7 @@ namespace hz
 		const auto erroring_qualifier = evaluated_type->qualifier;
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("type qualifier mismatch; expected `{}` but got `{}`",
-			_type_qualifier_map.at(expected_qualifier), _type_qualifier_map.at(erroring_qualifier)), token);
+			type_qualifier_map.at(expected_qualifier), type_qualifier_map.at(erroring_qualifier)), token);
 	}
 
 	void CommonErrors::type_signedness_mismatch(Type* type, Expression* expression, const Token& token)

@@ -31,7 +31,7 @@ namespace hz
 		{
 			return std::format("{} {} void", 
 				_storage_class_map.at(storage),
-				_type_qualifier_map.at(qualifier));
+				type_qualifier_map.at(qualifier));
 		}
 
 		bool is_complete() const
