@@ -1,7 +1,7 @@
 #ifndef HAZE_COMMANDLINEOPTIONS_H
 #define HAZE_COMMANDLINEOPTIONS_H
 
-#include <cli/ArchitectureType.h>
+#include <cli/ArchitectureKind.h>
 #include <cli/ExecutionType.h>
 #include <cli/VerbosityType.h>
 #include <data/DependencyInjector.h>
@@ -15,7 +15,7 @@ namespace hz
 		: public SingletonTag<CommandLineOptions>
 	{
 		// --architecture=
-		ArchitectureType architecture = ArchitectureType::X86;
+		ArchitectureKind architecture = ArchitectureKind::X86;
 		// --verbosity=
 		VerbosityType verbosity = VerbosityType::NORMAL;
 		// --execution=

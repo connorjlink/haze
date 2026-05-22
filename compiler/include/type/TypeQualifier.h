@@ -61,4 +61,17 @@ namespace hz
 	}
 }
 
+template<>
+struct std::formatter<hz::TypeQualifier>
+{
+	constexpr auto parse(std::format_parse_context& context)
+	{
+		return context.begin();
+	}
+	auto format(const hz::TypeQualifier& qualifier, std::format_context& context) const
+	{
+		return std::format_to(context.out(), "{}", to_string(qualifier));
+	}
+};
+
 #endif

@@ -8,29 +8,35 @@ namespace hz
 {
 	enum class TypeKind
 	{
-		VOID,
-		INT,
-		FLOAT,
-		STRUCT_OR_UNION,
-		ENUM,
-		TYPEDEF_NAME,
-		POINTER,
-		ARRAY,
-		FUNCTION,
+#define X(enumerator, name) enumerator,
+#include <type/TypeKind.def>
+#undef X
 	};
 
-	static const std::unordered_map<TypeKind, std::string_view> _type_kind_map
+	constexpr std::string_view to_string(TypeKind kind)
 	{
-		{ TypeKind::VOID, "void" },
-		{ TypeKind::INT, "int" },
-		{ TypeKind::FLOAT, "float" },
-		{ TypeKind::STRUCT_OR_UNION, "struct or union" },
-		{ TypeKind::ENUM, "enum" },
-		{ TypeKind::TYPEDEF_NAME, "typedef name" },
-		{ TypeKind::POINTER, "pointer" },
-		{ TypeKind::ARRAY, "array" },
-		{ TypeKind::FUNCTION, "function" },
-	};
+		switch (kind)
+		{
+#define X(enumerator, name) case TypeKind::enumerator: return name;
+#include <type/TypeKind.def>
+#undef X
+		}
+
+		return "<unknown type kind>";
+	}
 }
+
+template<>
+struct std::formatter<hz::TypeKind>
+{
+	constexpr auto parse(std::format_parse_context& context)
+	{
+		return context.begin();
+	}
+	auto format(const hz::TypeKind& kind, std::format_context& context) const
+	{
+		return std::format_to(context.out(), "{}", to_string(kind));
+	}
+};
 
 #endif

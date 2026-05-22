@@ -15,9 +15,9 @@ namespace hz
 {
 	using namespace riscv;
 
-	ArchitectureType RISCVAssemblerParser::ctype() const
+	ArchitectureKind RISCVAssemblerParser::ctype() const
 	{
-		return ArchitectureType::RISCV;
+		return ArchitectureKind::RISCV;
 	}
 
 	Instruction* RISCVAssemblerParser::parse_instruction_command()

@@ -1,7 +1,7 @@
 #ifndef HAZE_INITIALIZER_H
 #define HAZE_INITIALIZER_H
 
-#include <cli/ArchitectureType.h>
+#include <cli/ArchitectureKind.h>
 #include <cli/CommandLineOptions.h>
 #include <data/DependencyInjector.h>
 #include <toolchain/AssemblerParser.h>
@@ -17,7 +17,7 @@ namespace hz
 		const auto architecture = USE_UNSAFE(CommandLineOptions)->architecture;
 		switch (architecture)
 		{
-		case ArchitectureType::RISCV:
+		case ArchitectureKind::RISCV:
 			return new RISCVAssemblerParser{ filepath };
 		}
 

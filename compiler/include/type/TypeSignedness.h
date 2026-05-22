@@ -8,21 +8,50 @@ namespace hz
 {
 	enum class TypeSignedness
 	{
-		SIGNED,
-		UNSIGNED,
+#define X(enumerator, name) enumerator,
+#include <type/TypeSignedness.def>
+#undef X
 	};
 
-	static const std::unordered_map<TokenType, TypeSignedness> _type_signedness_token_map
+	constexpr std::string_view to_string(TypeSignedness signedness)
 	{
-		{ TokenType::SIGNED, TypeSignedness::SIGNED },
-		{ TokenType::UNSIGNED, TypeSignedness::UNSIGNED },
-	};
+		switch (signedness)
+		{
+#define X(enumerator, name) case TypeSignedness::enumerator: return #name;
+#include <type/TypeSignedness.def>
+#undef X
+		}
 
-	static const std::unordered_map<TypeSignedness, std::string_view> _type_signedness_map
+		return "<unknown type signedness>";
+	}
+
+	constexpr TypeSignedness to_type_signedness(TokenType token_type)
 	{
-		{ TypeSignedness::SIGNED, "signed" },
-		{ TypeSignedness::UNSIGNED, "unsigned" },
-	};
+		switch (token_type)
+		{
+#define X(enumerator, name) case TokenType::enumerator: return TypeSignedness::name;
+#include <type/TypeSignedness.def>
+#undef X
+		}
+
+		USE_UNSAFE(ErrorReporter)->post_error(std::format(
+			"invalid type signedness token '{}'", token_type), NULL_TOKEN);
+
+		return TypeSignedness::SIGNED;
+	}
 }
+
+template<>
+struct std::formatter<hz::TypeSignedness>
+{
+	constexpr auto parse(std::format_parse_context& context)
+	{
+		return context.begin();
+	}
+	auto format(const hz::TypeSignedness& signedness, std::format_context& context) const
+	{
+		return std::format_to(context.out(), "{}", to_string(signedness));
+	}
+};
 
 #endif 

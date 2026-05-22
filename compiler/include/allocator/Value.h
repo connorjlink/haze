@@ -4,7 +4,7 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/Generator.h>
-#include <cli/ArchitectureType.h>
+#include <cli/ArchitectureKind.h>
 #include <utility/Constants.h>
 #include <utility/Strings.h>
 #include <utility/Sum.h>

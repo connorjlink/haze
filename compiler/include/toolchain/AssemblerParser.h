@@ -2,7 +2,7 @@
 #define HAZE_ASSEMBLERPARSER_H
 
 #include <toolchain/Parser.h>
-#include <cli/ArchitectureType.h>
+#include <cli/ArchitectureKind.h>
 #include <command/Command.h>
 #include <utility/Constants.h>
 
@@ -28,7 +28,7 @@ namespace hz
 		virtual std::vector<Node*> parse() final override;
 
 	public:
-		virtual ArchitectureType ctype() const = 0;
+		virtual ArchitectureKind ctype() const = 0;
 
 	protected:
 		virtual Instruction* parse_instruction_command() = 0;

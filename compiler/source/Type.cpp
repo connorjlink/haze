@@ -20,7 +20,7 @@ namespace hz
 		switch (int_type)
 		{
 			case INT8: return sizeof(std::int8_t);
-			case INT16: return sizeof(std::uint16_t);
+			case INT16: return sizeof(std::int16_t);
 			case INT32: return sizeof(std::int32_t);
 
 			default:

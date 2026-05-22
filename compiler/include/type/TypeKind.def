@@ -1,0 +1,12 @@
+// Haze TypeKind.def
+// (c) Connor J. Link. All Rights Reserved.
+
+X(VOID, void)
+X(INT, int)
+X(FLOAT, float)
+X(STRUCT_OR_UNION, struct-or-union)
+X(ENUM, enum)
+X(TYPEDEF_NAME, typedef-name)
+X(POINTER, pointer)
+X(ARRAY, array)
+X(FUNCTION, function)

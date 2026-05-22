@@ -6,26 +6,33 @@
 #include <riscv/RISCVRegister.h>
 #include <utility/Constants.h>
 
-// Haze ArchitectureType.h
+// Haze ArchitectureKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class ArchitectureType
+	enum class ArchitectureKind
 	{
-		X86,
-		RISCV,
+#define X(enumerator, name) enumerator,
+#include <cli/ArchitectureKind.def>
+#undef X
 	};
 
-	static const std::unordered_map<std::string, ArchitectureType> _architecture_map
+	constexpr std::string_view to_string(ArchitectureKind type)
 	{
-		{ "x86", ArchitectureType::X86 },
-		{ "riscv", ArchitectureType::RISCV },
-	};
+		switch (type)
+		{
+#define X(enumerator, name) case ArchitectureKind::enumerator: return name;
+#include <cli/ArchitectureKind.def>
+#undef X
+		}
 
-	inline constexpr std::pair<std::size_t, std::size_t> get_register_extrema(ArchitectureType type)
+		return "<unknown architecture kind>";
+	}
+
+	constexpr std::pair<std::size_t, std::size_t> get_register_extrema(ArchitectureKind type)
 	{
-		using enum ArchitectureType;
+		using enum ArchitectureKind;
 		switch (type)
 		{
 			case X86: return std::make_pair(0, 7); // eax, ..., edi
@@ -38,9 +45,9 @@ namespace hz
 
 #define NAMEOF(x) #x
 
-	inline constexpr const std::string& get_stack_frame_pointer(ArchitectureType type)
+	constexpr const std::string& get_stack_frame_pointer(ArchitectureKind type)
 	{
-		using enum ArchitectureType;
+		using enum ArchitectureKind;
 		switch (type)
 		{
 			case X86: return NAMEOF(EBP);
@@ -51,9 +58,9 @@ namespace hz
 			"unknown architecture type `{}`", static_cast<int>(type)), NULL_TOKEN);
 	}
 
-	inline constexpr Address get_linker_origin(ArchitectureType type)
+	constexpr Address get_linker_origin(ArchitectureKind type)
 	{
-		using enum ArchitectureType;
+		using enum ArchitectureKind;
 		switch (type)
 		{
 			case X86: return 0x401000; // default image base for PE files

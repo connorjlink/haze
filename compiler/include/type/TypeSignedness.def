@@ -1,0 +1,5 @@
+// Haze TypeSignedness.def
+// (c) Connor J. Link. All Rights Reserved.
+
+X(SIGNED, signed)
+X(UNSIGNED, unsigned)

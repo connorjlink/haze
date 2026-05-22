@@ -14,9 +14,9 @@ namespace hz
 	class RISCVInstruction : public Instruction
 	{
 	public:
-		virtual ArchitectureType ctype() const final override
+		virtual ArchitectureKind ctype() const final override
 		{
-			return ArchitectureType::RISCV;
+			return ArchitectureKind::RISCV;
 		}
 
 	public:

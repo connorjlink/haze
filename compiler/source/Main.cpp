@@ -296,14 +296,14 @@ int main(int argc, char** argv)
 	// export the linked executable for the target architecture
 	switch (USE_UNSAFE(CommandLineOptions)->architecture)
 	{
-		case ArchitectureType::X86:
+		case ArchitectureKind::X86:
 		{
 			auto pe_builder = new PEBuilder{ executable };
 			output_filepath = std::format("{}.exe", basename);
 			pe_builder->export_exe(output_filepath, basename);
 		} break;
 
-		case ArchitectureType::RISCV:
+		case ArchitectureKind::RISCV:
 		{
 			auto bm_builder = new BMBuilder{ executable };
 			output_filepath = std::format("{}.bin", basename);
