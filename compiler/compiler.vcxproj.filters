@@ -467,10 +467,10 @@
     <ClInclude Include="include\command\LabelCommand.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\VerbosityType.h">
+    <ClInclude Include="include\cli\defs\VerbosityKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\ArchitectureType.h">
+    <ClInclude Include="include\cli\defs\ArchitectureKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\CommandLineOptions.h">
@@ -479,10 +479,10 @@
     <ClInclude Include="include\cli\CommandLineParser.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\ExecutionType.h">
+    <ClInclude Include="include\cli\defs\ExecutionKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\OptionType.h">
+    <ClInclude Include="include\cli\defs\OptionKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\builder\PEBuilder.h">
@@ -710,7 +710,7 @@
     <ClInclude Include="include\command\DotDefineCommand.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\OptimizationFlag.h">
+    <ClInclude Include="include\cli\defs\OptimizationFlag.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\defs\RISCVInstructionKind.h">
@@ -723,6 +723,12 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\defs\X86InstructionKind.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Variant.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\allocator\defs\ValueKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -745,10 +751,10 @@
     <None Include="include\type\defs\TypeQualifier.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\cli\ArchitectureKind.def">
+    <None Include="include\cli\defs\ArchitectureKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\cli\OptimizationFlag.def">
+    <None Include="include\cli\defs\OptimizationFlag.def">
       <Filter>Archivos de origen</Filter>
     </None>
     <None Include="include\riscv\defs\RISCVInstructionKind.def">
@@ -773,6 +779,27 @@
       <Filter>Archivos de origen</Filter>
     </None>
     <None Include="include\riscv\defs\RISCVRegister.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\allocator\defs\ValueKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\cli\defs\VerbosityKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\cli\defs\OptionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\cli\defs\ExecutionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\runtime\defs\VariableKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\defs\IntKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\defs\FloatKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
   </ItemGroup>

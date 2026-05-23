@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\allocator\defs\ValueKind.h" />
     <ClInclude Include="include\ast\function\Function.h" />
     <ClInclude Include="include\ast\AST.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
@@ -246,6 +247,7 @@
     <ClInclude Include="include\utility\Lazy.h" />
     <ClInclude Include="include\utility\Ranges.h" />
     <ClInclude Include="include\utility\Strings.h" />
+    <ClInclude Include="include\utility\Variant.h" />
     <ClInclude Include="include\validator\TypeValidator.h" />
     <ClInclude Include="include\validator\X86BuilderValidator.h" />
     <ClInclude Include="include\x86\defs\X86InstructionKind.h" />
@@ -290,13 +292,13 @@
     <ClInclude Include="include\ast\VariableStatement.h" />
     <ClInclude Include="include\ast\WhileStatement.h" />
     <ClInclude Include="include\builder\PEBuilder.h" />
-    <ClInclude Include="include\cli\ArchitectureType.h" />
+    <ClInclude Include="include\cli\defs\ArchitectureKind.h" />
     <ClInclude Include="include\cli\CommandLineOptions.h" />
     <ClInclude Include="include\cli\CommandLineParser.h" />
-    <ClInclude Include="include\cli\ExecutionType.h" />
-    <ClInclude Include="include\cli\OptimizationFlag.h" />
-    <ClInclude Include="include\cli\OptionType.h" />
-    <ClInclude Include="include\cli\VerbosityType.h" />
+    <ClInclude Include="include\cli\defs\ExecutionKind.h" />
+    <ClInclude Include="include\cli\defs\OptimizationFlag.h" />
+    <ClInclude Include="include\cli\defs\OptionKind.h" />
+    <ClInclude Include="include\cli\defs\VerbosityKind.h" />
     <ClInclude Include="include\command\BinaryCommandType.h" />
     <ClInclude Include="include\command\BranchCommandType.h" />
     <ClInclude Include="include\command\Command.h" />
@@ -373,15 +375,22 @@
     <ClInclude Include="include\validator\Validator.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\allocator\defs\ValueKind.def" />
     <None Include="include\ast\expression\ExpressionKind.def" />
     <None Include="include\ast\function\FunctionKind.def" />
     <None Include="include\ast\statement\StatementKind.def" />
-    <None Include="include\cli\ArchitectureKind.def" />
-    <None Include="include\cli\OptimizationFlag.def" />
+    <None Include="include\cli\defs\ArchitectureKind.def" />
+    <None Include="include\cli\defs\ExecutionKind.def" />
+    <None Include="include\cli\defs\OptimizationFlag.def" />
+    <None Include="include\cli\defs\OptionKind.def" />
+    <None Include="include\cli\defs\VerbosityKind.def" />
     <None Include="include\riscv\defs\RISCVInstructionKind.def" />
     <None Include="include\riscv\defs\RISCVRegister.def" />
+    <None Include="include\runtime\defs\VariableKind.def" />
     <None Include="include\symbol\defs\SymbolKind.def" />
     <None Include="include\toolchain\defs\ToolchainKind.def" />
+    <None Include="include\type\defs\FloatKind.def" />
+    <None Include="include\type\defs\IntKind.def" />
     <None Include="include\type\defs\StorageClass.def" />
     <None Include="include\type\defs\TypeKind.def" />
     <None Include="include\type\defs\TypeQualifier.def" />
