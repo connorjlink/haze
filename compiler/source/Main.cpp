@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 
 	// unit testing requires some singletones to be registered
 	const auto execution = USE_UNSAFE(CommandLineOptions)->execution;
-	if (execution == ExecutionType::VALIDATE)
+	if (execution == ExecutionKind::VALIDATE)
 	{
 		AutoJob test_task{ "unit testing" };
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
 			"validation complete"), NULL_TOKEN);
 		return 0;
 	}
-	else if (execution != ExecutionType::COMPILE)
+	else if (execution != ExecutionKind::COMPILE)
 	{
 		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"unrecognized execution type `{}`", std::to_underlying(execution)), NULL_TOKEN);

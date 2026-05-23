@@ -115,10 +115,10 @@ namespace hz
 	{
 		// default to identifier unless the search proves otherwise
 		auto type = TokenType::IDENTIFIER;
-		if (_token_map.contains(text))
+		if (token_map.contains(text))
 		{
 			// has_value() strengthened
-			type = _token_map.at(text).value();
+			type = token_map.at(text).value();
 		}
 
 		return Token

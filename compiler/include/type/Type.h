@@ -3,10 +3,10 @@
 
 #include <data/DependencyInjector.h>
 #include <symbol/SymbolDatabase.h>
-#include <type/StorageClass.h>
-#include <type/TypeQualifier.h>
-#include <type/TypeSignedness.h>
-#include <type/TypeKind.h>
+#include <type/defs/StorageClass.h>
+#include <type/defs/TypeQualifier.h>
+#include <type/defs/TypeSignedness.h>
+#include <type/defs/TypeKind.h>
 #include <utility/Sum.h>
 
 // Haze Type.h
@@ -133,9 +133,9 @@ namespace hz
 
 				// <storage-class> <type-qualifier> <type-width>
 				return std::format("{} {} {}",
-					_storage_class_map.at(float_type.storage),
-					format_type_qualifier(float_type.qualifier),
-					_float_width_map.at(float_type.float_type));
+					float_type.storage,
+					float_type.qualifier,
+					float_type.float_type);
 			} break;
 
 			case STRUCT_OR_UNION:

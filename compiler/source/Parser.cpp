@@ -79,7 +79,7 @@ namespace hz
 
 		auto convert = [&](auto v) -> const std::string&
 		{
-			const auto item = _token_map.at(v);
+			const auto item = token_map.at(v);
 
 			if (item)
 			{

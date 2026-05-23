@@ -2,9 +2,9 @@
 #define HAZE_FLOATTYPE_H
 
 #include <error/CommonErrors.h>
-#include <type/StorageClass.h>
-#include <type/TypeQualifier.h>
-#include <type/TypeKind.h>
+#include <type/defs/StorageClass.h>
+#include <type/defs/TypeQualifier.h>
+#include <type/defs/TypeKind.h>
 #include <utility/Constants.h>
 
 // Haze FloatType.h
@@ -14,17 +14,22 @@ namespace hz
 {
 	enum class FloatKind
 	{
-		FLOAT,
-		DOUBLE,
-		LONG_DOUBLE,
+#define X(enumerator, name) enumerator,
+#include <type/defs/FloatKind.def>
+#undef X
 	};
 
-	static const std::unordered_map<FloatKind, std::string_view> _float_kind_map
+	constexpr std::string_view to_string(FloatKind kind)
 	{
-		{ FloatKind::FLOAT, "float" },
-		{ FloatKind::DOUBLE, "double" },
-		{ FloatKind::LONG_DOUBLE, "long double" },
-	};
+		switch (kind)
+		{
+#define X(enumerator, name) case FloatKind::enumerator: return #name;
+#include <type/defs/FloatKind.def>
+#undef X
+		}
+
+		return "<unknown float kind>";
+	}
 
 	class FloatType : public TypeBase
 	{

@@ -1,10 +1,10 @@
 #ifndef HAZE_INTTYPE_H
 #define HAZE_INTTYPE_H
 
-#include <type/StorageClass.h>
-#include <type/TypeQualifier.h>
-#include <type/TypeSignedness.h>
-#include <type/TypeKind.h>
+#include <type/defs/StorageClass.h>
+#include <type/defs/TypeQualifier.h>
+#include <type/defs/TypeSignedness.h>
+#include <type/defs/TypeKind.h>
 
 // Haze IntType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -13,21 +13,22 @@ namespace hz
 {
 	enum class IntKind
 	{
-		CHAR,
-		SHORT,
-		INT,
-		LONG,
-		LONG_LONG,
+#define X(enumerator, name) enumerator,
+#include <type/defs/IntKind.def>
+#undef X
 	};
 
-	static const std::unordered_map<IntKind, std::string_view> _int_kind_map
+	constexpr std::string_view to_string(IntKind kind)
 	{
-		{ IntKind::CHAR, "char" },
-		{ IntKind::SHORT, "short" },
-		{ IntKind::INT, "int" },
-		{ IntKind::LONG, "long" },
-		{ IntKind::LONG_LONG, "long long" },
-	};
+		switch (kind)
+		{
+#define X(enumerator, name) case IntKind::enumerator: return #name;
+#include <type/defs/IntKind.def>
+#undef X
+		}
+
+		return "<unknown int kind>";
+	}
 
 	class IntType : public TypeBase
 	{
@@ -46,23 +47,15 @@ namespace hz
 
 		Offset size() const
 		{
-			using enum IntKind;
 			switch (int_kind)
 			{
-				case CHAR:
-					return sizeof(char);
-				case SHORT:
-					return sizeof(short);
-				case INT:
-					return sizeof(int);
-				case LONG:
-					return sizeof(long);
-				case LONG_LONG:
-					return sizeof(long long);
-				default:
-					CommonErrors::invalid_int_type(int_kind, NULL_TOKEN);
-					return -1;
+#define X(enumerator, name) case IntKind::enumerator: return sizeof(name);
+#include <type/defs/IntKind.def>
+#undef X
 			}
+
+			CommonErrors::invalid_int_type(int_kind, NULL_TOKEN);
+			return -1;
 		}
 
 		bool is_complete() const

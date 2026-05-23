@@ -2,8 +2,8 @@
 #define HAZE_COMMANDLINEOPTIONS_H
 
 #include <cli/ArchitectureKind.h>
-#include <cli/ExecutionType.h>
-#include <cli/VerbosityType.h>
+#include <cli/ExecutionKind.h>
+#include <cli/VerbosityKind.h>
 #include <data/DependencyInjector.h>
 
 // Haze CommandLineOptions.h
@@ -17,9 +17,9 @@ namespace hz
 		// --architecture=
 		ArchitectureKind architecture = ArchitectureKind::X86;
 		// --verbosity=
-		VerbosityType verbosity = VerbosityType::NORMAL;
+		VerbosityKind verbosity = VerbosityKind::NORMAL;
 		// --execution=
-		ExecutionType execution = ExecutionType::COMPILE;
+		ExecutionKind execution = ExecutionKind::COMPILE;
 
 		// --output=raw
 		bool raw_output = false;

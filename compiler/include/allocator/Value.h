@@ -1,10 +1,11 @@
 #ifndef HAZE_VALUESUM_H
 #define HAZE_VALUESUM_H
 
+#include <allocator/defs/ValueKind.h>
+#include <cli/defs/ArchitectureKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/Generator.h>
-#include <cli/ArchitectureKind.h>
 #include <utility/Constants.h>
 #include <utility/Strings.h>
 #include <utility/Sum.h>
@@ -42,21 +43,6 @@ namespace hz
 
 namespace hz
 {
-	enum class ValueTag : TagType
-	{
-		REGISTER,
-		STACK,
-		STATIC,
-	};
-
-	static const std::unordered_map<ValueTag, std::string> ValueTagNames
-	{
-		{ ValueTag::REGISTER, "register" },
-		{ ValueTag::STACK, "stack" },
-		{ ValueTag::STATIC, "static" },
-	};
-
-
 	class RegisterValue : public ValueBase
 	{
 	public:

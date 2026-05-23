@@ -2,7 +2,7 @@ import std;
 
 #include <cli/CommandLineParser.h>
 #include <cli/OptimizationType.h>
-#include <cli/OptionType.h>
+#include <cli/OptionKind.h>
 
 // Haze CommandLineParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -83,7 +83,7 @@ namespace hz
 				const auto option = _option_map.at(option_string);
 				const auto& value = argument_split[1];
 
-				using enum OptionType;
+				using enum OptionKind;
 				switch (option)
 				{
 					case ARCHITECTURE:

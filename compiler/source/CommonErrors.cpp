@@ -76,7 +76,7 @@ namespace hz
 
 	void CommonErrors::invalid_token_type(TokenType ttype, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("token", std::string{ _token_map.at(ttype).value() }), token);
+		internal_compiler_error(invalid_generic_type("token", std::string{ token_map.at(ttype).value() }), token);
 	}
 
 	void CommonErrors::invalid_symbol_type(SymbolKind stype, const Token& token)

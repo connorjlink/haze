@@ -302,19 +302,16 @@
     <ClInclude Include="include\type\TypeCheck.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\type\TypeQualifier.h">
+    <ClInclude Include="include\type\defs\TypeQualifier.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\type\TypeSignedness.h">
+    <ClInclude Include="include\type\defs\TypeSignedness.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypeStorage.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypeType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\AssemblerParser.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerToolchain.h">
@@ -341,13 +338,7 @@
     <ClInclude Include="include\toolchain\Linker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\toolchain\LinkerType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\toolchain\Parser.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\ParserType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Preprocessor.h">
@@ -359,7 +350,7 @@
     <ClInclude Include="include\toolchain\Toolchain.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\toolchain\ToolchainType.h">
+    <ClInclude Include="include\toolchain\defs\ToolchainType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Token.h">
@@ -374,7 +365,7 @@
     <ClInclude Include="include\symbol\SymbolExporter.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\symbol\SymbolType.h">
+    <ClInclude Include="include\symbol\defs\SymbolKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\statistic\models\Statistic.h">
@@ -491,9 +482,6 @@
     <ClInclude Include="include\cli\ExecutionType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\OptimizationType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\cli\OptionType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -593,23 +581,17 @@
     <ClInclude Include="include\allocator\Allocator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\riscv\RISCVInstructionType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\riscv\RISCVInstruction.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Instruction.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\riscv\RISCVRegister.h">
+    <ClInclude Include="include\riscv\defs\RISCVRegister.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h">
       <Filter>Archivos de origen</Filter>
-    </ClInclude>
-    <ClInclude Include="include\toolchain\AssemblerParserType.h">
-      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86Instruction.h">
       <Filter>Archivos de encabezado</Filter>
@@ -626,7 +608,7 @@
     <ClInclude Include="include\x86\X86Builder.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\x86\X86Register.h">
+    <ClInclude Include="include\x86\defs\X86Register.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Initializer.h">
@@ -668,7 +650,7 @@
     <ClInclude Include="include\type\PointerType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\type\StorageClass.h">
+    <ClInclude Include="include\type\defs\StorageClass.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypedefNameType.h">
@@ -719,10 +701,28 @@
     <ClInclude Include="include\builder\Builder.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\type\TypeKind.h">
+    <ClInclude Include="include\type\defs\TypeKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\function\FunctionKind.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\command\DotDefineCommand.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cli\OptimizationFlag.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\riscv\defs\RISCVInstructionKind.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Formatter.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\x86\defs\X86OperandKind.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\x86\defs\X86InstructionKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -736,13 +736,43 @@
     <None Include="include\ast\expression\ExpressionKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\x86\X86OperandKind.def">
+    <None Include="include\x86\defs\X86OperandKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\x86\X86InstructionKind.def">
+    <None Include="include\x86\defs\X86InstructionKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\type\TypeQualifier.def">
+    <None Include="include\type\defs\TypeQualifier.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\cli\ArchitectureKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\cli\OptimizationFlag.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\riscv\defs\RISCVInstructionKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\defs\TypeKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\defs\TypeSignedness.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\toolchain\defs\ToolchainKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\x86\defs\X86Register.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\defs\StorageClass.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\symbol\defs\SymbolKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\riscv\defs\RISCVRegister.def">
       <Filter>Archivos de origen</Filter>
     </None>
   </ItemGroup>

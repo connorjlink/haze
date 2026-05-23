@@ -111,7 +111,7 @@ namespace hz
 			else if (here == '.')
 			{
 				const auto lexeme = substring_while(my_isalnum);
-				const auto search = _token_map.at(std::format(".{}", lexeme));
+				const auto search = token_map.at(std::format(".{}", lexeme));
 
 				if (search)
 				{
@@ -130,7 +130,7 @@ namespace hz
 			else if (my_isidentifierfirst(here))
 			{
 				const auto lexeme = read_identifier();
-				const auto search = _token_map.at(lexeme);
+				const auto search = token_map.at(lexeme);
 
 				if (search.has_value())
 				{
@@ -182,7 +182,7 @@ namespace hz
 			else
 			{
 				const auto current_string = std::string{ here };
-				const auto search = _token_map.at(current_string);
+				const auto search = token_map.at(current_string);
 
 				if (search.has_value())
 				{

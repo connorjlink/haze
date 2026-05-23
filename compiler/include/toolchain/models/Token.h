@@ -135,7 +135,7 @@ namespace hz
 
 #define S(x) std::string_view{ x }
 
-	static const Bimap<std::string_view, TokenType> _token_map
+	static const Bimap<std::string_view, TokenType> token_map
 	{
 		bimap_t{ S("int"), TokenType::INT },
 		bimap_t{ S("identifier"), TokenType::IDENTIFIER },
@@ -408,7 +408,7 @@ struct std::formatter<hz::TokenType>
 	}
 	auto format(const hz::TokenType& token, std::format_context& context) const
 	{
-		return std::format_to(context.out(), "{}", hz::_token_map.at(token).value_or("error"));
+		return std::format_to(context.out(), "{}", hz::token_map.at(token).value_or("error"));
 	}
 };
 

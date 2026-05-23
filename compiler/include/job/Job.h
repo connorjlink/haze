@@ -16,7 +16,7 @@ namespace hz
 
 	private:
 		std::string task;
-		std::chrono::high_resolution_clock::time_point _start_time, _stop_time;
+		std::chrono::high_resolution_clock::time_point start_time, stop_time;
 
 	private:
 		std::chrono::microseconds duration() const;
@@ -29,8 +29,8 @@ namespace hz
 		Job(const std::string& task, std::uint32_t uuid)
 			: task{ task }, uuid(uuid)
 		{
-			_start_time = std::chrono::high_resolution_clock::now();
-			_stop_time = std::chrono::high_resolution_clock::time_point::min();
+			start_time = std::chrono::high_resolution_clock::now();
+			stop_time = std::chrono::high_resolution_clock::time_point::min();
 		}
 	};
 }

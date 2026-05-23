@@ -3,6 +3,7 @@
 
 #include <toolchain/models/Instruction.h>
 #include <utility/Constants.h>
+#include <utility/Variant.h>
 #include <x86/defs/X86Register.h>
 #include <x86/defs/X86OperandKind.h>
 #include <x86/defs/X86InstructionKind.h>
@@ -12,10 +13,6 @@
 
 namespace hz
 {
-	template<template<typename> typename TraitT, typename... Ts>
-		requires (TraitT<Ts>::value && ...)
-	using ConstrainedVariant = std::variant<Ts...>;
-
 	template<typename T>
 	concept X86OperandConcept = requires(const T& t)
 	{

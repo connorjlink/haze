@@ -9,9 +9,9 @@ namespace hz
 {
 	std::chrono::microseconds Job::duration() const
 	{
-		if (_stop_time != std::chrono::high_resolution_clock::time_point::min())
+		if (stop_time != std::chrono::high_resolution_clock::time_point::min())
 		{
-			return std::chrono::duration_cast<std::chrono::microseconds>(_stop_time - _start_time);
+			return std::chrono::duration_cast<std::chrono::microseconds>(stop_time - start_time);
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error("undefined job duration stop time", NULL_TOKEN);
@@ -20,7 +20,7 @@ namespace hz
 
 	void Job::end()
 	{
-		_stop_time = std::chrono::high_resolution_clock::now();
+		stop_time = std::chrono::high_resolution_clock::now();
 	}
 
 	std::string Job::format() const
