@@ -4,10 +4,6 @@
 // Haze IntermediateType.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define AS_BRANCH_COMMAND(x) static_cast<BranchCommand*>(x)
-#define AS_BRANCH_LABEL_COMMAND(x) static_cast<BranchLabelCommand*>(x)
-#define AS_CALL_FUNCTION_COMMAND(x) static_cast<CallFunctionCommand*>(x)
-
 namespace hz
 {
 	enum class IntermediateType

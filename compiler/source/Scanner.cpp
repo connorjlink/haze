@@ -114,7 +114,7 @@ namespace hz
 	Token Scanner::forge_token(const std::string& text) const
 	{
 		// default to identifier unless the search proves otherwise
-		auto type = TokenType::IDENTIFIER;
+		auto type = TokenKind::IDENTIFIER;
 		if (token_map.contains(text))
 		{
 			// has_value() strengthened
@@ -138,7 +138,7 @@ namespace hz
 	{
 		return Token
 		{
-			.type = TokenType::ERROR,
+			.type = TokenKind::ERROR,
 			.text = value,
 			.location = current_context.location,
 		};

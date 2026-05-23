@@ -31,7 +31,7 @@ namespace hz
 
 		while (!eof())
 		{
-			using enum TokenType;
+			using enum TokenKind;
 
 			// NOTE: intentionally making a copy here
 			const auto here = current();
@@ -199,7 +199,7 @@ namespace hz
 			}
 		}
 
-		APPEND_TOKEN(TokenType::END, "eof");
+		APPEND_TOKEN(TokenKind::END, "eof");
 
 		return tokens;
 	}

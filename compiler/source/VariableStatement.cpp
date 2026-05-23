@@ -58,7 +58,7 @@ namespace hz
 					
 					using enum TypeSignedness;
 					using enum IntTypeKind;
-					switch (int_variable->int_type)
+					switch (int_variable->int_kind)
 					{
 						case INT8:
 						{

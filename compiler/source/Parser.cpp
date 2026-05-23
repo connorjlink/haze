@@ -21,7 +21,7 @@ namespace
 {
 	using namespace hz;
 
-	bool is_binary_operator(TokenType type)
+	bool is_binary_operator(TokenKind type)
 	{
 		return _binary_expression_map.contains(type);
 	}
@@ -68,7 +68,7 @@ namespace hz
 			"unexpectedly reached the end of file", peek());
 	}
 
-	Token Parser::consume(TokenType type)
+	Token Parser::consume(TokenKind type)
 	{
 		const auto& current = peek();
 		if (current.type == type)
@@ -92,11 +92,11 @@ namespace hz
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"expected token `{}` but got `{}`",
-				convert(type), ((current.type == TokenType::IDENTIFIER || current.type == TokenType::INT) ? current.text : convert(current.type))), current);
+				convert(type), ((current.type == TokenKind::IDENTIFIER || current.type == TokenKind::INT) ? current.text : convert(current.type))), current);
 		return current;
 	}
 
-	std::vector<Token> Parser::fetch_until(TokenType type)
+	std::vector<Token> Parser::fetch_until(TokenKind type)
 	{
 		std::vector<Token> tokens;
 
@@ -112,7 +112,7 @@ namespace hz
 #pragma message ("TODO: refactor the dotdefine to be overriden by subclasses")
 	Node* Parser::parse_dotdefine_command()
 	{
-		consume(TokenType::DOTDEFINE);
+		consume(TokenKind::DOTDEFINE);
 
 		Type* type = nullptr;
 
@@ -129,7 +129,7 @@ namespace hz
 		}
 		
 		const auto identifier_expression = parse_identifier_expression();
-		consume(TokenType::EQUALS);
+		consume(TokenKind::EQUALS);
 
 		// if the optimized value is not a constant expression, it isn't a valid definition
 		const auto value_expression = parse_expression_optimized();
@@ -157,13 +157,13 @@ namespace hz
 
 	IdentifierExpression* Parser::parse_identifier_expression(IdentifierType itype)
 	{
-		const auto name_token = consume(TokenType::IDENTIFIER);
+		const auto name_token = consume(TokenKind::IDENTIFIER);
 		return new IdentifierExpression{ name_token.text, name_token, itype };
 	}
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
 	{
-		const auto integer_literal_token = consume(TokenType::INT);
+		const auto integer_literal_token = consume(TokenKind::INT);
 		const auto& integer_string = integer_literal_token.text;
 
 		BigInteger integer_value{};
@@ -184,17 +184,17 @@ namespace hz
 
 	StringExpression* Parser::parse_string_expression()
 	{
-		const auto message_token = consume(TokenType::STRING);
+		const auto message_token = consume(TokenKind::STRING);
 		return new StringExpression{ message_token.text, message_token };
 	}
 
 	FunctionCallExpression* Parser::parse_functioncall_expression()
 	{
-		const auto name_token = consume(TokenType::IDENTIFIER);
+		const auto name_token = consume(TokenKind::IDENTIFIER);
 
-		consume(TokenType::LPAREN);
+		consume(TokenKind::LPAREN);
 		const auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 
 		if (!USE_SAFE(SymbolDatabase)->has_symbol(name_token.text))
 		{
@@ -221,24 +221,24 @@ namespace hz
 
 	Expression* Parser::parse_parenthesis_expression()
 	{
-		consume(TokenType::LPAREN);
+		consume(TokenKind::LPAREN);
 		const auto expression = parse_expression();
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 
 		return expression;
 	}
 
 	AdjustExpression* Parser::parse_increment_expression()
 	{
-		consume(TokenType::TILDE);
+		consume(TokenKind::TILDE);
 		
-		if (peek().type == TokenType::IDENTIFIER)
+		if (peek().type == TokenKind::IDENTIFIER)
 		{
 			const auto identifier_expression = parse_identifier_expression();
 			return new AdjustExpression{ true, identifier_expression, identifier_expression->_token };
 		}
 
-		else if (peek().type == TokenType::INT)
+		else if (peek().type == TokenKind::INT)
 		{
 			const auto integer_literal_expression = parse_integerliteral_expression();
 			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
@@ -250,15 +250,15 @@ namespace hz
 
 	AdjustExpression* Parser::parse_decrement_expression()
 	{
-		consume(TokenType::EXCLAMATION);
+		consume(TokenKind::EXCLAMATION);
 
-		if (peek().type == TokenType::IDENTIFIER)
+		if (peek().type == TokenKind::IDENTIFIER)
 		{
 			const auto identifier_expression = parse_identifier_expression();
 			return new AdjustExpression{ false, identifier_expression, identifier_expression->_token };
 		}
 
-		else if (peek().type == TokenType::INT)
+		else if (peek().type == TokenKind::INT)
 		{
 			const auto integer_literal_expression = parse_integerliteral_expression();
 			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
@@ -271,7 +271,7 @@ namespace hz
 
 	Expression* Parser::parse_generic_expression()
 	{
-		using enum TokenType;
+		using enum TokenKind;
 		switch (peek().type)
 		{
 			case LPAREN:
@@ -345,16 +345,16 @@ namespace hz
 
 	Expression* Parser::parse_infix_expression(Expression* left, Precedence minimum_precedence)
 	{
-		static const std::unordered_map<TokenType, Precedence> precedences
+		static const std::unordered_map<TokenKind, Precedence> precedences
 		{
-			{ TokenType::EQUALS,            Precedence::ASSIGN },
-			{ TokenType::EQUALSEQUALS,      Precedence::EQUALITY },
-			{ TokenType::EXCLAMATIONEQUALS, Precedence::EQUALITY },
-			{ TokenType::GREATER,           Precedence::COMPARE },
-			{ TokenType::LESS,              Precedence::COMPARE },
-			{ TokenType::PLUS,              Precedence::TERM },
-			{ TokenType::MINUS,             Precedence::TERM },
-			{ TokenType::STAR,              Precedence::FACTOR },
+			{ TokenKind::EQUALS,            Precedence::ASSIGN },
+			{ TokenKind::EQUALSEQUALS,      Precedence::EQUALITY },
+			{ TokenKind::EXCLAMATIONEQUALS, Precedence::EQUALITY },
+			{ TokenKind::GREATER,           Precedence::COMPARE },
+			{ TokenKind::LESS,              Precedence::COMPARE },
+			{ TokenKind::PLUS,              Precedence::TERM },
+			{ TokenKind::MINUS,             Precedence::TERM },
+			{ TokenKind::STAR,              Precedence::FACTOR },
 		};
 
 		do
@@ -386,17 +386,17 @@ namespace hz
 
 			switch (next.type)
 			{
-				case TokenType::PLUS: left = new PlusBinaryExpression{ left, right, left->_token }; break;
-				case TokenType::MINUS: left = new MinusBinaryExpression{ left, right, left->_token }; break;
-				case TokenType::STAR: left = new TimesBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::PLUS: left = new PlusBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::MINUS: left = new MinusBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::STAR: left = new TimesBinaryExpression{ left, right, left->_token }; break;
 
-				case TokenType::EQUALS: left = new AssignBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::EQUALS: left = new AssignBinaryExpression{ left, right, left->_token }; break;
 
-				case TokenType::EQUALSEQUALS: left = new EqualityBinaryExpression{ left, right, left->_token }; break;
-				case TokenType::EXCLAMATIONEQUALS: left = new InequalityBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::EQUALSEQUALS: left = new EqualityBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::EXCLAMATIONEQUALS: left = new InequalityBinaryExpression{ left, right, left->_token }; break;
 
-				case TokenType::GREATER: left = new GreaterBinaryExpression{ left, right, left->_token }; break;
-				case TokenType::LESS: left = new LessBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::GREATER: left = new GreaterBinaryExpression{ left, right, left->_token }; break;
+				case TokenKind::LESS: left = new LessBinaryExpression{ left, right, left->_token }; break;
 			}
 		} while (true);
 

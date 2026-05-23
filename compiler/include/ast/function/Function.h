@@ -80,9 +80,6 @@ namespace hz
 	using FunctionReference = FunctionSum::template Reference<T>;
 
 	using FunctionHandle = FunctionReference<Function>;
-
-
-
 }
 
 #endif

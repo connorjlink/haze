@@ -12,9 +12,6 @@ namespace hz
 	class Function;
 	class Expression;
 
-
-
-
 	class Context
 		: public SingletonTag<Context>
 		, public InjectSingleton<ErrorReporter>

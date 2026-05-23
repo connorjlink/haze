@@ -1,7 +1,7 @@
 #ifndef HAZE_ERROR_H
 #define HAZE_ERROR_H
 
-#include <error/ErrorType.h>
+#include <error/defs/ErrorKind.h>
 #include <toolchain/models/Token.h>
 
 // Haze Error.h
@@ -15,13 +15,13 @@ namespace hz
 		SourceLocation location;
 		const std::string& erroring_line;
 		std::string message;
-		ErrorType severity;
+		ErrorKind severity;
 
 	public:
 		std::string format() const;
 
 	public:
-		Error(SourceLocation location, const std::string& erroring_line, const std::string& message, ErrorType severity)
+		Error(SourceLocation location, const std::string& erroring_line, const std::string& message, ErrorKind severity)
 			: location{ location }, erroring_line{ erroring_line }, message{ message }, severity{ severity }
 		{
 		}

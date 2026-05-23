@@ -1,0 +1,7 @@
+// Haze CommandType.def
+// (c) Connor J. Link. All Rights Reserved.
+
+X(LABEL, LabelCommand, label)
+X(INSTRUCTION, InstructionCommand, instruction)
+X(DOTORG, DotorgCommand, .org)
+X(DOTBYTE, DotbyteCommand, .byte)

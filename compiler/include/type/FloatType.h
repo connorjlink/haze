@@ -36,29 +36,25 @@ namespace hz
 	public:
 		StorageClass storage;
 		TypeQualifier qualifier;
-		FloatKind float_type;
+		FloatKind float_kind;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::FLOAT;
 		}
 
 		Offset size() const
 		{
-			using enum FloatKind;
-			switch (float_type)
+			switch (float_kind)
 			{
-				case FLOAT:
-					return sizeof(float);
-				case DOUBLE:
-					return sizeof(double);
-				case LONG_DOUBLE:
-					return sizeof(long double);
-				default:
-					CommonErrors::invalid_float_type(float_type, NULL_TOKEN);
-					return -1;
+#define X(enumerator, name) case FloatKind::enumerator: return sizeof(name);
+#include <type/defs/FloatKind.def>
+#undef X
 			}
+
+			CommonErrors::invalid_float_type(float_kind, NULL_TOKEN);
+			return -1;
 		}
 
 		bool is_complete() const

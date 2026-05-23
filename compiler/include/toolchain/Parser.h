@@ -42,8 +42,8 @@ namespace hz
 		Token& lookahead();
 
 	protected:
-		Token consume(TokenType);
-		std::vector<Token> fetch_until(TokenType);
+		Token consume(TokenKind);
+		std::vector<Token> fetch_until(TokenKind);
 
 	protected:
 		enum class Precedence

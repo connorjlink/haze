@@ -35,10 +35,10 @@ namespace hz
 	{
 		const auto& first = peek();
 
-		if (first.type == TokenType::IDENTIFIER)
+		if (first.type == TokenKind::IDENTIFIER)
 		{
 			const auto& label_command_token = first;
-			consume(TokenType::IDENTIFIER);
+			consume(TokenKind::IDENTIFIER);
 
 			return new IdentifierExpression{ label_command_token.text, label_command_token };
 		}
@@ -54,7 +54,7 @@ namespace hz
 
 	Node* AssemblerParser::parse_dotorg_command()
 	{
-		consume(TokenType::DOTORG);
+		consume(TokenKind::DOTORG);
 		const auto& token = lookahead();
 
 		const auto address_expression = parse_literal();
@@ -72,7 +72,7 @@ namespace hz
 	Node* AssemblerParser::parse_label_command()
 	{
 		const auto identifier_expression = parse_identifier_expression();
-		consume(TokenType::COLON);
+		consume(TokenKind::COLON);
 
 		const auto& identifier = identifier_expression->name;
 
@@ -89,9 +89,9 @@ namespace hz
 
 		switch (first.type)
 		{
-			case TokenType::DOTDEFINE: return parse_dotdefine_command();
-			case TokenType::DOTORG: return parse_dotorg_command();
-			case TokenType::IDENTIFIER: return parse_label_command();
+			case TokenKind::DOTDEFINE: return parse_dotdefine_command();
+			case TokenKind::DOTORG: return parse_dotorg_command();
+			case TokenKind::IDENTIFIER: return parse_label_command();
 		}
 
 		const auto instruction = parse_instruction_command();
@@ -102,7 +102,7 @@ namespace hz
 	{
 		std::vector<Node*> instructions{};
 
-		while (peek().type != TokenType::END)
+		while (peek().type != TokenKind::END)
 		{
 			instructions.emplace_back(parse_command());
 		}

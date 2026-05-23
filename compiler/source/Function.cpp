@@ -53,7 +53,7 @@ namespace hz
 		{
 			auto compiler_parser = AS_COMPILER_PARSER(REQUIRE_SAFE(Parser).get());
 
-			const auto& end_function_label = compiler_parser->_function_label_map.at(name);
+			const auto& end_function_label = compiler_parser->function_label_map.at(name);
 			REQUIRE_SAFE(Generator)->branch_label(end_function_label);
 
 			REQUIRE_SAFE(Generator)->end_scope();

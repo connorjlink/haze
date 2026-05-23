@@ -44,39 +44,34 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("parser", _parser_type_map.at(ptype)), token);
 	}
 
-	void CommonErrors::invalid_statement_type(StatementKind stype, const Token& token)
+	void CommonErrors::invalid_statement_type(StatementKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("statement", statement_kind_map.at(stype)), token);
+		internal_compiler_error(invalid_generic_type("statement", std::format("{}", kind)), token);
 	}
 
-	void CommonErrors::invalid_expression_type(ExpressionType etype, const Token& token)
+	void CommonErrors::invalid_expression_type(ExpressionType kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("expression", _expression_type_map.at(etype)), token);
+		internal_compiler_error(invalid_generic_type("expression", std::format("{}", kind)), token);
 	}
 
-	void CommonErrors::invalid_command_type(CommandType ctype, const Token& token)
+	void CommonErrors::invalid_command_type(CommandKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("command", _command_type_map.at(ctype)), token);
+		internal_compiler_error(invalid_generic_type("command", std::format("{}", kind)), token);
 	}
 
-	void CommonErrors::invalid_integer_literal_type(IntegerLiteralType itype, const Token& token)
+	void CommonErrors::invalid_int_type(IntKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("integer literal", _integer_literal_type_map.at(itype)), token);
+		internal_compiler_error(invalid_generic_type("integer", std::format("{}", kind)), token);
 	}
 
-	void CommonErrors::invalid_int_type(IntKind itype, const Token& token)
+	void CommonErrors::invalid_float_type(FloatKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("integer", _int_kind_map.at(itype)), token);
+		internal_compiler_error(invalid_generic_type("float", std::format("{}", kind)), token);
 	}
 
-	void CommonErrors::invalid_float_type(FloatKind ftype, const Token& token)
+	void CommonErrors::invalid_token_type(TokenKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("float", _float_kind_map.at(ftype)), token);
-	}
-
-	void CommonErrors::invalid_token_type(TokenType ttype, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("token", std::string{ token_map.at(ttype).value() }), token);
+		internal_compiler_error(invalid_generic_type("token", std::string{ token_map.at(kind).value() }), token);
 	}
 
 	void CommonErrors::invalid_symbol_type(SymbolKind stype, const Token& token)
@@ -161,7 +156,7 @@ namespace hz
 
 	void CommonErrors::int_type_specifier_mismatch(Type* type, Expression* expression, const Token& token)
 	{
-		const auto expected_specifier = AS_INT_TYPE(type)->int_type;
+		const auto expected_specifier = AS_INT_TYPE(type)->int_kind;
 
 		const auto evaluated_type = AS_INT_TYPE(resolve_type(expression));
 		if (evaluated_type == nullptr)
@@ -171,7 +166,7 @@ namespace hz
 			return;
 		}
 
-		const auto erroring_specifier = evaluated_type->int_type;
+		const auto erroring_specifier = evaluated_type->int_kind;
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("type specifier mismatch; expected `{}` but got `{}`",
 			_int_type_type_map.at(expected_specifier), _int_type_type_map.at(erroring_specifier)), token);

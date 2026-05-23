@@ -25,19 +25,19 @@ namespace hz
 		const auto& opcode_token = peek();
 		consume(opcode_token.type);
 
-		using enum TokenType;
+		using enum TokenKind;
 		switch (opcode_token.type)
 		{
 			// I instruction set
 			case LB:
 			{
 				const auto rd = PARSE_REGISTER();
-				consume(TokenType::COMMA);
+				consume(TokenKind::COMMA);
 				const auto integer_literal = parse_integerliteral_expression();
 				const auto immediate = static_cast<Offset>(integer_literal_int(integer_literal->value));
-				consume(TokenType::LPAREN);
+				consume(TokenKind::LPAREN);
 				const auto rs1 = PARSE_REGISTER();
-				consume(TokenType::RPAREN);
+				consume(TokenKind::RPAREN);
 				return new lb(rd, immediate, rs1);
 			} break;
 
@@ -165,38 +165,38 @@ namespace hz
 
 		switch (register_token.type)
 		{
-			case TokenType::X0:  case TokenType::ZERO:                   return X0;
-			case TokenType::X1:  case TokenType::RA:                     return X1;
-			case TokenType::X2:  case TokenType::SP:                     return X2;
-			case TokenType::X3:  case TokenType::GP:                     return X3;
-			case TokenType::X4:  case TokenType::TP:                     return X4;
-			case TokenType::X5:  case TokenType::T0:                     return X5;
-			case TokenType::X6:  case TokenType::T1:                     return X6;
-			case TokenType::X7:  case TokenType::T2:                     return X7;
-			case TokenType::X8:  case TokenType::S0: case TokenType::FP: return X8;
-			case TokenType::X9:  case TokenType::S1:                     return X9;
-			case TokenType::X10: case TokenType::A0:                     return X10;
-			case TokenType::X11: case TokenType::A1:                     return X11;
-			case TokenType::X12: case TokenType::A2:                     return X12;
-			case TokenType::X13: case TokenType::A3:                     return X13;
-			case TokenType::X14: case TokenType::A4:                     return X14;
-			case TokenType::X15: case TokenType::A5:                     return X15;
-			case TokenType::X16: case TokenType::A6:                     return X16;
-			case TokenType::X17: case TokenType::A7:                     return X17;
-			case TokenType::X18: case TokenType::S2:                     return X18;
-			case TokenType::X19: case TokenType::S3:                     return X19;
-			case TokenType::X20: case TokenType::S4:                     return X20;
-			case TokenType::X21: case TokenType::S5:                     return X21;
-			case TokenType::X22: case TokenType::S6:                     return X22;
-			case TokenType::X23: case TokenType::S7:                     return X23;
-			case TokenType::X24: case TokenType::S8:                     return X24;
-			case TokenType::X25: case TokenType::S9:                     return X25;
-			case TokenType::X26: case TokenType::S10:                    return X26;
-			case TokenType::X27: case TokenType::S11:                    return X27;
-			case TokenType::X28: case TokenType::T3:                     return X28;
-			case TokenType::X29: case TokenType::T4:                     return X29;
-			case TokenType::X30: case TokenType::T5:                     return X30;
-			case TokenType::X31: case TokenType::T6:                     return X31;
+			case TokenKind::X0:  case TokenKind::ZERO:                   return X0;
+			case TokenKind::X1:  case TokenKind::RA:                     return X1;
+			case TokenKind::X2:  case TokenKind::SP:                     return X2;
+			case TokenKind::X3:  case TokenKind::GP:                     return X3;
+			case TokenKind::X4:  case TokenKind::TP:                     return X4;
+			case TokenKind::X5:  case TokenKind::T0:                     return X5;
+			case TokenKind::X6:  case TokenKind::T1:                     return X6;
+			case TokenKind::X7:  case TokenKind::T2:                     return X7;
+			case TokenKind::X8:  case TokenKind::S0: case TokenKind::FP: return X8;
+			case TokenKind::X9:  case TokenKind::S1:                     return X9;
+			case TokenKind::X10: case TokenKind::A0:                     return X10;
+			case TokenKind::X11: case TokenKind::A1:                     return X11;
+			case TokenKind::X12: case TokenKind::A2:                     return X12;
+			case TokenKind::X13: case TokenKind::A3:                     return X13;
+			case TokenKind::X14: case TokenKind::A4:                     return X14;
+			case TokenKind::X15: case TokenKind::A5:                     return X15;
+			case TokenKind::X16: case TokenKind::A6:                     return X16;
+			case TokenKind::X17: case TokenKind::A7:                     return X17;
+			case TokenKind::X18: case TokenKind::S2:                     return X18;
+			case TokenKind::X19: case TokenKind::S3:                     return X19;
+			case TokenKind::X20: case TokenKind::S4:                     return X20;
+			case TokenKind::X21: case TokenKind::S5:                     return X21;
+			case TokenKind::X22: case TokenKind::S6:                     return X22;
+			case TokenKind::X23: case TokenKind::S7:                     return X23;
+			case TokenKind::X24: case TokenKind::S8:                     return X24;
+			case TokenKind::X25: case TokenKind::S9:                     return X25;
+			case TokenKind::X26: case TokenKind::S10:                    return X26;
+			case TokenKind::X27: case TokenKind::S11:                    return X27;
+			case TokenKind::X28: case TokenKind::T3:                     return X28;
+			case TokenKind::X29: case TokenKind::T4:                     return X29;
+			case TokenKind::X30: case TokenKind::T5:                     return X30;
+			case TokenKind::X31: case TokenKind::T6:                     return X31;
 		}
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(

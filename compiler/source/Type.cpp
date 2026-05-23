@@ -17,7 +17,7 @@ namespace hz
 	std::uint16_t IntType::size() const
 	{
 		using enum IntTypeKind;
-		switch (int_type)
+		switch (int_kind)
 		{
 			case INT8: return sizeof(std::int8_t);
 			case INT16: return sizeof(std::int16_t);
@@ -25,7 +25,7 @@ namespace hz
 
 			default:
 			{
-				CommonErrors::invalid_int_type(int_type, NULL_TOKEN); 
+				CommonErrors::invalid_int_type(int_kind, NULL_TOKEN); 
 				return -1;
 			} break;
 		}
@@ -33,11 +33,11 @@ namespace hz
 
 	std::string IntType::string() const
 	{
-		// qualifier signedness int_type storage
+		// qualifier signedness int_kind storage
 		return std::format("{} {} {} {}",
 			type_qualifier_map.at(qualifier), 
 			_type_signedness_map.at(signedness),
-			_int_type_type_map.at(int_type),
+			_int_type_type_map.at(int_kind),
 			_type_storage_map.at(storage));
 	}
 

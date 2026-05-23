@@ -41,13 +41,13 @@ namespace hz
 {
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
-	concept Type = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
+	concept TypeConcept = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
 
 	// expose a strict polymorphic interface for types
 	template<typename AnchorT>
 	using TypeMethods = std::tuple
 	<
-		Method<&AnchorT::ttype, TypeKind()>,
+		Method<&AnchorT::type_kind, TypeKind()>,
 		Method<&AnchorT::size, Offset()>,
 		Method<&AnchorT::is_complete, bool()>,
 	>;
@@ -108,7 +108,7 @@ namespace hz
 	std::string format_type(const TypeBase& type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST)
 	{
 		using enum TypeKind;
-		switch (type.ttype())
+		switch (type.type_kind())
 		{
 			case VOID:
 			{
@@ -117,25 +117,25 @@ namespace hz
 
 			case INT:
 			{
-				const auto& int_type = static_cast<const IntType&>(type);
+				const auto& int_kind = static_cast<const IntType&>(type);
 
 				// <storage-class> <type-qualifier> <type-specifier> <type-width>
 				return std::format("{} {} {} {}",
-					_storage_class_map.at(int_type.storage),
-					format_type_qualifier(int_type.qualifier),
-					_type_signedness_map.at(int_type.signedness),
-					_int_kind_map.at(int_type.int_kind));
+					int_kind.storage,
+					int_kind.qualifier,
+					int_kind.signedness,
+					int_kind.int_kind);
 			} break;
 
 			case FLOAT:
 			{
-				const auto& float_type = static_cast<const FloatType&>(type);
+				const auto& float_kind = static_cast<const FloatType&>(type);
 
 				// <storage-class> <type-qualifier> <type-width>
 				return std::format("{} {} {}",
-					float_type.storage,
-					float_type.qualifier,
-					float_type.float_type);
+					float_kind.storage,
+					float_kind.qualifier,
+					float_kind.float_kind);
 			} break;
 
 			case STRUCT_OR_UNION:
@@ -159,9 +159,9 @@ namespace hz
 				//     members...
 				// }
 				return std::format("{} {} {} {{\n{}}}",
-					_storage_class_map.at(struct_or_union_type.storage),
-					format_type_qualifier(struct_or_union_type.qualifier),
-					_struct_or_union_type_map.at(struct_or_union_type.struct_or_union_kind),
+					struct_or_union_type.storage,
+					struct_or_union_type.qualifier,
+					struct_or_union_type.struct_or_union_kind,
 					members);
 			} break;
 
@@ -172,14 +172,14 @@ namespace hz
 				// <storage-class> <type-qualifier> enum tag 
 				// NOTE: enumerators not shown since they don't fundamentally affect the type
 				return std::format("{} {} enum {}", 
-					_storage_class_map.at(enum_type.storage),
-					format_type_qualifier(enum_type.qualifier),
+					enum_type.storage,
+					enum_type.qualifier,
 					name);
 			} break;
 
 			case TYPEDEF_NAME:
 			{
-				const auto& typedef_name_type = static_cast<const TypedefName&>(type);
+				const auto& typedef_name_type = static_cast<const TypedefNameType&>(type);
 
 				// NOTE: just using the underyling alias name since the typedef doesn't affect the type's string representation
 				return typedef_name_type.name;

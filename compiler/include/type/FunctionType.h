@@ -16,7 +16,7 @@ namespace hz
 		bool is_variadic;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::FUNCTION;
 		}

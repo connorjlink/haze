@@ -23,7 +23,7 @@ namespace hz
 
 	Statement* CompilerParser::parse_statement(const std::string& enclosing_function)
 	{
-		using enum TokenType;
+		using enum TokenKind;
 		switch (peek().type)
 		{
 			case LBRACE: return parse_compound_statement(enclosing_function);
@@ -45,7 +45,7 @@ namespace hz
 	{
 		std::vector<Statement*> statements;
 
-		while (peek().type != TokenType::RBRACE)
+		while (peek().type != TokenKind::RBRACE)
 		{
 			statements.emplace_back(parse_statement(enclosing_function));
 		}
@@ -55,16 +55,16 @@ namespace hz
 
 	Statement* CompilerParser::parse_null_statement(const std::string& enclosing_function)
 	{
-		const auto semicolon_token = consume(TokenType::SEMICOLON);
+		const auto semicolon_token = consume(TokenKind::SEMICOLON);
 		return MAKE_NULL_STATEMENT(semicolon_token);
 	}
 
 	Statement* CompilerParser::parse_variabledeclaration_statement(const std::string& enclosing_function)
 	{
-		consume(TokenType::DECLARE);
+		consume(TokenKind::DECLARE);
 
 		const auto type = parse_type();
-		const auto identifier_token = consume(TokenType::IDENTIFIER);
+		const auto identifier_token = consume(TokenKind::IDENTIFIER);
 
 		USE_SAFE(SymbolDatabase)->add_variable(identifier_token.text, lookbehind());
 
@@ -74,40 +74,40 @@ namespace hz
 		// exports the variable identifier symbol only
 		USE_SAFE(SymbolExporter)->enqueue(function_symbol, identifier_token);
 
-		if (peek().type == TokenType::EQUALS)
+		if (peek().type == TokenKind::EQUALS)
 		{
-			consume(TokenType::EQUALS);
+			consume(TokenKind::EQUALS);
 
 			const auto value = parse_expression();
 	
-			consume(TokenType::SEMICOLON);
+			consume(TokenKind::SEMICOLON);
 
 			return new VariableStatement{ type, identifier_token.text, value, nullptr, value->_token };
 		}
 
-		consume(TokenType::SEMICOLON);
+		consume(TokenKind::SEMICOLON);
 
 		return new VariableStatement{ type, identifier_token.text, nullptr, nullptr, identifier_token };
 	}
 
 	Statement* CompilerParser::parse_compound_statement(const std::string& enclosing_function)
 	{
-		const auto lbrace_token = consume(TokenType::LBRACE);
+		const auto lbrace_token = consume(TokenKind::LBRACE);
 
 		auto statements = parse_statements(enclosing_function);
 
-		consume(TokenType::RBRACE);
+		consume(TokenKind::RBRACE);
 
 		return new CompoundStatement{ statements, lbrace_token };
 	}
 
 	Statement* CompilerParser::parse_return_statement(const std::string& enclosing_function)
 	{
-		const auto return_token = consume(TokenType::RETURN);
+		const auto return_token = consume(TokenKind::RETURN);
 
 		const auto expression = parse_expression();
 
-		consume(TokenType::SEMICOLON);
+		consume(TokenKind::SEMICOLON);
 
 		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, enclosing_function, return_token);
 
@@ -130,11 +130,11 @@ namespace hz
 
 	Statement* CompilerParser::parse_inline_asm_statement(const std::string& enclosing_function)
 	{
-		const auto asm_token = consume(TokenType::ASM);
-		consume(TokenType::LBRACE);
+		const auto asm_token = consume(TokenKind::ASM);
+		consume(TokenKind::LBRACE);
 
-		const auto assembly = fetch_until(TokenType::RBRACE);
-		assembly.emplace_back(Token{ TokenType::END, "eof", peek().location });
+		const auto assembly = fetch_until(TokenKind::RBRACE);
+		assembly.emplace_back(Token{ TokenKind::END, "eof", peek().location });
 
 		const auto assembler_parser = createassembler_parser(filepath);
 		assembler_parser->reload(assembly, filepath);
@@ -151,19 +151,19 @@ namespace hz
 				})
 			| std::ranges::to<std::vector<Command*>>();
 
-		consume(TokenType::RBRACE);
+		consume(TokenKind::RBRACE);
 
 		return new InlineAsmStatement{ commands, assembler_parser, filepath, asm_token };
 	}
 
 	Statement* CompilerParser::parse_while_statement(const std::string& enclosing_function)
 	{
-		consume(TokenType::WHILE);
-		consume(TokenType::LPAREN);
+		consume(TokenKind::WHILE);
+		consume(TokenKind::LPAREN);
 
 		const auto condition = parse_expression();
 
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 
 		const auto body = parse_statement(enclosing_function);
 
@@ -172,17 +172,17 @@ namespace hz
 
 	Statement* CompilerParser::parse_for_statement(const std::string& enclosing_function)
 	{
-		consume(TokenType::FOR);
-		consume(TokenType::LPAREN);
+		consume(TokenKind::FOR);
+		consume(TokenKind::LPAREN);
 
 		const auto initialization = parse_variabledeclaration_statement(enclosing_function);
 		const auto condition = parse_expression();
 
-		consume(TokenType::SEMICOLON);
+		consume(TokenKind::SEMICOLON);
 
 		const auto expression = parse_expression();
 
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 
 		const auto body = parse_statement(enclosing_function);
 
@@ -191,19 +191,19 @@ namespace hz
 
 	Statement* CompilerParser::parse_if_statement(const std::string& enclosing_function)
 	{
-		consume(TokenType::IF);
-		consume(TokenType::LPAREN);
+		consume(TokenKind::IF);
+		consume(TokenKind::LPAREN);
 
 		const auto condition = parse_expression();
 
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 
 		const auto if_body = parse_statement(enclosing_function);
 		Statement* else_body = nullptr;
 
-		if (peek().type == TokenType::ELSE)
+		if (peek().type == TokenKind::ELSE)
 		{
-			consume(TokenType::ELSE);
+			consume(TokenKind::ELSE);
 			else_body = parse_statement(enclosing_function);
 		}
 		
@@ -212,13 +212,13 @@ namespace hz
 
 	Statement* CompilerParser::parse_print_statement(const std::string& enclosing_function)
 	{
-		consume(TokenType::PRINT);
-		consume(TokenType::LPAREN);
+		consume(TokenKind::PRINT);
+		consume(TokenKind::LPAREN);
 
 		const auto expression = parse_expression();
 
-		consume(TokenType::RPAREN);
-		consume(TokenType::SEMICOLON);
+		consume(TokenKind::RPAREN);
+		consume(TokenKind::SEMICOLON);
 
 		return new PrintStatement{ expression, expression->_token };
 	}
@@ -226,7 +226,7 @@ namespace hz
 	Statement* CompilerParser::parse_expression_statement(const std::string& enclosing_function)
 	{
 		const auto expression = parse_expression();
-		consume(TokenType::SEMICOLON);
+		consume(TokenKind::SEMICOLON);
 
 		if (expression != nullptr)
 		{
@@ -238,13 +238,13 @@ namespace hz
 
 	Statement* CompilerParser::parse_exit_statement(const std::string& enclosing_function)
 	{
-		const auto exit_token = consume(TokenType::EXIT);
+		const auto exit_token = consume(TokenKind::EXIT);
 		
-		consume(TokenType::LPAREN);
+		consume(TokenKind::LPAREN);
 		const auto expression = parse_expression();
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 		
-		consume(TokenType::SEMICOLON);
+		consume(TokenKind::SEMICOLON);
 
 		return new ExitStatement{ expression, exit_token };
 	}
@@ -254,7 +254,7 @@ namespace hz
 		const auto type = parse_type();
 		const auto name = parse_identifier_expression();
 
-		consume(TokenType::COMMA);
+		consume(TokenKind::COMMA);
 
 		return new MemberDeclarationExpression{ type, name, name->_token };
 	}
@@ -263,7 +263,7 @@ namespace hz
 	{
 		std::vector<MemberDeclarationExpression*> out{};
 
-		while (peek().type != TokenType::RBRACE)
+		while (peek().type != TokenKind::RBRACE)
 		{
 			const auto member_declaration = parse_member_declaration_statement(enclosing_function);
 			out.emplace_back(member_declaration);
@@ -274,13 +274,13 @@ namespace hz
 
 	Statement* CompilerParser::parse_struct_declaration_statement(const std::string& enclosing_function)
 	{
-		const auto declaration = consume(TokenType::STRUCT);
+		const auto declaration = consume(TokenKind::STRUCT);
 
 		const auto identifier = parse_identifier_expression();
 
-		consume(TokenType::LBRACE);
+		consume(TokenKind::LBRACE);
 		const auto member_declarations = parse_member_declaration_statements(enclosing_function);
-		consume(TokenType::RBRACE);
+		consume(TokenKind::RBRACE);
 
 		const auto symbol = new StructSymbol{ identifier->name, declaration };
 		
@@ -294,7 +294,7 @@ namespace hz
 	{
 		std::vector<Expression*> arguments;
 
-		while (peek().type != TokenType::RPAREN)
+		while (peek().type != TokenKind::RPAREN)
 		{
 
 			/*
@@ -333,11 +333,11 @@ namespace hz
 			}
 
 
-			if (peek().type != TokenType::RPAREN)
+			if (peek().type != TokenKind::RPAREN)
 			{
-				consume(TokenType::COMMA);
+				consume(TokenKind::COMMA);
 
-				if (peek().type == TokenType::RPAREN)
+				if (peek().type == TokenKind::RPAREN)
 				{
 					USE_SAFE(ErrorReporter)->post_error("expected another argument but got `)`", peek());
 					break;
@@ -446,8 +446,8 @@ namespace hz
 			case WORD: [[fallthrough]];
 			case DWORD:
 			{
-				auto int_type = _type_specifier_int_map.at(specifier);
-				return new IntType{ qualifier, signedness, int_type, storage };
+				auto int_kind = _type_specifier_int_map.at(specifier);
+				return new IntType{ qualifier, signedness, int_kind, storage };
 			} break;
 
 			case STRUCT:
@@ -470,22 +470,22 @@ namespace hz
 
 	Node* CompilerParser::parse_function()
 	{
-		consume(TokenType::FUNCTION);
+		consume(TokenKind::FUNCTION);
 
 		const auto return_type = parse_type();
 
-		const auto name_token = consume(TokenType::IDENTIFIER);
+		const auto name_token = consume(TokenKind::IDENTIFIER);
 
 		// 5 digits of randomness for now
 		const auto uuid = hz::generate(5);
 		const auto end_function_label = std::format("end_function_{:05d}", uuid);
-		_function_label_map[name_token.text] = end_function_label;
+		function_label_map[name_token.text] = end_function_label;
 
-		consume(TokenType::EQUALS);
+		consume(TokenKind::EQUALS);
 
-		consume(TokenType::LPAREN);
+		consume(TokenKind::LPAREN);
 		auto arguments = parse_arguments(true);
-		consume(TokenType::RPAREN);
+		consume(TokenKind::RPAREN);
 
 		// update the symbol map
 		USE_SAFE(SymbolDatabase)->add_function(name_token.text, lookbehind(), return_type, arguments);
@@ -498,7 +498,7 @@ namespace hz
 	{
 		std::vector<Node*> functions;
 
-		while (peek().type != TokenType::END)
+		while (peek().type != TokenKind::END)
 		{
 			functions.emplace_back(parse_function());
 		}
@@ -510,7 +510,7 @@ namespace hz
 	{
 		auto program = parse_functions();
 
-		if (_function_label_map.contains("main"))
+		if (function_label_map.contains("main"))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
 			USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, "main", peek(), true);

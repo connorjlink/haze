@@ -15,7 +15,7 @@ namespace hz
 		std::optional<Address> length;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::ARRAY;
 		}

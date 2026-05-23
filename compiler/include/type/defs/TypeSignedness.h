@@ -29,11 +29,11 @@ namespace hz
 		return "<unknown type signedness>";
 	}
 
-	constexpr TypeSignedness to_type_signedness(TokenType token_type)
+	constexpr TypeSignedness to_type_signedness(TokenKind token_type)
 	{
 		switch (token_type)
 		{
-#define X(enumerator, name) case TokenType::enumerator: return TypeSignedness::name;
+#define X(enumerator, name) case TokenKind::enumerator: return TypeSignedness::name;
 #include <type/defs/TypeSignedness.def>
 #undef X
 		}

@@ -20,7 +20,19 @@ namespace hz
 	template<typename T>
 	using ExpressionReference = SumReference<T, ExpressionSumStorage>;
 
-	using ExpressionBase = SumMemberBase<ExpressionSumStorage>;
+	using ExpressionFacade = SumMemberBase<ExpressionSumStorage>;
+
+	class ExpressionBase
+		: public ExpressionFacade
+		, public InjectService<Generator>
+	{
+	public:
+		template<typename Self>
+		bool check_types(this Self&& self, const Storage& ast)
+		{
+			return self.get_type().is_valid();
+		}
+	};
 }
 
 namespace hz
@@ -48,10 +60,10 @@ namespace hz
 	class FloatLiteralExpression : public ExpressionBase
 	{
 	public:
-		std::float64_t value;
+		BigFloat value;
 
 	public:
-		FloatLiteralExpression(std::float64_t value)
+		FloatLiteralExpression(BigFloat value)
 			: value{ value }
 		{
 		}
@@ -366,19 +378,6 @@ namespace hz
 	using ExpressionReference = ExpressionSum::template Reference<T>;
 
 	using ExpressionHandle = ExpressionSum::Handle;
-
-
-	class ExpressionBase
-		: public ExpressionSumBase
-		, public InjectService<Generator>
-	{
-	public:
-		template<typename Self>
-		bool check_types(this Self&& self, const Storage& ast)
-		{
-			return self.get_type().is_valid();
-		}
-	};
 }
 
 #endif

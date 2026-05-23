@@ -1,8 +1,6 @@
 #ifndef HAZE_RISCVASSEMBLERPARSER_H
 #define HAZE_RISCVASSEMBLERPARSER_H
 
-#include <toolchain/AssemblerParser.h>
-
 // Haze RISCVAssemblerParser.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -10,7 +8,7 @@ namespace hz
 {
 	class Instruction;
 
-	class RISCVAssemblerParser : public AssemblerParser
+	class RISCVAssemblerParser : public Parser
 	{
 	protected:
 		virtual ArchitectureKind ctype() const final override;

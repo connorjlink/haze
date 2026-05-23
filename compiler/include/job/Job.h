@@ -27,10 +27,11 @@ namespace hz
 
 	public:
 		Job(const std::string& task, std::uint32_t uuid)
-			: task{ task }, uuid(uuid)
+			: task{ task }
+			, uuid{ uuid }
+			, start_time{ std::chrono::high_resolution_clock::now() }
+			, stop_time{ std::chrono::high_resolution_clock::time_point::min() }
 		{
-			start_time = std::chrono::high_resolution_clock::now();
-			stop_time = std::chrono::high_resolution_clock::time_point::min();
 		}
 	};
 }

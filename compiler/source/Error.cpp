@@ -1,6 +1,6 @@
 import std;
 
-#include <error/Error.h>
+#include <error/models/Error.h>
 
 // Haze Error.cpp
 // (c) Connor J. Link. All Rights Reserved.

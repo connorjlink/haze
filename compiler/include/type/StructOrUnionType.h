@@ -2,9 +2,9 @@
 #define HAZE_STRUCTORUNIONTYPE_H
 
 #include <error/CommonErrors.h>
-#include <type/StorageClass.h>
-#include <type/TypeQualifier.h>
-#include <type/TypeKind.h>
+#include <type/defs/StorageClass.h>
+#include <type/defs/TypeQualifier.h>
+#include <type/defs/TypeKind.h>
 #include <utility/Constants.h>
 
 // Haze StructOrUnion.h
@@ -14,15 +14,22 @@ namespace hz
 {
 	enum class StructOrUnionKind
 	{
-		STRUCT,
-		UNION
+#define X(enumerator, name) enumerator,
+#include <type/defs/StructOrUnionKind.def>
+#undef X
 	};
 
-	static const std::unordered_map<StructOrUnionKind, std::string_view> _struct_or_union_type_map
+	constexpr std::string_view to_string(StructOrUnionKind kind)
 	{
-		{ StructOrUnionKind::STRUCT, "struct" },
-		{ StructOrUnionKind::UNION, "union" },
-	};
+		switch (kind)
+		{
+#define X(enumerator, name) case StructOrUnionKind::enumerator: return #name;
+#include <type/defs/StructOrUnionKind.def>
+#undef X
+		}
+
+		return "<unknown struct or union kind>";
+	}
 
 	class StructOrUnionType : public TypeBase
 	{
@@ -42,7 +49,7 @@ namespace hz
 		std::string tag;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::STRUCT_OR_UNION;
 		}

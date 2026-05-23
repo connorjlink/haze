@@ -27,7 +27,7 @@ namespace hz
 		std::string tag;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::ENUM;
 		}

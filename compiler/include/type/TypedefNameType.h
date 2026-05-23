@@ -15,7 +15,7 @@ namespace hz
 		std::string name;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::TYPEDEF_NAME;
 		}

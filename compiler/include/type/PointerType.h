@@ -15,7 +15,7 @@ namespace hz
 		TypeQualifier qualifier;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_kind() const
 		{
 			return TypeKind::POINTER;
 		}

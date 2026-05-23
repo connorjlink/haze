@@ -29,11 +29,11 @@ namespace hz
 		return "<unknown storage class>";
 	}
 
-	constexpr StorageClass token_to_storage_class(TokenType token)
+	constexpr StorageClass token_to_storage_class(TokenKind token)
 	{
 		switch (token)
 		{
-#define X(enumerator, name, value) case TokenType::enumerator: return StorageClass::enumerator;
+#define X(enumerator, name, value) case TokenKind::enumerator: return StorageClass::enumerator;
 #include <type/defs/StorageClass.def>
 #undef X
 		}

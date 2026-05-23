@@ -102,7 +102,7 @@ namespace hz
 
 		if (context != nullptr)
 		{
-			context->post(ErrorType::INFORMATION, message, filepath, token);
+			context->post(ErrorKind::INFORMATION, message, filepath, token);
 			return;
 		}
 
@@ -122,7 +122,7 @@ namespace hz
 	{
 		if (context != nullptr)
 		{
-			context->post(ErrorType::WARNING, message, filepath, token);
+			context->post(ErrorKind::WARNING, message, filepath, token);
 			return;
 		}
 
@@ -147,7 +147,7 @@ namespace hz
 
 		if (context != nullptr)
 		{
-			context->post(ErrorType::ERROR, message, filepath, token);
+			context->post(ErrorKind::ERROR, message, filepath, token);
 			return;
 		}
 
@@ -172,7 +172,7 @@ namespace hz
 
 		if (context != nullptr)
 		{
-			context->post(ErrorType::UNCORRECTABLE, message, filepath, token);
+			context->post(ErrorKind::UNCORRECTABLE, message, filepath, token);
 		}
 		else
 		{

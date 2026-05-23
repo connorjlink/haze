@@ -1,0 +1,8 @@
+// Haze DeclarationKind.def
+// (c) Connor J. Link. All Rights Reserved.
+
+X(FUNCTION, FunctionDeclaration, function)
+X(VARIABLE, VariableDeclaration, variable)
+X(STRUCT_OR_UNION, StructOrUnionDeclaration, struct or union)
+X(ENUM, EnumDeclaration, enum)
+X(TYPEDEF, TypedefDeclaration, typedef)

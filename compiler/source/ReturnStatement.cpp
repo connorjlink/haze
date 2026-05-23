@@ -24,7 +24,7 @@ namespace hz
 		if (REQUIRE_SAFE(Parser)->ptype() == ParserType::COMPILER)
 		{
 			auto compiler_parser = AS_COMPILER_PARSER(REQUIRE_SAFE(Parser).get());
-			const auto& end_function_label = compiler_parser->_function_label_map.at(enclosing_function);
+			const auto& end_function_label = compiler_parser->function_label_map.at(enclosing_function);
 
 			// when value==nullptr, expect no return value ONLY from nvr function
 			if (value == nullptr)

@@ -10,11 +10,10 @@ namespace hz
 	enum class StatementKind;
 	enum class ExpressionType;
 	enum class BinaryExpressionKind;
-	enum class IntegerLiteralType;
 	enum class CommandType;
 	enum class IntKind;
 	enum class FloatKind;
-	enum class TokenType;
+	enum class TokenKind;
 	enum class SymbolKind;
 	enum class StructOrUnionKind;
 
@@ -43,10 +42,9 @@ namespace hz
 		static void invalid_command_type(CommandType, const Token&);
 
 	public:
-		static void invalid_integer_literal_type(IntegerLiteralType, const Token&);
 		static void invalid_int_type(IntKind, const Token&);
 		static void invalid_float_type(FloatKind, const Token&);
-		static void invalid_token_type(TokenType, const Token&);
+		static void invalid_token_type(TokenKind, const Token&);
 		static void invalid_symbol_type(SymbolKind, const Token&);
 		static void invalid_struct_or_union_type(StructOrUnionKind, const Token&);
 
@@ -62,7 +60,7 @@ namespace hz
 		static void invalid_register(const std::string&, const Token&);
 
 	public:
-		static void integer_size_mismatch(IntegerLiteralType, IntegerLiteralType, const Token&);
+		static void integer_size_mismatch(IntKind, IntKind, const Token&);
 		static void invalid_binary_expression(ExpressionType, ExpressionType, BinaryExpressionType, const Token&);
 
 	public:

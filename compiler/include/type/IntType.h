@@ -40,7 +40,7 @@ namespace hz
 		IntKind int_kind;
 
 	public:
-		TypeKind ttype() const
+		TypeKind type_knid() const
 		{
 			return TypeKind::INT;
 		}

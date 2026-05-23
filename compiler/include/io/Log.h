@@ -1,7 +1,7 @@
 #ifndef HAZE_LOG_H
 #define HAZE_LOG_H
 
-#include <error/ErrorType.h>
+#include <error/defs/ErrorKind.h>
 
 // Haze Log.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,7 +17,7 @@ namespace hz
 		static void raw(const std::string&);
 
 	public:
-		static void with_severity(const std::string&, ErrorType);
+		static void with_severity(const std::string&, ErrorKind);
 
 	public:
 		static void output(const std::string&);
