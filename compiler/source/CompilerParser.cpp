@@ -109,7 +109,7 @@ namespace hz
 
 		consume(TokenType::SEMICOLON);
 
-		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, enclosing_function, return_token);
+		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, enclosing_function, return_token);
 
 		// NOTE: special case for `main()`:
 		// return statements are really an exit from the entire program
@@ -513,7 +513,7 @@ namespace hz
 		if (_function_label_map.contains("main"))
 		{
 			//at bare minimum, we must compile main() since it's the entrypoint
-			USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, "main", peek(), true);
+			USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, "main", peek(), true);
 
 			if (USE_SAFE(CommandLineOptions)->optimization & OptimizationType::AST)
 			{

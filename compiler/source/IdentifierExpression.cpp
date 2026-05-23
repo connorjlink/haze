@@ -22,27 +22,27 @@ namespace hz
 		const auto type = USE_SAFE(SymbolDatabase)->query_symbol_type(name, _token);
 		switch (type)
 		{
-			case SymbolType::FUNCTION:
+			case SymbolKind::FUNCTION:
 			{
 				const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name, _token);
 				return function_symbol->return_type->ttype();
 			} break;
-			case SymbolType::ARGUMENT:
+			case SymbolKind::ARGUMENT:
 			{
 				const auto argument_symbol = USE_SAFE(SymbolDatabase)->reference_argument(name, _token);
 				return argument_symbol->type->ttype();
 			} break;
-			case SymbolType::VARIABLE:
+			case SymbolKind::VARIABLE:
 			{
 				const auto variable_symbol = USE_SAFE(SymbolDatabase)->reference_variable(name, _token);
 				return variable_symbol->type->ttype();
 			} break;
-			case SymbolType::DEFINE:
+			case SymbolKind::DEFINE:
 			{
 				const auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(name, _token);
 				return define_symbol->type->ttype();
 			} break;
-			case SymbolType::STRUCT:
+			case SymbolKind::STRUCT:
 			{
 				return TypeKind::STRUCT;
 			} break;
@@ -58,18 +58,18 @@ namespace hz
 		// NOTE: old method
 		/*const auto type = _parser->query_symbol_type(name, _token);
 
-		using enum SymbolType;
+		using enum SymbolKind;
 		switch (type)
 		{
-			case SymbolType::VARIABLE:
+			case SymbolKind::VARIABLE:
 			{
-				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolType::VARIABLE, name, _token));
+				auto variable_symbol = AS_VARIABLE_SYMBOL(_parser->reference_symbol(SymbolKind::VARIABLE, name, _token));
 				variable_symbol->allocation->copy_into(allocation);
 			} break;
 
-			case SymbolType::ARGUMENT:
+			case SymbolKind::ARGUMENT:
 			{
-				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolType::ARGUMENT, name, _token));
+				auto argument_symbol = AS_ARGUMENT_SYMBOL(_parser->reference_symbol(SymbolKind::ARGUMENT, name, _token));
 				argument_symbol->allocation->copy_into(allocation);
 			} break;
 
@@ -84,7 +84,7 @@ namespace hz
 
 	Expression* IdentifierExpression::optimize()
 	{
-		const auto symbol = USE_SAFE(SymbolDatabase)->try_reference_symbol(SymbolType::DEFINE, name, _token);
+		const auto symbol = USE_SAFE(SymbolDatabase)->try_reference_symbol(SymbolKind::DEFINE, name, _token);
 		if (symbol)
 		{
 

@@ -39,7 +39,7 @@ namespace hz
 
 	void Generator::begin_function(const std::string& name)
 	{
-		_linkables.emplace_back(Linkable{ USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, NULL_TOKEN), {}, {}, 0});
+		_linkables.emplace_back(Linkable{ USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, NULL_TOKEN), {}, {}, 0});
 	}
 
 	void Generator::label_command(const std::string& identifier)

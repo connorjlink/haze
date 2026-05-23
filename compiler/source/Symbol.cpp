@@ -7,33 +7,33 @@ import std;
 
 namespace hz
 {
-	SymbolType FunctionSymbol::ytype() const
+	SymbolKind FunctionSymbol::ytype() const
 	{
-		return SymbolType::FUNCTION;
+		return SymbolKind::FUNCTION;
 	}
 
-	SymbolType ArgumentSymbol::ytype() const
+	SymbolKind ArgumentSymbol::ytype() const
 	{
-		return SymbolType::ARGUMENT;
+		return SymbolKind::ARGUMENT;
 	}
 
-	SymbolType VariableSymbol::ytype() const
+	SymbolKind VariableSymbol::ytype() const
 	{
-		return SymbolType::VARIABLE;
+		return SymbolKind::VARIABLE;
 	}
 
-	SymbolType DefineSymbol::ytype() const
+	SymbolKind DefineSymbol::ytype() const
 	{
-		return SymbolType::DEFINE;
+		return SymbolKind::DEFINE;
 	}
 
-	SymbolType LabelSymbol::ytype() const
+	SymbolKind LabelSymbol::ytype() const
 	{
-		return SymbolType::LABEL;
+		return SymbolKind::LABEL;
 	}
 
-	SymbolType StructSymbol::ytype() const
+	SymbolKind StructSymbol::ytype() const
 	{
-		return SymbolType::STRUCT;
+		return SymbolKind::STRUCT;
 	}
 }

@@ -21,22 +21,22 @@ namespace hz
 		using Test = Test<Parameters>;
 
 	private:
-		static bool validate_primitive(const Parameters&);
-		static bool validate_pointer(const Parameters&);
-		static bool validate_enum(const Parameters&);
-		static bool validate_struct(const Parameters&);
-		static bool validate_union(const Parameters&);
-		static bool validate_function(const Parameters&);
-		static bool validate_array(const Parameters&);
+		static bool validate_primitive(Parameters&);
+		static bool validate_pointer(Parameters&);
+		static bool validate_enum(Parameters&);
+		static bool validate_struct(Parameters&);
+		static bool validate_union(Parameters&);
+		static bool validate_function(Parameters&);
+		static bool validate_array(Parameters&);
 
 	public:
-		static bool validate_parse_primitive(const Parameters&);
-		static bool validate_parse_pointer(const Parameters&);
-		static bool validate_parse_enum(const Parameters&);
-		static bool validate_parse_struct(const Parameters&);
-		static bool validate_parse_union(const Parameters&);
-		static bool validate_parse_function(const Parameters&);
-		static bool validate_parse_array(const Parameters&);
+		static bool validate_parse_primitive(Parameters&);
+		static bool validate_parse_pointer(Parameters&);
+		static bool validate_parse_enum(Parameters&);
+		static bool validate_parse_struct(Parameters&);
+		static bool validate_parse_union(Parameters&);
+		static bool validate_parse_function(Parameters&);
+		static bool validate_parse_array(Parameters&);
 
 	public:
 		TypeValidator();

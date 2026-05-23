@@ -3,7 +3,9 @@
 
 #include <toolchain/models/Instruction.h>
 #include <utility/Constants.h>
-#include <x86/X86Register.h>
+#include <x86/defs/X86Register.h>
+#include <x86/defs/X86OperandKind.h>
+#include <x86/defs/X86InstructionKind.h>
 
 // Haze X86Instruction.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -13,27 +15,6 @@ namespace hz
 	template<template<typename> typename TraitT, typename... Ts>
 		requires (TraitT<Ts>::value && ...)
 	using ConstrainedVariant = std::variant<Ts...>;
-
-
-	enum class X86OperandKind
-	{
-#define X(enumerator, name) enumerator,
-#include <x86/X86OperandKind.def>
-#undef X
-	};
-
-	constexpr std::string_view to_string(X86OperandKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case X86OperandKind::enumerator: return name;
-#include <x86/X86OperandKind.def>
-#undef X
-		}
-
-		return "<unknon operand kind>";
-	}
-
 
 	template<typename T>
 	concept X86OperandConcept = requires(const T& t)
@@ -141,26 +122,6 @@ namespace hz
 		}, operand);
 	}
 
-
-
-	enum class X86InstructionKind
-	{
-#define X(enumerator, name) enumerator,
-#include <x86/X86InstructionKind.def>
-#undef X
-	};
-
-	constexpr std::string_view to_string(X86InstructionKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case X86InstructionKind::enumerator: return name;
-#include <x86/X86InstructionKind.def>
-#undef X
-		}
-
-		return "<unknown instruction kind>";
-	}
 
 
 	template<typename T>
@@ -448,10 +409,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			CallInstruction(const std::string& label, std::int32_t displacement)
+			CallInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -466,10 +427,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			ApicallInstruction(const std::string& label, std::int32_t displacement)
+			ApicallInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -484,10 +445,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JmpInstruction(const std::string& label, std::int32_t displacement)
+			JmpInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -502,10 +463,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JeInstruction(const std::string& label, std::int32_t displacement)
+			JeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -520,10 +481,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JneInstruction(const std::string& label, std::int32_t displacement)
+			JneInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -538,10 +499,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JlInstruction(const std::string& label, std::int32_t displacement)
+			JlInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -556,10 +517,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JleInstruction(const std::string& label, std::int32_t displacement)
+			JleInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -574,10 +535,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JgInstruction(const std::string& label, std::int32_t displacement)
+			JgInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -592,10 +553,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JgeInstruction(const std::string& label, std::int32_t displacement)
+			JgeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -610,10 +571,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JaInstruction(const std::string& label, std::int32_t displacement)
+			JaInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -628,10 +589,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JaeInstruction(const std::string& label, std::int32_t displacement)
+			JaeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -646,10 +607,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JbInstruction(const std::string& label, std::int32_t displacement)
+			JbInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
@@ -664,10 +625,10 @@ namespace hz
 		{
 		private:
 			const std::string& label;
-			std::int32_t displacement;
+			Offset displacement;
 
 		public:
-			JbeInstruction(const std::string& label, std::int32_t displacement)
+			JbeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}

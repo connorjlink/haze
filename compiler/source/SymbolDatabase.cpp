@@ -13,7 +13,7 @@ import std;
 
 namespace hz
 {
-	Symbol* SymbolDatabase::add_symbol(SymbolType type, const std::string& name, const Token& token)
+	Symbol* SymbolDatabase::add_symbol(SymbolKind type, const std::string& name, const Token& token)
 	{
 		// does the symbol already exist in the registry?
 		if (_table.contains(name))
@@ -25,7 +25,7 @@ namespace hz
 
 		Symbol* new_symbol = nullptr;
 
-		using enum SymbolType;
+		using enum SymbolKind;
 		switch (type)
 		{
 			case FUNCTION: new_symbol = _table[name] = new FunctionSymbol{ name, token, nullptr }; break;
@@ -51,7 +51,7 @@ namespace hz
 
 	FunctionSymbol* SymbolDatabase::add_function(const std::string& name, const Token& location, Type* return_type, const std::vector<ArgumentExpression*>& arguments)
 	{
-		auto function_symbol = AS_FUNCTION_SYMBOL(add_symbol(SymbolType::FUNCTION, name, location));
+		auto function_symbol = AS_FUNCTION_SYMBOL(add_symbol(SymbolKind::FUNCTION, name, location));
 		function_symbol->return_type = return_type;
 		function_symbol->arguments = arguments;
 		return function_symbol;
@@ -59,45 +59,45 @@ namespace hz
 
 	ArgumentSymbol* SymbolDatabase::add_argument(const std::string& name, const Token& location, Type* type)
 	{
-		auto argument_symbol = AS_ARGUMENT_SYMBOL(add_symbol(SymbolType::ARGUMENT, name, location));
+		auto argument_symbol = AS_ARGUMENT_SYMBOL(add_symbol(SymbolKind::ARGUMENT, name, location));
 		argument_symbol->type = type;
 		return argument_symbol;
 	}
 
 	VariableSymbol* SymbolDatabase::add_variable(const std::string& name, const Token& location)
 	{
-		return AS_VARIABLE_SYMBOL(add_symbol(SymbolType::VARIABLE, name, location));
+		return AS_VARIABLE_SYMBOL(add_symbol(SymbolKind::VARIABLE, name, location));
 	}
 
 	DefineSymbol* SymbolDatabase::add_define(const std::string& name, const Token& location)
 	{
-		return AS_DEFINE_SYMBOL(add_symbol(SymbolType::DEFINE, name, location));
+		return AS_DEFINE_SYMBOL(add_symbol(SymbolKind::DEFINE, name, location));
 	}
 
 	LabelSymbol* SymbolDatabase::add_label(const std::string& name, const Token& location)
 	{
-		return AS_LABEL_SYMBOL(add_symbol(SymbolType::LABEL, name, location));
+		return AS_LABEL_SYMBOL(add_symbol(SymbolKind::LABEL, name, location));
 	}
 
 	StructSymbol* SymbolDatabase::add_struct(const std::string& name, const Token& location)
 	{
-		return AS_STRUCT_SYMBOL(add_symbol(SymbolType::STRUCT, name, location));
+		return AS_STRUCT_SYMBOL(add_symbol(SymbolKind::STRUCT, name, location));
 	}
 
 
-	SymbolType SymbolDatabase::query_symbol_type(const std::string& name, const Token& location)
+	SymbolKind SymbolDatabase::query_symbol_type(const std::string& name, const Token& location)
 	{
 		if (!_table.contains(name))
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"symbol `{}` is undefined", name), location);
-			return SymbolType::VARIABLE;
+			return SymbolKind::VARIABLE;
 		}
 
 		return _table.at(name)->ytype();
 	}
 
-	Symbol* SymbolDatabase::internal_reference_symbol(bool log_errors, SymbolType type, const std::string& name, const Token& location, bool mark_visited)
+	Symbol* SymbolDatabase::internal_reference_symbol(bool log_errors, SymbolKind type, const std::string& name, const Token& location, bool mark_visited)
 	{
 		if (!_symbol_type_map.contains(type))
 		{
@@ -139,19 +139,19 @@ namespace hz
 		return symbol;
 	}
 
-	Symbol* SymbolDatabase::try_reference_symbol(SymbolType type, const std::string& name, const Token& location, bool mark_visited)
+	Symbol* SymbolDatabase::try_reference_symbol(SymbolKind type, const std::string& name, const Token& location, bool mark_visited)
 	{
 		return internal_reference_symbol(false, type, name, location, mark_visited);
 	}
 
-	Symbol* SymbolDatabase::reference_symbol(SymbolType type, const std::string& name, const Token& location, bool mark_visited)
+	Symbol* SymbolDatabase::reference_symbol(SymbolKind type, const std::string& name, const Token& location, bool mark_visited)
 	{
 		return internal_reference_symbol(true, type, name, location, mark_visited);
 	}
 
 	FunctionSymbol* SymbolDatabase::reference_function(const std::string& name, const Token& location, bool mark_visited)
 	{
-		const auto symbol = reference_symbol(SymbolType::FUNCTION, name, location, mark_visited);
+		const auto symbol = reference_symbol(SymbolKind::FUNCTION, name, location, mark_visited);
 		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		return function_symbol;
@@ -159,7 +159,7 @@ namespace hz
 
 	ArgumentSymbol* SymbolDatabase::reference_argument(const std::string& name, const Token& location, bool mark_visited)
 	{
-		const auto symbol = reference_symbol(SymbolType::ARGUMENT, name, location, mark_visited);
+		const auto symbol = reference_symbol(SymbolKind::ARGUMENT, name, location, mark_visited);
 		const auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
 
 		return argument_symbol;
@@ -167,7 +167,7 @@ namespace hz
 
 	VariableSymbol* SymbolDatabase::reference_variable(const std::string& name, const Token& location, bool mark_visited)
 	{
-		const auto symbol = reference_symbol(SymbolType::VARIABLE, name, location, mark_visited);
+		const auto symbol = reference_symbol(SymbolKind::VARIABLE, name, location, mark_visited);
 		const auto variable_symbol = AS_VARIABLE_SYMBOL(symbol);
 
 		return variable_symbol;
@@ -175,7 +175,7 @@ namespace hz
 
 	DefineSymbol* SymbolDatabase::reference_define(const std::string& name, const Token& location, bool mark_visited)
 	{
-		const auto symbol = reference_symbol(SymbolType::DEFINE, name, location, mark_visited);
+		const auto symbol = reference_symbol(SymbolKind::DEFINE, name, location, mark_visited);
 		const auto define_symbol = AS_DEFINE_SYMBOL(symbol);
 
 		return define_symbol;
@@ -183,7 +183,7 @@ namespace hz
 
 	LabelSymbol* SymbolDatabase::reference_label(const std::string& name, const Token& location, bool mark_visited)
 	{
-		const auto symbol = reference_symbol(SymbolType::LABEL, name, location, mark_visited);
+		const auto symbol = reference_symbol(SymbolKind::LABEL, name, location, mark_visited);
 		const auto label_symbol = AS_LABEL_SYMBOL(symbol);
 
 		return label_symbol;
@@ -191,7 +191,7 @@ namespace hz
 
 	StructSymbol* SymbolDatabase::reference_struct(const std::string& name, const Token& location, bool mark_visited)
 	{
-		const auto symbol = reference_symbol(SymbolType::STRUCT, name, location, mark_visited);
+		const auto symbol = reference_symbol(SymbolKind::STRUCT, name, location, mark_visited);
 		const auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
 
 		return struct_symbol;
@@ -212,7 +212,7 @@ namespace hz
 			{
 				auto symbol_type = USE_UNSAFE(SymbolDatabase)->query_symbol_type(identifier_expression->name, NULL_TOKEN);
 
-				if (symbol_type == SymbolType::VARIABLE)
+				if (symbol_type == SymbolKind::VARIABLE)
 				{
 					auto symbol = USE_UNSAFE(SymbolDatabase)->reference_variable(identifier_expression->name, NULL_TOKEN);
 					auto variable_symbol = AS_VARIABLE_SYMBOL(symbol);

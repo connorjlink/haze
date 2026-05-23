@@ -165,7 +165,7 @@ namespace hz
 		const auto symbol = entry.symbol;
 		const auto& location = entry.token;
 
-		using enum SymbolType;
+		using enum SymbolKind;
 		switch (symbol->ytype())
 		{
 			case FUNCTION:

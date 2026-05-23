@@ -26,91 +26,82 @@ namespace hz
 	TypeValidator::TypeValidator()
 	{
 		// serialized primitive types to string
-		const auto parameters0 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating primitive()");
-		auto test0 = Test{ "primitive()", validate_primitive };
-		test0.attach(parameters0);
+		const auto context0 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating primitive()");
+		auto parameters0 = Parameters{ context0, TypeSumStorage{} };
+		auto test0 = Test{ "primitive()", validate_primitive, parameters0 };
 		add_test(test0);
 
 		// serialized pointer types to string
-		const auto parameters1 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating pointer()");
-		auto test1 = Test{ "pointer()", validate_pointer };
-		test1.attach(parameters1);
+		const auto context1 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating pointer()");
+		auto parameters1 = Parameters{ context1, TypeSumStorage{} };
+		auto test1 = Test{ "pointer()", validate_pointer, parameters1 };
 		add_test(test1);
 
 		// serialized enum types to string
-		const auto parameters2 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating enum()");
-		auto test2 = Test{ "enum()", validate_enum };
-		test2.attach(parameters2);
+		const auto context2 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating enum()");
+		auto parameters2 = Parameters{ context2, TypeSumStorage{} };
+		auto test2 = Test{ "enum()", validate_enum, parameters2 };
 		add_test(test2);
 
 		// serialized struct types to string
-		const auto parameters3 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating struct()");
-		auto test3 = Test{ "struct()", validate_struct };
-		test3.attach(parameters3);
+		const auto context3 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating struct()");
+		auto parameters3 = Parameters{ context3, TypeSumStorage{} };
+		auto test3 = Test{ "struct()", validate_struct, parameters3 };
 		add_test(test3);
 
 		// serialized union types to string
-		const auto parameters4 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating union()");
-		auto test4 = Test{ "union()", validate_union };
-		test4.attach(parameters4);
+		const auto context4 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating union()");
+		auto parameters4 = Parameters{ context4, TypeSumStorage{} };
+		auto test4 = Test{ "union()", validate_union, parameters4 };
 		add_test(test4);
 
 		// serialized function types to string
 		const auto parameters5 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating function()");
-		auto test5 = Test{ "function()", validate_function };
-		test5.attach(parameters5);
+		auto test5 = Test{ "function()", validate_function, parameters5 };
 		add_test(test5);
 
 		// serialized array types to string
 		const auto parameters6 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating array()");
-		auto test6 = Test{ "array()", validate_array };
-		test6.attach(parameters6);
+		auto test6 = Test{ "array()", validate_array, parameters6 };
 		add_test(test6);
 
 		// parsing primitive types from string
 		const auto parameters7 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_primitive()");
-		auto test7 = Test{ "parse_primitive()", validate_parse_primitive };
-		test7.attach(parameters7);
+		auto test7 = Test{ "parse_primitive()", validate_parse_primitive, parameters7 };
 		add_test(test7);
 
 		// parsing pointer types from string
 		const auto parameters8 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_pointer()");
-		auto test8 = Test{ "parse_pointer()", validate_parse_pointer };
-		test8.attach(parameters8);
+		auto test8 = Test{ "parse_pointer()", validate_parse_pointer, parameters8 };
 		add_test(test8);
 
 		// parsing enum types from string
 		const auto parameters9 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_enum()");
-		auto test9 = Test{ "parse_enum()", validate_parse_enum };
-		test9.attach(parameters9);
+		auto test9 = Test{ "parse_enum()", validate_parse_enum, parameters9 };
 		add_test(test9);
 
 		// parsing struct types from string
 		const auto parameters10 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_struct()");
-		auto test10 = Test{ "parse_struct()", validate_parse_struct };
-		test10.attach(parameters10);
+		auto test10 = Test{ "parse_struct()", validate_parse_struct, parameters10 };
 		add_test(test10);
 
 		// parsing union types from string
 		const auto parameters11 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_union()");
-		auto test11 = Test{ "parse_union()", validate_parse_union };
-		test11.attach(parameters11);
+		auto test11 = Test{ "parse_union()", validate_parse_union, parameters11 };
 		add_test(test11);
 
 		// parsing function types from string
 		const auto parameters12 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_function()");
-		auto test12 = Test{ "parse_function()", validate_parse_function };
-		test12.attach(parameters12);
+		auto test12 = Test{ "parse_function()", validate_parse_function, parameters12 };
 		add_test(test12);
 
 		// parsing array types from string
 		const auto parameters13 = USE_SAFE(ErrorReporter)->open_context(__FILE__, "validating parse_array()");
-		auto test13 = Test{ "parse_array()", validate_parse_array };
-		test13.attach(parameters13);
+		auto test13 = Test{ "parse_array()", validate_parse_array, parameters13 };
 		add_test(test13);
 	}
 
-	bool TypeValidator::validate_primitive(const Parameters& parameters)
+	bool TypeValidator::validate_primitive(Parameters& parameters)
 	{
 		auto had_error = false;
 
@@ -137,7 +128,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool TypeValidator::validate_pointer(const Parameters& parameters)
+	bool TypeValidator::validate_pointer(Parameters& parameters)
 	{
 		auto had_error = false;
 
@@ -158,7 +149,7 @@ namespace hz
 		return had_error;
 	}
 
-	bool TypeValidator::validate_enum(const Parameters& parameters)
+	bool TypeValidator::validate_enum(Parameters& parameters)
 	{
 		auto had_error = false;
 

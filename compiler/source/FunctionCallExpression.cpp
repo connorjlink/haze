@@ -25,7 +25,7 @@ namespace hz
 
 	void FunctionCallExpression::generate(Allocation* allocation)
 	{
-		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::FUNCTION, name, _token, true);
+		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, _token, true);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
 		const auto defined_arity = function_symbol->arity();

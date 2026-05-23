@@ -2,7 +2,7 @@ import std;
 
 #include <ast/expression/Expression.h>
 #include <ast/statement/Statement.h>
-#include <symbol/SymbolType.h>
+#include <symbol/SymbolKind.h>
 #include <error/CommonErrors.h>
 #include <toolchain/ParserType.h>
 #include <type/Type.h>
@@ -79,7 +79,7 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("token", std::string{ _token_map.at(ttype).value() }), token);
 	}
 
-	void CommonErrors::invalid_symbol_type(SymbolType stype, const Token& token)
+	void CommonErrors::invalid_symbol_type(SymbolKind stype, const Token& token)
 	{
 		internal_compiler_error(invalid_generic_type("symbol", _symbol_type_map.at(stype)), token);
 	}

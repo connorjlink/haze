@@ -12,7 +12,7 @@ namespace hz
 {
 	struct Token;
 	class Type;
-	enum class SymbolType;
+	enum class SymbolKind;
 	class Symbol;
 	class FunctionSymbol;
 	class ArgumentSymbol;
@@ -31,7 +31,7 @@ namespace hz
 		std::unordered_map<std::string, Symbol*> _table;
 
 	public:
-		Symbol* add_symbol(SymbolType, const std::string&, const Token&);
+		Symbol* add_symbol(SymbolKind, const std::string&, const Token&);
 		FunctionSymbol* add_function(const std::string&, const Token&, Type*, const std::vector<ArgumentExpression*>& arguments);
 		ArgumentSymbol* add_argument(const std::string&, const Token&, Type*);
 		VariableSymbol* add_variable(const std::string&, const Token&);
@@ -40,14 +40,14 @@ namespace hz
 		StructSymbol* add_struct(const std::string&, const Token&);
 
 	public:
-		SymbolType query_symbol_type(const std::string&, const Token&);
+		SymbolKind query_symbol_type(const std::string&, const Token&);
 
 	private:
-		Symbol* internal_reference_symbol(bool, SymbolType, const std::string&, const Token&, bool = false);
+		Symbol* internal_reference_symbol(bool, SymbolKind, const std::string&, const Token&, bool = false);
 
 	public:
-		Symbol* try_reference_symbol(SymbolType, const std::string&, const Token&, bool = false);
-		Symbol* reference_symbol(SymbolType, const std::string&, const Token&, bool = false);
+		Symbol* try_reference_symbol(SymbolKind, const std::string&, const Token&, bool = false);
+		Symbol* reference_symbol(SymbolKind, const std::string&, const Token&, bool = false);
 		FunctionSymbol* reference_function(const std::string&, const Token&, bool = false);
 		ArgumentSymbol* reference_argument(const std::string&, const Token&, bool = false);
 		VariableSymbol* reference_variable(const std::string&, const Token&, bool = false);

@@ -51,7 +51,7 @@ namespace hz
 			//	const auto argument_expression = AS_ARGUMENT_EXPRESSION(function_symbol->arguments[0]);
 			//	const auto identifier = argument_expression->identifier;
 
-			//	const auto symbol = _parser->reference_symbol(SymbolType::ARGUMENT, identifier->name, _token);
+			//	const auto symbol = _parser->reference_symbol(SymbolKind::ARGUMENT, identifier->name, _token);
 			//	const auto argument_symbol = AS_ARGUMENT_SYMBOL(symbol);
 
 			//	const auto allocation = argument_symbol->allocation;

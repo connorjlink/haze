@@ -1,7 +1,7 @@
 #ifndef HAZE_SYMBOL_H
 #define HAZE_SYMBOL_H
 
-#include <symbol/SymbolType.h>
+#include <symbol/defs/SymbolKind.h>
 #include <utility/ExtendedInteger.h>
 
 // Haze Symbol.h
@@ -32,7 +32,7 @@ namespace hz
 		virtual ~Symbol() = default;
 
 	public:
-		virtual SymbolType ytype() const = 0;
+		virtual SymbolKind ytype() const = 0;
 	};
 
 	class FunctionSymbol : public Symbol
@@ -62,7 +62,7 @@ namespace hz
 		}
 
 	public:
-		virtual SymbolType ytype() const final override;
+		virtual SymbolKind ytype() const final override;
 	};
 
 	class ArgumentSymbol : public Symbol
@@ -77,7 +77,7 @@ namespace hz
 		}
 
 	public:
-		virtual SymbolType ytype() const final override;
+		virtual SymbolKind ytype() const final override;
 	};
 
 	class VariableSymbol : public Symbol
@@ -93,7 +93,7 @@ namespace hz
 		}
 
 	public:
-		virtual SymbolType ytype() const final override;
+		virtual SymbolKind ytype() const final override;
 	};
 
 	class DefineSymbol : public Symbol
@@ -109,7 +109,7 @@ namespace hz
 		}
 
 	public:
-		virtual SymbolType ytype() const final override;
+		virtual SymbolKind ytype() const final override;
 	};
 
 	class LabelSymbol : public Symbol
@@ -124,7 +124,7 @@ namespace hz
 		}
 
 	public:
-		virtual SymbolType ytype() const final override;
+		virtual SymbolKind ytype() const final override;
 	};
 
 	class StructSymbol : public Symbol
@@ -140,7 +140,7 @@ namespace hz
 		}
 
 	public:
-		virtual SymbolType ytype() const final override;
+		virtual SymbolKind ytype() const final override;
 	};
 }
 

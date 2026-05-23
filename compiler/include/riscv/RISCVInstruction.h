@@ -3,8 +3,8 @@
 
 #include <toolchain/models/Instruction.h>
 #include <utility/Constants.h>
-#include <riscv/RISCVInstructionType.h>
-#include <riscv/RISCVRegister.h>
+#include <riscv/defs/RISCVInstructionKind.h>
+#include <riscv/defs/RISCVRegister.h>
 
 // Haze RISCVInstruction.h
 // (c) Connor J. Link. All Rights Reserved.

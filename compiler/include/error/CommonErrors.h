@@ -15,7 +15,7 @@ namespace hz
 	enum class IntKind;
 	enum class FloatKind;
 	enum class TokenType;
-	enum class SymbolType;
+	enum class SymbolKind;
 	enum class StructOrUnionKind;
 
 	class Type;
@@ -47,7 +47,7 @@ namespace hz
 		static void invalid_int_type(IntKind, const Token&);
 		static void invalid_float_type(FloatKind, const Token&);
 		static void invalid_token_type(TokenType, const Token&);
-		static void invalid_symbol_type(SymbolType, const Token&);
+		static void invalid_symbol_type(SymbolKind, const Token&);
 		static void invalid_struct_or_union_type(StructOrUnionKind, const Token&);
 
 	public:

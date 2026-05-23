@@ -399,4 +399,17 @@ namespace hz
 	}
 }
 
+template<>
+struct std::formatter<hz::TokenType>
+{
+	constexpr auto parse(std::format_parse_context& context)
+	{
+		return context.begin();
+	}
+	auto format(const hz::TokenType& token, std::format_context& context) const
+	{
+		return std::format_to(context.out(), "{}", hz::_token_map.at(token).value_or("error"));
+	}
+};
+
 #endif

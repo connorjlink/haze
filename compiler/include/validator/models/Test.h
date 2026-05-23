@@ -16,22 +16,17 @@ namespace hz
 		std::function<bool(ParametersT&)> test;
 
 	private:
-		ParametersT parameters;
+		ParametersT& parameters;
 
 	public:
-		void attach(ParametersT& parameters)
-		{
-			this->parameters = parameters;
-		}
-
 		bool run_test() const
 		{
-			return test(frame);
+			return test(parameters);
 		}
 
 	public:
-		Test(const std::string& name, std::function<bool(ParametersT&)> test)
-			: name{ name }, test{ test }, parameters{}
+		Test(const std::string& name, std::function<bool(ParametersT&)> test, Parameters& parameters)
+			: name{ name }, test{ test }, parameters{ parameters }
 		{
 			// explicit default on parameters
 		}

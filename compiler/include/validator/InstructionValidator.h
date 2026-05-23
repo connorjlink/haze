@@ -11,8 +11,17 @@ namespace hz
 	class InstructionValidator : public Validator
 	{
 	private:
-		static bool validate_constructor(ErrorFrame);
-		static bool validate_bytes(ErrorFrame);
+		struct Parameters
+		{
+			ErrorFrame error_frame;
+		};
+
+	private:
+		using Test = Test<Parameters>;
+
+	private:
+		static bool validate_constructor(Parameters&);
+		static bool validate_bytes(Parameters&);
 
 	public:
 		InstructionValidator();

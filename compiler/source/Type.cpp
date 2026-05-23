@@ -49,7 +49,7 @@ namespace hz
 
 	std::uint16_t StructType::size() const
 	{
-		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolType::STRUCT, tag, NULL_TOKEN);
+		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::STRUCT, tag, NULL_TOKEN);
 		auto struct_symbol = AS_STRUCT_SYMBOL(symbol);
 
 		const auto member_count = struct_symbol->members.size();
