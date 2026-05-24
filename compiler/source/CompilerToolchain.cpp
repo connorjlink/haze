@@ -13,9 +13,9 @@ import std;
 
 namespace hz
 {
-	ToolchainType CompilerToolchain::ttype() const
+	ToolchainKind CompilerToolchain::ttype() const
 	{
-		return ToolchainType::COMPILER;
+		return ToolchainKind::COMPILER;
 	}
 
 	std::vector<Linkable> CompilerToolchain::run(const std::string& filepath)
@@ -24,7 +24,7 @@ namespace hz
 
 		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
 
-		REQUIRE_SAFE(Parser)->reload(_tokens.at(filepath), filepath);
+		REQUIRE_SAFE(Parser)->reload(tokens.at(filepath), filepath);
 		auto ast = REQUIRE_SAFE(Parser)->parse();
 
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);

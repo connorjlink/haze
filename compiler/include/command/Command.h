@@ -1,6 +1,7 @@
 #ifndef HAZE_COMMAND_H
 #define HAZE_COMMAND_H
 
+#include <ast/AST.h>
 #include <command/defs/CommandKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
@@ -124,13 +125,13 @@ namespace hz
 	};
 #define MAKE_DOTORG_COMMAND(address, token) DotOrgCommand{ address, token }
 
-	class DotbyteCommand : public CommandBase
+	class DotByteCommand : public CommandBase
 	{
 	private:
 		ByteRange bytes;
 
 	public:
-		DotbyteCommand(const ByteRange& bytes, const Token& token)
+		DotByteCommand(const ByteRange& bytes, const Token& token)
 			: CommandBase{ token }, bytes{ bytes }
 		{
 		}
@@ -142,6 +143,22 @@ namespace hz
 		CommandHandle optimize(const Storage&) const;
 	};
 #define MAKE_DOTBYTE_COMMAND(bytes, token) DotbyteCommand{ bytes, token }
+
+
+	using CommandTypes = SumTypeList
+	<
+		LabelCommand,
+		InstructionCommand,
+		DotOrgCommand,
+		DotByteCommand,
+	>;
+
+	using CommandSum = MakeSum<ASTMethods, CommandTypes>::Type;
+
+	template<typename T>
+	using CommandReference = CommandSum::template Reference<T>;
+
+	using CommandHandle = CommandSum::Handle;
 }
 
 #endif

@@ -134,22 +134,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\allocator\defs\ValueKind.h" />
+    <ClInclude Include="include\ast\declaration\Declaration.h" />
+    <ClInclude Include="include\ast\declaration\defs\DeclarationKind.h" />
     <ClInclude Include="include\ast\function\Function.h" />
     <ClInclude Include="include\ast\AST.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
-    <ClInclude Include="include\ast\function\FunctionKind.h" />
+    <ClInclude Include="include\ast\function\defs\FunctionKind.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
-    <ClInclude Include="include\command\DotDefineCommand.h" />
     <ClInclude Include="include\type\defs\TypeKind.h" />
     <ClInclude Include="include\utility\Formatter.h" />
     <ClInclude Include="include\utility\Sum.h" />
     <ClInclude Include="include\utility\Typing.h" />
     <ClInclude Include="include\allocator\Value.h" />
-    <ClInclude Include="include\ast\statement\InlineAssemblyStatement.h" />
-    <ClInclude Include="include\ast\statement\StatementKind.h" />
+    <ClInclude Include="include\ast\statement\defs\StatementKind.h" />
     <ClInclude Include="include\ast\statement\StructDeclarationStatement.h" />
-    <ClInclude Include="include\ast\statement\VariableStatement.h" />
-    <ClInclude Include="include\ast\statement\WhileStatement.h" />
     <ClInclude Include="include\builder\BMBuilder.h" />
     <ClInclude Include="include\builder\Builder.h" />
     <ClInclude Include="include\toolchain\Initializer.h" />
@@ -260,37 +258,7 @@
     <ClInclude Include="include\x86\defs\X86Register.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\allocator\Allocation.h" />
-    <ClInclude Include="include\allocator\AllocationType.h" />
     <ClInclude Include="include\allocator\Allocator.h" />
-    <ClInclude Include="include\ast\AdjustExpression.h" />
-    <ClInclude Include="include\ast\ArgumentExpression.h" />
-    <ClInclude Include="include\ast\BinaryExpression.h" />
-    <ClInclude Include="include\ast\BinaryExpressionType.h" />
-    <ClInclude Include="include\ast\CompoundStatement.h" />
-    <ClInclude Include="include\ast\ExitStatement.h" />
-    <ClInclude Include="include\ast\ExpressionStatement.h" />
-    <ClInclude Include="include\ast\ExpressionType.h" />
-    <ClInclude Include="include\ast\ForStatement.h" />
-    <ClInclude Include="include\ast\Function.h" />
-    <ClInclude Include="include\ast\FunctionArgumentExpression.h" />
-    <ClInclude Include="include\ast\FunctionCallExpression.h" />
-    <ClInclude Include="include\ast\IdentifierExpression.h" />
-    <ClInclude Include="include\ast\IfStatement.h" />
-    <ClInclude Include="include\ast\InlineAsmStatement.h" />
-    <ClInclude Include="include\ast\IntegerLiteralExpression.h" />
-    <ClInclude Include="include\ast\MemberDeclarationExpression.h" />
-    <ClInclude Include="include\ast\Node.h" />
-    <ClInclude Include="include\ast\NodeType.h" />
-    <ClInclude Include="include\ast\NullStatement.h" />
-    <ClInclude Include="include\ast\PrintStatement.h" />
-    <ClInclude Include="include\ast\ReturnStatement.h" />
-    <ClInclude Include="include\ast\Statement.h" />
-    <ClInclude Include="include\ast\StatementType.h" />
-    <ClInclude Include="include\ast\StringExpression.h" />
-    <ClInclude Include="include\ast\StructDeclarationStatement.h" />
-    <ClInclude Include="include\ast\VariableStatement.h" />
-    <ClInclude Include="include\ast\WhileStatement.h" />
     <ClInclude Include="include\builder\PEBuilder.h" />
     <ClInclude Include="include\cli\defs\ArchitectureKind.h" />
     <ClInclude Include="include\cli\CommandLineOptions.h" />
@@ -302,12 +270,9 @@
     <ClInclude Include="include\command\BinaryCommandType.h" />
     <ClInclude Include="include\command\BranchCommandType.h" />
     <ClInclude Include="include\command\Command.h" />
-    <ClInclude Include="include\command\CommandType.h" />
-    <ClInclude Include="include\command\DotOrgCommand.h" />
-    <ClInclude Include="include\command\InstructionCommand.h" />
+    <ClInclude Include="include\command\defs\CommandKind.h" />
     <ClInclude Include="include\command\IntermediateCommand.h" />
     <ClInclude Include="include\command\IntermediateType.h" />
-    <ClInclude Include="include\command\LabelCommand.h" />
     <ClInclude Include="include\command\models\IntegerLiteral.h" />
     <ClInclude Include="include\command\models\IntegerLiteralType.h" />
     <ClInclude Include="include\daemon\Daemon.h" />
@@ -317,10 +282,10 @@
     <ClInclude Include="include\data\UndoableRedoable.h" />
     <ClInclude Include="include\error\AutoErrorContext.h" />
     <ClInclude Include="include\error\CommonErrors.h" />
-    <ClInclude Include="include\error\Error.h" />
+    <ClInclude Include="include\error\models\Error.h" />
     <ClInclude Include="include\error\ErrorContext.h" />
     <ClInclude Include="include\error\ErrorReporter.h" />
-    <ClInclude Include="include\error\ErrorType.h" />
+    <ClInclude Include="include\error\defs\ErrorKind.h" />
     <ClInclude Include="include\io\FileManager.h" />
     <ClInclude Include="include\io\Log.h" />
     <ClInclude Include="include\io\models\File.h" />
@@ -376,14 +341,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="include\allocator\defs\ValueKind.def" />
-    <None Include="include\ast\expression\ExpressionKind.def" />
-    <None Include="include\ast\function\FunctionKind.def" />
-    <None Include="include\ast\statement\StatementKind.def" />
+    <None Include="include\ast\declaration\defs\DeclarationKind.def" />
+    <None Include="include\ast\expression\defs\ExpressionKind.def" />
+    <None Include="include\ast\function\defs\FunctionKind.def" />
+    <None Include="include\ast\statement\defs\StatementKind.def" />
     <None Include="include\cli\defs\ArchitectureKind.def" />
     <None Include="include\cli\defs\ExecutionKind.def" />
     <None Include="include\cli\defs\OptimizationFlag.def" />
     <None Include="include\cli\defs\OptionKind.def" />
     <None Include="include\cli\defs\VerbosityKind.def" />
+    <None Include="include\command\defs\CommandKind.def" />
+    <None Include="include\error\defs\ErrorKind.def" />
     <None Include="include\riscv\defs\RISCVInstructionKind.def" />
     <None Include="include\riscv\defs\RISCVRegister.def" />
     <None Include="include\runtime\defs\VariableKind.def" />
@@ -392,6 +360,7 @@
     <None Include="include\type\defs\FloatKind.def" />
     <None Include="include\type\defs\IntKind.def" />
     <None Include="include\type\defs\StorageClass.def" />
+    <None Include="include\type\defs\StructOrUnionKind.def" />
     <None Include="include\type\defs\TypeKind.def" />
     <None Include="include\type\defs\TypeQualifier.def" />
     <None Include="include\type\defs\TypeSignedness.def" />

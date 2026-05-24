@@ -3,7 +3,7 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <toolchain/ToolchainType.h>
+#include <toolchain/ToolchainKind.h>
 
 // Haze File.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -16,7 +16,7 @@ namespace hz
 	{
 	private:
 		std::string filepath;
-		ToolchainType type;
+		ToolchainKind type;
 		std::optional<std::string> raw_contents = std::nullopt;
 		std::optional<std::string> processed_contents = std::nullopt;
 		std::uint32_t reload_count = 0;
@@ -25,7 +25,7 @@ namespace hz
 		std::string get_raw_contents(void);
 		std::string get_processed_contents(void);
 		// only one toolchain can claim proprietership of a file for now
-		ToolchainType ttype(void) const;
+		ToolchainKind ttype(void) const;
 
 	public:
 		void compute_type(void);

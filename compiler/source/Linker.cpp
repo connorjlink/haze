@@ -7,20 +7,12 @@ import std;
 
 namespace hz
 {
-	Linker::Linker()
+	void Linker::reload(const std::vector<Linkable>& linkables)
 	{
-		USE_SAFE(ErrorReporter)->open_context(filepath, "linking");
+		this->linkables = linkables;
 	}
 
-	Linker::~Linker()
-	{
-		USE_SAFE(ErrorReporter)->close_context();
-	}
-
-	Linker::reload(const std::vector<Linkable&>& linkables)
-	{
-		_linkables = linkables;
-	}
+	#pragma message("TODO: when writing the linker, be sure to open and close an error context per each filepath to get proper error message correlation")
 
 //	AssemblerLinker::AssemblerLinker(cosnt std::vector<Node*>& commands, AssemblerParser* assembler_parser, const std::string& filepath)
 //		: Linker{ filepath }, commands{ commands }, assembler_parser{ assembler_parser }
@@ -186,7 +178,7 @@ namespace hz
 //
 //	bool CompilerLinker::optimize()
 //	{
-//		for (auto& [name, linkable] : _linkables)
+//		for (auto& [name, linkable] : linkables)
 //		{
 //			auto& [symbol, function, ir, offset] = linkable;
 //
@@ -288,7 +280,7 @@ namespace hz
 //		Address address_tracker = 0;
 //
 //		// resolve the length of each instruction to compute each label's address
-//		for (auto& [name, linkable] : _linkables)
+//		for (auto& [name, linkable] : linkables)
 //		{
 //
 //			auto& [symbol, function, ir, offset] = linkable;
@@ -335,14 +327,14 @@ namespace hz
 //			}
 //		}
 //
-//		for (auto& [name, linkable] : _linkables)
+//		for (auto& [name, linkable] : linkables)
 //		{
 //			auto& [symbol, function, ir, offset] = linkable;
 //
 //			// reset the address tracker to be used again
 //			address_tracker = 0;
 //
-//			for (auto& [_, linkable] : _linkables)
+//			for (auto& [_, linkable] : linkables)
 //			{
 //				for (auto command : linkable.commands)
 //				{
@@ -353,7 +345,7 @@ namespace hz
 //					{
 //						auto label = AS_LABEL_COMMAND(command);
 //
-//						for (auto& [_, patching_linkable] : _linkables)
+//						for (auto& [_, patching_linkable] : linkables)
 //						{
 //							for (auto patching_command : patching_linkable.commands)
 //							{
@@ -434,7 +426,7 @@ namespace hz
 //			}
 //		}
 //
-//		for (auto& [name, linkable] : _linkables)
+//		for (auto& [name, linkable] : linkables)
 //		{
 //			auto& [symbol, function, ir, offset] = linkable;
 //
@@ -493,7 +485,7 @@ namespace hz
 //		// the first function starts at address 0
 //		Offset address_tracker = 0;
 //
-//		for (auto& linkable : _linkables)
+//		for (auto& linkable : linkables)
 //		{
 //			linkable.offset = address_tracker;
 //
@@ -543,13 +535,13 @@ namespace hz
 //				{
 //					// at this point it is unknown if the target label is a function or instruction label
 //
-//					const auto target_linkable = std::find_if(_linkables.begin(), _linkables.end(), [&](auto&& linkable)
+//					const auto target_linkable = std::find_if(linkables.begin(), linkables.end(), [&](auto&& linkable)
 //						{
 //							return linkable.symbol->name == branch_command->label;
 //						});
 //
 //					// if the label was found, it is a function
-//					if (target_linkable != _linkables.end())
+//					if (target_linkable != linkables.end())
 //					{
 //						absolute_target_offset = target_linkable->offset;
 //					}

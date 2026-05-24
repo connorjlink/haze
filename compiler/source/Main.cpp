@@ -163,7 +163,7 @@ int main(int argc, char** argv)
 		});
 		switch (file.ttype())
 		{
-			case ToolchainType::ASSEMBLER:
+			case ToolchainKind::ASSEMBLER:
 			{
 				ServiceContainer::instance().register_factory<Parser, AssemblerParser>([&]
 				{
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
 				});
 			} break;
 
-			case ToolchainType::COMPILER:
+			case ToolchainKind::COMPILER:
 			{
 				ServiceContainer::instance().register_factory<Parser, CompilerParser>([&]
 				{

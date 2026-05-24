@@ -32,6 +32,20 @@ namespace hz
 		{
 			return self.get_type().is_valid();
 		}
+
+		template<typename Self>
+		ExpressionKind expression_kind(this Self&& self)
+		{
+			switch (self.ttype())
+			{
+
+			}
+
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"invalid expression tag `{}`", self.ttype()), self.token);
+
+			return ExpressionKind::;
+		}
 	};
 }
 
@@ -96,6 +110,26 @@ namespace hz
 		TypeHandle get_type(const Storage&) const;
 	};
 #define MAKE_STRING_LITERAL_EXPRESSION(value) StringLiteralExpression{ value }
+
+	class CharacterLiteralExpression : public ExpressionBase
+	{
+	public:
+		char value;
+
+	public:
+		CharacterLiteralExpression(char value)
+			: value{ value }
+		{
+		}
+
+	public:
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		ExpressionHandle evaluate(const Storage&, Context&) const;
+		ExpressionHandle optimize(const Storage&) const;
+		TypeHandle get_type(const Storage&) const;
+	};
+#define MAKE_CHARACTER_LITERAL_EXPRESSION(value) CharacterLiteralExpression{ value }
 
 	class IdentifierExpression : public ExpressionBase
 	{
@@ -223,75 +257,9 @@ namespace hz
 	};
 #define MAKE_FUNCTION_CALL_EXPRESSION(identifier, arguments) FunctionCallExpression{ MAKE_HANDLE(ast, identifier), arguments }
 
-	enum class BinaryExpressionKind
-	{
-		ADD,
-		ADD_ASSIGNMENT,
-		SUBTRACT,
-		SUBTRACT_ASSIGNMENT,
-		MULTIPLY,
-		MULTIPLY_ASSIGNMENT,
-		DIVIDE,
-		DIVIDE_ASSIGNMENT,
-		MODULO,
-		MODULO_ASSIGNMENT,
-		LEFT_SHIFT,
-		LEFT_SHIFT_ASSIGNMENT,
-		RIGHT_SHIFT,
-		RIGHT_SHIFT_ASSIGNMENT,
-		BITWISE_AND,
-		BITWISE_AND_ASSIGNMENT,
-		BITWISE_OR,
-		BITWISE_OR_ASSIGNMENT,
-		BITWISE_XOR,
-		BITWISE_XOR_ASSIGNMENT,
-		LOGICAL_AND,
-		LOGICAL_OR,
-		EQUAL,
-		NOT_EQUAL,
-		LESS,
-		LESS_EQUAL,
-		GREATER,
-		GREATER_EQUAL,
-		DOT,
-		ARROW,
-		COMMA,
-	};
+	
 
-	static const std::unordered_map<BinaryExpressionKind, std::string_view> binary_expression_kind_map
-	{
-		{ BinaryExpressionKind::ADD, " + " },
-		{ BinaryExpressionKind::ADD_ASSIGNMENT, " += " },
-		{ BinaryExpressionKind::SUBTRACT, " - " },
-		{ BinaryExpressionKind::SUBTRACT_ASSIGNMENT, " -= " },
-		{ BinaryExpressionKind::MULTIPLY, " * " },
-		{ BinaryExpressionKind::MULTIPLY_ASSIGNMENT, " *= " },
-		{ BinaryExpressionKind::DIVIDE, " / " },
-		{ BinaryExpressionKind::DIVIDE_ASSIGNMENT, " /= " },
-		{ BinaryExpressionKind::MODULO, " % " },
-		{ BinaryExpressionKind::MODULO_ASSIGNMENT, " %= " },
-		{ BinaryExpressionKind::LEFT_SHIFT, " << " },
-		{ BinaryExpressionKind::LEFT_SHIFT_ASSIGNMENT, " <<= " },
-		{ BinaryExpressionKind::RIGHT_SHIFT, " >> " },
-		{ BinaryExpressionKind::RIGHT_SHIFT_ASSIGNMENT, " >>= " },
-		{ BinaryExpressionKind::BITWISE_AND, " & " },
-		{ BinaryExpressionKind::BITWISE_AND_ASSIGNMENT, " &= " },
-		{ BinaryExpressionKind::BITWISE_OR, " | " },
-		{ BinaryExpressionKind::BITWISE_OR_ASSIGNMENT, " |= " },
-		{ BinaryExpressionKind::BITWISE_XOR, " ^ " },
-		{ BinaryExpressionKind::BITWISE_XOR_ASSIGNMENT, " ^= " },
-		{ BinaryExpressionKind::LOGICAL_AND, " && " },
-		{ BinaryExpressionKind::LOGICAL_OR, " || " },
-		{ BinaryExpressionKind::EQUAL, " == " },
-		{ BinaryExpressionKind::NOT_EQUAL, " != " },
-		{ BinaryExpressionKind::LESS, " < " },
-		{ BinaryExpressionKind::LESS_EQUAL, " <= " },
-		{ BinaryExpressionKind::GREATER, " > " },
-		{ BinaryExpressionKind::GREATER_EQUAL, " >= " },
-		{ BinaryExpressionKind::DOT, "." },
-		{ BinaryExpressionKind::ARROW, "->" },
-		{ BinaryExpressionKind::COMMA, ", " }
-	};
+
 
 	class BinaryExpression : public ExpressionBase
 	{

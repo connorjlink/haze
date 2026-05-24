@@ -407,7 +407,7 @@
     <ClInclude Include="include\error\CommonErrors.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\error\Error.h">
+    <ClInclude Include="include\error\models\Error.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\error\ErrorContext.h">
@@ -416,7 +416,7 @@
     <ClInclude Include="include\error\ErrorReporter.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\error\ErrorType.h">
+    <ClInclude Include="include\error\defs\ErrorKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\data\UndoableRedoable.h">
@@ -449,22 +449,13 @@
     <ClInclude Include="include\command\Command.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\command\CommandType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\command\DotOrgCommand.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\command\InstructionCommand.h">
+    <ClInclude Include="include\command\defs\CommandKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\command\IntermediateCommand.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\command\IntermediateType.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\command\LabelCommand.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\VerbosityKind.h">
@@ -659,19 +650,10 @@
     <ClInclude Include="include\type\VoidType.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\statement\InlineAssemblyStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\StatementKind.h">
+    <ClInclude Include="include\ast\statement\defs\StatementKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\statement\StructDeclarationStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\VariableStatement.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ast\statement\WhileStatement.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\allocator\Value.h">
@@ -704,10 +686,7 @@
     <ClInclude Include="include\type\defs\TypeKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\ast\function\FunctionKind.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\command\DotDefineCommand.h">
+    <ClInclude Include="include\ast\function\defs\FunctionKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\OptimizationFlag.h">
@@ -731,15 +710,21 @@
     <ClInclude Include="include\allocator\defs\ValueKind.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="include\ast\declaration\Declaration.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\declaration\defs\DeclarationKind.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\ast\statement\StatementKind.def">
+    <None Include="include\ast\statement\defs\StatementKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\ast\function\FunctionKind.def">
+    <None Include="include\ast\function\defs\FunctionKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
-    <None Include="include\ast\expression\ExpressionKind.def">
+    <None Include="include\ast\expression\defs\ExpressionKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
     <None Include="include\x86\defs\X86OperandKind.def">
@@ -800,6 +785,18 @@
       <Filter>Archivos de origen</Filter>
     </None>
     <None Include="include\type\defs\FloatKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\error\defs\ErrorKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\command\defs\CommandKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\ast\declaration\defs\DeclarationKind.def">
+      <Filter>Archivos de origen</Filter>
+    </None>
+    <None Include="include\type\defs\StructOrUnionKind.def">
       <Filter>Archivos de origen</Filter>
     </None>
   </ItemGroup>

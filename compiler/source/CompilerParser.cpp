@@ -128,6 +128,20 @@ namespace hz
 		return new ReturnStatement{ enclosing_function, expression, nullptr, return_token };
 	}
 
+	Parser* CompilerParser::createassembler_parser(const std::string& filepath)
+	{
+		const auto architecture = USE_UNSAFE(CommandLineOptions)->architecture;
+		switch (architecture)
+		{
+			case ArchitectureKind::RISCV:
+				return new RISCVAssemblerParser{ filepath };
+		}
+
+		USE_UNSAFE(ErrorReporter)->post_error(
+			"unsupported architecture", NULL_TOKEN);
+		return nullptr;
+	}
+
 	Statement* CompilerParser::parse_inline_asm_statement(const std::string& enclosing_function)
 	{
 		const auto asm_token = consume(TokenKind::ASM);

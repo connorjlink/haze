@@ -5,8 +5,8 @@
 #include <data/DependencyInjector.h>
 #include <io/FileManager.h>
 #include <job/JobManager.h>
+#include <toolchain/defs/ToolchainKind.h>
 #include <toolchain/Generator.h>
-#include <toolchain/ToolchainType.h>
 #include <toolchain/Parser.h>
 #include <toolchain/models/Token.h>
 #include <toolchain/Linker.h>
@@ -23,16 +23,15 @@ namespace hz
 	{
 	protected:
 		// filepath to vector<token> mapping
-		std::unordered_map<std::string, std::vector<Token>> _tokens;
+		std::unordered_map<std::string, std::vector<Token>> tokens;
 
 	private:
-		std::int32_t _toolchain_task;
+		std::int32_t toolchain_task;
 
 	public:
 		Toolchain()
-			: _tokens{}
+			: tokens{}, toolchain_task{ -1 }
 		{
-			_toolchain_task = -1;
 		}
 		virtual ~Toolchain() = default;
 
@@ -40,7 +39,7 @@ namespace hz
 		void panic();
 
 	public:
-		virtual ToolchainType ttype() const = 0;
+		virtual ToolchainKind ttype() const = 0;
 		virtual std::vector<Linkable> run(const std::string&) = 0;
 
 	public:

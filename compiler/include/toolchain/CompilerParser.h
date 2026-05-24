@@ -40,6 +40,8 @@ namespace hz
 		StatementReference<CompoundStatemnet> parse_compound_statement(const std::string&);
 		StatementReference<LabeledStatement> parse_labeled_statement(const std::string&);
 		StatementReference<DeclarationStatement> parse_declaration_statement(const std::string&);
+
+		Parser* createassembler_parser(const std::string&);
 		StatementReference<InlineAssemblyStatement> parse_inline_asm_statement(const std::string&);
 
 	private:

@@ -12,8 +12,8 @@ import std;
 // Haze Generator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define ENCODE(x) _linkables[_linkables.size() - 1].commands.emplace_back(x)
-#define COMPOSE(x) _linkables[_linkables.size() - 1].ir.emplace_back(x)
+#define ENCODE(x) linkables[linkables.size() - 1].commands.emplace_back(x)
+#define COMPOSE(x) linkables[linkables.size() - 1].ir.emplace_back(x)
 
 namespace hz
 {
@@ -30,7 +30,7 @@ namespace hz
 
 	const std::string& Generator::current_function() const
 	{
-		const auto& linkable = _linkables[_linkables.size() - 1];
+		const auto& linkable = linkables[linkables.size() - 1];
 		const auto symbol = linkable.symbol;
 		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
 
@@ -39,12 +39,12 @@ namespace hz
 
 	void Generator::begin_function(const std::string& name)
 	{
-		_linkables.emplace_back(Linkable{ USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, NULL_TOKEN), {}, {}, 0});
+		linkables.emplace_back(Linkable{ USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, NULL_TOKEN), {}, {}, 0});
 	}
 
 	void Generator::label_command(const std::string& identifier)
 	{
-		_linkables[_linkables.size() - 1].commands.emplace_back(new LabelCommand{identifier, NULL_TOKEN});
+		linkables[linkables.size() - 1].commands.emplace_back(new LabelCommand{identifier, NULL_TOKEN});
 	}
 
 	void Generator::branch_label(const std::string& label)
@@ -331,7 +331,7 @@ namespace hz
 
 	Address Generator::resolve_origin() const
 	{
-		return static_cast<Address>(_linkables[_linkables.size() - 1].ir.size());
+		return static_cast<Address>(linkables[linkables.size() - 1].ir.size());
 	}
 
 
@@ -359,7 +359,7 @@ namespace hz
 
 		// Reorder defined functions so `main` is first since it's the entrypoint
 		// IntelliSense error only
-		std::ranges::partition(_linkables, [](auto& linkable)
+		std::ranges::partition(linkables, [](auto& linkable)
 		{
 			if (linkable.symbol->name == "main")
 			{
@@ -369,7 +369,7 @@ namespace hz
 			return false;
 		});
 
-		return _linkables;
+		return linkables;
 	}
 
 

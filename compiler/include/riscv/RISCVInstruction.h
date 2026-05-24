@@ -1,7 +1,6 @@
 #ifndef HAZE_RISCVINSTRUCTION_H
 #define HAZE_RISCVINSTRUCTION_H
 
-#include <toolchain/models/Instruction.h>
 #include <riscv/defs/RISCVInstructionKind.h>
 #include <riscv/defs/RISCVRegister.h>
 #include <utility/Constants.h>

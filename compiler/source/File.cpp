@@ -38,7 +38,7 @@ namespace
 
 namespace hz
 {
-	ToolchainType File::ttype(void) const
+	ToolchainKind File::ttype(void) const
 	{
 		return type;
 	}

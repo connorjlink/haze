@@ -1,19 +1,22 @@
 #ifndef HAZE_RISCVASSEMBLERPARSER_H
 #define HAZE_RISCVASSEMBLERPARSER_H
 
+#include <cli/defs/ArchitectureKind.h>
+#include <toolchain/AssemblerParser.h>
+
 // Haze RISCVAssemblerParser.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	class Instruction;
+	class Command;
 
-	class RISCVAssemblerParser : public Parser
+	class RISCVAssemblerParser : public AssemblerParser
 	{
-	protected:
-		virtual ArchitectureKind ctype() const final override;
-		virtual Instruction* parse_instruction_command() final override;
-		virtual std::int8_t parse_register() final override;
+	public:
+		ArchitectureKind ctype() const final override;
+		CommandReference<InstructionCommand> parse_instruction_command() const final override;
+		Register parse_register() const final override;
 
 	public:
 		using AssemblerParser::AssemblerParser;

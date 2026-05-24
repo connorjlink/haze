@@ -9,9 +9,9 @@ import std;
 
 namespace hz
 {
-	ToolchainType AssemblerToolchain::ttype() const
+	ToolchainKind AssemblerToolchain::ttype() const
 	{
-		return ToolchainType::ASSEMBLER;
+		return ToolchainKind::ASSEMBLER;
 	}
 
 	std::vector<Command*> AssemblerToolchain::run(const std::string& filepath)
@@ -20,7 +20,7 @@ namespace hz
 
 		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
 
-		REQUIRE_SAFE(Parser)->reload(_tokens.at(filepath), filepath);
+		REQUIRE_SAFE(Parser)->reload(tokens.at(filepath), filepath);
 
 		const auto commands = REQUIRE_SAFE(Parser)->parse();
 		const auto linkable = Linkable{ commands };

@@ -8,17 +8,17 @@
 
 namespace hz
 {
-    class BMBuilder : public Builder
-    {
-    public:
-        BMBuilder(const ByteRange& executable)
-            : Builder{ executable }
-        {
-        }
+	class BMBuilder : public Builder
+	{
+	public:
+		BMBuilder(const ByteRange& executable)
+			: Builder{ executable }
+		{
+		}
 
-    public:
-        virtual void export_exe(const std::string&) override;
-    };
+	public:
+		virtual void export_exe(const std::string&) override;
+	};
 }
 
 #endif

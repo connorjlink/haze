@@ -1,11 +1,8 @@
 import std;
 
 #include <ast/expression/Expression.h>
-#include <command/DotOrgCommand.h>
-#include <command/LabelCommand.h>
-#include <command/InstructionCommand.h>
-#include <toolchain/AssemblerParser.h>
-#include <toolchain/models/Instruction.h>
+#include <command/Command.h>
+#include <toolchain/RISCVAssemblerParser.h>
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

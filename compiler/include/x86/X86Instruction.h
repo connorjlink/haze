@@ -1,7 +1,6 @@
 #ifndef HAZE_X86INSTRUCTION_H
 #define HAZE_X86INSTRUCTION_H
 
-#include <toolchain/models/Instruction.h>
 #include <utility/Constants.h>
 #include <utility/Variant.h>
 #include <x86/defs/X86Register.h>

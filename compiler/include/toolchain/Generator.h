@@ -31,7 +31,7 @@ namespace hz
 		std::vector<Node*> _program;
 
 	private:
-		std::vector<Linkable> _linkables;
+		std::vector<Linkable> linkables;
 
 	private:
 		std::unordered_map<std::uint32_t, std::uint32_t> _string_length_map;

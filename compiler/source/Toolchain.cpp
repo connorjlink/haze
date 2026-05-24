@@ -13,7 +13,7 @@ namespace hz
 {
 	void Toolchain::init(const std::string& filepath)
 	{
-		_toolchain_task = REQUIRE_SAFE(JobManager)->begin_job("toolchain execution");
+		toolchain_task = REQUIRE_SAFE(JobManager)->begin_job("toolchain execution");
 
 		USE_SAFE(ErrorReporter)->open_context(filepath, "initializing");
 
@@ -31,7 +31,7 @@ namespace hz
 
 		const auto lex_task = REQUIRE_SAFE(JobManager)->begin_job("lexing");
 		const auto lexer = new Lexer{ filepath };
-		_tokens[filepath] = lexer->lex();
+		tokens[filepath] = lexer->lex();
 		REQUIRE_SAFE(JobManager)->end_job(lex_task);
 
 		USE_SAFE(ErrorReporter)->close_context();
@@ -43,7 +43,7 @@ namespace hz
 
 	void Toolchain::shut_down(bool is_panic)
 	{
-		REQUIRE_SAFE(JobManager)->end_job(_toolchain_task);
+		REQUIRE_SAFE(JobManager)->end_job(toolchain_task);
 		
 		if (!is_panic)
 		{

@@ -30,7 +30,7 @@ namespace hz
 	{
 	protected:
 		std::size_t cursor;
-		std::vector<Token> _tokens;
+		std::vector<Token> tokens;
 
 	protected:
 		std::string filepath;

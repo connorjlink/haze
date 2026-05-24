@@ -1,13 +1,13 @@
 #ifndef HAZE_LINKER_H
 #define HAZE_LINKER_H
 
-#include <command/InstructionCommand.h>
+#include <cli/CommandLineOptions.h>
+#include <cli/defs/ArchitectureKind.h>
+#include <command/Command.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
-#include <toolchain/LinkerType.h>
 #include <toolchain/models/Linkable.h>
-#include <cli/CommandLineOptions.h>
 
 // Haze Linker.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -22,17 +22,17 @@ namespace hz
 	{
 	private:
 		// mapping function name (global scope, shared across files) -> linkable
-		std::unordered_map<std::string, Linkable> _linkables;
+		std::unordered_map<std::string, Linkable> linkables;
 
 	public:
-		Linker();
-		~Linker();
+		virtual ~Linker() = default;
 
 	public:
 		void reload(const std::vector<Linkable>&);
-		LinkerType ltype() const;
+		// NOTE: the linker does not support generating fat binaries, so a single architecture is sufficient to uniquely identify it
+		ArchitectureKind architecture_kind() const;
 		bool optimize();
-		std::vector<InstructionCommand*> link(Address, Address);
+		std::vector<CommandReference<InstructionCommand>> link(Address, Address);
 	};
 }
 

@@ -30,7 +30,7 @@ namespace
 namespace hz
 {
 	Parser::Parser(const std::string& filepath)
-		: cursor{ 0 }, _tokens{ _tokens }, filepath{ filepath }
+		: cursor{ 0 }, tokens{ tokens }, filepath{ filepath }
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
 	}
@@ -45,7 +45,7 @@ namespace hz
 	{
 		if (cursor > 0)
 		{
-			return _tokens[cursor - 1];
+			return tokens[cursor - 1];
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable(
@@ -54,14 +54,14 @@ namespace hz
 
 	Token& Parser::peek()
 	{
-		return _tokens[cursor];
+		return tokens[cursor];
 	}
 
 	Token& Parser::lookahead()
 	{
-		if (cursor < _tokens.size() - 1)
+		if (cursor < tokens.size() - 1)
 		{
-			return _tokens[cursor + 1];
+			return tokens[cursor + 1];
 		}
 
 		USE_SAFE(ErrorReporter)->post_uncorrectable(
@@ -405,7 +405,7 @@ namespace hz
 
 	void Parser::reload(const std::vector<Token>& tokens, const std::string& filepath)
 	{
-		_tokens = tokens;
+		tokens = tokens;
 		filepath = filepath;
 	}
 }
