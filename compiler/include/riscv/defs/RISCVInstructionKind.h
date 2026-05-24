@@ -9,7 +9,7 @@ namespace hz
 	enum class RISCVInstructionKind
 	{
 #define X(enumerator, name) enumerator,
-#include <riscv/defs/RISCVInstructionKind.def>
+#include <riscv/defs/RISCVInstructionKind.x>
 #undef X
 	};
 
@@ -18,7 +18,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case RISCVInstructionKind::enumerator: return name;
-#include <riscv/defs/RISCVInstructionKind.def>
+#include <riscv/defs/RISCVInstructionKind.x>
 #undef X
 		}
 

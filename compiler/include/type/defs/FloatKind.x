@@ -1,4 +1,4 @@
-// Haze FloatKind.def
+// Haze FloatKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(FLOAT, float)

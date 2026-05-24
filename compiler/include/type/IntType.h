@@ -14,7 +14,7 @@ namespace hz
 	enum class IntKind
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/IntKind.def>
+#include <type/defs/IntKind.x>
 #undef X
 	};
 
@@ -23,7 +23,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case IntKind::enumerator: return #name;
-#include <type/defs/IntKind.def>
+#include <type/defs/IntKind.x>
 #undef X
 		}
 
@@ -50,7 +50,7 @@ namespace hz
 			switch (int_kind)
 			{
 #define X(enumerator, name) case IntKind::enumerator: return sizeof(name);
-#include <type/defs/IntKind.def>
+#include <type/defs/IntKind.x>
 #undef X
 			}
 

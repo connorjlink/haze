@@ -1,4 +1,4 @@
-// Haze X86InstructionKind.def
+// Haze X86InstructionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(PUSH, push)

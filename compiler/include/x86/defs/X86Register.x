@@ -1,4 +1,4 @@
-// Haze X86Register.def
+// Haze X86Register.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(EAX, eax, 0)

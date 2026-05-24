@@ -1,4 +1,4 @@
-// Haze RISCVInstructionKind.def
+// Haze RISCVInstructionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 // I instruction set

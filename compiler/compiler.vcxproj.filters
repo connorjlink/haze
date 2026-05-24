@@ -1,725 +1,725 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Archivos de origen">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Archivos de encabezado">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Archivos de recursos">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AdjustExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ArgumentExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\AssemblerParser.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\AssemblerToolchain.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\AutoErrorContext.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\AutoJob.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\AutoJSON.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Bimap.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\BinaryUtilities.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\CommandLineParser.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\CommonErrors.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\CompilerParser.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\CompilerToolchain.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\CompoundStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Context.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Daemon.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\DotDefineCommand.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\DotOrgCommand.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Error.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ErrorContext.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ErrorReporter.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ExitProgramException.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ExitStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Expression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ExpressionStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ExtendedInteger.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\File.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\FileManager.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ForStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Function.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\FunctionArgumentExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\FunctionCallExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Generator.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\IdentifierExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\IfStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\InlineAsmStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\InstructionCommand.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\InstructionValidator.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\IntegerLiteralExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\IntermediateCommand.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Job.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\JobManager.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\JSON.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\LabelCommand.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Lexer.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Linkable.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Linker.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Log.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Main.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\MemberDeclarationExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\NullStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Parser.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\PEBuilder.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Preprocessor.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\PrintStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Random.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ReturnStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\RuntimeAllocator.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Scanner.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Statement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\StringExpression.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\StructDeclarationStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Symbol.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\SymbolDatabase.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\SymbolExporter.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Toolchain.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Tracking.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Type.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\UndoableRedoable.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Validator.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\VariableStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\WebSocketClient.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\WebSocketServer.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\WhileStatement.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\X86Builder.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\X86Instruction.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\RISCVAssemblerParser.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\BMBuilder.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\TypeValidator.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\X86BuilderValidator.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\validator\InstructionValidator.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\validator\models\Test.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\validator\Validator.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Random.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\AutoJSON.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Bimap.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\BinaryConstants.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\BinaryUtilities.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Constants.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\ExitProgramException.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\ExtendedInteger.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\JSON.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\IntTypeType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\Type.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypeCheck.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\defs\TypeQualifier.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\defs\TypeSignedness.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypeStorage.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypeType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerToolchain.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\CommonToolchain.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\CompilerParser.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\CompilerToolchain.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Generator.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Lexer.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Linkable.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Linker.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Parser.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Preprocessor.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Scanner.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\Toolchain.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\defs\ToolchainKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Token.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\symbol\Symbol.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\symbol\SymbolDatabase.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\symbol\SymbolExporter.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\symbol\defs\SymbolKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\statistic\models\Statistic.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\statistic\StatisticExporter.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\runtime\Context.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\job\AutoJob.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\job\Job.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\job\JobManager.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\io\models\File.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\io\FileManager.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\io\Log.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\io\WebSocketClient.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\io\WebSocketServer.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\error\AutoErrorContext.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\error\CommonErrors.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\error\models\Error.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\error\ErrorContext.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\error\ErrorReporter.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\error\defs\ErrorKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\UndoableRedoable.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\DependencyInjector.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\Tracking.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\daemon\Debugger.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\daemon\Daemon.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\models\IntegerLiteral.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\models\IntegerLiteralType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\BinaryCommandType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\BranchCommandType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\Command.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\defs\CommandKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\IntermediateCommand.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\command\IntermediateType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\VerbosityKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\ArchitectureKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\CommandLineOptions.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\CommandLineParser.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\ExecutionKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\OptionKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\builder\PEBuilder.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\expression\Expression.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\statement\Statement.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\allocator\Allocator.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\RISCVInstruction.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\defs\RISCVRegister.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86Instruction.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86Operand.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86OperandType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86InstructionType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\X86Builder.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\defs\X86Register.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\validator\TypeValidator.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\validator\X86BuilderValidator.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Lazy.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Ranges.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Strings.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\StructOrUnionType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\ArrayType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\EnumType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\FloatType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\FunctionType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\IntType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\PointerType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\defs\StorageClass.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\TypedefNameType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\VoidType.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\statement\defs\StatementKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\statement\StructDeclarationStatement.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\allocator\Value.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\AST.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Sum.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Typing.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\function\Function.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\builder\BMBuilder.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\builder\Builder.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\type\defs\TypeKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\function\defs\FunctionKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\OptimizationFlag.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\riscv\defs\RISCVInstructionKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Formatter.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\defs\X86OperandKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\defs\X86InstructionKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Variant.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\allocator\defs\ValueKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\declaration\Declaration.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\declaration\defs\DeclarationKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ast\expression\defs\ExpressionKind.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerParser.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\ast\statement\defs\StatementKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\function\defs\FunctionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\expression\defs\ExpressionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\x86\defs\X86OperandKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\x86\defs\X86InstructionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\TypeQualifier.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\cli\defs\ArchitectureKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\cli\defs\OptimizationFlag.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
-    <None Include="include\riscv\defs\RISCVInstructionKind.def">
-      <Filter>Archivos de origen</Filter>
+    <None Include="include\riscv\defs\RISCVInstructionKind.x">
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\TypeKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\TypeSignedness.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\toolchain\defs\ToolchainKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\x86\defs\X86Register.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\StorageClass.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\symbol\defs\SymbolKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\riscv\defs\RISCVRegister.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\allocator\defs\ValueKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\cli\defs\VerbosityKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\cli\defs\OptionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\cli\defs\ExecutionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\runtime\defs\VariableKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\IntKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\FloatKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\error\defs\ErrorKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\command\defs\CommandKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\declaration\defs\DeclarationKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\type\defs\StructOrUnionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\expression\defs\PrimaryExpressionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\expression\defs\PostfixExpressionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\expression\defs\UnaryExpressionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
     <None Include="include\ast\expression\defs\BinaryExpressionKind.def">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

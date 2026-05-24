@@ -1,4 +1,4 @@
-// Haze UnaryExpressionKind.def
+// Haze UnaryExpressionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(PREFIX_INCREMENT, RIGHT, 2, prefix increment)

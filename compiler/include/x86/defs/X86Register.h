@@ -12,7 +12,7 @@ namespace hz
 	enum class X86Register : Register
 	{
 #define X(enumerator, name, value) enumerator = value,
-#include <x86/defs/X86Register.def>
+#include <x86/defs/X86Register.x>
 #undef X
 	};
 
@@ -21,7 +21,7 @@ namespace hz
 		switch (reg)
 		{
 #define X(enumerator, name, value) case X86Register::enumerator: return name;
-#include <x86/defs/X86Register.def>
+#include <x86/defs/X86Register.x>
 #undef X
 		}
 

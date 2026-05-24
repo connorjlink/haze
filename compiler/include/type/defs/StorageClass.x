@@ -1,4 +1,4 @@
-// Haze StorageClass.def
+// Haze StorageClass.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(AUTO, auto)

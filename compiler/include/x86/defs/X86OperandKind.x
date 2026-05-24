@@ -1,4 +1,4 @@
-// Haze X86OperandKind.def
+// Haze X86OperandKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(IMMEDIATE, immediate)

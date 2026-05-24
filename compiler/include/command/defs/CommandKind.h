@@ -9,7 +9,7 @@ namespace hz
 	enum class CommandKind
 	{
 #define X(enumerator, name) enumerator,
-#include <command/defs/CommandKind.def>
+#include <command/defs/CommandKind.x>
 #undef X
 	};
 
@@ -18,7 +18,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case CommandKind::enumerator: return #name;
-#include <command/defs/CommandKind.def>
+#include <command/defs/CommandKind.x>
 #undef X
 		}
 

@@ -1,4 +1,4 @@
-// Haze BinaryExpressionKind.def
+// Haze BinaryExpressionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(MULTIPLY, LEFT, 3, multiply)

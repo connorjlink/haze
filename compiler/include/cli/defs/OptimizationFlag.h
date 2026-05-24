@@ -11,7 +11,7 @@ namespace hz
 	enum class OptimizationFlag
 	{
 #define X(enumerator, name, value) enumerator = value,
-#include <cli/OptimizationFlag.def>
+#include <cli/OptimizationFlag.x>
 #undef X
 	};
 
@@ -21,7 +21,7 @@ namespace hz
 		switch (flag)
 		{
 #define X(enumerator, name, value) case OptimizationFlag::enumerator: return name;
-#include <cli/OptimizationFlag.def>
+#include <cli/OptimizationFlag.x>
 #undef X
 		}
 
@@ -33,7 +33,7 @@ namespace hz
 		static constexpr OptimizationFlag flags[] =
 		{
 #define X(enumerator, name, value) { OptimizationFlag::enumerator },
-#include <cli/OptimizationFlag.def>
+#include <cli/OptimizationFlag.x>
 #undef X
 		};
 

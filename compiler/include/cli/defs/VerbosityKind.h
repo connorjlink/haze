@@ -9,7 +9,7 @@ namespace hz
 	enum class VerbosityKind
 	{
 #define X(enumerator, name) enumerator,
-#include <cli/defs/VerbosityKind.def>
+#include <cli/defs/VerbosityKind.x>
 #undef X
 	};
 
@@ -18,7 +18,7 @@ namespace hz
 		switch (verbosity)
 		{
 #define X(enumerator, name) case VerbosityKind::enumerator: return #name;
-#include <cli/defs/VerbosityKind.def>
+#include <cli/defs/VerbosityKind.x>
 #undef X
 		}
 

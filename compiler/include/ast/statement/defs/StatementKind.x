@@ -1,4 +1,4 @@
-// Haze StatementKind.def
+// Haze StatementKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(NULL, NullStatement, null)

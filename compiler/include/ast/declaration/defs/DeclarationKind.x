@@ -1,4 +1,4 @@
-// Haze DeclarationKind.def
+// Haze DeclarationKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(FUNCTION, FunctionDeclaration, function)

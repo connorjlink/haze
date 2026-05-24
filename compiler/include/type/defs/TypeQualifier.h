@@ -14,7 +14,7 @@ namespace hz
 	enum class TypeQualifier
 	{
 #define X(enumerator, name, value) name = value,
-#include <type/defs/TypeQualifier.def>
+#include <type/defs/TypeQualifier.x>
 #undef X
 	};
 
@@ -24,7 +24,7 @@ namespace hz
 		switch (qualifier)
 		{
 #define X(enumerator, name, value) case TypeQualifier::name: return #name;
-#include <type/defs/TypeQualifier.def>
+#include <type/defs/TypeQualifier.x>
 #undef X
 		}
 
@@ -36,7 +36,7 @@ namespace hz
 		static constexpr TypeQualifier qualifiers[] =
 		{
 #define X(enumerator, name, value) { TypeQualifier::name },
-#include <type/defs/TypeQualifier.def>
+#include <type/defs/TypeQualifier.x>
 #undef X
 		};
 

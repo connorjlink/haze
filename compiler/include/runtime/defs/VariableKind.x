@@ -1,4 +1,4 @@
-// Haze VariableKind.def
+// Haze VariableKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(VOID, VoidVariable, void)

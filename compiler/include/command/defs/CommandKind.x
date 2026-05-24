@@ -1,4 +1,4 @@
-// Haze CommandType.def
+// Haze CommandType.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(LABEL, LabelCommand, label)

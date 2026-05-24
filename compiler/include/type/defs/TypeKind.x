@@ -1,4 +1,4 @@
-// Haze TypeKind.def
+// Haze TypeKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(VOID, void)

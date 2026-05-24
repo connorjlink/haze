@@ -1,4 +1,4 @@
-// Haze IntKind.def
+// Haze IntKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(CHAR, char)

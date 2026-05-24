@@ -1,4 +1,4 @@
-// Haze OptimizationFlag.def
+// Haze OptimizationFlag.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(NONE, none, 0)

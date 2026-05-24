@@ -13,7 +13,7 @@ namespace hz
 	enum class TypeSignedness
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/TypeSignedness.def>
+#include <type/defs/TypeSignedness.x>
 #undef X
 	};
 
@@ -22,7 +22,7 @@ namespace hz
 		switch (signedness)
 		{
 #define X(enumerator, name) case TypeSignedness::enumerator: return #name;
-#include <type/defs/TypeSignedness.def>
+#include <type/defs/TypeSignedness.x>
 #undef X
 		}
 
@@ -34,7 +34,7 @@ namespace hz
 		switch (token_type)
 		{
 #define X(enumerator, name) case TokenKind::enumerator: return TypeSignedness::name;
-#include <type/defs/TypeSignedness.def>
+#include <type/defs/TypeSignedness.x>
 #undef X
 		}
 

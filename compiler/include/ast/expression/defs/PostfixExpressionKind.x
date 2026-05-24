@@ -1,4 +1,4 @@
-// Haze PostfixExpressionKind.def
+// Haze PostfixExpressionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(POSTFIX_INCREMENT, LEFT, 1, postfix increment)

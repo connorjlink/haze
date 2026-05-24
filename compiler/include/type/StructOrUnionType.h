@@ -15,7 +15,7 @@ namespace hz
 	enum class StructOrUnionKind
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/StructOrUnionKind.def>
+#include <type/defs/StructOrUnionKind.x>
 #undef X
 	};
 
@@ -24,7 +24,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case StructOrUnionKind::enumerator: return #name;
-#include <type/defs/StructOrUnionKind.def>
+#include <type/defs/StructOrUnionKind.x>
 #undef X
 		}
 

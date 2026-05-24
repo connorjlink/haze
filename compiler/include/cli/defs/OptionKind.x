@@ -1,4 +1,4 @@
-// Haze OptionKind.def
+// Haze OptionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(ARCHITECTURE, architecture)

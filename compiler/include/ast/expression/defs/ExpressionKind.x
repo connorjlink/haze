@@ -1,4 +1,4 @@
-// Haze ExpressionKind.def
+// Haze ExpressionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(INTEGER_LITEAL, IntegerLiteralExpression, integer literal)

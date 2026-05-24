@@ -1,4 +1,4 @@
-// Haze VerbosityKind.def
+// Haze VerbosityKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(SILENT, silent)

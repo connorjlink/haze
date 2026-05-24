@@ -15,7 +15,7 @@ namespace hz
 	enum class FloatKind
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/FloatKind.def>
+#include <type/defs/FloatKind.x>
 #undef X
 	};
 
@@ -24,7 +24,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case FloatKind::enumerator: return #name;
-#include <type/defs/FloatKind.def>
+#include <type/defs/FloatKind.x>
 #undef X
 		}
 
@@ -49,7 +49,7 @@ namespace hz
 			switch (float_kind)
 			{
 #define X(enumerator, name) case FloatKind::enumerator: return sizeof(name);
-#include <type/defs/FloatKind.def>
+#include <type/defs/FloatKind.x>
 #undef X
 			}
 

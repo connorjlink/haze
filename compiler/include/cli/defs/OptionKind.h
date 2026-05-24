@@ -9,7 +9,7 @@ namespace hz
 	enum class OptionKind
 	{
 #define X(enumerator, name) enumerator,
-#include <cli/defs/OptionKind.def>
+#include <cli/defs/OptionKind.x>
 #undef X
 	};
 
@@ -18,7 +18,7 @@ namespace hz
 		switch (option)
 		{
 #define X(enumerator, name) case OptionKind::enumerator: return #name;
-#include <cli/defs/OptionKind.def>
+#include <cli/defs/OptionKind.x>
 #undef X
 		}
 

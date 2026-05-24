@@ -46,7 +46,7 @@ namespace hz
 			switch (self.ttype())
 			{
 #define X(enumerator, type, name) case TypeIndexV<type, typename CommandSumStorage::Type>: return CommandKind::enumerator;
-#include <command/defs/CommandKind.def>
+#include <command/defs/CommandKind.x>
 #undef X
 			}
 

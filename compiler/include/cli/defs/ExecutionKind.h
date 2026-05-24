@@ -9,7 +9,7 @@ namespace hz
 	enum class ExecutionKind
 	{
 #define X(enumerator, name) enumerator,
-#include <cli/defs/ExecutionKind.def>
+#include <cli/defs/ExecutionKind.x>
 #undef X
 	};
 
@@ -18,7 +18,7 @@ namespace hz
 		switch (execution)
 		{
 #define X(enumerator, name) case ExecutionKind::enumerator: return #name;
-#include <cli/defs/ExecutionKind.def>
+#include <cli/defs/ExecutionKind.x>
 #undef X
 		}
 

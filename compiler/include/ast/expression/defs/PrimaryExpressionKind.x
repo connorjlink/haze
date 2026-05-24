@@ -1,4 +1,4 @@
-// Haze PrimaryExpressionKind.def
+// Haze PrimaryExpressionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 // NOTE: associativity is meaningless for primary expressions so a default of LEFT is safe

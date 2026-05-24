@@ -9,7 +9,7 @@ namespace hz
 	enum class TypeKind
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/TypeKind.def>
+#include <type/defs/TypeKind.x>
 #undef X
 	};
 
@@ -18,7 +18,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case TypeKind::enumerator: return name;
-#include <type/defs/TypeKind.def>
+#include <type/defs/TypeKind.x>
 #undef X
 		}
 

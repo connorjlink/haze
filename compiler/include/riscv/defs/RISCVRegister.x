@@ -1,4 +1,4 @@
-// Haze RISCVRegister.def
+// Haze RISCVRegister.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(X0, x0, 0)

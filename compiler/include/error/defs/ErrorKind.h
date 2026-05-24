@@ -12,7 +12,7 @@ namespace hz
 	enum class ErrorKind
 	{
 #define X(enumerator, name) enumerator,
-#include <error/defs/ErrorKind.def>
+#include <error/defs/ErrorKind.x>
 #undef X
 	};
 
@@ -21,7 +21,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case ErrorKind::enumerator: return #name;
-#include <error/defs/ErrorKind.def>
+#include <error/defs/ErrorKind.x>
 #undef X
 		}
 

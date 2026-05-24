@@ -35,7 +35,7 @@ namespace hz
 			switch (self.ttype())
 			{
 #define X(enumerator, type, name) case TypeIndexV<type, typename DeclarationSumStorage::Type>: return DeclarationKind::enumerator;
-#include <ast/declaration/defs/DeclarationKind.def>
+#include <ast/declaration/defs/DeclarationKind.x>
 #undef X
 			}
 

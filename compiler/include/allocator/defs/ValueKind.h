@@ -11,7 +11,7 @@ namespace hz
 	enum class ValueTag : TagType
 	{
 #define X(enumerator, name) enumerator,
-#include <allocator/defs/ValueKind.def>
+#include <allocator/defs/ValueKind.x>
 #undef X
 	};
 
@@ -20,7 +20,7 @@ namespace hz
 		switch (tag)
 		{
 #define X(enumerator, name) case ValueTag::enumerator: return #name;
-#include <allocator/defs/ValueKind.def>
+#include <allocator/defs/ValueKind.x>
 #undef X
 		}
 

@@ -1,4 +1,4 @@
-// Haze ExecutionKind.def
+// Haze ExecutionKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
 X(VALIDATE, validate)

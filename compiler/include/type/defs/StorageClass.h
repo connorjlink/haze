@@ -13,7 +13,7 @@ namespace hz
 	enum class StorageClass
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/StorageClass.def>
+#include <type/defs/StorageClass.x>
 #undef X
 	};
 
@@ -22,7 +22,7 @@ namespace hz
 		switch (storage)
 		{
 #define X(enumerator, name) case StorageClass::enumerator: return #name;
-#include <type/defs/StorageClass.def>
+#include <type/defs/StorageClass.x>
 #undef X
 		}
 
@@ -34,7 +34,7 @@ namespace hz
 		switch (token)
 		{
 #define X(enumerator, name, value) case TokenKind::enumerator: return StorageClass::enumerator;
-#include <type/defs/StorageClass.def>
+#include <type/defs/StorageClass.x>
 #undef X
 		}
 
