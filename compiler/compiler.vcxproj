@@ -136,11 +136,13 @@
     <ClInclude Include="include\allocator\defs\ValueKind.h" />
     <ClInclude Include="include\ast\declaration\Declaration.h" />
     <ClInclude Include="include\ast\declaration\defs\DeclarationKind.h" />
+    <ClInclude Include="include\ast\expression\defs\ExpressionKind.h" />
     <ClInclude Include="include\ast\function\Function.h" />
     <ClInclude Include="include\ast\AST.h" />
     <ClInclude Include="include\ast\expression\Expression.h" />
     <ClInclude Include="include\ast\function\defs\FunctionKind.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
+    <ClInclude Include="include\toolchain\AssemblerParser.h" />
     <ClInclude Include="include\type\defs\TypeKind.h" />
     <ClInclude Include="include\utility\Formatter.h" />
     <ClInclude Include="include\utility\Sum.h" />
@@ -150,7 +152,6 @@
     <ClInclude Include="include\ast\statement\StructDeclarationStatement.h" />
     <ClInclude Include="include\builder\BMBuilder.h" />
     <ClInclude Include="include\builder\Builder.h" />
-    <ClInclude Include="include\toolchain\Initializer.h" />
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h" />
     <ClCompile Include="source\AdjustExpression.cpp" />
     <ClCompile Include="source\ArgumentExpression.cpp" />
@@ -312,13 +313,12 @@
     <ClInclude Include="include\toolchain\Lexer.h" />
     <ClInclude Include="include\toolchain\models\Linkable.h" />
     <ClInclude Include="include\toolchain\Linker.h" />
-    <ClInclude Include="include\toolchain\models\Instruction.h" />
     <ClInclude Include="include\toolchain\models\Token.h" />
     <ClInclude Include="include\toolchain\Parser.h" />
     <ClInclude Include="include\toolchain\Preprocessor.h" />
     <ClInclude Include="include\toolchain\Scanner.h" />
     <ClInclude Include="include\toolchain\Toolchain.h" />
-    <ClInclude Include="include\toolchain\defs\ToolchainType.h" />
+    <ClInclude Include="include\toolchain\defs\ToolchainKind.h" />
     <ClInclude Include="include\type\IntTypeType.h" />
     <ClInclude Include="include\type\Type.h" />
     <ClInclude Include="include\type\TypeCheck.h" />
@@ -342,7 +342,11 @@
   <ItemGroup>
     <None Include="include\allocator\defs\ValueKind.def" />
     <None Include="include\ast\declaration\defs\DeclarationKind.def" />
+    <None Include="include\ast\expression\defs\BinaryExpressionKind.def" />
     <None Include="include\ast\expression\defs\ExpressionKind.def" />
+    <None Include="include\ast\expression\defs\PostfixExpressionKind.def" />
+    <None Include="include\ast\expression\defs\PrimaryExpressionKind.def" />
+    <None Include="include\ast\expression\defs\UnaryExpressionKind.def" />
     <None Include="include\ast\function\defs\FunctionKind.def" />
     <None Include="include\ast\statement\defs\StatementKind.def" />
     <None Include="include\cli\defs\ArchitectureKind.def" />

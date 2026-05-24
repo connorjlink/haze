@@ -339,6 +339,7 @@ namespace hz
 		MemberAccessExpression,
 		ArrayAccessExpression
 	>;
+#pragma message("TODO: finish expression types with new families like primary and incorpoating precedence?")
 
 	using ExpressionSum = MakeSum<ASTMethods, ExpressionTypes>::Type;
 
