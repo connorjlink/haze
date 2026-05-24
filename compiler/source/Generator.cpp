@@ -3,7 +3,7 @@ import std;
 #include <allocator/Allocator.h>
 #include <ast/expression/Expression.h>
 #include <command/IntermediateCommand.h>
-#include <command/LabelCommand.h>
+#include <command/Command.h>
 #include <symbol/Symbol.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
@@ -298,7 +298,7 @@ namespace hz
 		// including an extra byte for the implicit NULL terminator
 		const auto length = message.length() + 1;
 
-		_string_length_map[pointer] = static_cast<std::uint32_t>(length);
+		string_length_map[pointer] = static_cast<std::uint32_t>(length);
 
 		auto command = new MakeMessageCommand{ pointer, message };
 		COMPOSE(command);
@@ -306,9 +306,9 @@ namespace hz
 
 	void Generator::print_message(std::uint32_t pointer)
 	{
-		if (_string_length_map.contains(pointer))
+		if (string_length_map.contains(pointer))
 		{
-			auto command = new PrintMessageCommand{ pointer, _string_length_map.at(pointer) };
+			auto command = new PrintMessageCommand{ pointer, string_length_map.at(pointer) };
 			COMPOSE(command);
 			return;
 		}
@@ -352,7 +352,7 @@ namespace hz
 
 	std::vector<Linkable> Generator::generate()
 	{
-		for (auto function : _program)
+		for (auto function : program)
 		{
 			function->generate();
 		}
@@ -375,7 +375,7 @@ namespace hz
 
 	void Generator::reload(const std::vector<Node*>& program, const std::string& filepath)
 	{
-		_program = program;
+		program = program;
 
 		USE_SAFE(ErrorReporter)->post_information(std::format(
 			"reloaded program from `{}` with {} top-level declarators", filepath, program.size()), NULL_TOKEN);

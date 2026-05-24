@@ -17,7 +17,7 @@ namespace hz
 	{
 		switch (kind)
 		{
-#define X(enumerator, name, extension) case ToolchainKind::enumerator: return name;
+#define X(enumerator, name, extension) case ToolchainKind::enumerator: return #name;
 #include <toolchain/defs/ToolchainKind.x>
 #undef X
 		}

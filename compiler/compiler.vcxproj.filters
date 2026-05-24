@@ -452,10 +452,10 @@
     <ClInclude Include="include\command\defs\CommandKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\command\IntermediateCommand.h">
+    <ClInclude Include="include\ir\IntermediateCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\command\IntermediateType.h">
+    <ClInclude Include="include\ir\defs\IntermediateKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\VerbosityKind.h">
@@ -628,97 +628,40 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\ast\statement\defs\StatementKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\function\defs\FunctionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\expression\defs\ExpressionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\x86\defs\X86OperandKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\x86\defs\X86InstructionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\type\defs\TypeQualifier.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\cli\defs\ArchitectureKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\cli\defs\OptimizationFlag.def">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\riscv\defs\RISCVInstructionKind.x">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\type\defs\TypeKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\type\defs\TypeSignedness.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\toolchain\defs\ToolchainKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\x86\defs\X86Register.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\type\defs\StorageClass.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\symbol\defs\SymbolKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\riscv\defs\RISCVRegister.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\allocator\defs\ValueKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\cli\defs\VerbosityKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\cli\defs\OptionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\cli\defs\ExecutionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\runtime\defs\VariableKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\type\defs\IntKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\type\defs\FloatKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\error\defs\ErrorKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\command\defs\CommandKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\declaration\defs\DeclarationKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\type\defs\StructOrUnionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\expression\defs\PrimaryExpressionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\expression\defs\PostfixExpressionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\expression\defs\UnaryExpressionKind.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ast\expression\defs\BinaryExpressionKind.def">
+    <None Include="include\allocator\defs\ValueKind.x" />
+    <None Include="include\ast\declaration\defs\DeclarationKind.x" />
+    <None Include="include\ast\expression\defs\BinaryExpressionKind.x" />
+    <None Include="include\ast\expression\defs\ExpressionKind.x" />
+    <None Include="include\ast\expression\defs\PostfixExpressionKind.x" />
+    <None Include="include\ast\expression\defs\PrimaryExpressionKind.x" />
+    <None Include="include\ast\expression\defs\UnaryExpressionKind.x" />
+    <None Include="include\ast\function\defs\FunctionKind.x" />
+    <None Include="include\ast\statement\defs\StatementKind.x" />
+    <None Include="include\cli\defs\ArchitectureKind.x" />
+    <None Include="include\cli\defs\ExecutionKind.x" />
+    <None Include="include\cli\defs\OptimizationFlag.x" />
+    <None Include="include\cli\defs\OptionKind.x" />
+    <None Include="include\cli\defs\VerbosityKind.x" />
+    <None Include="include\command\defs\CommandKind.x" />
+    <None Include="include\error\defs\ErrorKind.x" />
+    <None Include="include\riscv\defs\RISCVRegister.x" />
+    <None Include="include\runtime\defs\VariableKind.x" />
+    <None Include="include\symbol\defs\SymbolKind.x" />
+    <None Include="include\toolchain\defs\ToolchainKind.x" />
+    <None Include="include\type\defs\FloatKind.x" />
+    <None Include="include\type\defs\IntKind.x" />
+    <None Include="include\type\defs\StorageClass.x" />
+    <None Include="include\type\defs\StructOrUnionKind.x" />
+    <None Include="include\type\defs\TypeKind.x" />
+    <None Include="include\type\defs\TypeQualifier.x" />
+    <None Include="include\type\defs\TypeSignedness.x" />
+    <None Include="include\x86\defs\X86InstructionKind.x" />
+    <None Include="include\x86\defs\X86OperandKind.x" />
+    <None Include="include\x86\defs\X86Register.x" />
+    <None Include="include\ir\defs\IntermediateKind.x">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

@@ -6,7 +6,7 @@ import std;
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
 #include <toolchain/Preprocessor.h>
-#include <token/Token.h>
+#include <toolchain/models/Token.h>
 
 // Haze Preprocessor.cpp
 // (c) Connor J. Link. All Rights Reserved.

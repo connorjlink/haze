@@ -20,7 +20,7 @@ namespace hz
 	{
 		switch (flag)
 		{
-#define X(enumerator, name, value) case OptimizationFlag::enumerator: return name;
+#define X(enumerator, name, value) case OptimizationFlag::enumerator: return #name;
 #include <cli/OptimizationFlag.x>
 #undef X
 		}

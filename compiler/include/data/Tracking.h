@@ -50,24 +50,25 @@ namespace hz
 
 		public:
 			TrackingInformation(std::size_t number_created, TrackingTimePoint created, bool is_active) 
-				: number_created{ number_created }, created{ created }, is_active{ is_active }
+				: number_created{ number_created }
+				, created{ created }
+				, is_active{ is_active }
+				, number_retired{ 0 }
+				, number_deleted{ 0 }
+				, modified{ NEVER }
+				, retired{ NEVER }
+				, deleted{ NEVER } 
 			{
-				number_retired = 0;
-				number_deleted = 0;
-
-				modified = NEVER;
-				retired = NEVER;
-				deleted = NEVER;
 			}
 		};
 
 	private:
-		std::unordered_map<TrackingId, TrackingInformation> _database;
+		std::unordered_map<TrackingId, TrackingInformation> database;
 
 	private:
 		bool validate_exists(TrackingId id)
 		{
-			if (!_database.contains(id))
+			if (!database.contains(id))
 			{
 				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"invalid attachment to nonexistent entity tracking instance `{}`", id), NULL_TOKEN);
@@ -121,15 +122,15 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			if (!_database.contains(entity->id))
+			if (!database.contains(entity->id))
 			{
 				// 1 created @ now, active
-				_database.try_emplace(entity->id, 1, system_timestamp(), true);
+				database.try_emplace(entity->id, 1, system_timestamp(), true);
 			}
 
 			else
 			{
-				auto& entry = _database.at(entity->id);
+				auto& entry = database.at(entity->id);
 				entry.number_created++;
 				// don't update the timestamp to keep the tracked time from the very first instantiation
 				//entry.created = system_timestamp();
@@ -151,7 +152,7 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			auto& entry = _database.at(entity->id);
+			auto& entry = database.at(entity->id);
 			entry.number_modified++;
 			entry.modified = system_timestamp();
 			// active flag always reflects the results of the most recent transaction
@@ -172,7 +173,7 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			auto& entry = _database.at(entity->id);
+			auto& entry = database.at(entity->id);
 			entry.number_retired++;
 			entry.retired = system_timestamp();
 			entry.is_active = false;
@@ -192,7 +193,7 @@ namespace hz
 			static std::mutex mutex;
 			std::scoped_lock lock{ mutex };
 
-			auto& entry = _database.at(entity->id);
+			auto& entry = database.at(entity->id);
 			entry.number_deleted++;
 			entry.is_active = false;
 
@@ -209,12 +210,12 @@ namespace hz
 		// even though these processes will be slow, this has to take a copy to prevent invalidating the database
 		// in case the functions get called at a time other than program exit
 
-		std::vector<decltype(_database)::value_type> get_tracking_information(void) const
+		std::vector<decltype(database)::value_type> get_tracking_information(void) const
 		{
-			std::vector<decltype(_database)::value_type> result{};
-			result.reserve(_database.size());
+			std::vector<decltype(database)::value_type> result{};
+			result.reserve(database.size());
 
-			for (auto& kv : _database)
+			for (auto& kv : database)
 			{
 				result.emplace_back(kv);
 			}
@@ -226,7 +227,7 @@ namespace hz
 		{
 			std::vector<TrackingInformation> result{};
 
-			for (const auto& [key, value] : _database)
+			for (const auto& [key, value] : database)
 			{
 				if (value.number_retired > value.number_deleted && value.is_active)
 				{
@@ -240,7 +241,7 @@ namespace hz
 		{
 			std::vector<TrackingInformation> result{};
 
-			for (const auto& [key, value] : _database)
+			for (const auto& [key, value] : database)
 			{
 				if (value.number_created > value.number_deleted)
 				{
@@ -260,7 +261,7 @@ namespace hz
 	private:
 		friend Tracker;
 		TrackingId id;
-		bool _is_enabled;
+		bool is_enabled;
 
 	private:
 		static TrackingId generate_id(void)
@@ -275,7 +276,7 @@ namespace hz
 		template<typename Self>
 		void commit(this Self& self)
 		{
-			if (_is_enabled)
+			if (is_enabled)
 			{
 				if constexpr (requires { self.update(); })
 				{
@@ -289,7 +290,7 @@ namespace hz
 		template<typename Self>
 		void retire(this Self& self)
 		{
-			if (_is_enabled)
+			if (is_enabled)
 			{
 				USE_SAFE(Tracker)->notify_retired(this);
 			}
@@ -298,9 +299,9 @@ namespace hz
 	public:
 		// dynamically enable or disable entity tracking for this instance
 		Trackable(bool is_enabled = true)
-			: _is_enabled{ is_enabled }
+			: is_enabled{ is_enabled }
 		{
-			if (_is_enabled)
+			if (is_enabled)
 			{
 				id = generate_id();
 				USE_SAFE(Tracker)->notify_created(this);
@@ -309,7 +310,7 @@ namespace hz
 
 		~Trackable()
 		{
-			if (_is_enabled)
+			if (is_enabled)
 			{
 				USE_SAFE(Tracker)->notify_deleted(this);
 			}

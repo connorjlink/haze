@@ -23,7 +23,7 @@ namespace hz
 	struct SourceContext
 	{
 	public:
-		const std::string& source;
+		std::string source;
 		SourceLocation location;
 
 	public:
@@ -69,7 +69,7 @@ namespace hz
 		SourceContext current_context;
 
 	public:
-		const SourceContext& get_state(void) const
+		const SourceContext& get_context(void) const
 		{
 			return current_context;
 		}
@@ -112,6 +112,7 @@ namespace hz
 	protected:
 		// advance the cursor context?
 		std::string read_identifier(bool = false);
+		bool match_keyword(std::string_view);
 		bool match_keyword(const std::string&);
 		void skip_whitespace(bool = false);
 		void skip_until(char);

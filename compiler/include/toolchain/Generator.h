@@ -28,13 +28,13 @@ namespace hz
 	{
 	private:
 		// imported upon reload()
-		std::vector<Node*> _program;
+		std::vector<Node*> program;
 
 	private:
 		std::vector<Linkable> linkables;
 
 	private:
-		std::unordered_map<std::uint32_t, std::uint32_t> _string_length_map;
+		std::unordered_map<std::uint32_t, std::uint32_t> string_length_map;
 
 	public:
 		const std::string& current_function() const;

@@ -22,7 +22,7 @@ namespace hz
 	{
 		switch (type)
 		{
-#define X(enumerator, name) case ArchitectureKind::enumerator: return name;
+#define X(enumerator, name) case ArchitectureKind::enumerator: return #name;
 #include <cli/defs/ArchitectureKind.x>
 #undef X
 		}

@@ -19,7 +19,7 @@ namespace hz
 	{
 		switch (reg)
 		{
-#define X(enumerator, name, value) case RISCVRegister::enumerator: return name;
+#define X(enumerator, name, value) case RISCVRegister::enumerator: return #name;
 #include <riscv/defs/RISCVRegister.x>
 #undef X
 		}

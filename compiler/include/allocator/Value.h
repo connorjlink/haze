@@ -2,6 +2,7 @@
 #define HAZE_VALUESUM_H
 
 #include <allocator/defs/ValueKind.h>
+#include <cli/CommandLineOptions.h>
 #include <cli/defs/ArchitectureKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
@@ -63,7 +64,7 @@ namespace hz
 		{
 			if (destination != index)
 			{
-				generator.move(destination, index);
+				generator.make_copy(destination, index);
 			}
 		}
 
@@ -71,7 +72,7 @@ namespace hz
 		{
 			if (source != index)
 			{
-				generator.move(index, source);
+				generator.make_copy(index, source);
 			}
 		}
 	};
@@ -124,8 +125,8 @@ namespace hz
 
 		std::string format() const
 		{
-			static constexpr auto bits_per_hex_digit = std::countr_zero(16);
-			static constexpr auto hex_digits = (sizeof(Address) * CHAR_BIT + bits_per_hex_digit - 1) / bits_per_hex_digit;
+			static constexpr auto bits_per_hex_digit = std::countr_zero(16u);
+			static constexpr auto hex_digits = (sizeof(Address) * std::numeric_limits<unsigned char>::digits + bits_per_hex_digit - 1) / bits_per_hex_digit;
 
 			// NOTE: +2 required to account for the `0x` prefix
 			return std::format("[{:#0{}x}]", index, hex_digits + 2);
@@ -133,7 +134,7 @@ namespace hz
 
 		void load_into(Generator& generator, Register destination) const
 		{
-			generator.heap_read(destination, index.index);
+			generator.heap_read(destination, index);
 		}
 
 		void store_from(Generator& generator, Register source) const

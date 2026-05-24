@@ -153,7 +153,7 @@ namespace hz
 		DotByteCommand,
 	>;
 
-	using CommandSum = MakeSum<ASTMethods, CommandTypes>::Type;
+	using CommandSum = MakeSum<BaseASTMethods, CommandTypes>::Type;
 
 	template<typename T>
 	using CommandReference = CommandSum::template Reference<T>;

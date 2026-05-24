@@ -19,7 +19,7 @@ namespace hz
 	{
 		switch (kind)
 		{
-#define X(enumerator, name) case X86OperandKind::enumerator: return name;
+#define X(enumerator, name) case X86OperandKind::enumerator: return #name;
 #include <x86/defs/X86OperandKind.x>
 #undef X
 		}

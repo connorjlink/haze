@@ -17,7 +17,7 @@ namespace hz
 	{
 		switch (kind)
 		{
-#define X(enumerator, name) case TypeKind::enumerator: return name;
+#define X(enumerator, name) case TypeKind::enumerator: return #name;
 #include <type/defs/TypeKind.x>
 #undef X
 		}

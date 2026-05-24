@@ -38,7 +38,7 @@ namespace hz
 		return current_context.whereat();
 	}
 
-	const std::string& Scanner::wherein(void) const
+	std::string Scanner::wherein(void) const
 	{
 		return current_context.wherein();
 	}
@@ -144,7 +144,7 @@ namespace hz
 		};
 	}
 
-	const std::string& Scanner::read_identifier(bool advance_context)
+	std::string Scanner::read_identifier(bool advance_context)
 	{
 		auto& content = current_context.source;
 
@@ -175,7 +175,7 @@ namespace hz
 		return content.substr(start, length);
 	}
 
-	bool Scanner::match_keyword(const std::string& keyword)
+	bool Scanner::match_keyword(std::string_view keyword)
 	{
 		const auto length = keyword.length();
 
@@ -185,6 +185,11 @@ namespace hz
 			return true;
 		}
 		return false;
+	}
+
+	bool Scanner::match_keyword(const std::string& keyword)
+	{
+		return match_keyword(std::string_view{ keyword });
 	}
 
 	void Scanner::skip_whitespace(bool is_required)
@@ -221,7 +226,7 @@ namespace hz
 		}
 	}
 
-	const std::string& Scanner::substring_until(char c, bool advance_until)
+	std::string Scanner::substring_until(char c, bool advance_until)
 	{
 		const auto source_length = current_context.source.length();
 		const auto start = whereat();
@@ -242,7 +247,7 @@ namespace hz
 		return current_context.source.substr(start, length);
 	}
 
-	const std::string& Scanner::substring_while(bool(*functor)(char), bool advance_while)
+	std::string Scanner::substring_while(bool(*functor)(char), bool advance_while)
 	{
 		const auto source_length = current_context.source.length();
 		const auto start = whereat();

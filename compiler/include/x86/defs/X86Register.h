@@ -20,7 +20,7 @@ namespace hz
 	{
 		switch (reg)
 		{
-#define X(enumerator, name, value) case X86Register::enumerator: return name;
+#define X(enumerator, name, value) case X86Register::enumerator: return #name;
 #include <x86/defs/X86Register.x>
 #undef X
 		}

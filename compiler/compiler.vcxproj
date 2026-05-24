@@ -272,8 +272,8 @@
     <ClInclude Include="include\command\BranchCommandType.h" />
     <ClInclude Include="include\command\Command.h" />
     <ClInclude Include="include\command\defs\CommandKind.h" />
-    <ClInclude Include="include\command\IntermediateCommand.h" />
-    <ClInclude Include="include\command\IntermediateType.h" />
+    <ClInclude Include="include\ir\IntermediateCommand.h" />
+    <ClInclude Include="include\ir\defs\IntermediateKind.h" />
     <ClInclude Include="include\command\models\IntegerLiteral.h" />
     <ClInclude Include="include\command\models\IntegerLiteralType.h" />
     <ClInclude Include="include\daemon\Daemon.h" />
@@ -356,6 +356,7 @@
     <None Include="include\cli\defs\VerbosityKind.x" />
     <None Include="include\command\defs\CommandKind.x" />
     <None Include="include\error\defs\ErrorKind.x" />
+    <None Include="include\ir\defs\IntermediateKind.x" />
     <None Include="include\riscv\defs\RISCVInstructionKind.x" />
     <None Include="include\riscv\defs\RISCVRegister.x" />
     <None Include="include\runtime\defs\VariableKind.x" />
