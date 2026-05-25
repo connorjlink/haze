@@ -37,6 +37,7 @@ namespace hz
 		EQUALSEQUALS, EXCLAMATIONEQUALS,
 
 		GREATER, LESS,
+		GREATEREQUALS, LESSEQUALS,
 
 		LESSLESS, GREATERGREATER,
 		LESSLESSEQUALS, GREATERGREATEREQUALS,
@@ -149,9 +150,9 @@ namespace hz
 		bimap_t{ S("=="), TokenKind::EQUALSEQUALS },
 		bimap_t{ S("!="), TokenKind::EXCLAMATIONEQUALS },
 		bimap_t{ S(">"), TokenKind::GREATER },
-		bimap_t{ S(">="), TokenKind::GREATERGREATEREQUALS },
+		bimap_t{ S(">="), TokenKind::GREATEREQUALS },
 		bimap_t{ S("<"), TokenKind::LESS },
-		bimap_t{ S("<="), TokenKind::LESSLESSEQUALS },
+		bimap_t{ S("<="), TokenKind::LESSEQUALS },
 
 		bimap_t{ S("#"), TokenKind::POUND },
 		bimap_t{ S("##"), TokenKind::POUNDPOUND },

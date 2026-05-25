@@ -1,9 +1,9 @@
 #ifndef HAZE_VOIDTYPE_H
 #define HAZE_VOIDTYPE_H
 
-#include <type/StorageClass.h>
-#include <type/TypeQualifier.h>
-#include <type/TypeKind.h>
+#include <type/defs/StorageClass.h>
+#include <type/defs/TypeQualifier.h>
+#include <type/defs/TypeKind.h>
 
 // Haze VoidType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -30,8 +30,8 @@ namespace hz
 		std::string string() const
 		{
 			return std::format("{} {} void", 
-				_storage_class_map.at(storage),
-				type_qualifier_map.at(qualifier));
+				storage,
+				qualifier);
 		}
 
 		bool is_complete() const

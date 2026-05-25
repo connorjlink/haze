@@ -1,9 +1,8 @@
 ﻿import std;
 
-#include <allocator/Allocation.h>
-#include <ast/ReturnStatement.h>
+#include <allocator/Value.h>
+#include <ast/statement/Statement.h>
 #include <error/CommonErrors.h>
-#include <runtime/Evaluator.h>
 #include <symbol/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Parser.h>
@@ -19,7 +18,7 @@ namespace hz
 		return StatementKind::RETURN;
 	}
 
-	void ReturnStatement::generate(Allocation*)
+	void ReturnStatement::generate(Value& value)
 	{
 		if (REQUIRE_SAFE(Parser)->ptype() == ParserType::COMPILER)
 		{
@@ -72,7 +71,6 @@ namespace hz
 
 			REQUIRE_SAFE(Generator)->make_return(end_function_label, temp.source()->read());
 		}
-
 		else
 		{
 			CommonErrors::invalid_parser_type(REQUIRE_SAFE(Parser)->ptype(), _token);

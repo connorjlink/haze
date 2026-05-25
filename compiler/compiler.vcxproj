@@ -356,7 +356,11 @@
     <None Include="include\cli\defs\VerbosityKind.x" />
     <None Include="include\command\defs\CommandKind.x" />
     <None Include="include\error\defs\ErrorKind.x" />
+    <None Include="include\ir\defs\BinaryIntermediateKind.x" />
+    <None Include="include\ir\defs\CompareIntermediateKind.x" />
     <None Include="include\ir\defs\IntermediateKind.x" />
+    <None Include="include\ir\defs\IntermediateType.x" />
+    <None Include="include\ir\defs\UnaryIntermediateKind.x" />
     <None Include="include\riscv\defs\RISCVInstructionKind.x" />
     <None Include="include\riscv\defs\RISCVRegister.x" />
     <None Include="include\runtime\defs\VariableKind.x" />

@@ -1,11 +1,7 @@
 import std;
 
-#include <ast/AdjustExpression.h>
-#include <ast/BinaryExpression.h>
-#include <ast/IntegerLiteralExpression.h>
-#include <ast/FunctionCallExpression.h>
-#include <ast/StringExpression.h>
-#include <command/DotDefineCommand.h>
+#include <ast/expression/Expression.h>
+#include <command/Command.h>
 #include <error/CommonErrors.h>
 #include <error/ErrorReporter.h>
 #include <symbol/Symbol.h>
@@ -23,7 +19,41 @@ namespace
 
 	bool is_binary_operator(TokenKind type)
 	{
-		return _binary_expression_map.contains(type);
+		using enum TokenKind;
+		switch (type)
+		{
+			case AMPERSAND:            [[fallthrough]];
+			case AMPERSANDEQUALS:      [[fallthrough]];
+			case AMPERSANDAMPERSAND:   [[fallthrough]];
+			case PIPE:                 [[fallthrough]];
+			case PIPEEQUALS:           [[fallthrough]];
+			case PIPEPIPE:             [[fallthrough]];
+			case PLUS:                 [[fallthrough]];
+			case PLUSEQUALS:           [[fallthrough]];
+			case MINUS:                [[fallthrough]];
+			case MINUSEQUALS:          [[fallthrough]];
+			case STAR:                 [[fallthrough]];
+			case STAREQUALS:           [[fallthrough]];
+			case SLASH:                [[fallthrough]];
+			case SLASHEQUALS:          [[fallthrough]];
+			case PERCENT:              [[fallthrough]];
+			case PERCENTEQUALS:        [[fallthrough]];
+			case CARET:                [[fallthrough]];
+			case CARETEQUALS:          [[fallthrough]];
+			case EQUALSEQUALS:         [[fallthrough]];
+			case EXCLAMATIONEQUALS:    [[fallthrough]];
+			case GREATER:              [[fallthrough]];
+			case GREATEREQUALS:        [[fallthrough]];
+			case GREATERGREATER:       [[fallthrough]];
+			case GREATERGREATEREQUALS: [[fallthrough]];
+			case LESS:                 [[fallthrough]];
+			case LESSEQUALS:           [[fallthrough]];
+			case LESSLESS:             [[fallthrough]];
+			case LESSLESSEQUALS:
+				return true;
+		};
+
+		return false;
 	}
 }
 
@@ -77,7 +107,7 @@ namespace hz
 			return current;
 		}
 
-		auto convert = [&](auto v) -> const std::string&
+		auto convert = [&](auto v) -> std::string_view
 		{
 			const auto item = token_map.at(v);
 
@@ -92,7 +122,9 @@ namespace hz
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"expected token `{}` but got `{}`",
-				convert(type), ((current.type == TokenKind::IDENTIFIER || current.type == TokenKind::INT) ? current.text : convert(current.type))), current);
+				convert(type), ((current.type == TokenKind::IDENTIFIER || current.type == TokenKind::INT) 
+					? current.text 
+					: convert(current.type))), current);
 		return current;
 	}
 
@@ -125,7 +157,7 @@ namespace hz
 		else
 		{
 			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
-			type = new IntType{ TypeQualifier::IMMUTABLE, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
+			type = new IntType{ TypeQualifier::CONST, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
 		}
 		
 		const auto identifier_expression = parse_identifier_expression();

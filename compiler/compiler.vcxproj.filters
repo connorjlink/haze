@@ -664,5 +664,9 @@
     <None Include="include\ir\defs\IntermediateKind.x">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\ir\defs\IntermediateType.x" />
+    <None Include="include\ir\defs\BinaryIntermediateKind.x" />
+    <None Include="include\ir\defs\UnaryIntermediateKind.x" />
+    <None Include="include\ir\defs\CompareIntermediateKind.x" />
   </ItemGroup>
 </Project>
