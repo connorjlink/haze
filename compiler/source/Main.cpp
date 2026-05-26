@@ -1,6 +1,10 @@
 import std;
 
-#include <async/Task.h>
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
+#define NOMINMAX
+
+#include <Task.h>
 #include <cli/CommandLineParser.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
@@ -15,6 +19,7 @@ import std;
 #include <toolchain/CompilerToolchain.h>
 #include <toolchain/AssemblerToolchain.h>
 #include <toolchain/Linker.h>
+#include <toolchain/defs/ToolchainKind.h>
 #include <utility/ExitProgramException.h>
 #include <validator/X86BuilderValidator.h>
 #include <validator/TypeValidator.h>
@@ -58,7 +63,7 @@ int main(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 
 	// offload the loading process now to a background thread, await after initializing the rest of the components
-	auto loader = Task<std::unordered_map<std::string, File>>{ [&]()
+	auto loader = Task<std::unordered_map<std::string, File>>{ [&]
 	{	
 		for (auto& filepath : command_line_parser.files())
 		{
@@ -82,34 +87,6 @@ int main(int argc, char** argv)
 	SingletonContainer::instance().register_singleton<SymbolExporter>(std::cout);
 	SingletonContainer::instance().register_singleton<SymbolDatabase>();
 	SingletonContainer::instance().register_singleton<Linker>();
-
-	// unit testing requires some singletones to be registered
-	const auto execution = USE_UNSAFE(CommandLineOptions)->execution;
-	if (execution == ExecutionKind::VALIDATE)
-	{
-		AutoJob test_task{ "unit testing" };
-
-		auto validators = std::vector<Validator*>
-		{
-			new X86BuilderValidator{},
-			new TypeValidator{},
-		};
-
-		for (auto validator : validators)
-		{
-			validator->run_tests();
-		}
-
-		USE_UNSAFE(ErrorReporter)->post_information(std::format(
-			"validation complete"), NULL_TOKEN);
-		return 0;
-	}
-	else if (execution != ExecutionKind::COMPILE)
-	{
-		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"unrecognized execution type `{}`", std::to_underlying(execution)), NULL_TOKEN);
-		return 1;
-	}
 
 	// enumerate system threads
 	auto thread_count = static_cast<std::size_t>(std::thread::hardware_concurrency());

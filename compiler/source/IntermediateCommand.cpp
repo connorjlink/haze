@@ -6,7 +6,7 @@ import std;
 #include <utility/BinaryConstants.h>
 #include <type/Type.h>
 #include <x86/X86Builder.h>
-#include <x86/X86Register.h>
+#include <x86/defs/X86Register.h>
 #include <x86/X86Instruction.h>
 
 // Haze IntermediateCommand.cpp

@@ -191,7 +191,6 @@
     <ClCompile Include="source\IfStatement.cpp" />
     <ClCompile Include="source\InlineAsmStatement.cpp" />
     <ClCompile Include="source\InstructionCommand.cpp" />
-    <ClCompile Include="source\InstructionValidator.cpp" />
     <ClCompile Include="source\IntegerLiteralExpression.cpp" />
     <ClCompile Include="source\IntermediateCommand.cpp" />
     <ClCompile Include="source\Job.cpp" />
@@ -264,7 +263,6 @@
     <ClInclude Include="include\cli\defs\ArchitectureKind.h" />
     <ClInclude Include="include\cli\CommandLineOptions.h" />
     <ClInclude Include="include\cli\CommandLineParser.h" />
-    <ClInclude Include="include\cli\defs\ExecutionKind.h" />
     <ClInclude Include="include\cli\defs\OptimizationFlag.h" />
     <ClInclude Include="include\cli\defs\OptionKind.h" />
     <ClInclude Include="include\cli\defs\VerbosityKind.h" />
@@ -335,7 +333,6 @@
     <ClInclude Include="include\utility\ExtendedInteger.h" />
     <ClInclude Include="include\utility\JSON.h" />
     <ClInclude Include="include\utility\Random.h" />
-    <ClInclude Include="include\validator\InstructionValidator.h" />
     <ClInclude Include="include\validator\models\Test.h" />
     <ClInclude Include="include\validator\Validator.h" />
   </ItemGroup>
@@ -350,7 +347,6 @@
     <None Include="include\ast\function\defs\FunctionKind.x" />
     <None Include="include\ast\statement\defs\StatementKind.x" />
     <None Include="include\cli\defs\ArchitectureKind.x" />
-    <None Include="include\cli\defs\ExecutionKind.x" />
     <None Include="include\cli\defs\OptimizationFlag.x" />
     <None Include="include\cli\defs\OptionKind.x" />
     <None Include="include\cli\defs\VerbosityKind.x" />

@@ -10,7 +10,7 @@ import std;
 #include <runtime/Evaluator.h>
 #include <toolchain/Parser.h>
 #include <toolchain/CompilerParser.h>
-#include <x86/X86Register.h>
+#include <x86/defs/X86Register.h>
 
 // Haze Function.cpp
 // (c) Connor J. Link. All Rights Reserved.

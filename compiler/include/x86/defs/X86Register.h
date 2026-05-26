@@ -27,6 +27,11 @@ namespace hz
 
 		return "<unknown x86 register>";
 	}
+
+	Register to_register(X86Register reg)
+	{
+		return static_cast<Register>(reg);
+	}
 }
 
 #endif

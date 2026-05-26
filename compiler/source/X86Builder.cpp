@@ -1,7 +1,7 @@
 import std;
 
 #include <x86/X86Builder.h>
-#include <x86/X86Register.h>
+#include <x86/defs/X86Register.h>
 
 // Haze X86Builder.cpp
 // (c) Connor J. Link. All Rights Reserved.

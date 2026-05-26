@@ -126,9 +126,6 @@
     <ClCompile Include="source\InstructionCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\InstructionValidator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\IntegerLiteralExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -257,9 +254,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\validator\InstructionValidator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\validator\models\Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -470,9 +464,6 @@
     <ClInclude Include="include\cli\CommandLineParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\cli\defs\ExecutionKind.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\cli\defs\OptionKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -641,7 +632,6 @@
     <None Include="include\ast\function\defs\FunctionKind.x" />
     <None Include="include\ast\statement\defs\StatementKind.x" />
     <None Include="include\cli\defs\ArchitectureKind.x" />
-    <None Include="include\cli\defs\ExecutionKind.x" />
     <None Include="include\cli\defs\OptimizationFlag.x" />
     <None Include="include\cli\defs\OptionKind.x" />
     <None Include="include\cli\defs\VerbosityKind.x" />
