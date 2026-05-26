@@ -18,17 +18,17 @@ namespace hz
 		return ExpressionType::STRUCT_MEMBER_DECLARATION;
 	}
 
-	TypeKind MemberDeclarationExpression::ttype() const
+	TypeKind MemberDeclarationExpression::tag_type() const
 	{
-		return type->ttype();
+		return type->tag_type();
 	}
 
-	void MemberDeclarationExpression::generate(Allocation*)
+	void MemberDeclarationExpression::generate(ValueHandle)
 	{
 		// No direct code generation for a struct member declaration
 	}
 
-	Expression* MemberDeclarationExpression::optimize()
+	ExpressionHandle MemberDeclarationExpression::optimize()
 	{
 		// No optimizations possible for a struct member declaration
 		return nullptr;

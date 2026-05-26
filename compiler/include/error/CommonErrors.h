@@ -64,10 +64,10 @@ namespace hz
 		static void invalid_binary_expression(ExpressionType, ExpressionType, BinaryExpressionType, const Token&);
 
 	public:
-		static void type_qualifier_mismatch(Type*, Expression*, const Token&);
-		static void type_signedness_mismatch(Type*, Expression*, const Token&);
-		static void type_storage_mismatch(Type*, Expression*, const Token&);
-		static void int_type_specifier_mismatch(Type*, Expression*, const Token&);
+		static void type_qualifier_mismatch(TypeHandle, ExpressionHandle, const Token&);
+		static void type_signedness_mismatch(TypeHandle, ExpressionHandle, const Token&);
+		static void type_storage_mismatch(TypeHandle, ExpressionHandle, const Token&);
+		static void int_type_specifier_mismatch(TypeHandle, ExpressionHandle, const Token&);
 
 	public:
 		static void unsupported_statement(const std::string&, const std::string&, const Token&);

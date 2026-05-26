@@ -28,7 +28,7 @@ namespace hz
 		return ParserType::ASSEMBLER;
 	}
 
-	Expression* AssemblerParser::parse_literal()
+	ExpressionHandle AssemblerParser::parse_literal()
 	{
 		const auto& first = peek();
 

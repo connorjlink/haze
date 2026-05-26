@@ -32,7 +32,7 @@ namespace hz
 		template<typename Self>
 		DeclarationKind declaration_kind(this Self&& self)
 		{
-			switch (self.ttype())
+			switch (self.tag_type())
 			{
 #define X(enumerator, type, name) case TypeIndexV<type, typename DeclarationSumStorage::Type>: return DeclarationKind::enumerator;
 #include <ast/declaration/defs/DeclarationKind.x>

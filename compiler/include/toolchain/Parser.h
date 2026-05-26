@@ -8,7 +8,6 @@
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
-#include <toolchain/ParserType.h>
 #include <toolchain/models/Token.h>
 
 // Haze Parser.h
@@ -60,7 +59,7 @@ namespace hz
 		Node* parse_dotdefine_command();
 
 	protected:
-		ExpressionReference<IdentifierExpression> parse_identifier_expression(IdentifierType = IdentifierType::UNKNOWN); // explicit contextual type override
+		ExpressionReference<IdentifierExpression> parse_identifier_expression();
 		ExpressionReference<IntegerLiteralExpression> parse_integerliteral_expression();
 		ExpressionReference<StringLiteralExpression> parse_string_expression();
 		ExpressionReference<FunctionCallExpression> parse_functioncall_expression();
@@ -71,12 +70,12 @@ namespace hz
 		AdjustExpression* parse_decrement_expression();
 
 	protected:
-		Expression* parse_expression_optimized();
-		Expression* parse_expression();
+		ExpressionHandle parse_expression_optimized();
+		ExpressionHandle parse_expression();
 
 	private:
-		Expression* parse_generic_expression();
-		Expression* parse_infix_expression(Expression*, Precedence);
+		ExpressionHandle parse_generic_expression();
+		ExpressionHandle parse_infix_expression(ExpressionHandle, Precedence);
 
 	public:
 		virtual ParserType ptype() const = 0;

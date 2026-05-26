@@ -16,7 +16,7 @@ namespace hz
 		return StatementKind::INLINEASM;
 	}
 
-	void InlineAsmStatement::generate(Allocation*)
+	void InlineAsmStatement::generate(ValueHandle)
 	{
 		auto linker = new Linker{ commands, enclosing_file };
 		const auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin(), UWORD_MAX); 

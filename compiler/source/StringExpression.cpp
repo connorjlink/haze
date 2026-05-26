@@ -16,12 +16,12 @@ namespace hz
 		return ExpressionType::STRING;
 	}
 
-	TypeKind StringExpression::ttype() const
+	TypeKind StringExpression::tag_type() const
 	{
 		return TypeKind::STRING;
 	}
 
-	void StringExpression::generate(Allocation* allocation)
+	void StringExpression::generate(ValueHandle allocation)
 	{
 		// add an extra byte for the null terminator byte
 		const auto bytes = message.length() + 1;
@@ -33,7 +33,7 @@ namespace hz
 		REQUIRE_SAFE(Generator)->make_immediate(allocation->read(), integer_literal);
 	}
 
-	Expression* StringExpression::optimize()
+	ExpressionHandle StringExpression::optimize()
 	{
 		// No optimizations possible for a string expression
 		return nullptr;

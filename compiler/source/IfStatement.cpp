@@ -16,7 +16,7 @@ namespace hz
 		return StatementKind::IF;
 	}
 
-	void IfStatement::generate(Allocation*)
+	void IfStatement::generate(ValueHandle)
 	{
 		// 3 digits of randomness for now
 		const auto uuid = hz::generate(3);

@@ -12,7 +12,7 @@ namespace hz
 		return ExpressionType::FUNCTION_ARGUMENT;
 	}
 
-	Expression* FunctionArgumentExpression::optimize()
+	ExpressionHandle FunctionArgumentExpression::optimize()
 	{
 		if (auto value_optimized = value->optimize())
 		{
@@ -22,7 +22,7 @@ namespace hz
 		return nullptr;
 	}
 
-	void FunctionArgumentExpression::generate(Allocation* allocation)
+	void FunctionArgumentExpression::generate(ValueHandle allocation)
 	{
 		value->generate(allocation);
 	}

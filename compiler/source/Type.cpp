@@ -9,7 +9,7 @@ import std;
 
 namespace hz
 {
-	TypeKind IntType::ttype() const
+	TypeKind IntType::tag_type() const
 	{
 		return TypeKind::INT;
 	}
@@ -42,7 +42,7 @@ namespace hz
 	}
 
 
-	TypeKind StructType::ttype() const
+	TypeKind StructType::tag_type() const
 	{
 		return TypeKind::STRUCT;
 	}
@@ -81,7 +81,7 @@ namespace hz
 	}
 
 
-	TypeKind StringType::ttype() const
+	TypeKind StringType::tag_type() const
 	{
 		return TypeKind::STRING;
 	}

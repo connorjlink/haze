@@ -40,7 +40,7 @@ namespace hz
 		template<typename Self>
 		StatementKind statement_kind(this Self&& self)
 		{
-			switch (self.ttype())
+			switch (self.tag_type())
 			{
 #define X(enumerator, type, name) case TypeIndexV<type, typename StatementSumStorage::Type>: return StatementKind::enumerator;
 #include <ast/statement/defs/StatementKind.x>

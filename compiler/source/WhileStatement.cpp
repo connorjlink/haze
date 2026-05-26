@@ -17,7 +17,7 @@ namespace hz
 		return StatementKind::WHILE;
 	}
 
-	void WhileStatement::generate(Allocation*)
+	void WhileStatement::generate(ValueHandle)
 	{
 		// 3 digits of randomness for now
 		const auto uuid = hz::generate(3);

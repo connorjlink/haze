@@ -121,7 +121,7 @@ namespace hz
 			binary_expression_kind_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
 	}
 
-	void CommonErrors::type_qualifier_mismatch(Type* type, Expression* expression, const Token& token)
+	void CommonErrors::type_qualifier_mismatch(TypeHandle type, ExpressionHandle expression, const Token& token)
 	{
 		const auto expected_qualifier = type->qualifier;
 
@@ -132,7 +132,7 @@ namespace hz
 			type_qualifier_map.at(expected_qualifier), type_qualifier_map.at(erroring_qualifier)), token);
 	}
 
-	void CommonErrors::type_signedness_mismatch(Type* type, Expression* expression, const Token& token)
+	void CommonErrors::type_signedness_mismatch(TypeHandle type, ExpressionHandle expression, const Token& token)
 	{
 		const auto expected_signedness = AS_INT_TYPE(type)->signedness;
 
@@ -143,7 +143,7 @@ namespace hz
 			_type_signedness_map.at(erroring_signedness), _type_signedness_map.at(erroring_signedness)), token);
 	}
 
-	void CommonErrors::type_storage_mismatch(Type* type, Expression* expression, const Token& token)
+	void CommonErrors::type_storage_mismatch(TypeHandle type, ExpressionHandle expression, const Token& token)
 	{
 		const auto expected_storage = type->storage;
 
@@ -154,7 +154,7 @@ namespace hz
 			_type_storage_map.at(expected_storage), _type_storage_map.at(erroring_storage)), token);
 	}
 
-	void CommonErrors::int_type_specifier_mismatch(Type* type, Expression* expression, const Token& token)
+	void CommonErrors::int_type_specifier_mismatch(TypeHandle type, ExpressionHandle expression, const Token& token)
 	{
 		const auto expected_specifier = AS_INT_TYPE(type)->int_kind;
 

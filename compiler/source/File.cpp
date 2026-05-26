@@ -38,7 +38,7 @@ namespace
 
 namespace hz
 {
-	ToolchainKind File::ttype(void) const
+	ToolchainKind File::tag_type(void) const
 	{
 		return type;
 	}
@@ -68,7 +68,7 @@ namespace hz
 			"file {} not found", filepath), NULL_TOKEN);
 	}
 
-	std::string File::get_processed_contents(void)
+	std::string File::get_processed_contents(void) const
 	{
 		if (processed_contents.has_value())
 		{

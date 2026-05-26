@@ -9,7 +9,7 @@ import std;
 
 namespace hz
 {
-	ToolchainKind AssemblerToolchain::ttype() const
+	ToolchainKind AssemblerToolchain::tag_type() const
 	{
 		return ToolchainKind::ASSEMBLER;
 	}

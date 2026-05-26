@@ -5,7 +5,7 @@ import std;
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define APPEND_TOKEN(ttype, raw) tokens.emplace_back(Token{ .type = ttype, .text = raw, .location = get_state().location })
+#define APPEND_TOKEN(tag_type, raw) tokens.emplace_back(Token{ .type = tag_type, .text = raw, .location = get_state().location })
 
 namespace hz
 {

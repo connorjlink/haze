@@ -14,7 +14,7 @@ namespace hz
 		return CommandType::DOTDEFINE;
 	}
 
-	void DotDefineCommand::generate(Allocation*)
+	void DotDefineCommand::generate(ValueHandle)
 	{
 		CommonErrors::invalid_command_type(ctype(), _token);
 	}

@@ -28,7 +28,7 @@ namespace hz
 			// when value==nullptr, expect no return value ONLY from nvr function
 			if (value == nullptr)
 			{
-				if (USE_SAFE(SymbolDatabase)->reference_function(enclosing_function, _token)->return_type->ttype() != TypeKind::VOID)
+				if (USE_SAFE(SymbolDatabase)->reference_function(enclosing_function, _token)->return_type->tag_type() != TypeKind::VOID)
 				{
 					USE_SAFE(ErrorReporter)->post_error("no return value was specified for a non-nvr function", _token);
 					return;

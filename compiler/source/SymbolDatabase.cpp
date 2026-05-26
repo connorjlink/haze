@@ -16,10 +16,10 @@ namespace hz
 	Symbol* SymbolDatabase::add_symbol(SymbolKind type, const std::string& name, const Token& token)
 	{
 		// does the symbol already exist in the registry?
-		if (_table.contains(name))
+		if (table.contains(name))
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format("symbol `{}` was already defined as a {}",
-				name, _symbol_type_map.at(_table.at(name)->ytype())), token);
+				name, _symbol_type_map.at(table.at(name)->ytype())), token);
 			return nullptr;
 		}
 
@@ -28,11 +28,11 @@ namespace hz
 		using enum SymbolKind;
 		switch (type)
 		{
-			case FUNCTION: new_symbol = _table[name] = new FunctionSymbol{ name, token, nullptr }; break;
-			case ARGUMENT: new_symbol = _table[name] = new ArgumentSymbol{ name, token, nullptr }; break;
-			case VARIABLE: new_symbol = _table[name] = new VariableSymbol{ name, token, nullptr, nullptr }; break;
-			case DEFINE: new_symbol = _table[name] = new DefineSymbol{ name, token, nullptr, ExtendedInteger{} }; break;
-			case LABEL: new_symbol = _table[name] = new LabelSymbol{ name, token, 0 }; break;
+			case FUNCTION: new_symbol = table[name] = new FunctionSymbol{ name, token, nullptr }; break;
+			case ARGUMENT: new_symbol = table[name] = new ArgumentSymbol{ name, token, nullptr }; break;
+			case VARIABLE: new_symbol = table[name] = new VariableSymbol{ name, token, nullptr, nullptr }; break;
+			case DEFINE: new_symbol = table[name] = new DefineSymbol{ name, token, nullptr, ExtendedInteger{} }; break;
+			case LABEL: new_symbol = table[name] = new LabelSymbol{ name, token, 0 }; break;
 
 			default:
 			{
@@ -49,7 +49,7 @@ namespace hz
 		return new_symbol;
 	}
 
-	FunctionSymbol* SymbolDatabase::add_function(const std::string& name, const Token& location, Type* return_type, const std::vector<ArgumentExpression*>& arguments)
+	FunctionSymbol* SymbolDatabase::add_function(const std::string& name, const Token& location, TypeHandle return_type, const std::vector<ArgumentExpression*>& arguments)
 	{
 		auto function_symbol = AS_FUNCTION_SYMBOL(add_symbol(SymbolKind::FUNCTION, name, location));
 		function_symbol->return_type = return_type;
@@ -57,7 +57,7 @@ namespace hz
 		return function_symbol;
 	}
 
-	ArgumentSymbol* SymbolDatabase::add_argument(const std::string& name, const Token& location, Type* type)
+	ArgumentSymbol* SymbolDatabase::add_argument(const std::string& name, const Token& location, TypeHandle type)
 	{
 		auto argument_symbol = AS_ARGUMENT_SYMBOL(add_symbol(SymbolKind::ARGUMENT, name, location));
 		argument_symbol->type = type;
@@ -87,14 +87,14 @@ namespace hz
 
 	SymbolKind SymbolDatabase::query_symbol_type(const std::string& name, const Token& location)
 	{
-		if (!_table.contains(name))
+		if (!table.contains(name))
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"symbol `{}` is undefined", name), location);
 			return SymbolKind::VARIABLE;
 		}
 
-		return _table.at(name)->ytype();
+		return table.at(name)->ytype();
 	}
 
 	Symbol* SymbolDatabase::internal_reference_symbol(bool log_errors, SymbolKind type, const std::string& name, const Token& location, bool mark_visited)
@@ -109,7 +109,7 @@ namespace hz
 			return nullptr;
 		}
 
-		if (!_table.contains(name))
+		if (!table.contains(name))
 		{
 			if (log_errors)
 			{
@@ -119,14 +119,14 @@ namespace hz
 			return nullptr;
 		}
 
-		auto symbol = _table.at(name);
+		auto symbol = table.at(name);
 
 		if (symbol->ytype() != type)
 		{
 			if (log_errors)
 			{
 				USE_SAFE(ErrorReporter)->post_error(std::format("symbol `{}` was defined as a {} but referenced as a {}",
-					name, _symbol_type_map.at(symbol->ytype()), _symbol_type_map.at(type)), location);
+					name, symbol->ytype(), type), location);
 			}
 			return nullptr;
 		}
@@ -199,10 +199,10 @@ namespace hz
 
 	bool SymbolDatabase::has_symbol(const std::string& name)
 	{
-		return _table.contains(name);
+		return table.contains(name);
 	}
 
-	bool SymbolDatabase::is_mapped_identifier(Expression* expression)
+	bool SymbolDatabase::is_mapped_identifier(ExpressionHandle expression)
 	{
 		if (expression->etype() == ExpressionType::IDENTIFIER)
 		{
@@ -231,6 +231,6 @@ namespace hz
 
 	SymbolDatabase::SymbolDatabase()
 	{
-		_table = {};
+		table = {};
 	}
 }

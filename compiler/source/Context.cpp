@@ -45,12 +45,12 @@ namespace hz
 		return value;
 	}
 
-	void Context::push_arguments(const std::vector<Expression*>& arguments)
+	void Context::push_arguments(const std::vector<ExpressionHandle>& arguments)
 	{
 		_arguments.emplace(arguments);
 	}
 
-	std::vector<Expression*> Context::pop_arguments()
+	std::vector<ExpressionHandle> Context::pop_arguments()
 	{
 		const auto arguments = _arguments.top();
 		_arguments.pop();

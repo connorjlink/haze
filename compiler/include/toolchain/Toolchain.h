@@ -39,7 +39,7 @@ namespace hz
 		void panic();
 
 	public:
-		virtual ToolchainKind ttype() const = 0;
+		virtual ToolchainKind tag_type() const = 0;
 		virtual std::vector<Linkable> run(const std::string&) = 0;
 
 	public:

@@ -14,17 +14,17 @@ namespace hz
 		return ExpressionType::INTEGER_LITERAL;
 	}
 
-	TypeKind IntegerLiteralExpression::ttype() const
+	TypeKind IntegerLiteralExpression::tag_type() const
 	{
 		return TypeKind::INT;
 	}
 
-	void IntegerLiteralExpression::generate(Allocation* allocation)
+	void IntegerLiteralExpression::generate(ValueHandle allocation)
 	{
 		REQUIRE_SAFE(Generator)->make_immediate(allocation->read(), value);
 	}
 
-	Expression* IntegerLiteralExpression::optimize()
+	ExpressionHandle IntegerLiteralExpression::optimize()
 	{
 		return nullptr;
 	}

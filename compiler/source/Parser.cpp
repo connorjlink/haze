@@ -146,7 +146,7 @@ namespace hz
 	{
 		consume(TokenKind::DOTDEFINE);
 
-		Type* type = nullptr;
+		TypeHandle type = nullptr;
 
 		if (ptype() == ParserType::COMPILER)
 		{
@@ -187,10 +187,14 @@ namespace hz
 		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
 	}
 
-	IdentifierExpression* Parser::parse_identifier_expression(IdentifierType itype)
+	ExpressionReference<IdentifierExpression> Parser::parse_identifier_expression()
 	{
 		const auto name_token = consume(TokenKind::IDENTIFIER);
-		return new IdentifierExpression{ name_token.text, name_token, itype };
+
+		const auto kind = USE_SAFE(SymbolDatabase)->query_symbol_type(name_token.text, name_token);
+
+
+		return MAKE_IDENTIFIER_EXPRESSION(name_token.text, name_token);
 	}
 
 	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
@@ -251,7 +255,7 @@ namespace hz
 		return new FunctionCallExpression{ name_token.text, arguments, name_token };
 	}
 
-	Expression* Parser::parse_parenthesis_expression()
+	ExpressionHandle Parser::parse_parenthesis_expression()
 	{
 		consume(TokenKind::LPAREN);
 		const auto expression = parse_expression();
@@ -301,7 +305,7 @@ namespace hz
 	}
 
 
-	Expression* Parser::parse_generic_expression()
+	ExpressionHandle Parser::parse_generic_expression()
 	{
 		using enum TokenKind;
 		switch (peek().type)
@@ -350,7 +354,7 @@ namespace hz
 		}
 	}
 
-	Expression* Parser::parse_expression_optimized()
+	ExpressionHandle Parser::parse_expression_optimized()
 	{
 		auto expression = parse_expression();
 
@@ -362,7 +366,7 @@ namespace hz
 		return expression;
 	}
 
-	Expression* Parser::parse_expression()
+	ExpressionHandle Parser::parse_expression()
 	{
 		// parse until the minimum precedence level is reached (so parse everything possible basically)
 		const auto infix_expression = parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
@@ -375,7 +379,7 @@ namespace hz
 		return nullptr;
 	}
 
-	Expression* Parser::parse_infix_expression(Expression* left, Precedence minimum_precedence)
+	ExpressionHandle Parser::parse_infix_expression(ExpressionHandle left, Precedence minimum_precedence)
 	{
 		static const std::unordered_map<TokenKind, Precedence> precedences
 		{

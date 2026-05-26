@@ -13,7 +13,7 @@ namespace hz
 		return StatementKind::EXPRESSION;
 	}
 
-	void ExpressionStatement::generate(Allocation*)
+	void ExpressionStatement::generate(ValueHandle)
 	{
 		AutoStackAllocation temp{};
 		expression->generate(temp.source());

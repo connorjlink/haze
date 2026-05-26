@@ -49,10 +49,10 @@ namespace hz
 		std::vector<MemberDeclarationExpression*> parse_member_declaration_statements(const std::string&);
 
 	public:
-		std::vector<Expression*> parse_arguments(bool);
+		std::vector<ExpressionHandle> parse_arguments(bool);
 
 	public:
-		Type* parse_type();
+		TypeHandle parse_type();
 
 	public:
 		TypeQualifier parse_type_qualifier(bool = false);

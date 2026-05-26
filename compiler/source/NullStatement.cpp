@@ -12,7 +12,7 @@ namespace hz
 		return StatementKind::NUL;
 	}
 
-	void NullStatement::generate(Allocation*)
+	void NullStatement::generate(ValueHandle)
 	{
 		// No code generated for a no-op
 	}

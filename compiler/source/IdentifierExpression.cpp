@@ -17,7 +17,7 @@ namespace hz
 		return ExpressionType::IDENTIFIER;
 	}
 
-	TypeKind IdentifierExpression::ttype() const
+	TypeKind IdentifierExpression::tag_type() const
 	{
 		const auto type = USE_SAFE(SymbolDatabase)->query_symbol_type(name, _token);
 		switch (type)
@@ -25,22 +25,22 @@ namespace hz
 			case SymbolKind::FUNCTION:
 			{
 				const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name, _token);
-				return function_symbol->return_type->ttype();
+				return function_symbol->return_type->tag_type();
 			} break;
 			case SymbolKind::ARGUMENT:
 			{
 				const auto argument_symbol = USE_SAFE(SymbolDatabase)->reference_argument(name, _token);
-				return argument_symbol->type->ttype();
+				return argument_symbol->type->tag_type();
 			} break;
 			case SymbolKind::VARIABLE:
 			{
 				const auto variable_symbol = USE_SAFE(SymbolDatabase)->reference_variable(name, _token);
-				return variable_symbol->type->ttype();
+				return variable_symbol->type->tag_type();
 			} break;
 			case SymbolKind::DEFINE:
 			{
 				const auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(name, _token);
-				return define_symbol->type->ttype();
+				return define_symbol->type->tag_type();
 			} break;
 			case SymbolKind::STRUCT:
 			{
@@ -53,7 +53,7 @@ namespace hz
 		return TypeKind::VOID;
 	}
 
-	void IdentifierExpression::generate(Allocation* allocation)
+	void IdentifierExpression::generate(ValueHandle allocation)
 	{
 		// NOTE: old method
 		/*const auto type = _parser->query_symbol_type(name, _token);
@@ -82,7 +82,7 @@ namespace hz
 		REQUIRE_SAFE(Allocator)->read_local(allocation->read(), name);
 	}
 
-	Expression* IdentifierExpression::optimize()
+	ExpressionHandle IdentifierExpression::optimize()
 	{
 		const auto symbol = USE_SAFE(SymbolDatabase)->try_reference_symbol(SymbolKind::DEFINE, name, _token);
 		if (symbol)

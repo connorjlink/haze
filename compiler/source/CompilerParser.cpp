@@ -304,9 +304,9 @@ namespace hz
 	}
 
 	// is_definition controls whether we are a function definition or call
-	std::vector<Expression*> CompilerParser::parse_arguments(bool is_definition)
+	std::vector<ExpressionHandle> CompilerParser::parse_arguments(bool is_definition)
 	{
-		std::vector<Expression*> arguments;
+		std::vector<ExpressionHandle> arguments;
 
 		while (peek().type != TokenKind::RPAREN)
 		{
@@ -438,7 +438,7 @@ namespace hz
 		return storage;
 	}
 
-	Type* CompilerParser::parse_type()
+	TypeHandle CompilerParser::parse_type()
 	{
 		// default is `const` but can be overriden
 		const auto qualifier = parse_type_qualifier();

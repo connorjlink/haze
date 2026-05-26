@@ -12,7 +12,7 @@ namespace hz
 		return CommandType::LABEL;
 	}
 
-	void LabelCommand::generate(Allocation*)
+	void LabelCommand::generate(ValueHandle)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported compiler command type `label`", _token);
 	}

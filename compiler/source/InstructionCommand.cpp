@@ -17,7 +17,7 @@ namespace hz
 		return CommandType::INSTRUCTION;
 	}
 
-	void InstructionCommand::generate(Allocation*)
+	void InstructionCommand::generate(ValueHandle)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported generation command type `instruction`", _token);
 	}

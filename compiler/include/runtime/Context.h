@@ -22,7 +22,7 @@ namespace hz
 
 #pragma message("TODO: refactor the context to not maintain a state--should work on pure functions only!")
 		std::stack<Variable*> returns;
-		std::stack<std::vector<Expression*>> arguments;
+		std::stack<std::vector<ExpressionHandle>> arguments;
 
 	private:
 		bool executing = true;
@@ -46,8 +46,8 @@ namespace hz
 		Variable* pop_return();
 
 	public:
-		void push_arguments(const std::vector<Expression*>&);
-		std::vector<Expression*> pop_arguments();
+		void push_arguments(const std::vector<ExpressionHandle>&);
+		std::vector<ExpressionHandle> pop_arguments();
 
 	public:
 		void print(const std::string& message);

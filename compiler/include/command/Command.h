@@ -43,7 +43,7 @@ namespace hz
 		template<typename Self>
 		CommandKind command_kind(this Self&& self)
 		{
-			switch (self.ttype())
+			switch (self.tag_type())
 			{
 #define X(enumerator, type, name) case TypeIndexV<type, typename CommandSumStorage::Type>: return CommandKind::enumerator;
 #include <command/defs/CommandKind.x>
@@ -51,7 +51,7 @@ namespace hz
 			}
 
 			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"invalid command tag `{}`", self.ttype()), self.token);
+				"invalid command tag `{}`", self.tag_type()), self.token);
 
 			return CommandKind::LABEL;
 		}

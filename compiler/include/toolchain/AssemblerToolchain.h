@@ -14,7 +14,7 @@ namespace hz
 		using Toolchain::Toolchain;
 
 	public:
-		virtual ToolchainKind ttype() const final override;
+		virtual ToolchainKind tag_type() const final override;
 		virtual std::vector<Linkable> run(const std::string&) final override;
 	};
 }

@@ -17,7 +17,7 @@ namespace hz
 		return StatementKind::FOR;
 	}
 
-	void ForStatement::generate(Allocation*)
+	void ForStatement::generate(ValueHandle)
 	{
 		// 3 digits of randomness for now
 		const auto uuid = hz::generate(3);

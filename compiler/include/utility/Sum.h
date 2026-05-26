@@ -351,7 +351,7 @@ namespace hz
 		using Storage = typename SumFacadeT::Storage;
 
 		template<typename Self>
-		constexpr TagType ttype(this Self&& self)
+		constexpr TagType tag_type(this Self&& self)
 		{
 			using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
 			return TypeIndexV<This, typename SumFacadeT::Type>;

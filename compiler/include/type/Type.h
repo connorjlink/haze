@@ -89,7 +89,7 @@ namespace hz
 	TypePrecedence precedence(const TypeBase& type)
 	{
 		using enum TypeKind;
-		switch (type.ttype())
+		switch (type.tag_type())
 		{
 			case VOID:            return TypePrecedence::LEAF;
 			case INT:             return TypePrecedence::LEAF;

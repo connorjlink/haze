@@ -17,13 +17,13 @@ namespace hz
 		return ExpressionType::FUNCTION_CALL;
 	}
 
-	TypeKind FunctionCallExpression::ttype() const
+	TypeKind FunctionCallExpression::tag_type() const
 	{
 		const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name, _token);
-		return function_symbol->return_type->ttype();
+		return function_symbol->return_type->tag_type();
 	}
 
-	void FunctionCallExpression::generate(Allocation* allocation)
+	void FunctionCallExpression::generate(ValueHandle allocation)
 	{
 		auto symbol = USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, _token, true);
 		auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
@@ -38,14 +38,14 @@ namespace hz
 			return;
 		}
 
-		std::vector<Expression*> argument_expressions{};
+		std::vector<ExpressionHandle> argument_expressions{};
 
 		for (auto i = 0; i < arguments.size(); i++)
 		{
 			auto corresponding_argument = function_symbol->arguments[i];
 			auto argument_expression = AS_ARGUMENT_EXPRESSION(corresponding_argument);
 
-			Type* type = nullptr;
+			TypeHandle type = nullptr;
 
 			if (check_type(arguments[i], argument_expression->type) == true)
 			{
@@ -60,9 +60,9 @@ namespace hz
 		REQUIRE_SAFE(Generator)->call_function(name, argument_expressions, allocation);
 	}
 
-	Expression* FunctionCallExpression::optimize()
+	ExpressionHandle FunctionCallExpression::optimize()
 	{
-		std::vector<Expression*> optimized_arguments{};
+		std::vector<ExpressionHandle> optimized_arguments{};
 		for (auto& argument : arguments)
 		{
 			const auto try_optimized = argument->optimize();
@@ -100,7 +100,7 @@ namespace hz
 
 	Node* FunctionCallExpression::evaluate(Context* context) const
 	{
-		std::vector<Expression*> arguments_evaluated{};
+		std::vector<ExpressionHandle> arguments_evaluated{};
 
 		for (auto& argument : arguments)
 		{

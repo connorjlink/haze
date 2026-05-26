@@ -13,7 +13,7 @@ import std;
 
 namespace hz
 {
-	ToolchainKind CompilerToolchain::ttype() const
+	ToolchainKind CompilerToolchain::tag_type() const
 	{
 		return ToolchainKind::COMPILER;
 	}

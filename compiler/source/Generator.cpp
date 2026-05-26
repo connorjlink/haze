@@ -215,7 +215,7 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::call_function(const std::string& function, const std::vector<Expression*>& arguments, Allocation* allocation)
+	void Generator::call_function(const std::string& function, const std::vector<ExpressionHandle>& arguments, ValueHandle allocation)
 	{
 		for (auto expression : arguments)
 		{

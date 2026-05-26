@@ -21,18 +21,42 @@ import std;
 #include <toolchain/Linker.h>
 #include <toolchain/defs/ToolchainKind.h>
 #include <utility/ExitProgramException.h>
-#include <validator/X86BuilderValidator.h>
-#include <validator/TypeValidator.h>
 #include <builder/PEBuilder.h>
 #include <builder/BMBuilder.h>
 
 // Haze Main.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-using namespace hz;
-
-int main(int argc, char** argv)
+namespace
 {
+	using namespace hz;
+
+	Task<std::unordered_map<std::string, std::string>> load_files_async(CommandLineParser& command_line_parser)
+	{
+		std::unordered_map<std::string, std::string> result{};
+
+		for (auto& filepath : command_line_parser.files())
+		{
+			if (USE_UNSAFE(FileManager)->has_file(filepath))
+			{
+				USE_UNSAFE(ErrorReporter)->post_warning(std::format(
+					"file `{}` was already read", filepath), NULL_TOKEN);
+			}
+
+			USE_UNSAFE(FileManager)->open_file(filepath);
+
+			const auto& file = USE_UNSAFE(FileManager)->get_file(filepath);
+			result[filepath] = file.get_processed_contents();
+		}
+
+		co_return result;
+	}
+}
+
+hz::Task<int> main_shim(int argc, char** argv)
+{
+	using namespace hz;
+
 	WebSocketServer server{ [](SOCKET client)
 	{
 		std::cerr << std::format("New client connected: {}", client);
@@ -63,25 +87,8 @@ int main(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 
 	// offload the loading process now to a background thread, await after initializing the rest of the components
-	auto loader = Task<std::unordered_map<std::string, File>>{ [&]
-	{	
-		for (auto& filepath : command_line_parser.files())
-		{
-			if (USE_UNSAFE(FileManager)->has_file(filepath))
-			{
-				USE_UNSAFE(ErrorReporter)->post_warning(std::format(
-					"file `{}` was already read"))
-			}
+	auto loader = ::load_files_async(command_line_parser);
 
-			USE_UNSAFE(FileManager)->open_file(filepath);
-
-			const auto& file = USE_UNSAFE(FileManager).get_file(filepath);
-			result[filepath] = file.content();
-		}
-
-		co_return result;
-	} };
-	
 	// register all other global (thread-shared) singletons
 	SingletonContainer::instance().register_singleton<Context>();
 	SingletonContainer::instance().register_singleton<SymbolExporter>(std::cout);
@@ -91,11 +98,11 @@ int main(int argc, char** argv)
 	// enumerate system threads
 	auto thread_count = static_cast<std::size_t>(std::thread::hardware_concurrency());
 	// NOTE: hardware concurrency can return 0, default to 4 then
-	thread_count = thread_count == 0 ? 4 : thread_count; 
+	thread_count = thread_count == 0 ? 4 : thread_count;
 	// no need to spawn more threads than there are files
 	thread_count = std::min(thread_count, command_line_parser.files().size());
 
-	
+
 	// create the threadpool and pin work items 
 	using ThreadWork = std::vector<std::string>;
 	std::vector<ThreadWork> thread_work{};
@@ -117,8 +124,6 @@ int main(int argc, char** argv)
 	// run once per thread
 	auto thread_initialization = [&]
 	{
-		const auto& file = USE_UNSAFE(FileManager)->get_file(filepath);
-
 		ServiceContainer::instance().register_factory<JobManager>([]
 		{
 			return std::make_shared<JobManager>();
@@ -138,7 +143,8 @@ int main(int argc, char** argv)
 		{
 			return std::make_shared<Allocator>();
 		});
-		switch (file.ttype())
+
+		switch (file.tag_type())
 		{
 			case ToolchainKind::ASSEMBLER:
 			{
@@ -175,22 +181,22 @@ int main(int argc, char** argv)
 		{
 			REQUIRE_UNSAFE(Toolchain)->run(filepath);
 		}
-		catch (ExitProgramException e)
+		catch (const ExitProgramException& exception)
 		{
-			USE_UNSAFE(ErrorReporter)->post_information(e.what(), NULL_TOKEN);
+			USE_UNSAFE(ErrorReporter)->post_information(exception.what(), NULL_TOKEN);
 			// graceful shutdown for this reason
 			REQUIRE_UNSAFE(Toolchain)->shut_down(false);
 		}
-		catch (std::exception e)
+		catch (const std::exception& exception)
 		{
-			USE_UNSAFE(ErrorReporter)->post_uncorrectable(e.what(), NULL_TOKEN);
+			USE_UNSAFE(ErrorReporter)->post_uncorrectable(exception.what(), NULL_TOKEN);
+			// uh oh!
 			REQUIRE_UNSAFE(Toolchain)->panic();
 		}
 	};
 
 	// quiesce on file manager
 	co_await loader;
-	
 
 
 	// launch the thread pool
@@ -198,14 +204,14 @@ int main(int argc, char** argv)
 	for (auto& work : thread_work)
 	{
 		threads.emplace_back([&, work = std::move(work)]
-		{
-			thread_initialization();
-
-			for (auto& filepath : work)
 			{
-				thread_translation(filepath);
-			}
-		});
+				thread_initialization();
+
+				for (auto& filepath : work)
+				{
+					thread_translation(filepath);
+				}
+			});
 	}
 
 	// block wait until all threads are complete to start linking
@@ -215,7 +221,7 @@ int main(int argc, char** argv)
 		{
 			thread.join();
 		}
-	}	
+	}
 
 #pragma message("TODO: figure out how to reload the linker with the new linkables from the symbol database")
 	USE_UNSAFE(Linker)->reload();
@@ -296,8 +302,13 @@ int main(int argc, char** argv)
 
 	USE_UNSAFE(ErrorReporter)->post_information(std::format(
 		"wrote fresh executable for `{}`", output_filepath), NULL_TOKEN);
-	
+
 	REQUIRE_UNSAFE(JobManager)->end_job(finalize_task);
-	
-	return 0;
+
+	co_return 0;
+}
+
+int main(int argc, char** argv)
+{
+	return main_shim(argc, argv).get();
 }

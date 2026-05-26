@@ -31,7 +31,7 @@ namespace hz
 		return StatementKind::STRUCT;
 	}
 
-	void StructDeclarationStatement::generate(Allocation*)
+	void StructDeclarationStatement::generate(ValueHandle)
 	{
 		// No direct code generation for a struct declaration
 	}

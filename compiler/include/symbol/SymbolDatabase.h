@@ -28,12 +28,12 @@ namespace hz
 		, public InjectSingleton<ErrorReporter, SymbolExporter>
 	{
 	private:
-		std::unordered_map<std::string, Symbol*> _table;
+		std::unordered_map<std::string, Symbol*> table;
 
 	public:
 		Symbol* add_symbol(SymbolKind, const std::string&, const Token&);
-		FunctionSymbol* add_function(const std::string&, const Token&, Type*, const std::vector<ArgumentExpression*>& arguments);
-		ArgumentSymbol* add_argument(const std::string&, const Token&, Type*);
+		FunctionSymbol* add_function(const std::string&, const Token&, TypeHandle, const std::vector<ArgumentExpression*>& arguments);
+		ArgumentSymbol* add_argument(const std::string&, const Token&, TypeHandle);
 		VariableSymbol* add_variable(const std::string&, const Token&);
 		DefineSymbol* add_define(const std::string&, const Token&);
 		LabelSymbol* add_label(const std::string&, const Token&);
@@ -57,7 +57,7 @@ namespace hz
 
 	public:
 		bool has_symbol(const std::string&);
-		bool is_mapped_identifier(Expression*);
+		bool is_mapped_identifier(ExpressionHandle);
 
 	public:
 		SymbolDatabase();

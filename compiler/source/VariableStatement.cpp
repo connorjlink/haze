@@ -14,7 +14,7 @@ namespace hz
 		return StatementKind::VARIABLE;
 	}
 
-	void VariableStatement::generate(Allocation*)
+	void VariableStatement::generate(ValueHandle)
 	{
 		if (value)
 		{
@@ -50,7 +50,7 @@ namespace hz
 			Variable* variable = nullptr;
 
 			using enum TypeKind;
-			switch (type->ttype())
+			switch (type->tag_type())
 			{
 				case INT:
 				{
@@ -88,13 +88,13 @@ namespace hz
 
 				case STRING:
 				{
-					USE_SAFE(ErrorReporter)->post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					USE_SAFE(ErrorReporter)->post_warning(std::format("generated `{}` initializer value `\"\"` for `{}`", _type_type_map.at(type->tag_type()), name), _token);
 					variable = new StringVariable{ "" };
 				} break;
 
 				case VOID: 
 				{
-					USE_SAFE(ErrorReporter)->post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->ttype()), name), _token);
+					USE_SAFE(ErrorReporter)->post_error(std::format("invalid variable type `{}` for `{}`", _type_type_map.at(type->tag_type()), name), _token);
 					return nullptr;
 				} break;
 			}

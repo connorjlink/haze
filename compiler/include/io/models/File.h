@@ -3,7 +3,7 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <toolchain/ToolchainKind.h>
+#include <toolchain/defs/ToolchainKind.h>
 
 // Haze File.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -23,9 +23,9 @@ namespace hz
 
 	public:
 		std::string get_raw_contents(void);
-		std::string get_processed_contents(void);
+		std::string get_processed_contents(void) const;
 		// only one toolchain can claim proprietership of a file for now
-		ToolchainKind ttype(void) const;
+		ToolchainKind tag_type(void) const;
 
 	public:
 		void compute_type(void);

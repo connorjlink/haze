@@ -22,7 +22,7 @@ namespace hz
 		return NodeType::FUNCTION;
 	}
 
-	void Function::generate(Allocation*)
+	void Function::generate(ValueHandle)
 	{
 		REQUIRE_SAFE(Generator)->begin_function(name);
 

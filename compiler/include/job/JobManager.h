@@ -13,7 +13,7 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::vector<Job> _jobs;
+		std::vector<Job> jobs;
 
 	public:
 		std::uint32_t begin_job(const std::string&);
@@ -24,7 +24,7 @@ namespace hz
 
 	public:
 		JobManager()
-			: _jobs{}
+			: jobs{}
 		{
 		}
 	};

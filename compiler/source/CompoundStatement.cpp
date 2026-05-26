@@ -13,7 +13,7 @@ namespace hz
 		return StatementKind::COMPOUND;
 	}
 
-	void CompoundStatement::generate(Allocation*)
+	void CompoundStatement::generate(ValueHandle)
 	{
 		//_generator->begin_scope();
 

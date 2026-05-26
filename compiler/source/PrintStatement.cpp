@@ -15,7 +15,7 @@ namespace hz
 		return StatementKind::PRINT;
 	}
 
-	void PrintStatement::generate(Allocation*)
+	void PrintStatement::generate(ValueHandle)
 	{
 		AutoStackAllocation temp{};
 		message->generate(temp.source());

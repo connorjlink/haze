@@ -16,7 +16,7 @@ namespace hz
 		return StatementKind::EXIT;
 	}
 
-	void ExitStatement::generate(Allocation*)
+	void ExitStatement::generate(ValueHandle)
 	{
 		AutoStackAllocation temp{};
 		code->generate(temp.source());

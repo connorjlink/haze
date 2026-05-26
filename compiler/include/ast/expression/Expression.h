@@ -2,9 +2,10 @@
 #define HAZE_EXPRESSION_AST_H
 
 #include <ast/AST.h>
+#include <ast/expression/defs/ExpressionKind.h>
 #include <runtime/Context.h>
-#include <type/Type.h>
 #include <toolchain/Generator.h>
+#include <type/Type.h>
 
 // Haze Expression.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -36,15 +37,18 @@ namespace hz
 		template<typename Self>
 		ExpressionKind expression_kind(this Self&& self)
 		{
-			switch (self.ttype())
+			switch (self.tag_type())
 			{
-
+#define X(enumerator, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
+#include <ast/expression/defs/ExpressionKind.x>
+#undef X
 			}
 
 			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"invalid expression tag `{}`", self.ttype()), self.token);
+				"invalid expression tag `{}`", self.tag_type()), self.token);
 
-			return ExpressionKind::;
+			// error recovery does not care about expression kind
+			return ExpressionKind::INTEGER_LITERAL;
 		}
 	};
 }

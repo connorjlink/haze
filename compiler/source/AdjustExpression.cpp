@@ -16,12 +16,12 @@ namespace hz
 		return ExpressionType::ADJUST;
 	}
 
-	TypeKind AdjustExpression::ttype() const
+	TypeKind AdjustExpression::tag_type() const
 	{
 		return TypeKind::INT;
 	}
 
-	void AdjustExpression::generate(Allocation* allocation)
+	void AdjustExpression::generate(ValueHandle allocation)
 	{
 		target->generate(allocation);
 
@@ -36,7 +36,7 @@ namespace hz
 		}
 	}
 
-	Expression* AdjustExpression::optimize()
+	ExpressionHandle AdjustExpression::optimize()
 	{
 		// No optimizations possible for an adjustment expression
 		return nullptr;

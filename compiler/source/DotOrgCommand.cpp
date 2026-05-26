@@ -12,7 +12,7 @@ namespace hz
 		return CommandType::DOTORG;
 	}
 
-	void DotOrgCommand::generate(Allocation*)
+	void DotOrgCommand::generate(ValueHandle)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported compiler command type `.org`", _token);
 	}

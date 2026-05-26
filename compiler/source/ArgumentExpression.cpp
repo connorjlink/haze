@@ -13,17 +13,17 @@ namespace hz
 		return ExpressionType::ARGUMENT;
 	}
 
-	TypeKind ArgumentExpression::ttype() const
+	TypeKind ArgumentExpression::tag_type() const
 	{
-		return type->ttype();
+		return type->tag_type();
 	}
 
-	void ArgumentExpression::generate(Allocation*)
+	void ArgumentExpression::generate(ValueHandle)
 	{
 		USE_SAFE(ErrorReporter)->post_error("unsupported compiler expression type `argument`", _token);
 	}
 
-	Expression* ArgumentExpression::optimize()
+	ExpressionHandle ArgumentExpression::optimize()
 	{
 		// no optimizations possible for an argument expression
 		return nullptr;

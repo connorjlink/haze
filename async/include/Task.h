@@ -18,8 +18,8 @@ namespace hz
 	class Task
 	{
 	public:
-		struct PromiseType;
-		using HandleType = std::coroutine_handle<PromiseType>;
+		struct promise_type;
+		using HandleType = std::coroutine_handle<promise_type>;
 
 	private:
 		HandleType coroutine;
@@ -100,7 +100,7 @@ namespace hz
 	};
 
 	template<typename T>
-	struct Task<T>::PromiseType
+	struct Task<T>::promise_type
 	{
 		T value;
 		std::exception_ptr exception;
@@ -141,12 +141,7 @@ namespace hz
 
 		void return_value(T value) 
 		{
-			value = std::move(value);
-
-			if (continuation)
-			{
-				continuation.resume();
-			}
+			this->value = std::move(value);
 		}
 
 		void unhandled_exception()
@@ -156,7 +151,7 @@ namespace hz
 	};
 
 	template<>
-	struct Task<void>::PromiseType
+	struct Task<void>::promise_type
 	{
 		std::exception_ptr exception;
 		std::coroutine_handle<> continuation;

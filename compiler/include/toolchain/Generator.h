@@ -126,7 +126,7 @@ namespace hz
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function
-		void call_function(const std::string&, const std::vector<Expression*>&, Allocation*);
+		void call_function(const std::string&, const std::vector<ExpressionHandle>&, ValueHandle);
 		// return from a call to a `nvr` function
 		void make_return(const std::string&);
 		// return from a call to a `nvr` function
