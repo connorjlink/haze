@@ -172,7 +172,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\InstructionTest.cpp" />
+    <ClCompile Include="source\TypeTest.cpp" />
+    <ClCompile Include="source\X86BuilderTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

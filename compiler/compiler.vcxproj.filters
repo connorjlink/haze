@@ -198,9 +198,6 @@
     <ClCompile Include="source\StructDeclarationStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Symbol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\SymbolDatabase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,9 +214,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\UndoableRedoable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\VariableStatement.cpp">
@@ -246,20 +240,8 @@
     <ClCompile Include="source\BMBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\TypeValidator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\X86BuilderValidator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\validator\models\Test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\validator\Validator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\utility\Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -504,12 +486,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\x86\defs\X86Register.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\validator\TypeValidator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\validator\X86BuilderValidator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Lazy.h">
