@@ -16,7 +16,7 @@ namespace hz
 		Method<&AnchorT::format, decltype(&AnchorT::format)>,
 		Method<&AnchorT::generate, decltype(&AnchorT::generate)>,
 		Method<&AnchorT::evaluate, decltype(&AnchorT::evaluate)>,
-		Method<&AnchorT::optimize, decltype(&AnchorT::optimize)>,
+		Method<&AnchorT::optimize, decltype(&AnchorT::optimize)>
 	>;
 
 	// further constrain pure AST types like expression and statements for type checking purposes

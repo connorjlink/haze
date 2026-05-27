@@ -601,7 +601,6 @@
     <None Include="include\allocator\defs\ValueKind.x" />
     <None Include="include\ast\declaration\defs\DeclarationKind.x" />
     <None Include="include\ast\expression\defs\BinaryExpressionKind.x" />
-    <None Include="include\ast\expression\defs\ExpressionKind.x" />
     <None Include="include\ast\expression\defs\PostfixExpressionKind.x" />
     <None Include="include\ast\expression\defs\PrimaryExpressionKind.x" />
     <None Include="include\ast\expression\defs\UnaryExpressionKind.x" />

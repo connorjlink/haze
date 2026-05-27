@@ -1,7 +1,7 @@
 #ifndef HAZE_ARRAYTYPE_H
 #define HAZE_ARRAYTYPE_H
 
-#include <type/TypeKind.h>
+#include <type/defs/TypeKind.h>
 
 // Haze ArrayType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -32,7 +32,9 @@ namespace hz
 
 		std::string string() const
 		{
-			const auto length_string = length.has_value() ? std::to_string(length.value()) : "";
+			const auto length_string = length.has_value() 
+				? std::to_string(length.value()) 
+				: "";
 
 			return std::format("{}[{}]",
 				element_type.get().string(),

@@ -1,7 +1,7 @@
 #ifndef HAZE_POINTERTYPE_H
 #define HAZE_POINTERTYPE_H
 
-#include <type/TypeKind.h>
+#include <type/defs/TypeKind.h>
 
 // Haze PointerType.h
 // (c) Connor J. Link. All Rights Reserved.

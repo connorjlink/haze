@@ -1,6 +1,7 @@
 #ifndef HAZE_CONTEXT_H
 #define HAZE_CONTEXT_H
 
+#include <ast/AST.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 
@@ -11,6 +12,7 @@ namespace hz
 {	
 	class Function;
 	class Expression;
+	class Variable;
 
 	class Context
 		: public SingletonTag<Context>
@@ -22,7 +24,7 @@ namespace hz
 
 #pragma message("TODO: refactor the context to not maintain a state--should work on pure functions only!")
 		std::stack<Variable*> returns;
-		std::stack<std::vector<ExpressionHandle>> arguments;
+		std::stack<std::vector<Expression*>> arguments;
 
 	private:
 		bool executing = true;
@@ -46,8 +48,8 @@ namespace hz
 		Variable* pop_return();
 
 	public:
-		void push_arguments(const std::vector<ExpressionHandle>&);
-		std::vector<ExpressionHandle> pop_arguments();
+		void push_arguments(const std::vector<Expression*>&);
+		std::vector<Expression*> pop_arguments();
 
 	public:
 		void print(const std::string& message);

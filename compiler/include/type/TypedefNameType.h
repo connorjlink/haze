@@ -1,7 +1,7 @@
 #ifndef HAZE_TYPEDEFNAMETYPE_H
 #define HAZE_TYPEDEFNAMETYPE_H
 
-#include <type/TypeKind.h>
+#include <type/defs/TypeKind.h>
 
 // Haze TypedefName.h
 // (c) Connor J. Link. All Rights Reserved.

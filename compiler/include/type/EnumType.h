@@ -1,9 +1,9 @@
 #ifndef HAZE_ENUMTYPE_H
 #define HAZE_ENUMTYPE_H
 
-#include <type/StorageClass.h>
-#include <type/TypeQualifier.h>
-#include <type/TypeKind.h>
+#include <type/defs/StorageClass.h>
+#include <type/defs/TypeQualifier.h>
+#include <type/defs/TypeKind.h>
 #include <utility/Constants.h>
 
 // Haze EnumType.h

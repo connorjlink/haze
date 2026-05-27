@@ -91,7 +91,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ MAKE_HANDLE(ast, expression), token }
+#define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ make_handle(ast, expression), token }
 
 	class ReturnStatement : public StatementBase
 	{
@@ -114,7 +114,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_RETURN_STATEMENT(enclosing_function, expression, value, token) ReturnStatement{ enclosing_function, MAKE_HANDLE(ast, expression), value, token }
+#define MAKE_RETURN_STATEMENT(enclosing_function, expression, value, token) ReturnStatement{ enclosing_function, make_handle(ast, expression), value, token }
 
 	class IfStatement : public StatementBase
 	{
@@ -137,7 +137,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_IF_STATEMENT(condition, if_body, else_body, token) IfStatement{ MAKE_HANDLE(ast, condition), if_body, else_body, token }
+#define MAKE_IF_STATEMENT(condition, if_body, else_body, token) IfStatement{ make_handle(ast, condition), if_body, else_body, token }
 
 	class WhileStatement : public StatementBase
 	{
@@ -159,7 +159,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_WHILE_STATEMENT(condition, body, token) WhileStatement{ MAKE_HANDLE(ast, condition), body, token }
+#define MAKE_WHILE_STATEMENT(condition, body, token) WhileStatement{ make_handle(ast, condition), body, token }
 
 	class DoStatement : public StatementBase
 	{
@@ -181,7 +181,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_DO_STATEMENT(condition, body, token) DoStatement{ MAKE_HANDLE(ast, condition), body, token }
+#define MAKE_DO_STATEMENT(condition, body, token) DoStatement{ make_handle(ast, condition), body, token }
 
 	class ForStatement : public StatementBase
 	{
@@ -205,7 +205,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_FOR_STATEMENT(initialization, condition, induction, body, token) ForStatement{ initialization, MAKE_HANDLE(ast, condition), MAKE_HANDLE(ast, induction), body, token }
+#define MAKE_FOR_STATEMENT(initialization, condition, induction, body, token) ForStatement{ initialization, make_handle(ast, condition), make_handle(ast, induction), body, token }
 
 	class GotoStatement : public StatementBase
 	{
@@ -292,7 +292,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
-#define MAKE_SWITCH_STATEMENT(condition, cases, fallback, token) SwitchStatement{ MAKE_HANDLE(ast, condition), cases, fallback, token }
+#define MAKE_SWITCH_STATEMENT(condition, cases, fallback, token) SwitchStatement{ make_handle(ast, condition), cases, fallback, token }
 
 	class CompoundStatement : public StatementBase
 	{

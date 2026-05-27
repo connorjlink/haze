@@ -1,10 +1,20 @@
 #include <cstddef>
+#include <cstdlib>
 
 #include <vector>
 #include <string>
 #include <string_view>
 #include <format>
 #include <unordered_map>
+#include <functional>
+#include <mutex>
+#include <optional>
+#include <iostream>
+#include <stack>
+#include <queue>
+#include <condition_variable>
+#include <syncstream>
+#include <filesystem>
 
 #include <type/Type.h>
 #include <type/IntType.h>

@@ -1,6 +1,7 @@
 #ifndef HAZE_SYMBOL_DATABASE_H
 #define HAZE_SYMBOL_DATABASE_H
 
+#include <ast/expression/Expression.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolExporter.h>
