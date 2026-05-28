@@ -11,13 +11,13 @@ X(SUBTRACT, LEFT, 4, SubtractExpression, subtract)
 X(LEFT_SHIFT, LEFT, 5, LeftShiftExpression, left shift)
 X(RIGHT_SHIFT, LEFT, 5, RightShiftExpression, right shift)
 
-X(LESS, LEFT, 6, LessExpression, less than)
-X(LESS_EQUAL, LEFT, 6, LessEqualExpression, less than or equal to)
-X(GREATER, LEFT, 6, GreaterExpression, greater than)
-X(GREATER_EQUAL, LEFT, 6, GreaterEqualExpression, greater than or equal to)
+X(LESS, LEFT, 6, LessThanExpression, less than)
+X(LESS_EQUAL, LEFT, 6, LessThanOrEqualToExpression, less than or equal to)
+X(GREATER, LEFT, 6, GreaterThanExpression, greater than)
+X(GREATER_EQUAL, LEFT, 6, GreaterThanOrEqualToExpression, greater than or equal to)
 
-X(EQUAL, LEFT, 7, EqualExpression, equal to)
-X(NOT_EQUAL, LEFT, 7, NotEqualExpression, not equal to)
+X(EQUAL, LEFT, 7, EqualToExpression, equal to)
+X(NOT_EQUAL, LEFT, 7, NotEqualToExpression, not equal to)
 
 X(BITWISE_AND, LEFT, 8, BitwiseAndExpression, bitwise AND)
 

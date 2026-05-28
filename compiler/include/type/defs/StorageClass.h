@@ -33,7 +33,7 @@ namespace hz
 	{
 		switch (token)
 		{
-#define X(enumerator, name, value) case TokenKind::enumerator: return StorageClass::enumerator;
+#define X(enumerator, name) case TokenKind::enumerator: return StorageClass::enumerator;
 #include <type/defs/StorageClass.x>
 #undef X
 		}

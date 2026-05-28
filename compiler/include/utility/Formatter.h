@@ -10,7 +10,7 @@ namespace hz
 	concept Formattable = std::is_scoped_enum_v<T> && requires(const T& t)
 	{
 		{ std::to_underlying(t) } -> std::convertible_to<std::underlying_type_t<T>>;
-		{ to_string(t) } -> std::convertible_to<std::string>;
+		{ to_string(t) } -> std::convertible_to<std::string_view>;
 	};
 
 	template<typename T>

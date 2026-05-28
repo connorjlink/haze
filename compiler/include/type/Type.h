@@ -2,6 +2,7 @@
 #define HAZE_TYPE_H
 
 #include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <type/defs/StorageClass.h>
 #include <type/defs/TypeQualifier.h>
@@ -23,7 +24,18 @@ namespace hz
 	template<typename T>
 	using TypeReference = SumReference<T, TypeSumStorage>;
 
-	using TypeBase = SumMemberBase<TypeSumStorage>;
+	using TypeFacade = SumMemberBase<TypeSumStorage>;
+
+	class TypeBase 
+		: public TypeFacade
+		, public InjectSingleton<ErrorReporter>
+	{
+	public:
+		using Storage = TypeSumStorage;
+
+		template<typename Self>
+		TypeKind type_kind(this Self&&);
+	};
 }
 
 // NOTE: this secondary include block is mandatory to allow the incomplete type facade
@@ -39,10 +51,6 @@ namespace hz
 
 namespace hz
 {
-	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept TypeConcept = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
-
 	// expose a strict polymorphic interface for types
 	template<typename AnchorT>
 	using TypeMethods = std::tuple
@@ -51,6 +59,10 @@ namespace hz
 		Method<&AnchorT::size, Offset()>,
 		Method<&AnchorT::is_complete, bool()>,
 	>;
+
+	// not for public consumption
+	template<typename SumMemberT, typename SumStorageT>
+	concept TypeConcept = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
 
 	using TypeKinds = SumTypeList
 	<
@@ -76,6 +88,24 @@ namespace hz
 	};
 
 
+	template<typename Self>
+	TypeKind TypeBase::type_kind(this Self&& self)
+	{
+		switch (self.tag_type())
+		{
+#define X(enumerator, name) case TypeIndexV<enumerator, typename Storage::Type>: return TypeKind::enumerator;
+#include <type/defs/TypeKind.x>
+#undef X
+		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"invalid type tag `{}`", self.tag_type()), NULL_TOKEN);
+
+		return TypeKind::VOID;
+	}
+
+
+
 	enum class TypePrecedence
 	{
 		LOWEST,
@@ -89,7 +119,7 @@ namespace hz
 	TypePrecedence precedence(const TypeBase& type)
 	{
 		using enum TypeKind;
-		switch (type.tag_type())
+		switch (type.type_kind())
 		{
 			case VOID:            return TypePrecedence::LEAF;
 			case INT:             return TypePrecedence::LEAF;

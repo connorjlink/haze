@@ -1,6 +1,7 @@
 #ifndef HAZE_INTTYPE_H
 #define HAZE_INTTYPE_H
 
+#include <error/CommonErrors.h>
 #include <type/defs/StorageClass.h>
 #include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeSignedness.h>

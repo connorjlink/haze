@@ -66,7 +66,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid primary expression kind `{}`", kind));
+			"invalid primary expression kind `{}`", kind), NULL_TOKEN);
 
 		return Associativity::LEFT;
 	}
@@ -81,7 +81,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid primary expression kind `{}`", kind));
+			"invalid primary expression kind `{}`", kind), NULL_TOKEN);
 
 		return 0;
 	}
@@ -116,7 +116,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid postfix expression kind `{}`", kind));
+			"invalid postfix expression kind `{}`", kind), NULL_TOKEN);
 
 		return Associativity::LEFT;
 	}
@@ -131,7 +131,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid postfix expression kind `{}`", kind));
+			"invalid postfix expression kind `{}`", kind), NULL_TOKEN);
 
 		return 0;
 	}
@@ -166,7 +166,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid unary expression kind `{}`", kind));
+			"invalid unary expression kind `{}`", kind), NULL_TOKEN);
 
 		return Associativity::LEFT;
 	}
@@ -181,7 +181,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid unary expression kind `{}`", kind));
+			"invalid unary expression kind `{}`", kind), NULL_TOKEN);
 
 		return 0;
 	}
@@ -216,7 +216,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid binary expression kind `{}`", kind));
+			"invalid binary expression kind `{}`", kind), NULL_TOKEN);
 
 		return Associativity::LEFT;
 	}
@@ -231,7 +231,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid binary expression kind `{}`", kind));
+			"invalid binary expression kind `{}`", kind), NULL_TOKEN);
 
 		return 0;
 	}

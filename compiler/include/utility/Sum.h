@@ -101,7 +101,7 @@ namespace hz
 	concept SumTupleImpl = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
 
 	template<typename T, typename SumT, typename MethodsT>
-	concept SumTuple = SumTupleImpl < T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{} > ;
+	concept SumTuple = SumTupleImpl<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
 
 
 	// sum type and dispatch family
@@ -109,7 +109,7 @@ namespace hz
 	concept SumElement = SumTuple<T, SumT, MethodsT<SumT, AnchorT>>;
 
 	template<template<typename, typename> typename MethodsT, typename... Ts>
-		requires (sizeof...(Ts) > std::numeric_limits<TagType>::min() && sizeof...(Ts) <= std::numeric_limits<TagType>::max())
+		requires (sizeof...(Ts) > std::numeric_limits<TagType>::min() and sizeof...(Ts) <= std::numeric_limits<TagType>::max())
 	struct Sum
 	{
 	public:
@@ -133,20 +133,30 @@ namespace hz
 	template<typename... Ts>
 	struct SumTypeList
 	{
-		using Type = std::tuple<Ts...>;
+		using FilteredTs = RemoveTypeT<void, Ts...>;
+		using Type = AsTupleT<FilteredTs>;
 		using Anchor = std::tuple_element_t<0, Type>;
 
 		template<typename T>
 		inline static constexpr auto Index = TypeIndexV<T, Type>;
 	};
 
-	template<template<typename, typename> typename MethodsT, typename TypeList>
+	template<template<typename, typename> typename MethodsT, typename TypeListT>
 	struct MakeSum;
 
-	template<template<typename, typename> typename MethodsT, typename... Ts>
-	struct MakeSum<MethodsT, SumTypeList<Ts...>>
+	template<template<typename, typename> typename MethodsT, typename TypeListT>
+	struct MakeSumHelper;
+
+	template<template<typename, typename> typename MethodsT, typename... TypeListT>
+	struct MakeSumHelper<MethodsT, TypeList<TypeListT...>>
 	{
-		using Type = Sum<MethodsT, Ts...>;
+		using Type = Sum<MethodsT, TypeListT...>;
+	};
+
+	template<template<typename, typename> typename MethodsT, typename... TypeListT>
+	struct MakeSum<MethodsT, SumTypeList<TypeListT...>>
+	{
+		using Type = typename MakeSumHelper<MethodsT, typename SumTypeList<TypeListT...>::FilteredTs>::Type;
 	};
 
 	template<typename T>
@@ -348,7 +358,9 @@ namespace hz
 	template<typename SumFacadeT>
 	struct SumMemberBase
 	{
-		using Storage = typename SumFacadeT::Storage;
+		// NOTE: this would be ideal to simplify usage but this cannot work due to circular dependency issues with the incomplete type facade
+		// Instead, each implementation xSumBase class needs to define the common base
+		//using Storage = typename SumFacadeT::Storage;
 
 		template<typename Self>
 		constexpr TagType tag_type(this Self&& self)

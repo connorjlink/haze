@@ -28,6 +28,8 @@ namespace hz
 		, public InjectService<Generator>
 	{
 	public:
+		using Storage = ExpressionSumStorage;
+
 		template<typename Self>
 		bool check_types(this Self&& self, const Storage& ast)
 		{
@@ -35,33 +37,7 @@ namespace hz
 		}
 
 		template<typename Self>
-		ExpressionKind expression_kind(this Self&& self)
-		{
-			switch (self.tag_type())
-			{
-#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-#include <ast/expression/defs/PrimaryExpressionKind.x>
-#undef X
-
-#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-#include <ast/expression/defs/PostfixExpressionKind.x>
-#undef X
-
-#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-#include <ast/expression/defs/UnaryExpressionKind.x>
-#undef X
-
-#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-#include <ast/expression/defs/BinaryExpressionKind.x>
-#undef X
-			}
-
-			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"invalid expression tag `{}`", self.tag_type()), self.token);
-
-			// error recovery does not care about expression kind
-			return ExpressionKind::INTEGER_LITERAL;
-		}
+		ExpressionKind expression_kind(this Self&&);
 	};
 }
 
@@ -208,6 +184,8 @@ namespace hz
 #define X(enumerator, associativity, precedence, type, name) type,
 #include <ast/expression/defs/PrimaryExpressionKind.x>
 #undef X
+		// NOTE: will be discarded, only to get rid of the extraneous trailing comma from the macro expansion
+		void
 	>;
 
 	
@@ -373,6 +351,7 @@ namespace hz
 #define X(enumerator, associativity, precedence, type, name) type,
 #include <ast/expression/defs/PostfixExpressionKind.x>
 #undef X
+		void
 	>;
 
 
@@ -610,6 +589,7 @@ namespace hz
 #define X(enumerator, associativity, precedence, type, name) type,
 #include <ast/expression/defs/UnaryExpressionKind.x>
 #undef X
+		void
 	>;
 
 
@@ -974,6 +954,27 @@ namespace hz
 	};
 #define MAKE_LOGICAL_AND_EXPRESSION(left, right) LogicalAndExpression{ make_handle(ast, left), make_handle(ast, right) }
 
+	class LogicalOrExpression : public ExpressionBase
+	{
+	public:
+		ExpressionHandle left;
+		ExpressionHandle right;
+
+	public:
+		std::string format() const;
+		void generate(const Storage& ast) const;
+		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
+		ExpressionHandle optimize(const Storage& ast) const;
+		ExpressionHandle get_type(const Storage& ast) const;
+
+	public:
+		LogicalOrExpression(ExpressionHandle left, ExpressionHandle right)
+			: left{ left }, right{ right }
+		{
+		}
+	};
+#define MAKE_LOGICAL_OR_EXPRESSION(left, right) LogicalOrExpression{ make_handle(ast, left), make_handle(ast, right) }
+
 	class TernaryExpression : public ExpressionBase
 	{
 	public:
@@ -1263,6 +1264,7 @@ namespace hz
 #define X(enumerator, associativity, precedence, type, name) type,
 #include <ast/expression/defs/BinaryExpressionKind.x>
 #undef X
+		void
 	>;
 
 
@@ -1270,7 +1272,7 @@ namespace hz
 	// All Expressions
 	//////////////////////////////////////////////////////
 
-	using ExpressionTypes = SumTypeList
+	using ExpressionKinds = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
 #include <ast/expression/defs/PrimaryExpressionKind.x>
@@ -1287,15 +1289,41 @@ namespace hz
 #define X(enumerator, associativity, precedence, type, name) type,
 #include <ast/expression/defs/BinaryExpressionKind.x>
 #undef X
+		void
 	>;
 #pragma message("TODO: finish expression types with new families like primary and incorpoating precedence?")
 
-	using ExpressionSum = MakeSum<ASTMethods, ExpressionTypes>::Type;
 
-	template<typename T>
-	using ExpressionReference = ExpressionSum::template Reference<T>;
+	using ExpressionSumImplementation = MakeSum<ASTMethods, ExpressionKinds>::Type;
 
-	using ExpressionHandle = ExpressionSum::Handle;
+	struct ExpressionSumStorage : public ExpressionSumImplementation::Storage
+	{
+		using MakeSum<ASTMethods, ExpressionKinds>::Type::Storage::Storage;
+
+		using Type = ExpressionSumImplementation::Type;
+		using Anchor = ExpressionSumImplementation::Anchor;
+	};
+
+
+	template<typename Self>
+	ExpressionKind ExpressionBase::expression_kind(this Self&& self)
+	{
+		switch (self.tag_type())
+		{
+#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
+#include <ast/expression/defs/PrimaryExpressionKind.x>
+#include <ast/expression/defs/PostfixExpressionKind.x>
+#include <ast/expression/defs/UnaryExpressionKind.x>
+#include <ast/expression/defs/BinaryExpressionKind.x>
+#undef X
+		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"invalid expression tag `{}`", self.tag_type()), self.token);
+
+		// error recovery does not care about expression kind
+		return ExpressionKind::INTEGER_LITERAL;
+	}
 }
 
 #endif
