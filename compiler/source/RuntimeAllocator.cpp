@@ -3,7 +3,7 @@ import std;
 #include <allocator/Allocator.h>
 #include <error/ErrorReporter.h>
 
-// Haze Allocator.cpp
+// Haze RuntimeAllocator.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace 

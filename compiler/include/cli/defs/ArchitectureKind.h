@@ -11,10 +11,12 @@
 
 namespace hz
 {
+#include <cli/defs/ArchitectureKind.x>
+
 	enum class ArchitectureKind
 	{
 #define X(enumerator, name) enumerator,
-#include <cli/defs/ArchitectureKind.x>
+		ARCHITECTURE_KINDS(X)
 #undef X
 	};
 
@@ -23,7 +25,7 @@ namespace hz
 		switch (type)
 		{
 #define X(enumerator, name) case ArchitectureKind::enumerator: return #name;
-#include <cli/defs/ArchitectureKind.x>
+			ARCHITECTURE_KINDS(X)
 #undef X
 		}
 

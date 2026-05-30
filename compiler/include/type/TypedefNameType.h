@@ -3,7 +3,7 @@
 
 #include <type/defs/TypeKind.h>
 
-// Haze TypedefName.h
+// Haze TypedefNameType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

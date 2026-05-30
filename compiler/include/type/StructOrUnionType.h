@@ -5,31 +5,20 @@
 #include <type/defs/StorageClass.h>
 #include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeKind.h>
+#include <utility/AutoEnum.h>
 #include <utility/Constants.h>
 
-// Haze StructOrUnion.h
+// Haze StructOrUnionType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class StructOrUnionKind
-	{
-#define X(enumerator, name) enumerator,
 #include <type/defs/StructOrUnionKind.x>
-#undef X
-	};
 
-	constexpr std::string_view to_string(StructOrUnionKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case StructOrUnionKind::enumerator: return #name;
-#include <type/defs/StructOrUnionKind.x>
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case StructOrUnionKind::enumerator: return #name;
 
-		return "<unknown struct or union kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
 
 	class StructOrUnionType : public TypeBase
 	{

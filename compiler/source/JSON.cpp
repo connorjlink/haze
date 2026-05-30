@@ -2,7 +2,7 @@ import std;
 
 #include <utility/JSON.h>
 
-// Haze JSON.h
+// Haze JSON.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace

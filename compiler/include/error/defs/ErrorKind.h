@@ -1,6 +1,8 @@
 #ifndef HAZE_ERRORKIND_H
 #define HAZE_ERRORKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze ErrorKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -9,24 +11,12 @@
 
 namespace hz
 {
-	enum class ErrorKind
-	{
-#define X(enumerator, name) enumerator,
 #include <error/defs/ErrorKind.x>
-#undef X
-	};
 
-	constexpr std::string_view to_string(ErrorKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case ErrorKind::enumerator: return #name;
-#include <error/defs/ErrorKind.x>
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case SymbolKind::enumerator: return #name;
 
-		return "<unknon error kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, SYMBOL_KINDS, ErrorKind, error kind)
 }
 
 #endif

@@ -1,29 +1,19 @@
 #ifndef HAZE_SYMBOLKIND_H
 #define HAZE_SYMBOLKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze SymbolKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class SymbolKind
-	{
-#define X(enumerator, name) enumerator,
 #include <symbol/defs/SymbolKind.x>
-#undef X
-	};
 
-	constexpr std::string_view to_string(SymbolKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case SymbolKind::enumerator: return #name;
-#include <symbol/defs/SymbolKind.x>
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case SymbolKind::enumerator: return #name;
 
-		return "<unknown symbol kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, SYMBOL_KINDS, Symbol, symbol)
 }
 
 #endif 

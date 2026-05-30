@@ -5,7 +5,7 @@ import std;
 #include <websocket.h>
 #include <ws2tcpip.h>
 
-// Haze WebSocketServer.h
+// Haze WebSocketServer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 #pragma comment(lib, "Ws2_32.lib")

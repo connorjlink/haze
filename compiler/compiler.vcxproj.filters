@@ -593,6 +593,9 @@
     <ClInclude Include="include\toolchain\AssemblerParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\AutoEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\riscv\defs\RISCVInstructionKind.x">

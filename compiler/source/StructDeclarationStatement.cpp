@@ -3,7 +3,7 @@ import std;
 #include <ast/MemberDeclarationExpression.h>
 #include <ast/StructDeclarationStatement.h>
 
-// Haze StructDeclarationStatement.h
+// Haze StructDeclarationStatement.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz

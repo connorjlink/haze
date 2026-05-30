@@ -12,10 +12,12 @@
 
 namespace hz
 {
+#include <type/defs/IntKind.x>
+
 	enum class IntKind
 	{
 #define X(enumerator, name) enumerator,
-#include <type/defs/IntKind.x>
+		INT_KINDS(X)
 #undef X
 	};
 
@@ -24,7 +26,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, name) case IntKind::enumerator: return #name;
-#include <type/defs/IntKind.x>
+			INT_KINDS(X)
 #undef X
 		}
 
@@ -50,9 +52,9 @@ namespace hz
 		{
 			switch (int_kind)
 			{
-#define X(enumerator, name) case IntKind::enumerator: return sizeof(name);
-#include <type/defs/IntKind.x>
-#undef X
+#define SWITCH_CASE(enumerator, name) case IntKind::enumerator: return sizeof(name);
+				INT_KINDS(SWITCH_CASE)
+#undef SWITCH_CASE
 			}
 
 			CommonErrors::invalid_int_type(int_kind, NULL_TOKEN);

@@ -6,10 +6,12 @@
 
 namespace hz
 {
+#include <ast/function/defs/FunctionKind.x>
+
 	enum class FunctionKind
 	{
 #define X(enumerator, type, name) enumerator,
-#include <ast/statement/FunctionKind.x>
+		FUNCTION_KINDS(X)
 #undef X
 	};
 
@@ -18,7 +20,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, type, name) case FunctionKind::type: return #name;
-#include <ast/statement/FunctionKind.x>
+			FUNCTION_KINDS(X)
 #undef X
 		}
 

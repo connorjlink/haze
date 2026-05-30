@@ -17,22 +17,27 @@ namespace hz
 	};
 
 
+#include <ast/expression/defs/PrimaryExpressionKind.x>
+#include <ast/expression/defs/PostfixExpressionKind.x>
+#include <ast/expression/defs/UnaryExpressionKind.x>
+#include <ast/expression/defs/BinaryExpressionKind.x>
+
 	enum class ExpressionKind
 	{
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/PrimaryExpressionKind.x>
+		PRIMARY_EXPRESSION_KINDS(X)
 #undef X
 
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/PostfixExpressionKind.x>
+		POSTFIX_EXPRESSION_KINDS(X)
 #undef X
 
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/UnaryExpressionKind.x>
+		UNARY_EXPRESSION_KINDS(X)
 #undef X
 
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/BinaryExpressionKind.x>
+		BINARY_EXPRESSION_KINDS(X)
 #undef X
 	};
 
@@ -40,7 +45,7 @@ namespace hz
 	enum class PrimaryExpressionKind
 	{
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/PrimaryExpressionKind.x>
+		PRIMARY_EXPRESSION_KINDS(X)
 #undef X
 	};
 
@@ -49,7 +54,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case PrimaryExpressionKind::enumerator: return #name;
-#include <ast/expression/defs/PrimaryExpressionKind.x>
+			PRIMARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -61,7 +66,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case PrimaryExpressionKind::enumerator: return Associativity::associativity;
-#include <ast/expression/defs/PrimaryExpressionKind.x>
+			PRIMARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -76,7 +81,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case PrimaryExpressionKind::enumerator: return precedence;
-#include <ast/expression/defs/PrimaryExpressionKind.x>
+			PRIMARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -90,7 +95,7 @@ namespace hz
 	enum class PostfixExpressionKind
 	{
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/PostfixExpressionKind.x>
+		POSTFIX_EXPRESSION_KINDS(X)
 #undef X
 	};
 
@@ -99,7 +104,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case PostfixExpressionKind::enumerator: return #name;
-#include <ast/expression/defs/PostfixExpressionKind.x>
+			POSTFIX_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -111,7 +116,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case PostfixExpressionKind::enumerator: return Associativity::associativity;
-#include <ast/expression/defs/PostfixExpressionKind.x>
+			POSTFIX_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -126,7 +131,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case PostfixExpressionKind::enumerator: return precedence;
-#include <ast/expression/defs/PostfixExpressionKind.x>
+			POSTFIX_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -140,7 +145,7 @@ namespace hz
 	enum class UnaryExpressionKind
 	{
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/UnaryExpressionKind.x>
+		UNARY_EXPRESSION_KINDS(X)
 #undef X
 	};
 
@@ -149,7 +154,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case UnaryExpressionKind::enumerator: return #name;
-#include <ast/expression/defs/UnaryExpressionKind.x>
+			UNARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -161,7 +166,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case UnaryExpressionKind::enumerator: return Associativity::associativity;
-#include <ast/expression/defs/UnaryExpressionKind.x>
+			UNARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -176,7 +181,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case UnaryExpressionKind::enumerator: return precedence;
-#include <ast/expression/defs/UnaryExpressionKind.x>
+			UNARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -190,7 +195,7 @@ namespace hz
 	enum class BinaryExpressionKind
 	{
 #define X(enumerator, associativity, precedence, type, name) enumerator,
-#include <ast/expression/defs/BinaryExpressionKind.x>
+		BINARY_EXPRESSION_KINDS(X)
 #undef X
 	};
 
@@ -199,7 +204,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case BinaryExpressionKind::enumerator: return #name;
-#include <ast/expression/defs/BinaryExpressionKind.x>
+			BINARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -211,7 +216,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case BinaryExpressionKind::enumerator: return Associativity::associativity;
-#include <ast/expression/defs/BinaryExpressionKind.x>
+			BINARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -226,7 +231,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case BinaryExpressionKind::enumerator: return precedence;
-#include <ast/expression/defs/BinaryExpressionKind.x>
+			BINARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 

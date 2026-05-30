@@ -6,10 +6,12 @@
 
 namespace hz
 {
+#include <ast/declaration/defs/DeclarationKind.x>
+
 	enum class DeclarationKind
 	{
 #define X(enumerator, type, name) enumerator,
-#include <ast/declaration/defs/DeclarationKind.x>
+		DECLARATION_KINDS(X)
 #undef X
 	};
 
@@ -18,7 +20,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, type, name) case DeclarationKind::enumerator: return #name;
-#include <ast/declaration/defs/DeclarationKind.x>
+			DECLARATION_KINDS(X)
 #undef X
 		}
 
