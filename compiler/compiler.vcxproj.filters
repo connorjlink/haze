@@ -633,5 +633,6 @@
     <None Include="include\ir\defs\BinaryIntermediateKind.x" />
     <None Include="include\ir\defs\UnaryIntermediateKind.x" />
     <None Include="include\ir\defs\CompareIntermediateKind.x" />
+    <None Include="include\type\defs\TypeMethods.x" />
   </ItemGroup>
 </Project>

@@ -71,7 +71,7 @@ namespace hz
 					Offset running_count{};
 					for (const auto& member : members.value())
 					{
-						const auto member_size = member.type.get().size();
+						const auto member_size = member.type.size();
 						const auto candidate = member.offset + member_size;
 
 						if (candidate > running_count)

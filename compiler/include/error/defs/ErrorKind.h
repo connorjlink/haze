@@ -16,7 +16,7 @@ namespace hz
 #undef X
 	};
 
-	constexpr std::string_view to_string(ErrorKind kind) noexcept
+	constexpr std::string_view to_string(ErrorKind kind)
 	{
 		switch (kind)
 		{

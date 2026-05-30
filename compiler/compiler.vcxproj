@@ -358,6 +358,7 @@
     <None Include="include\type\defs\StorageClass.x" />
     <None Include="include\type\defs\StructOrUnionKind.x" />
     <None Include="include\type\defs\TypeKind.x" />
+    <None Include="include\type\defs\TypeMethods.x" />
     <None Include="include\type\defs\TypeQualifier.x" />
     <None Include="include\type\defs\TypeSignedness.x" />
     <None Include="include\x86\defs\X86InstructionKind.x" />

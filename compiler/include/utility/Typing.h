@@ -91,6 +91,29 @@ namespace hz
 
 	template<typename T>
 	using AsTupleT = typename AsTuple<T>::Type;
+
+
+	template<typename>
+	struct AllButLast;
+
+	template<typename... Ts>
+	struct AllButLast<std::tuple<Ts...>>
+	{
+	private:
+		template<std::size_t... Is>
+		static auto helper(std::index_sequence<Is...>)
+			-> std::tuple<std::tuple_element_t<Is, std::tuple<Ts...>>...>;
+
+	public:
+		using type = std::conditional_t<
+			sizeof...(Ts) > 0,
+			decltype(helper(std::make_index_sequence<sizeof...(Ts) - 1>{})),
+			std::tuple<>
+		>;
+	};
+
+	template<typename... Ts>
+	using AllButLastT = typename AllButLast<Ts...>::type;
 }
 
 #endif

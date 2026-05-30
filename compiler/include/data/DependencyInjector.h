@@ -6,16 +6,16 @@
 
 namespace hz
 {
-	using TypeHandle = void*;
+	using TypePointer = void*;
 
 	class TypeId
 	{
 	private:
-		TypeHandle id;
+		TypePointer id;
 
 	private:
 		// NOTE: must be private to enforce explicit creation through thread-safe means
-		TypeId(TypeHandle id)
+		TypeId(TypePointer id)
 			: id(id)
 		{
 		}
@@ -25,7 +25,7 @@ namespace hz
 
 		std::size_t hash_code() const
 		{
-			return std::hash<TypeHandle>{}(id);
+			return std::hash<TypePointer>{}(id);
 		}
 
 		template<typename T>
@@ -33,7 +33,7 @@ namespace hz
 		{
 			// sizeof does not matter, this merely requires a unique address per type
 			static std::uint8_t id;
-			return { static_cast<TypeHandle>(&id) };
+			return { static_cast<TypePointer>(&id) };
 		};
 	};
 

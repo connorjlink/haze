@@ -2,9 +2,9 @@ import std;
 
 #include <ast/expression/Expression.h>
 #include <ast/statement/Statement.h>
-#include <symbol/SymbolKind.h>
+#include <command/defs/CommandKind.h>
 #include <error/CommonErrors.h>
-#include <toolchain/ParserType.h>
+#include <symbol/defs/SymbolKind.h>
 #include <type/Type.h>
 #include <type/TypeCheck.h>
 
@@ -39,34 +39,29 @@ namespace hz
 		return std::format("invalid {} type `{}`", context, type);
 	}
 
-	void CommonErrors::invalid_parser_type(ParserType ptype, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("parser", _parser_type_map.at(ptype)), token);
-	}
-
 	void CommonErrors::invalid_statement_type(StatementKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("statement", std::format("{}", kind)), token);
+		internal_compiler_error(invalid_generic_type("statement", std::string{ to_string(kind) }), token);
 	}
 
-	void CommonErrors::invalid_expression_type(ExpressionType kind, const Token& token)
+	void CommonErrors::invalid_expression_type(ExpressionKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("expression", std::format("{}", kind)), token);
+		internal_compiler_error(invalid_generic_type("expression", std::string{ to_string(kind) }), token);
 	}
 
 	void CommonErrors::invalid_command_type(CommandKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("command", std::format("{}", kind)), token);
+		internal_compiler_error(invalid_generic_type("command", std::string{ to_string(kind) }), token);
 	}
 
 	void CommonErrors::invalid_int_type(IntKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("integer", std::format("{}", kind)), token);
+		internal_compiler_error(invalid_generic_type("integer", std::string{ to_string(kind) }), token);
 	}
 
 	void CommonErrors::invalid_float_type(FloatKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("float", std::format("{}", kind)), token);
+		internal_compiler_error(invalid_generic_type("float", std::string{ to_string(kind) }), token);
 	}
 
 	void CommonErrors::invalid_token_type(TokenKind kind, const Token& token)
@@ -74,14 +69,15 @@ namespace hz
 		internal_compiler_error(invalid_generic_type("token", std::string{ token_map.at(kind).value() }), token);
 	}
 
-	void CommonErrors::invalid_symbol_type(SymbolKind stype, const Token& token)
+	void CommonErrors::invalid_symbol_type(SymbolKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("symbol", _symbol_type_map.at(stype)), token);
+#pragma message("TODO: migrate the generic type function to accept also std::string_view")
+		internal_compiler_error(invalid_generic_type("symbol", std::string{ to_string(kind) }), token);
 	}
 
-	void CommonErrors::invalid_struct_or_union_type(StructOrUnionType sotype, const Token& token)
+	void CommonErrors::invalid_struct_or_union_type(StructOrUnionKind kind, const Token& token)
 	{
-		internal_compiler_error(invalid_generic_type("struct or union", _struct_or_union_type_map.at(sotype)), token);
+		internal_compiler_error(invalid_generic_type("struct or union", std::string{ to_string(kind) }), token);
 	}
 
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)

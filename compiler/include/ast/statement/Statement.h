@@ -28,6 +28,9 @@ namespace hz
 	struct StatementBase : public StatementFacade
 	{
 	public:
+		using Storage = StatementSumStorage;
+
+	public:
 		Token token;
 
 	public:

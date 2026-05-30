@@ -3,7 +3,6 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <symbol/SymbolDatabase.h>
 #include <type/defs/StorageClass.h>
 #include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeSignedness.h>
@@ -17,14 +16,8 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-	struct TypeSumStorage;
-
-	using TypeHandle = SumHandle<TypeSumStorage>;
-
-	template<typename T>
-	using TypeReference = SumReference<T, TypeSumStorage>;
-
-	using TypeFacade = SumMemberBase<TypeSumStorage>;
+#include <type/defs/TypeMethods.x>
+	DEFINE_SUM_ANCILLARY(Type, TYPE_METHODS)
 
 	class TypeBase 
 		: public TypeFacade
@@ -51,30 +44,15 @@ namespace hz
 
 namespace hz
 {
-	// expose a strict polymorphic interface for types
-	template<typename AnchorT>
-	using TypeMethods = std::tuple
-	<
-		Method<&AnchorT::type_kind, TypeKind()>,
-		Method<&AnchorT::size, Offset()>,
-		Method<&AnchorT::is_complete, bool()>,
-	>;
-
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
 	concept TypeConcept = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
 
 	using TypeKinds = SumTypeList
 	<
-		VoidType,
-		IntType,
-		FloatType,
-		StructOrUnionType,
-		EnumType,
-		TypedefNameType,
-		PointerType,
-		ArrayType,
-		FunctionType,
+#define X(enumerator, name, type) type,
+#include <type/defs/TypeKind.x>
+#undef X
 	>;
 
 	using TypeSumImplementation = MakeSum<TypeMethods, TypeKinds>::Type;
@@ -93,7 +71,7 @@ namespace hz
 	{
 		switch (self.tag_type())
 		{
-#define X(enumerator, name) case TypeIndexV<enumerator, typename Storage::Type>: return TypeKind::enumerator;
+#define X(enumerator, name, type) case TypeIndexV<enumerator, typename Storage::Type>: return TypeKind::enumerator;
 #include <type/defs/TypeKind.x>
 #undef X
 		}
@@ -121,6 +99,8 @@ namespace hz
 		using enum TypeKind;
 		switch (type.type_kind())
 		{
+#pragma message("TODO: hoist type precedence out to X-macros")
+
 			case VOID:            return TypePrecedence::LEAF;
 			case INT:             return TypePrecedence::LEAF;
 			case FLOAT:           return TypePrecedence::LEAF;
@@ -135,7 +115,7 @@ namespace hz
 		return TypePrecedence::LOWEST;
 	}
 
-	std::string format_type(const TypeBase& type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST)
+	std::string format_type(TypeHandle type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST)
 	{
 		using enum TypeKind;
 		switch (type.type_kind())
@@ -147,30 +127,30 @@ namespace hz
 
 			case INT:
 			{
-				const auto& int_kind = static_cast<const IntType&>(type);
+				const auto& int_type = type.get<IntType>();
 
 				// <storage-class> <type-qualifier> <type-specifier> <type-width>
 				return std::format("{} {} {} {}",
-					int_kind.storage,
-					int_kind.qualifier,
-					int_kind.signedness,
-					int_kind.int_kind);
+					int_type.storage,
+					int_type.qualifier,
+					int_type.signedness,
+					int_type.int_kind);
 			} break;
 
 			case FLOAT:
 			{
-				const auto& float_kind = static_cast<const FloatType&>(type);
+				const auto& float_type = type.get<FloatType>();
 
 				// <storage-class> <type-qualifier> <type-width>
 				return std::format("{} {} {}",
-					float_kind.storage,
-					float_kind.qualifier,
-					float_kind.float_kind);
+					float_type.storage,
+					float_type.qualifier,
+					float_type.float_kind);
 			} break;
 
 			case STRUCT_OR_UNION:
 			{
-				const auto& struct_or_union_type = static_cast<const StructOrUnionType&>(type);
+				const auto& struct_or_union_type = type.get<StructOrUnionType>();
 
 				if (!struct_or_union_type.members.has_value())
 				{
@@ -197,7 +177,7 @@ namespace hz
 
 			case ENUM:
 			{
-				const auto& enum_type = static_cast<const EnumType&>(type);
+				const auto& enum_type = type.get<EnumType>();
 
 				// <storage-class> <type-qualifier> enum tag 
 				// NOTE: enumerators not shown since they don't fundamentally affect the type
@@ -209,7 +189,7 @@ namespace hz
 
 			case TYPEDEF_NAME:
 			{
-				const auto& typedef_name_type = static_cast<const TypedefNameType&>(type);
+				const auto& typedef_name_type = type.get<TypedefNameType>();
 
 				// NOTE: just using the underyling alias name since the typedef doesn't affect the type's string representation
 				return typedef_name_type.name;
@@ -217,7 +197,7 @@ namespace hz
 
 			case POINTER:
 			{
-				const auto& pointer_type = static_cast<const PointerType&>(type);
+				const auto& pointer_type = type.get<PointerType>();
 				const auto qualifier_string = format_type_qualifier(pointer_type.qualifier);
 
 				// <pointee-type>* <pointer-qualifiers>
@@ -236,7 +216,7 @@ namespace hz
 
 			case ARRAY:
 			{
-				const auto& array_type = static_cast<const ArrayType&>(type);
+				const auto& array_type = type.get<ArrayType>();
 				const auto array_length = array_type.length.has_value() 
 					? std::to_string(array_type.length.value()) 
 					: "";
@@ -249,7 +229,7 @@ namespace hz
 
 			case FUNCTION:
 			{
-				const auto& function_type = static_cast<const FunctionType&>(type);
+				const auto& function_type = type.get<FunctionType>();
 
 				auto parameters = function_type.parameters
 					| std::views::transform([](const auto& parameter) 

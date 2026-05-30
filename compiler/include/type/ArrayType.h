@@ -27,7 +27,7 @@ namespace hz
 				return PointerType::size();
 			}
 
-			return element_type.get().size() * length.value();
+			return element_type.size() * length.value();
 		}
 
 		std::string string() const
@@ -37,7 +37,7 @@ namespace hz
 				: "";
 
 			return std::format("{}[{}]",
-				element_type.get().string(),
+				format_type(element_type),
 				length_string);
 		}
 
@@ -50,7 +50,7 @@ namespace hz
 				return false;
 			}
 
-			return element_type.get().is_complete();
+			return element_type.is_complete();
 		}
 	};
 }

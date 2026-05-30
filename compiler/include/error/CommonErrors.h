@@ -6,11 +6,10 @@
 
 namespace hz
 {
-	enum class ParserType;
 	enum class StatementKind;
-	enum class ExpressionType;
+	enum class ExpressionKind;
 	enum class BinaryExpressionKind;
-	enum class CommandType;
+	enum class CommandKind;
 	enum class IntKind;
 	enum class FloatKind;
 	enum class TokenKind;
@@ -36,10 +35,9 @@ namespace hz
 		static std::string invalid_generic_type(const std::string&, const std::string&);
 
 	public:
-		static void invalid_parser_type(ParserType, const Token&);
 		static void invalid_statement_type(StatementKind, const Token&);
-		static void invalid_expression_type(ExpressionType, const Token&);
-		static void invalid_command_type(CommandType, const Token&);
+		static void invalid_expression_type(ExpressionKind, const Token&);
+		static void invalid_command_type(CommandKind, const Token&);
 
 	public:
 		static void invalid_int_type(IntKind, const Token&);
@@ -61,7 +59,7 @@ namespace hz
 
 	public:
 		static void integer_size_mismatch(IntKind, IntKind, const Token&);
-		static void invalid_binary_expression(ExpressionType, ExpressionType, BinaryExpressionType, const Token&);
+		static void invalid_binary_expression(ExpressionKind, ExpressionKind, BinaryExpressionKind, const Token&);
 
 	public:
 		static void type_qualifier_mismatch(TypeHandle, ExpressionHandle, const Token&);

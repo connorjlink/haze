@@ -1,12 +1,12 @@
 // Haze TypeKind.x
 // (c) Connor J. Link. All Rights Reserved.
 
-X(VOID, void)
-X(INT, int)
-X(FLOAT, float)
-X(STRUCT_OR_UNION, struct-or-union)
-X(ENUM, enum)
-X(TYPEDEF_NAME, typedef-name)
-X(POINTER, pointer)
-X(ARRAY, array)
-X(FUNCTION, function)
+X(VOID, void, VoidType)
+X(INT, int, IntType)
+X(FLOAT, float, FloatType)
+X(STRUCT_OR_UNION, struct-or-union, StructOrUnionType)
+X(ENUM, enum, EnumType)
+X(TYPEDEF_NAME, typedef-name, TypedefNameType)
+X(POINTER, pointer, PointerType)
+X(ARRAY, array, ArrayType)
+X(FUNCTION, function, FunctionType)

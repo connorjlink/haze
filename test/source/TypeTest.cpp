@@ -12,6 +12,7 @@
 #include <iostream>
 #include <stack>
 #include <queue>
+#include <ranges>
 #include <condition_variable>
 #include <syncstream>
 #include <filesystem>
