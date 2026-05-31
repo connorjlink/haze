@@ -105,11 +105,14 @@ namespace hz
 
 
 	// sum type and dispatch family
-	template<typename T, typename SumT, template<typename, typename> typename MethodsT, typename AnchorT>
-	concept SumElement = SumTuple<T, SumT, MethodsT<SumT, AnchorT>>;
+	template<typename T, typename SumT, template<typename> typename MethodsT, typename AnchorT>
+	concept SumElement = SumTuple<T, SumT, MethodsT<AnchorT>>;
+
+	template<std::size_t I, typename T>
+	concept IsInRange = (I >= std::numeric_limits<TagType>::min() and I <= std::numeric_limits<TagType>::max());
 
 	template<template<typename> typename MethodsT, typename... Ts>
-		requires (sizeof...(Ts) > std::numeric_limits<TagType>::min() and sizeof...(Ts) <= std::numeric_limits<TagType>::max())
+		requires IsInRange<sizeof...(Ts), TagType>
 	struct Sum
 	{
 	public:
@@ -141,19 +144,19 @@ namespace hz
 		inline static constexpr auto Index = TypeIndexV<T, Type>;
 	};
 
-	template<template<typename, typename> typename MethodsT, typename TypeListT>
+	template<template<typename> typename MethodsT, typename TypeListT>
 	struct MakeSum;
 
-	template<template<typename, typename> typename MethodsT, typename TypeListT>
+	template<template<typename> typename MethodsT, typename TypeListT>
 	struct MakeSumHelper;
 
-	template<template<typename, typename> typename MethodsT, typename... TypeListT>
+	template<template<typename> typename MethodsT, typename... TypeListT>
 	struct MakeSumHelper<MethodsT, TypeList<TypeListT...>>
 	{
 		using Type = Sum<MethodsT, TypeListT...>;
 	};
 
-	template<template<typename, typename> typename MethodsT, typename... TypeListT>
+	template<template<typename> typename MethodsT, typename... TypeListT>
 	struct MakeSum<MethodsT, SumTypeList<TypeListT...>>
 	{
 		using Type = typename MakeSumHelper<MethodsT, typename SumTypeList<TypeListT...>::FilteredTs>::Type;
@@ -214,11 +217,11 @@ namespace hz
 		constexpr returntype name() const \
 		{ \
 			using Anchor = typename SumStorageT::Anchor; \
-			return call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
+			return this->template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
 		}
 	};
 
-#define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>
+#define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
 #define SUM_DISPATCH_ENTRY(name, returntype) DEFINE_SUM_METHOD(name, returntype)
 
 #define DEFINE_SUM_ANCILLARY(name, X) \

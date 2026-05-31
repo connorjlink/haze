@@ -1,6 +1,7 @@
 #ifndef HAZE_ARRAYTYPE_H
 #define HAZE_ARRAYTYPE_H
 
+#include <type/TypeFormatter.h>
 #include <type/defs/TypeKind.h>
 
 // Haze ArrayType.h

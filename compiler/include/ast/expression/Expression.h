@@ -3,6 +3,8 @@
 
 #include <ast/AST.h>
 #include <ast/expression/defs/ExpressionKind.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 #include <runtime/Context.h>
 #include <toolchain/Generator.h>
 #include <type/Type.h>
@@ -15,18 +17,13 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-	struct ExpressionSumStorage;
+	DEFINE_SUM_ANCILLARY(Expression, AST_METHODS)
 
-	using ExpressionHandle = SumHandle<ExpressionSumStorage>;
-
-	template<typename T>
-	using ExpressionReference = SumReference<T, ExpressionSumStorage>;
-
-	using ExpressionFacade = SumMemberBase<ExpressionSumStorage>;
 
 	class ExpressionBase
 		: public ExpressionFacade
 		, public InjectService<Generator>
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		using Storage = ExpressionSumStorage;
@@ -1273,6 +1270,10 @@ namespace hz
 	// All Expressions
 	//////////////////////////////////////////////////////
 
+	// not for public consumption
+	template<typename SumMemberT, typename SumStorageT>
+	concept ExpressionConcept = SumTuple<SumMemberT, SumStorageT, ASTMethods<SumStorageT>>;
+
 	using ExpressionKinds = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
@@ -1283,14 +1284,12 @@ namespace hz
 #undef X
 		void
 	>;
-#pragma message("TODO: finish expression types with new families like primary and incorpoating precedence?")
-
 
 	using ExpressionSumImplementation = MakeSum<ASTMethods, ExpressionKinds>::Type;
 
 	struct ExpressionSumStorage : public ExpressionSumImplementation::Storage
 	{
-		using MakeSum<ASTMethods, ExpressionKinds>::Type::Storage::Storage;
+		using ExpressionSumImplementation::Storage::Storage;
 
 		using Type = ExpressionSumImplementation::Type;
 		using Anchor = ExpressionSumImplementation::Anchor;

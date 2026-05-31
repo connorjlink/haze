@@ -15,12 +15,8 @@
 namespace hz
 {
 	class Node;
-	class Parser;
-	class InstructionCommand;
-	class Allocation;
-	class Variable;
-	class IntegerLiteral;
-	class Expression;
+	struct ExpressionHandle;
+	struct ValueHandle;
 
 	class Generator
 		: public ServiceTag<Generator>
@@ -28,13 +24,14 @@ namespace hz
 	{
 	private:
 		// imported upon reload()
+#pragma message("TODO: swap over to declarators system")
 		std::vector<Node*> program;
 
 	private:
 		std::vector<Linkable> linkables;
 
 	private:
-		std::unordered_map<std::uint32_t, std::uint32_t> string_length_map;
+		std::unordered_map<Address, Offset> string_length_map;
 
 	public:
 		const std::string& current_function() const;

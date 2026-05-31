@@ -7,19 +7,19 @@
 namespace hz
 {
 #define TYPE_KINDS(X) \
-	X(VOID, VoidType, void) \
-	X(INT, IntType, int) \
-	X(FLOAT, FloatType, float) \
-	X(STRUCT_OR_UNION, StructOrUnionType, struct-or-union) \
-	X(ENUM, EnumType, enum) \
-	X(TYPEDEF_NAME, TypedefNameType, typedef-name) \
-	X(POINTER, PointerType, pointer) \
-	X(ARRAY, ArrayType, array) \
-	X(FUNCTION, FunctionType, function)
+	X(VOID, LEAF, VoidType, void) \
+	X(INT, LEAF, IntType, int) \
+	X(FLOAT, LEAF, FloatType, float) \
+	X(STRUCT_OR_UNION, LEAF, StructOrUnionType, struct-or-union) \
+	X(ENUM, LEAF, EnumType, enum) \
+	X(TYPEDEF_NAME, LEAF, TypedefNameType, typedef-name) \
+	X(POINTER, POINTER, PointerType, pointer) \
+	X(ARRAY, ARRAY, ArrayType, array) \
+	X(FUNCTION, FUNCTION, FunctionType, function)
 
 
-#define ENUM_MEMBER(enumerator, type, name) enumerator,
-#define SWITCH_CASE(enumerator, type, name) case TypeKind::enumerator: return #name;
+#define ENUM_MEMBER(enumerator, precedence, type, name) enumerator,
+#define SWITCH_CASE(enumerator, precedence, type, name) case TypeKind::enumerator: return #name;
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, TYPE_KINDS, TypeKind, type kind)
 

@@ -20,9 +20,9 @@ namespace hz
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case SymbolKind::enumerator: return #name;
+#define SWITCH_CASE(enumerator, name) case ErrorKind::enumerator: return #name;
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, SYMBOL_KINDS, ErrorKind, error kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, ERROR_KINDS, ErrorKind, error kind)
 
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

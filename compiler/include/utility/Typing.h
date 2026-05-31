@@ -7,19 +7,21 @@
 namespace hz
 {
 	// meta type traits
-	template<typename T, typename Tuple>
+	template<typename T, typename Types>
 	struct TypeIndex;
 
 	template<typename T, typename... Types>
-	struct TypeIndex<T, std::tuple<T, Types...>>
-		: public std::integral_constant<std::size_t, 0>
+	struct TypeIndex<T, std::tuple<Types...>>
 	{
-	};
+		static constexpr std::size_t value = []<std::size_t... Is>(std::index_sequence<Is...>)
+		{
+			auto index = sizeof...(Types);
+			// fold on setting the index to the matching type or nothing if not found
+			((std::is_same_v<T, std::tuple_element_t<Is, std::tuple<Types...>>> ? index = Is : 0), ...);
+			return index;
+		}(std::make_index_sequence<sizeof...(Types)>{});
 
-	template<typename T, typename U, typename... Types>
-	struct TypeIndex<T, std::tuple<U, Types...>>
-		: public std::integral_constant<std::size_t, 1 + TypeIndex<T, std::tuple<Types...>>::value>
-	{
+		static_assert(value < sizeof...(Types), "The specified type was not found within the provided tuple");
 	};
 
 	template<typename T, typename Tuple>
@@ -114,6 +116,12 @@ namespace hz
 
 	template<typename... Ts>
 	using AllButLastT = typename AllButLast<Ts...>::type;
+
+
+	template<template<typename...> typename Tuple1, template<typename...> typename Tuple2>
+	using TupleCatT = decltype(std::tuple_cat(
+		std::declval<Tuple1>(),
+		std::declval<Tuple2>()));
 }
 
 #endif

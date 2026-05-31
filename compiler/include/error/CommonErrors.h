@@ -1,6 +1,9 @@
 #ifndef HAZE_COMMONERRORS_H
 #define HAZE_COMMONERRORS_H
 
+#include <type/Type.h>
+#include <ast/expression/Expression.h>
+
 // Haze CommonErrors.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -8,16 +11,13 @@ namespace hz
 {
 	enum class StatementKind;
 	enum class ExpressionKind;
-	enum class BinaryExpressionKind;
 	enum class CommandKind;
 	enum class IntKind;
 	enum class FloatKind;
 	enum class TokenKind;
 	enum class SymbolKind;
 	enum class StructOrUnionKind;
-
-	class Type;
-	class Expression;
+	enum class BinaryExpressionKind;
 
 	struct Token;
 

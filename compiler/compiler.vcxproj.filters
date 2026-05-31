@@ -243,6 +243,9 @@
     <ClCompile Include="template\Skeleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\TypeFormatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\utility\Random.h">
@@ -615,6 +618,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\runtime\defs\VariableKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type\TypeFormatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\TypePrecedence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

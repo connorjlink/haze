@@ -9,21 +9,37 @@
 
 namespace hz
 {
+#define BASE_AST_METHODS(X) \
+	X(format) \
+	X(generate) \
+	X(evaluate) \
+	X(optimize)
+
 	// expose a strict polymorphic interface for AST nodes, including external data like IR
 	template<typename AnchorT>
-	using BaseASTMethods = std::tuple
+	using BaseASTMethods = AllButLastT
 	<
-		Method<&AnchorT::format, decltype(&AnchorT::format)>,
-		Method<&AnchorT::generate, decltype(&AnchorT::generate)>,
-		Method<&AnchorT::evaluate, decltype(&AnchorT::evaluate)>,
-		Method<&AnchorT::optimize, decltype(&AnchorT::optimize)>
+#define X(name) Method<&AnchorT::name, decltype(&AnchorT::name)>,
+		BASE_AST_METHODS(X)
+#undef X
+		void
 	>;
+
+
+#define AST_METHODS(X) \
+	BASE_AST_METHODS(X) \
+	X(format) \
 
 	// further constrain pure AST types like expression and statements for type checking purposes
 	template<typename AnchorT>
-	using ASTMethods = decltype(std::tuple_cat(
-		std::declval<BaseASTMethods<AnchorT>>(),
-		std::declval<std::tuple<Method<&AnchorT::get_type, decltype(&AnchorT::get_type)>>>()));
+	using ASTMethods = AllButLastT
+	<
+#define X(name) Method<&AnchorT::name, decltype(&AnchorT::name)>,
+		AST_METHODS(X)
+#undef X
+		void
+	>;
+
 
 	template<typename SumMemberT, typename SumStorageT, typename MethodsT>
 	concept ASTNode = SumTuple<SumMemberT, SumStorageT, MethodsT>;
