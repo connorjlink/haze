@@ -240,6 +240,9 @@
     <ClCompile Include="source\BMBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="template\Skeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\utility\Random.h">
@@ -596,46 +599,23 @@
     <ClInclude Include="include\utility\AutoEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\riscv\defs\RISCVInstructionKind.x">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\allocator\defs\ValueKind.x" />
-    <None Include="include\ast\declaration\defs\DeclarationKind.x" />
-    <None Include="include\ast\expression\defs\BinaryExpressionKind.x" />
-    <None Include="include\ast\expression\defs\PostfixExpressionKind.x" />
-    <None Include="include\ast\expression\defs\PrimaryExpressionKind.x" />
-    <None Include="include\ast\expression\defs\UnaryExpressionKind.x" />
-    <None Include="include\ast\function\defs\FunctionKind.x" />
-    <None Include="include\ast\statement\defs\StatementKind.x" />
-    <None Include="include\cli\defs\ArchitectureKind.x" />
-    <None Include="include\cli\defs\OptimizationFlag.x" />
-    <None Include="include\cli\defs\OptionKind.x" />
-    <None Include="include\cli\defs\VerbosityKind.x" />
-    <None Include="include\command\defs\CommandKind.x" />
-    <None Include="include\error\defs\ErrorKind.x" />
-    <None Include="include\riscv\defs\RISCVRegister.x" />
-    <None Include="include\runtime\defs\VariableKind.x" />
-    <None Include="include\symbol\defs\SymbolKind.x" />
-    <None Include="include\toolchain\defs\ToolchainKind.x" />
-    <None Include="include\type\defs\FloatKind.x" />
-    <None Include="include\type\defs\IntKind.x" />
-    <None Include="include\type\defs\StorageClass.x" />
-    <None Include="include\type\defs\StructOrUnionKind.x" />
-    <None Include="include\type\defs\TypeKind.x" />
-    <None Include="include\type\defs\TypeQualifier.x" />
-    <None Include="include\type\defs\TypeSignedness.x" />
-    <None Include="include\x86\defs\X86InstructionKind.x" />
-    <None Include="include\x86\defs\X86OperandKind.x" />
-    <None Include="include\x86\defs\X86Register.x" />
-    <None Include="include\ir\defs\IntermediateKind.x">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\ir\defs\IntermediateType.x" />
-    <None Include="include\ir\defs\BinaryIntermediateKind.x" />
-    <None Include="include\ir\defs\UnaryIntermediateKind.x" />
-    <None Include="include\ir\defs\CompareIntermediateKind.x" />
-    <None Include="include\type\defs\TypeMethods.x" />
+    <ClInclude Include="include\ir\defs\BinaryIntermediateKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ir\defs\UnaryIntermediateKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ir\defs\CompareIntermediateKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ir\defs\IntermediateTypeKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="template\Skeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\runtime\defs\VariableKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

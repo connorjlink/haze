@@ -4,7 +4,9 @@
 // Haze Task.h
 // (c) Connor J. Link. All Rights Reserved.
 
-static_assert(_MSC_VER, "This code must be compiled with MSVC to use its native Windows-exclusive std::async threadpool dispatcher.");
+#ifndef _MSC_VER
+#warning "This code should be compiled with MSVC to use its native Windows-exclusive std::async threadpool dispatcher."
+#endif
 
 namespace hz
 {

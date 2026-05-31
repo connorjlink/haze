@@ -1,31 +1,24 @@
 #ifndef HAZE_FUNCTIONKIND_H
 #define HAZE_FUNCTIONKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze FunctionKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-#include <ast/function/defs/FunctionKind.x>
+#define FUNCTION_KINDS(X) \
+	X(FUNCTION, Function, function)
 
-	enum class FunctionKind
-	{
-#define X(enumerator, type, name) enumerator,
-		FUNCTION_KINDS(X)
-#undef X
-	};
 
-	constexpr std::string_view to_string(FunctionKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, type, name) case FunctionKind::type: return #name;
-			FUNCTION_KINDS(X)
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, type, name) enumerator,
+#define SWITCH_CASE(enumerator, type, name) case FunctionKind::enumerator: return #name;
 
-		return "<unknown function kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, FUNCTION_KINDS, FunctionKind, function kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

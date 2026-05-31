@@ -1,7 +1,0 @@
-// Haze StorageClass.x
-// (c) Connor J. Link. All Rights Reserved.
-
-X(AUTO, auto)
-X(REGISTER, register)
-X(STATIC, static)
-X(EXTERN, extern)

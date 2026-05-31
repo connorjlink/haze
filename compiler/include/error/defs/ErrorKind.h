@@ -11,12 +11,21 @@
 
 namespace hz
 {
-#include <error/defs/ErrorKind.x>
+#define ERROR_KINDS(X) \
+	X(OUTPUT, output) \
+	X(INFORMATION, information) \
+	X(WARNING, warning) \
+	X(ERROR, error) \
+	X(UNCORRECTABLE, uncorrectable internal error)
+
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case SymbolKind::enumerator: return #name;
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, SYMBOL_KINDS, ErrorKind, error kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

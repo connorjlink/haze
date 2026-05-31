@@ -6,26 +6,20 @@
 
 namespace hz
 {
-#include <ast/declaration/defs/DeclarationKind.x>
+#define DECLARATION_KINDS(X) \
+	X(FUNCTION, FunctionDeclaration, function) \
+	X(VARIABLE, VariableDeclaration, variable) \
+	X(STRUCT_OR_UNION, StructOrUnionDeclaration, struct or union) \
+	X(ENUM, EnumDeclaration, enum) \
+	X(TYPEDEF, TypedefDeclaration, typedef)
 
-	enum class DeclarationKind
-	{
-#define X(enumerator, type, name) enumerator,
-		DECLARATION_KINDS(X)
-#undef X
-	};
+#define ENUM_MEMBER(enumerator, type, name) enumerator,
+#define SWITCH_CASE(enumerator, type, name) case DeclarationKind::enumerator: return #name;
 
-	constexpr std::string_view to_string(DeclarationKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, type, name) case DeclarationKind::enumerator: return #name;
-			DECLARATION_KINDS(X)
-#undef X
-		}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, DECLARATION_KINDS, DeclarationKind, declaration kind)
 
-		return "<unknown declaration kind>";
-	}
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

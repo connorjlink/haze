@@ -6,6 +6,7 @@
 #include <runtime/Context.h>
 #include <toolchain/Generator.h>
 #include <type/Type.h>
+#include <utility/Sum.h>
 
 // Haze Expression.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -182,7 +183,7 @@ namespace hz
 	using PrimaryExpressionTypes = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/PrimaryExpressionKind.x>
+		PRIMARY_EXPRESSION_KINDS(X)
 #undef X
 		// NOTE: will be discarded, only to get rid of the extraneous trailing comma from the macro expansion
 		void
@@ -349,7 +350,7 @@ namespace hz
 	using PostfixExpressionTypes = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/PostfixExpressionKind.x>
+		POSTFIX_EXPRESSION_KINDS(X)
 #undef X
 		void
 	>;
@@ -587,7 +588,7 @@ namespace hz
 	using UnaryExpressionTypes = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/UnaryExpressionKind.x>
+		UNARY_EXPRESSION_KINDS(X)
 #undef X
 		void
 	>;
@@ -1262,7 +1263,7 @@ namespace hz
 	using BinaryExpressionTypes = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/BinaryExpressionKind.x>
+		BINARY_EXPRESSION_KINDS(X)
 #undef X
 		void
 	>;
@@ -1275,19 +1276,10 @@ namespace hz
 	using ExpressionKinds = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/PrimaryExpressionKind.x>
-#undef X
-
-#define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/PostfixExpressionKind.x>
-#undef X
-
-#define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/UnaryExpressionKind.x>
-#undef X
-
-#define X(enumerator, associativity, precedence, type, name) type,
-#include <ast/expression/defs/BinaryExpressionKind.x>
+		PRIMARY_EXPRESSION_KINDS(X)
+		POSTFIX_EXPRESSION_KINDS(X)
+		UNARY_EXPRESSION_KINDS(X)
+		BINARY_EXPRESSION_KINDS(X)
 #undef X
 		void
 	>;
@@ -1311,10 +1303,10 @@ namespace hz
 		switch (self.tag_type())
 		{
 #define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-#include <ast/expression/defs/PrimaryExpressionKind.x>
-#include <ast/expression/defs/PostfixExpressionKind.x>
-#include <ast/expression/defs/UnaryExpressionKind.x>
-#include <ast/expression/defs/BinaryExpressionKind.x>
+			PRIMARY_EXPRESSION_KINDS(X)
+			POSTFIX_EXPRESSION_KINDS(X)
+			UNARY_EXPRESSION_KINDS(X)
+			BINARY_EXPRESSION_KINDS(X)
 #undef X
 		}
 

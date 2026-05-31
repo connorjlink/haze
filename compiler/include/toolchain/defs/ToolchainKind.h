@@ -1,29 +1,25 @@
 #ifndef HAZE_TOOLCHAINKIND_H
 #define HAZE_TOOLCHAINKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze ToolchainKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class ToolchainKind
-	{
-#define X(enumerator, name, extension) enumerator,
-#include <toolchain/defs/ToolchainKind.x>
-#undef X
-	};
+#define TOOLCHAIN_KINDS(X) \
+	X(ASSEMBLER, assembler, .s) \
+	X(COMPILER, compiler, .c)
 
-	constexpr std::string_view to_string(ToolchainKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name, extension) case ToolchainKind::enumerator: return #name;
-#include <toolchain/defs/ToolchainKind.x>
-#undef X
-		}
 
-		return "<unknown toolchain kind>";
-	}
+#define ENUM_MEMBER(enumerator, name, extension) enumerator,
+#define SWITCH_CASE(enumerator, name, extension) case ToolchainKind::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, TOOLCHAIN_KINDS, ToolchainKind, toolchain kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif 

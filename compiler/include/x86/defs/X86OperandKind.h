@@ -8,24 +8,21 @@
 
 namespace hz
 {
-	enum class X86OperandKind
-	{
-#define X(enumerator, name) enumerator,
-#include <x86/defs/X86OperandKind.x>
-#undef X
-	};
+#define X86_OPERAND_KINDS(X) \
+	X(IMMEDIATE, immediate) \
+	X(INDIRECT, indirect) \
+	X(REGISTER, register) \
+	X(REGISTER_INDIRECT, register-indirect) \
+	X(REGISTER_DISPLACED, register-displaced)
 
-	constexpr std::string_view to_string(X86OperandKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case X86OperandKind::enumerator: return #name;
-#include <x86/defs/X86OperandKind.x>
-#undef X
-		}
 
-		return "<unknown x86 operand kind>";
-	}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case X86OperandKind::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, X86_OPERAND_KINDS, X86OperandKind, x86 operand kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

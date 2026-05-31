@@ -8,16 +8,26 @@
 // Haze TypeQualifier.h
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace hz
-{
+// weird Windows.h stuff... again...
 #undef CONST
 
-#include <type/defs/TypeQualifier.x>
+namespace hz
+{
+#define TYPE_QUALIFIERS(X) \
+	X(NONE, none, 0) \
+	X(CONST, const, 1 << 0) \
+	X(VOLATILE, volatile, 1 << 1) \
+	X(RESTRICT, restrict, 1 << 2)
+
 
 #define ENUM_MEMBER(enumerator, name, value) enumerator = value,
 #define SWITCH_CASE(enumerator, name, value) case TypeQualifier::enumerator: return #name;
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, TYPE_QUALIFIERS, TypeQualifier, type qualifier)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
 
 	constexpr std::string format_type_qualifier(TypeQualifier qualifier)
 	{

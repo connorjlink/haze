@@ -1,6 +1,7 @@
 #ifndef HAZE_OPTIMIZATIONFLAG_H
 #define HAZE_OPTIMIZATIONFLAG_H
 
+#include <utility/AutoEnum.h>
 #include <utility/Formatter.h>
 
 // Haze OptimizationFlag.h
@@ -8,32 +9,29 @@
 
 namespace hz
 {
-	enum class OptimizationFlag
-	{
-#define X(enumerator, name, value) enumerator = value,
-#include <cli/OptimizationFlag.x>
-#undef X
-	};
+#define OPTIMIZATION_FLAGS(X) \
+	X(NONE, none, 0) \
+	X(AST, ast, 1 << 0) \
+	X(TAC, tac, 1 << 1) \
+	X(LTO, lto, 1 << 2)
 
-	// NOTE: the following only works for a single flag
-	constexpr std::string_view format_optimization_flag(OptimizationFlag flag)
-	{
-		switch (flag)
-		{
-#define X(enumerator, name, value) case OptimizationFlag::enumerator: return #name;
-#include <cli/OptimizationFlag.x>
-#undef X
-		}
 
-		return "<unknown optimization flag>";
-	}
+#define ENUM_MEMBER(enumerator, name, value) enumerator = value,
+#define SWITCH_CASE(enumerator, name, value) case OptimizationFlag::enumerator: return #name;
 
-	constexpr std::string to_string(OptimizationFlag flag)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, OPTIMIZATION_FLAGS, OptimizationFlag, optimization flag : std::uint8_t)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
+
+#pragma message("TODO: swap existing calls to std::format to this function for proper formatting of optimization flags")
+	constexpr std::string format_optimization_flag(OptimizationFlag flag)
 	{
 		static constexpr OptimizationFlag flags[] =
 		{
 #define X(enumerator, name, value) { OptimizationFlag::enumerator },
-#include <cli/OptimizationFlag.x>
+			OPTIMIZATION_FLAGS(X)
 #undef X
 		};
 

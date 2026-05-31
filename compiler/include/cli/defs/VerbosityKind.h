@@ -1,29 +1,27 @@
 #ifndef HAZE_VERBOSITYKIND_H
 #define HAZE_VERBOSITYKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze VerbosityKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class VerbosityKind
-	{
-#define X(enumerator, name) enumerator,
-#include <cli/defs/VerbosityKind.x>
-#undef X
-	};
+#define VERBOSITY_KINDS(X) \
+	X(SILENT, silent) \
+	X(QUIET, quiet) \
+	X(NORMAL, normal) \
+	X(VERBOSE, verbose)
 
-	constexpr std::string_view to_string(VerbosityKind verbosity)
-	{
-		switch (verbosity)
-		{
-#define X(enumerator, name) case VerbosityKind::enumerator: return #name;
-#include <cli/defs/VerbosityKind.x>
-#undef X
-		}
 
-		return "<unknown verbosity level>";
-	}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case VerbosityKind::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, VERBOSITY_KINDS, VerbosityKind, verbosity kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

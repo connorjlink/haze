@@ -3,10 +3,11 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <toolchain/models/Token.h>
 #include <type/defs/StorageClass.h>
-#include <type/defs/TypeQualifier.h>
-#include <type/defs/TypeSignedness.h>
 #include <type/defs/TypeKind.h>
+#include <type/defs/TypeSignedness.h>
+#include <type/defs/TypeQualifier.h>
 #include <utility/Sum.h>
 
 // Haze Type.h
@@ -16,8 +17,14 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-#include <type/defs/TypeMethods.x>
+#define TYPE_METHODS(X) \
+	X(type_kind, TypeKind) \
+	X(size, Offset) \
+	X(is_complete, bool)
+
+
 	DEFINE_SUM_ANCILLARY(Type, TYPE_METHODS)
+
 
 	class TypeBase 
 		: public TypeFacade
@@ -50,9 +57,10 @@ namespace hz
 
 	using TypeKinds = SumTypeList
 	<
-#define X(enumerator, name, type) type,
-#include <type/defs/TypeKind.x>
+#define X(enumerator, type, name) type,
+		TYPE_KINDS(X)
 #undef X
+		void
 	>;
 
 	using TypeSumImplementation = MakeSum<TypeMethods, TypeKinds>::Type;
@@ -71,8 +79,8 @@ namespace hz
 	{
 		switch (self.tag_type())
 		{
-#define X(enumerator, name, type) case TypeIndexV<enumerator, typename Storage::Type>: return TypeKind::enumerator;
-#include <type/defs/TypeKind.x>
+#define X(enumerator, name, type) case TypeIndexV<TypeKind::enumerator, typename Storage::Type>: return TypeKind::enumerator;
+			TYPE_KINDS(X)
 #undef X
 		}
 
@@ -81,7 +89,6 @@ namespace hz
 
 		return TypeKind::VOID;
 	}
-
 
 
 	enum class TypePrecedence
@@ -96,20 +103,18 @@ namespace hz
 
 	TypePrecedence precedence(const TypeBase& type)
 	{
-		using enum TypeKind;
 		switch (type.type_kind())
 		{
 #pragma message("TODO: hoist type precedence out to X-macros")
-
-			case VOID:            return TypePrecedence::LEAF;
-			case INT:             return TypePrecedence::LEAF;
-			case FLOAT:           return TypePrecedence::LEAF;
-			case STRUCT_OR_UNION: return TypePrecedence::LEAF;
-			case ENUM:            return TypePrecedence::LEAF;
-			case TYPEDEF_NAME:    return TypePrecedence::LEAF;
-			case POINTER:         return TypePrecedence::POINTER;
-			case ARRAY:           return TypePrecedence::ARRAY;
-			case FUNCTION:        return TypePrecedence::FUNCTION;
+			case TypeKind::VOID:            return TypePrecedence::LEAF;
+			case TypeKind::INT:             return TypePrecedence::LEAF;
+			case TypeKind::FLOAT:           return TypePrecedence::LEAF;
+			case TypeKind::STRUCT_OR_UNION: return TypePrecedence::LEAF;
+			case TypeKind::ENUM:            return TypePrecedence::LEAF;
+			case TypeKind::TYPEDEF_NAME:    return TypePrecedence::LEAF;
+			case TypeKind::POINTER:         return TypePrecedence::POINTER;
+			case TypeKind::ARRAY:           return TypePrecedence::ARRAY;
+			case TypeKind::FUNCTION:        return TypePrecedence::FUNCTION;
 		}
 
 		return TypePrecedence::LOWEST;
@@ -117,15 +122,14 @@ namespace hz
 
 	std::string format_type(TypeHandle type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST)
 	{
-		using enum TypeKind;
 		switch (type.type_kind())
 		{
-			case VOID:
+			case TypeKind::VOID:
 			{
 				return "void";
 			} break;
 
-			case INT:
+			case TypeKind::INT:
 			{
 				const auto& int_type = type.get<IntType>();
 
@@ -137,7 +141,7 @@ namespace hz
 					int_type.int_kind);
 			} break;
 
-			case FLOAT:
+			case TypeKind::FLOAT:
 			{
 				const auto& float_type = type.get<FloatType>();
 
@@ -148,7 +152,7 @@ namespace hz
 					float_type.float_kind);
 			} break;
 
-			case STRUCT_OR_UNION:
+			case TypeKind::STRUCT_OR_UNION:
 			{
 				const auto& struct_or_union_type = type.get<StructOrUnionType>();
 
@@ -175,7 +179,7 @@ namespace hz
 					members);
 			} break;
 
-			case ENUM:
+			case TypeKind::ENUM:
 			{
 				const auto& enum_type = type.get<EnumType>();
 
@@ -187,7 +191,7 @@ namespace hz
 					name);
 			} break;
 
-			case TYPEDEF_NAME:
+			case TypeKind::TYPEDEF_NAME:
 			{
 				const auto& typedef_name_type = type.get<TypedefNameType>();
 
@@ -195,7 +199,7 @@ namespace hz
 				return typedef_name_type.name;
 			} break;
 
-			case POINTER:
+			case TypeKind::POINTER:
 			{
 				const auto& pointer_type = type.get<PointerType>();
 				const auto qualifier_string = format_type_qualifier(pointer_type.qualifier);
@@ -214,7 +218,7 @@ namespace hz
 				return format_type(pointer_type.pointee, pointer_string, TypePrecedence::POINTER);
 			} break;
 
-			case ARRAY:
+			case TypeKind::ARRAY:
 			{
 				const auto& array_type = type.get<ArrayType>();
 				const auto array_length = array_type.length.has_value() 
@@ -227,7 +231,7 @@ namespace hz
 				return format_type(array_type.element_type, name_string, TypePrecedence::ARRAY);
 			} break;
 
-			case FUNCTION:
+			case TypeKind::FUNCTION:
 			{
 				const auto& function_type = type.get<FunctionType>();
 

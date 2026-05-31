@@ -8,26 +8,18 @@
 
 namespace hz
 {
-#include <allocator/defs/ValueKind.x>
+#define VALUE_KINDS(X) \
+	X(REGISTER, register) \
+	X(STACK, stack) \
+	X(STATIC, static)
 
-	enum class ValueTag : TagType
-	{
-#define X(enumerator, name) enumerator,
-		VALUE_KINDS(X)
-#undef X
-	};
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case ValueTag::enumerator: return #name;
 
-	constexpr std::string_view to_string(ValueTag tag)
-	{
-		switch (tag)
-		{
-#define X(enumerator, name) case ValueTag::enumerator: return #name;
-			VALUE_KINDS(X)
-#undef X
-		}
+	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, VALUE_KINDS, ValueTag, value tag, : TagType)
 
-		return "<unknown value tag>";
-	}
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

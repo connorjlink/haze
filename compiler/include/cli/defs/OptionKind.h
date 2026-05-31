@@ -1,29 +1,29 @@
 #ifndef HAZE_OPTIONKIND_H
 #define HAZE_OPTIONKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze OptionKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class OptionKind
-	{
-#define X(enumerator, name) enumerator,
-#include <cli/defs/OptionKind.x>
-#undef X
-	};
+#define OPTION_KINDS(X) \
+	X(ARCHITECTURE, architecture) \
+	X(VERBOSITY, verbosity) \
+	X(EXECUTION, execution) \
+	X(OPTIMIZATION, optimization) \
+	X(OUTPUT, output) \
+	X(OUTFILE, outfile)
 
-	constexpr std::string_view to_string(OptionKind option)
-	{
-		switch (option)
-		{
-#define X(enumerator, name) case OptionKind::enumerator: return #name;
-#include <cli/defs/OptionKind.x>
-#undef X
-		}
 
-		return "<unknown option>";
-	}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case OptionKind::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, OPTION_KINDS, OptionKind, option kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif 

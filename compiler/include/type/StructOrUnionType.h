@@ -13,12 +13,19 @@
 
 namespace hz
 {
-#include <type/defs/StructOrUnionKind.x>
+#define STRUCT_OR_UNION_KINDS(X) \
+	X(STRUCT, struct) \
+	X(UNION, union)
+
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case StructOrUnionKind::enumerator: return #name;
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
 
 	class StructOrUnionType : public TypeBase
 	{

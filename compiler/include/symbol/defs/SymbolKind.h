@@ -8,12 +8,20 @@
 
 namespace hz
 {
-#include <symbol/defs/SymbolKind.x>
+#define SYMBOL_KINDS(X) \
+	X(FUNCTION, function) \
+	X(VARIABLE, variable) \
+	X(LABEL, label) \
+	X(TYPE, type) 
+
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case SymbolKind::enumerator: return #name;
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, SYMBOL_KINDS, Symbol, symbol)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif 

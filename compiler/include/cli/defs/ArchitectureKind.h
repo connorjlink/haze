@@ -4,6 +4,7 @@
 #include <error/ErrorReporter.h>
 #include <x86/defs/X86Register.h>
 #include <riscv/defs/RISCVRegister.h>
+#include <utility/AutoEnum.h>
 #include <utility/Constants.h>
 
 // Haze ArchitectureKind.h
@@ -11,26 +12,19 @@
 
 namespace hz
 {
-#include <cli/defs/ArchitectureKind.x>
+#define ARCHITECTURE_KINDS(X) \
+	X(X86, x86) \
+	X(RISCV, risc-v)
 
-	enum class ArchitectureKind
-	{
-#define X(enumerator, name) enumerator,
-		ARCHITECTURE_KINDS(X)
-#undef X
-	};
 
-	constexpr std::string_view to_string(ArchitectureKind type)
-	{
-		switch (type)
-		{
-#define X(enumerator, name) case ArchitectureKind::enumerator: return #name;
-			ARCHITECTURE_KINDS(X)
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case ArchitectureKind::enumerator: return #name;
 
-		return "<unknown architecture kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, ARCHITECTURE_KINDS, ArchitectureKind, architecture kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
 
 	constexpr std::pair<std::size_t, std::size_t> get_register_extrema(ArchitectureKind kind)
 	{

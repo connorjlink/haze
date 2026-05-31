@@ -5,6 +5,7 @@
 #include <type/defs/StorageClass.h>
 #include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeKind.h>
+#include <utility/AutoEnum.h>
 #include <utility/Constants.h>
 
 // Haze FloatType.h
@@ -12,24 +13,20 @@
 
 namespace hz
 {
-	enum class FloatKind
-	{
-#define X(enumerator, name) enumerator,
-#include <type/defs/FloatKind.x>
-#undef X
-	};
+#define FLOAT_KINDS(X) \
+	X(FLOAT, float) \
+	X(DOUBLE, double) \
+	X(LONG_DOUBLE, long double)
 
-	constexpr std::string_view to_string(FloatKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case FloatKind::enumerator: return #name;
-#include <type/defs/FloatKind.x>
-#undef X
-		}
 
-		return "<unknown float kind>";
-	}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case FloatKind::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, FLOAT_KINDS, FloatKind, float kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
 
 	class FloatType : public TypeBase
 	{
@@ -49,7 +46,7 @@ namespace hz
 			switch (float_kind)
 			{
 #define X(enumerator, name) case FloatKind::enumerator: return sizeof(name);
-#include <type/defs/FloatKind.x>
+				FLOAT_KINDS(X)
 #undef X
 			}
 

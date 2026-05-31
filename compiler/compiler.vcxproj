@@ -133,6 +133,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="template\Skeleton.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClInclude Include="include\allocator\defs\ValueKind.h" />
     <ClInclude Include="include\ast\declaration\Declaration.h" />
     <ClInclude Include="include\ast\declaration\defs\DeclarationKind.h" />
@@ -142,6 +145,11 @@
     <ClInclude Include="include\ast\expression\Expression.h" />
     <ClInclude Include="include\ast\function\defs\FunctionKind.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
+    <ClInclude Include="include\ir\defs\BinaryIntermediateKind.h" />
+    <ClInclude Include="include\ir\defs\CompareIntermediateKind.h" />
+    <ClInclude Include="include\ir\defs\IntermediateTypeKind.h" />
+    <ClInclude Include="include\ir\defs\UnaryIntermediateKind.h" />
+    <ClInclude Include="include\runtime\defs\VariableKind.h" />
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
     <ClInclude Include="include\type\defs\TypeKind.h" />
     <ClInclude Include="include\utility\AutoEnum.h" />
@@ -251,6 +259,9 @@
     <ClInclude Include="include\x86\X86Operand.h" />
     <ClInclude Include="include\x86\X86OperandType.h" />
     <ClInclude Include="include\x86\defs\X86Register.h" />
+    <ClInclude Include="template\Skeleton.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\allocator\Allocator.h" />
@@ -328,43 +339,6 @@
     <ClInclude Include="include\utility\ExtendedInteger.h" />
     <ClInclude Include="include\utility\JSON.h" />
     <ClInclude Include="include\utility\Random.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\allocator\defs\ValueKind.x" />
-    <None Include="include\ast\declaration\defs\DeclarationKind.x" />
-    <None Include="include\ast\expression\defs\BinaryExpressionKind.x" />
-    <None Include="include\ast\expression\defs\PostfixExpressionKind.x" />
-    <None Include="include\ast\expression\defs\PrimaryExpressionKind.x" />
-    <None Include="include\ast\expression\defs\UnaryExpressionKind.x" />
-    <None Include="include\ast\function\defs\FunctionKind.x" />
-    <None Include="include\ast\statement\defs\StatementKind.x" />
-    <None Include="include\cli\defs\ArchitectureKind.x" />
-    <None Include="include\cli\defs\OptimizationFlag.x" />
-    <None Include="include\cli\defs\OptionKind.x" />
-    <None Include="include\cli\defs\VerbosityKind.x" />
-    <None Include="include\command\defs\CommandKind.x" />
-    <None Include="include\error\defs\ErrorKind.x" />
-    <None Include="include\ir\defs\BinaryIntermediateKind.x" />
-    <None Include="include\ir\defs\CompareIntermediateKind.x" />
-    <None Include="include\ir\defs\IntermediateKind.x" />
-    <None Include="include\ir\defs\IntermediateType.x" />
-    <None Include="include\ir\defs\UnaryIntermediateKind.x" />
-    <None Include="include\riscv\defs\RISCVInstructionKind.x" />
-    <None Include="include\riscv\defs\RISCVRegister.x" />
-    <None Include="include\runtime\defs\VariableKind.x" />
-    <None Include="include\symbol\defs\SymbolKind.x" />
-    <None Include="include\toolchain\defs\ToolchainKind.x" />
-    <None Include="include\type\defs\FloatKind.x" />
-    <None Include="include\type\defs\IntKind.x" />
-    <None Include="include\type\defs\StorageClass.x" />
-    <None Include="include\type\defs\StructOrUnionKind.x" />
-    <None Include="include\type\defs\TypeKind.x" />
-    <None Include="include\type\defs\TypeMethods.x" />
-    <None Include="include\type\defs\TypeQualifier.x" />
-    <None Include="include\type\defs\TypeSignedness.x" />
-    <None Include="include\x86\defs\X86InstructionKind.x" />
-    <None Include="include\x86\defs\X86OperandKind.x" />
-    <None Include="include\x86\defs\X86Register.x" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

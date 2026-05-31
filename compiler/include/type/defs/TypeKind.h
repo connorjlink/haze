@@ -6,26 +6,25 @@
 
 namespace hz
 {
-#include <type/defs/TypeKind.x>
+#define TYPE_KINDS(X) \
+	X(VOID, VoidType, void) \
+	X(INT, IntType, int) \
+	X(FLOAT, FloatType, float) \
+	X(STRUCT_OR_UNION, StructOrUnionType, struct-or-union) \
+	X(ENUM, EnumType, enum) \
+	X(TYPEDEF_NAME, TypedefNameType, typedef-name) \
+	X(POINTER, PointerType, pointer) \
+	X(ARRAY, ArrayType, array) \
+	X(FUNCTION, FunctionType, function)
 
-	enum class TypeKind
-	{
-#define X(enumerator, name, type) enumerator,
-		TYPE_KINDS(X)
-#undef X
-	};
 
-	constexpr std::string_view to_string(TypeKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case TypeKind::enumerator: return #name;
-			TYPE_KINDS(X)
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, type, name) enumerator,
+#define SWITCH_CASE(enumerator, type, name) case TypeKind::enumerator: return #name;
 
-		return "<unknown type kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, TYPE_KINDS, TypeKind, type kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif

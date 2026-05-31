@@ -1,9 +1,0 @@
-// Haze VariableKind.x
-// (c) Connor J. Link. All Rights Reserved.
-
-X(VOID, VoidVariable, void)
-X(INT, IntVariable, int)
-X(FLOAT, FloatVariable, float)
-X(STRUCT_OR_UNION, StructOrUnionVariable, struct or union)
-X(ENUM, EnumVariable, enum)
-X(

@@ -106,7 +106,7 @@ namespace hz
 
 	public:
 		using type = std::conditional_t<
-			sizeof...(Ts) > 0,
+			(sizeof...(Ts) > 0),
 			decltype(helper(std::make_index_sequence<sizeof...(Ts) - 1>{})),
 			std::tuple<>
 		>;

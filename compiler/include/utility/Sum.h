@@ -108,7 +108,7 @@ namespace hz
 	template<typename T, typename SumT, template<typename, typename> typename MethodsT, typename AnchorT>
 	concept SumElement = SumTuple<T, SumT, MethodsT<SumT, AnchorT>>;
 
-	template<template<typename, typename> typename MethodsT, typename... Ts>
+	template<template<typename> typename MethodsT, typename... Ts>
 		requires (sizeof...(Ts) > std::numeric_limits<TagType>::min() and sizeof...(Ts) <= std::numeric_limits<TagType>::max())
 	struct Sum
 	{
@@ -122,7 +122,7 @@ namespace hz
 		using TypeAt = std::tuple_element_t<I, Type>;
 
 	public:
-		using Methods = MethodsT<Sum, Anchor>;
+		using Methods = MethodsT<Anchor>;
 
 	public:
 		struct Storage : public SumStorage<Ts...>

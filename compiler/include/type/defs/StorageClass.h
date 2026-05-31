@@ -4,37 +4,35 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/models/Token.h>
+#include <utility/AutoEnum.h>
 
 // Haze StorageClass.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum class StorageClass
-	{
-#define X(enumerator, name) enumerator,
-#include <type/defs/StorageClass.x>
-#undef X
-	};
+#define STORAGE_CLASSES(X) \
+	X(AUTO, auto) \
+	X(REGISTER, register) \
+	X(STATIC, static) \
+	X(EXTERN, extern)
 
-	constexpr std::string_view to_string(StorageClass storage)
-	{
-		switch (storage)
-		{
-#define X(enumerator, name) case StorageClass::enumerator: return #name;
-#include <type/defs/StorageClass.x>
-#undef X
-		}
 
-		return "<unknown storage class>";
-	}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case StorageClass::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, STORAGE_CLASSES, StorageClass, storage class)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
 
 	constexpr StorageClass token_to_storage_class(TokenKind token)
 	{
 		switch (token)
 		{
 #define X(enumerator, name) case TokenKind::enumerator: return StorageClass::enumerator;
-#include <type/defs/StorageClass.x>
+			STORAGE_CLASSES(X)
 #undef X
 		}
 

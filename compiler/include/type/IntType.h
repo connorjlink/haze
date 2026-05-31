@@ -1,3 +1,4 @@
+
 #ifndef HAZE_INTTYPE_H
 #define HAZE_INTTYPE_H
 
@@ -6,32 +7,29 @@
 #include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeSignedness.h>
 #include <type/defs/TypeKind.h>
+#include <utility/AutoEnum.h>
 
 // Haze IntType.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-#include <type/defs/IntKind.x>
+#define INT_KINDS(X) \
+	X(CHAR, char) \
+	X(SHORT, short) \
+	X(INT, int) \
+	X(LONG, long) \
+	X(LONG_LONG, long long)
 
-	enum class IntKind
-	{
-#define X(enumerator, name) enumerator,
-		INT_KINDS(X)
-#undef X
-	};
 
-	constexpr std::string_view to_string(IntKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case IntKind::enumerator: return #name;
-			INT_KINDS(X)
-#undef X
-		}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case IntKind::enumerator: return #name;
 
-		return "<unknown int kind>";
-	}
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, INT_KINDS, IntKind, int kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
+
 
 	class IntType : public TypeBase
 	{

@@ -4,8 +4,8 @@
 // Haze AutoEnum.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define DEFINE_ENUM(enummember, switchcase, kinds, type, name) \
-	enum class type \
+#define DEFINE_ENUM_INTERNAL(enummember, switchcase, kinds, type, name, extras) \
+	enum class type extras \
 	{ \
 		kinds(enummember) \
 	}; \
@@ -17,5 +17,11 @@
 		} \
 		return "<unknown " #name ">"; \
 	}
+
+#define DEFINE_ENUM(enummember, switchcase, kinds, type, name) \
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, kinds, type, name, )
+
+#define DEFINE_ENUM_BACKED(enummember, switchcase, kinds, type, name, base) \
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, kinds, type, name, base)
 
 #endif

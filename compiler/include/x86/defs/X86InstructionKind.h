@@ -1,6 +1,7 @@
 #ifndef HAZE_X86INSTRUCTIONKIND_H
 #define HAZE_X86INSTRUCTIONKIND_H
 
+#include <utility/AutoEnum.h>
 #include <utility/Formatter.h>
 
 // Haze X86InstructionKind.h
@@ -8,24 +9,57 @@
 
 namespace hz
 {
-	enum class X86InstructionKind
-	{
-#define X(enumerator, name) enumerator,
-#include <x86/defs/X86InstructionKind.x>
-#undef X
-	};
+#define X86_INSTRUCTION_KINDS(X) \
+	X(PUSH, push) \
+	X(POP, pop) \
+	X(MOV, mov) \
+	X(MOVZX, movzx) \
+	X(ADD, add) \
+	X(SUB, sub) \
+	X(OR, or ) \
+	X(AND, and) \
+	X(XOR, xor) \
+	X(INC, inc) \
+	X(DEC, dec) \
+	X(SAL, sal) \
+	X(SAR, sar) \
+	X(TEST, test) \
+	X(CMP, cmp) \
+	X(CALL, call) \
+	X(APICALL, apicall) \
+	X(JMP, jmp) \
+	X(JE, je) \
+	X(JNE, jne) \
+	X(JL, jl) \
+	X(JLE, jle) \
+	X(JG, jg) \
+	X(JGE, jge) \
+	X(JA, ja) \
+	X(JAE, jae) \
+	X(JB, jb) \
+	X(JBE, jbe) \
+	X(SETE, sete) \
+	X(SETNE, setne) \
+	X(SETL, setl) \
+	X(SETLE, setle) \
+	X(SETG, setg) \
+	X(SETGE, setge) \
+	X(SETA, seta) \
+	X(SETAE, setae) \
+	X(SETB, setb) \
+	X(SETBE, setbe) \
+	X(NOP, nop) \
+	X(RET, ret) \
+	X(LEAVE, leave)
 
-	constexpr std::string_view to_string(X86InstructionKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, name) case X86InstructionKind::enumerator: return #name;
-#include <x86/defs/X86InstructionKind.x>
-#undef X
-		}
 
-		return "<unknown x86 instruction kind>";
-	}
+#define ENUM_MEMBER(enumerator, name) enumerator,
+#define SWITCH_CASE(enumerator, name) case X86InstructionKind::enumerator: return #name;
+
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, X86_INSTRUCTION_KINDS, X86InstructionKind, x86 instruction kind)
+
+#undef SWITCH_CASE
+#undef ENUM_MEMBER
 }
 
 #endif
