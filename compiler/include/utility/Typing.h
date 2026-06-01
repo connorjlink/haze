@@ -115,7 +115,7 @@ namespace hz
 	};
 
 	template<typename... Ts>
-	using AllButLastT = typename AllButLast<Ts...>::type;
+	using AllButLastT = typename AllButLast<std::tuple<Ts...>>::type;
 
 
 	template<template<typename...> typename Tuple1, template<typename...> typename Tuple2>
