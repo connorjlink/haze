@@ -35,7 +35,7 @@ namespace hz
 		Method<&AnchorT::tag_type, TagType()>,
 		Method<&AnchorT::format, std::string()>,
 		Method<&AnchorT::load_into, void(Generator&, Register)>,
-		Method<&AnchorT::store_from, void(Generator&, Register)>,
+		Method<&AnchorT::store_from, void(Generator&, Register)>
 	>;
 
 	template<typename SumMemberT, typename SumStorageT>

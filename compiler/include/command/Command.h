@@ -41,20 +41,7 @@ namespace hz
 
 	public:
 		template<typename Self>
-		CommandKind command_kind(this Self&& self)
-		{
-			switch (self.tag_type())
-			{
-#define X(enumerator, type, name) case TypeIndexV<type, typename CommandSumStorage::Type>: return CommandKind::enumerator;
-				COMMAND_KINDS(X)
-#undef X
-			}
-
-			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"invalid command tag `{}`", self.tag_type()), self.token);
-
-			return CommandKind::LABEL;
-		}
+		CommandKind command_kind(this Self&&);
 	};
 }
 
@@ -159,6 +146,23 @@ namespace hz
 	using CommandReference = CommandSum::template Reference<T>;
 
 	using CommandHandle = CommandSum::Handle;
+
+
+	template<typename Self>
+	CommandKind CommandBase::command_kind(this Self&& self)
+	{
+		switch (self.tag_type())
+		{
+#define X(enumerator, type, name) case TypeIndexV<type, typename CommandSumStorage::Type>: return CommandKind::enumerator;
+			COMMAND_KINDS(X)
+#undef X
+		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"invalid command tag `{}`", self.tag_type()), self.token);
+
+		return CommandKind::LABEL;
+	}
 }
 
 #endif

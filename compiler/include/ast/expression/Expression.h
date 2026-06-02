@@ -17,7 +17,7 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-	DEFINE_SUM_ANCILLARY(Expression, AST_METHODS)
+	DEFINE_SUM(Expression, AST_METHODS)
 
 
 	class ExpressionBase

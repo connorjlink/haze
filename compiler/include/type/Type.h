@@ -18,13 +18,13 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-#define TYPE_METHODS(X) \
+#define TYPE_METHODS(X, handlet) \
 	X(type_kind, TypeKind) \
 	X(size, Offset) \
 	X(is_complete, bool)
 
 
-	DEFINE_SUM_ANCILLARY(Type, TYPE_METHODS)
+	DEFINE_SUM(Type, TYPE_METHODS)
 
 
 	class TypeBase 

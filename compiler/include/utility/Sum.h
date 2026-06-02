@@ -224,17 +224,17 @@ namespace hz
 #define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
 #define SUM_DISPATCH_ENTRY(name, returntype) DEFINE_SUM_METHOD(name, returntype)
 
-#define DEFINE_SUM_ANCILLARY(name, X) \
+#define DEFINE_SUM(name, X) \
 	template<typename SumStorageT> \
 	class name##SumDispatcher : public SumDispatcher<SumStorageT> \
 	{ \
 	public: \
-		X(SUM_DISPATCH_ENTRY) \
+		X(SUM_DISPATCH_ENTRY, name##Handle) \
 	}; \
 	template<typename AnchorT> \
 	using name##Methods = AllButLastT<std::tuple \
 		< \
-			X(METHOD_TUPLE_ENTRY) \
+			X(METHOD_TUPLE_ENTRY, name##Handle) \
 			void \
 		> \
 	>; \
@@ -243,6 +243,14 @@ namespace hz
 	template<typename T> \
 	using name##Reference = SumReference<T, name##SumDispatcher, name##SumStorage>; \
 	using name##Facade = SumMemberBase<name##SumStorage>; 
+
+#define FORWARD_DECLARE_SUM(name) \
+	template<template<typename> typename SumDispatcherT, typename SumStorageT> \
+	struct SumHandle; \
+	template<typename SumStorageT> \
+	class name##SumDispatcher; \
+	struct name##SumStorage; \
+	using name##Handle = SumHandle<name##SumDispatcher, name##SumStorage>;
 
 
 	// dynamic dispatch wrapper type for sum families

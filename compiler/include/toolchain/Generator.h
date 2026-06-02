@@ -15,8 +15,18 @@
 namespace hz
 {
 	class Node;
-	struct ExpressionHandle;
-	struct ValueHandle;
+
+	FORWARD_DECLARE_SUM(Expression);
+	FORWARD_DECLARE_SUM(Value);
+
+
+	// 4. Do the exact same for Value components
+	template<typename SumStorageT>
+	class ValueSumDispatcher;
+	struct ValueSumStorage;
+
+	using ValueHandle = SumHandle<ValueSumDispatcher, ValueSumStorage>;
+	
 
 	class Generator
 		: public ServiceTag<Generator>

@@ -5,15 +5,13 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolExporter.h>
+#include <utility/Sum.h>
 
 // Haze SymbolDatabase.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	struct Token;
-	class Type;
-	enum class SymbolKind;
 	class Symbol;
 	class FunctionSymbol;
 	class ArgumentSymbol;
@@ -23,6 +21,13 @@ namespace hz
 	class StructSymbol;
 	class Expression;
 	class ArgumentExpression;
+
+	struct Token;
+
+	enum class SymbolKind;
+
+	FORWARD_DECLARE_SUM(Expression);
+
 
 	class SymbolDatabase
 		: public SingletonTag<SymbolDatabase>
