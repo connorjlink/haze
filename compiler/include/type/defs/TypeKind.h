@@ -7,15 +7,15 @@
 namespace hz
 {
 #define TYPE_KINDS(X) \
-	X(VOID, LEAF, VoidType, void) \
-	X(INT, LEAF, IntType, int) \
-	X(FLOAT, LEAF, FloatType, float) \
-	X(STRUCT_OR_UNION, LEAF, StructOrUnionType, struct-or-union) \
-	X(ENUM, LEAF, EnumType, enum) \
-	X(TYPEDEF_NAME, LEAF, TypedefNameType, typedef-name) \
-	X(POINTER, POINTER, PointerType, pointer) \
-	X(ARRAY, ARRAY, ArrayType, array) \
-	X(FUNCTION, FUNCTION, FunctionType, function)
+	X(VOID,            LEAF,     VoidType,          void) \
+	X(INT,             LEAF,     IntType,           int) \
+	X(FLOAT,           LEAF,     FloatType,         float) \
+	X(STRUCT_OR_UNION, LEAF,     StructOrUnionType, struct-or-union) \
+	X(ENUM,            LEAF,     EnumType,          enum) \
+	X(TYPEDEF_NAME,    LEAF,     TypedefNameType,   typedef-name) \
+	X(POINTER,         POINTER,  PointerType,       pointer) \
+	X(ARRAY,           ARRAY,    ArrayType,         array) \
+	X(FUNCTION,        FUNCTION, FunctionType,      function)
 
 
 #define ENUM_MEMBER(enumerator, precedence, type, name) enumerator,

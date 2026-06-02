@@ -13,6 +13,8 @@
 
 namespace hz
 {
+	class MemberDeclarationExpression;
+
 	class CompilerParser : public Parser
 	{
 	public:
@@ -37,7 +39,7 @@ namespace hz
 		StatementReference<ContinueStatement> parse_continue_statement(const std::string&);
 		StatementReference<BreakStatement> parse_break_statement(const std::string&);
 		StatementReference<SwitchStatement> parse_switch_statement(const std::string&);
-		StatementReference<CompoundStatemnet> parse_compound_statement(const std::string&);
+		StatementReference<CompoundStatement> parse_compound_statement(const std::string&);
 		StatementReference<LabeledStatement> parse_labeled_statement(const std::string&);
 		StatementReference<DeclarationStatement> parse_declaration_statement(const std::string&);
 

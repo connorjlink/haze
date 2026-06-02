@@ -9,10 +9,10 @@
 namespace hz
 {
 #define COMMAND_KINDS(X) \
-	X(LABEL, LabelCommand, label) \
+	X(LABEL,       LabelCommand,       label) \
 	X(INSTRUCTION, InstructionCommand, instruction) \
-	X(DOTORG, DotorgCommand, .org) \
-	X(DOTBYTE, DotbyteCommand, .byte)
+	X(DOTORG,      DotOrgCommand,      .org) \
+	X(DOTBYTE,     DotByteCommand,     .byte)
 
 
 #define ENUM_MEMBER(enumerator, type, name) enumerator,

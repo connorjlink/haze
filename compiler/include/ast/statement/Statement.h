@@ -4,10 +4,12 @@
 #include <allocator/Value.h>
 #include <ast/AST.h>
 #include <ast/declaration/Declaration.h>
+#include <ast/statement/defs/StatementKind.h>
 #include <data/DependencyInjector.h>
 #include <toolchain/models/Token.h>
 #include <toolchain/RISCVAssemblerParser.h>
 #include <type/Type.h>
+#include <utility/Sum.h>
 
 // Haze Statement.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -16,16 +18,15 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-	struct StatementSumStorage;
+	FORWARD_DECLARE_SUM(Statement)
 
-	using StatementHandle = SumHandle<StatementSumStorage>;
+	template<typename MethodsT>
+	using StatementASTMethods = ASTMethods<MethodsT, StatementHandle>;
 
-	template<typename T>
-	using StatementReference = SumReference<T, StatementSumStorage>;
+	DEFINE_SUM(Statement, AST_METHODS)
 
-	using StatementFacade = SumMemberBase<StatementSumStorage>;
 
-	struct StatementBase : public StatementFacade
+	class StatementBase : public StatementFacade
 	{
 	public:
 		using Storage = StatementSumStorage;
@@ -41,17 +42,7 @@ namespace hz
 
 	public:
 		template<typename Self>
-		StatementKind statement_kind(this Self&& self)
-		{
-			switch (self.tag_type())
-			{
-#define X(enumerator, type, name) case TypeIndexV<type, typename StatementSumStorage::Type>: return StatementKind::enumerator;
-#include <ast/statement/defs/StatementKind.x>
-#undef X
-			}
-
-			return "<unknown statement kind>";
-		}
+		StatementKind statement_kind(this Self&&);
 	};
 }
 
@@ -369,7 +360,7 @@ namespace hz
 		std::vector<CommandHandle> commands;
 
 	public:
-		InlineAssemblyStatement(const std::vector<CommandHadle>& commands, const Token& token)
+		InlineAssemblyStatement(const std::vector<CommandHandle>& commands, const Token& token)
 			: StatementBase{ token }, commands{ commands }
 		{
 		}
@@ -385,37 +376,49 @@ namespace hz
 #define MAKE_INLINE_ASSEMBLY_STATEMENT(commands, token) InlineAssemblyStatement{ commands, token }
 
 
+	//////////////////////////////////////////////////////
+	// All Statements
+	//////////////////////////////////////////////////////
+
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
 	concept Type = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
 
-	// statements use the base AST node methods
-
-	using StatementTypes = SumTypeList
+	using StatementKinds = SumTypeList
 	<
-		NullStatement,
-		ExpressionStatement,
-		ReturnStatement,
-		IfStatement,
-		WhileStatement,
-		DoStatement,
-		ForStatement,
-		GotoStatement,
-		ContinueStatement,
-		BreakStatement,
-		ReturnStatement,
-		CompoundStatement,
-		VariableDeclarationStatement,
-		InlineAssemblyStatement,
-		LabeledStatement,
+#define X(enumerator, type, name) type,
+		STATEMENT_KINDS(X)
+#undef X
+		void
 	>;
 
-	using StatementSum = MakeSum<ASTMethods, StatementTypes>::Type;
+	using StatementSumImplementation = MakeSum<StatementASTMethods, StatementKinds>::Type;
 
-	template<typename T>
-	using StatementReference = StatementSum::template Reference<T>;
+	struct StatementSumStorage : public StatementSumImplementation::Storage
+	{
+		using StatementSumImplementation::Storage::Storage;
 
-	using StatementHandle = StatementSum::Handle;
+		using Type = StatementSumImplementation::Type;
+		using Anchor = StatementSumImplementation::Anchor;
+	};
+
+
+	template<typename Self>
+	StatementKind StatementBase::statement_kind(this Self&& self)
+	{
+		switch (self.tag_type())
+		{
+#define X(enumerator, type, name) case TypeIndexV<type, typename StatementSumStorage::Type>: return StatementKind::enumerator;
+			STATEMENT_KINDS(X)
+#undef X
+		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"invalid statement tag `{}`", self.tag_type()), self.token);
+
+		// error recovery does not care about statement kind
+		return StatementKind::NULL;
+	}
 }
 
 #endif

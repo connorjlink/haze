@@ -22,6 +22,9 @@ namespace hz
 	class StructSymbol;
 	class DefineSymbol;
 	class LabelSymbol;
+	class AdjustExpression;
+
+	enum class ParserType;
 
 	class Parser
 		: public ServiceTag<Parser>

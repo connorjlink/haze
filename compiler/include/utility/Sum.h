@@ -23,24 +23,24 @@ namespace hz
 	static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
 	// dynamic dispatch generator for sum families
-	template<typename Fn, typename SumStorageT, typename Tuple, std::size_t... Is>
+	template<typename MethodT, typename SumStorageT, typename Tuple, std::size_t... Is>
 	consteval auto make_dispatch_table_impl(std::index_sequence<Is...>)
 	{
 		return std::array
 		{
-			[](const SumStorageT& sum, IndexType index) -> typename Fn::ReturnType
+			[](const SumStorageT& sum, IndexType index) -> typename MethodT::ReturnType
 			{
 				using T = std::tuple_element_t<Is, Tuple>;
 				const auto& vector = sum.storage.template get<T>();
-				return (vector[index].*Fn::pointer)(sum);
+				return (vector[index].*MethodT::pointer)(sum);
 			}...
 		};
 	}
 
-	template<typename Fn, typename SumStorageT, typename Tuple>
+	template<typename MethodT, typename SumStorageT, typename Tuple>
 	consteval auto make_dispatch_table()
 	{
-		return make_dispatch_table_impl<Fn, SumStorageT, Tuple>(
+		return make_dispatch_table_impl<MethodT, SumStorageT, Tuple>(
 			std::make_index_sequence<std::tuple_size_v<Tuple>>{});
 	}
 
@@ -51,6 +51,10 @@ namespace hz
 	{
 	public:
 		static constexpr std::size_t size = sizeof...(Ts);
+
+	public:
+		using Type = std::tuple<Ts...>;
+		using Anchor = std::tuple_element_t<0, Type>;
 
 	public:
 		std::tuple<std::vector<Ts>...> storage;
@@ -232,11 +236,10 @@ namespace hz
 		X(SUM_DISPATCH_ENTRY, name##Handle) \
 	}; \
 	template<typename AnchorT> \
-	using name##Methods = AllButLastT<std::tuple \
-		< \
-			X(METHOD_TUPLE_ENTRY, name##Handle) \
-			void \
-		> \
+	using name##Methods = AllButLastT \
+	< \
+		X(METHOD_TUPLE_ENTRY, name##Handle) \
+		void \
 	>; \
 	struct name##SumStorage; \
 	using name##Handle = SumHandle<name##SumDispatcher, name##SumStorage>; \

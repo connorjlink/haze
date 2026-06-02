@@ -16,19 +16,21 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-	struct CommandSumStorage;
+	FORWARD_DECLARE_SUM(Command)
 
-	using CommandHandle = SumHandle<CommandSumStorage>;
+	template<typename MethodsT>
+	using CommandASTMethods = BaseASTMethods<MethodsT, CommandHandle>;
 
-	template<typename T>
-	using CommandReference = SumReference<T, CommandSumStorage>;
+	DEFINE_SUM(Command, BASE_AST_METHODS)
 
-	using CommandFacade = SumMemberBase<CommandSumStorage>;
 
 	class CommandBase
 		: public CommandFacade
 		, public InjectSingleton<ErrorReporter>
 	{
+	public:
+		using Storage = CommandSumStorage;
+
 	public:
 		Address offset;
 		Token token;
@@ -132,20 +134,26 @@ namespace hz
 #define MAKE_DOTBYTE_COMMAND(bytes, token) DotbyteCommand{ bytes, token }
 
 
-	using CommandTypes = SumTypeList
+	template<typename SumMemberT, typename SumStorageT>
+	concept CommandConcept = SumTuple<SumMemberT, SumStorageT, CommandASTMethods<SumStorageT>>;
+
+	using CommandKinds = SumTypeList
 	<
-		LabelCommand,
-		InstructionCommand,
-		DotOrgCommand,
-		DotByteCommand,
+#define X(enumerator, type, name) type,
+		COMMAND_KINDS(X)
+#undef X
+		void
 	>;
 
-	using CommandSum = MakeSum<BaseASTMethods, CommandTypes>::Type;
+	using CommandSumImplementation = MakeSum<CommandASTMethods, CommandKinds>::Type;
 
-	template<typename T>
-	using CommandReference = CommandSum::template Reference<T>;
+	struct CommandSumStorage : public CommandSumImplementation::Storage
+	{
+		using CommandSumImplementation::Storage::Storage;
 
-	using CommandHandle = CommandSum::Handle;
+		using Type = CommandSumImplementation::Type;
+		using Anchor = CommandSumImplementation::Anchor;
+	};
 
 
 	template<typename Self>
@@ -158,6 +166,7 @@ namespace hz
 #undef X
 		}
 
+		// error recovery does not care about command kind
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"invalid command tag `{}`", self.tag_type()), self.token);
 

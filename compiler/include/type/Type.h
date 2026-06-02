@@ -23,7 +23,6 @@ namespace hz
 	X(size, Offset) \
 	X(is_complete, bool)
 
-
 	DEFINE_SUM(Type, TYPE_METHODS)
 
 

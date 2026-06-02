@@ -255,7 +255,6 @@
     <ClInclude Include="include\type\VoidType.h" />
     <ClInclude Include="include\utility\Lazy.h" />
     <ClInclude Include="include\utility\Ranges.h" />
-    <ClInclude Include="include\utility\Strings.h" />
     <ClInclude Include="include\utility\Variant.h" />
     <ClInclude Include="include\x86\defs\X86InstructionKind.h" />
     <ClInclude Include="include\x86\defs\X86OperandKind.h" />

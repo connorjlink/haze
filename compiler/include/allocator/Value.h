@@ -8,7 +8,6 @@
 #include <error/ErrorReporter.h>
 #include <toolchain/Generator.h>
 #include <utility/Constants.h>
-#include <utility/Strings.h>
 #include <utility/Sum.h>
 #include <utility/Typing.h>
 
@@ -19,27 +18,35 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
-	struct ValueSumStorage;
+#define VALUE_METHODS(X, handlet) \
+	X(tag_type,   ValueKind) \
+	X(format,     std::string) \
+	X(load_into,  void) \
+	X(store_from, void)
 
-	using ValueHandle = SumHandle<ValueSumStorage>;
+	FORWARD_DECLARE_SUM(Value)
 
-	template<typename T>
-	using ValueReference = SumReference<T, ValueSumStorage>;
-
-	using ValueBase = SumMemberBase<ValueSumStorage>;
-	
 	// expose a strict polymorphic interface for values
 	template<typename AnchorT>
-	using ValueMethods = std::tuple
+	using ValueMethods = AllButLastT
 	<
-		Method<&AnchorT::tag_type, TagType()>,
-		Method<&AnchorT::format, std::string()>,
-		Method<&AnchorT::load_into, void(Generator&, Register)>,
-		Method<&AnchorT::store_from, void(Generator&, Register)>
+#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
+		VALUE_METHODS(X, ValueHandle)
+#undef X
+		void
 	>;
 
-	template<typename SumMemberT, typename SumStorageT>
-	concept Value = SumTuple<SumMemberT, SumStorageT, ValueMethods<SumStorageT>>;
+	DEFINE_SUM(Value, VALUE_METHODS)
+	
+
+	class ValueBase : public ValueFacade
+	{
+	public:
+		using Storage = ValueSumStorage;
+
+		template<typename Self>
+		ValueKind value_kind(this Self&&);
+	};
 }
 
 namespace hz
@@ -50,9 +57,9 @@ namespace hz
 		Register index;
 
 	public:
-		ValueTag tag_type() const
+		ValueKind tag_type() const
 		{
-			return ValueTag::REGISTER;
+			return ValueKind::REGISTER;
 		}
 
 		std::string format() const
@@ -86,9 +93,9 @@ namespace hz
 		Offset index;
 
 	public:
-		ValueTag tag_type() const
+		ValueKind tag_type() const
 		{
-			return ValueTag::STACK;
+			return ValueKind::STACK;
 		}
 
 		std::string format() const
@@ -118,9 +125,9 @@ namespace hz
 		Address index;
 
 	public:
-		ValueTag tag_type() const
+		ValueKind tag_type() const
 		{
-			return ValueTag::STATIC;
+			return ValueKind::STATIC;
 		}
 
 		std::string format() const
@@ -143,17 +150,49 @@ namespace hz
 		}
 	};
 
+	// not for public consumption
+	template<typename SumMemberT, typename SumStorageT>
+	concept Value = SumTuple<SumMemberT, SumStorageT, ValueMethods<SumStorageT>>;
 	
 	// nonfacade types for public consumption
-	using ValueTypes = SumTypeList
+	using ValueKinds = SumTypeList
 	<
-		RegisterValue,
-		StackValue,
-		StaticValue
+#define X(enumerator, type, name) type,
+		VALUE_KINDS(X)
+#undef X
+		void
 	>;
 
-	using ValueSum = MakeSum<ValueMethods, ValueTypes>::Type;
-	using ValueBase = SumMemberBase<ValueSum>;
+	using ValueSumImplementation = MakeSum<ValueMethods, ValueKinds>::Type;
+
+	struct ValueSumStorage : public ValueSumImplementation::Storage
+	{
+		using ValueSumImplementation::Storage::Storage;
+
+		using Type = ValueSumImplementation::Type;
+		using Anchor = ValueSumImplementation::Anchor;
+	};
+
+
+	template<typename Self>
+	ValueKind ValueBase::value_kind(this Self&& self)
+	{
+		switch (self.tag_type())
+		{
+#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ValueKind::enumerator;
+			PRIMARY_EXPRESSION_KINDS(X)
+			POSTFIX_EXPRESSION_KINDS(X)
+			UNARY_EXPRESSION_KINDS(X)
+			BINARY_EXPRESSION_KINDS(X)
+#undef X
+		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"invalid value tag `{}`", self.tag_type()), self.token);
+
+		// error recovery does not care about value kind
+		return ValueKind::STACK;
+	}
 }
 
 #endif

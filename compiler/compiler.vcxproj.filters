@@ -500,9 +500,6 @@
     <ClInclude Include="include\utility\Ranges.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\Strings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\type\StructOrUnionType.h">
       <Filter>Header Files</Filter>
     </ClInclude>

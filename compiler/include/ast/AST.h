@@ -10,7 +10,7 @@
 namespace hz
 {
 #define BASE_AST_METHODS(X, handlet) \
-	X(format, std::string) \
+	X(format,   std::string) \
 	X(generate, void) \
 	X(evaluate, handlet) \
 	X(optimize, handlet)
@@ -19,7 +19,7 @@ namespace hz
 	template<typename AnchorT, typename HandleT>
 	using BaseASTMethods = AllButLastT
 	<
-#define X(name, handlet) Method<&AnchorT::name, decltype(&AnchorT::name)>,
+#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
 		BASE_AST_METHODS(X, HandleT)
 #undef X
 		void
@@ -34,7 +34,7 @@ namespace hz
 	template<typename AnchorT, typename HandleT>
 	using ASTMethods = AllButLastT
 	<
-#define X(name, handlet) Method<&AnchorT::name, decltype(&AnchorT::name)>,
+#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
 		AST_METHODS(X, HandleT)
 #undef X
 		void
