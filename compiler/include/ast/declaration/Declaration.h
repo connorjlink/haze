@@ -23,6 +23,9 @@ namespace hz
 	struct DeclarationBase : public DeclarationFacade
 	{
 	public:
+		using Storage = DeclarationSumStorage;
+
+	public:
 		Token token;
 
 	public:
@@ -43,28 +46,96 @@ namespace hz
 
 	class FunctionDeclaration : public DeclarationBase
 	{
+	private:
+		TypeReference<FunctionType> type;
+		std::vector<std::string> formal_parameters;
+
+	public:
+		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, const std::vector<std::string>& formal_parameters)
+			: DeclarationBase{ token }, type{ type }, formal_parameters{ formal_parameters }
+		{
+		}
+
+	public:
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		DeclarationHandle evaluate(const Storage&, Context&) const;
+		DeclarationHandle optimize(const Storage&) const;
 	};
 
 
 	class VariableDeclaration : public DeclarationBase
 	{
+	private:
+		TypeHandle type;
+		ExpressionHandle initializer;
 
+	public:
+		VariableDeclaration(const Token& token, TypeHandle type, ExpressionHandle initializer)
+			: DeclarationBase{ token }, type{ type }, initializer{ initializer }
+		{
+		}
+
+	public:
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		DeclarationHandle evaluate(const Storage&, Context&) const;
+		DeclarationHandle optimize(const Storage&) const;
 	};
 
 
 	class StructOrUnionDeclaration : public DeclarationBase
 	{
-	
+	private:
+		TypeReference<StructOrUnionType> type;
+
+	public:
+		StructOrUnionDeclaration(const Token& token, TypeReference<StructOrUnionType> type)
+			: DeclarationBase{ token }, type{ type }
+		{
+		}
+
+	public:
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		DeclarationHandle evaluate(const Storage&, Context&) const;
+		DeclarationHandle optimize(const Storage&) const;
 	};
 
 	class EnumDeclaration : public DeclarationBase
 	{
-	
+	private:
+		TypeReference<EnumType> type;
+
+	public:
+		EnumDeclaration(const Token& token, TypeReference<EnumType> type)
+			: DeclarationBase{ token }, type{ type }
+		{
+		}
+
+	public:
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		DeclarationHandle evaluate(const Storage&, Context&) const;
+		DeclarationHandle optimize(const Storage&) const;
 	};
 
 	class TypedefDeclaration : public DeclarationBase
 	{
+	private:
+		TypeReference<TypedefNameType> type;
 
+	public:
+		TypedefDeclaration(const Token& token, TypeReference<TypedefNameType> type)
+			: DeclarationBase{ token }, type{ type }
+		{
+		}
+
+	public:
+		std::string format(void) const;
+		void generate(const Storage&) const;
+		DeclarationHandle evaluate(const Storage&, Context&) const;
+		DeclarationHandle optimize(const Storage&) const;
 	};
 
 

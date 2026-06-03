@@ -253,7 +253,10 @@ namespace hz
 	template<typename SumStorageT> \
 	class name##SumDispatcher; \
 	struct name##SumStorage; \
-	using name##Handle = SumHandle<name##SumDispatcher, name##SumStorage>;
+	using name##Handle = SumHandle<name##SumDispatcher, name##SumStorage>; \
+	template<typename T> \
+	using name##Reference = SumReference<T, name##SumDispatcher, name##SumStorage>; \
+	using name##Facade = SumMemberBase<name##SumStorage>; 
 
 
 	// dynamic dispatch wrapper type for sum families

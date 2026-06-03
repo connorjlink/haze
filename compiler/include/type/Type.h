@@ -74,6 +74,9 @@ namespace hz
 	};
 
 
+
+
+
 	template<typename Self>
 	TypeKind TypeBase::type_kind(this Self&& self)
 	{
