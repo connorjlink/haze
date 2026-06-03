@@ -178,6 +178,8 @@ namespace hz
 			const auto case2 = PointerType{ .pointee = make_handle<ArrayType, TypeSumDispatcher, TypeSumStorage>(sum, std::move(case2_helper)), .qualifier = TypeQualifier::VOLATILE };
 			Assert::AreEqual("volatile int(*)[5]"s, to_string(case2));
 
+#pragma message("TODO: add per-sum handle/reference generation logic to reduce the wordiness by self-specializing the make_XX templates")
+
 			// pointer to array 5 of pointer to function (pointer to const char) returning enum a
 			auto case3_func_param = PointerType{ .pointee = const_char_handle, .qualifier = TypeQualifier::NONE };
 			auto case3_func = FunctionType{ .parameters = { make_handle<PointerType, TypeSumDispatcher, TypeSumStorage>(sum, std::move(case3_func_param)) }, .return_type = const_enum, .is_variadic = true };
@@ -188,12 +190,12 @@ namespace hz
 			Assert::AreEqual("const enum my_enum(*(*)[5])(const char*, ...)"s, to_string(case3));
 		}
 
-#define CONCAT(x, y) x##y
 #define TEST_CASE_HELPER(typestring, counter) \
-		static const auto CONCAT(test, counter) = CONCAT(#typestring, s); \
-		CompilerParser CONCAT(parser, counter){ #typestring }; \
-		Assert::AreEqual(CONCAT(test, counter), to_string(CONCAT(parser, counter).parse_type())) /* explicit semicolon omission */
-#define TEST_CASE(typestring) TEST_CASE_HELPER(typestring, __COUNTER__)
+		static const auto test##counter = #typestring##s; \
+		CompilerParser parser##counter{ #typestring }; \
+		Assert::AreEqual(test##counter, to_string(parser##counter.parse_type())) /* explicit semicolon omission */
+#define TEST_CASE_INDIRECT(typestring, counter) TEST_CASE_HELPER(typestring, counter) /* C macro subsitution precedence rules :( */
+#define TEST_CASE(typestring) TEST_CASE_INDIRECT(typestring, __COUNTER__)
 
 		TEST_METHOD(ValidateParsePrimitive)
 		{
@@ -243,7 +245,7 @@ namespace hz
 		}
 
 #undef TEST_CASE
+#undef TEST_CASE_INDIRECT
 #undef TEST_CASE_HELPER
-#undef CONCAT
 	};
 }
