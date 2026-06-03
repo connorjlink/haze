@@ -45,7 +45,7 @@ namespace hz
 			switch (self.tag_type())
 			{
 #define X(enumerator, type, name) case TypeIndexV<type, typename Storage::Type>: return SymbolKind::enumerator;
-#include <symbol/defs/SymbolKind.x>
+				SYMBOL_KINDS(X)
 #undef X
 			}
 

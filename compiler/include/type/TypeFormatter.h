@@ -12,7 +12,18 @@ namespace hz
 
 	TypePrecedence precedence(const TypeBase& type);
 
-	std::string format_type(TypeHandle type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST);
+	std::string to_string(TypeHandle type, const std::string& name = "<anonymous>", TypePrecedence parent_predence = TypePrecedence::LOWEST);
+
+#define DECLARE_TYPE_FORMATTER(t) std::string to_string(const t& type, const std::string& name = "<anonymous>", TypePrecedence parent_precedence)
+
+	// forward declaration required not to form circular dependency with the incomplete type facade
+#define X(enumerator, precedence, type, name) class type;
+	TYPE_KINDS(X)
+#undef X
+
+#define X(enumerator, precedence, type, name) DECLARE_TYPE_FORMATTER(type);
+	TYPE_KINDS(X)
+#undef X
 }
 
 #endif

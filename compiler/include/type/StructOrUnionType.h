@@ -30,7 +30,7 @@ namespace hz
 	class StructOrUnionType : public TypeBase
 	{
 	public:
-		struct StructOrUnionMember
+		struct Member
 		{
 			std::string name;
 			TypeHandle type;
@@ -41,7 +41,7 @@ namespace hz
 		StorageClass storage;
 		TypeQualifier qualifier;
 		StructOrUnionKind struct_or_union_kind;
-		std::optional<std::vector<StructOrUnionMember>> members;
+		std::optional<std::vector<Member>> members;
 		std::string tag;
 
 	public:

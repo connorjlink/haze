@@ -3,12 +3,11 @@ import std;
 #include <ast/expression/Expression.h>
 #include <ast/function/Function.h>
 #include <ast/statement/Statement.h>
-#include <cli/OptimizationType.h>
+#include <cli/defs/OptimizationFlag.h>
 #include <error/CommonErrors.h>
 #include <symbol/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/AssemblerParser.h>
-#include <toolchain/Initializer.h>
 #include <utility/Random.h>
 
 // Haze CompilerParser.cpp

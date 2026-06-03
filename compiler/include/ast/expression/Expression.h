@@ -214,7 +214,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_POSTFIX_INCREMENT_EXPRESSION(operand) PostfixIncrementExpression{ make_handle(ast, operand)
+#define MAKE_POSTFIX_INCREMENT_EXPRESSION(operand) PostfixIncrementExpression{ make_handle(ast, operand) }
 
 	class PostfixDecrementExpression : public ExpressionBase
 	{
@@ -234,7 +234,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_POSTFIX_DECREMENT_EXPRESSION(operand) PostfixDecrementExpression{ make_handle(ast, operand)
+#define MAKE_POSTFIX_DECREMENT_EXPRESSION(operand) PostfixDecrementExpression{ make_handle(ast, operand) }
 
 	class FunctionCallExpression : public ExpressionBase
 	{

@@ -138,7 +138,7 @@ namespace hz
 
 				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"invalid operand types for binary operator `{}`: `{}` and `{}`",
-					binary_expression_kind_map.at(kind), format_type(left_type), format_type(right_type)), NULL_TOKEN);
+					binary_expression_kind_map.at(kind), to_string(left_type), to_string(right_type)), NULL_TOKEN);
 				return make_invalid_handle(ast);
 			} break;
 
@@ -153,7 +153,7 @@ namespace hz
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
 						"invalid operand types for bitwise operator `{}`: `{}` and `{}`",
-						binary_expression_kind_map.at(kind), format_type(left_type), format_type(right_type)), NULL_TOKEN);
+						binary_expression_kind_map.at(kind), to_string(left_type), to_string(right_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
@@ -178,7 +178,7 @@ namespace hz
 					if (!Type::is_compatible(left_type.pointee_type(), right_type.pointee_type()))
 					{
 						USE_SAFE(ErrorReporter)->post_error(std::format(
-							"cannot compare pointers of incompatible types `{}` and `{}`", format_type(left_type), format_type(right_type)), NULL_TOKEN);
+							"cannot compare pointers of incompatible types `{}` and `{}`", to_string(left_type), to_string(right_type)), NULL_TOKEN);
 						return make_invalid_handle(ast);
 					}
 
@@ -189,7 +189,7 @@ namespace hz
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
 						"invalid operand types for relational operator `{}`: `{}` and `{}`",
-						binary_expression_kind_map.at(kind), format_type(left_type), format_type(right_type)), NULL_TOKEN);
+						binary_expression_kind_map.at(kind), to_string(left_type), to_string(right_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
@@ -204,7 +204,7 @@ namespace hz
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
 						"invalid operand types for logical operator `{}`: `{}` and `{}`",
-						binary_expression_kind_map.at(kind), format_type(left_type), format_type(right_type)), NULL_TOKEN);
+						binary_expression_kind_map.at(kind), to_string(left_type), to_string(right_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
@@ -216,14 +216,14 @@ namespace hz
 				if (!left_type.is_struct_or_union())
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"left operand of member access operator must be a struct or union type, got `{}`", format_type(left_type)), NULL_TOKEN);
+						"left operand of member access operator must be a struct or union type, got `{}`", to_string(left_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
 				if (!right_type.is_identifier())
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"right operand of member access operator must be an identifier, got `{}`", format_type(right_type)), NULL_TOKEN);
+						"right operand of member access operator must be an identifier, got `{}`", to_string(right_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
@@ -232,7 +232,7 @@ namespace hz
 				if (!members.contains(member_name))
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"type `{}` has no member named `{}`", format_type(left_type), member_name), NULL_TOKEN);
+						"type `{}` has no member named `{}`", to_string(left_type), member_name), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
@@ -244,14 +244,14 @@ namespace hz
 				if (!(left_type.is_pointer() && left_type.pointee_type().is_struct_or_union()))
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"left operand of member access operator must be a pointer to struct or union type, got `{}`", format_type(left_type)), NULL_TOKEN);
+						"left operand of member access operator must be a pointer to struct or union type, got `{}`", to_string(left_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
 				if (!right_type.is_identifier())
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"right operand of member access operator must be an identifier, got `{}`", format_type(right_type)), NULL_TOKEN);
+						"right operand of member access operator must be an identifier, got `{}`", to_string(right_type)), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
@@ -260,7 +260,7 @@ namespace hz
 				if (!members.contains(member_name))
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"type `{}` has no member named `{}`", format_type(left_type), member_name), NULL_TOKEN);
+						"type `{}` has no member named `{}`", to_string(left_type), member_name), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 

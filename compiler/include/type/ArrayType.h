@@ -38,7 +38,7 @@ namespace hz
 				: "";
 
 			return std::format("{}[{}]",
-				format_type(element_type),
+				to_string(element_type),
 				length_string);
 		}
 

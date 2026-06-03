@@ -7,6 +7,7 @@
 #include <ast/statement/Statement.h>
 #include <allocator/Allocator.h>
 #include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
 #include <toolchain/Parser.h>
@@ -28,7 +29,9 @@ namespace hz
 	DEFINE_SUM(Function, AST_METHODS)
 
 
-	class FunctionBase : public FunctionFacade
+	class FunctionBase 
+		: public FunctionFacade
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		using Storage = FunctionSumStorage;
@@ -50,6 +53,10 @@ namespace hz
 
 namespace hz
 {
+	//////////////////////////////////////////////////////
+	// Standard Functions
+	//////////////////////////////////////////////////////
+
 	class Function 
 		: public FunctionBase
 		, public InjectService<Generator, Parser, Allocator>
@@ -75,6 +82,7 @@ namespace hz
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
 	};
+#define MAKE_FUNCTION(name, returntype, arguments, statement, token) Function{ name, returntype, arguments, make_handle(ast, statement), token }
 
 
 	//////////////////////////////////////////////////////

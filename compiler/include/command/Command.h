@@ -78,7 +78,7 @@ namespace hz
 
 	public:
 		InstructionCommand() = delete;
-		InstructionCommand(const ByteRange&, const std::string& = "", const Token&);
+		InstructionCommand(const Token&, const ByteRange&, const std::string& = "");
 
 	public:
 		inline std::size_t length() const
@@ -93,7 +93,7 @@ namespace hz
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
 	};
-#define MAKE_INSTRUCTION_COMMAND(object_code, branch_target, token) InstructionCommand{ object_code, branch_target, token }
+#define MAKE_INSTRUCTION_COMMAND(token, object_code, branch_target) InstructionCommand{ token, object_code, branch_target }
 
 	class DotOrgCommand : public CommandBase
 	{
