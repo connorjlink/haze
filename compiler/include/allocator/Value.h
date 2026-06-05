@@ -39,7 +39,9 @@ namespace hz
 	DEFINE_SUM(Value, VALUE_METHODS)
 	
 
-	class ValueBase : public ValueFacade
+	class ValueBase 
+		: public ValueFacade
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		using Storage = ValueSumStorage;
@@ -117,9 +119,7 @@ namespace hz
 		}
 	};
 
-	class StaticValue
-		: public ValueBase
-		, public InjectSingleton<ErrorReporter>
+	class StaticValue : public ValueBase
 	{
 	public:
 		Address index;

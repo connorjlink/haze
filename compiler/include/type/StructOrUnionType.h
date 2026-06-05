@@ -45,69 +45,8 @@ namespace hz
 		std::string tag;
 
 	public:
-		TypeKind type_kind() const
-		{
-			return TypeKind::STRUCT_OR_UNION;
-		}
-
-		Offset size() const
-		{
-			if (!members.has_value())
-			{
-				CommonErrors::invalid_struct_or_union_type(struct_or_union_kind, NULL_TOKEN);
-				return -1;
-			}
-
-			using enum StructOrUnionKind;
-			switch (struct_or_union_kind)
-			{
-				case STRUCT:
-				{
-					// don't know here what the alignment is, so struct size is just the largest member's offset + its size
-					Offset running_count{};
-					for (const auto& member : members.value())
-					{
-						const auto member_size = member.type.size();
-						const auto candidate = member.offset + member_size;
-
-						if (candidate > running_count)
-						{
-							running_count = candidate;
-						}
-					}
-
-					return running_count;
-				} break;
-
-				case UNION:
-				{
-					// union size is just the size of its largest member
-					Offset running_count{};
-					for (const auto& member : members.value())
-					{
-						const auto member_size = member.type.size();
-
-						if (member_size > running_count)
-						{
-							running_count = member_size;
-						}
-					}
-
-					return running_count;
-				} break;
-
-				default:
-				{
-					CommonErrors::invalid_struct_or_union_type(struct_or_union_kind, NULL_TOKEN);
-					return -1;
-				} break;
-			}
-		}
-
-		bool is_complete() const
-		{
-			return members.has_value();
-		}
+		Offset size() const;
+		bool is_complete() const;
 	};
 }
 

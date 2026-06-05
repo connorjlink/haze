@@ -18,6 +18,8 @@ namespace hz
 {
 	// forward declare sum storage and self-referential types for facade
 
+	FORWARD_DECLARE_SUM(Type)
+
 #define TYPE_METHODS(X, handlet) \
 	X(type_kind, TypeKind) \
 	X(size, Offset) \
@@ -51,6 +53,10 @@ namespace hz
 
 namespace hz
 {
+	//////////////////////////////////////////////////////
+	// All Types
+	//////////////////////////////////////////////////////
+
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
 	concept TypeConcept = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
@@ -72,8 +78,6 @@ namespace hz
 		using Type = TypeSumImplementation::Type;
 		using Anchor = TypeSumImplementation::Anchor;
 	};
-
-
 
 
 

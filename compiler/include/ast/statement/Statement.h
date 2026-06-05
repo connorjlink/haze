@@ -6,6 +6,7 @@
 #include <ast/declaration/Declaration.h>
 #include <ast/statement/defs/StatementKind.h>
 #include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 #include <toolchain/models/Token.h>
 #include <toolchain/RISCVAssemblerParser.h>
 #include <type/Type.h>
@@ -26,7 +27,9 @@ namespace hz
 	DEFINE_SUM(Statement, AST_METHODS)
 
 
-	class StatementBase : public StatementFacade
+	class StatementBase 
+		: public StatementFacade
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		using Storage = StatementSumStorage;

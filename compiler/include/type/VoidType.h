@@ -4,6 +4,7 @@
 #include <type/defs/StorageClass.h>
 #include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeKind.h>
+#include <utility/Constants.h>
 
 // Haze VoidType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,27 +18,8 @@ namespace hz
 		TypeQualifier qualifier;
 
 	public:
-		TypeKind type_kind() const
-		{
-			return TypeKind::VOID;
-		}
-
-		Offset size() const
-		{
-			return 0;
-		}
-
-		std::string string() const
-		{
-			return std::format("{} {} void", 
-				storage,
-				qualifier);
-		}
-
-		bool is_complete() const
-		{
-			return false;
-		}
+		Offset size() const;
+		bool is_complete() const;
 	};
 }
 

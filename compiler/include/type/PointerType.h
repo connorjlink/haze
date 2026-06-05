@@ -2,6 +2,7 @@
 #define HAZE_POINTERTYPE_H
 
 #include <type/defs/TypeKind.h>
+#include <utility/Constants.h>
 
 // Haze PointerType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -15,21 +16,9 @@ namespace hz
 		TypeQualifier qualifier;
 
 	public:
-		TypeKind type_kind() const
-		{
-			return TypeKind::POINTER;
-		}
-
-		static Offset size()
-		{
-			return sizeof(Address);
-		}
-
-		bool is_complete() const
-		{
-			// pointer has a fixed size, so it's always complete to allow for things like void*
-			return true;
-		}
+		// NOTE: this is static to allow other classes a convenient way to get platform variables
+		static Offset size();
+		bool is_complete() const;
 	};
 }
 

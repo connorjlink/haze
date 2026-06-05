@@ -23,25 +23,25 @@ namespace hz
 	static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
 	// dynamic dispatch generator for sum families
-	template<typename MethodT, typename SumStorageT, typename Tuple, std::size_t... Is>
+	template<typename MethodT, typename SumStorageT, typename TupleT, std::size_t... Is>
 	consteval auto make_dispatch_table_impl(std::index_sequence<Is...>)
 	{
 		return std::array
 		{
 			[](const SumStorageT& sum, IndexType index) -> typename MethodT::ReturnType
 			{
-				using T = std::tuple_element_t<Is, Tuple>;
+				using T = std::tuple_element_t<Is, TupleT>;
 				const auto& vector = sum.storage.template get<T>();
 				return (vector[index].*MethodT::pointer)(sum);
 			}...
 		};
 	}
 
-	template<typename MethodT, typename SumStorageT, typename Tuple>
+	template<typename MethodT, typename SumStorageT, typename TupleT>
 	consteval auto make_dispatch_table()
 	{
-		return make_dispatch_table_impl<MethodT, SumStorageT, Tuple>(
-			std::make_index_sequence<std::tuple_size_v<Tuple>>{});
+		return make_dispatch_table_impl<MethodT, SumStorageT, TupleT>(
+			std::make_index_sequence<std::tuple_size_v<TupleT>>{});
 	}
 
 
@@ -188,40 +188,34 @@ namespace hz
 		}
 
 	public:
-		constexpr void validate() const
+		template<typename Self>
+		constexpr void validate(this Self&& self)
 		{
-			if (!is_valid())
+			if (!self.is_valid())
 			{
 				USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-					"invalid sum reference: tag {}, index {}", self().get_tag(), index.index));
+					"invalid sum reference: tag {}, index {}", self.get_tag(), index.index));
 			}
 		}
 
-	private:
-		template<typename Self>
-			requires HasGetTag<Self>
-		constexpr const Self& self(this Self&& self)
-		{
-			return self;
-		}
-
 	public:
-		template<typename MethodT>
-		constexpr decltype(auto) call() const
+		template<typename MethodT, typename Self>
+		constexpr decltype(auto) call(this Self&& self)
 		{
 			static constinit auto table =
 				make_dispatch_table<MethodT, SumStorageT, typename SumStorageT::Type>();
 
-			validate();
-			return table[self().get_tag()](sum_storage, index);
+			self.validate();
+			return table[self.get_tag()](self.sum_storage, self.index);
 		}
 
 		// derived SumDispatcherT classes need to provide every common sum method wrapper around call<MethodT>()
 #define DEFINE_SUM_METHOD(name, returntype) \
-		constexpr returntype name() const \
+		template<typename Self> \
+		constexpr decltype(auto) name(this Self&& self) \
 		{ \
 			using Anchor = typename SumStorageT::Anchor; \
-			return this->template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
+			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
 		}
 	};
 

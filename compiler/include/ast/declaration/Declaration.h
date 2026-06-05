@@ -3,6 +3,8 @@
 
 #include <ast/AST.h>
 #include <ast/declaration/defs/DeclarationKind.h>
+#include <data/DependencyInjector.h>
+#include <error/ErrorReporter.h>
 #include <utility/Sum.h>
 
 // Haze Declaration.h
@@ -20,7 +22,9 @@ namespace hz
 	DEFINE_SUM(Declaration, BASE_AST_METHODS)
 
 
-	struct DeclarationBase : public DeclarationFacade
+	struct DeclarationBase 
+		: public DeclarationFacade
+		, public InjectSingleton<ErrorReporter>
 	{
 	public:
 		using Storage = DeclarationSumStorage;

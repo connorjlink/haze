@@ -36,28 +36,8 @@ namespace hz
 		FloatKind float_kind;
 
 	public:
-		TypeKind type_kind() const
-		{
-			return TypeKind::FLOAT;
-		}
-
-		Offset size() const
-		{
-			switch (float_kind)
-			{
-#define X(enumerator, name) case FloatKind::enumerator: return sizeof(name);
-				FLOAT_KINDS(X)
-#undef X
-			}
-
-			CommonErrors::invalid_float_type(float_kind, NULL_TOKEN);
-			return -1;
-		}
-
-		bool is_complete() const
-		{
-			return true;
-		}
+		Offset size() const;
+		bool is_complete() const;
 	};
 }
 

@@ -2,6 +2,7 @@
 #define HAZE_FUNCTIONTYPE_H
 
 #include <type/PointerType.h>
+#include <utility/Constants.h>
 
 // Haze FunctionType.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -16,21 +17,9 @@ namespace hz
 		bool is_variadic;
 
 	public:
-		TypeKind type_kind() const
-		{
-			return TypeKind::FUNCTION;
-		}
-
-		Offset size() const
-		{
-			return PointerType::size();
-		}
-
-		bool is_complete() const
-		{
-			// this is basically impossible for functions, but it is closer to complete since sizeof() works
-			return true;
-		}
+		// NOTE: this is static to allow other classes a convenient way to get platform variables
+		static Offset size();
+		bool is_complete() const;
 	};
 }
 

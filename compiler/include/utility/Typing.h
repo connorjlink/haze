@@ -24,8 +24,8 @@ namespace hz
 		static_assert(value < sizeof...(Types), "The specified type was not found within the provided tuple");
 	};
 
-	template<typename T, typename Tuple>
-	inline constexpr auto TypeIndexV = TypeIndex<T, Tuple>::value;
+	template<typename T, typename TupleT>
+	inline constexpr auto TypeIndexV = TypeIndex<T, TupleT>::value;
 
 
 	// function type traits

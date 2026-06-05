@@ -27,21 +27,8 @@ namespace hz
 		std::string tag;
 
 	public:
-		TypeKind type_kind() const
-		{
-			return TypeKind::ENUM;
-		}
-
-		Offset size() const
-		{
-			// C (until C23?) doesn't support specifying the underlying type of enumerators, so no need to check
-			return sizeof(EnumMember::value);
-		}
-
-		bool is_complete() const
-		{
-			return members.has_value();
-		}
+		Offset size() const;
+		bool is_complete() const;
 	};
 }
 
