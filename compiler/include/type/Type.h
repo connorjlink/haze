@@ -21,9 +21,10 @@ namespace hz
 	FORWARD_DECLARE_SUM(Type)
 
 #define TYPE_METHODS(X, handlet) \
-	X(type_kind, TypeKind) \
 	X(size, Offset) \
 	X(is_complete, bool)
+	//X(type_kind, TypeKind)
+#pragma message("TODO: determine if this type_kind is necessary")
 
 	DEFINE_SUM(Type, TYPE_METHODS)
 

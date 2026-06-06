@@ -41,7 +41,7 @@ namespace hz
 
 	class ValueBase 
 		: public ValueFacade
-		, public InjectSingleton<ErrorReporter>
+		, public InjectSingleton<CommandLineOptions, ErrorReporter>
 	{
 	public:
 		using Storage = ValueSumStorage;
@@ -86,9 +86,7 @@ namespace hz
 		}
 	};
 
-	class StackValue
-		: public ValueBase
-		, public InjectSingleton<CommandLineOptions>
+	class StackValue : public ValueBase
 	{
 	public:
 		// relative offset from the base pointer, negative is below the current stack frame
@@ -102,7 +100,7 @@ namespace hz
 
 		std::string format() const
 		{
-			const auto architecture_type = USE_SAFE(CommandLineOptions)->architecture;
+			const auto architecture_type = USE_UNSAFE(CommandLineOptions)->architecture;
 			const auto format = get_stack_frame_pointer(architecture_type);
 
 			return std::format("[{} + {}]", format, index);

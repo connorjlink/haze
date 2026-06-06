@@ -162,6 +162,16 @@ namespace hz
 			register_instance<T>(std::make_shared<U>(std::forward<Args>(args)...));
 		}
 		
+#pragma message("TODO: move away from std::unordered_map singleton container to default/parameterized constructible")
+		//template<typename T>
+		//	requires std::derived_from<T, SingletonTag<T>>
+		//std::shared_ptr<T> get()
+		//{
+		//	static std::shared_ptr<T> instance = std::make_shared<T>();
+		//	return instance;
+		//}
+
+
 		// fetches an unsynchronized singleton handle. note
 		// that accessing this handle is not thread-safe!
 		template<typename T>
@@ -207,10 +217,14 @@ namespace hz
 	public:
 		static SingletonContainer& instance()
 		{
-			static SingletonContainer inst;
-			return inst;
+			static SingletonContainer container;
+			return container;
 		}
 	};
+
+#define RUN_SYNC(x, y) SingletonContainer::instance().run_synchronized<x>(y)
+#define RUN_UNSYNC(x, y) SingletonContainer::instance().run_unsynchronized<x>(y)
+
 
 	// have to inject new instances per-thread starting at object graph root container to avoid races
 	class ThreadScope
@@ -245,55 +259,59 @@ namespace hz
 		return scope;
 	}
 
+
+	template<typename T>
+	struct InjectServiceTag {};
+
 	// mixin, e.g., MyClass : public InjectService<MyService> { } ... using_service<T>().some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!
 	template<typename... Ts>
 		requires (std::derived_from<Ts, ServiceTag<Ts>> && ...)
-	class InjectService
+	struct InjectService : public InjectServiceTag<Ts>...
 	{
-	private:
-		std::tuple<std::shared_ptr<Ts>...> services;
-
-	public:
-		// resolve a specific thread-local service instance. requires static complete type parameter
-		template<typename T>
-		std::shared_ptr<T> using_service() const
-		{
-			return std::get<std::shared_ptr<T>>(services);
-		}
-
-	protected:
-		InjectService()
-			: services{ (using_thread().get<Ts>())... }
-		{
-		}
 	};
 
-	// mixin, e.g., MyClass : public InjectSingleton<MyService> { } ... using_global_service<T>().some_method()
+	template<typename T, typename CallerT>
+		requires std::derived_from<CallerT, InjectServiceTag<T>> and std::derived_from<T, ServiceTag<T>>
+	std::shared_ptr<T> using_service(const CallerT*)
+	{
+		return using_thread().get<T>();
+	}
+	// denoted unsafe because the call could fail if the service was not registered
+	// NOTE: DO NOT DEFERENCE THE SERVICE POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
+#define REQUIRE_UNSAFE(x) using_thread().get<x>()
+	// denoted safe because the caller class has already injected the service successfully
+	// NOTE: not explicitly thread-safe, so use with caution!
+#define REQUIRE_SAFE(x) using_service<x>(this)
+
+
+	template<typename T>
+	struct InjectSingletonTag {};
+
+	// mixin, e.g., MyClass : public InjectSingleton<MyService> { } ... using_singleton<T>()->some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!
 	template<typename... Ts>
 		requires (std::derived_from<Ts, SingletonTag<Ts>> && ...)
-	class InjectSingleton
+	struct InjectSingleton : public InjectSingletonTag<Ts>...
 	{
-	private:
-		std::tuple<std::shared_ptr<Ts>...> services;
-
-	public:
-		// resolve a specific global singleton instance. requires static complete type parameter
-		template<typename T>
-		std::shared_ptr<T> using_singleton() const
-		{
-			return std::get<std::shared_ptr<T>>(services);
-		}
-
-	public:
-		InjectSingleton()
-			: services{ (SingletonContainer::instance().get<Ts>())... }
-		{
-		}
 	};
 
-	// Autoregistration is kinda dangerous so not sure if the following is ready for deployment yet
+	// NOTE: CallerT required to choose ensure the current class has a valid instance available to fetch
+	template<typename T, typename CallerT>
+		requires std::derived_from<CallerT, InjectSingletonTag<T>> and std::derived_from<T, SingletonTag<T>>
+	std::shared_ptr<T> using_singleton(const CallerT*)
+	{
+		return SingletonContainer::instance().get<T>();
+	}
+	// denoted unsafe because the call could fail if the singleton was not registered
+	// NOTE: DO NOT DEFERENCE THE SINGLETON POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
+#define USE_UNSAFE(x) SingletonContainer::instance().get<x>()
+	// denoted safe because the caller class has already injected the singleton successfully
+	// NOTE: not explicitly thread-safe, so use with caution!
+#define USE_SAFE(x) using_singleton<x>(this)
+
+
+#pragma message("TODO: Autoregistration is kinda dangerous so not sure if the following is ready for deployment yet")
 
 	// template<typename T, bool AutoRegisterB, typename... Args>
 	// struct ServiceTag
@@ -324,20 +342,6 @@ namespace hz
 	// 		}
 	// 	}
 	// };
-
-#define REQUIRE_SAFE(x) using_service<x>()
-//#define REQUIRE_UNSAFE(x) ServiceContainer::instance().get<x>()
-#define REQUIRE_UNSAFE(x) using_thread().get<x>()
-
-	// Denoted unsafe because the call could fail if the singleton was not registered
-	// NOTE: DO NOT DEFERENCE THE SINGLETON POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
-#define USE_UNSAFE(x) SingletonContainer::instance().get<x>()
-	// Denoted safe because the caller has already injected the singleton (so it would have failed already), so this call cannot fail
-	// NOTE: not explicitly thread-safe, so use with caution!
-#define USE_SAFE(x) using_singleton<x>()
-
-#define RUN_SYNC(x, y) SingletonContainer::instance().run_synchronized<x>(y)
-
 }
 
 #endif
