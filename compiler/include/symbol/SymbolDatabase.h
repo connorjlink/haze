@@ -12,6 +12,8 @@
 
 namespace hz
 {
+	enum class SymbolKind;
+
 	class Symbol;
 	class FunctionSymbol;
 	class ArgumentSymbol;
@@ -24,8 +26,7 @@ namespace hz
 
 	struct Token;
 
-	enum class SymbolKind;
-
+	FORWARD_DECLARE_SUM(Type);
 	FORWARD_DECLARE_SUM(Expression);
 
 

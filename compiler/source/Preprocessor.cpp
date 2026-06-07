@@ -120,7 +120,7 @@ namespace hz
 					// consume #
 					advance();
 
-					if (const auto include_keyword = token_map.at(TokenKind::INCLUDE).value();
+					if (const auto include_keyword = *token_map.at(TokenKind::INCLUDE);
 						match_keyword(include_keyword))
 					{
 						advance(include_keyword.length());
@@ -128,7 +128,7 @@ namespace hz
 
 						handle_include();
 					}
-					else if (const auto define_keyword = token_map.at(TokenKind::DEFINE).value();
+					else if (const auto define_keyword = *token_map.at(TokenKind::DEFINE);
 							 match_keyword(define_keyword))
 					{
 						advance(define_keyword.length());
@@ -136,7 +136,7 @@ namespace hz
 
 						handle_macro_definition();
 					}
-					else if (const auto if_keyword = token_map.at(TokenKind::IF).value();
+					else if (const auto if_keyword = *token_map.at(TokenKind::IF);
 							 match_keyword(if_keyword))
 					{
 						advance(if_keyword.length());

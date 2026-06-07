@@ -1,8 +1,7 @@
 #ifndef HAZE_COMMONERRORS_H
 #define HAZE_COMMONERRORS_H
 
-#include <type/Type.h>
-#include <ast/expression/Expression.h>
+#include <utility/Sum.h>
 
 // Haze CommonErrors.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -20,6 +19,10 @@ namespace hz
 	enum class BinaryExpressionKind;
 
 	struct Token;
+
+	FORWARD_DECLARE_SUM(Type)
+	FORWARD_DECLARE_SUM(Expression)
+
 
 	class CommonErrors
 	{

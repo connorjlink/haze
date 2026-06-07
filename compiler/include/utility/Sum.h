@@ -214,15 +214,6 @@ namespace hz
 			return table[self.get_tag()](self.sum_storage, self.index);
 		}
 
-		// derived SumDispatcherT classes need to provide every common sum method wrapper around call<MethodT>()
-#define DEFINE_SUM_METHOD(name, returntype) \
-		template<typename Self> \
-		constexpr decltype(auto) name(this Self&& self) \
-		{ \
-			using Anchor = typename SumStorageT::Anchor; \
-			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
-		}
-
 	public:
 		constexpr SumDispatcher(const SumStorageT& sum_storage, IndexHandle index)
 			: sum_storage{ sum_storage }, index{ index }
@@ -230,8 +221,34 @@ namespace hz
 		}
 	};
 
+	// required to constrain handle/reference functions later without a mandatory template parameter
+	struct SumMemberBaseTag {};
+
+	// common base class recommended for sum member classes
+	template<typename SumFacadeT>
+	struct SumMemberBase : public SumMemberBaseTag
+	{
+		// NOTE: this would be ideal to simplify usage but this cannot work due to circular dependency issues with the incomplete type facade
+		// Instead, each implementation xSumBase class needs to define the common base
+		//using Storage = typename SumFacadeT::Storage;
+
+		template<typename Self>
+		constexpr TagType tag_type(this Self&& self)
+		{
+			using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
+			return TypeIndexV<This, typename SumFacadeT::Type>;
+		}
+	};
+
+
 #define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
-#define SUM_DISPATCH_ENTRY(name, returntype) DEFINE_SUM_METHOD(name, returntype)
+#define SUM_DISPATCH_ENTRY(name, returntype) \
+		template<typename Self> \
+		constexpr decltype(auto) name(this Self&& self) \
+		{ \
+			using Anchor = typename SumStorageT::Anchor; \
+			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
+		}
 
 #define DEFINE_SUM(name, X) \
 	template<typename SumStorageT> \
@@ -239,6 +256,11 @@ namespace hz
 	{ \
 	public: \
 		X(SUM_DISPATCH_ENTRY, name##Handle) \
+	public: \
+		constexpr name##SumDispatcher(const SumStorageT& sum_storage, IndexHandle index) \
+			: SumDispatcher<SumStorageT>{ sum_storage, index } \
+		{ \
+		} \
 	}; \
 	template<typename AnchorT> \
 	using name##Methods = AllButLastT \
@@ -351,19 +373,25 @@ namespace hz
 
 	public:
 		constexpr SumReference(const SumStorageT& sum_storage, IndexType index)
-			: SumDispatcherT<SumStorageT>{ sum_storage, { index, true } }
+			: SumDispatcherT<SumStorageT>{ sum_storage, IndexHandle{ index, true } }
 		{
 			// valid reference
 		}
 
 		constexpr SumReference(const SumStorageT& sum_storage)
-			: SumDispatcherT<SumStorageT>{ sum_storage, { 0, false } }
+			: SumDispatcherT<SumStorageT>{ sum_storage, IndexHandle{ 0, false } }
 		{
 			// invalid reference
 		}
 	};
 
-	// entry point into sum dynamic dispatch
+
+	//////////////////////////////////////////////////////
+	// Entry point into sum dynamic dispatch
+	//////////////////////////////////////////////////////
+
+	// NOTE: typically the value macro parameter should be std::move()'d to avoid creating an additional copy of what should be temporary
+
 	template<typename T, template<typename> typename SumDispatcherT, typename SumStorageT>
 	constexpr SumHandle<SumDispatcherT, SumStorageT> make_handle(SumStorageT& sum_storage, T&& value)
 	{
@@ -371,8 +399,15 @@ namespace hz
 		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
 		return SumHandle<SumDispatcherT, SumStorageT>{ sum_storage, index, TypeIndexV<T, typename SumStorageT::Type> };
 	}
-// NOTE: typically the value should be std::move()'d to avoid creating an additional copy of what should be temporary by the caller
 #define MAKE_HANDLE(type, family, sum, value) make_handle<type, family##SumDispatcher, family##SumStorage>(sum, value)
+
+	template<typename T>
+		requires std::derived_from<T, SumMemberBaseTag>
+	constexpr SumHandle<typename T::Dispatcher, typename T::Storage> make_handle(typename T::Storage& sum_storage, T&& value)
+	{
+		return make_handle<T, typename T::Dispatcher, typename T::Storage>(sum_storage, std::forward<T>(value));
+	}
+#define MAKE_HANDLE_AUTO(sum, value) make_handle(sum, value)
 
 	template<template<typename> typename SumDispatcherT, typename SumStorageT>
 	constexpr SumHandle<SumDispatcherT, SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
@@ -380,7 +415,16 @@ namespace hz
 		// does not participate in sum storage
 		return SumHandle<SumDispatcherT, SumStorageT>{ sum_storage };
 	}
-#define MAKE_INVALID_HANDLE(family, sum) make_invalid_handle<family##SumDispatcher, family##SumStorage>(sum)
+#define MAKE_INVALID_HANDLE(sum, family) make_invalid_handle<family##SumDispatcher, family##SumStorage>(sum)
+
+	template<typename T>
+		requires std::derived_from<T, SumMemberBaseTag>
+	constexpr SumHandle<typename T::Dispatcher, typename T::Storage> make_invalid_handle(const typename T::Storage& sum_storage)
+	{
+		return make_invalid_handle<typename T::Dispatcher, typename T::Storage>(sum_storage);
+	}
+#define MAKE_INVALID_HANDLE_AUTO(sum, type) make_invalid_handle<type>(sum)
+
 
 	template<typename T, template<typename> typename SumDispatcherT, typename SumStorageT>
 	constexpr SumReference<T, SumDispatcherT, SumStorageT> make_reference(SumStorageT& sum_storage, T&& value)
@@ -389,8 +433,15 @@ namespace hz
 		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
 		return SumReference<T, SumDispatcherT, SumStorageT>{ sum_storage, index };
 	}
-// NOTE: typically the value should be std::move()'d to avoid creating an additional copy of what should be temporary by the caller
 #define MAKE_REFERENCE(type, family, sum, value) make_reference<type, family##SumDispatcher, family##SumStorage>(sum, value)
+
+	template<typename T>
+		requires std::derived_from<T, SumMemberBaseTag>
+	constexpr SumReference<T, typename T::Dispatcher, typename T::Storage> make_reference(typename T::Storage& sum_storage, T&& value)
+	{
+		return make_reference<T, typename T::Dispatcher, typename T::Storage>(sum_storage, std::forward<T>(value));
+	}
+#define MAKE_REFERENCE_AUTO(sum, value) make_reference(sum, value)
 
 	template<typename T, template<typename> typename SumDispatcherT, typename SumStorageT>
 	constexpr SumReference<T, SumDispatcherT, SumStorageT> make_invalid_reference(const SumStorageT& sum_storage)
@@ -400,22 +451,13 @@ namespace hz
 	}
 #define MAKE_INVALID_REFERENCE(type, family, sum) make_invalid_reference<type, family##SumDispatcher, family##SumStorage>(sum)
 
-
-	// common base class recommended for sum member classes
-	template<typename SumFacadeT>
-	struct SumMemberBase
+	template<typename T>
+		requires std::derived_from<T, SumMemberBaseTag>
+	constexpr SumReference<T, typename T::Dispatcher, typename T::Storage> make_invalid_reference(const typename T::Storage& sum_storage)
 	{
-		// NOTE: this would be ideal to simplify usage but this cannot work due to circular dependency issues with the incomplete type facade
-		// Instead, each implementation xSumBase class needs to define the common base
-		//using Storage = typename SumFacadeT::Storage;
-
-		template<typename Self>
-		constexpr TagType tag_type(this Self&& self)
-		{
-			using This = std::remove_pointer_t<std::remove_cvref_t<Self>>;
-			return TypeIndexV<This, typename SumFacadeT::Type>;
-		}
-	};
+		return make_invalid_reference<T, typename T::Dispatcher, typename T::Storage>(sum_storage);
+	}
+#define MAKE_INVALID_REFERENCE_AUTO(sum, type) make_invalid_reference<type>(sum)
 }
 
 #endif

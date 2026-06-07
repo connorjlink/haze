@@ -218,7 +218,6 @@
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\MemberDeclarationExpression.cpp" />
-    <ClCompile Include="source\NullStatement.cpp" />
     <ClCompile Include="source\Parser.cpp" />
     <ClCompile Include="source\PEBuilder.cpp" />
     <ClCompile Include="source\Preprocessor.cpp" />

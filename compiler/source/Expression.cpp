@@ -227,16 +227,23 @@ namespace hz
 					return make_invalid_handle(ast);
 				}
 
-				const auto members = left_type.members().value();
+				const auto members = left_type.members();
+				if (!members)
+				{
+					USE_SAFE(ErrorReporter)->post_error(std::format(
+						"type `{}` is incomplete", to_string(left_type)), NULL_TOKEN);
+					return make_invalid_handle(ast);
+				}
+
 				const auto member_name = right.identifier(ast).name;
-				if (!members.contains(member_name))
+				if (!members->contains(member_name))
 				{
 					USE_SAFE(ErrorReporter)->post_error(std::format(
 						"type `{}` has no member named `{}`", to_string(left_type), member_name), NULL_TOKEN);
 					return make_invalid_handle(ast);
 				}
 
-				return members.at(member_name).type;
+				return members->at(member_name).type;
 			} break;
 
 			case ARROW:
@@ -255,7 +262,14 @@ namespace hz
 					return make_invalid_handle(ast);
 				}
 
-				const auto members = left_type.pointee_type().members().value();
+				const auto members = left_type.pointee_type().members();
+				if (!members)
+				{
+					USE_SAFE(ErrorReporter)->post_error(std::format(
+						"type `{}` is incomplete", to_string(left_type.pointee_type())), NULL_TOKEN);
+					return make_invalid_handle(ast);
+				}
+
 				const auto member_name = right.identifier(ast).name;
 				if (!members.contains(member_name))
 				{

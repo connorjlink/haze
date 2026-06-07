@@ -18,9 +18,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name, value) enumerator = value,
 #define SWITCH_CASE(enumerator, name, value) case OptimizationFlag::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name, value) Mapping{ #name, OptimizationFlag::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, OPTIMIZATION_FLAGS, OptimizationFlag, optimization flag : std::uint8_t)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, OPTIMIZATION_FLAGS, OptimizationFlag, optimization flag : std::uint8_t)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 

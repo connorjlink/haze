@@ -17,9 +17,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case VerbosityKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, VerbosityKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, VERBOSITY_KINDS, VerbosityKind, verbosity kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, VERBOSITY_KINDS, VerbosityKind, verbosity kind)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 }

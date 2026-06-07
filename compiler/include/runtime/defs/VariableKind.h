@@ -18,9 +18,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, type, name) enumerator,
 #define SWITCH_CASE(enumerator, type, name) case VariableKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, type, name) Mapping{ #name, VariableKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, VARIABLE_KINDS, VariableKind, variable kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, VARIABLE_KINDS, VariableKind, variable kind)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 }

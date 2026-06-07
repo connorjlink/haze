@@ -28,9 +28,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case IntermediateKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, IntermediateKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, INTERMEDIATE_KINDS, IntermediateKind, intermediate kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, INTERMEDIATE_KINDS, IntermediateKind, intermediate kind)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 

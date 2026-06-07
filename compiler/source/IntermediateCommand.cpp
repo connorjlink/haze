@@ -1,10 +1,11 @@
 import std;
 
-#include <command/IntermediateCommand.h>
+#include <ir/IntermediateCommand.h>
 #include <symbol/Symbol.h>
+#include <type/Type.h>
 #include <utility/BinaryUtilities.h>
 #include <utility/BinaryConstants.h>
-#include <type/Type.h>
+#include <utility/Constants.h>
 #include <x86/X86Builder.h>
 #include <x86/defs/X86Register.h>
 #include <x86/X86Instruction.h>
@@ -55,9 +56,9 @@ namespace hz
 {
 	using namespace x86;
 
-	IntermediateType BranchLabelCommand::itype() const
+	IntermediateTypeKind BranchLabelCommand::itype() const
 	{
-		return IntermediateType::BRANCH_LABEL;
+		return IntermediateTypeKind::BRANCH_LABEL;
 	}
 
 	ByteRange BranchLabelCommand::emit() const
@@ -723,7 +724,7 @@ namespace hz
 		//PUT(X86Builder::add_ri(ESP, 0x1000));
 
 		::assert(target_offset.has_value(), "Function call relative jump target offset was not defined");
-		PUT(X86Builder::call_relative(target_offset.value()));
+		PUT(X86Builder::call_relative(*target_offset));
 
 		return out;
 	}
@@ -736,14 +737,13 @@ namespace hz
 
 	ByteRange VoidReturnCommand::emit() const
 	{
-		// NOTE: not directly `ret` 
-
-		// jmp end_function_label
+		// NOTE: not directly `ret` to ensure avoid duplicating epilogue code
+		// - jmp end_function_label
 
 		ByteRange out{};
 
 		::assert(target_offset.has_value(), "Return statement relative jump target offset was not defined");
-		PUT(X86Builder::jmp_relative(target_offset.value()));
+		PUT(X86Builder::jmp_relative(*target_offset));
 
 		return out;
 	}
@@ -756,12 +756,13 @@ namespace hz
 
 	ByteRange ValueReturnCommand::emit() const
 	{
-		// jmp end_function_label
+		// NOTE: not directly `ret` to ensure avoid duplicating epilogue code
+		// - jmp end_function_label
 
 		ByteRange out{};
 
 		::assert(target_offset.has_value(), "Return statement relative jump target offset was not defined");
-		PUT(X86Builder::jmp_relative(target_offset.value()));
+		PUT(X86Builder::jmp_relative(*target_offset));
 
 		return out;
 	}
@@ -774,14 +775,14 @@ namespace hz
 
 	ByteRange IfNotZeroCommand::emit() const
 	{
-		// test value, value
-		// jne target_offset
+		// - test value, value
+		// - jne target_offset
 
 		ByteRange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
 		::assert(target_offset.has_value(), "Ifnz conditional statement relative jump target offset was not defined");
-		PUT(X86Builder::jne_relative(target_offset.value()));
+		PUT(X86Builder::jne_relative(*target_offset));
 
 		return out;
 	}
@@ -794,14 +795,14 @@ namespace hz
 
 	ByteRange IfZeroCommand::emit() const
 	{
-		// test value, value
-		// je target_offset
+		// - test value, value
+		// - je target_offset
 
 		ByteRange out{};
 
 		PUT(X86Builder::test_rr(_value, _value));
 		::assert(target_offset.has_value(), "Ifz conditional statement relative jump target offset was not defined");
-		PUT(X86Builder::je_relative(target_offset.value()));
+		PUT(X86Builder::je_relative(*target_offset));
 
 		return out;
 	}
@@ -814,12 +815,12 @@ namespace hz
 
 	ByteRange GotoCommand::emit() const
 	{
-		// jmp target_offset
+		// - jmp target_offset
 
 		ByteRange out{};
 
 		::assert(target_offset.has_value(), "Goto statement relative jump target offset was not defined");
-		PUT(X86Builder::jmp_relative(target_offset.value()));
+		PUT(X86Builder::jmp_relative(*target_offset));
 
 		return out;
 	}
@@ -847,13 +848,13 @@ namespace hz
 
 	ByteRange PrintMessageCommand::emit() const
 	{
-		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL)
-		// push NULL
-		// push NULL
-		// push strlen
-		// push &string
-		// push [0x004032F0] ; provided console stdout handle
-		// call [WriteConsole]
+		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL):
+		// - push NULL
+		// - push NULL
+		// - push strlen
+		// - push &string
+		// - push [0x004032F0] ; provided console stdout handle
+		// - call [WriteConsole]
 
 		ByteRange out{};
 
@@ -875,20 +876,20 @@ namespace hz
 
 	ByteRange PrintNumberCommand::emit() const
 	{
-		// wnsprintfA(buffer, 0xF, "%d\n", _value)
-		// push value
-		// push format_string
-		// push buffer_size
-		// push buffer
-		// call [wnsprintfA]
+		// wnsprintfA(buffer, 0xF, "%d\n", _value)"
+		// - push value
+		// - push format_string
+		// - push buffer_size
+		// - push buffer
+		// - call [wnsprintfA]
 
-		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL)
-		// push NULL
-		// push NULL
-		// push strlen
-		// push &string
-		// push [0x4032F0] ; provided console stdout handle
-		// call [WriteConsole]
+		// WriteConsole(STDHANDLE, &string, strlen, NULL, NULL):
+		// - push NULL
+		// - push NULL
+		// - push strlen
+		// - push &string
+		// - push [0x4032F0] ; provided console stdout handle
+		// - call [WriteConsole]
 
 		ByteRange out{};
 
@@ -930,8 +931,8 @@ namespace hz
 
 	ByteRange ExitProgramCommand::emit() const
 	{
-		// push code
-		// call [ExitProcess]
+		// - push code
+		// - call [ExitProcess]
 
 		ByteRange out{};
 

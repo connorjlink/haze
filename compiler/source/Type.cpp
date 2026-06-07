@@ -2,6 +2,7 @@ import std;
 
 #include <error/CommonErrors.h>
 #include <type/Type.h>
+#include <utility/Constants.h>
 
 // Haze Type.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -75,7 +76,7 @@ namespace hz
 	
 	Offset StructOrUnionType::size() const
 	{
-		if (!members.has_value())
+		if (!members)
 		{
 			CommonErrors::invalid_struct_or_union_type(struct_or_union_kind, NULL_TOKEN);
 			return -1;
@@ -88,7 +89,7 @@ namespace hz
 			{
 				// don't know here what the alignment is, so struct size is just the largest member's offset + its size
 				Offset running_count{};
-				for (const auto& member : members.value())
+				for (const auto& member : *members)
 				{
 					const auto member_size = member.type.size();
 					const auto candidate = member.offset + member_size;
@@ -106,7 +107,7 @@ namespace hz
 			{
 				// union size is just the size of its largest member
 				Offset running_count{};
-				for (const auto& member : members.value())
+				for (const auto& member : *members)
 				{
 					const auto member_size = member.type.size();
 
@@ -186,19 +187,19 @@ namespace hz
 
 	Offset ArrayType::size() const
 	{
-		if (!length.has_value())
+		if (!length)
 		{
 			return PointerType::size();
 		}
 
-		return element_type.size() * length.value();
+		return element_type.size() * *length;
 	}
 
 	bool ArrayType::is_complete() const
 	{
 		// an array is incomplete if it doesn't have a length yet
 		// this does not work for functions since they decay to pointers as parameters
-		if (!length.has_value())
+		if (!length)
 		{
 			return false;
 		}

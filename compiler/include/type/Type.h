@@ -22,8 +22,8 @@ namespace hz
 
 #define TYPE_METHODS(X, handlet) \
 	X(size, Offset) \
-	X(is_complete, bool)
-	//X(type_kind, TypeKind)
+	X(is_complete, bool) \
+	X(type_kind, TypeKind)
 #pragma message("TODO: determine if this type_kind is necessary")
 
 	DEFINE_SUM(Type, TYPE_METHODS)
@@ -34,6 +34,8 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	public:
+		template<typename T>
+		using Dispatcher = TypeSumDispatcher<T>;
 		using Storage = TypeSumStorage;
 
 		template<typename Self>
@@ -81,7 +83,6 @@ namespace hz
 	};
 
 
-
 	template<typename Self>
 	TypeKind TypeBase::type_kind(this Self&& self)
 	{
@@ -97,6 +98,8 @@ namespace hz
 
 		return TypeKind::VOID;
 	}
+
+
 }
 
 #endif

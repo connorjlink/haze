@@ -23,14 +23,16 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name, value) enumerator = value,
 #define SWITCH_CASE(enumerator, name, value) case X86Register::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name, value) Mapping{ #name, X86Register::enumerator },
 
-	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, X86_REGISTER_KINDS, X86Register, x86 register, : Register)
+	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, X86_REGISTER_KINDS, X86Register, x86 register, : Register)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 
 
-	Register to_register(X86Register reg)
+	inline Register to_register(X86Register reg)
 	{
 		return static_cast<Register>(reg);
 	}

@@ -55,9 +55,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case X86InstructionKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, X86InstructionKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, X86_INSTRUCTION_KINDS, X86InstructionKind, x86 instruction kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, X86_INSTRUCTION_KINDS, X86InstructionKind, x86 instruction kind)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 }

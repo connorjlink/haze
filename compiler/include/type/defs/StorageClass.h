@@ -20,9 +20,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case StorageClass::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, StorageClass::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, STORAGE_CLASSES, StorageClass, storage class)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, STORAGE_CLASSES, StorageClass, storage class)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 

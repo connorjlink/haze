@@ -2,7 +2,7 @@ import std;
 
 #include <allocator/Allocator.h>
 #include <ast/expression/Expression.h>
-#include <command/IntermediateCommand.h>
+#include <ir/IntermediateCommand.h>
 #include <command/Command.h>
 #include <symbol/Symbol.h>
 #include <symbol/SymbolDatabase.h>

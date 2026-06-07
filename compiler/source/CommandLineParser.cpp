@@ -1,8 +1,8 @@
 import std;
 
 #include <cli/CommandLineParser.h>
-#include <cli/OptimizationType.h>
-#include <cli/OptionKind.h>
+#include <cli/defs/OptimizationFlag.h>
+#include <cli/defs/OptionKind.h>
 
 // Haze CommandLineParser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -13,8 +13,10 @@ namespace
 	{
 		return text
 			| std::ranges::views::split(delimiter)
-			| std::ranges::views::transform([](auto&& str) 
-				{ return const std::string&(&*str.begin(), std::ranges::distance(str)); })
+			| std::ranges::views::transform([](auto&& string)
+			{
+				return std::string_view(&*string.begin(), std::ranges::distance(string));
+			})
 			| std::ranges::to<std::vector<std::string>>();
 	}
 
@@ -22,9 +24,9 @@ namespace
 	{
 		std::vector<std::string> out{};
 
-		const auto pos = text.find_first_of(delimiter);
-		out.emplace_back(text.substr(0, pos));
-		out.emplace_back(text.substr(pos + 1));
+		const auto position = text.find_first_of(delimiter);
+		out.emplace_back(text.substr(0, position));
+		out.emplace_back(text.substr(position + 1));
 		
 		return out;
 	}
@@ -72,54 +74,44 @@ namespace hz
 				}
 
 				const auto& option_string = argument_split[0];
+				const auto option = from_string<OptionKind>(option_string);
 
-				if (!_option_map.contains(option_string))
+				if (!option)
 				{
 					USE_SAFE(ErrorReporter)->post_warning(std::format(
 						"unrecognized option `{}`", option_string), NULL_TOKEN);
 					continue;
 				}
 
-				const auto option = _option_map.at(option_string);
 				const auto& value = argument_split[1];
 
 				using enum OptionKind;
-				switch (option)
+				switch (*option)
 				{
 					case ARCHITECTURE:
 					{
-						if (!_architecture_map.contains(value))
+						const auto architecture = from_string<ArchitectureKind>(value);
+						if (!architecture)
 						{
 							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized architecture type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
-						USE_SAFE(CommandLineOptions)->architecture = _architecture_map.at(value);
+						USE_SAFE(CommandLineOptions)->architecture = *architecture;
 					} break;
 
 					case VERBOSITY:
 					{
-						if (!_verbosity_type_map.contains(value))
+						const auto verbosity = from_string<VerbosityKind>(value);
+						if (!verbosity)
 						{
 							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized verbosity type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
-						USE_SAFE(CommandLineOptions)->verbosity = _verbosity_type_map.at(value);
-					} break;
-
-					case EXECUTION:
-					{
-						if (!_execution_map.contains(value))
-						{
-							USE_SAFE(ErrorReporter)->post_warning(std::format(
-								"unrecognized execution type `{}`", value), NULL_TOKEN);
-							continue;
-						}
-
-						USE_SAFE(CommandLineOptions)->execution = _execution_map.at(value);
+						USE_SAFE(CommandLineOptions)->verbosity = *verbosity;
 					} break;
 
 					case OUTPUT:
@@ -134,15 +126,16 @@ namespace hz
 
 					case OPTIMIZATION:
 					{
-						if (!_optimization_map.contains(value))
+						const auto optimization = from_string<OptimizationFlag>(value);
+						if (!optimization)
 						{
 							USE_SAFE(ErrorReporter)->post_warning(std::format(
 								"unrecognized optimization type `{}`", value), NULL_TOKEN);
 							continue;
 						}
 
-						auto flag = _optimization_map.at(value);
-						USE_SAFE(CommandLineOptions)->optimization |= flag;
+						// NOTE: combine the incoming flags with sensible compiler defaults
+						USE_SAFE(CommandLineOptions)->optimization |= *optimization;
 					} break;
 
 					case OUTFILE:

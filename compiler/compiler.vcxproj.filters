@@ -162,9 +162,6 @@
     <ClCompile Include="source\MemberDeclarationExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\NullStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

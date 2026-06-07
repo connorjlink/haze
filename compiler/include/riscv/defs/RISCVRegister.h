@@ -76,14 +76,24 @@ namespace hz
 	X(T6,   t6,   31, MAIN)
 
 #define ENUM_MEMBER(enumerator, name, value) enumerator = value,
-#define ENUM_MEMBER_ADAPTER(e, n, v, category) ENUM_MEMBER(e, n, v)
+#define ENUM_MEMBER_ADAPTER(enumerator, name, value, category) ENUM_MEMBER(enumerator, name, value)
 
 #define SWITCH_CASE(enumerator, name, value) case RISCVRegister::enumerator: return #name;
-#define SWITCH_CASE_ROUTE_MAIN(e, n, v) SWITCH_CASE(e, n, v)
-#define SWITCH_CASE_ROUTE_ALIAS(e, n, v) /* elide not to genereate switch cases */
-#define SWITCH_CASE_ADAPTER(e, n, v, category) SWITCH_CASE_ROUTE_##category(e, n, v)
+#define SWITCH_CASE_ROUTE_MAIN(enumerator, name, value) SWITCH_CASE(enumerator, name, value)
+#define SWITCH_CASE_ROUTE_ALIAS(enumerator, name, value) /* elide switch cases for alternatives */
+#define SWITCH_CASE_ADAPTER(enumerator, name, value, category) SWITCH_CASE_ROUTE_##category(enumerator, name, value)
 
-	DEFINE_ENUM_BACKED(ENUM_MEMBER_ADAPTER, SWITCH_CASE_ADAPTER, RISCV_REGISTERS, RISCVRegister, RISC-V register, : Register)
+#define MAP_MEMBER(enumerator, name, value) Mapping{ #name, RISCVRegister::enumerator },
+#define MAP_MEMBER_ROUTE_MAIN(enumerator, name, value) MAP_MEMBER(enumerator, name, value)
+#define MAP_MEMBER_ROUTE_ALIAS(enumerator, name, value) /* elide map members for alternatives */
+#define MAP_MEMBER_ADAPTER(enumerator, name, value, category) MAP_MEMBER_ROUTE_##category(enumerator, name, value)
+
+	DEFINE_ENUM_BACKED(ENUM_MEMBER_ADAPTER, SWITCH_CASE_ADAPTER, MAP_MEMBER_ADAPTER, RISCV_REGISTERS, RISCVRegister, RISC-V register, : Register)
+
+#undef MAP_MEMBER_ADAPTER
+#undef MAP_MEMBER_ROUTE_ALIAS
+#undef MAP_MEMBER_ROUTE_MAIN
+#undef MAP_MEMBER
 
 #undef SWITCH_CASE_ADAPTER
 #undef SWITCH_CASE_ROUTE_ALIAS

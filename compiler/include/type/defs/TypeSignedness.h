@@ -18,9 +18,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case TypeSignedness::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, TypeSignedness::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, TYPE_SIGNEDNESSES, TypeSignedness, type signedness)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, TYPE_SIGNEDNESSES, TypeSignedness, type signedness)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 

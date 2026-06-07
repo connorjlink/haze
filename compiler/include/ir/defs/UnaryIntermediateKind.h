@@ -14,11 +14,13 @@ namespace hz
 	X(BITWISE_NOT, ~, bitwise not)
 
 
-#define ENUM_MEMBER(enumerator, operator_symbol, name) enumerator,
-#define SWITCH_CASE(enumerator, operator_symbol, name) case UnaryIntermediateKind::enumerator: return #name;
+#define ENUM_MEMBER(enumerator, operator, name) enumerator,
+#define SWITCH_CASE(enumerator, operator, name) case UnaryIntermediateKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, operator, name) Mapping{ #name, UnaryIntermediateKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, UNARY_INTERMEDIATE_KINDS, UnaryIntermediateKind, unary intermediate kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, UNARY_INTERMEDIATE_KINDS, UnaryIntermediateKind, unary intermediate kind)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 }

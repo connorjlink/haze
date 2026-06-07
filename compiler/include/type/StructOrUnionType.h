@@ -20,9 +20,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case StructOrUnionKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, StructOrUnionKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 

@@ -4,12 +4,12 @@
 #include <allocator/Allocator.h>
 #include <command/BranchCommandType.h>
 #include <command/BinaryCommandType.h>
-#include <command/IntermediateType.h>
 #include <data/DependencyInjector.h>
 #include <error/CommonErrors.h>
+#include <ir/defs/IntermediateType.h>
 #include <symbol/SymbolDatabase.h>
-#include <utility/Constants.h>
 #include <toolchain/Generator.h>
+#include <utility/Constants.h>
 
 // Haze IntermediateCommand.h
 // (c) Connor J. Link. All Rights Reserved.

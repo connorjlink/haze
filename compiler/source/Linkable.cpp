@@ -1,7 +1,7 @@
 import std;
 
 #include <toolchain/Linkable.h>
-#include <command/IntermediateCommand.h>
+#include <ir/IntermediateCommand.h>
 #include <symbol/Symbol.h>
 
 // Haze Linkable.cpp

@@ -204,14 +204,14 @@ hz::Task<int> main_shim(int argc, char** argv)
 	for (auto& work : thread_work)
 	{
 		threads.emplace_back([&, work = std::move(work)]
-			{
-				thread_initialization();
+		{
+			thread_initialization();
 
-				for (auto& filepath : work)
-				{
-					thread_translation(filepath);
-				}
-			});
+			for (auto& filepath : work)
+			{
+				thread_translation(filepath);
+			}
+		});
 	}
 
 	// block wait until all threads are complete to start linking

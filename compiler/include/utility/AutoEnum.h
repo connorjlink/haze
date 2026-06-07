@@ -4,7 +4,15 @@
 // Haze AutoEnum.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define DEFINE_ENUM_INTERNAL(enummember, switchcase, kinds, type, name, extras) \
+// NOTE: the below declaration is only a guide to avoid from_string being an overload only on return type
+namespace hz
+{
+	template<typename T>
+		requires std::is_scoped_enum_v<T>
+	constexpr std::optional<T> from_string(std::string_view) = delete;
+}
+
+#define DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, kinds, type, name, extras) \
 	enum class type extras \
 	{ \
 		kinds(enummember) \
@@ -16,12 +24,42 @@
 			kinds(switchcase) \
 		} \
 		return "<unknown " #name ">"; \
+	} \
+	template<> \
+	constexpr std::optional<type> from_string<type>(std::string_view string) \
+	{ \
+		struct Mapping \
+		{ \
+			std::string_view enumerator; \
+			type value; \
+		}; \
+		constexpr auto lookup = []() \
+		{ \
+			std::array mappings \
+			{ \
+				kinds(mapmember) \
+			}; \
+			std::sort(mappings.begin(), mappings.end(), [](const Mapping& a, const Mapping& b) \
+			{ \
+				return a.enumerator < b.enumerator; \
+			}); \
+			return mappings; \
+		}(); \
+		const auto it = std::lower_bound(lookup.begin(), lookup.end(), string, [](const Mapping& mapping, std::string_view val) \
+		{ \
+			return mapping.enumerator < val; \
+		}); \
+		if (it != lookup.end() && it->enumerator == string) \
+		{ \
+			return it->value; \
+		} \
+		return std::nullopt; \
 	}
 
-#define DEFINE_ENUM(enummember, switchcase, kinds, type, name) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, kinds, type, name, )
+#define DEFINE_ENUM(enummember, switchcase, mapmember, kinds, type, name) \
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, kinds, type, name, )
 
-#define DEFINE_ENUM_BACKED(enummember, switchcase, kinds, type, name, base) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, kinds, type, name, base)
+#define DEFINE_ENUM_BACKED(enummember, switchcase, mapmember, kinds, type, name, base) \
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, kinds, type, name, base)
 
 #endif

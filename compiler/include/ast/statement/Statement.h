@@ -64,12 +64,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_NULL_STATEMENT(token) NullStatement{ token }
 
@@ -85,12 +84,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ make_handle(ast, expression), token }
 
@@ -108,12 +106,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_RETURN_STATEMENT(enclosing_function, expression, value, token) ReturnStatement{ enclosing_function, make_handle(ast, expression), value, token }
 
@@ -131,12 +128,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_IF_STATEMENT(condition, if_body, else_body, token) IfStatement{ make_handle(ast, condition), if_body, else_body, token }
 
@@ -153,12 +149,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_WHILE_STATEMENT(condition, body, token) WhileStatement{ make_handle(ast, condition), body, token }
 
@@ -175,12 +170,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_DO_STATEMENT(condition, body, token) DoStatement{ make_handle(ast, condition), body, token }
 
@@ -199,12 +193,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_FOR_STATEMENT(initialization, condition, induction, body, token) ForStatement{ initialization, make_handle(ast, condition), make_handle(ast, induction), body, token }
 
@@ -220,12 +213,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_GOTO_STATEMENT(label, token) GotoStatement{ label, token }
 
@@ -238,12 +230,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_CONTINUE_STATEMENT(token) ContinueStatement{ token }
 
@@ -256,12 +247,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_BREAK_STATEMENT(token) BreakStatement{ token }
 
@@ -286,12 +276,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_SWITCH_STATEMENT(condition, cases, fallback, token) SwitchStatement{ make_handle(ast, condition), cases, fallback, token }
 
@@ -307,12 +296,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_COMPOUND_STATEMENT(substatements, token) CompoundStatement{ substatements, token }
 
@@ -329,12 +317,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_LABELED_STATEMENT(label, statement, token) LabeledStatement{ label, statement, token }
 
@@ -350,12 +337,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_DECLARATION_STATEMENT(declaration, token) DeclarationStatement{ declaration, token }
 
@@ -373,12 +359,11 @@ namespace hz
 		}
 
 	public:
-		StatementKind tag_type(void) const;
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		TypeHandle get_type(const TypeSumStorage&) const;
 	};
 #define MAKE_INLINE_ASSEMBLY_STATEMENT(commands, token) InlineAssemblyStatement{ commands, token }
 

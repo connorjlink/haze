@@ -119,9 +119,11 @@ namespace hz
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case RISCVInstructionKind::enumerator: return #name;
+#define MAP_MEMBER(enumerator, name) Mapping{ #name, RISCVInstructionKind::enumerator },
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, RISCV_INSTRUCTION_KINDS, RISCVInstructionKind, RISC-V instruction kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, RISCV_INSTRUCTION_KINDS, RISCVInstructionKind, RISC-V instruction kind)
 
+#undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER
 }

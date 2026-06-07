@@ -87,7 +87,7 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(PointerType)
 	{
-		const auto qualifier_string = to_string_qualifier(type.qualifier);
+		const auto qualifier_string = format_type_qualifier(type.qualifier);
 
 		// <pointee-type>* <pointer-qualifiers>
 		auto pointer_string = std::format("*{}{}{}",
@@ -105,8 +105,8 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(ArrayType)
 	{
-		const auto array_length = type.length.has_value()
-			? std::to_string(type.length.value())
+		const auto array_length = type.length
+			? std::to_string(*type.length)
 			: "";
 
 		// <element-type> [ <array-size> ]
@@ -117,13 +117,17 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(FunctionType)
 	{
-		const auto parameters = type.parameters
-			| std::views::transform([](const auto& parameter)
-				{
-					return to_string(parameter, "", TypePrecedence::FUNCTION);
-				})
-			| std::views::join(std::string(", "))
-			| std::ranges::to<std::string>();
+		auto parameters = std::string{};
+
+		for (auto i = 0uz; i < type.parameters.size(); i++)
+		{
+			if (i != 0)
+			{
+				parameters += ", ";
+			}
+
+			parameters += to_string(type.parameters[i], "", TypePrecedence::FUNCTION);
+		}
 
 		if (type.is_variadic)
 		{

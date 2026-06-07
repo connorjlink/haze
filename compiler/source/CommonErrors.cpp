@@ -66,6 +66,7 @@ namespace hz
 
 	void CommonErrors::invalid_token_type(TokenKind kind, const Token& token)
 	{
+		// NOTE: prefer the value() call to get a proper exception in case of invalid token kind
 		internal_compiler_error(invalid_generic_type("token", std::string{ token_map.at(kind).value() }), token);
 	}
 

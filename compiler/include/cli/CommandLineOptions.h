@@ -2,6 +2,7 @@
 #define HAZE_COMMANDLINEOPTIONS_H
 
 #include <cli/defs/ArchitectureKind.h>
+#include <cli/defs/OptimizationFlag.h>
 #include <cli/defs/VerbosityKind.h>
 #include <data/DependencyInjector.h>
 
@@ -25,7 +26,7 @@ namespace hz
 		std::string output_filepath{};
 
 		// bit flags by optimization category of OptimizationType
-		std::uint32_t optimization{};
+		OptimizationFlag optimization{};
 	};
 }
 
