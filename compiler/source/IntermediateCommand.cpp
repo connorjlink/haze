@@ -292,21 +292,21 @@ namespace hz
 
 		if (destination == _lhs)
 		{
-			// NOTE: the lhs is already in the destination register, so add rhs directly
-			// add destination, rhs
+			// NOTE: the left is already in the destination register, so add right directly
+			// add destination, right
 			PUT(X86Builder::add_rr(destination, _rhs));
 		}
 
 		else if (destination == _rhs)
 		{
-			// NOTE: the rhs is already in the destination register, so add lhs directly
+			// NOTE: the right is already in the destination register, so add left directly
 			PUT(X86Builder::add_rr(destination, _lhs));
 		}
 
 		else
 		{
-			// mov destination, lhs
-			// add destination, rhs
+			// mov destination, left
+			// add destination, right
 			PUT(X86Builder::mov_rr(destination, _lhs));
 			PUT(X86Builder::add_rr(destination, _rhs));
 		}
@@ -326,8 +326,8 @@ namespace hz
 
 		if (destination == _lhs)
 		{
-			// NOTE: the lhs is already in the destination register, so sub rhs directly
-			// sub destination, rhs
+			// NOTE: the left is already in the destination register, so sub right directly
+			// sub destination, right
 			PUT(X86Builder::sub_rr(destination, _rhs));
 		}
 		
@@ -338,8 +338,8 @@ namespace hz
 
 		else
 		{
-			// mov destination, lhs
-			// sub destination, rhs
+			// mov destination, left
+			// sub destination, right
 			PUT(X86Builder::mov_rr(destination, _lhs));
 			PUT(X86Builder::sub_rr(destination, _rhs));
 		}
@@ -374,21 +374,21 @@ namespace hz
 
 		if (destination == _lhs)
 		{
-			// NOTE: the lhs is already in the destination register, so or rhs directly
-			// or destination, rhs
+			// NOTE: the left is already in the destination register, so or right directly
+			// or destination, right
 			PUT(X86Builder::or_rr(destination, _rhs));
 		}
 
 		else if (destination == _rhs)
 		{
-			// NOTE: the rhs is already in the destination register, so add lhs directly
+			// NOTE: the right is already in the destination register, so add left directly
 			PUT(X86Builder::or_rr(destination, _lhs));
 		}
 
 		else
 		{
-			// mov destination, lhs
-			// or destination, rhs
+			// mov destination, left
+			// or destination, right
 			PUT(X86Builder::mov_rr(destination, _lhs));
 			PUT(X86Builder::or_rr(destination, _rhs));
 		}
@@ -408,21 +408,21 @@ namespace hz
 
 		if (destination == _lhs)
 		{
-			// NOTE: the lhs is already in the destination register, so and rhs directly
-			// and destination, rhs
+			// NOTE: the left is already in the destination register, so and right directly
+			// and destination, right
 			PUT(X86Builder::and_rr(destination, _rhs));
 		}
 
 		else if (destination == _rhs)
 		{
-			// NOTE: the rhs is already in the destination register, so and lhs directly
+			// NOTE: the right is already in the destination register, so and left directly
 			PUT(X86Builder::and_rr(destination, _lhs));
 		}
 
 		else
 		{
-			// mov destination, lhs
-			// and destination, rhs
+			// mov destination, left
+			// and destination, right
 			PUT(X86Builder::mov_rr(destination, _lhs));
 			PUT(X86Builder::and_rr(destination, _rhs));
 		}
@@ -442,21 +442,21 @@ namespace hz
 
 		if (destination == _lhs)
 		{
-			// NOTE: the lhs is already in the destination register, so xor rhs directly
-			// xor destination, rhs
+			// NOTE: the left is already in the destination register, so xor right directly
+			// xor destination, right
 			PUT(X86Builder::xor_rr(destination, _rhs));
 		}
 
 		else if (destination == _rhs)
 		{
-			// NOTE: the rhs is already in the destination register, so xor lhs directly
+			// NOTE: the right is already in the destination register, so xor left directly
 			PUT(X86Builder::xor_rr(destination, _lhs));
 		}
 
 		else
 		{
-			// mov destination, lhs
-			// xor destination, rhs
+			// mov destination, left
+			// xor destination, right
 			PUT(X86Builder::mov_rr(destination, _lhs));
 			PUT(X86Builder::xor_rr(destination, _rhs));
 		}
@@ -504,7 +504,7 @@ namespace hz
 
 	ByteRange EqualityCommand::emit() const
 	{
-		// cmp lhs, rhs
+		// cmp left, right
 		// sete destination
 		// movzx destination, destination
 
@@ -525,7 +525,7 @@ namespace hz
 
 	ByteRange InequalityCommand::emit() const
 	{
-		// cmp lhs, rhs
+		// cmp left, right
 		// setne destination
 		// movzx destination, destination
 
@@ -549,7 +549,7 @@ namespace hz
 		// NOTE: comparison is for two SIGNED integers
 		// use set(above|below) for unsigned comparisons
 
-		// cmp lhs, rhs
+		// cmp left, right
 		// setl destination
 		// movzx destination, destination
 
@@ -573,7 +573,7 @@ namespace hz
 		// NOTE: comparison is for two SIGNED integers
 		// use set(above|below) for unsigned comparisons
 
-		// cmp lhs, rhs
+		// cmp left, right
 		// setg destination
 		// movzx destination, destination
 

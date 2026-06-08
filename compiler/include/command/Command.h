@@ -135,7 +135,7 @@ namespace hz
 
 
 	template<typename SumMemberT, typename SumStorageT>
-	concept CommandConcept = SumTuple<SumMemberT, SumStorageT, CommandASTMethods<SumStorageT>>;
+	concept IsCommand = SumTuple<SumMemberT, SumStorageT, CommandASTMethods<SumStorageT>>;
 
 	using CommandKinds = SumTypeList
 	<

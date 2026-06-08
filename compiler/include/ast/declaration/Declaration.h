@@ -150,7 +150,7 @@ namespace hz
 
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
-	concept DeclarationConcept = SumTuple<SumMemberT, SumStorageT, DeclarationASTMethods<SumStorageT>>;
+	concept IsDeclaration = SumTuple<SumMemberT, SumStorageT, DeclarationASTMethods<SumStorageT>>;
 
 	using DeclarationKinds = SumTypeList
 	<

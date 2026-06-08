@@ -34,9 +34,9 @@ namespace hz
 #undef ENUM_MEMBER
 
 
-	inline Register to_register(X86Register reg)
+	inline Register to_register(X86Register $register)
 	{
-		return static_cast<Register>(reg);
+		return static_cast<Register>($register);
 	}
 }
 

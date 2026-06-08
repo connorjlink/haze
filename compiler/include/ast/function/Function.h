@@ -91,7 +91,7 @@ namespace hz
 
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
-	concept FunctionConcept = SumTuple<SumMemberT, SumStorageT, FunctionASTMethods<SumStorageT>>;
+	concept IsFunction = SumTuple<SumMemberT, SumStorageT, FunctionASTMethods<SumStorageT>>;
 
 	using FunctionKinds = SumTypeList
 	<

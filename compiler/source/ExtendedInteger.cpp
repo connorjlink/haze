@@ -12,52 +12,52 @@ namespace hz
 		return static_cast<bool>(magnitude);
 	}
 
-	ExtendedInteger& ExtendedInteger::operator=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator=(const ExtendedInteger& right)
 	{
-		magnitude = rhs.magnitude;
-		sign = rhs.sign;
+		magnitude = right.magnitude;
+		sign = right.sign;
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator+=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator+=(const ExtendedInteger& right)
 	{
-		if (sign == rhs.sign)
+		if (sign == right.sign)
 		{
-			magnitude += rhs.magnitude;
+			magnitude += right.magnitude;
 		}
 
 		else
 		{
-			if (magnitude >= rhs.magnitude)
+			if (magnitude >= right.magnitude)
 			{
-				magnitude -= rhs.magnitude;
+				magnitude -= right.magnitude;
 			}
 
 			else
 			{
-				magnitude = rhs.magnitude - magnitude;
-				sign = rhs.sign;
+				magnitude = right.magnitude - magnitude;
+				sign = right.sign;
 			}
 		}
 
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator-=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator-=(const ExtendedInteger& right)
 	{
-		if (sign != rhs.sign) 
+		if (sign != right.sign) 
 		{
-			magnitude += rhs.magnitude;
+			magnitude += right.magnitude;
 		}
 		else 
 		{
-			if (magnitude >= rhs.magnitude) 
+			if (magnitude >= right.magnitude) 
 			{
-				magnitude -= rhs.magnitude;
+				magnitude -= right.magnitude;
 			}
 			else 
 			{
-				magnitude = rhs.magnitude - magnitude;
+				magnitude = right.magnitude - magnitude;
 				sign = !sign;
 			}
 		}
@@ -65,141 +65,141 @@ namespace hz
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator*=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator*=(const ExtendedInteger& right)
 	{
-		magnitude *= rhs.magnitude;
-		sign = (sign == rhs.sign);
+		magnitude *= right.magnitude;
+		sign = (sign == right.sign);
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator/=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator/=(const ExtendedInteger& right)
 	{
-		magnitude /= rhs.magnitude;
-		sign = (sign == rhs.sign);
+		magnitude /= right.magnitude;
+		sign = (sign == right.sign);
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator%=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator%=(const ExtendedInteger& right)
 	{
-		magnitude %= rhs.magnitude;
-		// C/C++ modulo by definition has the same sign as the lhs
+		magnitude %= right.magnitude;
+		// C/C++ modulo by definition has the same sign as the left
 		// for example, 5 % -3 = 2
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator&=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator&=(const ExtendedInteger& right)
 	{
-		magnitude &= rhs.magnitude;
+		magnitude &= right.magnitude;
 		// sign with bitwise operations doesn't make sense as for arithmetic operators
-		// so, ignore it and preserve the sign of the lhs
+		// so, ignore it and preserve the sign of the left
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator^=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator^=(const ExtendedInteger& right)
 	{
-		magnitude ^= rhs.magnitude;
+		magnitude ^= right.magnitude;
 		// sign with bitwise operations doesn't make sense as for arithmetic operators
-		// so, ignore it and preserve the sign of the lhs
+		// so, ignore it and preserve the sign of the left
 		return *this;
 	}
 
-	ExtendedInteger& ExtendedInteger::operator|=(const ExtendedInteger& rhs)
+	ExtendedInteger& ExtendedInteger::operator|=(const ExtendedInteger& right)
 	{
-		magnitude |= rhs.magnitude;
+		magnitude |= right.magnitude;
 		// sign with bitwise operations doesn't make sense as for arithmetic operators
-		// so, ignore it and preserve the sign of the lhs
+		// so, ignore it and preserve the sign of the left
 		return *this;
 	}
 
-	ExtendedInteger operator+(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator+(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs += rhs;
+		return left += right;
 	}
 
-	ExtendedInteger operator-(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator-(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs -= rhs;
+		return left -= right;
 	}
 
-	ExtendedInteger operator*(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator*(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs *= rhs;
+		return left *= right;
 	}
 
-	ExtendedInteger operator/(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator/(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs /= rhs;
+		return left /= right;
 	}
 
-	ExtendedInteger operator%(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator%(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs %= rhs;
+		return left %= right;
 	}
 
-	ExtendedInteger operator&(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator&(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs &= rhs;
+		return left &= right;
 	}
 
-	ExtendedInteger operator^(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator^(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs ^= rhs;
+		return left ^= right;
 	}
 
-	ExtendedInteger operator|(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	ExtendedInteger operator|(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return lhs |= rhs;
+		return left |= right;
 	}
 
-	ExtendedInteger operator~(const ExtendedInteger& rhs)
+	ExtendedInteger operator~(const ExtendedInteger& right)
 	{
 		// sign with bitwise operations doesn't make sense as for arithmetic operators
-		// so, ignore it and preserve the sign of the rhs
-		return { ~rhs.magnitude, rhs.sign };
+		// so, ignore it and preserve the sign of the right
+		return { ~right.magnitude, right.sign };
 	}
 
-	ExtendedInteger operator+(const ExtendedInteger& rhs)
+	ExtendedInteger operator+(const ExtendedInteger& right)
 	{
-		return rhs;
+		return right;
 	}
 
-	ExtendedInteger operator-(const ExtendedInteger& rhs)
+	ExtendedInteger operator-(const ExtendedInteger& right)
 	{
-		return { rhs.magnitude, !rhs.sign };
+		return { right.magnitude, !right.sign };
 	}
 
-	bool operator==(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	bool operator==(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return (lhs.magnitude == rhs.magnitude) && (lhs.sign == rhs.sign);
+		return (left.magnitude == right.magnitude) && (left.sign == right.sign);
 	}
 
-	bool operator!=(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	bool operator!=(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return !(lhs == rhs);
+		return !(left == right);
 	}
 
-	bool operator>(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	bool operator>(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		if (lhs.sign != rhs.sign)
+		if (left.sign != right.sign)
 		{
-			return lhs.sign;
+			return left.sign;
 		}
 
-		return lhs.sign ? (lhs.magnitude > rhs.magnitude) : (lhs.magnitude < rhs.magnitude);
+		return left.sign ? (left.magnitude > right.magnitude) : (left.magnitude < right.magnitude);
 	}
 
-	bool operator>=(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	bool operator>=(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return (lhs > rhs) || (lhs == rhs);
+		return (left > right) || (left == right);
 	}
 
-	bool operator<(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	bool operator<(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return !(lhs >= rhs);
+		return !(left >= right);
 	}
 
-	bool operator<=(ExtendedInteger lhs, const ExtendedInteger& rhs)
+	bool operator<=(ExtendedInteger left, const ExtendedInteger& right)
 	{
-		return !(lhs > rhs);
+		return !(left > right);
 	}
 }

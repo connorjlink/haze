@@ -73,32 +73,32 @@ namespace hz
 		void stack_write(Offset, Register);
 
 	public:
-		// NOTE: all math operations are { LHS, RHS, destination }
-		// destination = lhs + rhs
+		// NOTE: all math operations are { left, right, destination }
+		// destination = left + right
 		void compute_add(Register, Register, Register);
-		// destination = lhs - rhs
+		// destination = left - right
 		void compute_subtract(Register, Register, Register);
-		// destination = lhs * rhs
+		// destination = left * right
 		void compute_multiplication(Register, Register, Register);
-		// destination = lhs | rhs
+		// destination = left | right
 		void compute_bitor(Register, Register, Register);
-		// destination = lhs ^ rhs
+		// destination = left ^ right
 		void compute_bitxor(Register, Register, Register);
-		// destination = lhs & rhs
+		// destination = left & right
 		void compute_bitand(Register, Register, Register);
-		// destination = lhs << rhs
+		// destination = left << right
 		void compute_bitlshift(Register, Register, Register);
-		// destination = lhs >> rhs
+		// destination = left >> right
 		void compute_bitrshift(Register, Register, Register);
 
 	public:
-		// destination = lhs == rhs
+		// destination = left == right
 		void compute_equality(Register, Register, Register);
-		// destination = lhs != rhs
+		// destination = left != right
 		void compute_inequality(Register, Register, Register);
-		// destination = lhs < rhs
+		// destination = left < right
 		void compute_less(Register, Register, Register);
-		// destination = lhs > rhs
+		// destination = left > right
 		void compute_greater(Register, Register, Register);
 
 	private:

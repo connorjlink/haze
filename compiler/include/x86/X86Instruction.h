@@ -13,7 +13,7 @@
 namespace hz
 {
 	template<typename T>
-	concept X86OperandConcept = requires(const T& t)
+	concept IsX86Operand = requires(const T& t)
 	{
 		{ t.otype() } -> std::same_as<X86OperandKind>;
 	};
@@ -21,7 +21,7 @@ namespace hz
 	template<typename T>
 	struct X86OperandTrait
 	{
-		static constexpr bool value = X86OperandConcept<T>;
+		static constexpr bool value = IsX86Operand<T>;
 	};
 
 	namespace x86
@@ -72,7 +72,7 @@ namespace hz
 		public:
 			X86OperandKind otype() const;
 		};
-#define reg(reg) RegisterOperand{ reg }
+#define $register($register) RegisterOperand{ $register }
 
 		class RegisterIndirectOperand : public RegisterOperand
 		{
@@ -90,8 +90,8 @@ namespace hz
 			Offset displacement;
 
 		public:
-			RegisterDisplacedOperand(X86Register reg, Offset displacement)
-				: RegisterOperand{ reg }, displacement{ displacement }
+			RegisterDisplacedOperand(X86Register $register, Offset displacement)
+				: RegisterOperand{ $register }, displacement{ displacement }
 			{
 			}
 
@@ -112,7 +112,7 @@ namespace hz
 
 	X86OperandKind operand_type(const X86Operand& operand)
 	{
-		return std::visit([]<X86OperandConcept T>(const T& variant)
+		return std::visit([]<IsX86Operand T>(const T& variant)
 		{
 			return variant.otype();
 		}, operand);
@@ -121,7 +121,7 @@ namespace hz
 
 
 	template<typename T>
-	concept X86InstructionConcept = requires(const T & t)
+	concept IsX86Instruction = requires(const T & t)
 	{
 		{ t.itype() } -> std::same_as<X86InstructionKind>;
 		{ t.emit() } -> std::same_as<ByteRange>;
@@ -130,7 +130,7 @@ namespace hz
 	template<typename T>
 	struct X86InstructionTrait
 	{
-		static constexpr bool value = X86InstructionConcept<T>;
+		static constexpr bool value = IsX86Instruction<T>;
 	};
 
 	namespace x86
@@ -877,7 +877,7 @@ namespace hz
 
 	X86InstructionKind instruction_type(const X86Instruction& instruction)
 	{
-		return std::visit([]<X86InstructionConcept T>(const T& variant)
+		return std::visit([]<IsX86Instruction T>(const T& variant)
 		{
 			return variant.itype();
 		}, instruction);
@@ -885,7 +885,7 @@ namespace hz
 
 	ByteRange emit(const X86Instruction& instruction)
 	{
-		return std::visit([]<X86InstructionConcept T>(const T& variant)
+		return std::visit([]<IsX86Instruction T>(const T& variant)
 		{
 			return variant.emit();
 		}, instruction);

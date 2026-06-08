@@ -106,16 +106,16 @@ namespace hz
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid register index `{}`", message), token);
 	}
 
-	void CommonErrors::integer_size_mismatch(IntegerLiteralType lhs, IntegerLiteralType rhs, const Token& token)
+	void CommonErrors::integer_size_mismatch(IntegerLiteralType left, IntegerLiteralType right, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("integer type mismatch between `{}` and `{}`",
-			_integer_literal_type_map.at(lhs), _integer_literal_type_map.at(rhs)), token);
+			_integer_literal_type_map.at(left), _integer_literal_type_map.at(right)), token);
 	}
 
-	void CommonErrors::invalid_binary_expression(ExpressionType lhs, ExpressionType rhs, BinaryExpressionType op, const Token& token)
+	void CommonErrors::invalid_binary_expression(ExpressionType left, ExpressionType right, BinaryExpressionType op, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid binary expression `{}` between `{}` and `{}`",
-			binary_expression_kind_map.at(op), _expression_type_map.at(lhs), _expression_type_map.at(rhs)), token);
+			binary_expression_kind_map.at(op), _expression_type_map.at(left), _expression_type_map.at(right)), token);
 	}
 
 	void CommonErrors::type_qualifier_mismatch(TypeHandle type, ExpressionHandle expression, const Token& token)

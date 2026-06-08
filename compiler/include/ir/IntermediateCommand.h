@@ -209,11 +209,11 @@ namespace hz
 	class BinaryCommand : public IntermediateCommand
 	{
 	protected:
-		std::int8_t lhs, rhs, destination;
+		std::int8_t left, right, destination;
 
 	public:
-		BinaryCommand(std::int8_t lhs, std::int8_t rhs, std::int8_t destination)
-			: lhs{ lhs }, rhs{ rhs }, destination{ destination }
+		BinaryCommand(std::int8_t left, std::int8_t right, std::int8_t destination)
+			: left{ left }, right{ right }, destination{ destination }
 		{
 		}
 

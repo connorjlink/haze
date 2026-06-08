@@ -12,7 +12,7 @@
 namespace hz
 {
 	template<typename T>
-	concept RISCVInstructionConcept = requires(const T & t)
+	concept IsRISCVInstruction = requires(const T & t)
 	{
 		{ t.itype() } -> std::same_as<RISCVInstructionKind>;
 		{ t.emit() } -> std::same_as<ByteRange>;
@@ -21,7 +21,7 @@ namespace hz
 	template<typename T>
 	struct RISCVInstructionTrait
 	{
-		static constexpr bool value = RISCVInstructionConcept<T>;
+		static constexpr bool value = IsRISCVInstruction<T>;
 	};
 
 

@@ -42,7 +42,7 @@ namespace hz
 
 
 	template<typename SumMemberT, typename SumStorageT, typename MethodsT>
-	concept ASTNode = SumTuple<SumMemberT, SumStorageT, MethodsT>;
+	concept IsASTNode = SumTuple<SumMemberT, SumStorageT, MethodsT>;
 }
 
 #endif

@@ -7,7 +7,7 @@
 namespace hz
 {
 	template<typename T>
-	concept Formattable = std::is_scoped_enum_v<T> && requires(const T& t)
+	concept Formattable = std::is_scoped_enum_v<T> and requires(const T& t)
 	{
 		{ std::to_underlying(t) } -> std::convertible_to<std::underlying_type_t<T>>;
 		{ to_string(t) } -> std::convertible_to<std::string_view>;
@@ -15,28 +15,28 @@ namespace hz
 
 	template<typename T>
 		requires std::is_scoped_enum_v<T>
-	constexpr T operator|(T lhs, T rhs)
+	constexpr T operator|(T left, T right)
 	{
 		return static_cast<T>(
-			static_cast<std::underlying_type_t<T>>(lhs) |
-			static_cast<std::underlying_type_t<T>>(rhs));
+			std::to_underlying(left) |
+			std::to_underlying(right));
 	}
 
 	template<typename T>
 		requires std::is_scoped_enum_v<T>
-	constexpr T operator|=(T& lhs, T rhs)
+	constexpr T operator|=(T& left, T right)
 	{
-		lhs = lhs | rhs;
-		return lhs;
+		left = left | right;
+		return left;
 	}
 
 	template<typename T>
 		requires std::is_scoped_enum_v<T>
-	constexpr bool operator&(T lhs, T rhs)
+	constexpr bool operator&(T left, T right)
 	{
 		return static_cast<bool>(
-			static_cast<std::underlying_type_t<T>>(lhs) &
-			static_cast<std::underlying_type_t<T>>(rhs));
+			std::to_underlying(left) &
+			std::to_underlying(right));
 	}
 }
 
@@ -47,6 +47,7 @@ struct std::formatter<T>
 	{
 		return context.begin();
 	}
+
 	auto format(const T& value, std::format_context& context) const
 	{
 		return std::format_to(context.out(), "{}", to_string(value));

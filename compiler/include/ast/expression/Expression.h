@@ -1277,7 +1277,7 @@ namespace hz
 
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
-	concept ExpressionConcept = SumTuple<SumMemberT, SumStorageT, ExpressionASTMethods<SumStorageT>>;
+	concept IsExpression = SumTuple<SumMemberT, SumStorageT, ExpressionASTMethods<SumStorageT>>;
 
 	using ExpressionKinds = SumTypeList
 	<

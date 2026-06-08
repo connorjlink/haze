@@ -107,10 +107,10 @@ namespace hz
 	};
 
 	template<typename T, typename SumT, typename MethodsT, std::size_t... Is>
-	concept SumTupleImpl = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
+	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
 
 	template<typename T, typename SumT, typename MethodsT>
-	concept SumTuple = SumTupleImpl<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
+	concept SumTuple = SumTupleImplementation<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
 
 
 	// sum type and dispatch family

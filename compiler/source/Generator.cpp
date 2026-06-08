@@ -95,75 +95,75 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::compute_add(Register lhs, Register rhs, Register destination)
+	void Generator::compute_add(Register left, Register right, Register destination)
 	{
-		auto command = new AddCommand{ lhs, rhs, destination };
+		auto command = new AddCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_subtract(Register lhs, Register rhs, Register destination)
+	void Generator::compute_subtract(Register left, Register right, Register destination)
 	{
-		auto command = new SubtractCommand{ lhs, rhs, destination };
+		auto command = new SubtractCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_multiplication(Register lhs, Register rhs, Register destination)
+	void Generator::compute_multiplication(Register left, Register right, Register destination)
 	{
-		auto command = new MultiplyCommand{ lhs, rhs, destination };
+		auto command = new MultiplyCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitor(Register lhs, Register rhs, Register destination)
+	void Generator::compute_bitor(Register left, Register right, Register destination)
 	{
-		auto command = new BitorCommand{ lhs, rhs, destination };
+		auto command = new BitorCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitand(Register lhs, Register rhs, Register destination)
+	void Generator::compute_bitand(Register left, Register right, Register destination)
 	{
-		auto command = new BitandCommand{ lhs, rhs, destination };
+		auto command = new BitandCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitlshift(Register lhs, Register rhs, Register destination)
+	void Generator::compute_bitlshift(Register left, Register right, Register destination)
 	{
-		auto command = new BitlshiftCommand{ lhs, rhs, destination };
+		auto command = new BitlshiftCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitrshift(Register lhs, Register rhs, Register destination)
+	void Generator::compute_bitrshift(Register left, Register right, Register destination)
 	{
-		auto command = new BitrshiftCommand{ lhs, rhs, destination };
+		auto command = new BitrshiftCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_bitxor(Register lhs, Register rhs, Register destination)
+	void Generator::compute_bitxor(Register left, Register right, Register destination)
 	{
-		auto command = new BitxorCommand{ lhs, rhs, destination };
+		auto command = new BitxorCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_equality(Register lhs, Register rhs, Register destination)
+	void Generator::compute_equality(Register left, Register right, Register destination)
 	{
-		auto command = new EqualityCommand{ lhs, rhs, destination };
+		auto command = new EqualityCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_inequality(Register lhs, Register rhs, Register destination)
+	void Generator::compute_inequality(Register left, Register right, Register destination)
 	{
-		auto command = new InequalityCommand{ lhs, rhs, destination };
+		auto command = new InequalityCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_less(Register lhs, Register rhs, Register destination)
+	void Generator::compute_less(Register left, Register right, Register destination)
 	{
-		auto command = new LessCommand{ lhs, rhs, destination };
+		auto command = new LessCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 
-	void Generator::compute_greater(Register lhs, Register rhs, Register destination)
+	void Generator::compute_greater(Register left, Register right, Register destination)
 	{
-		auto command = new GreaterCommand{ lhs, rhs, destination };
+		auto command = new GreaterCommand{ left, right, destination };
 		COMPOSE(command);
 	}
 

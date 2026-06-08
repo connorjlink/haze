@@ -150,7 +150,7 @@ namespace hz
 
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
-	concept Value = SumTuple<SumMemberT, SumStorageT, ValueMethods<SumStorageT>>;
+	concept IsValue = SumTuple<SumMemberT, SumStorageT, ValueMethods<SumStorageT>>;
 	
 	// nonfacade types for public consumption
 	using ValueKinds = SumTypeList
