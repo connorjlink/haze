@@ -14,8 +14,8 @@
 namespace hz
 {
 #define TYPE_QUALIFIERS(X) \
-	X(NONE, none, 0) \
-	X(CONST, const, 1 << 0) \
+	X(NONE,     none,          0) \
+	X(CONST,    const,    1 << 0) \
 	X(VOLATILE, volatile, 1 << 1) \
 	X(RESTRICT, restrict, 1 << 2)
 
@@ -23,9 +23,11 @@ namespace hz
 #define ENUM_MEMBER(enumerator, name, value) enumerator = value,
 #define SWITCH_CASE(enumerator, name, value) case TypeQualifier::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name, value) Mapping{ #name, TypeQualifier::enumerator },
+#define FORWARD_DECLARATION(enumerator, name, value) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, TYPE_QUALIFIERS, TypeQualifier, type qualifier)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TYPE_QUALIFIERS, TypeQualifier, type qualifier)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

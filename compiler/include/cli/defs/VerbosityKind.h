@@ -9,18 +9,20 @@
 namespace hz
 {
 #define VERBOSITY_KINDS(X) \
-	X(SILENT, silent) \
-	X(QUIET, quiet) \
-	X(NORMAL, normal) \
+	X(SILENT,  silent) \
+	X(QUIET,   quiet) \
+	X(NORMAL,  normal) \
 	X(VERBOSE, verbose)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case VerbosityKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, VerbosityKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, VERBOSITY_KINDS, VerbosityKind, verbosity kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VERBOSITY_KINDS, VerbosityKind, verbosity kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

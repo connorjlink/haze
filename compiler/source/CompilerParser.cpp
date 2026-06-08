@@ -295,7 +295,7 @@ namespace hz
 		const auto member_declarations = parse_member_declaration_statements(enclosing_function);
 		consume(TokenKind::RBRACE);
 
-		const auto symbol = new StructSymbol{ identifier->name, declaration };
+		const auto symbol = new StructOrUnionSymbol{ identifier->name, declaration };
 		
 		USE_SAFE(SymbolDatabase)->add_struct(identifier->name, identifier->_token);
 

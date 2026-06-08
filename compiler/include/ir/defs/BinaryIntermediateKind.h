@@ -9,27 +9,29 @@
 namespace hz
 {
 #define BINARY_INTERMEDIATE_KINDS(X) \
-	X(ADD, +, add) \
-	X(SUBTRACT, -, subtract) \
-	X(MULTIPLY, *, multiply) \
-	X(DIVIDE, /, divide) \
-	X(UNSIGNED_DIVIDE, u./ , unsigned divide) \
-	X(MODULO, %, modulo) \
-	X(UNSIGNED_MODULO, u.%, unsigned modulo) \
-	X(AND, &, bitwise and) \
-	X(OR, |, bitwise or ) \
-	X(XOR, ^, bitwise xor) \
-	X(SHIFT_LEFT, <<, bitwise shift left) \
-	X(SHIFT_RIGHT, >>, bitwise shift right) \
-	X(UNSIGNED_SHIFT_RIGHT, u.>> , unsigned bitwise shift right)
+	X(ADD,                  +,     add) \
+	X(SUBTRACT,             -,     subtract) \
+	X(MULTIPLY,             *,     multiply) \
+	X(DIVIDE,               /,     divide) \
+	X(UNSIGNED_DIVIDE,      u./,   unsigned divide) \
+	X(MODULO,               %,     modulo) \
+	X(UNSIGNED_MODULO,      u.%,   unsigned modulo) \
+	X(AND,                  &,     bitwise and) \
+	X(OR,                   |,     bitwise or ) \
+	X(XOR,                  ^,     bitwise xor) \
+	X(SHIFT_LEFT,           <<,    bitwise shift left) \
+	X(SHIFT_RIGHT,          >>,    bitwise shift right) \
+	X(UNSIGNED_SHIFT_RIGHT, u.>>, unsigned bitwise shift right)
 
 
 #define ENUM_MEMBER(enumerator, operator, name) enumerator,
 #define SWITCH_CASE(enumerator, operator, name) case BinaryIntermediateKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, operator, name) Mapping{ #name, BinaryIntermediateKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, operator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, BINARY_INTERMEDIATE_KINDS, BinaryIntermediateKind, binary intermediate kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, BINARY_INTERMEDIATE_KINDS, BinaryIntermediateKind, binary intermediate kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

@@ -8,19 +8,21 @@
 
 namespace hz
 {
-#define TYPE_PRECEDENCE(X) \
-	X(LOWEST, lowest) \
-	X(POINTER, pointer) \
-	X(ARRAY, array) \
+#define TYPE_PRECEDENCES(X) \
+	X(LOWEST,   lowest) \
+	X(POINTER,  pointer) \
+	X(ARRAY,    array) \
 	X(FUNCTION, function) \
-	X(LEAF, leaf) // base type
+	X(LEAF,     leaf) // base type
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case TypePrecedence::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, TypePrecedence::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, TYPE_PRECEDENCE, TypePrecedence, type precedence)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TYPE_PRECEDENCES, TypePrecedence, type precedence)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

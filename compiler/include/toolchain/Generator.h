@@ -1,6 +1,7 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
+#include <ast/declaration/Declaration.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
@@ -14,19 +15,11 @@
 
 namespace hz
 {
-	class Node;
+	class ArgumentExpression;
 
 	FORWARD_DECLARE_SUM(Expression);
 	FORWARD_DECLARE_SUM(Value);
 
-
-	// 4. Do the exact same for Value components
-	template<typename SumStorageT>
-	class ValueSumDispatcher;
-	struct ValueSumStorage;
-
-	using ValueHandle = SumHandle<ValueSumDispatcher, ValueSumStorage>;
-	
 
 	class Generator
 		: public ServiceTag<Generator>
@@ -34,8 +27,7 @@ namespace hz
 	{
 	private:
 		// imported upon reload()
-#pragma message("TODO: swap over to declarators system")
-		std::vector<Node*> program;
+		std::vector<DeclarationHandle> program;
 
 	private:
 		std::vector<Linkable> linkables;
@@ -123,7 +115,7 @@ namespace hz
 		// destination = source
 		void make_copy(Register, Register);
 		// destination = immediate
-		void make_immediate(Register, BigInteger);
+		void make_immediate(BigInteger);
 
 	public:
 		// position a new function argument for the next call
@@ -133,7 +125,7 @@ namespace hz
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function
-		void call_function(const std::string&, const std::vector<ExpressionHandle>&, ValueHandle);
+		void call_function(const std::string&, const std::vector<ExpressionReference<ArgumentExpression>>&, ValueHandle);
 		// return from a call to a `nvr` function
 		void make_return(const std::string&);
 		// return from a call to a `nvr` function
@@ -189,7 +181,7 @@ namespace hz
 
 	public:
 		// ast, filepath
-		void reload(const std::vector<Node*>&, const std::string&);
+		void reload(std::vector<DeclarationHandle>, const std::string&);
 
 	public:
 		Generator(const std::string&);

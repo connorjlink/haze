@@ -374,7 +374,7 @@ namespace hz
 
 	// not for public consumption
 	template<typename SumMemberT, typename SumStorageT>
-	concept Type = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
+	concept TypeConcept = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
 
 	using StatementKinds = SumTypeList
 	<

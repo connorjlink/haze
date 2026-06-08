@@ -15,19 +15,21 @@
 namespace hz
 {
 #define INT_KINDS(X) \
-	X(CHAR, char) \
-	X(SHORT, short) \
-	X(INT, int) \
-	X(LONG, long) \
+	X(CHAR,      char) \
+	X(SHORT,     short) \
+	X(INT,       int) \
+	X(LONG,      long) \
 	X(LONG_LONG, long long)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case IntKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, IntKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, INT_KINDS, IntKind, int kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, INT_KINDS, IntKind, int kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

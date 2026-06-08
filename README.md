@@ -1,8 +1,9 @@
 # HAZE
-> A bespoke, from-scratch, full-stack, machine-code–level x86 & RISC-V optimizing compiler for Windows and bare metal.
+> A bespoke, from-scratch, full-stack, machine-code–level x86 & RISC-V optimizing compiler for Windows and bare metal for CJL99, a floatless dialect of C99.
 
 ## MAIN FEATURES
 - Fully custom RISC-V assembly language and assembler
+- Fully custom IR graph entitled HAZE (hardware-agnostic abstract zonal expression-graph)
 - Fully custom optimizing compiler, parallelized across translation units
   - x86 and RISC-V CPU support
   - Custom linker and Win32 PE .exe exporter

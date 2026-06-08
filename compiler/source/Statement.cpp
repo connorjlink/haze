@@ -25,18 +25,18 @@ namespace hz
 	StatementHandle NullStatement::evaluate(const Storage& storage, Context&) const
 	{
 		// no evaluation necessary for null statement
-		return make_invalid_handle<StatementSumDispatcher, StatementSumStorage>(storage);
+		return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
 	StatementHandle NullStatement::optimize(const Storage& storage) const
 	{
 		// no optimizations possible for null statement
-		return make_invalid_handle<StatementSumDispatcher, StatementSumStorage>(storage);
+		return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
 	TypeHandle NullStatement::get_type(const TypeSumStorage& storage) const
 	{
 		// no type result possible for null statement
-		return make_invalid_handle<TypeSumDispatcher, TypeSumStorage>(storage);
+		return MAKE_INVALID_HANDLE(storage, Type);
 	}
 }

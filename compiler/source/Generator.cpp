@@ -191,9 +191,9 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::make_immediate(Register destination, BigInteger value)
+	void Generator::make_immediate(BigInteger value)
 	{
-		auto command = new MakeImmediateCommand{ destination, value };
+		auto command = new MakeImmediateCommand{ value };
 		COMPOSE(command);
 	}
 
@@ -215,7 +215,7 @@ namespace hz
 		COMPOSE(command);
 	}
 
-	void Generator::call_function(const std::string& function, const std::vector<ExpressionHandle>& arguments, ValueHandle allocation)
+	void Generator::call_function(const std::string& function, const std::vector<ExpressionReference<ArgumentExpression>>& arguments, ValueHandle allocation)
 	{
 		for (auto expression : arguments)
 		{
@@ -373,9 +373,9 @@ namespace hz
 	}
 
 
-	void Generator::reload(const std::vector<Node*>& program, const std::string& filepath)
+	void Generator::reload(std::vector<DeclarationHandle> program, const std::string& filepath)
 	{
-		program = program;
+		this->program = std::move(program);
 
 		USE_SAFE(ErrorReporter)->post_information(std::format(
 			"reloaded program from `{}` with {} top-level declarators", filepath, program.size()), NULL_TOKEN);

@@ -419,12 +419,6 @@
     <ClInclude Include="include\command\models\IntegerLiteralType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\command\BinaryCommandType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\command\BranchCommandType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\command\Command.h">
       <Filter>Header Files</Filter>
     </ClInclude>

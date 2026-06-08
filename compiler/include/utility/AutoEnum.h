@@ -12,11 +12,12 @@ namespace hz
 	constexpr std::optional<T> from_string(std::string_view) = delete;
 }
 
-#define DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, kinds, type, name, extras) \
+#define DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, extras) \
 	enum class type extras \
 	{ \
 		kinds(enummember) \
 	}; \
+	kinds(forwarddeclaration) \
 	constexpr std::string_view to_string(type kind) \
 	{ \
 		switch (kind) \
@@ -56,10 +57,13 @@ namespace hz
 		return std::nullopt; \
 	}
 
-#define DEFINE_ENUM(enummember, switchcase, mapmember, kinds, type, name) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, kinds, type, name, )
 
-#define DEFINE_ENUM_BACKED(enummember, switchcase, mapmember, kinds, type, name, base) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, kinds, type, name, base)
+#pragma message("TODO: include specific serialize/deserialize functions for bitfield type enums")
+
+#define DEFINE_ENUM(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name) \
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, )
+
+#define DEFINE_ENUM_BACKED(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, base) \
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, base)
 
 #endif

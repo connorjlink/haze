@@ -7,18 +7,21 @@
 namespace hz
 {
 #define DECLARATION_KINDS(X) \
-	X(FUNCTION, FunctionDeclaration, function) \
-	X(VARIABLE, VariableDeclaration, variable) \
+	X(FUNCTION,        FunctionDeclaration,      function) \
+	X(VARIABLE,        VariableDeclaration,      variable) \
 	X(STRUCT_OR_UNION, StructOrUnionDeclaration, struct or union) \
-	X(ENUM, EnumDeclaration, enum) \
-	X(TYPEDEF, TypedefDeclaration, typedef)
+	X(ENUM,            EnumDeclaration,          enum) \
+	X(TYPEDEF,         TypedefDeclaration,       typedef)
+
 
 #define ENUM_MEMBER(enumerator, type, name) enumerator,
 #define SWITCH_CASE(enumerator, type, name) case DeclarationKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, type, name) Mapping{ #name, DeclarationKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, type, name) class type;
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, DECLARATION_KINDS, DeclarationKind, declaration kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, DECLARATION_KINDS, DeclarationKind, declaration kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

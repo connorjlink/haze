@@ -9,19 +9,21 @@
 namespace hz
 {
 #define VARIABLE_KINDS(X) \
-	X(VOID, VoidVariable, void) \
-	X(INT, IntVariable, int) \
-	X(FLOAT, FloatVariable, float) \
+	X(VOID,            VoidVariable,          void) \
+	X(INT,             IntVariable,           int) \
+	X(FLOAT,           FloatVariable,         float) \
 	X(STRUCT_OR_UNION, StructOrUnionVariable, struct or union) \
-	X(ENUM, EnumVariable, enum)
+	X(ENUM,            EnumVariable,          enum)
 
 
 #define ENUM_MEMBER(enumerator, type, name) enumerator,
 #define SWITCH_CASE(enumerator, type, name) case VariableKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, type, name) Mapping{ #name, VariableKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, type, name) class type;
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, VARIABLE_KINDS, VariableKind, variable kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VARIABLE_KINDS, VariableKind, variable kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

@@ -79,7 +79,7 @@ namespace hz
 		return AS_LABEL_SYMBOL(add_symbol(SymbolKind::LABEL, name, location));
 	}
 
-	StructSymbol* SymbolDatabase::add_struct(const std::string& name, const Token& location)
+	StructOrUnionSymbol* SymbolDatabase::add_struct(const std::string& name, const Token& location)
 	{
 		return AS_STRUCT_SYMBOL(add_symbol(SymbolKind::STRUCT, name, location));
 	}
@@ -189,7 +189,7 @@ namespace hz
 		return label_symbol;
 	}
 
-	StructSymbol* SymbolDatabase::reference_struct(const std::string& name, const Token& location, bool mark_visited)
+	StructOrUnionSymbol* SymbolDatabase::reference_struct(const std::string& name, const Token& location, bool mark_visited)
 	{
 		const auto symbol = reference_symbol(SymbolKind::STRUCT, name, location, mark_visited);
 		const auto struct_symbol = AS_STRUCT_SYMBOL(symbol);

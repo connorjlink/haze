@@ -10,15 +10,16 @@ namespace hz
 {
 #define OPTION_KINDS(X) \
 	X(ARCHITECTURE, architecture) \
-	X(VERBOSITY, verbosity) \
+	X(VERBOSITY,    verbosity) \
 	X(OPTIMIZATION, optimization) \
-	X(OUTPUT, output) \
-	X(OUTFILE, outfile)
+	X(OUTPUT,       output) \
+	X(OUTFILE,      outfile)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case OptionKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, OptionKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, OPTION_KINDS, OptionKind, option kind)
 

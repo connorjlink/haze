@@ -14,53 +14,53 @@ namespace hz
 {
 	enum class SymbolKind;
 
-	class Symbol;
 	class FunctionSymbol;
 	class ArgumentSymbol;
 	class VariableSymbol;
 	class DefineSymbol;
 	class LabelSymbol;
-	class StructSymbol;
-	class Expression;
-	class ArgumentExpression;
+	class StructOrUnionSymbol;
 
 	struct Token;
 
+	FORWARD_DECLARE_SUM(Symbol);
 	FORWARD_DECLARE_SUM(Type);
 	FORWARD_DECLARE_SUM(Expression);
 
+
+#pragma message("TODO: redo symbol database to use direct AST reference instead of individual symbol types")
 
 	class SymbolDatabase
 		: public SingletonTag<SymbolDatabase>
 		, public InjectSingleton<ErrorReporter, SymbolExporter>
 	{
 	private:
-		std::unordered_map<std::string, Symbol*> table;
+		std::unordered_map<std::string, SymbolHandle> table;
 
 	public:
-		Symbol* add_symbol(SymbolKind, const std::string&, const Token&);
-		FunctionSymbol* add_function(const std::string&, const Token&, TypeHandle, const std::vector<ArgumentExpression*>& arguments);
-		ArgumentSymbol* add_argument(const std::string&, const Token&, TypeHandle);
-		VariableSymbol* add_variable(const std::string&, const Token&);
-		DefineSymbol* add_define(const std::string&, const Token&);
-		LabelSymbol* add_label(const std::string&, const Token&);
-		StructSymbol* add_struct(const std::string&, const Token&);
+		SymbolHandle add_symbol(SymbolKind, const std::string&, const Token&);
+		SymbolReference<FunctionSymbol> add_function(const std::string&, const Token&, TypeHandle, const std::vector<ExpressionReference<ArgumentExpression>>& arguments);
+		SymbolReference<ArgumentSymbol> add_argument(const std::string&, const Token&, TypeHandle);
+		SymbolReference<VariableSymbol> add_variable(const std::string&, const Token&);
+		SymbolReference<DefineSymbol> add_define(const std::string&, const Token&);
+		SymbolReference<LabelSymbol> add_label(const std::string&, const Token&);
+		SymbolReference<StructOrUnionSymbol> add_struct(const std::string&, const Token&);
 
 	public:
 		SymbolKind query_symbol_type(const std::string&, const Token&);
 
 	private:
-		Symbol* internal_reference_symbol(bool, SymbolKind, const std::string&, const Token&, bool = false);
+		SymbolHandle internal_reference_symbol(bool, SymbolKind, const std::string&, const Token&, bool = false);
 
 	public:
-		Symbol* try_reference_symbol(SymbolKind, const std::string&, const Token&, bool = false);
-		Symbol* reference_symbol(SymbolKind, const std::string&, const Token&, bool = false);
-		FunctionSymbol* reference_function(const std::string&, const Token&, bool = false);
-		ArgumentSymbol* reference_argument(const std::string&, const Token&, bool = false);
-		VariableSymbol* reference_variable(const std::string&, const Token&, bool = false);
-		DefineSymbol* reference_define(const std::string&, const Token&, bool = false);
-		LabelSymbol* reference_label(const std::string&, const Token&, bool = false);
-		StructSymbol* reference_struct(const std::string&, const Token&, bool = false);
+		SymbolHandle try_reference_symbol(SymbolKind, const std::string&, const Token&, bool = false);
+		SymbolHandle reference_symbol(SymbolKind, const std::string&, const Token&, bool = false);
+		SymbolReference<FunctionSymbol> reference_function(const std::string&, const Token&, bool = false);
+		SymbolReference<ArgumentSymbol> reference_argument(const std::string&, const Token&, bool = false);
+		SymbolReference<VariableSymbol> reference_variable(const std::string&, const Token&, bool = false);
+		SymbolReference<DefineSymbol> reference_define(const std::string&, const Token&, bool = false);
+		SymbolReference<LabelSymbol> reference_label(const std::string&, const Token&, bool = false);
+		SymbolReference<StructOrUnionSymbol> reference_struct(const std::string&, const Token&, bool = false);
 
 	public:
 		bool has_symbol(const std::string&);

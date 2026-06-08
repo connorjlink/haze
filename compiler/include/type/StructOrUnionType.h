@@ -15,15 +15,17 @@ namespace hz
 {
 #define STRUCT_OR_UNION_KINDS(X) \
 	X(STRUCT, struct) \
-	X(UNION, union)
+	X(UNION,  union)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case StructOrUnionKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, StructOrUnionKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

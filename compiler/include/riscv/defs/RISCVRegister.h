@@ -88,7 +88,11 @@ namespace hz
 #define MAP_MEMBER_ROUTE_ALIAS(enumerator, name, value) /* elide map members for alternatives */
 #define MAP_MEMBER_ADAPTER(enumerator, name, value, category) MAP_MEMBER_ROUTE_##category(enumerator, name, value)
 
-	DEFINE_ENUM_BACKED(ENUM_MEMBER_ADAPTER, SWITCH_CASE_ADAPTER, MAP_MEMBER_ADAPTER, RISCV_REGISTERS, RISCVRegister, RISC-V register, : Register)
+#define FORWARD_DECLARATION(enumerator, name, value) /* elide forward declarations */
+
+	DEFINE_ENUM_BACKED(ENUM_MEMBER_ADAPTER, SWITCH_CASE_ADAPTER, MAP_MEMBER_ADAPTER, FORWARD_DECLARATION, RISCV_REGISTERS, RISCVRegister, RISC-V register, : Register)
+
+#undef FORWARD_DECLARATION
 
 #undef MAP_MEMBER_ADAPTER
 #undef MAP_MEMBER_ROUTE_ALIAS

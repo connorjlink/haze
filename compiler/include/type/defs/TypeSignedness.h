@@ -12,16 +12,18 @@
 namespace hz
 {
 #define TYPE_SIGNEDNESSES(X) \
-	X(SIGNED, signed) \
+	X(SIGNED,   signed) \
 	X(UNSIGNED, unsigned)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case TypeSignedness::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, TypeSignedness::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, TYPE_SIGNEDNESSES, TypeSignedness, type signedness)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TYPE_SIGNEDNESSES, TypeSignedness, type signedness)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

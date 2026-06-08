@@ -2,6 +2,7 @@
 #define HAZE_SYMBOL_H
 
 #include <allocator/Value.h>
+#include <ast/expression/Expression.h>
 #include <symbol/defs/SymbolKind.h>
 #include <type/Type.h>
 #include <utility/Constants.h>
@@ -133,14 +134,14 @@ namespace hz
 		}
 	};
 
-	class StructSymbol : public SymbolBase
+	class StructOrUnionSymbol : public SymbolBase
 	{
 	public:
-		std::unordered_map<std::string, StructMember> members;
+		std::unordered_map<std::string, StructOrUnionType::Member> members;
 
 	public:
-		StructSymbol(const std::string& name, const Token& token)
-			: Symbol{ name, token }
+		StructOrUnionSymbol(const std::string& name, const Token& token)
+			: SymbolBase{ name, token }
 		{
 		}
 	};

@@ -8,30 +8,33 @@ namespace hz
 {
 #define INTERMEDIATE_KINDS(X) \
 	X(ALLOCATE_STACK, allocate) \
-	X(DEREFERENCE, dereference) \
-	X(REFERENCE, reference) \
-	X(IMMEDIATE, immediate) \
-	X(COPY, copy) \
-	X(BINARY, binary) \
-	X(UNARY, unary) \
-	X(COMPARE, compare) \
-	X(BRANCH, branch) \
-	X(CALL, call) \
-	X(RETURN, return) \
-	X(SIGN_EXTEND, signextend) \
-	X(ZERO_EXTEND, zeroextend) \
-	X(TRUNCATE, truncate) \
-	X(REINTERPRET, reinterpret) \
-	X(CAST, cast) \
-	X(OFFSETOF, offset-of) \
-	X(LABEL, label)
+	X(DEREFERENCE,    dereference) \
+	X(REFERENCE,      reference) \
+	X(IMMEDIATE,      immediate) \
+	X(COPY,           copy) \
+	X(BINARY,         binary) \
+	X(UNARY,          unary) \
+	X(COMPARE,        compare) \
+	X(BRANCH,         branch) \
+	X(CALL,           call) \
+	X(RETURN,         return) \
+	X(SIGN_EXTEND,    signextend) \
+	X(ZERO_EXTEND,    zeroextend) \
+	X(TRUNCATE,       truncate) \
+	X(REINTERPRET,    reinterpret) \
+	X(CAST,           cast) \
+	X(OFFSETOF,       offset-of) \
+	X(LABEL,          label)
+
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case IntermediateKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, IntermediateKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, INTERMEDIATE_KINDS, IntermediateKind, intermediate kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, INTERMEDIATE_KINDS, IntermediateKind, intermediate kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

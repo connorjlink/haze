@@ -7,6 +7,47 @@ import std;
 
 namespace hz
 {
+	//////////////////////////////////////////////////////
+	// Identifier Expression
+	//////////////////////////////////////////////////////
+
+
+
+
+	//////////////////////////////////////////////////////
+	// Integer Literal Expression
+	//////////////////////////////////////////////////////
+
+	std::string IntegerLiteralExpression::format(void) const
+	{
+		return std::string();
+	}
+
+	void IntegerLiteralExpression::generate(const Storage&) const
+	{
+		REQUIRE_SAFE(Generator)->make_immediate(value);
+	}
+
+	ExpressionHandle IntegerLiteralExpression::evaluate(const Storage&, Context&) const
+	{
+		// no evaluation necessary for null statement
+		return MAKE_INVALID_HANDLE(storage, Statement);
+	}
+
+	ExpressionHandle IntegerLiteralExpression::optimize(const Storage&) const
+	{
+		return ExpressionHandle();
+	}
+
+	TypeHandle IntegerLiteralExpression::get_type(const Storage&) const
+	{
+		return TypeHandle();
+	}
+
+
+
+
+
 	std::string BinaryExpression::format(void) const
 	{
 		return std::format("{} {} {}",
@@ -291,4 +332,5 @@ namespace hz
 		}
 
 	}
+	
 }

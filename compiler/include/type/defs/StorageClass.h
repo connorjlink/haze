@@ -12,18 +12,20 @@
 namespace hz
 {
 #define STORAGE_CLASSES(X) \
-	X(AUTO, auto) \
+	X(AUTO,     auto) \
 	X(REGISTER, register) \
-	X(STATIC, static) \
-	X(EXTERN, extern)
+	X(STATIC,   static) \
+	X(EXTERN,   extern)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case StorageClass::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, StorageClass::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, STORAGE_CLASSES, StorageClass, storage class)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, STORAGE_CLASSES, StorageClass, storage class)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

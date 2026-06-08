@@ -14,17 +14,19 @@
 namespace hz
 {
 #define FLOAT_KINDS(X) \
-	X(FLOAT, float) \
-	X(DOUBLE, double) \
+	X(FLOAT,       float) \
+	X(DOUBLE,      double) \
 	X(LONG_DOUBLE, long double)
 
 
 #define ENUM_MEMBER(enumerator, name) enumerator,
 #define SWITCH_CASE(enumerator, name) case FloatKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, FloatKind::enumerator },
+#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FLOAT_KINDS, FloatKind, float kind)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, FLOAT_KINDS, FloatKind, float kind)
 
+#undef FORWARD_DECLARATION
 #undef MAP_MEMBER
 #undef SWITCH_CASE
 #undef ENUM_MEMBER

@@ -24,7 +24,6 @@ namespace hz
 	X(size, Offset) \
 	X(is_complete, bool) \
 	X(type_kind, TypeKind)
-#pragma message("TODO: determine if this type_kind is necessary")
 
 	DEFINE_SUM(Type, TYPE_METHODS)
 
@@ -39,7 +38,12 @@ namespace hz
 		using Storage = TypeSumStorage;
 
 		template<typename Self>
-		TypeKind type_kind(this Self&&);
+		TypeKind type_kind2(this Self&&);
+
+		TypeKind type_kind() const
+		{
+			return const_cast<TypeBase*>(this)->type_kind2();
+		}
 	};
 }
 
@@ -84,7 +88,7 @@ namespace hz
 
 
 	template<typename Self>
-	TypeKind TypeBase::type_kind(this Self&& self)
+	TypeKind TypeBase::type_kind2(this Self&& self)
 	{
 		switch (self.tag_type())
 		{

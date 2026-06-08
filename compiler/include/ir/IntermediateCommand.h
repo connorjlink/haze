@@ -2,11 +2,9 @@
 #define HAZE_INTERMEDIATECOMMAND_H
 
 #include <allocator/Allocator.h>
-#include <command/BranchCommandType.h>
-#include <command/BinaryCommandType.h>
 #include <data/DependencyInjector.h>
 #include <error/CommonErrors.h>
-#include <ir/defs/IntermediateType.h>
+#include <ir/defs/IntermediateKind.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/Generator.h>
 #include <utility/Constants.h>
@@ -29,7 +27,7 @@ namespace hz
 		virtual ~IntermediateCommand() = default;
 
 	public:
-		virtual IntermediateType itype() const = 0;
+		virtual IntermediateKind itype() const = 0;
 		virtual ByteRange emit() const = 0;
 		virtual constexpr std::int32_t bytes() const
 		{
@@ -50,7 +48,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -78,7 +76,7 @@ namespace hz
 		constexpr ByteRange _emit(Address, Offset) const;
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 		//virtual constexpr std::int32_t bytes() const final override;
 	};
@@ -86,7 +84,7 @@ namespace hz
 	class LeaveScopeCommand : public IntermediateCommand
 	{
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -103,7 +101,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -120,7 +118,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -137,7 +135,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -154,7 +152,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -171,7 +169,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -188,7 +186,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -204,7 +202,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -220,7 +218,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual BinaryCommandType btype() const = 0;
 	};
 
@@ -356,7 +354,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -372,7 +370,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -388,24 +386,23 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
 	class MakeImmediateCommand : public IntermediateCommand
 	{
 	private:
-		Register destination;
 		BigInteger immediate;
 
 	public:
-		MakeImmediateCommand(Register destination, BigInteger immediate)
-			: destination{ destination }, immediate{ immediate }
+		MakeImmediateCommand(BigInteger immediate)
+			: immediate{ immediate }
 		{
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -424,7 +421,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -441,7 +438,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -464,7 +461,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual BranchCommandType btype() const = 0;
 	};
 
@@ -589,7 +586,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -606,7 +603,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -622,7 +619,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -638,7 +635,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -654,7 +651,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateType itype() const final override;
+		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 }

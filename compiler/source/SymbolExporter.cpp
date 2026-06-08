@@ -100,7 +100,7 @@ namespace
 		return "";
 	}
 
-	std::string export_struct_symbol(StructSymbol* struct_symbol, const Token& token)
+	std::string export_struct_symbol(StructOrUnionSymbol* struct_symbol, const Token& token)
 	{
 		return "";
 	}

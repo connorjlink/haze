@@ -19,7 +19,7 @@ namespace hz
 	class FunctionSymbol;
 	class ArgumentSymbol;
 	class VariableSymbol;
-	class StructSymbol;
+	class StructOrUnionSymbol;
 	class DefineSymbol;
 	class LabelSymbol;
 	class AdjustExpression;

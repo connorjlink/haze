@@ -276,8 +276,6 @@
     <ClInclude Include="include\cli\defs\OptimizationFlag.h" />
     <ClInclude Include="include\cli\defs\OptionKind.h" />
     <ClInclude Include="include\cli\defs\VerbosityKind.h" />
-    <ClInclude Include="include\command\BinaryCommandType.h" />
-    <ClInclude Include="include\command\BranchCommandType.h" />
     <ClInclude Include="include\command\Command.h" />
     <ClInclude Include="include\command\defs\CommandKind.h" />
     <ClInclude Include="include\ir\IntermediateCommand.h" />

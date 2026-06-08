@@ -250,12 +250,12 @@ namespace hz
 			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
 		}
 
-#define DEFINE_SUM(name, X) \
+#define DEFINE_SUM(name, methods) \
 	template<typename SumStorageT> \
 	class name##SumDispatcher : public SumDispatcher<SumStorageT> \
 	{ \
 	public: \
-		X(SUM_DISPATCH_ENTRY, name##Handle) \
+		methods(SUM_DISPATCH_ENTRY, name##Handle) \
 	public: \
 		constexpr name##SumDispatcher(const SumStorageT& sum_storage, IndexHandle index) \
 			: SumDispatcher<SumStorageT>{ sum_storage, index } \
@@ -265,7 +265,7 @@ namespace hz
 	template<typename AnchorT> \
 	using name##Methods = AllButLastT \
 	< \
-		X(METHOD_TUPLE_ENTRY, name##Handle) \
+		methods(METHOD_TUPLE_ENTRY, name##Handle) \
 		void \
 	>; \
 	struct name##SumStorage; \
