@@ -26,6 +26,8 @@ namespace hz
 #else
 #error "Unsupported target platform"
 #endif
+
+	inline constexpr auto WHITESPACE = " \t\n\r";
 }
 
 #endif

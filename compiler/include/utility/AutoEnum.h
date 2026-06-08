@@ -58,12 +58,10 @@ namespace hz
 	}
 
 
-#pragma message("TODO: include specific serialize/deserialize functions for bitfield type enums")
-
 #define DEFINE_ENUM(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name) \
 	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, )
 
 #define DEFINE_ENUM_BACKED(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, base) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, base)
+	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, : base)
 
 #endif

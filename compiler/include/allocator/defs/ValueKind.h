@@ -19,7 +19,7 @@ namespace hz
 #define MAP_MEMBER(enumerator, type, name) Mapping{ #name, ValueKind::enumerator },
 #define FORWARD_DECLARATION(enumerator, type, name) class type;
 
-	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VALUE_KINDS, ValueKind, value kind, : TagType)
+	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VALUE_KINDS, ValueKind, value kind, TagType)
 
 #undef FORWARD_DECLARATION
 #undef MAP_MEMBER

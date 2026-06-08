@@ -26,7 +26,7 @@ namespace hz
 #define MAP_MEMBER(enumerator, name, value) Mapping{ #name, X86Register::enumerator },
 #define FORWARD_DECLARATION(enumerator, name, value) /* elide forward declarations */
 
-	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, X86_REGISTER_KINDS, X86Register, x86 register, : Register)
+	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, X86_REGISTER_KINDS, X86Register, x86 register, Register)
 
 #undef FORWARD_DECLARATION
 #undef MAP_MEMBER

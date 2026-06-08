@@ -24,11 +24,28 @@ namespace hz
 
 	template<typename T>
 		requires std::is_scoped_enum_v<T>
+	constexpr T operator|(T left, std::underlying_type_t<T> right)
+	{
+		return left | static_cast<T>(right);
+	}
+
+
+	template<typename T>
+		requires std::is_scoped_enum_v<T>
 	constexpr T operator|=(T& left, T right)
 	{
 		left = left | right;
 		return left;
 	}
+
+	template<typename T>
+		requires std::is_scoped_enum_v<T>
+	constexpr T operator|=(T& left, std::underlying_type_t<T> right)
+	{
+		left = left | right;
+		return left;
+	}
+
 
 	template<typename T>
 		requires std::is_scoped_enum_v<T>
@@ -38,6 +55,14 @@ namespace hz
 			std::to_underlying(left) &
 			std::to_underlying(right));
 	}
+
+	template<typename T>
+		requires std::is_scoped_enum_v<T>
+	constexpr bool operator&(T left, std::underlying_type_t<T> right)
+	{
+		return left & static_cast<T>(right);
+	}
+
 }
 
 template<hz::Formattable T>

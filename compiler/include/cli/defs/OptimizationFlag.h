@@ -1,7 +1,7 @@
 #ifndef HAZE_OPTIMIZATIONFLAG_H
 #define HAZE_OPTIMIZATIONFLAG_H
 
-#include <utility/AutoEnum.h>
+#include <utility/AutoBitfield.h>
 #include <utility/Formatter.h>
 
 // Haze OptimizationFlag.h

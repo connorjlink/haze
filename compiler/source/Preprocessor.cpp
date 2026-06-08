@@ -7,6 +7,7 @@ import std;
 #include <symbol/SymbolExporter.h>
 #include <toolchain/Preprocessor.h>
 #include <toolchain/models/Token.h>
+#include <utility/Constants.h>
 
 // Haze Preprocessor.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -29,25 +30,23 @@ namespace
 		}
 	}
 
-	static constexpr auto ws = " \t\n\r";
-
 	// Thanks https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring :)
 	// trim from end of string (right)
-	std::string& rtrim(std::string& s, const char* t = ws)
+	std::string& rtrim(std::string& s, const char* t = hz::WHITESPACE)
 	{
 		s.erase(s.find_last_not_of(t) + 1);
 		return s;
 	}
 
 	// trim from beginning of string (left)
-	std::string& ltrim(std::string& s, const char* t = ws)
+	std::string& ltrim(std::string& s, const char* t = hz::WHITESPACE)
 	{
 		s.erase(0, s.find_first_not_of(t));
 		return s;
 	}
 
 	// trim from both ends of string (right then left)
-	std::string& trim(std::string& s, const char* t = ws)
+	std::string& trim(std::string& s, const char* t = hz::WHITESPACE)
 	{
 		return ltrim(rtrim(s, t), t);
 	}
