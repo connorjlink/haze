@@ -614,5 +614,8 @@
     <ClInclude Include="include\type\defs\TypePrecedence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utility\AutoBitfield.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

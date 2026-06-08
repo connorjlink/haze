@@ -82,7 +82,17 @@ namespace hz
 #define DEFINE_BITFIELD_BACKED(enummember, ifbranch, bitcheck, kinds, type, name, base) \
 	DEFINE_BITFIELD_INTERNAL(ENUM_MEMBER, ifbranch, bitcheck, kinds, type, name, : base)
 		
+// EXAMPLE CODE ONLY
+#define LISTY(X) \
+	X(FLAG_A, x, flag a, x, 0x1) \
+	X(FLAG_B, x, flag b, x, 0x2) \
+	X(FLAG_C, x, flag c, x, 0x4) \
+	X(FLAG_D, x, flag d, x, 0x8) \
+	X(FLAG_E, x, flag e, x, 0x10)
 
+#define ENUM_MEMBER(enumerator, x, name, y, value) BITFIELD_ENUM_MEMBER(enumerator, name, value)
+#define IF_BRANCH(enumerator, x, name, y, value) BITFIED_IF_BRANCH(enumerator, name, value)
+#define BIT_CHECK(enumerator, x, name, y, value) BITFIELD_BIT_CHECK(enumerator, name, value)
 
 }
 

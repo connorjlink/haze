@@ -158,6 +158,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="include\type\TypeFormatter.h" />
+    <ClInclude Include="include\utility\AutoBitfield.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\utility\AutoEnum.h" />
     <ClInclude Include="include\utility\Formatter.h" />
     <ClInclude Include="include\utility\Sum.h" />
