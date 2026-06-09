@@ -6,14 +6,14 @@
 
 namespace hz
 {
-	enum class JSONType
+	enum struct JSONType
 	{
 		OBJECT,
 		ARRAY,
 		VALUE,
 	};
 
-	class JSON
+	struct JSON
 	{
 	public:
 		virtual JSONType jtype(void) const noexcept = 0;
@@ -24,7 +24,7 @@ namespace hz
 	};
 
 
-	enum class JSONValueType
+	enum struct JSONValueType
 	{
 		STRING,
 		NUMBER,
@@ -32,7 +32,7 @@ namespace hz
 		NULL,
 	};
 
-	class JSONValue : public JSON
+	struct JSONValue : public JSON
 	{
 	public:
 		virtual JSONType jtype(void) const noexcept override;
@@ -42,7 +42,7 @@ namespace hz
 		~JSONValue() = default;
 	};
 
-	class StringJSONValue : public JSONValue
+	struct StringJSONValue : public JSONValue
 	{
 	public:
 		std::string value;
@@ -60,7 +60,7 @@ namespace hz
 		~StringJSONValue() = default;
 	};
 
-	class NumberJSONValue : public JSONValue
+	struct NumberJSONValue : public JSONValue
 	{
 	public:
 		std::int32_t value;
@@ -78,7 +78,7 @@ namespace hz
 		~NumberJSONValue() = default;
 	};
 
-	class BooleanJSONValue : public JSONValue
+	struct BooleanJSONValue : public JSONValue
 	{
 	public:
 		bool value;
@@ -96,7 +96,7 @@ namespace hz
 		~BooleanJSONValue() = default;
 	};
 
-	class NullJSONValue : public JSONValue
+	struct NullJSONValue : public JSONValue
 	{
 	public:
 		JSONValueType vtype(void) const noexcept override;
@@ -112,7 +112,7 @@ namespace hz
 	};
 
 
-	class JSONObject : public JSON
+	struct JSONObject : public JSON
 	{
 	public:
 		std::unordered_map<std::string, JSON*> members;
@@ -136,7 +136,7 @@ namespace hz
 	};
 
 	
-	class JSONArray : public JSON
+	struct JSONArray : public JSON
 	{
 	public:
 		std::vector<JSON*> objects;

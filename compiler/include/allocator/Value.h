@@ -39,7 +39,7 @@ namespace hz
 	DEFINE_SUM(Value, VALUE_METHODS)
 	
 
-	class ValueBase 
+	struct ValueBase 
 		: public ValueFacade
 		, public InjectSingleton<CommandLineOptions, ErrorReporter>
 	{
@@ -53,7 +53,7 @@ namespace hz
 
 namespace hz
 {
-	class RegisterValue : public ValueBase
+	struct RegisterValue : public ValueBase
 	{
 	public:
 		Register index;
@@ -86,7 +86,7 @@ namespace hz
 		}
 	};
 
-	class StackValue : public ValueBase
+	struct StackValue : public ValueBase
 	{
 	public:
 		// relative offset from the base pointer, negative is below the current stack frame
@@ -117,7 +117,7 @@ namespace hz
 		}
 	};
 
-	class StaticValue : public ValueBase
+	struct StaticValue : public ValueBase
 	{
 	public:
 		Address index;

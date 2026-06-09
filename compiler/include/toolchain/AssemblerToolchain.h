@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class AssemblerToolchain : public Toolchain
+	struct AssemblerToolchain : public Toolchain
 	{
 	public:
 		using Toolchain::Toolchain;

@@ -11,7 +11,7 @@
 namespace hz
 {
 	// inherits the injected error reporter singleton
-	class File //: public Trackable
+	struct File //: public Trackable
 		: public InjectSingleton<ErrorReporter>
 	{
 	private:

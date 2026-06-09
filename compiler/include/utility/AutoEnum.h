@@ -1,6 +1,9 @@
 #ifndef HAZE_AUTOENUM_H
 #define HAZE_AUTOENUM_H
 
+#include <utility/Formatter.h>
+
+
 // Haze AutoEnum.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -12,12 +15,12 @@ namespace hz
 	constexpr std::optional<T> from_string(std::string_view) = delete;
 }
 
-#define DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, extras) \
-	enum class type extras \
+#define DEFINE_ENUM_INTERNAL(enummember, switchcase, datamember, structtype, kinds, type, name, extras) \
+	enum struct type extras \
 	{ \
 		kinds(enummember) \
 	}; \
-	kinds(forwarddeclaration) \
+	kinds(structtype) \
 	constexpr std::string_view to_string(type kind) \
 	{ \
 		switch (kind) \
@@ -34,11 +37,11 @@ namespace hz
 			std::string_view enumerator; \
 			type value; \
 		}; \
-		constexpr auto lookup = []() \
+		auto lookup = []() \
 		{ \
 			std::array mappings \
 			{ \
-				kinds(mapmember) \
+				kinds(datamember) \
 			}; \
 			std::sort(mappings.begin(), mappings.end(), [](const Mapping& a, const Mapping& b) \
 			{ \
@@ -57,11 +60,23 @@ namespace hz
 		return std::nullopt; \
 	}
 
+#define _PRIVATE_AUTOENUM_ENUM_MEMBER(enumerator, type, name, enumeration) enumerator,
+#define _PRIVATE_AUTOENUM_SWITCH_CASE(enumerator, type, name, enumeration) case enumeration::enumerator: return #name;
+#define _PRIVATE_AUTOENUM_DATA_MEMBER(enumerator, type, name, enumeration) Mapping{ #name, enumeration::enumerator },
+#define _PRIVATE_AUTOENUM_STRUCT_TYPE(enumerator, type, name, enumeration) struct type;
 
-#define DEFINE_ENUM(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, )
+#define AUTOENUM_EXPAND(x) x
 
-#define DEFINE_ENUM_BACKED(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, base) \
-	DEFINE_ENUM_INTERNAL(enummember, switchcase, mapmember, forwarddeclaration, kinds, type, name, : base)
+#define AUTOENUM_ENUM_MEMBER(...) AUTOENUM_EXPAND(AUTOENUM_ROUTER(_PRIVATE_AUTOENUM_ENUM_MEMBER, __VA_ARGS__))
+#define AUTOENUM_SWITCH_CASE(...) AUTOENUM_EXPAND(AUTOENUM_ROUTER(_PRIVATE_AUTOENUM_SWITCH_CASE, __VA_ARGS__))
+#define AUTOENUM_DATA_MEMBER(...) AUTOENUM_EXPAND(AUTOENUM_ROUTER(_PRIVATE_AUTOENUM_DATA_MEMBER, __VA_ARGS__))
+#define AUTOENUM_STRUCT_TYPE(...) AUTOENUM_EXPAND(AUTOENUM_ROUTER(_PRIVATE_AUTOENUM_STRUCT_TYPE, __VA_ARGS__))
+
+// NOTE: define AUTOENUM_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
+#define DEFINE_ENUM(kinds, type, name) \
+	DEFINE_ENUM_INTERNAL(AUTOENUM_ENUM_MEMBER, AUTOENUM_SWITCH_CASE, AUTOENUM_DATA_MEMBER, AUTOENUM_STRUCT_TYPE, kinds, type, name, )
+
+#define DEFINE_ENUM_BASE(kinds, type, name, base) \
+	DEFINE_ENUM_INTERNAL(AUTOENUM_ENUM_MEMBER, AUTOENUM_SWITCH_CASE, AUTOENUM_DATA_MEMBER, AUTOENUM_STRUCT_TYPE, kinds, type, name, : base)
 
 #endif

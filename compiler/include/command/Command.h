@@ -24,7 +24,7 @@ namespace hz
 	DEFINE_SUM(Command, BASE_AST_METHODS)
 
 
-	class CommandBase
+	struct CommandBase
 		: public CommandFacade
 		, public InjectSingleton<ErrorReporter>
 	{
@@ -49,7 +49,7 @@ namespace hz
 
 namespace hz
 {
-	class LabelCommand : public CommandBase
+	struct LabelCommand : public CommandBase
 	{
 	private:
 		std::string label;
@@ -69,7 +69,7 @@ namespace hz
 	};
 #define MAKE_LABEL_COMMAND(label, token) LabelCommand{ label, token }
 
-	class InstructionCommand : public CommandBase
+	struct InstructionCommand : public CommandBase
 	{
 	public:
 		ByteRange object_code;
@@ -95,7 +95,7 @@ namespace hz
 	};
 #define MAKE_INSTRUCTION_COMMAND(token, object_code, branch_target) InstructionCommand{ token, object_code, branch_target }
 
-	class DotOrgCommand : public CommandBase
+	struct DotOrgCommand : public CommandBase
 	{
 	public:
 		Address address;
@@ -114,7 +114,7 @@ namespace hz
 	};
 #define MAKE_DOTORG_COMMAND(address, token) DotOrgCommand{ address, token }
 
-	class DotByteCommand : public CommandBase
+	struct DotByteCommand : public CommandBase
 	{
 	private:
 		ByteRange bytes;

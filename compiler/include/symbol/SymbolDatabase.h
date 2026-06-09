@@ -12,15 +12,14 @@
 
 namespace hz
 {
-	enum class SymbolKind;
+	enum struct SymbolKind;
 
-	class FunctionSymbol;
-	class ArgumentSymbol;
-	class VariableSymbol;
-	class DefineSymbol;
-	class LabelSymbol;
-	class StructOrUnionSymbol;
-
+	struct FunctionSymbol;
+	struct ArgumentSymbol;
+	struct VariableSymbol;
+	struct DefineSymbol;
+	struct LabelSymbol;
+	struct StructOrUnionSymbol;
 	struct Token;
 
 	FORWARD_DECLARE_SUM(Symbol);
@@ -30,7 +29,7 @@ namespace hz
 
 #pragma message("TODO: redo symbol database to use direct AST reference instead of individual symbol types")
 
-	class SymbolDatabase
+	struct SymbolDatabase
 		: public SingletonTag<SymbolDatabase>
 		, public InjectSingleton<ErrorReporter, SymbolExporter>
 	{

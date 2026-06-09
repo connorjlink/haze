@@ -14,7 +14,7 @@
 
 namespace hz
 {
-	enum class ScannerType
+	enum struct ScannerType
 	{
 		PREPROCESSOR,
 		LEXER,
@@ -61,7 +61,7 @@ namespace hz
 		}
 	};
 
-	class Scanner 
+	struct Scanner 
 		: public UndoableRedoable<SourceContext>
 		, public InjectSingleton<ErrorReporter, FileManager, SymbolDatabase, SymbolExporter>
 	{

@@ -31,7 +31,7 @@ namespace hz
 #undef ENUM_MEMBER
 
 
-	class StructOrUnionType : public TypeBase
+	struct StructOrUnionType : public TypeBase
 	{
 	public:
 		struct Member

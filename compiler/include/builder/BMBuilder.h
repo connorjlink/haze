@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class BMBuilder : public Builder
+	struct BMBuilder : public Builder
 	{
 	public:
 		BMBuilder(const ByteRange& executable)

@@ -14,15 +14,15 @@ namespace hz
 	constexpr T from_string(std::string_view) = delete;
 }
 
-#define DEFINE_BITFIELD_INTERNAL(enummember, ifbranch, bitcheck, kinds, type, name, extras) \
-	enum class type extras \
+#define DEFINE_BITFIELD_INTERNAL(enummember, appendname, valuematch, kinds, type, name, extras) \
+	enum struct type extras \
 	{ \
 		kinds(enummember) \
 	}; \
 	constexpr std::string to_string(type kind) \
 	{ \
 		auto result = std::string{}; \
-		kinds(ifbranch) \
+		kinds(appendname) \
 		return result; \
 	} \
 	template<> \
@@ -44,7 +44,7 @@ namespace hz
 				const auto last = token.find_last_not_of(WHITESPACE); \
 				token = token.substr(first, (last - first + 1)); \
 				auto found = false; \
-				kinds(bitcheck) \
+				kinds(valuematch) \
 			} \
 			if (end == std::string_view::npos) \
 			{ \
@@ -56,11 +56,8 @@ namespace hz
 	}
 
 
-#pragma message("TODO: duplicate this adapter pattern across to AutoEnum also")
-
-#define BITFIELD_ENUM_MEMBER(enumerator, name, value) enumerator = value,
-
-#define BITFIED_IF_BRANCH(enumerator, name, value) \
+#define _PRIVATE_BITFIELD_ENUM_MEMBER(enumerator, name, value) enumerator = value,
+#define _PRIVATE_BITFIELD_APPEND_NAME(enumerator, name, value) \
 	if (kind & value) \
 	{ \
 		if (!result.empty()) \
@@ -69,31 +66,23 @@ namespace hz
 		} \
 		result += #name; \
 	}
-
-#define BITFIELD_BIT_CHECK(enumerator, name, value) \
+#define _PRIVATE_BITFIELD_VALUE_MATCH(enumerator, name, value) \
 	if (token == #name) \
 	{ \
 		result |= EnumType::enumerator; \
 	}
 
-#define DEFINE_BITFIELD(enummember, ifbranch, bitcheck, kinds, type, name) \
-	DEFINE_BITFIELD_INTERNAL(ENUM_MEMBER, ifbranch, bitcheck, kinds, type, name, : std::uint32_t)
+#define BITFIELD_EXPAND(x) x
 
-#define DEFINE_BITFIELD_BACKED(enummember, ifbranch, bitcheck, kinds, type, name, base) \
-	DEFINE_BITFIELD_INTERNAL(ENUM_MEMBER, ifbranch, bitcheck, kinds, type, name, : base)
-		
-// EXAMPLE CODE ONLY
-#define LISTY(X) \
-	X(FLAG_A, x, flag a, x, 0x1) \
-	X(FLAG_B, x, flag b, x, 0x2) \
-	X(FLAG_C, x, flag c, x, 0x4) \
-	X(FLAG_D, x, flag d, x, 0x8) \
-	X(FLAG_E, x, flag e, x, 0x10)
+#define BITFIELD_ENUM_MEMBER(...) BITFIELD_EXPAND(BITFIELD_ROUTER(_PRIVATE_BITFIELD_ENUM_MEMBER, __VA_ARGS__))
+#define BITFIELD_APPEND_NAME(...) BITFIELD_EXPAND(BITFIELD_ROUTER(_PRIVATE_BITFIELD_APPEND_NAME, __VA_ARGS__))
+#define BITFIELD_VALUE_MATCH(...) BITFIELD_EXPAND(BITFIELD_ROUTER(_PRIVATE_BITFIELD_VALUE_MATCH, __VA_ARGS__))
 
-#define ENUM_MEMBER(enumerator, x, name, y, value) BITFIELD_ENUM_MEMBER(enumerator, name, value)
-#define IF_BRANCH(enumerator, x, name, y, value) BITFIED_IF_BRANCH(enumerator, name, value)
-#define BIT_CHECK(enumerator, x, name, y, value) BITFIELD_BIT_CHECK(enumerator, name, value)
+// NOTE: define BITFIELD_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
+#define DEFINE_BITFIELD(kinds, type, name) \
+	DEFINE_BITFIELD_INTERNAL(BITFIELD_ENUM_MEMBER, BITFIELD_APPEND_NAME, BITFIELD_VALUE_MATCH, kinds, type, name, : std::uint32_t)
 
-}
+#define DEFINE_BITFIELD_BASE(kinds, type, name, base) \
+	DEFINE_BITFIELD_INTERNAL(BITFIELD_ENUM_MEMBER, BITFIELD_APPEND_NAME, BITFIELD_VALUE_MATCH, kinds, type, name, : base)
 
 #endif

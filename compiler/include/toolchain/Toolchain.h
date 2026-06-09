@@ -16,7 +16,7 @@
 
 namespace hz
 {
-	class Toolchain
+	struct Toolchain
 		: public ServiceTag<Toolchain>
 		, public InjectService<Generator, JobManager, Parser>
 		, public InjectSingleton<CommandLineOptions, ErrorReporter, FileManager, Linker>

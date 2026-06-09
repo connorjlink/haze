@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class WebSocketServer
+	struct WebSocketServer
 	{
 	private:
 		std::function<void(SOCKET)> on_open;

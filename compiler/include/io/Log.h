@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class Log
+	struct Log
 	{
 	private:
 		static void print(const std::string&, const std::string&);

@@ -11,7 +11,7 @@
 
 namespace hz
 {
-	class EnumType : public TypeBase
+	struct EnumType : public TypeBase
 	{
 	public:
 		struct EnumMember

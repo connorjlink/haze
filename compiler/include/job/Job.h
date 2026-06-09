@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class Job : public InjectSingleton<ErrorReporter>
+	struct Job : public InjectSingleton<ErrorReporter>
 	{
 	public:
 		std::uint32_t uuid;

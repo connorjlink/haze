@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class PEBuilder : public Builder
+	struct PEBuilder : public Builder
 	{
 	// pe utilities
 	private:

@@ -27,7 +27,7 @@ namespace hz
 	DEFINE_SUM(Statement, AST_METHODS)
 
 
-	class StatementBase 
+	struct StatementBase 
 		: public StatementFacade
 		, public InjectSingleton<ErrorReporter>
 	{
@@ -55,7 +55,7 @@ namespace hz
 	// C Statement Categories
 	//////////////////////////////////////////////////////
 
-	class NullStatement : public StatementBase
+	struct NullStatement : public StatementBase
 	{
 	public:
 		NullStatement(const Token& token)
@@ -72,7 +72,7 @@ namespace hz
 	};
 #define MAKE_NULL_STATEMENT(token) NullStatement{ token }
 
-	class ExpressionStatement : public StatementBase
+	struct ExpressionStatement : public StatementBase
 	{
 	private:
 		ExpressionHandle expression;
@@ -92,7 +92,7 @@ namespace hz
 	};
 #define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ make_handle(ast, expression), token }
 
-	class ReturnStatement : public StatementBase
+	struct ReturnStatement : public StatementBase
 	{
 	private:
 		std::string enclosing_function;
@@ -114,7 +114,7 @@ namespace hz
 	};
 #define MAKE_RETURN_STATEMENT(enclosing_function, expression, value, token) ReturnStatement{ enclosing_function, make_handle(ast, expression), value, token }
 
-	class IfStatement : public StatementBase
+	struct IfStatement : public StatementBase
 	{
 	private:
 		ExpressionHandle condition;
@@ -136,7 +136,7 @@ namespace hz
 	};
 #define MAKE_IF_STATEMENT(condition, if_body, else_body, token) IfStatement{ make_handle(ast, condition), if_body, else_body, token }
 
-	class WhileStatement : public StatementBase
+	struct WhileStatement : public StatementBase
 	{
 	private:
 		ExpressionHandle condition;
@@ -157,7 +157,7 @@ namespace hz
 	};
 #define MAKE_WHILE_STATEMENT(condition, body, token) WhileStatement{ make_handle(ast, condition), body, token }
 
-	class DoStatement : public StatementBase
+	struct DoStatement : public StatementBase
 	{
 	private:
 		ExpressionHandle condition;
@@ -178,7 +178,7 @@ namespace hz
 	};
 #define MAKE_DO_STATEMENT(condition, body, token) DoStatement{ make_handle(ast, condition), body, token }
 
-	class ForStatement : public StatementBase
+	struct ForStatement : public StatementBase
 	{
 	private:
 		StatementHandle initialization;
@@ -201,7 +201,7 @@ namespace hz
 	};
 #define MAKE_FOR_STATEMENT(initialization, condition, induction, body, token) ForStatement{ initialization, make_handle(ast, condition), make_handle(ast, induction), body, token }
 
-	class GotoStatement : public StatementBase
+	struct GotoStatement : public StatementBase
 	{
 	private:
 		std::string label;
@@ -221,7 +221,7 @@ namespace hz
 	};
 #define MAKE_GOTO_STATEMENT(label, token) GotoStatement{ label, token }
 
-	class ContinueStatement : public StatementBase
+	struct ContinueStatement : public StatementBase
 	{
 	public:
 		ContinueStatement(const Token& token)
@@ -238,7 +238,7 @@ namespace hz
 	};
 #define MAKE_CONTINUE_STATEMENT(token) ContinueStatement{ token }
 
-	class BreakStatement : public StatementBase
+	struct BreakStatement : public StatementBase
 	{
 	public:
 		BreakStatement(const Token& token)
@@ -255,7 +255,7 @@ namespace hz
 	};
 #define MAKE_BREAK_STATEMENT(token) BreakStatement{ token }
 
-	class SwitchStatement : public StatementBase
+	struct SwitchStatement : public StatementBase
 	{
 	public:
 		struct Case
@@ -284,7 +284,7 @@ namespace hz
 	};
 #define MAKE_SWITCH_STATEMENT(condition, cases, fallback, token) SwitchStatement{ make_handle(ast, condition), cases, fallback, token }
 
-	class CompoundStatement : public StatementBase
+	struct CompoundStatement : public StatementBase
 	{
 	public:
 		std::vector<StatementHandle> substatements;
@@ -304,7 +304,7 @@ namespace hz
 	};
 #define MAKE_COMPOUND_STATEMENT(substatements, token) CompoundStatement{ substatements, token }
 
-	class LabeledStatement : public StatementBase
+	struct LabeledStatement : public StatementBase
 	{
 	private:
 		std::string label;
@@ -325,7 +325,7 @@ namespace hz
 	};
 #define MAKE_LABELED_STATEMENT(label, statement, token) LabeledStatement{ label, statement, token }
 
-	class DeclarationStatement : public StatementBase
+	struct DeclarationStatement : public StatementBase
 	{
 	private:
 		DeclarationHandle declaration;
@@ -345,7 +345,7 @@ namespace hz
 	};
 #define MAKE_DECLARATION_STATEMENT(declaration, token) DeclarationStatement{ declaration, token }
 
-	class InlineAssemblyStatement
+	struct InlineAssemblyStatement
 		: public StatementBase
 		, public InjectService<AssemblerParser>
 	{

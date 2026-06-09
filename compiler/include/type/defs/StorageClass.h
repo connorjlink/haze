@@ -23,7 +23,7 @@ namespace hz
 #define MAP_MEMBER(enumerator, name) Mapping{ #name, StorageClass::enumerator },
 #define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, STORAGE_CLASSES, StorageClass, storage class)
+	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, STORAGE_CLASSES, StorageClass, storage struct)
 
 #undef FORWARD_DECLARATION
 #undef MAP_MEMBER
@@ -41,7 +41,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"unknown storage class `{}`", token), NULL_TOKEN);
+			"unknown storage struct `{}`", token), NULL_TOKEN);
 
 		return StorageClass::AUTO;
 	}

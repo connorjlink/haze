@@ -19,7 +19,7 @@ namespace hz
 #define ENUM_MEMBER(enumerator, type, name) enumerator,
 #define SWITCH_CASE(enumerator, type, name) case VariableKind::enumerator: return #name;
 #define MAP_MEMBER(enumerator, type, name) Mapping{ #name, VariableKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, type, name) class type;
+#define FORWARD_DECLARATION(enumerator, type, name) struct type;
 
 	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VARIABLE_KINDS, VariableKind, variable kind)
 

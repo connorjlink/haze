@@ -10,7 +10,7 @@
 
 namespace hz
 {
-    class Builder
+    struct Builder
         : public InjectSingleton<ErrorReporter>
     {
 	protected:

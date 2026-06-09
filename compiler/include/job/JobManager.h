@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class JobManager
+	struct JobManager
 		: public ServiceTag<JobManager>
 		, public InjectSingleton<ErrorReporter>
 	{

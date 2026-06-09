@@ -10,7 +10,7 @@
 
 namespace hz
 {
-	class ErrorReporter 
+	struct ErrorReporter 
 		: public SingletonTag<ErrorReporter>
 	{
 	private:

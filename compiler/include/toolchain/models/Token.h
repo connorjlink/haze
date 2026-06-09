@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	enum class TokenKind
+	enum struct TokenKind
 	{
 		IDENTIFIER,
 

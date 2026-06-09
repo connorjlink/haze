@@ -22,9 +22,9 @@ namespace hz
 
 	TrackingTimePoint system_timestamp(void);
 
-	class Trackable;
+	struct Trackable;
 
-	class Tracker
+	struct Tracker
 		: public SingletonTag<Tracker>
 		, public InjectSingleton<ErrorReporter>
 	{
@@ -255,7 +255,7 @@ namespace hz
 
 	// provides some generic machinery for more detailed instrumentation by the compiler driver
 	// not templated because C++23 deducing this does not require it
-	class Trackable 
+	struct Trackable 
 		: public InjectSingleton<Tracker>
 	{
 	private:

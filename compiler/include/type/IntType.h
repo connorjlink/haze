@@ -35,7 +35,7 @@ namespace hz
 #undef ENUM_MEMBER
 
 
-	class IntType : public TypeBase
+	struct IntType : public TypeBase
 	{
 	public:
 		StorageClass storage;

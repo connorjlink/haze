@@ -10,7 +10,7 @@
 
 namespace hz
 {
-	class CommandLineParser
+	struct CommandLineParser
 		: public InjectSingleton<ErrorReporter, CommandLineOptions>
 	{
 	private:

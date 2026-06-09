@@ -8,7 +8,7 @@ namespace hz
 {
 	using TypePointer = void*;
 
-	class TypeId
+	struct TypeId
 	{
 	private:
 		TypePointer id;
@@ -70,7 +70,7 @@ namespace hz
 	template<typename T>
 	struct SingletonTag {};
 
-	class ServiceContainer
+	struct ServiceContainer
 	{
 	private:
 		std::unordered_map<TypeId, std::function<std::shared_ptr<void>()>> factories;
@@ -131,7 +131,7 @@ namespace hz
 		}
 	};
 
-	class SingletonContainer
+	struct SingletonContainer
 	{
 	private:
 		std::unordered_map<TypeId, std::shared_ptr<void>> instances;
@@ -227,7 +227,7 @@ namespace hz
 
 
 	// have to inject new instances per-thread starting at object graph root container to avoid races
-	class ThreadScope
+	struct ThreadScope
 	{
 	private:
 		// type erasure is fine since shared ptr stores type-specific deleter
@@ -280,7 +280,7 @@ namespace hz
 	// denoted unsafe because the call could fail if the service was not registered
 	// NOTE: DO NOT DEFERENCE THE SERVICE POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
 #define REQUIRE_UNSAFE(x) using_thread().get<x>()
-	// denoted safe because the caller class has already injected the service successfully
+	// denoted safe because the caller struct has already injected the service successfully
 	// NOTE: not explicitly thread-safe, so use with caution!
 #define REQUIRE_SAFE(x) using_service<x>(this)
 
@@ -296,7 +296,7 @@ namespace hz
 	{
 	};
 
-	// NOTE: CallerT required to choose ensure the current class has a valid instance available to fetch
+	// NOTE: CallerT required to choose ensure the current struct has a valid instance available to fetch
 	template<typename T, typename CallerT>
 		requires std::derived_from<CallerT, InjectSingletonTag<T>> and std::derived_from<T, SingletonTag<T>>
 	std::shared_ptr<T> using_singleton(const CallerT*)
@@ -306,7 +306,7 @@ namespace hz
 	// denoted unsafe because the call could fail if the singleton was not registered
 	// NOTE: DO NOT DEFERENCE THE SINGLETON POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
 #define USE_UNSAFE(x) SingletonContainer::instance().get<x>()
-	// denoted safe because the caller class has already injected the singleton successfully
+	// denoted safe because the caller struct has already injected the singleton successfully
 	// NOTE: not explicitly thread-safe, so use with caution!
 #define USE_SAFE(x) using_singleton<x>(this)
 

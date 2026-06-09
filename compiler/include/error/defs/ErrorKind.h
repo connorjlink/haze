@@ -19,17 +19,11 @@ namespace hz
 	X(UNCORRECTABLE, uncorrectable internal error)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case ErrorKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, ErrorKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, ErrorKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, ERROR_KINDS, ErrorKind, error kind)
+	DEFINE_ENUM(ERROR_KINDS, ErrorKind, error kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

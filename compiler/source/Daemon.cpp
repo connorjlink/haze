@@ -12,7 +12,7 @@ namespace hz
 	{
 		server.start(port);
 	}
-#pragma message("TODO: implement Daemon class to handle WebSocket connections and messages")
+#pragma message("TODO: implement Daemon struct to handle WebSocket connections and messages")
 	void Daemon::OnOpen(SOCKET client)
 	{
 		std::print("New client connected: {}", client);

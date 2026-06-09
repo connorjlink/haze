@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class PointerType : public TypeBase
+	struct PointerType : public TypeBase
 	{
 	public:
 		TypeHandle pointee;

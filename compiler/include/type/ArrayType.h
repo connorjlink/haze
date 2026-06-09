@@ -10,7 +10,7 @@
 
 namespace hz
 {
-	class ArrayType : public TypeBase
+	struct ArrayType : public TypeBase
 	{
 	public:
 		TypeHandle element_type;

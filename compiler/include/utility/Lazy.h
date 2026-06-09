@@ -8,7 +8,7 @@ namespace hz
 {
     // NOTE: not thread safe
     template<typename T, typename FunctorT, typename... Ts>
-    class Lazy
+    struct Lazy
     {
     private:
         mutable std::optional<T> value;

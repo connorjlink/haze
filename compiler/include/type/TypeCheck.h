@@ -6,8 +6,8 @@
 
 namespace hz
 {
-	class Type;
-	class Expression;
+	struct Type;
+	struct Expression;
 
 	TypeHandle resolve_type(ExpressionHandle);
 	bool check_type(ExpressionHandle, TypeHandle);

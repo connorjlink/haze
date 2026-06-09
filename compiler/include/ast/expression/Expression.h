@@ -25,7 +25,7 @@ namespace hz
 	DEFINE_SUM(Expression, AST_METHODS)
 
 
-	class ExpressionBase
+	struct ExpressionBase
 		: public ExpressionFacade
 		, public InjectService<Generator>
 		, public InjectSingleton<ErrorReporter>
@@ -50,10 +50,10 @@ namespace hz
 	// Primary Expressions
 	//////////////////////////////////////////////////////
 
-	class IdentifierExpression : public ExpressionBase
+	struct IdentifierExpression : public ExpressionBase
 	{
 	public:
-		enum class Kind
+		enum struct Kind
 		{
 			UNKNOWN, // default
 			GLOBAL_VARIABLE,
@@ -82,7 +82,7 @@ namespace hz
 	};
 #define MAKE_IDENTIFIER_EXPRESSION(identifier_kind, name) IdentifierExpression{ identifier_kind, name }
 
-	class IntegerLiteralExpression : public ExpressionBase
+	struct IntegerLiteralExpression : public ExpressionBase
 	{
 	public:
 		BigInteger value;
@@ -102,7 +102,7 @@ namespace hz
 	};
 #define MAKE_INTEGER_LITERAL_EXPRESSION(value) IntegerLiteralExpression{ value }
 
-	class FloatLiteralExpression : public ExpressionBase
+	struct FloatLiteralExpression : public ExpressionBase
 	{
 	public:
 		BigFloat value;
@@ -122,7 +122,7 @@ namespace hz
 	};
 #define MAKE_FLOAT_LITERAL_EXPRESSION(value) FloatLiteralExpression{ value }
 
-	class StringLiteralExpression : public ExpressionBase
+	struct StringLiteralExpression : public ExpressionBase
 	{
 	public:
 		std::string value;
@@ -142,7 +142,7 @@ namespace hz
 	};
 #define MAKE_STRING_LITERAL_EXPRESSION(value) StringLiteralExpression{ value }
 
-	class CharacterLiteralExpression : public ExpressionBase
+	struct CharacterLiteralExpression : public ExpressionBase
 	{
 	public:
 		char value;
@@ -162,7 +162,7 @@ namespace hz
 	};
 #define MAKE_CHARACTER_LITERAL_EXPRESSION(value) CharacterLiteralExpression{ value }
 
-	class ParenthesizedExpression : public ExpressionBase
+	struct ParenthesizedExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle inner;
@@ -196,7 +196,7 @@ namespace hz
 	// Postfix Expressions
 	//////////////////////////////////////////////////////
 
-	class PostfixIncrementExpression : public ExpressionBase
+	struct PostfixIncrementExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -216,7 +216,7 @@ namespace hz
 	};
 #define MAKE_POSTFIX_INCREMENT_EXPRESSION(operand) PostfixIncrementExpression{ make_handle(ast, operand) }
 
-	class PostfixDecrementExpression : public ExpressionBase
+	struct PostfixDecrementExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -236,7 +236,7 @@ namespace hz
 	};
 #define MAKE_POSTFIX_DECREMENT_EXPRESSION(operand) PostfixDecrementExpression{ make_handle(ast, operand) }
 
-	class FunctionCallExpression : public ExpressionBase
+	struct FunctionCallExpression : public ExpressionBase
 	{
 	public:
 		ExpressionReference<IdentifierExpression> identifier;
@@ -257,7 +257,7 @@ namespace hz
 	};
 #define MAKE_FUNCTION_CALL_EXPRESSION(identifier, arguments) FunctionCallExpression{ make_handle(ast, identifier), arguments }
 
-	class SubscriptExpression : public ExpressionBase
+	struct SubscriptExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle array;
@@ -278,7 +278,7 @@ namespace hz
 	};
 #define MAKE_SUBSCRIPT_EXPRESSION(array, index) SubscriptExpression{ make_handle(ast, array), make_handle(ast, index)
 
-	class MemberAccessExpression : public ExpressionBase
+	struct MemberAccessExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle object;
@@ -299,7 +299,7 @@ namespace hz
 	};
 #define MAKE_MEMBER_ACCESS_EXPRESSION(object, member) MemberAccessExpression{ make_handle(ast, object), make_reference(ast, member) }
 
-	class MemberAccessThroughPointerExpression : public ExpressionBase
+	struct MemberAccessThroughPointerExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle object;
@@ -320,7 +320,7 @@ namespace hz
 	};
 #define MAKE_MEMBER_ACCESS_THROUGH_POINTER_EXPRESSION(object, member) MemberAccessThroughPointerExpression{ make_handle(ast, object), make_handle(ast, member) }
 
-	class CompoundLiteralExpression : public ExpressionBase
+	struct CompoundLiteralExpression : public ExpressionBase
 	{
 	public:
 		struct Initializer
@@ -362,7 +362,7 @@ namespace hz
 	// Unary Expressions
 	//////////////////////////////////////////////////////
 
-	class PrefixIncrementExpression : public ExpressionBase
+	struct PrefixIncrementExpression : public ExpressionBase
 	{
 	public:
 		// restricted to lvalues (unary expression only), checked at AST construction
@@ -383,7 +383,7 @@ namespace hz
 	};
 #define MAKE_PREFIX_INCREMENT_EXPRESSION(operand) PrefixIncrementExpression{ make_handle(ast, operand) }
 
-	class PrefixDecrementExpression : public ExpressionBase
+	struct PrefixDecrementExpression : public ExpressionBase
 	{
 	public:
 		// restricted to lvalues (unary expression only), checked at AST construction
@@ -404,7 +404,7 @@ namespace hz
 	};
 #define MAKE_PREFIX_DECREMENT_EXPRESSION(operand) PrefixDecrementExpression{ make_handle(ast, operand) }
 
-	class PlusExpression : public ExpressionBase
+	struct PlusExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -424,7 +424,7 @@ namespace hz
 	};
 #define MAKE_PLUS_EXPRESSION(operand) PlusExpression{ make_handle(ast, operand) }
 
-	class MinusExpression : public ExpressionBase
+	struct MinusExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -444,7 +444,7 @@ namespace hz
 	};
 #define MAKE_MINUS_EXPRESSION(operand) MinusExpression{ make_handle(ast, operand) }
 
-	class BitwiseNotExpression : public ExpressionBase
+	struct BitwiseNotExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -464,7 +464,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_NOT_EXPRESSION(operand) BitwiseNotExpression{ make_handle(ast, operand) }
 
-	class LogicalNotExpression : public ExpressionBase
+	struct LogicalNotExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -484,7 +484,7 @@ namespace hz
 	};
 #define MAKE_LOGICAL_NOT_EXPRESSION(operand) LogicalNotExpression{ make_handle(ast, operand)
 
-	class CastExpression : public ExpressionBase
+	struct CastExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle target;
@@ -505,7 +505,7 @@ namespace hz
 	};
 #define MAKE_CAST_EXPRESSION(target, type) CastExpression{ make_handle(ast, target), type }
 
-	class AddressOfExpression : public ExpressionBase
+	struct AddressOfExpression : public ExpressionBase
 	{
 	public:
 		// operand must be an addressable lvalue or function designator
@@ -527,7 +527,7 @@ namespace hz
 	};
 #define MAKE_ADDRESS_OF_EXPRESSION(operand) AddressOfExpression{ make_handle(ast, operand) }
 
-	class DereferenceExpression : public ExpressionBase
+	struct DereferenceExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -547,7 +547,7 @@ namespace hz
 	};
 #define MAKE_DEREFERENCE_EXPRESSION(operand) DereferenceExpression{ make_handle(ast, operand) }
 
-	class SizeOfExpressionExpression : public ExpressionBase
+	struct SizeOfExpressionExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle operand;
@@ -567,7 +567,7 @@ namespace hz
 	};
 #define MAKE_SIZEOF_EXPRESSION_EXPRESSION(operand) SizeOfExpressionExpression{ make_handle(ast, operand) }
 
-	class SizeOfTypeExpression : public ExpressionBase
+	struct SizeOfTypeExpression : public ExpressionBase
 	{
 	public:
 		TypeHandle type;
@@ -600,7 +600,7 @@ namespace hz
 	// Binary Expressions
 	//////////////////////////////////////////////////////
 
-	class MultiplyExpression : public ExpressionBase
+	struct MultiplyExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -621,7 +621,7 @@ namespace hz
 	};
 #define MAKE_MULTIPLY_EXPRESSION(left, right) MultiplyExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class DivideExpression : public ExpressionBase
+	struct DivideExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -642,7 +642,7 @@ namespace hz
 	};
 #define MAKE_DIVIDE_EXPRESSION(left, right) DivideExpression{ make_handle(ast, left), make_handle(ast, right) }
 	
-	class ModuloExpression : public ExpressionBase
+	struct ModuloExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -663,7 +663,7 @@ namespace hz
 	};
 #define MAKE_MODULO_EXPRESSION(left, right) ModuloExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class AddExpression : public ExpressionBase
+	struct AddExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -684,7 +684,7 @@ namespace hz
 	};
 #define MAKE_ADD_EXPRESSION(left, right) AddExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class SubtractExpression : public ExpressionBase
+	struct SubtractExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -705,7 +705,7 @@ namespace hz
 	};
 #define MAKE_SUBTRACT_EXPRESSION(left, right) SubtractExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class LeftShiftExpression : public ExpressionBase
+	struct LeftShiftExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -726,7 +726,7 @@ namespace hz
 	};
 #define MAKE_LEFT_SHIFT_EXPRESSION(left, right) LeftShiftExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class RightShiftExpression : public ExpressionBase
+	struct RightShiftExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -747,7 +747,7 @@ namespace hz
 	};
 #define MAKE_RIGHT_SHIFT_EXPRESSION(left, right) RightShiftExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class LessThanExpression : public ExpressionBase
+	struct LessThanExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -768,7 +768,7 @@ namespace hz
 	};
 #define MAKE_LESS_THAN_EXPRESSION(left, right) LessThanExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class LessThanOrEqualToExpression : public ExpressionBase
+	struct LessThanOrEqualToExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -789,7 +789,7 @@ namespace hz
 	};
 #define MAKE_LESS_THAN_OR_EQUAL_TO_EXPRESSION(left, right) LessThanOrEqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class GreaterThanExpression : public ExpressionBase
+	struct GreaterThanExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -810,7 +810,7 @@ namespace hz
 	};
 #define MAKE_GREATER_THAN_EXPRESSION(left, right) GreaterThanExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class GreaterThanOrEqualToExpression : public ExpressionBase
+	struct GreaterThanOrEqualToExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -831,7 +831,7 @@ namespace hz
 	};
 #define MAKE_GREATER_THAN_OR_EQUAL_TO_EXPRESSION(left, right) GreaterThanOrEqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class EqualToExpression : public ExpressionBase
+	struct EqualToExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -852,7 +852,7 @@ namespace hz
 	};
 #define MAKE_EQUAL_TO_EXPRESSION(left, right) EqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class NotEqualToExpression : public ExpressionBase
+	struct NotEqualToExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -873,7 +873,7 @@ namespace hz
 	};
 #define MAKE_NOT_EQUAL_TO_EXPRESSION(left, right) NotEqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class BitwiseAndExpression : public ExpressionBase
+	struct BitwiseAndExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -894,7 +894,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_AND_EXPRESSION(left, right) BitwiseAndExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class BitwiseXorExpression : public ExpressionBase
+	struct BitwiseXorExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -915,7 +915,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_XOR_EXPRESSION(left, right) BitwiseXorExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class BitwiseOrExpression : public ExpressionBase
+	struct BitwiseOrExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -936,7 +936,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_OR_EXPRESSION(left, right) BitwiseOrExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class LogicalAndExpression : public ExpressionBase
+	struct LogicalAndExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -957,7 +957,7 @@ namespace hz
 	};
 #define MAKE_LOGICAL_AND_EXPRESSION(left, right) LogicalAndExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class LogicalOrExpression : public ExpressionBase
+	struct LogicalOrExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -978,7 +978,7 @@ namespace hz
 	};
 #define MAKE_LOGICAL_OR_EXPRESSION(left, right) LogicalOrExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class TernaryExpression : public ExpressionBase
+	struct TernaryExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle condition;
@@ -1000,7 +1000,7 @@ namespace hz
 	};
 #define MAKE_TERNARY_EXPRESSION(condition, then, otherwise) TernaryExpression{ make_handle(ast, condition), make_handle(ast, then), make_handle(ast, otherwise) }
 
-	class AssignmentExpression : public ExpressionBase
+	struct AssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1022,7 +1022,7 @@ namespace hz
 	};
 #define MAKE_ASSIGNMENT_EXPRESSION(left, right) AssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class AddAssignmentExpression : public ExpressionBase
+	struct AddAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1044,7 +1044,7 @@ namespace hz
 	};
 #define MAKE_ADD_ASSIGNMENT_EXPRESSION(left, right) AddAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class SubtractAssignmentExpression : public ExpressionBase
+	struct SubtractAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1066,7 +1066,7 @@ namespace hz
 	};
 #define MAKE_SUBTRACT_ASSIGNMENT_EXPRESSION(left, right) SubtractAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class MultiplyAssignmentExpression : public ExpressionBase
+	struct MultiplyAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1088,7 +1088,7 @@ namespace hz
 	};
 #define MAKE_MULTIPLY_ASSIGNMENT_EXPRESSION(left, right) MultiplyAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class DivideAssignmentExpression : public ExpressionBase
+	struct DivideAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1110,7 +1110,7 @@ namespace hz
 	};
 #define MAKE_DIVIDE_ASSIGNMENT_EXPRESSION(left, right) DivideAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class ModuloAssignmentExpression : public ExpressionBase
+	struct ModuloAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1132,7 +1132,7 @@ namespace hz
 	};
 #define MAKE_MODULO_ASSIGNMENT_EXPRESSION(left, right) ModuloAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class LeftShiftAssignmentExpression : public ExpressionBase
+	struct LeftShiftAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1154,7 +1154,7 @@ namespace hz
 	};
 #define MAKE_LEFT_SHIFT_ASSIGNMENT_EXPRESSION(left, right) LeftShiftAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class RightShiftAssignmentExpression : public ExpressionBase
+	struct RightShiftAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1176,7 +1176,7 @@ namespace hz
 	};
 #define MAKE_RIGHT_SHIFT_ASSIGNMENT_EXPRESSION(left, right) RightShiftAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class BitwiseAndAssignmentExpression : public ExpressionBase
+	struct BitwiseAndAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1198,7 +1198,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_AND_ASSIGNMENT_EXPRESSION(left, right) BitwiseAndAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class BitwiseXorAssignmentExpression : public ExpressionBase
+	struct BitwiseXorAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1220,7 +1220,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_XOR_ASSIGNMENT_EXPRESSION(left, right) BitwiseXorAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class BitwiseOrAssignmentExpression : public ExpressionBase
+	struct BitwiseOrAssignmentExpression : public ExpressionBase
 	{
 	public:
 		// restricted to assignable lvalues, checked at AST construction and before code generation
@@ -1242,7 +1242,7 @@ namespace hz
 	};
 #define MAKE_BITWISE_OR_ASSIGNMENT_EXPRESSION(left, right) BitwiseOrAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
 
-	class CommaExpression : public ExpressionBase
+	struct CommaExpression : public ExpressionBase
 	{
 	public:
 		std::vector<ExpressionHandle> expressions;

@@ -8,15 +8,15 @@
 
 namespace hz
 {
-	enum class StatementKind;
-	enum class ExpressionKind;
-	enum class CommandKind;
-	enum class IntKind;
-	enum class FloatKind;
-	enum class TokenKind;
-	enum class SymbolKind;
-	enum class StructOrUnionKind;
-	enum class BinaryExpressionKind;
+	enum struct StatementKind;
+	enum struct ExpressionKind;
+	enum struct CommandKind;
+	enum struct IntKind;
+	enum struct FloatKind;
+	enum struct TokenKind;
+	enum struct SymbolKind;
+	enum struct StructOrUnionKind;
+	enum struct BinaryExpressionKind;
 
 	struct Token;
 
@@ -24,7 +24,7 @@ namespace hz
 	FORWARD_DECLARE_SUM(Expression)
 
 
-	class CommonErrors
+	struct CommonErrors
 	{
 	public:
 		static void internal_compiler_error(const std::string&, const Token&);

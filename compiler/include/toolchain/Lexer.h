@@ -10,7 +10,7 @@
 namespace hz
 {
 	// inherits the injected file manager service
-	class Lexer : public Scanner
+	struct Lexer : public Scanner
 	{
 	public:
 		std::vector<Token> lex();

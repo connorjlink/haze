@@ -107,6 +107,8 @@
       <BuildStlModules>true</BuildStlModules>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\async\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,6 +1,8 @@
 #ifndef HAZE_DECLARATIONKIND_H
 #define	HAZE_DECLARATIONKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze DeclarationKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -14,17 +16,11 @@ namespace hz
 	X(TYPEDEF,         TypedefDeclaration,       typedef)
 
 
-#define ENUM_MEMBER(enumerator, type, name) enumerator,
-#define SWITCH_CASE(enumerator, type, name) case DeclarationKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, type, name) Mapping{ #name, DeclarationKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, type, name) class type;
+#define AUTOENUM_ROUTER(X, enumerator, type, name) X(enumerator, type, name, DeclarationKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, DECLARATION_KINDS, DeclarationKind, declaration kind)
+	DEFINE_ENUM(DECLARATION_KINDS, DeclarationKind, declaration kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

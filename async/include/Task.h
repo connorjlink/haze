@@ -10,10 +10,10 @@
 
 namespace hz
 {
-	enum class ContinuationPolicy
+	enum struct ContinuationPolicy
 	{
-		ReturnToCaller,
-		RunAnywhere
+		RETURN_TO_CALLER,
+		RUN_ANYWHERE
 	};
 
 	template<typename T = void>
@@ -42,11 +42,10 @@ namespace hz
 
 		bool await_ready() const noexcept { return false; }
 
-		// Awaiter with continuation control
-		auto await_suspend(std::coroutine_handle<> awaiting, ContinuationPolicy policy = ContinuationPolicy::ReturnToCaller)
+		auto await_suspend(std::coroutine_handle<> awaiting, ContinuationPolicy policy = ContinuationPolicy::RETURN_TO_CALLER)
 		{
 			coroutine.promise().continuation = awaiting;
-			if (policy == ContinuationPolicy::RunAnywhere)
+			if (policy == ContinuationPolicy::RUN_ANYWHERE)
 			{
 				std::async(std::launch::async, [coroutine = this->coroutine]() mutable
 				{
@@ -141,7 +140,7 @@ namespace hz
 			return Awaiter{ continuation };
 		}
 
-		void return_value(T value) 
+		void return_value(T value)
 		{
 			this->value = std::move(value);
 		}
@@ -158,12 +157,12 @@ namespace hz
 		std::exception_ptr exception;
 		std::coroutine_handle<> continuation;
 
-		auto get_return_object() 
+		auto get_return_object()
 		{ 
 			return Task{ HandleType::from_promise(*this) }; 
 		}
 		
-		auto initial_suspend() 
+		auto initial_suspend()
 		{ 
 			return std::suspend_always{};
 		}
@@ -191,7 +190,7 @@ namespace hz
 			return Awaiter{ continuation };
 		}
 
-		void return_void() 
+		void return_void()
 		{
 			if (continuation)
 			{
@@ -199,7 +198,7 @@ namespace hz
 			}
 		}
 
-		void unhandled_exception() 
+		void unhandled_exception()
 		{ 
 			exception = std::current_exception(); 
 		}

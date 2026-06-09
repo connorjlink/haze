@@ -27,29 +27,11 @@ namespace hz
 	X(LABEL,          label)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case IntermediateKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, IntermediateKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, IntermediateKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, INTERMEDIATE_KINDS, IntermediateKind, intermediate kind)
+	DEFINE_ENUM(INTERMEDIATE_KINDS, IntermediateKind, intermediate kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
-
-#define INTERMEDIATE_TYPE_KINDS(X) \
-	X(VOID, 0, void) \
-	X(BOOL, 1, bool) \
-	X(INT8, 8, int8) \
-	X(INT16, 16, int16) \
-	X(INT32, 32, int32) \
-	X(FLOAT32, 32, float32) \
-	X(FLOAT64, 64, float64) \
-	X(FLOAT80, 80, float80) \
-	X(POINTER, (sizeof(Address)* std::numeric_limits<unsigned char>::digits), pointer)
-
+#undef AUTOENUM_ROUTER
 }
 
 #endif 

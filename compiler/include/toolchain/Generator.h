@@ -15,13 +15,13 @@
 
 namespace hz
 {
-	class ArgumentExpression;
+	struct ArgumentExpression;
 
 	FORWARD_DECLARE_SUM(Expression);
 	FORWARD_DECLARE_SUM(Value);
 
 
-	class Generator
+	struct Generator
 		: public ServiceTag<Generator>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase>
 	{

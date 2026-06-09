@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class FileManager : 
+	struct FileManager : 
 		public SingletonTag<FileManager>,
 		public InjectSingleton<ErrorReporter>
 	{

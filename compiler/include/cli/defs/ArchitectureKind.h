@@ -2,10 +2,10 @@
 #define HAZE_ARCHITECTURETYPE_H
 
 #include <error/ErrorReporter.h>
-#include <x86/defs/X86Register.h>
 #include <riscv/defs/RISCVRegister.h>
 #include <utility/AutoEnum.h>
 #include <utility/Constants.h>
+#include <x86/defs/X86Register.h>
 
 // Haze ArchitectureKind.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,19 +17,14 @@ namespace hz
 	X(RISCV, risc-v)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case ArchitectureKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, ArchitectureKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, ArchitectureKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, ARCHITECTURE_KINDS, ArchitectureKind, architecture kind)
+	DEFINE_ENUM(ARCHITECTURE_KINDS, ArchitectureKind, architecture kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 
 
+	// returns the pair <minimum index, maximum index>
 	constexpr std::pair<std::size_t, std::size_t> get_register_extrema(ArchitectureKind kind)
 	{
 		using enum ArchitectureKind;
@@ -40,22 +35,22 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"unknown architecture type `{}`", kind), NULL_TOKEN);
+			"invalid architecture kind `{}`", kind), NULL_TOKEN);
 	}
 
 #define NAMEOF(x) #x
 
-	constexpr const std::string& get_stack_frame_pointer(ArchitectureKind kind)
+	constexpr std::string_view get_stack_frame_pointer(ArchitectureKind kind)
 	{
 		using enum ArchitectureKind;
 		switch (kind)
 		{
 			case X86: return NAMEOF(EBP);
-			case RISCV: return NAMEOF(FP); 
+			case RISCV: return NAMEOF(FP);
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"unknown architecture type `{}`", kind), NULL_TOKEN);
+			"invalid architecture kind `{}`", kind), NULL_TOKEN);
 	}
 
 	constexpr Address get_linker_origin(ArchitectureKind kind)
@@ -68,7 +63,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
-			"unknown architecture type `{}`", kind), NULL_TOKEN);
+			"invalid architecture kind `{}`", kind), NULL_TOKEN);
 	}
 
 #undef NAMEOF

@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class TypedefNameType : public TypeBase
+	struct TypedefNameType : public TypeBase
 	{
 	public:
 		TypeHandle type;

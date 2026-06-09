@@ -28,7 +28,7 @@ namespace hz
 	DEFINE_SUM(Type, TYPE_METHODS)
 
 
-	class TypeBase 
+	struct TypeBase 
 		: public TypeFacade
 		, public InjectSingleton<ErrorReporter>
 	{

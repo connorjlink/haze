@@ -10,11 +10,11 @@
 
 namespace hz
 {	
-	class Function;
-	class Expression;
-	class Variable;
+	struct Function;
+	struct Expression;
+	struct Variable;
 
-	class Context
+	struct Context
 		: public SingletonTag<Context>
 		, public InjectSingleton<ErrorReporter>
 	{

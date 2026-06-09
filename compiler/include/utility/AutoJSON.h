@@ -6,13 +6,13 @@
 
 namespace hz
 {
-	class JSON;
-	class JSONObject;
-	class JSONArray;
+	struct JSON;
+	struct JSONObject;
+	struct JSONArray;
 
 	// these are basically smart pointer classes, but they are somewhat nice for clarity/intention purpose
 
-	class AutoJSONObject
+	struct AutoJSONObject
 	{
 	private:
 		JSONObject* object;
@@ -29,7 +29,7 @@ namespace hz
 		~AutoJSONObject();
 	};
 
-	class AutoJSONArray
+	struct AutoJSONArray
 	{
 	private:
 		JSONArray* array;

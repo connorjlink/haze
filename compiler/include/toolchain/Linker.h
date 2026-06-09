@@ -16,7 +16,7 @@ namespace hz
 {
 	// Has to be a singleton because many threads will feed compiled 
 	// translation units to the linker to produce a final command stream
-	class Linker
+	struct Linker
 		: public SingletonTag<Linker>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, CommandLineOptions>
 	{

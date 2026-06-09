@@ -9,9 +9,9 @@
 
 namespace hz
 {
-	class Command;
+	struct Command;
 
-	class RISCVAssemblerParser : public AssemblerParser
+	struct RISCVAssemblerParser : public AssemblerParser
 	{
 	public:
 		ArchitectureKind ctype() const final override;

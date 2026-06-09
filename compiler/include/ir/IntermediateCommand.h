@@ -14,7 +14,7 @@
 
 namespace hz
 {
-	class IntermediateCommand 
+	struct IntermediateCommand 
 		: public InjectService<Generator, Allocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
@@ -36,7 +36,7 @@ namespace hz
 	};
 
 
-	class BranchLabelCommand : public IntermediateCommand
+	struct BranchLabelCommand : public IntermediateCommand
 	{
 	public:
 		std::string label;
@@ -52,7 +52,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class EnterScopeCommand : public IntermediateCommand
+	struct EnterScopeCommand : public IntermediateCommand
 	{
 	private:
 		Offset bytes;
@@ -81,14 +81,14 @@ namespace hz
 		//virtual constexpr std::int32_t bytes() const final override;
 	};
 
-	class LeaveScopeCommand : public IntermediateCommand
+	struct LeaveScopeCommand : public IntermediateCommand
 	{
 	public:
 		virtual IntermediateKind itype() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
-	class LocalVariableCommand : public IntermediateCommand
+	struct LocalVariableCommand : public IntermediateCommand
 	{
 	private:
 		Register location;
@@ -105,7 +105,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class GlobalVariableCommand : public IntermediateCommand
+	struct GlobalVariableCommand : public IntermediateCommand
 	{
 	private:
 		Register location;
@@ -122,7 +122,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class HeapReadCommand : public IntermediateCommand
+	struct HeapReadCommand : public IntermediateCommand
 	{
 	private:
 		Address pointer;
@@ -139,7 +139,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class HeapWriteCommand : public IntermediateCommand
+	struct HeapWriteCommand : public IntermediateCommand
 	{
 	private:
 		Address pointer;
@@ -156,7 +156,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class StackReadCommand : public IntermediateCommand
+	struct StackReadCommand : public IntermediateCommand
 	{
 	private:
 		Offset offset;
@@ -173,7 +173,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class StackWriteCommand : public IntermediateCommand
+	struct StackWriteCommand : public IntermediateCommand
 	{
 	private:
 		Offset offset;
@@ -190,7 +190,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BoolCommand : public IntermediateCommand
+	struct BoolCommand : public IntermediateCommand
 	{
 	private:
 		std::int8_t destination, source;
@@ -206,7 +206,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BinaryCommand : public IntermediateCommand
+	struct BinaryCommand : public IntermediateCommand
 	{
 	protected:
 		std::int8_t left, right, destination;
@@ -222,7 +222,7 @@ namespace hz
 		virtual BinaryCommandType btype() const = 0;
 	};
 
-	class AddCommand : public BinaryCommand
+	struct AddCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -232,7 +232,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class SubtractCommand : public BinaryCommand
+	struct SubtractCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -242,7 +242,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class MultiplyCommand : public BinaryCommand
+	struct MultiplyCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -252,7 +252,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BitorCommand : public BinaryCommand
+	struct BitorCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -262,7 +262,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BitandCommand : public BinaryCommand
+	struct BitandCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -272,7 +272,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BitxorCommand : public BinaryCommand
+	struct BitxorCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -282,7 +282,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BitlshiftCommand : public BinaryCommand
+	struct BitlshiftCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -292,7 +292,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BitrshiftCommand : public BinaryCommand
+	struct BitrshiftCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -302,7 +302,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class EqualityCommand : public BinaryCommand
+	struct EqualityCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -312,7 +312,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class InequalityCommand : public BinaryCommand
+	struct InequalityCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -322,7 +322,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class LessCommand : public BinaryCommand
+	struct LessCommand : public BinaryCommand
 	{ 
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -332,7 +332,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class GreaterCommand : public BinaryCommand
+	struct GreaterCommand : public BinaryCommand
 	{
 	public:
 		using BinaryCommand::BinaryCommand;
@@ -342,7 +342,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class IncrementCommand : public IntermediateCommand
+	struct IncrementCommand : public IntermediateCommand
 	{
 	private:
 		Register destination, source;
@@ -358,7 +358,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class DecrementCommand : public IntermediateCommand
+	struct DecrementCommand : public IntermediateCommand
 	{
 	private:
 		Register destination, source;
@@ -374,7 +374,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class CopyCommand : public IntermediateCommand
+	struct CopyCommand : public IntermediateCommand
 	{
 	public:
 		Register destination, source;
@@ -390,7 +390,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class MakeImmediateCommand : public IntermediateCommand
+	struct MakeImmediateCommand : public IntermediateCommand
 	{
 	private:
 		BigInteger immediate;
@@ -406,7 +406,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class MakeArgumentCommand : public IntermediateCommand
+	struct MakeArgumentCommand : public IntermediateCommand
 	{
 	private:
 		Register source;
@@ -425,7 +425,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class TakeArgumentCommand : public IntermediateCommand
+	struct TakeArgumentCommand : public IntermediateCommand
 	{
 	private:
 		Register destination;
@@ -442,7 +442,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class BranchCommand : public IntermediateCommand
+	struct BranchCommand : public IntermediateCommand
 	{
 	public:
 		// jmp destination
@@ -465,7 +465,7 @@ namespace hz
 		virtual BranchCommandType btype() const = 0;
 	};
 
-	class CallFunctionCommand : public BranchCommand
+	struct CallFunctionCommand : public BranchCommand
 	{
 	public:
 		CallFunctionCommand(const std::string& label)
@@ -483,7 +483,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class VoidReturnCommand : public BranchCommand
+	struct VoidReturnCommand : public BranchCommand
 	{
 	public:
 		using BranchCommand::BranchCommand;
@@ -493,7 +493,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class ValueReturnCommand : public BranchCommand
+	struct ValueReturnCommand : public BranchCommand
 	{
 	public:
 		ValueReturnCommand(const std::string& label)
@@ -511,7 +511,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class IfNotZeroCommand : public BranchCommand
+	struct IfNotZeroCommand : public BranchCommand
 	{
 	private:
 		// location storing the value to compare
@@ -533,7 +533,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class IfZeroCommand : public BranchCommand
+	struct IfZeroCommand : public BranchCommand
 	{
 	private:
 		// location storing the value to compare
@@ -555,7 +555,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class GotoCommand : public BranchCommand
+	struct GotoCommand : public BranchCommand
 	{
 	public:
 		GotoCommand(const std::string& label)
@@ -573,7 +573,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class MakeMessageCommand : public IntermediateCommand
+	struct MakeMessageCommand : public IntermediateCommand
 	{
 	private:
 		Address pointer;
@@ -590,7 +590,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class PrintMessageCommand : public IntermediateCommand
+	struct PrintMessageCommand : public IntermediateCommand
 	{
 	private:
 		Address pointer;
@@ -607,7 +607,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class PrintNumberCommand : public IntermediateCommand
+	struct PrintNumberCommand : public IntermediateCommand
 	{
 	private:
 		Register source;
@@ -623,7 +623,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class ExitProgramCommand : public IntermediateCommand
+	struct ExitProgramCommand : public IntermediateCommand
 	{
 	private:
 		Register source;
@@ -639,7 +639,7 @@ namespace hz
 		virtual ByteRange emit() const final override;
 	};
 
-	class InlineAssemblyCommand : public IntermediateCommand
+	struct InlineAssemblyCommand : public IntermediateCommand
 	{
 	private:
 		ByteRange code;

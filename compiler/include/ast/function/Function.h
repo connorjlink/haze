@@ -29,7 +29,7 @@ namespace hz
 	DEFINE_SUM(Function, AST_METHODS)
 
 
-	class FunctionBase 
+	struct FunctionBase 
 		: public FunctionFacade
 		, public InjectSingleton<ErrorReporter>
 	{
@@ -57,7 +57,7 @@ namespace hz
 	// Standard Functions
 	//////////////////////////////////////////////////////
 
-	class Function 
+	struct Function 
 		: public FunctionBase
 		, public InjectService<Generator, Parser, Allocator>
 		, public InjectSingleton<SymbolDatabase>

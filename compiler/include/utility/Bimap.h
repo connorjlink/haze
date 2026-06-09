@@ -16,7 +16,7 @@ namespace hz
 
 	template<typename T, typename U>
 		requires (!std::is_same_v<T, U>)
-	class Bimap
+	struct Bimap
 	{
 	private:
 		std::unordered_map<T, U> forward;

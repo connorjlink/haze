@@ -15,17 +15,11 @@ namespace hz
 	X(VERBOSE, verbose)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case VerbosityKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, VerbosityKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, VerbosityKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VERBOSITY_KINDS, VerbosityKind, verbosity kind)
+	DEFINE_ENUM(VERBOSITY_KINDS, VerbosityKind, verbosity kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

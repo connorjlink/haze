@@ -24,7 +24,7 @@ namespace hz
 
 	using SymbolFacade = SumMemberBase<SymbolSumStorage>;
 
-	class SymbolBase : public SymbolFacade
+	struct SymbolBase : public SymbolFacade
 	{
 	public:
 		std::string name;
@@ -60,7 +60,7 @@ namespace hz
 
 namespace hz
 {
-	class FunctionSymbol : public SymbolBase
+	struct FunctionSymbol : public SymbolBase
 	{
 	private:
 		Address entrypoint = 0;
@@ -84,7 +84,7 @@ namespace hz
 		}
 	};
 
-	class ArgumentSymbol : public SymbolBase
+	struct ArgumentSymbol : public SymbolBase
 	{
 	public:
 		TypeHandle type;
@@ -96,7 +96,7 @@ namespace hz
 		}
 	};
 
-	class VariableSymbol : public SymbolBase
+	struct VariableSymbol : public SymbolBase
 	{
 	public:
 		ValueHandle value;
@@ -109,7 +109,7 @@ namespace hz
 		}
 	};
 
-	class DefineSymbol : public SymbolBase
+	struct DefineSymbol : public SymbolBase
 	{
 	public:
 		TypeHandle type;
@@ -122,7 +122,7 @@ namespace hz
 		}
 	};
 
-	class LabelSymbol : public SymbolBase
+	struct LabelSymbol : public SymbolBase
 	{
 	public:
 		Address address;
@@ -134,7 +134,7 @@ namespace hz
 		}
 	};
 
-	class StructOrUnionSymbol : public SymbolBase
+	struct StructOrUnionSymbol : public SymbolBase
 	{
 	public:
 		std::unordered_map<std::string, StructOrUnionType::Member> members;

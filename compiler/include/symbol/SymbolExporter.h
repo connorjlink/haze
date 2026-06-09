@@ -12,9 +12,9 @@
 
 namespace hz
 {
-	class Symbol;
+	struct Symbol;
 
-	class SymbolExporter 
+	struct SymbolExporter 
 		: public SingletonTag<SymbolExporter>
 		, public InjectSingleton<ErrorReporter>
 	{

@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	class StatisticExporter
+	struct StatisticExporter
 	{
 #warning TODO FINISH STATISTIC EXPORTER CLASS
 	};

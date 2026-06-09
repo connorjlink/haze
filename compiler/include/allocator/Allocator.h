@@ -10,7 +10,7 @@
 
 namespace hz
 {
-	class Allocator 
+	struct Allocator 
 		: public ServiceTag<Allocator>
 		, public InjectService<Generator>
 	{

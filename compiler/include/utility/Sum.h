@@ -177,7 +177,7 @@ namespace hz
 		{ t.get_tag() } -> std::same_as<TagType>;
 	};
 
-	// base class for dispatching methods on sum members
+	// base struct for dispatching methods on sum members
 	template<typename SumStorageT>
 	struct SumDispatcher
 		: public InjectSingleton<ErrorReporter>
@@ -224,12 +224,12 @@ namespace hz
 	// required to constrain handle/reference functions later without a mandatory template parameter
 	struct SumMemberBaseTag {};
 
-	// common base class recommended for sum member classes
+	// common base struct recommended for sum member classes
 	template<typename SumFacadeT>
 	struct SumMemberBase : public SumMemberBaseTag
 	{
 		// NOTE: this would be ideal to simplify usage but this cannot work due to circular dependency issues with the incomplete type facade
-		// Instead, each implementation xSumBase class needs to define the common base
+		// Instead, each implementation xSumBase struct needs to define the common base
 		//using Storage = typename SumFacadeT::Storage;
 
 		template<typename Self>
@@ -252,7 +252,7 @@ namespace hz
 
 #define DEFINE_SUM(name, methods) \
 	template<typename SumStorageT> \
-	class name##SumDispatcher : public SumDispatcher<SumStorageT> \
+	struct name##SumDispatcher : public SumDispatcher<SumStorageT> \
 	{ \
 	public: \
 		methods(SUM_DISPATCH_ENTRY, name##Handle) \
@@ -278,7 +278,7 @@ namespace hz
 	template<template<typename> typename SumDispatcherT, typename SumStorageT> \
 	struct SumHandle; \
 	template<typename SumStorageT> \
-	class name##SumDispatcher; \
+	struct name##SumDispatcher; \
 	struct name##SumStorage; \
 	using name##Handle = SumHandle<name##SumDispatcher, name##SumStorage>; \
 	template<typename T> \

@@ -11,7 +11,7 @@ namespace hz
 {
 	struct ErrorFrame;
 
-	class AutoErrorContext : public InjectSingleton<ErrorReporter>
+	struct AutoErrorContext : public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::size_t initial_context_count;

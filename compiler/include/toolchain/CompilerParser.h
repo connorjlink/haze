@@ -13,9 +13,9 @@
 
 namespace hz
 {
-	class MemberDeclarationExpression;
+	struct MemberDeclarationExpression;
 
-	class CompilerParser : public Parser
+	struct CompilerParser : public Parser
 	{
 	public:
 		std::unordered_map<std::string, std::string> function_label_map;

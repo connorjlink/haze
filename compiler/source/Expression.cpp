@@ -1,6 +1,7 @@
 import std;
 
 #include <ast/expression/Expression.h>
+#include <cli/defs/ArchitectureKind.h>
 
 // Haze Expression.cpp
 // (c) Connor J. Link. All Rights Reserved.

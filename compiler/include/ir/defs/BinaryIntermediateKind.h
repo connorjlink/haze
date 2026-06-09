@@ -24,17 +24,11 @@ namespace hz
 	X(UNSIGNED_SHIFT_RIGHT, u.>>, unsigned bitwise shift right)
 
 
-#define ENUM_MEMBER(enumerator, operator, name) enumerator,
-#define SWITCH_CASE(enumerator, operator, name) case BinaryIntermediateKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, operator, name) Mapping{ #name, BinaryIntermediateKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, operator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, operator, name) X(enumerator, FakeType, operator, BinaryIntermediateKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, BINARY_INTERMEDIATE_KINDS, BinaryIntermediateKind, binary intermediate kind)
+	DEFINE_ENUM(BINARY_INTERMEDIATE_KINDS, BinaryIntermediateKind, binary intermediate kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

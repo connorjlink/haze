@@ -28,7 +28,7 @@ namespace hz
 	// I base instruction set instructions
 	namespace riscv
 	{
-		class LbInstruction
+		struct LbInstruction
 		{
 		private:
 			Offset immediate;
@@ -47,7 +47,7 @@ namespace hz
 		};
 #define lb(rd, imm, rs1) LbInstruction{ imm, rd, rs1 }
 
-		class LhInstruction
+		struct LhInstruction
 		{
 		private:
 			Offset immediate;
@@ -66,7 +66,7 @@ namespace hz
 		};
 #define lh(rd, imm, rs1) LhInstruction{ imm, rd, rs1 }
 
-		class LwInstruction
+		struct LwInstruction
 		{
 		private:
 			Offset immediate;
@@ -84,7 +84,7 @@ namespace hz
 		};
 #define lw(rd, imm, rs1) LwInstruction{ imm, rd, rs1 }
 
-		class LbuInstruction
+		struct LbuInstruction
 		{
 		private:
 			Offset immediate;
@@ -102,7 +102,7 @@ namespace hz
 		};
 #define lbu(rd, imm, rs1) LbuInstruction{ imm, rd, rs1 }
 
-		class LhuInstruction
+		struct LhuInstruction
 		{
 		private:
 			Offset immediate;
@@ -120,7 +120,7 @@ namespace hz
 		};
 #define lhu(rd, imm, rs1) LhuInstruction{ imm, rd, rs1 }
 	
-		class SbInstruction
+		struct SbInstruction
 		{
 		private:
 			Offset immediate;
@@ -139,7 +139,7 @@ namespace hz
 		};
 #define sb(rs2, imm, rs1) SbInstruction{ imm, rs1, rs2 }
 
-		class ShInstruction
+		struct ShInstruction
 		{
 		private:
 			Offset immediate;
@@ -157,7 +157,7 @@ namespace hz
 		};
 #define sh(rs2, imm, rs1) ShInstruction{ imm, rs1, rs2 }
 
-		class SwInstruction
+		struct SwInstruction
 		{
 		private:
 			Offset immediate;
@@ -175,7 +175,7 @@ namespace hz
 		};
 #define sw(rs2, imm, rs1) SwInstruction{ imm, rs1, rs2 }
 
-		class LuiInstruction
+		struct LuiInstruction
 		{
 		private:
 			Offset immediate;
@@ -193,7 +193,7 @@ namespace hz
 		};
 #define lui(rd, imm) LuiInstruction{ imm, rd }
 
-		class AuipcInstruction
+		struct AuipcInstruction
 		{
 		private:
 			Offset immediate;
@@ -210,7 +210,7 @@ namespace hz
 		};
 #define auipc(rd, imm) AuipcInstruction{ imm, rd }
 
-		class AddInstruction
+		struct AddInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -229,7 +229,7 @@ namespace hz
 		};
 #define add(rd, rs1, rs2) AddInstruction{ rd, rs1, rs2
 
-		class SubInstruction
+		struct SubInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -248,7 +248,7 @@ namespace hz
 		};
 #define sub(rd, rs1, rs2) SubInstruction{ rd, rs1, rs2 }
 
-		class AndInstruction
+		struct AndInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -267,7 +267,7 @@ namespace hz
 		};
 #define and(rd, rs1, rs2) AndInstruction{ rd, rs1, rs2 }
 
-		class OrInstruction
+		struct OrInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -286,7 +286,7 @@ namespace hz
 		};
 #define or(rd, rs1, rs2) OrInstruction{ rd, rs1, rs2 }
 
-		class XorInstruction
+		struct XorInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -303,7 +303,7 @@ namespace hz
 		};
 #define xor(rd, rs1, rs2) XorInstruction{ rd, rs1, rs2 }
 
-		class SllInstruction
+		struct SllInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -320,7 +320,7 @@ namespace hz
 		};
 #define sll(rd, rs1, rs2) SllInstruction{ rd, rs1, rs2 }
 
-		class SrlInstruction
+		struct SrlInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -337,7 +337,7 @@ namespace hz
 		};
 #define srl(rd, rs1, rs2) SrlInstruction{ rd, rs1, rs2 }
 
-		class SraInstruction
+		struct SraInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -354,7 +354,7 @@ namespace hz
 		};
 #define sra(rd, rs1, rs2) SraInstruction{ rd, rs1, rs2 }
 
-		class AddiInstruction
+		struct AddiInstruction
 		{
 		private:
 			Offset immediate;
@@ -373,7 +373,7 @@ namespace hz
 		};
 #define addi(rd, rs1, imm) AddiInstruction{ imm, rd, rs1 }
 
-		class AndiInstruction
+		struct AndiInstruction
 		{
 		private:
 			Offset immediate;
@@ -392,7 +392,7 @@ namespace hz
 		};
 #define andi(rd, rs1, imm) AndiInstruction{ imm, rd, rs1 }
 
-		class OriInstruction
+		struct OriInstruction
 		{
 		private:
 			Offset immediate;
@@ -411,7 +411,7 @@ namespace hz
 		};
 #define ori(rd, rs1, imm) OriInstruction{ imm, rd, rs1 }
 
-		class XoriInstruction
+		struct XoriInstruction
 		{
 		private:
 			Offset immediate;
@@ -430,7 +430,7 @@ namespace hz
 		};
 #define xori(rd, rs1, imm) XoriInstruction{ imm, rd, rs1 }
 
-		class SlliInstruction
+		struct SlliInstruction
 		{
 		private:
 			Offset immediate;
@@ -449,7 +449,7 @@ namespace hz
 		};
 #define slli(rd, rs1, imm) SlliInstruction{ imm, rd, rs1 }
 
-		class SrliInstruction
+		struct SrliInstruction
 		{
 		private:
 			Offset immediate;
@@ -468,7 +468,7 @@ namespace hz
 		};
 #define srli(rd, rs1, imm) SrliInstruction{ imm, rd, rs1 }
 
-		class SraiInstruction
+		struct SraiInstruction
 		{
 		private:
 			Offset immediate;
@@ -485,7 +485,7 @@ namespace hz
 		};
 #define srai(rd, rs1, imm) SraiInstruction{ imm, rd, rs1 }
 
-		class SltInstruction
+		struct SltInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -504,7 +504,7 @@ namespace hz
 		};
 #define slt(rd, rs1, rs2) SltInstruction{ rd, rs1, rs2 }
 
-		class SltuInstruction
+		struct SltuInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -523,7 +523,7 @@ namespace hz
 		};
 #define sltu(rd, rs1, rs2) SltuInstruction{ rd, rs1, rs2 }
 
-		class SltiInstruction
+		struct SltiInstruction
 		{
 		private:
 			Offset immediate;
@@ -542,7 +542,7 @@ namespace hz
 		};
 #define slti(rd, rs1, imm) SltiInstruction{ imm, rd, rs1 }
 
-		class SltiuInstruction
+		struct SltiuInstruction
 		{
 		private:
 			Offset immediate;
@@ -561,7 +561,7 @@ namespace hz
 		};
 #define sltiu(rd, rs1, imm) SltiuInstruction{ imm, rd, rs1 }
 
-		class JalInstruction
+		struct JalInstruction
 		{
 		private:
 			Offset immediate;
@@ -579,7 +579,7 @@ namespace hz
 		};
 #define jal(rd, imm) JalInstruction{ imm, rd }
 
-		class JalrInstruction
+		struct JalrInstruction
 		{
 		private:
 			Offset immediate;
@@ -596,7 +596,7 @@ namespace hz
 		};
 #define jalr(rd, imm, rs1) JalrInstruction{ imm, rd, rs1 }
 
-		class BeqInstruction
+		struct BeqInstruction
 		{
 		private:
 			Offset immediate;
@@ -615,7 +615,7 @@ namespace hz
 		};
 #define beq(rs1, rs2, imm) BeqInstruction{ imm, rs1, rs2 }
 
-		class BneInstruction
+		struct BneInstruction
 		{
 		private:
 			Offset immediate;
@@ -634,7 +634,7 @@ namespace hz
 		};
 #define bne(rs1, rs2, imm) BneInstruction{ imm, rs1, rs2 }
 
-		class BltInstruction
+		struct BltInstruction
 		{
 		private:
 			Offset immediate;
@@ -653,7 +653,7 @@ namespace hz
 		};
 #define blt(rs1, rs2, imm) BltInstruction{ imm, rs1, rs2 }
 
-		class BgeInstruction
+		struct BgeInstruction
 		{
 		private:
 			Offset immediate;
@@ -670,7 +670,7 @@ namespace hz
 		};
 #define bge(rs1, rs2, imm) BgeInstruction{ imm, rs1, rs2 }
 
-		class BltuInstruction
+		struct BltuInstruction
 		{
 		private:
 			Offset immediate;
@@ -687,7 +687,7 @@ namespace hz
 		};
 #define bltu(rs1, rs2, imm) BltuInstruction{ imm, rs1, rs2 }
 
-		class BgeuInstruction
+		struct BgeuInstruction
 		{
 		private:
 			Offset immediate;
@@ -704,7 +704,7 @@ namespace hz
 		};
 #define bgeu(rs1, rs2, imm) BgeuInstruction { imm, rs1, rs2 }
 
-		class NopInstruction
+		struct NopInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -712,7 +712,7 @@ namespace hz
 		};
 #define nop() NopInstruction{}
 
-		class EcallInstruction
+		struct EcallInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -720,7 +720,7 @@ namespace hz
 		};
 #define ecall() EcallInstruction{}
 
-		class EbreakInstruction
+		struct EbreakInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -728,7 +728,7 @@ namespace hz
 		};
 #define ebreak() EbreakInstruction{}
 
-		class FenceInstruction
+		struct FenceInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -740,7 +740,7 @@ namespace hz
 	// M extension instructions
 	namespace riscv
 	{
-		class MulInstruction
+		struct MulInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -759,7 +759,7 @@ namespace hz
 		};
 #define mul(rd, rs1, rs2) MulInstruction{ rd, rs1, rs2 }
 
-		class MulhInstruction
+		struct MulhInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -778,7 +778,7 @@ namespace hz
 		};
 #define mulh(rd, rs1, rs2) MulhInstruction{ rd, rs1, rs2 }
 
-		class MulhuInstruction
+		struct MulhuInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -795,7 +795,7 @@ namespace hz
 		};
 #define mulhu(rd, rs1, rs2) MulhuInstruction{ rd, rs1, rs2 }
 
-		class MulhsuInstruction
+		struct MulhsuInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -812,7 +812,7 @@ namespace hz
 		};
 #define mulhsu(rd, rs1, rs2) MulhsuInstruction{ rd, rs1, rs2 }
 
-		class DivInstruction
+		struct DivInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -829,7 +829,7 @@ namespace hz
 		};
 #define div(rd, rs1, rs2) DivInstruction{ rd, rs1, rs2 }
 
-		class DivuInstruction
+		struct DivuInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -846,7 +846,7 @@ namespace hz
 		};
 #define divu(rd, rs1, rs2) DivuInstruction{ rd, rs1, rs2 }
 
-		class RemInstruction
+		struct RemInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -863,7 +863,7 @@ namespace hz
 		};
 #define rem(rd, rs1, rs2) RemInstruction{ rd, rs1, rs2 }
 
-		class RemuInstruction
+		struct RemuInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -884,7 +884,7 @@ namespace hz
 	// A extension instructions
 	namespace riscv
 	{
-		class LrwInstruction
+		struct LrwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -904,7 +904,7 @@ namespace hz
 		};
 #define lrw(rd, rs1, acquire, release) LrwInstruction{ rd, rs1, acquire, release }
 
-		class ScwInstruction
+		struct ScwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -923,7 +923,7 @@ namespace hz
 		};
 #define scw(rd, rs2, rs1, acquire, release) ScwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmoswapwInstruction
+		struct AmoswapwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -944,7 +944,7 @@ namespace hz
 		};
 #define amoswapw(rd, rs2, rs1, acquire, release) AmoswapwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmoaddwInstruction
+		struct AmoaddwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -965,7 +965,7 @@ namespace hz
 		};
 #define amoaddw(rd, rs2, rs1, acquire, release) AmoaddwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmoandwInstruction
+		struct AmoandwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -986,7 +986,7 @@ namespace hz
 		};
 #define amoandw(rd, rs2, rs1, acquire, release) AmoandwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmoorwInstruction
+		struct AmoorwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1007,7 +1007,7 @@ namespace hz
 		};
 #define amoorw(rd, rs2, rs1, acquire, release) AmoorwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmoxorwInstruction
+		struct AmoxorwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1028,7 +1028,7 @@ namespace hz
 		};
 #define amoxorw(rd, rs2, rs1, acquire, release) AmoxorwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmominwInstruction
+		struct AmominwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1049,7 +1049,7 @@ namespace hz
 		};
 #define amominw(rd, rs2, rs1, acquire, release) AmominwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmomaxwInstruction
+		struct AmomaxwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1070,7 +1070,7 @@ namespace hz
 		};
 #define amomaxw(rd, rs2, rs1, acquire, release) AmomaxwInstruction{ rd, rs1, rs2, acquire, release }
 
-		class AmominuwInstruction
+		struct AmominuwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1090,7 +1090,7 @@ namespace hz
 			ByteRange emit() const;
 		};
 #define amominuw(rd, rs2, rs1, acquire, release) AmominuwInstruction{ rd, rs1, rs2, acquire, release }
-		class AmomaxuwInstruction
+		struct AmomaxuwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1115,7 +1115,7 @@ namespace hz
 	// C extension instructions
 	namespace riscv
 	{
-		class ClwspInstruction
+		struct ClwspInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1133,7 +1133,7 @@ namespace hz
 		};
 #define clwsp(rd, imm) ClwspInstruction{ rd, imm }
 
-		class CswspInstruction
+		struct CswspInstruction
 		{
 		private:
 			RISCVRegister rs2;
@@ -1151,7 +1151,7 @@ namespace hz
 		};
 #define cswsp(rs2, imm) CswspInstruction{ rs2, imm }
 
-		class ClwInstruction
+		struct ClwInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1170,7 +1170,7 @@ namespace hz
 		};
 #define clw(rd, imm, rs1) ClwInstruction{ rd, imm, rs1 }
 
-		class CswInstruction
+		struct CswInstruction
 		{
 		private:
 			RISCVRegister rs1;
@@ -1189,7 +1189,7 @@ namespace hz
 		};
 #define csw(rs2, imm, rs1) CswInstruction{ rs2, imm, rs1 }
 
-		class CjInstruction
+		struct CjInstruction
 		{
 		private:
 			Offset immediate;
@@ -1206,7 +1206,7 @@ namespace hz
 		};
 #define cj(imm) CjInstruction{ imm }
 
-		class CjalInstruction
+		struct CjalInstruction
 		{
 		private:
 			Offset immediate;
@@ -1223,7 +1223,7 @@ namespace hz
 		};
 #define cjal(imm) CjalInstruction{ imm }
 
-		class CjrInstruction
+		struct CjrInstruction
 		{
 		private:
 			RISCVRegister rs1;
@@ -1240,7 +1240,7 @@ namespace hz
 		};
 #define cjr(rs1) CjrInstruction{ rs1 }
 
-		class CjalrInstruction
+		struct CjalrInstruction
 		{
 		private:
 			RISCVRegister rs1;
@@ -1257,7 +1257,7 @@ namespace hz
 		};
 #define cjalr(rs1) CjalrInstruction{ rs1 }
 
-		class CbeqzInstruction
+		struct CbeqzInstruction
 		{
 		private:
 			RISCVRegister rs2;
@@ -1275,7 +1275,7 @@ namespace hz
 		};
 #define cbeqz(rs2, imm) CbeqzInstruction{ rs2, imm }
 
-		class CbnezInstruction
+		struct CbnezInstruction
 		{
 		private:
 			RISCVRegister rs2;
@@ -1293,7 +1293,7 @@ namespace hz
 		};
 #define cbnez(rs2, imm) CbnezInstruction{ rs2, imm }
 
-		class CliInstruction
+		struct CliInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1311,7 +1311,7 @@ namespace hz
 		};
 #define cli(rd, imm) CliInstruction{ rd, imm }
 
-		class CluiInstruction
+		struct CluiInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1329,7 +1329,7 @@ namespace hz
 		};
 #define clui(rd, imm) CluiInstruction{ rd, imm }
 
-		class CaddiInstruction
+		struct CaddiInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1347,7 +1347,7 @@ namespace hz
 		};
 #define caddi(rd, imm) CaddiInstruction{ rd, imm }
 
-		class Caddi16spInstruction
+		struct Caddi16spInstruction
 		{
 		private:
 			Offset immediate;
@@ -1364,7 +1364,7 @@ namespace hz
 		};
 #define caddi16sp(imm) Caddi16spInstruction{ imm }
 
-		class Caddi4spnInstruction
+		struct Caddi4spnInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1382,7 +1382,7 @@ namespace hz
 		};
 #define caddi4spn(rd, imm) Caddi4spnInstruction{ rd, imm }
 
-		class CslliInstruction
+		struct CslliInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1400,7 +1400,7 @@ namespace hz
 		};
 #define cslli(rd, shamt) CslliInstruction{ rd, shamt }
 
-		class CsrliInstruction
+		struct CsrliInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1418,7 +1418,7 @@ namespace hz
 		};
 #define csrli(rd, shamt) CsrliInstruction{ rd, shamt }
 
-		class CsraiInstruction
+		struct CsraiInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1436,7 +1436,7 @@ namespace hz
 		};
 #define csrai(rd, shamt) CsraiInstruction{ rd, shamt }
 
-		class CandiInstruction
+		struct CandiInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1454,7 +1454,7 @@ namespace hz
 		};
 #define candi(rd, imm) CandiInstruction{ rd, imm }
 
-		class CmvInstruction
+		struct CmvInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1472,7 +1472,7 @@ namespace hz
 		};
 #define cmv(rd, rs2) CmvInstruction{ rd, rs2 }
 
-		class CaddInstruction
+		struct CaddInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1490,7 +1490,7 @@ namespace hz
 		};
 #define cadd(rd, rs2) CaddInstruction{ rd, rs2 }
 
-		class CsubInstruction
+		struct CsubInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1508,7 +1508,7 @@ namespace hz
 		};
 #define csub(rd, rs2) CsubInstruction{ rd, rs2 }
 
-		class CxorInstruction
+		struct CxorInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1526,7 +1526,7 @@ namespace hz
 		};
 #define cxor(rd, rs2) CxorInstruction{ rd, rs2 }
 
-		class CorInstruction
+		struct CorInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1544,7 +1544,7 @@ namespace hz
 		};
 #define cor(rd, rs2) CorInstruction{ rd, rs2 }
 
-		class CandInstruction
+		struct CandInstruction
 		{
 		private:
 			RISCVRegister rd;
@@ -1562,7 +1562,7 @@ namespace hz
 		};
 #define cand(rd, rs2) CandInstruction{ rd, rs2 }
 
-		class CnopInstruction
+		struct CnopInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -1570,7 +1570,7 @@ namespace hz
 		};
 #define cnop() CnopInstruction{}
 
-		class CebreakInstruction
+		struct CebreakInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -1582,7 +1582,7 @@ namespace hz
 	// Zicsr extension instructions
 	namespace riscv
 	{
-		class CsrrwInstruction
+		struct CsrrwInstruction
 		{
 		private:
 			Offset csr;
@@ -1601,7 +1601,7 @@ namespace hz
 		};
 #define cssrw(rd, csr, rs1) CssrwInstruction{ csr, rd, rs1 }
 
-		class CsrrsInstruction
+		struct CsrrsInstruction
 		{
 		private:
 			Offset csr;
@@ -1620,7 +1620,7 @@ namespace hz
 		};
 #define csrrs(rd, csr, rs1) CsrrsInstruction{ csr, rd, rs1 }
 
-		class CsrrcInstruction
+		struct CsrrcInstruction
 		{
 		private:
 			Offset csr;
@@ -1638,7 +1638,7 @@ namespace hz
 		};
 #define csrrc(rd, csr, rs1) CsrrcInstruction{ csr, rd, rs1 }
 
-		class CsrrwiInstruction
+		struct CsrrwiInstruction
 		{
 		private:
 			Offset csr;
@@ -1655,7 +1655,7 @@ namespace hz
 		};
 #define csrrwi(rd, csr, imm) CsrrwiInstruction{ csr, rd, imm }
 
-		class CsrrsiInstruction
+		struct CsrrsiInstruction
 		{
 		private:
 			Offset csr;
@@ -1672,7 +1672,7 @@ namespace hz
 		};
 #define csrrsi(rd, csr, imm) CsrrsiInstruction{ csr, rd, imm }
 
-		class CsrrciInstruction
+		struct CsrrciInstruction
 		{
 		private:
 			Offset csr;
@@ -1693,7 +1693,7 @@ namespace hz
 	// Zifencei extension instructions
 	namespace riscv
 	{
-		class FenceiInstruction
+		struct FenceiInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -1705,7 +1705,7 @@ namespace hz
 	// Priv extension instructions
 	namespace riscv
 	{
-		class UretInstruction
+		struct UretInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -1713,7 +1713,7 @@ namespace hz
 		};
 #define uret() UretInstruction{}
 
-		class SretInstruction
+		struct SretInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -1721,7 +1721,7 @@ namespace hz
 		};
 #define sret() SretInstruction{}
 
-		class MretInstruction
+		struct MretInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;
@@ -1729,7 +1729,7 @@ namespace hz
 		};
 #define mret() MretInstruction{}
 
-		class WfiInstruction
+		struct WfiInstruction
 		{
 		public:
 			RISCVInstructionKind itype() const;

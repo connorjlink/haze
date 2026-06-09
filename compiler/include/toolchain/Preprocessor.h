@@ -9,7 +9,7 @@
 namespace hz
 {
 	// inherits the injected file manager service
-	class Preprocessor : public Scanner
+	struct Preprocessor : public Scanner
 	{
 	private:
 		struct Macro

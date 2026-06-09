@@ -16,16 +16,11 @@ namespace hz
 	X(OUTFILE,      outfile)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case OptionKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, OptionKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, OptionKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, OPTION_KINDS, OptionKind, option kind)
+	DEFINE_ENUM(OPTION_KINDS, OptionKind, option kind)
 
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif 

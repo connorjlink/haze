@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class ErrorContext;
+	struct ErrorContext;
 
 	struct ErrorFrame
 	{
@@ -17,7 +17,7 @@ namespace hz
 		const std::string& filepath;
 	};
 
-	class ErrorContext
+	struct ErrorContext
 	{
 	private:
 		std::string task;

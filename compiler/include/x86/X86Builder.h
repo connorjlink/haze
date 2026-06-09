@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class X86Builder
+	struct X86Builder
 	{
 	public:
 		// mod R/M byte

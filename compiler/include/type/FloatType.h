@@ -32,7 +32,7 @@ namespace hz
 #undef ENUM_MEMBER
 
 
-	class FloatType : public TypeBase
+	struct FloatType : public TypeBase
 	{
 	public:
 		StorageClass storage;

@@ -11,7 +11,7 @@
 
 namespace hz
 {
-	enum class Associativity
+	enum struct Associativity
 	{
 		LEFT,
 		RIGHT,
@@ -82,7 +82,7 @@ namespace hz
 	X(COMMA,                  LEFT,  15, CommaExpression,                comma)
 
 
-	enum class ExpressionKind
+	enum struct ExpressionKind
 	{
 #define X(enumerator, associativity, precedence, type, name) enumerator,
 		PRIMARY_EXPRESSION_KINDS(X)

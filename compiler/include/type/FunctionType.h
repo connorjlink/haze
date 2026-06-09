@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class FunctionType : public TypeBase
+	struct FunctionType : public TypeBase
 	{
 	public:
 		std::vector<TypeHandle> parameters;

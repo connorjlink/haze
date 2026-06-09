@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class CompilerToolchain : public Toolchain
+	struct CompilerToolchain : public Toolchain
 	{
 	public:
 		using Toolchain::Toolchain;

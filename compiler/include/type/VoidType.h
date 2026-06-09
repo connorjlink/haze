@@ -11,7 +11,7 @@
 
 namespace hz
 {
-	class VoidType : public TypeBase
+	struct VoidType : public TypeBase
 	{
 	public:
 		StorageClass storage;

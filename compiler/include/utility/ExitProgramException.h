@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	class ExitProgramException : public std::exception
+	struct ExitProgramException : public std::exception
 	{
 	private:
 		std::string message;

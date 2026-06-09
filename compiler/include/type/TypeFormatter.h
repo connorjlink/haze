@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class TypeBase;
+	struct TypeBase;
 
 	TypePrecedence precedence(const TypeBase& type);
 
@@ -16,7 +16,7 @@ namespace hz
 	DECLARE_TYPE_FORMATTER(TypeHandle);
 
 	// forward declaration required not to form circular dependency with the incomplete type facade
-#define X(enumerator, precedence, type, name) class type;
+#define X(enumerator, precedence, type, name) struct type;
 	TYPE_KINDS(X)
 #undef X
 

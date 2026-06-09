@@ -18,7 +18,7 @@ namespace hz
 		return Address{ static_cast<Address>(x) };
 	}
 
-	class ExtendedInteger
+	struct ExtendedInteger
 	{
 	public:
 		std::uintmax_t magnitude;

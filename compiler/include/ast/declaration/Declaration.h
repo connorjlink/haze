@@ -48,7 +48,7 @@ namespace hz
 {
 #pragma message("TODO: implement remaining declaration AST nodes")
 
-	class FunctionDeclaration : public DeclarationBase
+	struct FunctionDeclaration : public DeclarationBase
 	{
 	private:
 		TypeReference<FunctionType> type;
@@ -68,7 +68,7 @@ namespace hz
 	};
 
 
-	class VariableDeclaration : public DeclarationBase
+	struct VariableDeclaration : public DeclarationBase
 	{
 	private:
 		TypeHandle type;
@@ -88,7 +88,7 @@ namespace hz
 	};
 
 
-	class StructOrUnionDeclaration : public DeclarationBase
+	struct StructOrUnionDeclaration : public DeclarationBase
 	{
 	private:
 		TypeReference<StructOrUnionType> type;
@@ -106,7 +106,7 @@ namespace hz
 		DeclarationHandle optimize(const Storage&) const;
 	};
 
-	class EnumDeclaration : public DeclarationBase
+	struct EnumDeclaration : public DeclarationBase
 	{
 	private:
 		TypeReference<EnumType> type;
@@ -124,7 +124,7 @@ namespace hz
 		DeclarationHandle optimize(const Storage&) const;
 	};
 
-	class TypedefDeclaration : public DeclarationBase
+	struct TypedefDeclaration : public DeclarationBase
 	{
 	private:
 		TypeReference<TypedefNameType> type;

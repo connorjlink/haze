@@ -26,7 +26,7 @@ namespace hz
 
 	namespace x86
 	{
-		class ImmediateOperand
+		struct ImmediateOperand
 		{
 		public:
 			ExtendedInteger immediate;
@@ -42,7 +42,7 @@ namespace hz
 		};
 #define imm(value) ImmediateOperand{ value }
 
-		class IndirectOperand
+		struct IndirectOperand
 		{
 		public:
 			Address address;
@@ -58,7 +58,7 @@ namespace hz
 		};
 #define indirect(address) IndirectOperand{ address }
 
-		class RegisterOperand
+		struct RegisterOperand
 		{ 
 		public:
 			X86Register $register;
@@ -74,7 +74,7 @@ namespace hz
 		};
 #define $register($register) RegisterOperand{ $register }
 
-		class RegisterIndirectOperand : public RegisterOperand
+		struct RegisterIndirectOperand : public RegisterOperand
 		{
 		public:
 			using RegisterOperand::RegisterOperand;
@@ -84,7 +84,7 @@ namespace hz
 		};
 #define reg_indirect($register) RegisterIndirectOperand{ $register }
 
-		class RegisterDisplacedOperand : public RegisterOperand
+		struct RegisterDisplacedOperand : public RegisterOperand
 		{
 		public:
 			Offset displacement;
@@ -135,7 +135,7 @@ namespace hz
 
 	namespace x86
 	{
-		class PushInstruction
+		struct PushInstruction
 		{
 		private:
 			X86Operand operand;
@@ -152,7 +152,7 @@ namespace hz
 		};
 #define push(op) PushInstruction{ op }
 
-		class PopInstruction
+		struct PopInstruction
 		{
 		private:
 			X86Operand operand;
@@ -169,7 +169,7 @@ namespace hz
 		};
 #define pop(op) PopInstruction{ op }
 
-		class MovInstruction
+		struct MovInstruction
 		{
 		private:
 			X86Operand destination;
@@ -187,7 +187,7 @@ namespace hz
 		};
 #define mov(dst, src) MovInstruction{ dst, src }
 
-		class MovzxInstruction
+		struct MovzxInstruction
 		{
 		private:
 			X86Operand destination;
@@ -205,7 +205,7 @@ namespace hz
 		};
 #define movzx(dst, src) MovzxInstruction{ dst, src }
 
-		class AddInstruction
+		struct AddInstruction
 		{
 		private:
 			X86Operand destination;
@@ -223,7 +223,7 @@ namespace hz
 		};
 #define add(dst, src) AddInstruction{ dst, src }
 
-		class SubInstruction
+		struct SubInstruction
 		{
 		private:
 			X86Operand destination;
@@ -241,7 +241,7 @@ namespace hz
 		};
 #define sub(dst, src) SubInstruction{ dst, src }
 
-		class AndInstruction
+		struct AndInstruction
 		{
 		private:
 			X86Operand destination;
@@ -259,7 +259,7 @@ namespace hz
 		};
 #define and(dst, src) AndInstruction{ dst, src }
 
-		class OrInstruction
+		struct OrInstruction
 		{
 		private:
 			X86Operand destination;
@@ -277,7 +277,7 @@ namespace hz
 		};
 #define or(dst, src) OrInstruction{ dst, src }
 
-		class XorInstruction
+		struct XorInstruction
 		{
 		private:
 			X86Operand destination;
@@ -295,7 +295,7 @@ namespace hz
 		};
 #define xor(dst, src) XorInstruction{ dst, src }
 
-		class IncInstruction
+		struct IncInstruction
 		{
 		private:
 			X86Operand operand;
@@ -312,7 +312,7 @@ namespace hz
 		};
 #define inc(op) IncInstruction{ op }
 
-		class DecInstruction
+		struct DecInstruction
 		{
 		private:
 			X86Operand operand;
@@ -329,7 +329,7 @@ namespace hz
 		};
 #define dec(op) DecInstruction{ op }
 
-		class SalInstruction
+		struct SalInstruction
 		{
 		private:
 			X86Operand operand;
@@ -347,7 +347,7 @@ namespace hz
 		};
 #define sal(op) SalInstruction{ op }
 
-		class SarInstruction
+		struct SarInstruction
 		{
 		private:
 			X86Operand operand;
@@ -365,7 +365,7 @@ namespace hz
 		};
 #define sar(op) SarInstruction{ op }
 
-		class TestInstruction
+		struct TestInstruction
 		{
 		private:
 			X86Operand destination;
@@ -383,7 +383,7 @@ namespace hz
 		};
 #define test(dst, src) TestInstruction{ dst, src }
 
-		class CmpInstruction
+		struct CmpInstruction
 		{
 		private:
 			X86Operand destination;
@@ -401,7 +401,7 @@ namespace hz
 		};
 #define cmp(dst, src) CmpInstruction{ dst, src }
 
-		class CallInstruction
+		struct CallInstruction
 		{
 		private:
 			const std::string& label;
@@ -419,7 +419,7 @@ namespace hz
 		};
 #define call(label, disp) CallInstruction{ label, disp }
 
-		class ApicallInstruction
+		struct ApicallInstruction
 		{
 		private:
 			const std::string& label;
@@ -437,7 +437,7 @@ namespace hz
 		};
 #define apicall(label, disp) ApicallInstruction{ label, disp }
 
-		class JmpInstruction
+		struct JmpInstruction
 		{
 		private:
 			const std::string& label;
@@ -455,7 +455,7 @@ namespace hz
 		};
 #define jmp(label, disp) JmpInstruction{ label, disp }
 
-		class JeInstruction
+		struct JeInstruction
 		{
 		private:
 			const std::string& label;
@@ -473,7 +473,7 @@ namespace hz
 		};
 #define je(label, disp) JeInstruction{ label, disp }
 
-		class JneInstruction
+		struct JneInstruction
 		{
 		private:
 			const std::string& label;
@@ -491,7 +491,7 @@ namespace hz
 		};
 #define jne(label, disp) JneInstruction{ label, disp }
 
-		class JlInstruction
+		struct JlInstruction
 		{
 		private:
 			const std::string& label;
@@ -509,7 +509,7 @@ namespace hz
 		};
 #define jl(label, disp) JlInstruction{ label, disp }
 
-		class JleInstruction
+		struct JleInstruction
 		{
 		private:
 			const std::string& label;
@@ -527,7 +527,7 @@ namespace hz
 		};
 #define jle(label, disp) JleInstruction{ label, disp }
 
-		class JgInstruction
+		struct JgInstruction
 		{
 		private:
 			const std::string& label;
@@ -545,7 +545,7 @@ namespace hz
 		};
 #define jg(label, disp) JgInstruction{ label, disp }
 
-		class JgeInstruction
+		struct JgeInstruction
 		{
 		private:
 			const std::string& label;
@@ -563,7 +563,7 @@ namespace hz
 		};
 #define jge(label, disp) JgeInstruction{ label, disp }
 
-		class JaInstruction
+		struct JaInstruction
 		{
 		private:
 			const std::string& label;
@@ -581,7 +581,7 @@ namespace hz
 		};
 #define ja(label, disp) JaInstruction{ label, disp }
 
-		class JaeInstruction
+		struct JaeInstruction
 		{
 		private:
 			const std::string& label;
@@ -599,7 +599,7 @@ namespace hz
 		};
 #define jae(label, disp) JaeInstruction{ label, disp }
 
-		class JbInstruction
+		struct JbInstruction
 		{
 		private:
 			const std::string& label;
@@ -617,7 +617,7 @@ namespace hz
 		};
 #define jb(label, disp) JbInstruction{ label, disp }
 
-		class JbeInstruction
+		struct JbeInstruction
 		{
 		private:
 			const std::string& label;
@@ -635,7 +635,7 @@ namespace hz
 		};
 #define jbe(label, disp) JbeInstruction{ label, disp }
 
-		class SeteInstruction
+		struct SeteInstruction
 		{
 		private:
 			X86Operand operand;
@@ -652,7 +652,7 @@ namespace hz
 		};
 #define sete(op) SeteInstruction{ op }
 
-		class SetneInstruction
+		struct SetneInstruction
 		{
 		private:
 			X86Operand operand;
@@ -669,7 +669,7 @@ namespace hz
 		};
 #define setne(op) SetneInstruction{ op }
 
-		class SetlInstruction
+		struct SetlInstruction
 		{
 		private:
 			X86Operand operand;
@@ -686,7 +686,7 @@ namespace hz
 		};
 #define setl(op) SetlInstruction{ op }
 
-		class SetleInstruction
+		struct SetleInstruction
 		{
 		private:
 			X86Operand operand;
@@ -703,7 +703,7 @@ namespace hz
 		};
 #define setle(op) SetleInstruction{ op }
 
-		class SetgInstruction
+		struct SetgInstruction
 		{
 		private:
 			X86Operand operand;
@@ -720,7 +720,7 @@ namespace hz
 		};
 #define setg(op) SetgInstruction{ op }
 
-		class SetgeInstruction
+		struct SetgeInstruction
 		{
 		private:
 			X86Operand operand;
@@ -737,7 +737,7 @@ namespace hz
 		};
 #define setge(op) SetgeInstruction{ op }
 
-		class SetaInstruction
+		struct SetaInstruction
 		{
 		private:
 			X86Operand operand;
@@ -754,7 +754,7 @@ namespace hz
 		};
 #define seta(op) SetaInstruction{ op }
 
-		class SetaeInstruction
+		struct SetaeInstruction
 		{
 		private:
 			X86Operand operand;
@@ -771,7 +771,7 @@ namespace hz
 		};
 #define setae(op) SetaeInstruction{ op }
 
-		class SetbInstruction
+		struct SetbInstruction
 		{
 		private:
 			X86Operand operand;
@@ -788,7 +788,7 @@ namespace hz
 		};
 #define setb(op) SetbInstruction{ op }
 
-		class SetbeInstruction
+		struct SetbeInstruction
 		{
 		private:
 			X86Operand operand;
@@ -805,7 +805,7 @@ namespace hz
 		};
 #define setbe(op) SetbeInstruction{ op }
 
-		class RetInstruction
+		struct RetInstruction
 		{
 		private:
 			Offset immediate;
@@ -822,7 +822,7 @@ namespace hz
 		};
 #define ret() RetInstruction{}
 
-		class LeaveInstruction
+		struct LeaveInstruction
 		{
 		// default constructor
 		public:

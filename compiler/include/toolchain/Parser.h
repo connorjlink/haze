@@ -15,18 +15,18 @@
 
 namespace hz
 {
-	class Symbol;
-	class FunctionSymbol;
-	class ArgumentSymbol;
-	class VariableSymbol;
-	class StructOrUnionSymbol;
-	class DefineSymbol;
-	class LabelSymbol;
-	class AdjustExpression;
+	struct Symbol;
+	struct FunctionSymbol;
+	struct ArgumentSymbol;
+	struct VariableSymbol;
+	struct StructOrUnionSymbol;
+	struct DefineSymbol;
+	struct LabelSymbol;
+	struct AdjustExpression;
 
-	enum class ParserType;
+	enum struct ParserType;
 
-	class Parser
+	struct Parser
 		: public ServiceTag<Parser>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, SymbolExporter, CommandLineOptions>
 	{
@@ -48,7 +48,7 @@ namespace hz
 		std::vector<Token> fetch_until(TokenKind);
 
 	protected:
-		enum class Precedence
+		enum struct Precedence
 		{
 			MINIMUM,
 			ASSIGN,

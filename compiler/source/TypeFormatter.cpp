@@ -27,7 +27,7 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(IntType)
 	{
-		// <storage-class> <type-qualifier> <type-specifier> <type-width>
+		// <storage-struct> <type-qualifier> <type-specifier> <type-width>
 		return std::format("{} {} {} {}",
 			type.storage,
 			type.qualifier,
@@ -37,7 +37,7 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(FloatType)
 	{
-		// <storage-class> <type-qualifier> <type-width>
+		// <storage-struct> <type-qualifier> <type-width>
 		return std::format("{} {} {}",
 			type.storage,
 			type.qualifier,
@@ -58,7 +58,7 @@ namespace hz
 			members += std::format("    {} {};\n", to_string(member.type), member.name);
 		}
 
-		// <storage-class> <type-qualifier> <struct-or-union> 
+		// <storage-struct> <type-qualifier> <struct-or-union> 
 		// {
 		//     members...
 		// }
@@ -71,7 +71,7 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(EnumType)
 	{
-		// <storage-class> <type-qualifier> enum tag 
+		// <storage-struct> <type-qualifier> enum tag 
 		// NOTE: enumerators not shown since they don't fundamentally affect the type
 		return std::format("{} {} enum {}",
 			type.storage,

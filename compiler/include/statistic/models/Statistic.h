@@ -31,7 +31,7 @@ namespace hz
 		std::vector<TimedTask> elapsed;
 	};
 
-	class Statistic
+	struct Statistic
 	{
 		std::string stage;
 		std::string filepath;

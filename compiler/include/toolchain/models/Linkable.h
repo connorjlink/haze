@@ -6,11 +6,11 @@
 
 namespace hz
 {
-	class FunctionSymbol;
-	class Command;
-	class IntermediateCommand;
+	struct FunctionSymbol;
+	struct Command;
+	struct IntermediateCommand;
 
-	class Linkable
+	struct Linkable
 	{
 	public:
 		// a reference to the FunctionSymbol associated with this

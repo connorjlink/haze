@@ -8,7 +8,7 @@
 
 namespace hz
 {
-	class StructDeclarationStatement : public StatementBase
+	struct StructDeclarationStatement : public StatementBase
 	{
 	public:
 		ExpressionReference<IdentifierExpression> identifier;

@@ -7,7 +7,7 @@
 namespace hz
 {
 	template<typename State, size_t MaxHistory = 5>
-	class UndoableRedoable
+	struct UndoableRedoable
 	{
 	private:
 		// front = redoable states, back = undoable states

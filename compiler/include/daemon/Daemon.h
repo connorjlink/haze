@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class Daemon
+	struct Daemon
 		: public SingletonTag<Daemon>
 	{
 	private:

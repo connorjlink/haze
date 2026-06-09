@@ -9,7 +9,7 @@
 
 namespace hz
 {
-	class AutoJob : public InjectService<JobManager>
+	struct AutoJob : public InjectService<JobManager>
 	{
 	private:
 		std::uint32_t _job_id;
