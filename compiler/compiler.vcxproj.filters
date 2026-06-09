@@ -614,5 +614,8 @@
     <ClInclude Include="include\utility\AutoBitfield.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\runtime\Variable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

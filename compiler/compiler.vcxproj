@@ -153,6 +153,10 @@
     <ClInclude Include="include\ir\defs\IntermediateTypeKind.h" />
     <ClInclude Include="include\ir\defs\UnaryIntermediateKind.h" />
     <ClInclude Include="include\runtime\defs\VariableKind.h" />
+    <ClInclude Include="include\runtime\Variable.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
     <ClInclude Include="include\type\defs\TypeKind.h" />
     <ClInclude Include="include\type\defs\TypePrecedence.h">
