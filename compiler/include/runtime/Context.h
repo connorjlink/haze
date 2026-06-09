@@ -4,20 +4,30 @@
 #include <ast/AST.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <utility/Sum.h>
 
 // Haze Context.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {	
-	struct Function;
-	struct Expression;
-	struct Variable;
+	FORWARD_DECLARE_SUM(Expression)
+	FORWARD_DECLARE_SUM(Variable)
+	FORWARD_DECLARE_SUM(Function)
+
 
 	struct Context
 		: public SingletonTag<Context>
 		, public InjectSingleton<ErrorReporter>
 	{
+	public:
+		struct Environment
+		{
+			std::unordered_map<std::string, VariableHandle> variables;
+			Environment* parent;
+		};
+
+
 	private:
 		std::unordered_map<std::string, Variable*> variables;
 		std::vector<Function*> functions;

@@ -3,7 +3,6 @@
 
 #include <utility/Formatter.h>
 
-
 // Haze AutoEnum.h
 // (c) Connor J. Link. All Rights Reserved.
 

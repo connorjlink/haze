@@ -22,17 +22,11 @@ namespace hz
 	X(LONG_LONG, long long)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case IntKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, IntKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, IntKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, INT_KINDS, IntKind, int kind)
+	DEFINE_ENUM(INT_KINDS, IntKind, int kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 
 
 	struct IntType : public TypeBase

@@ -3,7 +3,6 @@
 
 #include <utility/AutoEnum.h>
 #include <utility/Constants.h>
-#include <utility/Formatter.h>
 
 // Haze X86Register.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -21,17 +20,11 @@ namespace hz
 	X(EDI, edi, 7)
 
 
-#define ENUM_MEMBER(enumerator, name, value) enumerator = value,
-#define SWITCH_CASE(enumerator, name, value) case X86Register::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name, value) Mapping{ #name, X86Register::enumerator },
-#define FORWARD_DECLARATION(enumerator, name, value) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name, value) X(enumerator, FakeType, name, X86Register)
 
-	DEFINE_ENUM_BACKED(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, X86_REGISTER_KINDS, X86Register, x86 register, Register)
+	DEFINE_ENUM_BASE(X86_REGISTER_KINDS, X86Register, x86 register, Register)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 
 
 	inline Register to_register(X86Register $register)

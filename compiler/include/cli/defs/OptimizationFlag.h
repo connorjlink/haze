@@ -2,7 +2,6 @@
 #define HAZE_OPTIMIZATIONFLAG_H
 
 #include <utility/AutoBitfield.h>
-#include <utility/Formatter.h>
 
 // Haze OptimizationFlag.h
 // (c) Connor J. Link. All Rights Reserved.

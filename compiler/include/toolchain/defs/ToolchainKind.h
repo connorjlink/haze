@@ -14,17 +14,11 @@ namespace hz
 	X(COMPILER,  compiler,     .cjl)
 
 
-#define ENUM_MEMBER(enumerator, name, extension) enumerator,
-#define SWITCH_CASE(enumerator, name, extension) case ToolchainKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name, extension) Mapping{ #name, ToolchainKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name, extension) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name, extension) X(enumerator, FakeType, name, ToolchainKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TOOLCHAIN_KINDS, ToolchainKind, toolchain kind)
+	DEFINE_ENUM(TOOLCHAIN_KINDS, ToolchainKind, toolchain kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif 

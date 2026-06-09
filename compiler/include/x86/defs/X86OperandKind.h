@@ -1,7 +1,7 @@
 #ifndef HAZE_X86OPERANDKIND_H
 #define HAZE_X86OPERANDKIND_H
 
-#include <utility/Formatter.h>
+#include <utility/AutoEnum.h>
 
 // Haze X86OperandKind.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -16,17 +16,11 @@ namespace hz
 	X(REGISTER_DISPLACED, register-displaced)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case X86OperandKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, X86OperandKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, X86OperandKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, X86_OPERAND_KINDS, X86OperandKind, x86 operand kind)
+	DEFINE_ENUM(X86_OPERAND_KINDS, X86OperandKind, x86 operand kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

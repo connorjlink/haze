@@ -19,17 +19,11 @@ namespace hz
 	X(LONG_DOUBLE, long double)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case FloatKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, FloatKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, FloatKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, FLOAT_KINDS, FloatKind, float kind)
+	DEFINE_ENUM(FLOAT_KINDS, FloatKind, float kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 
 
 	struct FloatType : public TypeBase

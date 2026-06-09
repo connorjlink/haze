@@ -191,6 +191,10 @@ namespace hz
 		{
 			return index.is_valid;
 		}
+		constexpr operator bool() const
+		{
+			return is_valid();
+		}
 
 	public:
 		template<typename Self>

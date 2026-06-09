@@ -199,7 +199,6 @@
     <ClCompile Include="source\ExitProgramException.cpp" />
     <ClCompile Include="source\ExitStatement.cpp" />
     <ClCompile Include="source\Expression.cpp" />
-    <ClCompile Include="source\ExpressionStatement.cpp" />
     <ClCompile Include="source\ExtendedInteger.cpp" />
     <ClCompile Include="source\File.cpp" />
     <ClCompile Include="source\FileManager.cpp" />

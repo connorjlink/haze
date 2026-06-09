@@ -16,17 +16,11 @@ namespace hz
 	X(ENUM,            EnumVariable,          enum)
 
 
-#define ENUM_MEMBER(enumerator, type, name) enumerator,
-#define SWITCH_CASE(enumerator, type, name) case VariableKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, type, name) Mapping{ #name, VariableKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, type, name) struct type;
+#define AUTOENUM_ROUTER(X, enumerator, type, name) X(enumerator, type, name, VariableKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, VARIABLE_KINDS, VariableKind, variable kind)
+	DEFINE_ENUM(VARIABLE_KINDS, VariableKind, variable kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

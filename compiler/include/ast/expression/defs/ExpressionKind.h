@@ -4,7 +4,6 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <utility/AutoEnum.h>
-#include <utility/Formatter.h>
 
 // Haze ExpressionKind.h
 // (c) Connor J. Link. All Rights Reserved.

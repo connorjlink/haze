@@ -16,17 +16,11 @@ namespace hz
 	X(UNSIGNED, unsigned)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case TypeSignedness::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, TypeSignedness::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, TypeSignedness)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TYPE_SIGNEDNESSES, TypeSignedness, type signedness)
+	DEFINE_ENUM(TYPE_SIGNEDNESSES, TypeSignedness, type signedness)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 
 
 	constexpr TypeSignedness token_to_type_signedness(TokenKind token_type)
@@ -39,7 +33,7 @@ namespace hz
 		}
 
 		USE_UNSAFE(ErrorReporter)->post_error(std::format(
-			"invalid type signedness token '{}'", token_type), NULL_TOKEN);
+			"invalid type signedness token `{}`", token_type), NULL_TOKEN);
 
 		return TypeSignedness::SIGNED;
 	}

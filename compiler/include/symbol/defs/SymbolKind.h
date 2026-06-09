@@ -15,17 +15,11 @@ namespace hz
 	X(TYPE,     type) 
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case SymbolKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, SymbolKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, SymbolKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, SYMBOL_KINDS, Symbol, symbol)
+	DEFINE_ENUM(SYMBOL_KINDS, SymbolKind, symbol)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTEr
 }
 
 #endif 

@@ -87,9 +87,6 @@
     <ClCompile Include="source\Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ExpressionStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\ExtendedInteger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

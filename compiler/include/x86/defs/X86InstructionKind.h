@@ -2,7 +2,6 @@
 #define HAZE_X86INSTRUCTIONKIND_H
 
 #include <utility/AutoEnum.h>
-#include <utility/Formatter.h>
 
 // Haze X86InstructionKind.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -53,17 +52,11 @@ namespace hz
 	X(LEAVE,   leave)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case X86InstructionKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, X86InstructionKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name, extras) X(enumerator, FakeType, name, X86InstructionKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, X86_INSTRUCTION_KINDS, X86InstructionKind, x86 instruction kind)
+	DEFINE_ENUM(X86_INSTRUCTION_KINDS, X86InstructionKind, x86 instruction kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

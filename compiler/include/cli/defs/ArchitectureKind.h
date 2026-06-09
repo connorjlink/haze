@@ -38,6 +38,19 @@ namespace hz
 			"invalid architecture kind `{}`", kind), NULL_TOKEN);
 	}
 
+	constexpr Register get_abi_return_register(ArchitectureKind kind)
+	{
+		using enum ArchitectureKind;
+		switch (kind)
+		{
+			case X86: return to_register(X86Register::EAX);
+			case RISCV: return to_register(RISCVRegister::A0);
+		}
+
+		USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
+			"invalid architecture kind `{}`", kind), NULL_TOKEN);
+	}
+
 #define NAMEOF(x) #x
 
 	constexpr std::string_view get_stack_frame_pointer(ArchitectureKind kind)

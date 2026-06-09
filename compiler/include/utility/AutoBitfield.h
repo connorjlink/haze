@@ -56,8 +56,8 @@ namespace hz
 	}
 
 
-#define _PRIVATE_BITFIELD_ENUM_MEMBER(enumerator, name, value) enumerator = value,
-#define _PRIVATE_BITFIELD_APPEND_NAME(enumerator, name, value) \
+#define _PRIVATE_AUTOBITFIELD_ENUM_MEMBER(enumerator, name, value) enumerator = value,
+#define _PRIVATE_AUTOBITFIELD_APPEND_NAME(enumerator, name, value) \
 	if (kind & value) \
 	{ \
 		if (!result.empty()) \
@@ -66,23 +66,23 @@ namespace hz
 		} \
 		result += #name; \
 	}
-#define _PRIVATE_BITFIELD_VALUE_MATCH(enumerator, name, value) \
+#define _PRIVATE_AUTOBITFIELD_VALUE_MATCH(enumerator, name, value) \
 	if (token == #name) \
 	{ \
 		result |= EnumType::enumerator; \
 	}
 
-#define BITFIELD_EXPAND(x) x
+#define AUTOBITFIELD_EXPAND(x) x
 
-#define BITFIELD_ENUM_MEMBER(...) BITFIELD_EXPAND(BITFIELD_ROUTER(_PRIVATE_BITFIELD_ENUM_MEMBER, __VA_ARGS__))
-#define BITFIELD_APPEND_NAME(...) BITFIELD_EXPAND(BITFIELD_ROUTER(_PRIVATE_BITFIELD_APPEND_NAME, __VA_ARGS__))
-#define BITFIELD_VALUE_MATCH(...) BITFIELD_EXPAND(BITFIELD_ROUTER(_PRIVATE_BITFIELD_VALUE_MATCH, __VA_ARGS__))
+#define AUTOBITFIELD_ENUM_MEMBER(...) AUTOBITFIELD_EXPAND(AUTOBITFIELD_ROUTER(_PRIVATE_AUTOBITFIELD_ENUM_MEMBER, __VA_ARGS__))
+#define AUTOBITFIELD_APPEND_NAME(...) AUTOBITFIELD_EXPAND(AUTOBITFIELD_ROUTER(_PRIVATE_AUTOBITFIELD_APPEND_NAME, __VA_ARGS__))
+#define AUTOBITFIELD_VALUE_MATCH(...) AUTOBITFIELD_EXPAND(AUTOBITFIELD_ROUTER(_PRIVATE_AUTOBITFIELD_VALUE_MATCH, __VA_ARGS__))
 
 // NOTE: define BITFIELD_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
 #define DEFINE_BITFIELD(kinds, type, name) \
-	DEFINE_BITFIELD_INTERNAL(BITFIELD_ENUM_MEMBER, BITFIELD_APPEND_NAME, BITFIELD_VALUE_MATCH, kinds, type, name, : std::uint32_t)
+	DEFINE_BITFIELD_INTERNAL(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : std::uint32_t)
 
 #define DEFINE_BITFIELD_BASE(kinds, type, name, base) \
-	DEFINE_BITFIELD_INTERNAL(BITFIELD_ENUM_MEMBER, BITFIELD_APPEND_NAME, BITFIELD_VALUE_MATCH, kinds, type, name, : base)
+	DEFINE_BITFIELD_INTERNAL(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : base)
 
 #endif

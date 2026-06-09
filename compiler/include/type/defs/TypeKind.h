@@ -1,6 +1,8 @@
 #ifndef HAZE_TYPEKIND_H
 #define HAZE_TYPEKIND_H
 
+#include <utility/AutoEnum.h>
+
 // Haze TypeKind.h
 // (c) Connor J. Link. All Rights Reserved.
 
@@ -18,17 +20,11 @@ namespace hz
 	X(FUNCTION,        FUNCTION, FunctionType,      function)
 
 
-#define ENUM_MEMBER(enumerator, precedence, type, name) enumerator,
-#define SWITCH_CASE(enumerator, precedence, type, name) case TypeKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, precedence, type, name) Mapping{ #name, TypeKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, precedence, type, name) struct type;
+#define AUTOENUM_ROUTER(X, enumerator, precedence, type, name) X(enumerator, type, name, TypeKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TYPE_KINDS, TypeKind, type kind)
+	DEFINE_ENUM(TYPE_KINDS, TypeKind, type kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 }
 
 #endif

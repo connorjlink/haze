@@ -18,17 +18,11 @@ namespace hz
 	X(UNION,  union)
 
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case StructOrUnionKind::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, StructOrUnionKind::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, StructOrUnionKind)
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, STRUCT_OR_UNION_KINDS, StructOrUnionKind, "struct or union kind")
+	DEFINE_ENUM(STRUCT_OR_UNION_KINDS, StructOrUnionKind, struct or union kind)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+#undef AUTOENUM_ROUTER
 
 
 	struct StructOrUnionType : public TypeBase

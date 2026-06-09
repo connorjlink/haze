@@ -102,8 +102,6 @@ namespace hz
 
 		return TypeKind::VOID;
 	}
-
-
 }
 
 #endif

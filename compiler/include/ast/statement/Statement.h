@@ -5,10 +5,13 @@
 #include <ast/AST.h>
 #include <ast/declaration/Declaration.h>
 #include <ast/statement/defs/StatementKind.h>
+#include <cli/CommandLineOptions.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <toolchain/models/Token.h>
+#include <toolchain/CompilerParser.h>
+#include <toolchain/Generator.h>
 #include <toolchain/RISCVAssemblerParser.h>
+#include <toolchain/models/Token.h>
 #include <type/Type.h>
 #include <utility/Sum.h>
 
@@ -29,7 +32,8 @@ namespace hz
 
 	struct StatementBase 
 		: public StatementFacade
-		, public InjectSingleton<ErrorReporter>
+		, public InjectSingleton<CommandLineOptions, ErrorReporter>
+		, public InjectService<Generator>
 	{
 	public:
 		using Storage = StatementSumStorage;
@@ -92,16 +96,17 @@ namespace hz
 	};
 #define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ make_handle(ast, expression), token }
 
-	struct ReturnStatement : public StatementBase
+	struct ReturnStatement 
+		: public StatementBase
+		, public InjectService<CompilerParser>
 	{
 	private:
 		std::string enclosing_function;
 		ExpressionHandle expression;
-		ValueHandle value;
 
 	public:
-		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, ValueHandle value, const Token& token)
-			: StatementBase{ token }, enclosing_function{ enclosing_function }, expression{ expression }, value{ value }
+		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, const Token& token)
+			: StatementBase{ token }, enclosing_function{ enclosing_function }, expression{ expression }
 		{
 		}
 

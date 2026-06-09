@@ -3,7 +3,7 @@
 
 #include <utility/AutoEnum.h>
 
-// Haze $file$.h
+// Haze TypePrecedence.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
@@ -15,17 +15,12 @@ namespace hz
 	X(FUNCTION, function) \
 	X(LEAF,     leaf) // base type
 
-#define ENUM_MEMBER(enumerator, name) enumerator,
-#define SWITCH_CASE(enumerator, name) case TypePrecedence::enumerator: return #name;
-#define MAP_MEMBER(enumerator, name) Mapping{ #name, TypePrecedence::enumerator },
-#define FORWARD_DECLARATION(enumerator, name) /* elide forward declarations */
 
-	DEFINE_ENUM(ENUM_MEMBER, SWITCH_CASE, MAP_MEMBER, FORWARD_DECLARATION, TYPE_PRECEDENCES, TypePrecedence, type precedence)
+#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, TypePrecedence)
 
-#undef FORWARD_DECLARATION
-#undef MAP_MEMBER
-#undef SWITCH_CASE
-#undef ENUM_MEMBER
+	DEFINE_ENUM(TYPE_PRECEDENCES, TypePrecedence, type precedence)
+
+#undef AUTOENUM_ROUTER
 }
 
 #endif
