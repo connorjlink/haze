@@ -28,16 +28,19 @@ namespace hz
 	static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
 	// dynamic dispatch generator for sum families
-	template<typename MethodT, typename SumStorageT, typename TupleT, std::size_t... Is>
-	consteval auto make_dispatch_table_impl(std::index_sequence<Is...>)
+	template<typename MethodT, typename SumStorageT, typename TupleT, typename... Args, std::size_t... Is>
+	consteval auto make_dispatch_table_impl(std::index_sequence<Is...>, std::type_identity<void(Args...)>)
 	{
-		return std::array
+		using ReturnType = typename MethodT::ReturnType;
+		using FunctionPointerT = ReturnType(*)(const SumStorageT&, IndexType, Args...);
+
+		return std::array<FunctionPointerT, sizeof...(Is)>
 		{
-			[](const SumStorageT& sum, IndexType index) -> typename MethodT::ReturnType
+			[](const SumStorageT& sum, IndexType index, Args... args) -> ReturnType
 			{
 				using T = std::tuple_element_t<Is, TupleT>;
 				const auto& vector = sum.storage.template get<T>();
-				return (vector[index].*MethodT::pointer)(sum);
+				return (vector[index].*MethodT::pointer)(std::forward<Args>(args)...);
 			}...
 		};
 	}
@@ -45,8 +48,11 @@ namespace hz
 	template<typename MethodT, typename SumStorageT, typename TupleT>
 	consteval auto make_dispatch_table()
 	{
+		using FuncType = typename MethodTraits<decltype(MethodT::pointer)>::FuncType;
 		return make_dispatch_table_impl<MethodT, SumStorageT, TupleT>(
-			std::make_index_sequence<std::tuple_size_v<TupleT>>{});
+			std::make_index_sequence<std::tuple_size_v<TupleT>>{},
+			std::type_identity<FuncType>{}
+		);
 	}
 
 
@@ -100,11 +106,21 @@ namespace hz
 
 
 	// node dispatch type traits
-	template<typename T, typename SumT, typename Fn>
-	concept ImplementsMethod = requires(const T & node, const SumT & sum)
+	template<typename Node, typename FunctionT, typename Signature>
+	struct ImplementsMethodSignature : std::false_type {};
+
+	template<typename Node, typename FunctionT, typename... Args>
+	struct ImplementsMethodSignature<Node, FunctionT, void(Args...)>
 	{
-		{ (node.*Fn::pointer)(sum) } -> std::same_as<typename Fn::ReturnType>;
+		static constexpr bool value = requires(const Node & node, Args... args)
+		{
+			{ (node.*FunctionT::pointer)(std::forward<Args>(args)...) } -> std::same_as<typename FunctionT::ReturnType>;
+		};
 	};
+
+
+	template<typename T, typename SumT, typename FunctionT>
+	concept ImplementsMethod = ImplementsMethodSignature<T, FunctionT, typename MethodTraits<decltype(FunctionT::pointer)>::FuncType>::value;
 
 	template<typename T, typename SumT, typename MethodsT, std::size_t... Is>
 	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
@@ -208,14 +224,14 @@ namespace hz
 		}
 
 	public:
-		template<typename MethodT, typename Self>
-		constexpr decltype(auto) call(this Self&& self)
+		template<typename MethodT, typename Self, typename... Args>
+		constexpr decltype(auto) call(this Self&& self, Args&&... args)
 		{
 			static constinit auto table =
 				make_dispatch_table<MethodT, SumStorageT, typename SumStorageT::Type>();
 
 			self.validate();
-			return table[self.get_tag()](self.sum_storage, self.index);
+			return table[self.get_tag()](self.sum_storage, self.index, std::forward<Args>(args)...);
 		}
 
 	public:
@@ -247,11 +263,11 @@ namespace hz
 
 #define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
 #define SUM_DISPATCH_ENTRY(name, returntype) \
-		template<typename Self> \
-		constexpr decltype(auto) name(this Self&& self) \
+		template<typename Self, typename... Args> \
+		constexpr decltype(auto) name(this Self&& self, Args&&... args) \
 		{ \
 			using Anchor = typename SumStorageT::Anchor; \
-			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(); \
+			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(std::forward<Args>(args)...); \
 		}
 
 #define DEFINE_SUM(name, methods) \
@@ -417,7 +433,8 @@ namespace hz
 	constexpr SumHandle<SumDispatcherT, SumStorageT> make_invalid_handle(const SumStorageT& sum_storage)
 	{
 		// does not participate in sum storage
-		return SumHandle<SumDispatcherT, SumStorageT>{ sum_storage };
+		static const auto invalid_handle = SumHandle<SumDispatcherT, SumStorageT>{ sum_storage };
+		return invalid_handle;
 	}
 #define MAKE_INVALID_HANDLE(sum, family) make_invalid_handle<family##SumDispatcher, family##SumStorage>(sum)
 
@@ -451,7 +468,8 @@ namespace hz
 	constexpr SumReference<T, SumDispatcherT, SumStorageT> make_invalid_reference(const SumStorageT& sum_storage)
 	{
 		// does not participate in sum storage
-		return SumReference<T, SumDispatcherT, SumStorageT>{ sum_storage };
+		static const auto invalid_reference = SumReference<T, SumDispatcherT, SumStorageT>{ sum_storage };
+		return invalid_reference;
 	}
 #define MAKE_INVALID_REFERENCE(type, family, sum) make_invalid_reference<type, family##SumDispatcher, family##SumStorage>(sum)
 

@@ -65,10 +65,14 @@ namespace hz
 {
 	// enforce static type checking for service/singleton tags to prevent invalid usage
 	template<typename T>
-	struct ServiceTag {};
+	struct ServiceTag
+	{
+	};
 
 	template<typename T>
-	struct SingletonTag {};
+	struct SingletonTag
+	{
+	};
 
 	struct ServiceContainer
 	{
@@ -261,7 +265,9 @@ namespace hz
 
 
 	template<typename T>
-	struct InjectServiceTag {};
+	struct InjectServiceTag
+	{
+	};
 
 	// mixin, e.g., MyClass : public InjectService<MyService> { } ... using_service<T>().some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!
@@ -286,7 +292,9 @@ namespace hz
 
 
 	template<typename T>
-	struct InjectSingletonTag {};
+	struct InjectSingletonTag
+	{
+	};
 
 	// mixin, e.g., MyClass : public InjectSingleton<MyService> { } ... using_singleton<T>()->some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!

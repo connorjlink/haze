@@ -40,10 +40,39 @@ namespace hz
 	};
 
 
+	template<typename T>
+	struct MethodTraits;
+
+	template<typename R, typename C, typename... Args>
+	struct MethodTraits<R(C::*)(Args...)>
+	{
+		using FuncType = void(Args...);
+	};
+
+	template<typename R, typename C, typename... Args>
+	struct MethodTraits<R(C::*)(Args...) const>
+	{
+		using FuncType = void(Args...);
+	};
+
+	template<typename R, typename C, typename... Args>
+	struct MethodTraits<R(C::*)(Args...) noexcept>
+	{
+		using FuncType = void(Args...);
+	};
+
+	template<typename R, typename C, typename... Args>
+	struct MethodTraits<R(C::*)(Args...) const noexcept>
+	{
+		using FuncType = void(Args...);
+	};
+
+
 	template<typename... Ts>
 	struct TypeList
 	{
 	};
+
 
 	template<typename ToRemoveT, typename... Ts>
 	struct RemoveType;

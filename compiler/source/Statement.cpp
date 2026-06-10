@@ -91,8 +91,7 @@ namespace hz
 
 	void ReturnStatement::generate(const Storage& storage) const
 	{
-		auto compiler_parser = REQUIRE_SAFE(CompilerParser).get();
-		const auto& end_function_label = compiler_parser->function_label_map.at(enclosing_function);
+		const auto& end_function_label = REQUIRE_SAFE(CompilerParser)->function_label_map.at(enclosing_function);
 
 		if (!expression)
 		{
@@ -107,7 +106,6 @@ namespace hz
 		REQUIRE_SAFE(Generator)->make_return(end_function_label, get_abi_return_register(architecture));
 	}
 
-#pragma message("TODO: optimize invalid handles to use a common sentinel instead of creating a duplicate invalid entry every time")
 	StatementHandle ReturnStatement::evaluate(const Storage& storage, Context& context) const
 	{
 		const auto expression_evaluated = expression.evaluate(storage, context);

@@ -21,28 +21,44 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	public:
-		struct Environment
+		using VariableMap = std::unordered_map<std::string, VariableHandle>;
+
+#pragma message("TODO: refactor to allow contiguous memory for stack frames")
+		struct StackFrame
 		{
-			std::unordered_map<std::string, VariableHandle> variables;
-			Environment* parent;
+			VariableMap local_variables;
+			StackFrame* parent;
 		};
+
+		std::vector<StackFrame> stack;
+		VariableMap global_variables;
+
+	public:
+		void enter_function_frame(const std::vector<std::string_view>&);
+		void exit_frame();
+		void enter_block();
+		void exit_block();
+
+		VariableHandle resolve(std::string_view);
+		void assign(std::string_view name, VariableHandle value);
+
 
 
 	private:
-		std::unordered_map<std::string, Variable*> variables;
-		std::vector<Function*> functions;
+		std::unordered_map<std::string, VariableHandle> variables;
+		std::vector<FunctionHandle> functions;
 
 #pragma message("TODO: refactor the context to not maintain a state--should work on pure functions only!")
-		std::stack<Variable*> returns;
-		std::stack<std::vector<Expression*>> arguments;
+		std::stack<VariableHandle> returns;
+		std::stack<std::vector<ExpressionHandle>> arguments;
 
 	private:
 		bool executing = true;
 
 	public:
 		void declare_variable(const std::string&);
-		void define_variable(const std::string&, Variable*);
-		inline const std::unordered_map<std::string, Variable*>& get_variables() const
+		void define_variable(const std::string&, VariableHandle);
+		inline const std::unordered_map<std::string, VariableHandle>& get_variables() const
 		{
 			return variables;
 		}
