@@ -58,7 +58,7 @@ namespace hz
 
 	public:
 		// push a new variable public to the entire program
-		void make_global(Register, Variable*);
+		void make_global(Register, VariableHandle);
 
 	public:
 		// destination = memory[pointer]

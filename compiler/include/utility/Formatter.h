@@ -7,7 +7,7 @@
 namespace hz
 {
 	template<typename T>
-	concept Formattable = std::is_scoped_enum_v<T> and requires(const T& t)
+	concept IsFormattableEnumeration = std::is_scoped_enum_v<T> and requires(const T& t)
 	{
 		{ std::to_underlying(t) } -> std::convertible_to<std::underlying_type_t<T>>;
 		{ to_string(t) } -> std::convertible_to<std::string_view>;
@@ -62,10 +62,9 @@ namespace hz
 	{
 		return left & static_cast<T>(right);
 	}
-
 }
 
-template<hz::Formattable T>
+template<hz::IsFormattableEnumeration T>
 struct std::formatter<T>
 {
 	constexpr auto parse(std::format_parse_context& context)

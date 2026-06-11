@@ -153,6 +153,14 @@
     <ClInclude Include="include\ir\defs\IntermediateTypeKind.h" />
     <ClInclude Include="include\ir\defs\UnaryIntermediateKind.h" />
     <ClInclude Include="include\runtime\defs\VariableKind.h" />
+    <ClInclude Include="include\runtime\Evaluation.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="include\runtime\Interpreter.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\runtime\Variable.h">
       <SubType>
       </SubType>
@@ -164,12 +172,20 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="include\type\TypeFormatter.h" />
+    <ClInclude Include="include\utility\ArenaAllocator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\utility\AutoBitfield.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="include\utility\AutoEnum.h" />
     <ClInclude Include="include\utility\Formatter.h" />
+    <ClInclude Include="include\utility\Strings.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\utility\Sum.h" />
     <ClInclude Include="include\utility\Typing.h" />
     <ClInclude Include="include\allocator\Value.h" />

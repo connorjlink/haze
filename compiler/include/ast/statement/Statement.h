@@ -70,7 +70,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -90,7 +90,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -113,7 +113,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -135,7 +135,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -156,7 +156,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -177,7 +177,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -200,7 +200,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -220,7 +220,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -237,7 +237,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -254,7 +254,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -283,7 +283,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -303,7 +303,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -324,7 +324,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -344,7 +344,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};
@@ -366,7 +366,7 @@ namespace hz
 	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
-		StatementHandle evaluate(const Storage&, Context&) const;
+		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
 	};

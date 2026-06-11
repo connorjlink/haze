@@ -67,14 +67,24 @@ namespace hz
 	template<typename T>
 	struct ServiceTag
 	{
+		// thread-scoped
+	};
+
+	template<typename T>
+	struct ScopedTag
+	{
+		// request/injection-scoped
 	};
 
 	template<typename T>
 	struct SingletonTag
 	{
+		// global-scoped
 	};
 
-	struct ServiceContainer
+
+	template<template<typename> typename TagT>
+	struct ResourceContainer
 	{
 	private:
 		std::unordered_map<TypeId, std::function<std::shared_ptr<void>()>> factories;
@@ -83,7 +93,7 @@ namespace hz
 
 	public:
 		template<typename T>
-			requires std::derived_from<T, ServiceTag<T>>
+			requires std::derived_from<T, TagT<T>>
 		void register_factory(std::function<std::shared_ptr<T>()> factory)
 		{
 			std::scoped_lock lock{ mutex };
@@ -95,22 +105,8 @@ namespace hz
 			};
 		}
 
-		// polymorphic use only
-		template<typename T, typename U>
-			requires std::derived_from<T, ServiceTag<T>> and (std::derived_from<U, T> or std::is_same_v<T, U>)
-		void register_factory(std::function<std::shared_ptr<U>()> factory)
-		{
-			std::scoped_lock lock{ mutex };
-			const auto id = type_id<T>();
-
-			factories[id] = [factory]()
-			{
-				return std::static_pointer_cast<void>(factory());
-			};
-		}
-
 		template<typename T>
-			requires std::derived_from<T, ServiceTag<T>>
+			requires std::derived_from<T, TagT<T>>
 		std::shared_ptr<T> create()
 		{
 			std::scoped_lock lock{ mutex };
@@ -128,12 +124,33 @@ namespace hz
 		}
 
 	public:
-		static ServiceContainer& instance()
+		static ResourceContainer& instance()
 		{
-			static ServiceContainer container;
+			static ResourceContainer container;
 			return container;
 		}
 	};
+
+	struct ServiceContainer : public ResourceContainer<ServiceTag>
+	{
+	public:
+		// polymorphic use only
+		template<typename T, typename U>
+			requires std::derived_from<T, ServiceTag<T>> and (std::derived_from<U, T> or std::is_same_v<T, U>)
+		void register_factory(std::function<std::shared_ptr<U>()> factory)
+		{
+			std::scoped_lock lock{ mutex };
+			const auto id = type_id<T>();
+
+			factories[id] = [factory]()
+			{
+				return std::static_pointer_cast<void>(factory());
+			};
+		}
+	};
+
+	using ScopedContainer = ResourceContainer<ScopedTag>;
+
 
 	struct SingletonContainer
 	{
@@ -269,7 +286,7 @@ namespace hz
 	{
 	};
 
-	// mixin, e.g., MyClass : public InjectService<MyService> { } ... using_service<T>().some_method()
+	// mixin, e.g., MyClass : public InjectService<MyService> { } ... using_service<T>()->some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!
 	template<typename... Ts>
 		requires (std::derived_from<Ts, ServiceTag<Ts>> && ...)
@@ -289,6 +306,32 @@ namespace hz
 	// denoted safe because the caller struct has already injected the service successfully
 	// NOTE: not explicitly thread-safe, so use with caution!
 #define REQUIRE_SAFE(x) using_service<x>(this)
+
+
+	template<typename T>
+	struct InjectScopedTag
+	{
+	};
+
+	// mixin, e.g., MyClass : public InjectScoped<MyService> { } ... using_scoped<T>()->some_method(), which creates a new resource instance
+	// NOTE: requires a complete type--include prerequisite headers before using!
+	template<typename... Ts>
+		requires (std::derived_from<Ts, ScopedTag<Ts>> && ...)
+	struct InjectScoped : public InjectScopedTag<Ts>...
+	{
+	};
+
+	template<typename T, typename CallerT>
+		requires std::derived_from<CallerT, InjectScopedTag<T>> and std::derived_from<T, ScopedTag<T>>
+	std::shared_ptr<T> using_scoped(const CallerT*)
+	{
+		return ScopedContainer::instance().create<T>();
+	}
+	// denoted unsafe because the call could fail if the scoped resource was not registered
+#define CREATE_UNSAFE(x) ScopedContainer::instance().create<x>()
+	// denoted safe because the caller struct has already injected the scoped resource successfully
+	// NOTE: not explicitly thread-safe, so use with caution!
+#define CREATE_SAFE(x) using_scoped<x>(this)
 
 
 	template<typename T>
@@ -312,7 +355,6 @@ namespace hz
 		return SingletonContainer::instance().get<T>();
 	}
 	// denoted unsafe because the call could fail if the singleton was not registered
-	// NOTE: DO NOT DEFERENCE THE SINGLETON POINTER BECAUSE IT MIGHT BE POLYMORPHIC!
 #define USE_UNSAFE(x) SingletonContainer::instance().get<x>()
 	// denoted safe because the caller struct has already injected the singleton successfully
 	// NOTE: not explicitly thread-safe, so use with caution!

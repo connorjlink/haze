@@ -16,7 +16,7 @@ namespace hz
 
 	std::string NullStatement::format(void) const
 	{
-		return std::format(";");
+		return ";";
 	}
 
 	void NullStatement::generate(const Storage&) const
@@ -24,10 +24,10 @@ namespace hz
 		// no code generation necessary for null statement
 	}
 
-	StatementHandle NullStatement::evaluate(const Storage& storage, Context&) const
+	ASTTask NullStatement::evaluate(const Storage& storage, Context&) const
 	{
 		// no evaluation necessary for null statement
-		return MAKE_INVALID_HANDLE(storage, Statement);
+		co_return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
 	StatementHandle NullStatement::optimize(const Storage& storage) const
@@ -57,10 +57,10 @@ namespace hz
 		// no code generation necessary for expression statement
 	}
 
-	StatementHandle ExpressionStatement::evaluate(const Storage& storage, Context& context) const
+	ASTTask ExpressionStatement::evaluate(const Storage& storage, Context& context) const
 	{
-		expression.evaluate(context);
-		return MAKE_INVALID_HANDLE(storage, Statement);
+		co_await ASTAwaiter{ expression.evaluate(context) };
+		co_return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
 	StatementHandle ExpressionStatement::optimize(const Storage& storage) const
@@ -106,13 +106,12 @@ namespace hz
 		REQUIRE_SAFE(Generator)->make_return(end_function_label, get_abi_return_register(architecture));
 	}
 
-	StatementHandle ReturnStatement::evaluate(const Storage& storage, Context& context) const
+	ASTTask ReturnStatement::evaluate(const Storage& storage, Context& context) const
 	{
 		const auto expression_evaluated = expression.evaluate(storage, context);
-		context.push_return()
+		const auto value = co_await ASTAwaiter{ expression_evaluated };
 
-
-		return MAKE_INVALID_HANDLE(storage, Statement);
+		co_return value;
 	}
 
 	StatementHandle ReturnStatement::optimize(const Storage& storage) const

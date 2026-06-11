@@ -48,10 +48,11 @@ namespace hz
 	template<typename MethodT, typename SumStorageT, typename TupleT>
 	consteval auto make_dispatch_table()
 	{
-		using FuncType = typename MethodTraits<decltype(MethodT::pointer)>::FuncType;
+		using FunctionT = typename MethodTraits<decltype(MethodT::pointer)>::FunctionT;
+
 		return make_dispatch_table_impl<MethodT, SumStorageT, TupleT>(
 			std::make_index_sequence<std::tuple_size_v<TupleT>>{},
-			std::type_identity<FuncType>{}
+			std::type_identity<FunctionT>{}
 		);
 	}
 
@@ -126,7 +127,7 @@ namespace hz
 	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
 
 	template<typename T, typename SumT, typename MethodsT>
-	concept SumTuple = SumTupleImplementation<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
+	concept SumTuple = SumTupleImplementation < T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{} > ;
 
 
 	// sum type and dispatch family
@@ -261,6 +262,39 @@ namespace hz
 	};
 
 
+	template<typename T>
+	concept IsFormattableSum = requires(const T& t)
+	{
+		{ t.format() } -> std::convertible_to<std::string>;
+		std::derived_from<T, SumMemberBaseTag>;
+	};
+
+	template<typename T>
+	concept IsFormattableDispatcher = requires(const T & t)
+	{
+		{ t.get_tag() } -> std::convertible_to<TagType>;
+		{ t.format() } -> std::convertible_to<std::string>;
+		std::derived_from<T, SumDispatcher<typename T::Storage>>;
+	};
+}
+
+template<typename T>
+	requires hz::IsFormattableSum<T> or hz::IsFormattableDispatcher<T>
+struct std::formatter<T>
+{
+	constexpr auto parse(std::format_parse_context& context)
+	{
+		return context.begin();
+	}
+
+	auto format(const T& value, std::format_context& context) const
+	{
+		return std::format_to(context.out(), "{}", value.format());
+	}
+};
+
+namespace hz
+{
 #define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
 #define SUM_DISPATCH_ENTRY(name, returntype) \
 		template<typename Self, typename... Args> \

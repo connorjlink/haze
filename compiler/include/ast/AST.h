@@ -1,6 +1,7 @@
 #ifndef HAZE_AST_H
 #define HAZE_AST_H
 
+#include <runtime/Evaluation.h>
 #include <utility/Sum.h>
 #include <utility/Typing.h>
 
@@ -9,10 +10,16 @@
 
 namespace hz
 {
+	FORWARD_DECLARE_SUM(Variable)
+
+	using ASTTask = EvaluationTask<VariableHandle>;
+	using ASTAwaiter = EvaluationAwaiter<VariableHandle>;
+
+
 #define BASE_AST_METHODS(X, handlet) \
 	X(format,   std::string) \
 	X(generate, void) \
-	X(evaluate, handlet) \
+	X(evaluate, ASTTask) \
 	X(optimize, handlet)
 
 	// expose a strict polymorphic interface for AST nodes, including external data like IR

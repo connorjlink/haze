@@ -617,5 +617,17 @@
     <ClInclude Include="include\runtime\Variable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\runtime\Interpreter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\runtime\Evaluation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Strings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\ArenaAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
