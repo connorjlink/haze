@@ -28,19 +28,19 @@ namespace hz
 	static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
 	// dynamic dispatch generator for sum families
-	template<typename MethodT, typename SumStorageT, typename TupleT, typename... Args, std::size_t... Is>
-	consteval auto make_dispatch_table_impl(std::index_sequence<Is...>, std::type_identity<void(Args...)>)
+	template<typename MethodT, typename SumStorageT, typename TupleT, typename... ArgumentsTs, std::size_t... Is>
+	consteval auto make_dispatch_table_implementation(std::index_sequence<Is...>, std::type_identity<void(ArgumentsTs...)>)
 	{
 		using ReturnType = typename MethodT::ReturnType;
-		using FunctionPointerT = ReturnType(*)(const SumStorageT&, IndexType, Args...);
+		using FunctionPointerT = ReturnType(*)(const SumStorageT&, IndexType, ArgumentsTs...);
 
 		return std::array<FunctionPointerT, sizeof...(Is)>
 		{
-			[](const SumStorageT& sum, IndexType index, Args... args) -> ReturnType
+			[](const SumStorageT& sum, IndexType index, ArgumentsTs... arguments) -> ReturnType
 			{
 				using T = std::tuple_element_t<Is, TupleT>;
 				const auto& vector = sum.storage.template get<T>();
-				return (vector[index].*MethodT::pointer)(std::forward<Args>(args)...);
+				return (vector[index].*MethodT::pointer)(std::forward<ArgumentsTs>(arguments)...);
 			}...
 		};
 	}
@@ -50,7 +50,7 @@ namespace hz
 	{
 		using FunctionT = typename MethodTraits<decltype(MethodT::pointer)>::FunctionT;
 
-		return make_dispatch_table_impl<MethodT, SumStorageT, TupleT>(
+		return make_dispatch_table_implementation<MethodT, SumStorageT, TupleT>(
 			std::make_index_sequence<std::tuple_size_v<TupleT>>{},
 			std::type_identity<FunctionT>{}
 		);
@@ -88,11 +88,11 @@ namespace hz
 
 	public:
 		// NOTE: the return value for these functions is "wrong" per the STL, but it is useful for making external references to sum members
-		template<typename T, typename... Args>
-		constexpr IndexType emplace_back(Args&&... args)
+		template<typename T, typename... ArgumentsTs>
+		constexpr IndexType emplace_back(ArgumentsTs&&... arguments)
 		{
 			const auto new_index = get<T>().size();
-			get<T>().emplace_back(std::forward<Args>(args)...);
+			get<T>().emplace_back(std::forward<ArgumentsTs>(arguments)...);
 			return new_index;
 		}
 
@@ -110,12 +110,12 @@ namespace hz
 	template<typename Node, typename FunctionT, typename Signature>
 	struct ImplementsMethodSignature : std::false_type {};
 
-	template<typename Node, typename FunctionT, typename... Args>
-	struct ImplementsMethodSignature<Node, FunctionT, void(Args...)>
+	template<typename Node, typename FunctionT, typename... ArgumentsTs>
+	struct ImplementsMethodSignature<Node, FunctionT, void(ArgumentsTs...)>
 	{
-		static constexpr bool value = requires(const Node & node, Args... args)
+		static constexpr bool value = requires(const Node & node, ArgumentsTs... arguments)
 		{
-			{ (node.*FunctionT::pointer)(std::forward<Args>(args)...) } -> std::same_as<typename FunctionT::ReturnType>;
+			{ (node.*FunctionT::pointer)(std::forward<ArgumentsTs>(arguments)...) } -> std::same_as<typename FunctionT::ReturnType>;
 		};
 	};
 
@@ -225,14 +225,14 @@ namespace hz
 		}
 
 	public:
-		template<typename MethodT, typename Self, typename... Args>
-		constexpr decltype(auto) call(this Self&& self, Args&&... args)
+		template<typename MethodT, typename Self, typename... ArgumentsTs>
+		constexpr decltype(auto) call(this Self&& self, ArgumentsTs&&... arguments)
 		{
 			static constinit auto table =
 				make_dispatch_table<MethodT, SumStorageT, typename SumStorageT::Type>();
 
 			self.validate();
-			return table[self.get_tag()](self.sum_storage, self.index, std::forward<Args>(args)...);
+			return table[self.get_tag()](self.sum_storage, self.index, std::forward<ArgumentsTs>(arguments)...);
 		}
 
 	public:
@@ -297,11 +297,11 @@ namespace hz
 {
 #define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
 #define SUM_DISPATCH_ENTRY(name, returntype) \
-		template<typename Self, typename... Args> \
-		constexpr decltype(auto) name(this Self&& self, Args&&... args) \
+		template<typename Self, typename... ArgumentsTs> \
+		constexpr decltype(auto) name(this Self&& self, ArgumentsTs&&... arguments) \
 		{ \
 			using Anchor = typename SumStorageT::Anchor; \
-			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(std::forward<Args>(args)...); \
+			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(std::forward<ArgumentsTs>(arguments)...); \
 		}
 
 #define DEFINE_SUM(name, methods) \

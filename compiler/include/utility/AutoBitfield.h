@@ -1,18 +1,12 @@
 #ifndef HAZE_AUTOBITFIELD_H
 #define HAZE_AUTOBITFIELD_H
 
+#include <utility/AutoMacroTraits.h>
+#include <utility/Constants.h>
 #include <utility/Formatter.h>
 
 // Haze AutoBitfield.h
 // (c) Connor J. Link. All Rights Reserved.
-
-// NOTE: the below declaration is only a guide to avoid from_string being an overload only on return type
-namespace hz
-{
-	template<typename T>
-		requires std::is_scoped_enum_v<T>
-	constexpr T from_string(std::string_view) = delete;
-}
 
 #define DEFINE_BITFIELD_INTERNAL(enummember, appendname, valuematch, kinds, type, name, extras) \
 	enum struct type extras \
@@ -25,6 +19,10 @@ namespace hz
 		kinds(appendname) \
 		return result; \
 	} \
+	template<> \
+	struct hz::IsAutoBitfield<type> : std::true_type \
+	{ \
+	}; \
 	template<> \
 	type from_string<type>(std::string_view string) \
 	{ \

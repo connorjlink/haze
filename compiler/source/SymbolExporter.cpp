@@ -58,10 +58,10 @@ namespace
 	{
 		/* Example JSON output for an argument symbol
 		{
-			"name": "arg",
+			"name": "argument",
 			"value": null,
 			"type": "argument",
-			"text": "arg",
+			"text": "argument",
 			"location": {
 				"line": 1,
 				"column": 10,

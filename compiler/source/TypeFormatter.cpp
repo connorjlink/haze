@@ -87,7 +87,7 @@ namespace hz
 
 	DECLARE_TYPE_FORMATTER(PointerType)
 	{
-		const auto qualifier_string = format_type_qualifier(type.qualifier);
+		const auto qualifier_string = to_string(type.qualifier);
 
 		// <pointee-type>* <pointer-qualifiers>
 		auto pointer_string = std::format("*{}{}{}",

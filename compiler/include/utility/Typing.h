@@ -32,8 +32,8 @@ namespace hz
 	template<auto MethodPointer, typename Signature>
 	struct Method;
 
-	template<auto MethodPointer, typename R, typename... Args>
-	struct Method<MethodPointer, R(Args...)>
+	template<auto MethodPointer, typename R, typename... ArgumentsTs>
+	struct Method<MethodPointer, R(ArgumentsTs...)>
 	{
 		static constexpr auto pointer = MethodPointer;
 		using ReturnType = R;
@@ -43,28 +43,28 @@ namespace hz
 	template<typename T>
 	struct MethodTraits;
 
-	template<typename R, typename C, typename... Args>
-	struct MethodTraits<R(C::*)(Args...)>
+	template<typename R, typename C, typename... ArgumentsTs>
+	struct MethodTraits<R(C::*)(ArgumentsTs...)>
 	{
-		using FunctionT = void(Args...);
+		using FunctionT = void(ArgumentsTs...);
 	};
 
-	template<typename R, typename C, typename... Args>
-	struct MethodTraits<R(C::*)(Args...) const>
+	template<typename R, typename C, typename... ArgumentsTs>
+	struct MethodTraits<R(C::*)(ArgumentsTs...) const>
 	{
-		using FunctionT = void(Args...);
+		using FunctionT = void(ArgumentsTs...);
 	};
 
-	template<typename R, typename C, typename... Args>
-	struct MethodTraits<R(C::*)(Args...) noexcept>
+	template<typename R, typename C, typename... ArgumentsTs>
+	struct MethodTraits<R(C::*)(ArgumentsTs...) noexcept>
 	{
-		using FunctionT = void(Args...);
+		using FunctionT = void(ArgumentsTs...);
 	};
 
-	template<typename R, typename C, typename... Args>
-	struct MethodTraits<R(C::*)(Args...) const noexcept>
+	template<typename R, typename C, typename... ArgumentsTs>
+	struct MethodTraits<R(C::*)(ArgumentsTs...) const noexcept>
 	{
-		using FunctionT = void(Args...);
+		using FunctionT = void(ArgumentsTs...);
 	};
 
 

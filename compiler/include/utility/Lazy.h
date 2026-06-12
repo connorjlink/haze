@@ -21,9 +21,9 @@ namespace hz
 		{
 			if (!self.value)
 			{
-				self.value.emplace(std::apply([&](auto&... args)
+				self.value.emplace(std::apply([&](auto&... arguments)
 				{
-					return std::invoke(self.functor, args...);
+					return std::invoke(self.functor, arguments...);
 				}, self.arguments));
 			}
 
@@ -47,11 +47,11 @@ namespace hz
 		}
 
 	public:
-		template<typename F, typename... Args>
-		Lazy(F&& f, Args&&... args)
+		template<typename F, typename... ArgumentsTs>
+		Lazy(F&& f, ArgumentsTs&&... arguments)
 			: value{}
 			, functor{ std::forward<F>(f) }
-			, arguments{ std::forward<Args>(args)... }
+			, arguments{ std::forward<ArgumentsTs>(arguments)... }
 		{
 		}
 	};

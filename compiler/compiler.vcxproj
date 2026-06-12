@@ -108,7 +108,6 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\async\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
-      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -181,6 +180,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="include\utility\AutoEnum.h" />
+    <ClInclude Include="include\utility\AutoMacroTraits.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\utility\Formatter.h" />
     <ClInclude Include="include\utility\Strings.h">
       <SubType>
@@ -202,7 +205,6 @@
     <ClCompile Include="source\AutoJob.cpp" />
     <ClCompile Include="source\AutoJSON.cpp" />
     <ClCompile Include="source\Bimap.cpp" />
-    <ClCompile Include="source\BinaryUtilities.cpp" />
     <ClCompile Include="source\BMBuilder.cpp" />
     <ClCompile Include="source\CommandLineParser.cpp" />
     <ClCompile Include="source\CommonErrors.cpp" />
@@ -222,7 +224,6 @@
     <ClCompile Include="source\ExtendedInteger.cpp" />
     <ClCompile Include="source\File.cpp" />
     <ClCompile Include="source\FileManager.cpp" />
-    <ClCompile Include="source\ForStatement.cpp" />
     <ClCompile Include="source\Function.cpp" />
     <ClCompile Include="source\FunctionArgumentExpression.cpp" />
     <ClCompile Include="source\FunctionCallExpression.cpp" />

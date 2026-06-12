@@ -127,15 +127,9 @@ namespace hz
 					case OPTIMIZATION:
 					{
 						const auto optimization = from_string<OptimizationFlag>(value);
-						if (!optimization)
-						{
-							USE_SAFE(ErrorReporter)->post_warning(std::format(
-								"unrecognized optimization type `{}`", value), NULL_TOKEN);
-							continue;
-						}
 
 						// NOTE: combine the incoming flags with sensible compiler defaults
-						USE_SAFE(CommandLineOptions)->optimization |= *optimization;
+						USE_SAFE(CommandLineOptions)->optimization |= optimization;
 					} break;
 
 					case OUTFILE:

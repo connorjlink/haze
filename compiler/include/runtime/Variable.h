@@ -21,7 +21,7 @@ namespace hz
 	X(value, ExpressionHandle) \
 	X(get_type, TypeHandle)
 
-	DEFINE_SUM(Varaible, VARIABLE_METHODS)
+	DEFINE_SUM(Variable, VARIABLE_METHODS)
 
 
 	struct VariableBase

@@ -15,7 +15,7 @@ namespace hz
 		struct Macro
 		{
 			std::string name;
-			std::vector<std::string> args;
+			std::vector<std::string> arguments;
 			std::string code;
 			Token token;
 		};

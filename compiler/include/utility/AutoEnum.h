@@ -1,18 +1,11 @@
 #ifndef HAZE_AUTOENUM_H
 #define HAZE_AUTOENUM_H
 
+#include <utility/AutoMacroTraits.h>
 #include <utility/Formatter.h>
 
 // Haze AutoEnum.h
 // (c) Connor J. Link. All Rights Reserved.
-
-// NOTE: the below declaration is only a guide to avoid from_string being an overload only on return type
-namespace hz
-{
-	template<typename T>
-		requires std::is_scoped_enum_v<T>
-	constexpr std::optional<T> from_string(std::string_view) = delete;
-}
 
 #define DEFINE_ENUM_INTERNAL(enummember, switchcase, datamember, structtype, kinds, type, name, extras) \
 	enum struct type extras \
@@ -28,6 +21,10 @@ namespace hz
 		} \
 		return "<unknown " #name ">"; \
 	} \
+	template<> \
+	struct hz::IsAutoEnum<type> : std::true_type \
+	{ \
+	}; \
 	template<> \
 	constexpr std::optional<type> from_string<type>(std::string_view string) \
 	{ \

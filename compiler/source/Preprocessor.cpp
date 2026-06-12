@@ -273,18 +273,18 @@ namespace hz
 		}
 
 		const auto& macro = defined_macros.at(name);
-		if (macro.args.size() != arguments.size())
+		if (macro.arguments.size() != arguments.size())
 		{
 			USE_SAFE(ErrorReporter)->post_error(
 				"macro argument count mismatch", forge_token());
 			return;
 		}
 
-		if (macro.args.size() != arguments.size())
+		if (macro.arguments.size() != arguments.size())
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"macro `{}` was defined with {} arguments but called with {}",
-					macro.name, macro.args.size(), arguments.size()), forge_token());
+					macro.name, macro.arguments.size(), arguments.size()), forge_token());
 			return;
 		}
 
@@ -295,7 +295,7 @@ namespace hz
 		for (auto i = 0; i < arguments.size(); i++)
 		{
 			// if this substitution logic ever becomes a bottleneck, it might be wise to roll a custom re-scanner
-			replace(expanded, std::format("[{}]", macro.args[i]), arguments[i]);
+			replace(expanded, std::format("[{}]", macro.arguments[i]), arguments[i]);
 		}
 
 		insert_adjacent(expanded);

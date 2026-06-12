@@ -19,9 +19,9 @@ namespace hz
 	X(RESTRICT, restrict, 1 << 2)
 
 
-#define AUTOBITFIELD_ROUTER(X, enumerator, name, value) X(enumerator, FakeType, name, TypeQualifier)
+#define AUTOBITFIELD_ROUTER(X, enumerator, name, value) X(enumerator, name, value)
 
-	DEFINE_BITFIELD(TYPE_QUALIFIFERS, TypeQualifier, type qualifier)
+	DEFINE_BITFIELD(TYPE_QUALIFIERS, TypeQualifier, type qualifier)
 
 #undef AUTOBITFIELD_ROUTER
 }

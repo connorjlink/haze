@@ -39,9 +39,6 @@
     <ClCompile Include="source\Bimap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\BinaryUtilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\CommandLineParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -94,9 +91,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\FileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ForStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Function.cpp">
@@ -627,6 +621,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\ArenaAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\AutoMacroTraits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

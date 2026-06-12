@@ -5,6 +5,8 @@
 #include <ast/declaration/defs/DeclarationKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <runtime/Context.h>
+#include <type/Type.h>
 #include <utility/Sum.h>
 
 // Haze Declaration.h
@@ -55,16 +57,16 @@ namespace hz
 		std::vector<std::string> formal_parameters;
 
 	public:
-		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, const std::vector<std::string>& formal_parameters)
-			: DeclarationBase{ token }, type{ type }, formal_parameters{ formal_parameters }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
+
+	public:
+		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, const std::vector<std::string>& formal_parameters)
+			: DeclarationBase{ token }, type{ type }, formal_parameters{ formal_parameters }
+		{
+		}
 	};
 
 
@@ -75,16 +77,16 @@ namespace hz
 		ExpressionHandle initializer;
 
 	public:
-		VariableDeclaration(const Token& token, TypeHandle type, ExpressionHandle initializer)
-			: DeclarationBase{ token }, type{ type }, initializer{ initializer }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
+
+	public:
+		VariableDeclaration(const Token& token, TypeHandle type, ExpressionHandle initializer)
+			: DeclarationBase{ token }, type{ type }, initializer{ initializer }
+		{
+		}
 	};
 
 
@@ -94,16 +96,16 @@ namespace hz
 		TypeReference<StructOrUnionType> type;
 
 	public:
-		StructOrUnionDeclaration(const Token& token, TypeReference<StructOrUnionType> type)
-			: DeclarationBase{ token }, type{ type }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
+
+	public:
+		StructOrUnionDeclaration(const Token& token, TypeReference<StructOrUnionType> type)
+			: DeclarationBase{ token }, type{ type }
+		{
+		}
 	};
 
 	struct EnumDeclaration : public DeclarationBase
@@ -112,16 +114,16 @@ namespace hz
 		TypeReference<EnumType> type;
 
 	public:
-		EnumDeclaration(const Token& token, TypeReference<EnumType> type)
-			: DeclarationBase{ token }, type{ type }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
+
+	public:
+		EnumDeclaration(const Token& token, TypeReference<EnumType> type)
+			: DeclarationBase{ token }, type{ type }
+		{
+		}
 	};
 
 	struct TypedefDeclaration : public DeclarationBase
@@ -130,18 +132,17 @@ namespace hz
 		TypeReference<TypedefNameType> type;
 
 	public:
-		TypedefDeclaration(const Token& token, TypeReference<TypedefNameType> type)
-			: DeclarationBase{ token }, type{ type }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
-	};
 
+	public:
+		TypedefDeclaration(const Token& token, TypeReference<TypedefNameType> type)
+			: DeclarationBase{ token }, type{ type }
+		{
+		}
+	};
 
 
 	//////////////////////////////////////////////////////
@@ -169,7 +170,6 @@ namespace hz
 		using Type = DeclarationSumImplementation::Type;
 		using Anchor = DeclarationSumImplementation::Anchor;
 	};
-
 
 
 	template<typename Self>

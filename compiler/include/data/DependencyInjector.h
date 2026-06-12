@@ -168,19 +168,19 @@ namespace hz
 			instances[type_id<T>()] = std::static_pointer_cast<void>(instance);
 		}
 
-		template<typename T, typename... Args>
+		template<typename T, typename... ArgumentsTs>
 			requires std::derived_from<T, SingletonTag<T>>
-		void register_singleton(Args&&... args)
+		void register_singleton(ArgumentsTs&&... arguments)
 		{
-			register_instance<T>(std::make_shared<T>(std::forward<Args>(args)...));
+			register_instance<T>(std::make_shared<T>(std::forward<ArgumentsTs>(arguments)...));
 		}
 
 		// polymorphic only
-		template<typename T, typename U, typename... Args>
+		template<typename T, typename U, typename... ArgumentsTs>
 			requires std::derived_from<T, SingletonTag<T>> and std::derived_from<U, T>
-		void register_singleton_polymorphic(Args&&... args)
+		void register_singleton_polymorphic(ArgumentsTs&&... arguments)
 		{
-			register_instance<T>(std::make_shared<U>(std::forward<Args>(args)...));
+			register_instance<T>(std::make_shared<U>(std::forward<ArgumentsTs>(arguments)...));
 		}
 		
 #pragma message("TODO: move away from std::unordered_map singleton container to default/parameterized constructible")
@@ -363,32 +363,32 @@ namespace hz
 
 #pragma message("TODO: Autoregistration is kinda dangerous so not sure if the following is ready for deployment yet")
 
-	// template<typename T, bool AutoRegisterB, typename... Args>
+	// template<typename T, bool AutoRegisterB, typename... ArgumentsTs>
 	// struct ServiceTag
 	// {
-	// 	// this will be automatically called if there are no args to pass
-	// 	ServiceTag(Args&&... args)
+	// 	// this will be automatically called if there are no arguments to pass
+	// 	ServiceTag(ArgumentsTs&&... arguments)
 	// 	{
 	// 		if constexpr (AutoRegisterB)
 	// 		{
-	// 			ServiceContainer::instance().register_factory<T>([args... = std::forward<Args>(args)]() mutable
+	// 			ServiceContainer::instance().register_factory<T>([arguments... = std::forward<ArgumentsTs>(arguments)]() mutable
 	// 			{
-	// 				return std::make_shared<T>(std::forward<Args>(args)...);
+	// 				return std::make_shared<T>(std::forward<ArgumentsTs>(arguments)...);
 	// 			});
 	// 		}
 	// 	}
 	// };
 
-	// template<typename T, bool AutoRegisterB, typename... Args>
+	// template<typename T, bool AutoRegisterB, typename... ArgumentsTs>
 	// struct SingletonTag
 	// {
-	// 	// this will be automatically called if there are no args to pass
-	// 	SingletonTag(Args&&... args)
+	// 	// this will be automatically called if there are no arguments to pass
+	// 	SingletonTag(ArgumentsTs&&... arguments)
 	// 	{
 	// 		if constexpr (AutoRegisterB)
 	// 		{
 	// 			SingletonContainer::instance().register_singleton<T>(
-	// 				std::forward<Args>(args)...)
+	// 				std::forward<ArgumentsTs>(arguments)...)
 	// 		}
 	// 	}
 	// };

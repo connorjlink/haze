@@ -88,9 +88,9 @@ namespace hz
 #define MAP_MEMBER_ROUTE_ALIAS(enumerator, name, value) /* elide map members for alternatives */
 #define MAP_MEMBER_ADAPTER(enumerator, name, value, category) MAP_MEMBER_ROUTE_##category(enumerator, name, value)
 
-#define FORWARD_DECLARATION(enumerator, name, value) /* elide forward declarations */
+#define FORWARD_DECLARATION(enumerator, name, value, category) /* elide forward declarations */
 
-	DEFINE_ENUM( RISCV_REGISTERS, RISCVRegister, RISC-V register, Register)
+	DEFINE_ENUM_INTERNAL(ENUM_MEMBER_ADAPTER, SWITCH_CASE_ADAPTER, MAP_MEMBER_ADAPTER, FORWARD_DECLARATION, RISCV_REGISTERS, RISCVRegister, RISC-V register, /* fake */)
 
 #undef FORWARD_DECLARATION
 
@@ -106,6 +106,11 @@ namespace hz
 
 #undef ENUM_MEMBER_ADAPTER
 #undef ENUM_MEMBER
+
+	inline Register to_register(RISCVRegister $register)
+	{
+		return static_cast<Register>($register);
+	}
 }
 
 #endif

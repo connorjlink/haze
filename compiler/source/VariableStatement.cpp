@@ -1,7 +1,6 @@
 import std;
 
 #include <ast/statement/Statement.h>
-#include <runtime/Evaluator.h>
 #include <type/Type.h>
 
 // Haze VariableStatement.cpp
