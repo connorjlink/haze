@@ -377,7 +377,7 @@ namespace hz
 
 	struct SourceLocation
 	{
-		std::string filepath;
+		std::filesystem::path filepath;
 		// quick character index into the file
 		std::size_t position;
 		std::int32_t line, column;

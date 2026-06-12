@@ -7,122 +7,73 @@ import std;
 
 namespace
 {
-	std::string escape_string(const std::string& str)
+#pragma message("TODO: optimize escape_string using a lookup table and preallocation insertion")
+	std::string escape_string(const std::string& string)
 	{
-		std::string escaped;
-		for (const char c : str)
+		auto result = std::string{};
+
+		for (const auto character : string)
 		{
-			switch (c)
+			switch (character)
 			{
-				case '"':  escaped += "\\\""; break;
-				case '\\': escaped += "\\\\"; break;
-				case '\b': escaped += "\\b"; break;
-				case '\f': escaped += "\\f"; break;
-				case '\n': escaped += "\\n"; break;
-				case '\r': escaped += "\\r"; break;
-				case '\t': escaped += "\\t"; break;
-				default:   escaped += c; break;
+				case '"':  result += "\\\"";    break;
+				case '\\': result += "\\\\";    break;
+				case '\b': result += "\\b";     break;
+				case '\f': result += "\\f";     break;
+				case '\n': result += "\\n";     break;
+				case '\r': result += "\\r";     break;
+				case '\t': result += "\\t";     break;
+				default:   result += character; break;
 			}
 		}
-		return escaped;
+
+		return result;
 	}
 }
 
 namespace hz
 {
-	JSONType JSONValue::jtype(void) const noexcept
+	void JSONSerializer::operator()([[maybe_unused]] std::monostate value, std::string& result) const
 	{
-		return JSONType::VALUE;
+		result += "null";
 	}
 
-
-	JSONValueType StringJSONValue::vtype(void) const noexcept
+	void JSONSerializer::operator()(double value, std::string& result) const
 	{
-		return JSONValueType::STRING;
+		result += std::format("{}", value);
 	}
 
-	std::string StringJSONValue::serialize(void) const noexcept
+	void JSONSerializer::operator()(const std::string& value, std::string& result) const
 	{
-		const auto processed = ::escape_string(value);
-		return std::format("\"{}\"", processed);
+		result += std::format("\"{}\"", escape_string(value));
 	}
 
-
-	JSONValueType NumberJSONValue::vtype(void) const noexcept
+	void JSONSerializer::operator()(const JSONArray& value, std::string& result) const
 	{
-		return JSONValueType::NUMBER;
+		result += '[';
+
+		result += value
+			| std::ranges::views::transform([&](const auto& json)
+			{
+				return std::visit(*this, json.value, std::ref(result));
+			})
+			| std::ranges::views::join_with(", ");
+
+		result += ']';
 	}
 
-	std::string NumberJSONValue::serialize(void) const noexcept
+	void JSONSerializer::operator()(const JSONObject& value, std::string& result) const
 	{
-		return std::format("{}", value);
-	}
+		result += '{';
 
+		result += value
+			| std::ranges::views::transform([&](const auto& entry)
+			{
+				return std::format("\"{}\": {}", 
+					entry.key, std::visit(*this, entry.value, std::ref(result)));
+			})
+			| std::ranges::views::join_with(", ");
 
-	JSONValueType BooleanJSONValue::vtype(void) const noexcept
-	{
-		return JSONValueType::BOOLEAN;
-	}
-
-	std::string BooleanJSONValue::serialize(void) const noexcept
-	{
-		return std::format("{}", value);
-	}
-
-
-	JSONValueType NullJSONValue::vtype(void) const noexcept
-	{
-		return JSONValueType::NULL;
-	}
-
-	std::string NullJSONValue::serialize(void) const noexcept
-	{
-		return "null";
-	}
-
-
-
-	void JSONObject::upsert(const std::string& name, JSON* json)
-	{
-		members[name] = json;
-	}
-
-	JSONType JSONObject::jtype(void) const noexcept
-	{
-		return JSONType::OBJECT;
-	}
-
-	std::string JSONObject::serialize(void) const noexcept
-	{
-		const auto children = members
-			| std::ranges::views::transform([](const auto& pair) 
-				{
-					return std::format(R"("{}":{})", pair.first, pair.second->serialize()); 
-				})
-			| std::ranges::views::join_with(std::string(","))
-			| std::ranges::to<std::string>();
-
-		return std::format("{{{}}}", children);
-	}
-
-
-	void JSONArray::append(JSON* json)
-	{
-		objects.emplace_back(json);
-	}
-
-	JSONType JSONArray::jtype(void) const noexcept
-	{
-		return JSONType::ARRAY;
-	}
-
-	std::string JSONArray::serialize(void) const noexcept
-	{
-		const auto children = objects
-			| std::ranges::views::transform([](const JSON* json) { return json->serialize(); })
-			| std::ranges::views::join_with(std::string(","))
-			| std::ranges::to<std::string>();
-		
-		return std::format("[{}]", children);
+		result += '}';
 	}
 }

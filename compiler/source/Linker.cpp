@@ -492,7 +492,7 @@ namespace hz
 //			for (auto command : linkable.ir)
 //			{
 //				using enum IntermediateType;
-//				switch (command->itype())
+//				switch (command->instruction_kind())
 //				{
 //				case BRANCH_LABEL:
 //				{
@@ -524,7 +524,7 @@ namespace hz
 //		{
 //#pragma message("TODO: support branch commands that go directly to an index instead of only by label!")
 //
-//			if (command->itype() == IntermediateType::BRANCH)
+//			if (command->instruction_kind() == IntermediateType::BRANCH)
 //			{
 //				auto branch_command = AS_BRANCH_COMMAND(command);
 //

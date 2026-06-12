@@ -56,7 +56,7 @@ namespace hz
 {
 	using namespace x86;
 
-	IntermediateTypeKind BranchLabelCommand::itype() const
+	IntermediateTypeKind BranchLabelCommand::instruction_kind() const
 	{
 		return IntermediateTypeKind::BRANCH_LABEL;
 	}
@@ -68,7 +68,7 @@ namespace hz
 	}
 
 
-	IntermediateType EnterScopeCommand::itype() const
+	IntermediateType EnterScopeCommand::instruction_kind() const
 	{
 		return IntermediateType::ENTER_SCOPE;
 	}
@@ -114,7 +114,7 @@ namespace hz
 	}*/
 
 
-	IntermediateType LeaveScopeCommand::itype() const
+	IntermediateType LeaveScopeCommand::instruction_kind() const
 	{
 		return IntermediateType::LEAVE_SCOPE;
 	}
@@ -155,7 +155,7 @@ namespace hz
 	}
 
 
-	IntermediateType LocalVariableCommand::itype() const
+	IntermediateType LocalVariableCommand::instruction_kind() const
 	{
 		return IntermediateType::LOCAL_VARIABLE;
 	}
@@ -170,7 +170,7 @@ namespace hz
 	}
 
 
-	IntermediateType GlobalVariableCommand::itype() const
+	IntermediateType GlobalVariableCommand::instruction_kind() const
 	{
 		return IntermediateType::GLOBAL_VARIABLE;
 	}
@@ -185,7 +185,7 @@ namespace hz
 	}
 
 
-	IntermediateType HeapReadCommand::itype() const
+	IntermediateType HeapReadCommand::instruction_kind() const
 	{
 		return IntermediateType::HEAP_READ;
 	}
@@ -202,7 +202,7 @@ namespace hz
 	}
 
 
-	IntermediateType HeapWriteCommand::itype() const
+	IntermediateType HeapWriteCommand::instruction_kind() const
 	{
 		return IntermediateType::HEAP_WRITE;
 	}
@@ -219,7 +219,7 @@ namespace hz
 	}
 
 
-	IntermediateType StackReadCommand::itype() const
+	IntermediateType StackReadCommand::instruction_kind() const
 	{
 		return IntermediateType::STACK_READ;
 	}
@@ -236,7 +236,7 @@ namespace hz
 	}
 
 
-	IntermediateType StackWriteCommand::itype() const
+	IntermediateType StackWriteCommand::instruction_kind() const
 	{
 		return IntermediateType::STACK_WRITE;
 	}
@@ -254,7 +254,7 @@ namespace hz
 	}
 
 
-	IntermediateType BoolCommand::itype() const
+	IntermediateType BoolCommand::instruction_kind() const
 	{
 		return IntermediateType::BOOL;
 	}
@@ -275,7 +275,7 @@ namespace hz
 	}
 
 
-	IntermediateType BinaryCommand::itype() const
+	IntermediateType BinaryCommand::instruction_kind() const
 	{
 		return IntermediateType::BINARY;
 	}
@@ -587,7 +587,7 @@ namespace hz
 	}
 
 
-	IntermediateType IncrementCommand::itype() const
+	IntermediateType IncrementCommand::instruction_kind() const
 	{
 		return IntermediateType::INCREMENT;
 	}
@@ -609,7 +609,7 @@ namespace hz
 	}
 
 
-	IntermediateType DecrementCommand::itype() const
+	IntermediateType DecrementCommand::instruction_kind() const
 	{
 		return IntermediateType::DECREMENT;
 	}
@@ -631,7 +631,7 @@ namespace hz
 	}
 
 
-	IntermediateType CopyCommand::itype() const
+	IntermediateType CopyCommand::instruction_kind() const
 	{
 		return IntermediateType::COPY;
 	}
@@ -651,7 +651,7 @@ namespace hz
 	}
 
 
-	IntermediateType MakeImmediateCommand::itype() const
+	IntermediateType MakeImmediateCommand::instruction_kind() const
 	{
 		return IntermediateType::MAKE_IMMEDIATE;
 	}
@@ -666,7 +666,7 @@ namespace hz
 	}
 
 
-	IntermediateType MakeArgumentCommand::itype() const
+	IntermediateType MakeArgumentCommand::instruction_kind() const
 	{
 		return IntermediateType::MAKE_ARGUMENT;
 	}
@@ -683,7 +683,7 @@ namespace hz
 	}
 
 
-	IntermediateType TakeArgumentCommand::itype() const
+	IntermediateType TakeArgumentCommand::instruction_kind() const
 	{
 		return IntermediateType::TAKE_ARGUMENT;
 	}
@@ -700,7 +700,7 @@ namespace hz
 	}
 
 
-	IntermediateType BranchCommand::itype() const
+	IntermediateType BranchCommand::instruction_kind() const
 	{
 		return IntermediateType::BRANCH;
 	}
@@ -826,7 +826,7 @@ namespace hz
 	}
 
 
-	IntermediateType MakeMessageCommand::itype() const
+	IntermediateType MakeMessageCommand::instruction_kind() const
 	{
 		return IntermediateType::MAKE_MESSAGE;
 	}
@@ -841,7 +841,7 @@ namespace hz
 	}
 
 	
-	IntermediateType PrintMessageCommand::itype() const
+	IntermediateType PrintMessageCommand::instruction_kind() const
 	{
 		return IntermediateType::PRINT_MESSAGE;
 	}
@@ -869,7 +869,7 @@ namespace hz
 	}
 
 
-	IntermediateType PrintNumberCommand::itype() const
+	IntermediateType PrintNumberCommand::instruction_kind() const
 	{
 		return IntermediateType::PRINT_NUMBER;
 	}
@@ -924,7 +924,7 @@ namespace hz
 	}
 
 
-	IntermediateType ExitProgramCommand::itype() const
+	IntermediateType ExitProgramCommand::instruction_kind() const
 	{
 		return IntermediateType::EXIT_PROGRAM;
 	}
@@ -943,7 +943,7 @@ namespace hz
 	}
 
 
-	IntermediateType InlineAssemblyCommand::itype() const
+	IntermediateType InlineAssemblyCommand::instruction_kind() const
 	{
 		return IntermediateType::INLINE_ASSEMBLY;
 	}

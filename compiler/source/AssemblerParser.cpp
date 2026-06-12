@@ -3,6 +3,7 @@ import std;
 #include <ast/expression/Expression.h>
 #include <command/Command.h>
 #include <toolchain/RISCVAssemblerParser.h>
+#include <utility/ExtendedInteger.h>
 
 // Haze AssemblerParser.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -147,7 +147,7 @@ namespace hz
 	{
 		switch (type.type_kind())
 		{
-#define X(enumerator, precedence, t, name) case TypeKind::enumerator: \
+#define X(enumerator, precedence, t, n) case TypeKind::enumerator: \
 			{ \
 				const auto& derived_type = type.get<t>(); \
 				return to_string(derived_type, name, parent_precedence); \

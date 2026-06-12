@@ -15,7 +15,7 @@ namespace hz
 		: public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::string filepath;
+		std::filesystem::path filepath;
 		ToolchainKind type;
 		std::optional<std::string> raw_contents = std::nullopt;
 		std::optional<std::string> processed_contents = std::nullopt;

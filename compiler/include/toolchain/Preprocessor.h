@@ -26,7 +26,7 @@ namespace hz
 
 	private:
 		// filepath -> contents lazy-load :)
-		std::unordered_map<std::string, std::string> _raw_file_cache;
+		std::unordered_map<std::string, std::string> raw_file_cache;
 		std::stack<SourceContext> files_to_process;
 		// used to prohibit recursive macros
 		std::unordered_set<std::string> macro_invokations;

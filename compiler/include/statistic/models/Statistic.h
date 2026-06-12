@@ -34,7 +34,7 @@ namespace hz
 	struct Statistic
 	{
 		std::string stage;
-		std::string filepath;
+		std::filesystem::path filepath;
 
 		InternalStatistic internal;
 	};

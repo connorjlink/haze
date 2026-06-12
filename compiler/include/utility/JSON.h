@@ -1,162 +1,92 @@
 #ifndef HAZE_JSON_H
 #define HAZE_JSON_H
 
+#include <utility/Variant.h>
+
 // Haze JSON.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	enum struct JSONType
+	enum struct JSONKind
 	{
-		OBJECT,
 		ARRAY,
+		OBJECT,
 		VALUE,
 	};
+	
+
+	struct JSON;
+	struct JSONObjectEntry;
+
+	using JSONArray = std::vector<JSON>;
+	using JSONObject = std::vector<JSONObjectEntry>;
+
+
+	using JSONVariant = std::variant
+	<
+		std::monostate,
+		bool,
+		double,
+		std::string,
+		JSONArray,
+		JSONObject
+	>;
+
+
+	template<typename... Ts>
+	struct Overloaded : public Ts...
+	{
+		using Ts::operator()...;
+	};
+
+	template<typename... Ts>
+	Overloaded(Ts...) -> Overloaded<Ts...>;
+
+	struct JSONSerializer
+	{
+	public:
+		void operator()([[maybe_unused]] std::monostate, std::string&) const;
+		void operator()(double, std::string&) const;
+		void operator()(const std::string&, std::string&) const;
+		void operator()(const JSONArray&, std::string&) const;
+		void operator()(const JSONObject&, std::string&) const;
+	};
+
 
 	struct JSON
 	{
 	public:
-		virtual JSONType jtype(void) const noexcept = 0;
-		virtual std::string serialize(void) const noexcept = 0;
+		JSONVariant value;
 
 	public:
-		virtual ~JSON() = default;
-	};
-
-
-	enum struct JSONValueType
-	{
-		STRING,
-		NUMBER,
-		BOOLEAN,
-		NULL,
-	};
-
-	struct JSONValue : public JSON
-	{
-	public:
-		virtual JSONType jtype(void) const noexcept override;
-		virtual JSONValueType vtype(void) const noexcept = 0;
-
-	public:
-		~JSONValue() = default;
-	};
-
-	struct StringJSONValue : public JSONValue
-	{
-	public:
-		std::string value;
-
-	public:
-		JSONValueType vtype(void) const noexcept override;
-		std::string serialize(void) const noexcept override;
-
-	public:
-		StringJSONValue(const std::string& value) : value { value } 
+		std::string serialize() const
 		{
+			auto result = std::string{};
+			result.reserve(128);
+
+			std::visit(JSONSerializer{}, value, std::ref(result));
+
+			return result;
 		}
 
 	public:
-		~StringJSONValue() = default;
-	};
-
-	struct NumberJSONValue : public JSONValue
-	{
-	public:
-		std::int32_t value;
-
-	public:
-		JSONValueType vtype(void) const noexcept override;
-		std::string serialize(void) const noexcept override;
-
-	public:
-		NumberJSONValue(std::int32_t value) : value{ value } 
+		constexpr JSON()
+			: value{ std::monostate{} }
 		{
 		}
 
-	public:
-		~NumberJSONValue() = default;
-	};
-
-	struct BooleanJSONValue : public JSONValue
-	{
-	public:
-		bool value;
-
-	public:
-		JSONValueType vtype(void) const noexcept override;
-		std::string serialize(void) const noexcept override;
-
-	public:
-		BooleanJSONValue(bool value) : value{ value } 
+		template<typename T>
+		constexpr JSON(T value)
+			: value{ std::move(value) }
 		{
-		}
-
-	public:
-		~BooleanJSONValue() = default;
-	};
-
-	struct NullJSONValue : public JSONValue
-	{
-	public:
-		JSONValueType vtype(void) const noexcept override;
-		std::string serialize(void) const noexcept override;
-
-	public:
-		NullJSONValue() 
-		{
-		}
-
-	public:
-		~NullJSONValue() = default;
-	};
-
-
-	struct JSONObject : public JSON
-	{
-	public:
-		std::unordered_map<std::string, JSON*> members;
-
-	public:
-		void upsert(const std::string&, JSON*);
-
-	public:
-		JSONType jtype(void) const noexcept override;
-		std::string serialize(void) const noexcept override;
-
-	public:
-		~JSONObject()
-		{
-			for (auto& [key, value] : members)
-			{
-				delete value;
-			}
-			members.clear();
 		}
 	};
 
-	
-	struct JSONArray : public JSON
+	struct JSONObjectEntry
 	{
-	public:
-		std::vector<JSON*> objects;
-
-	public:
-		void append(JSON*);
-
-	public:
-		JSONType jtype(void) const noexcept override;
-		std::string serialize(void) const noexcept override;
-
-	public:
-		~JSONArray()
-		{
-			for (auto it = objects.begin(); it != objects.end(); it++)
-			{
-				delete *it;
-			}
-			objects.clear();
-		}
+		std::string key;
+		JSON value;
 	};
 }
 

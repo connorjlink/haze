@@ -14,6 +14,8 @@
 
 namespace hz
 {
+#pragma message("TODO: implement remaining intermediate commands")
+
 	struct IntermediateCommand 
 		: public InjectService<Generator, Allocator>
 		, public InjectSingleton<SymbolDatabase>
@@ -27,7 +29,7 @@ namespace hz
 		virtual ~IntermediateCommand() = default;
 
 	public:
-		virtual IntermediateKind itype() const = 0;
+		virtual IntermediateKind intermediate_kind() const = 0;
 		virtual ByteRange emit() const = 0;
 		virtual constexpr std::int32_t bytes() const
 		{
@@ -48,7 +50,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -76,7 +78,7 @@ namespace hz
 		constexpr ByteRange _emit(Address, Offset) const;
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 		//virtual constexpr std::int32_t bytes() const final override;
 	};
@@ -84,7 +86,7 @@ namespace hz
 	struct LeaveScopeCommand : public IntermediateCommand
 	{
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -101,7 +103,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -118,7 +120,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -135,7 +137,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -152,7 +154,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -169,7 +171,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -186,7 +188,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -202,7 +204,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -218,7 +220,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual BinaryCommandType btype() const = 0;
 	};
 
@@ -354,7 +356,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -370,7 +372,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -386,7 +388,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -402,7 +404,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -421,7 +423,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -438,7 +440,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -461,7 +463,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual BranchCommandType btype() const = 0;
 	};
 
@@ -586,7 +588,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -603,7 +605,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -619,7 +621,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -635,7 +637,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 
@@ -651,7 +653,7 @@ namespace hz
 		}
 
 	public:
-		virtual IntermediateKind itype() const final override;
+		virtual IntermediateKind intermediate_kind() const final override;
 		virtual ByteRange emit() const final override;
 	};
 }

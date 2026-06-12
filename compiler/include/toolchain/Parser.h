@@ -4,6 +4,7 @@
 #include <ast/AST.h>
 #include <ast/expression/Expression.h>
 #include <cli/CommandLineOptions.h>
+#include <command/Command.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
@@ -26,8 +27,9 @@ namespace hz
 
 	enum struct ParserType;
 
+	template<typename T>
 	struct Parser
-		: public ServiceTag<Parser>
+		: public ServiceTag<Parser<T>>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, SymbolExporter, CommandLineOptions>
 	{
 	protected:
@@ -35,7 +37,7 @@ namespace hz
 		std::vector<Token> tokens;
 
 	protected:
-		std::string filepath;
+		std::filesystem::path filepath;
 
 	protected:
 		// explicitly mutable!
@@ -48,6 +50,7 @@ namespace hz
 		std::vector<Token> fetch_until(TokenKind);
 
 	protected:
+#pragma message("TODO: replace this with primary/postfix/binary/unary operator precedence")
 		enum struct Precedence
 		{
 			MINIMUM,
@@ -59,7 +62,6 @@ namespace hz
 		};
 
 	protected:
-		Node* parse_dotdefine_command();
 
 	protected:
 		ExpressionReference<IdentifierExpression> parse_identifier_expression();
@@ -69,8 +71,8 @@ namespace hz
 		ExpressionHandle parse_parenthesis_expression();
 
 	protected:
-		AdjustExpression* parse_increment_expression();
-		AdjustExpression* parse_decrement_expression();
+		ExpressionReference<AdjustExpression> parse_increment_expression();
+		ExpressionReference<AdjustExpression> parse_decrement_expression();
 
 	protected:
 		ExpressionHandle parse_expression_optimized();
@@ -81,8 +83,12 @@ namespace hz
 		ExpressionHandle parse_infix_expression(ExpressionHandle, Precedence);
 
 	public:
-		virtual ParserType ptype() const = 0;
-		virtual std::vector<Node*> parse() = 0;
+		template<typename Self>
+			requires std::derived_from<Self, Parser<T>>
+		std::vector<typename T::NodeType> parse(this Self&& self)
+		{
+			return self.parse();
+		}
 
 	public:
 		void reload(const std::vector<Token>&, const std::string&);

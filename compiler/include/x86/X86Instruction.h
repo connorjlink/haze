@@ -16,7 +16,7 @@ namespace hz
 	template<typename T>
 	concept IsX86Operand = requires(const T& t)
 	{
-		{ t.otype() } -> std::same_as<X86OperandKind>;
+		{ t.operand_kind() } -> std::same_as<X86OperandKind>;
 	};
 
 	template<typename T>
@@ -33,7 +33,7 @@ namespace hz
 			ExtendedInteger immediate;
 
 		public:
-			X86OperandKind otype() const;
+			X86OperandKind operand_kind() const;
 
 		public:
 			ImmediateOperand(const ExtendedInteger& immediate)
@@ -49,7 +49,7 @@ namespace hz
 			Address address;
 
 		public:
-			X86OperandKind otype() const;
+			X86OperandKind operand_kind() const;
 
 		public:
 			IndirectOperand(Address address)
@@ -65,7 +65,7 @@ namespace hz
 			X86Register $register;
 
 		public:
-			X86OperandKind otype() const;
+			X86OperandKind operand_kind() const;
 
 		public:
 			RegisterOperand(X86Register $register)
@@ -78,7 +78,7 @@ namespace hz
 		struct RegisterIndirectOperand : public RegisterOperand
 		{
 		public:
-			X86OperandKind otype() const;
+			X86OperandKind operand_kind() const;
 
 		public:
 			using RegisterOperand::RegisterOperand;
@@ -91,7 +91,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86OperandKind otype() const;
+			X86OperandKind operand_kind() const;
 
 		public:
 			RegisterDisplacedOperand(X86Register $register, Offset displacement)
@@ -99,7 +99,7 @@ namespace hz
 			{
 			}
 		};
-#define reg_disp($register, displacement) RegisterDisplacedOperand{ $register, displacement }
+#define register_displaced($register, displacement) RegisterDisplacedOperand{ $register, displacement }
 	}
 
 	using X86Operand = ConstrainedVariant<X86OperandTrait,
@@ -114,7 +114,7 @@ namespace hz
 	{
 		return std::visit([]<IsX86Operand T>(const T& variant)
 		{
-			return variant.otype();
+			return variant.operand_kind();
 		}, operand);
 	}
 
@@ -123,7 +123,7 @@ namespace hz
 	template<typename T>
 	concept IsX86Instruction = requires(const T & t)
 	{
-		{ t.itype() } -> std::same_as<X86InstructionKind>;
+		{ t.instruction_kind() } -> std::same_as<X86InstructionKind>;
 		{ t.emit() } -> std::same_as<ByteRange>;
 	};
 
@@ -141,7 +141,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -158,7 +158,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -176,7 +176,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -194,7 +194,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -212,7 +212,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -230,7 +230,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -248,7 +248,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -266,7 +266,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -284,7 +284,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -301,7 +301,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -318,7 +318,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -336,7 +336,7 @@ namespace hz
 			Offset immediate;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -354,7 +354,7 @@ namespace hz
 			Offset immediate;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -372,7 +372,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -390,7 +390,7 @@ namespace hz
 			X86Operand source;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -408,7 +408,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -426,7 +426,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -444,7 +444,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -462,7 +462,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -480,7 +480,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -498,7 +498,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -516,7 +516,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -534,7 +534,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -552,7 +552,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -570,7 +570,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -588,7 +588,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -606,7 +606,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -624,7 +624,7 @@ namespace hz
 			Offset displacement;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -641,7 +641,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -658,7 +658,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -675,7 +675,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -692,7 +692,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -709,7 +709,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -726,7 +726,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -743,7 +743,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -760,7 +760,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -777,7 +777,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -794,7 +794,7 @@ namespace hz
 			X86Operand operand;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -811,7 +811,7 @@ namespace hz
 			Offset immediate;
 
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -825,7 +825,7 @@ namespace hz
 		struct LeaveInstruction
 		{
 		public:
-			X86InstructionKind itype() const;
+			X86InstructionKind instruction_kind() const;
 			ByteRange emit() const;
 
 		public:
@@ -881,7 +881,7 @@ namespace hz
 	{
 		return std::visit([]<IsX86Instruction T>(const T& variant)
 		{
-			return variant.itype();
+			return variant.instruction_kind();
 		}, instruction);
 	}
 

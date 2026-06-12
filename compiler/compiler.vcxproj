@@ -197,13 +197,10 @@
     <ClInclude Include="include\builder\BMBuilder.h" />
     <ClInclude Include="include\builder\Builder.h" />
     <ClInclude Include="include\toolchain\RISCVAssemblerParser.h" />
-    <ClCompile Include="source\AdjustExpression.cpp" />
-    <ClCompile Include="source\ArgumentExpression.cpp" />
     <ClCompile Include="source\AssemblerParser.cpp" />
     <ClCompile Include="source\AssemblerToolchain.cpp" />
     <ClCompile Include="source\AutoErrorContext.cpp" />
     <ClCompile Include="source\AutoJob.cpp" />
-    <ClCompile Include="source\AutoJSON.cpp" />
     <ClCompile Include="source\Bimap.cpp" />
     <ClCompile Include="source\BMBuilder.cpp" />
     <ClCompile Include="source\CommandLineParser.cpp" />
@@ -358,7 +355,6 @@
     <ClInclude Include="include\type\defs\TypeSignedness.h" />
     <ClInclude Include="include\type\TypeStorage.h" />
     <ClInclude Include="include\type\TypeType.h" />
-    <ClInclude Include="include\utility\AutoJSON.h" />
     <ClInclude Include="include\utility\Bimap.h" />
     <ClInclude Include="include\utility\BinaryConstants.h" />
     <ClInclude Include="include\utility\BinaryUtilities.h" />

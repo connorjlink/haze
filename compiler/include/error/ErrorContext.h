@@ -14,7 +14,7 @@ namespace hz
 	struct ErrorFrame
 	{
 		ErrorContext* context;
-		const std::string& filepath;
+		std::filesystem::path filepath;
 	};
 
 	struct ErrorContext

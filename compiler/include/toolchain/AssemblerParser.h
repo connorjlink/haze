@@ -11,10 +11,13 @@
 namespace hz
 {
 	struct AssemblerParser 
-		: public Parser
+		: public Parser<AssemblerParser>
 		, public ServiceTag<AssemblerParser>
 #pragma message("TODO: figure out how to get virtual dependencies sorted through the services (i.e., register the Parser and polymorphically initialize with AssemblerParser")
 	{
+	private:
+		using NodeType = Command;
+
 	private:
 		Address base;
 
@@ -23,9 +26,16 @@ namespace hz
 		virtual CommandReference<InstructionCommand> parse_instruction_command() const = 0;
 		virtual Register parse_register() const = 0;
 
+		CommandHandle parse_dotdefine_command() const;
+
+		std::vector<NodeType> parse() const
+		{
+
+		}
+
 	public:
-		AssemblerParser(Address base, const std::string& filepath)
-			: Parser{ std::format("{} <inline assembly>", filepath) }, base{base}
+		AssemblerParser(Address base, std::filesystem::path filepath)
+			: Parser{ std::format("{} <inline assembly>", std::move(filepath)) }, base{ base }
 		{
 		}
 	};

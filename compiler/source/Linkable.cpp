@@ -21,7 +21,7 @@ namespace hz
 		{
 			auto first = *_ir.begin();
 
-			if (first->itype() == IntermediateType::ENTER_SCOPE)
+			if (first->instruction_kind() == IntermediateType::ENTER_SCOPE)
 			{
 				first->marked_for_deletion = true;
 			}
@@ -47,15 +47,15 @@ namespace hz
 				auto penultimate = *(_ir.end() - 2);
 				auto last = *(_ir.end() - 1);
 
-				if (first->itype() == IntermediateType::ENTER_SCOPE)
+				if (first->instruction_kind() == IntermediateType::ENTER_SCOPE)
 				{
-					if (last->itype() == IntermediateType::LEAVE_SCOPE)
+					if (last->instruction_kind() == IntermediateType::LEAVE_SCOPE)
 					{
 						first->marked_for_deletion = true;
 						last->marked_for_deletion = true;
 					}
 
-					else if (penultimate->itype() == IntermediateType::LEAVE_SCOPE)
+					else if (penultimate->instruction_kind() == IntermediateType::LEAVE_SCOPE)
 					{
 						first->marked_for_deletion = true;
 						penultimate->marked_for_deletion = true;
@@ -64,8 +64,8 @@ namespace hz
 
 				for (auto i = 0; i < _ir.size() - 1; i++)
 				{
-					if (_ir[i + 0]->itype() == IntermediateType::ENTER_SCOPE &&
-						_ir[i + 1]->itype() == IntermediateType::LEAVE_SCOPE)
+					if (_ir[i + 0]->instruction_kind() == IntermediateType::ENTER_SCOPE &&
+						_ir[i + 1]->instruction_kind() == IntermediateType::LEAVE_SCOPE)
 					{
 						_ir[i + 0]->marked_for_deletion = true;
 						_ir[i + 1]->marked_for_deletion = true;
@@ -104,7 +104,7 @@ namespace hz
 		for (auto& command : ir)
 		{
 			using enum IntermediateType;
-			switch (command->itype())
+			switch (command->instruction_kind())
 			{
 			case COPY:
 			{

@@ -45,6 +45,8 @@ namespace hz
 
 	std::string File::get_raw_contents(void) 
 	{
+#pragma message("TODO: overhaul with Lazy<T>")
+
 		if (raw_contents.has_value())
 		{
 			return raw_contents.value();

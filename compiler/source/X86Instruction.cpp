@@ -51,7 +51,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind PushInstruction::itype() const
+	X86InstructionKind PushInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::PUSH;
 	}
@@ -122,7 +122,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind PopInstruction::itype() const
+	X86InstructionKind PopInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::POP;
 	}
@@ -150,7 +150,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind MovInstruction::itype() const
+	X86InstructionKind MovInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::MOV;
 	}
@@ -347,7 +347,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind MovzxInstruction::itype() const
+	X86InstructionKind MovzxInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::MOVZX;
 	}
@@ -396,7 +396,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind AddInstruction::itype() const
+	X86InstructionKind AddInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::ADD;
 	}
@@ -497,7 +497,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SubInstruction::itype() const
+	X86InstructionKind SubInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SUB;
 	}
@@ -597,7 +597,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind OrInstruction::itype() const
+	X86InstructionKind OrInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::OR;
 	}
@@ -697,7 +697,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind AndInstruction::itype() const
+	X86InstructionKind AndInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::AND;
 	}
@@ -797,7 +797,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind XorInstruction::itype() const
+	X86InstructionKind XorInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::XOR;
 	}
@@ -897,7 +897,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind IncInstruction::itype() const
+	X86InstructionKind IncInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::INC;
 	}
@@ -929,7 +929,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind DecInstruction::itype() const
+	X86InstructionKind DecInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::DEC;
 	}
@@ -961,7 +961,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SalInstruction::itype() const
+	X86InstructionKind SalInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SAL;
 	}
@@ -1013,7 +1013,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SarInstruction::itype() const
+	X86InstructionKind SarInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SAR;
 	}
@@ -1065,7 +1065,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind TestInstruction::itype() const
+	X86InstructionKind TestInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::TEST;
 	}
@@ -1113,7 +1113,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind CmpInstruction::itype() const
+	X86InstructionKind CmpInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::CMP;
 	}
@@ -1213,7 +1213,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind CallInstruction::itype() const
+	X86InstructionKind CallInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::CALL;
 	}
@@ -1230,7 +1230,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind ApicallInstruction::itype() const
+	X86InstructionKind ApicallInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::APICALL;
 	}
@@ -1248,7 +1248,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JmpInstruction::itype() const
+	X86InstructionKind JmpInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JMP;
 	}
@@ -1281,7 +1281,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JeInstruction::itype() const
+	X86InstructionKind JeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JE;
 	}
@@ -1315,7 +1315,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JneInstruction::itype() const
+	X86InstructionKind JneInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JNE;
 	}
@@ -1349,7 +1349,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JlInstruction::itype() const
+	X86InstructionKind JlInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JL;
 	}
@@ -1383,7 +1383,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JleInstruction::itype() const
+	X86InstructionKind JleInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JLE;
 	}
@@ -1417,7 +1417,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JgInstruction::itype() const
+	X86InstructionKind JgInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JG;
 	}
@@ -1451,7 +1451,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JgeInstruction::itype() const
+	X86InstructionKind JgeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JGE;
 	}
@@ -1486,7 +1486,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JaInstruction::itype() const
+	X86InstructionKind JaInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JA;
 	}
@@ -1520,7 +1520,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JaeInstruction::itype() const
+	X86InstructionKind JaeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JAE;
 	}
@@ -1554,7 +1554,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JbInstruction::itype() const
+	X86InstructionKind JbInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JB;
 	}
@@ -1588,7 +1588,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind JbeInstruction::itype() const
+	X86InstructionKind JbeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::JBE;
 	}
@@ -1622,7 +1622,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SeteInstruction::itype() const
+	X86InstructionKind SeteInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETE;
 	}
@@ -1656,7 +1656,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetneInstruction::itype() const
+	X86InstructionKind SetneInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETNE;
 	}
@@ -1690,7 +1690,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetlInstruction::itype() const
+	X86InstructionKind SetlInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETL;
 	}
@@ -1724,7 +1724,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetleInstruction::itype() const
+	X86InstructionKind SetleInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETLE;
 	}
@@ -1758,7 +1758,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetgInstruction::itype() const
+	X86InstructionKind SetgInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETG;
 	}
@@ -1792,7 +1792,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetgeInstruction::itype() const
+	X86InstructionKind SetgeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETGE;
 	}
@@ -1826,7 +1826,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetaInstruction::itype() const
+	X86InstructionKind SetaInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETA;
 	}
@@ -1860,7 +1860,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetaeInstruction::itype() const
+	X86InstructionKind SetaeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETAE;
 	}
@@ -1894,7 +1894,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetbInstruction::itype() const
+	X86InstructionKind SetbInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETB;
 	}
@@ -1928,7 +1928,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind SetbeInstruction::itype() const
+	X86InstructionKind SetbeInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::SETBE;
 	}
@@ -1962,7 +1962,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind NopInstruction::itype() const
+	X86InstructionKind NopInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::NOP;
 	}
@@ -1977,7 +1977,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind RetInstruction::itype() const
+	X86InstructionKind RetInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::RET;
 	}
@@ -2002,7 +2002,7 @@ namespace hz::x86
 	}
 
 
-	X86InstructionKind LeaveInstruction::itype() const
+	X86InstructionKind LeaveInstruction::instruction_kind() const
 	{
 		return X86InstructionKind::LEAVE;
 	}

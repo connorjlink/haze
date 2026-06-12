@@ -23,6 +23,7 @@ namespace hz
 	struct SourceContext
 	{
 	public:
+#pragma message("TODO: determine cheapest ownership model here for source storage")
 		std::string source;
 		SourceLocation location;
 
@@ -32,7 +33,7 @@ namespace hz
 			return location.position;
 		}
 
-		const std::string& wherein(void) const
+		std::filesystem::path wherein(void) const
 		{
 			return location.filepath;
 		}
