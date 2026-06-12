@@ -2,6 +2,7 @@
 #define HAZE_X86INSTRUCTION_H
 
 #include <utility/Constants.h>
+#include <utility/ExtendedInteger.h>
 #include <utility/Variant.h>
 #include <x86/defs/X86Register.h>
 #include <x86/defs/X86OperandKind.h>
@@ -32,15 +33,15 @@ namespace hz
 			ExtendedInteger immediate;
 
 		public:
+			X86OperandKind otype() const;
+
+		public:
 			ImmediateOperand(const ExtendedInteger& immediate)
 				: immediate{ immediate }
 			{
 			}
-
-		public:
-			X86OperandKind otype() const;
 		};
-#define imm(value) ImmediateOperand{ value }
+#define immediate(value) ImmediateOperand{ value }
 
 		struct IndirectOperand
 		{
@@ -48,13 +49,13 @@ namespace hz
 			Address address;
 
 		public:
+			X86OperandKind otype() const;
+
+		public:
 			IndirectOperand(Address address)
 				: address{ address }
 			{
 			}
-
-		public:
-			X86OperandKind otype() const;
 		};
 #define indirect(address) IndirectOperand{ address }
 
@@ -64,25 +65,25 @@ namespace hz
 			X86Register $register;
 
 		public:
+			X86OperandKind otype() const;
+
+		public:
 			RegisterOperand(X86Register $register)
 				: $register{ $register }
 			{
 			}
-
-		public:
-			X86OperandKind otype() const;
 		};
-#define $register($register) RegisterOperand{ $register }
+#define $register(register) RegisterOperand{ register }
 
 		struct RegisterIndirectOperand : public RegisterOperand
 		{
 		public:
-			using RegisterOperand::RegisterOperand;
+			X86OperandKind otype() const;
 
 		public:
-			X86OperandKind otype() const;
+			using RegisterOperand::RegisterOperand;
 		};
-#define reg_indirect($register) RegisterIndirectOperand{ $register }
+#define register_indirect(register) RegisterIndirectOperand{ register }
 
 		struct RegisterDisplacedOperand : public RegisterOperand
 		{
@@ -90,16 +91,15 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86OperandKind otype() const;
+
+		public:
 			RegisterDisplacedOperand(X86Register $register, Offset displacement)
 				: RegisterOperand{ $register }, displacement{ displacement }
 			{
 			}
-
-
-		public:
-			X86OperandKind otype() const;
 		};
-#define reg_disp($register, disp) RegisterDisplacedOperand{ $register, disp }
+#define reg_disp($register, displacement) RegisterDisplacedOperand{ $register, displacement }
 	}
 
 	using X86Operand = ConstrainedVariant<X86OperandTrait,
@@ -141,16 +141,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			PushInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define push(op) PushInstruction{ op }
+#define push(operand) PushInstruction{ operand }
 
 		struct PopInstruction
 		{
@@ -158,16 +158,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			PopInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define pop(op) PopInstruction{ op }
+#define pop(operand) PopInstruction{ operand }
 
 		struct MovInstruction
 		{
@@ -176,16 +176,16 @@ namespace hz
 			X86Operand source;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			MovInstruction(const X86Operand& destination, const X86Operand& source)
 				: destination{ destination }, source{ source }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define mov(dst, src) MovInstruction{ dst, src }
+#define mov(destination, source) MovInstruction{ destination, source }
 
 		struct MovzxInstruction
 		{
@@ -194,16 +194,16 @@ namespace hz
 			X86Operand source;
 
 		public:
-			MovzxInstruction(const X86Operand& destination, const X86Operand& source)
-				: destination{ destination }, source{ source  }
-			{
-			}
-
-		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			MovzxInstruction(const X86Operand& destination, const X86Operand& source)
+				: destination{ destination }, source{ source }
+			{
+			}
 		};
-#define movzx(dst, src) MovzxInstruction{ dst, src }
+#define movzx(destination, source) MovzxInstruction{ destination, source }
 
 		struct AddInstruction
 		{
@@ -212,16 +212,16 @@ namespace hz
 			X86Operand source;
 
 		public:
-			AddInstruction(const X86Operand& destination, const X86Operand& source)
-				: destination{ destination }, source{ source  }
-			{
-			}
-
-		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			AddInstruction(const X86Operand& destination, const X86Operand& source)
+				: destination{ destination }, source{ source }
+			{
+			}
 		};
-#define add(dst, src) AddInstruction{ dst, src }
+#define add(destination, source) AddInstruction{ destination, source }
 
 		struct SubInstruction
 		{
@@ -230,16 +230,16 @@ namespace hz
 			X86Operand source;
 
 		public:
-			SubInstruction(const X86Operand& destination, const X86Operand& source)
-				: destination{ destination }, source{ source  }
-			{
-			}
-
-		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			SubInstruction(const X86Operand& destination, const X86Operand& source)
+				: destination{ destination }, source{ source }
+			{
+			}
 		};
-#define sub(dst, src) SubInstruction{ dst, src }
+#define sub(destination, source) SubInstruction{ destination, source }
 
 		struct AndInstruction
 		{
@@ -248,16 +248,16 @@ namespace hz
 			X86Operand source;
 
 		public:
-			AndInstruction(const X86Operand& destination, const X86Operand& source)
-				: destination{ destination }, source{ source  }
-			{
-			}
-
-		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			AndInstruction(const X86Operand& destination, const X86Operand& source)
+				: destination{ destination }, source{ source }
+			{
+			}
 		};
-#define and(dst, src) AndInstruction{ dst, src }
+#define and(destination, source) AndInstruction{ destination, source }
 
 		struct OrInstruction
 		{
@@ -266,16 +266,16 @@ namespace hz
 			X86Operand source;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			OrInstruction(const X86Operand& destination, const X86Operand& source)
 				: destination{ destination }, source{ source }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define or(dst, src) OrInstruction{ dst, src }
+#define or(destination, source) OrInstruction{ destination, source }
 
 		struct XorInstruction
 		{
@@ -284,16 +284,16 @@ namespace hz
 			X86Operand source;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			XorInstruction(const X86Operand& destination, const X86Operand& source)
 				: destination{ destination }, source{ source }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define xor(dst, src) XorInstruction{ dst, src }
+#define xor(destination, source) XorInstruction{ destination, source }
 
 		struct IncInstruction
 		{
@@ -301,14 +301,14 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			IncInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
 #define inc(op) IncInstruction{ op }
 
@@ -318,14 +318,14 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			DecInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
 #define dec(op) DecInstruction{ op }
 
@@ -336,14 +336,14 @@ namespace hz
 			Offset immediate;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SalInstruction(const X86Operand& operand, Offset immediate = -1)
 				: operand{ operand }, immediate{ immediate }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
 #define sal(op) SalInstruction{ op }
 
@@ -354,14 +354,14 @@ namespace hz
 			Offset immediate;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SarInstruction(const X86Operand& operand, Offset immediate = -1)
 				: operand{ operand }, immediate{ immediate }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
 #define sar(op) SarInstruction{ op }
 
@@ -372,16 +372,16 @@ namespace hz
 			X86Operand source;
 
 		public:
-			TestInstruction(const X86Operand& destination, const X86Operand& source)
-				: destination{ destination }, source{ source  }
-			{
-			}
-
-		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			TestInstruction(const X86Operand& destination, const X86Operand& source)
+				: destination{ destination }, source{ source }
+			{
+			}
 		};
-#define test(dst, src) TestInstruction{ dst, src }
+#define test(destination, source) TestInstruction{ destination, source }
 
 		struct CmpInstruction
 		{
@@ -390,16 +390,16 @@ namespace hz
 			X86Operand source;
 
 		public:
-			CmpInstruction(const X86Operand& destination, const X86Operand& source)
-				: destination{ destination }, source{ source  }
-			{
-			}
-
-		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			CmpInstruction(const X86Operand& destination, const X86Operand& source)
+				: destination{ destination }, source{ source }
+			{
+			}
 		};
-#define cmp(dst, src) CmpInstruction{ dst, src }
+#define cmp(destination, source) CmpInstruction{ destination, source }
 
 		struct CallInstruction
 		{
@@ -408,16 +408,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			CallInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define call(label, disp) CallInstruction{ label, disp }
+#define call(label, displacement) CallInstruction{ label, displacement }
 
 		struct ApicallInstruction
 		{
@@ -426,16 +426,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			ApicallInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define apicall(label, disp) ApicallInstruction{ label, disp }
+#define apicall(label, displacement) ApicallInstruction{ label, displacement }
 
 		struct JmpInstruction
 		{
@@ -444,16 +444,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JmpInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jmp(label, disp) JmpInstruction{ label, disp }
+#define jmp(label, displacement) JmpInstruction{ label, displacement }
 
 		struct JeInstruction
 		{
@@ -462,16 +462,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define je(label, disp) JeInstruction{ label, disp }
+#define je(label, displacement) JeInstruction{ label, displacement }
 
 		struct JneInstruction
 		{
@@ -480,16 +480,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JneInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jne(label, disp) JneInstruction{ label, disp }
+#define jne(label, displacement) JneInstruction{ label, displacement }
 
 		struct JlInstruction
 		{
@@ -498,16 +498,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JlInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jl(label, disp) JlInstruction{ label, disp }
+#define jl(label, displacement) JlInstruction{ label, displacement }
 
 		struct JleInstruction
 		{
@@ -516,16 +516,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JleInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jle(label, disp) JleInstruction{ label, disp }
+#define jle(label, displacement) JleInstruction{ label, displacement }
 
 		struct JgInstruction
 		{
@@ -534,16 +534,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JgInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jg(label, disp) JgInstruction{ label, disp }
+#define jg(label, displacement) JgInstruction{ label, displacement }
 
 		struct JgeInstruction
 		{
@@ -552,16 +552,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JgeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jge(label, disp) JgeInstruction{ label, disp }
+#define jge(label, displacement) JgeInstruction{ label, displacement }
 
 		struct JaInstruction
 		{
@@ -570,16 +570,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JaInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define ja(label, disp) JaInstruction{ label, disp }
+#define ja(label, displacement) JaInstruction{ label, displacement }
 
 		struct JaeInstruction
 		{
@@ -588,16 +588,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JaeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jae(label, disp) JaeInstruction{ label, disp }
+#define jae(label, displacement) JaeInstruction{ label, displacement }
 
 		struct JbInstruction
 		{
@@ -606,16 +606,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JbInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jb(label, disp) JbInstruction{ label, disp }
+#define jb(label, displacement) JbInstruction{ label, displacement }
 
 		struct JbeInstruction
 		{
@@ -624,16 +624,16 @@ namespace hz
 			Offset displacement;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			JbeInstruction(const std::string& label, Offset displacement)
 				: label{ label }, displacement{ displacement }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define jbe(label, disp) JbeInstruction{ label, disp }
+#define jbe(label, displacement) JbeInstruction{ label, displacement }
 
 		struct SeteInstruction
 		{
@@ -641,16 +641,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SeteInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define sete(op) SeteInstruction{ op }
+#define sete(operand) SeteInstruction{ operand }
 
 		struct SetneInstruction
 		{
@@ -658,16 +658,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetneInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setne(op) SetneInstruction{ op }
+#define setne(operand) SetneInstruction{ operand }
 
 		struct SetlInstruction
 		{
@@ -675,16 +675,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetlInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setl(op) SetlInstruction{ op }
+#define setl(operand) SetlInstruction{ operand }
 
 		struct SetleInstruction
 		{
@@ -692,16 +692,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetleInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setle(op) SetleInstruction{ op }
+#define setle(operand) SetleInstruction{ operand }
 
 		struct SetgInstruction
 		{
@@ -709,16 +709,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetgInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setg(op) SetgInstruction{ op }
+#define setg(operand) SetgInstruction{ operand }
 
 		struct SetgeInstruction
 		{
@@ -726,16 +726,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetgeInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setge(op) SetgeInstruction{ op }
+#define setge(operand) SetgeInstruction{ operand }
 
 		struct SetaInstruction
 		{
@@ -743,16 +743,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetaInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define seta(op) SetaInstruction{ op }
+#define seta(operand) SetaInstruction{ operand }
 
 		struct SetaeInstruction
 		{
@@ -760,16 +760,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetaeInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setae(op) SetaeInstruction{ op }
+#define setae(operand) SetaeInstruction{ operand }
 
 		struct SetbInstruction
 		{
@@ -777,16 +777,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetbInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setb(op) SetbInstruction{ op }
+#define setb(operand) SetbInstruction{ operand }
 
 		struct SetbeInstruction
 		{
@@ -794,16 +794,16 @@ namespace hz
 			X86Operand operand;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			SetbeInstruction(const X86Operand& operand)
 				: operand{ operand }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
-#define setbe(op) SetbeInstruction{ op }
+#define setbe(operand) SetbeInstruction{ operand }
 
 		struct RetInstruction
 		{
@@ -811,23 +811,25 @@ namespace hz
 			Offset immediate;
 
 		public:
+			X86InstructionKind itype() const;
+			ByteRange emit() const;
+
+		public:
 			RetInstruction(Offset immediate = -1)
 				: immediate{ immediate }
 			{
 			}
-
-		public:
-			X86InstructionKind itype() const;
-			ByteRange emit() const;
 		};
 #define ret() RetInstruction{}
 
 		struct LeaveInstruction
 		{
-		// default constructor
 		public:
 			X86InstructionKind itype() const;
 			ByteRange emit() const;
+
+		public:
+			// default constructor
 		};
 #define leave() LeaveInstruction{}
 	}

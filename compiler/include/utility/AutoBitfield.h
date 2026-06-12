@@ -78,7 +78,7 @@ namespace hz
 #define AUTOBITFIELD_APPEND_NAME(...) AUTOBITFIELD_EXPAND(AUTOBITFIELD_ROUTER(_PRIVATE_AUTOBITFIELD_APPEND_NAME, __VA_ARGS__))
 #define AUTOBITFIELD_VALUE_MATCH(...) AUTOBITFIELD_EXPAND(AUTOBITFIELD_ROUTER(_PRIVATE_AUTOBITFIELD_VALUE_MATCH, __VA_ARGS__))
 
-// NOTE: define BITFIELD_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
+// NOTE: define AUTOBITFIELD_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
 #define DEFINE_BITFIELD(kinds, type, name) \
 	DEFINE_BITFIELD_INTERNAL(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : std::uint32_t)
 

@@ -100,13 +100,34 @@ namespace hz
 			{
 			}
 
-		public:
 			~EvaluationTask()
 			{
 				if (handle)
 				{
 					handle.destroy();
 				}
+			}
+
+			// noncopyable
+			EvaluationTask(const EvaluationTask&) = delete;
+			EvaluationTask& operator=(const EvaluationTask&) = delete;
+
+			EvaluationTask(EvaluationTask&& other) noexcept
+				: handle{ std::exchange(other.handle, nullptr) }
+			{
+			}
+
+			EvaluationTask& operator=(EvaluationTask&& other) noexcept
+			{
+				if (this != &other)
+				{
+					if (handle)
+					{
+						handle.destroy();
+					}
+					handle = std::exchange(other.handle, nullptr);
+				}
+				return *this;
 			}
 		};
 

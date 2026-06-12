@@ -6,7 +6,8 @@
 
 namespace hz
 {
-	using ByteRange = std::vector<std::uint8_t>;
+	using Byte = std::uint8_t;
+	using ByteRange = std::vector<Byte>;
 
 	using Register = std::uint8_t;
 	// pointer type

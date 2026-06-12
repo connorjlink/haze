@@ -643,7 +643,7 @@ namespace hz
 
 		if (destination != source)
 		{
-			// mov destination, src
+			// mov destination, source
 			PUT(X86Builder::mov_rr(destination, source));
 		}
 

@@ -42,14 +42,14 @@ namespace hz
 		Token token;
 
 	public:
+		template<typename Self>
+		StatementKind statement_kind(this Self&&);
+
+	public:
 		StatementBase(const Token& token)
 			: token{ token }
 		{
 		}
-
-	public:
-		template<typename Self>
-		StatementKind statement_kind(this Self&&);
 	};
 }
 
@@ -62,17 +62,17 @@ namespace hz
 	struct NullStatement : public StatementBase
 	{
 	public:
-		NullStatement(const Token& token)
-			: StatementBase{ token }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		NullStatement(const Token& token)
+			: StatementBase{ token }
+		{
+		}
 	};
 #define MAKE_NULL_STATEMENT(token) NullStatement{ token }
 
@@ -82,17 +82,17 @@ namespace hz
 		ExpressionHandle expression;
 
 	public:
-		ExpressionStatement(ExpressionHandle expression, const Token& token)
-			: StatementBase{ token }, expression{ expression }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		ExpressionStatement(ExpressionHandle expression, const Token& token)
+			: StatementBase{ token }, expression{ expression }
+		{
+		}
 	};
 #define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ make_handle(ast, expression), token }
 
@@ -105,17 +105,17 @@ namespace hz
 		ExpressionHandle expression;
 
 	public:
-		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, const Token& token)
-			: StatementBase{ token }, enclosing_function{ enclosing_function }, expression{ expression }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, const Token& token)
+			: StatementBase{ token }, enclosing_function{ enclosing_function }, expression{ expression }
+		{
+		}
 	};
 #define MAKE_RETURN_STATEMENT(enclosing_function, expression, value, token) ReturnStatement{ enclosing_function, make_handle(ast, expression), value, token }
 
@@ -127,17 +127,17 @@ namespace hz
 		StatementHandle else_body;
 
 	public:
-		IfStatement(ExpressionHandle condition, StatementHandle if_body, StatementHandle else_body, const Token& token)
-			: StatementBase{ token }, condition{ condition }, if_body{ if_body }, else_body{ else_body }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		IfStatement(ExpressionHandle condition, StatementHandle if_body, StatementHandle else_body, const Token& token)
+			: StatementBase{ token }, condition{ condition }, if_body{ if_body }, else_body{ else_body }
+		{
+		}
 	};
 #define MAKE_IF_STATEMENT(condition, if_body, else_body, token) IfStatement{ make_handle(ast, condition), if_body, else_body, token }
 
@@ -148,17 +148,17 @@ namespace hz
 		StatementHandle body;
 
 	public:
-		WhileStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
-			: StatementBase{ token }, condition{ condition }, body{ body }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		WhileStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
+			: StatementBase{ token }, condition{ condition }, body{ body }
+		{
+		}
 	};
 #define MAKE_WHILE_STATEMENT(condition, body, token) WhileStatement{ make_handle(ast, condition), body, token }
 
@@ -169,17 +169,17 @@ namespace hz
 		StatementHandle body;
 
 	public:
-		DoStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
-			: StatementBase{ token }, condition{ condition }, body{ body }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		DoStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
+			: StatementBase{ token }, condition{ condition }, body{ body }
+		{
+		}
 	};
 #define MAKE_DO_STATEMENT(condition, body, token) DoStatement{ make_handle(ast, condition), body, token }
 
@@ -188,14 +188,8 @@ namespace hz
 	private:
 		StatementHandle initialization;
 		ExpressionHandle condition;
-		ExpressionHandle induction;
+		ExpressionHandle increment;
 		StatementHandle body;
-
-	public:
-		ForStatement(StatementHandle initialization, ExpressionHandle condition, ExpressionHandle induction, StatementHandle body, const Token& token)
-			: StatementBase{ token }, initialization{ initialization }, condition{ condition }, induction{ induction }, body{ body }
-		{
-		}
 
 	public:
 		std::string format(void) const;
@@ -203,8 +197,14 @@ namespace hz
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		ForStatement(StatementHandle initialization, ExpressionHandle condition, ExpressionHandle increment, StatementHandle body, const Token& token)
+			: StatementBase{ token }, initialization{ initialization }, condition{ condition }, increment{ increment }, body{ body }
+		{
+		}
 	};
-#define MAKE_FOR_STATEMENT(initialization, condition, induction, body, token) ForStatement{ initialization, make_handle(ast, condition), make_handle(ast, induction), body, token }
+#define MAKE_FOR_STATEMENT(initialization, condition, increment, body, token) ForStatement{ initialization, make_handle(ast, condition), make_handle(ast, increment), body, token }
 
 	struct GotoStatement : public StatementBase
 	{
@@ -212,51 +212,51 @@ namespace hz
 		std::string label;
 
 	public:
-		GotoStatement(const std::string& label, const Token& token)
-			: StatementBase{ token }, label{ label }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+	
+	public:
+		GotoStatement(const std::string& label, const Token& token)
+			: StatementBase{ token }, label{ label }
+		{
+		}
 	};
 #define MAKE_GOTO_STATEMENT(label, token) GotoStatement{ label, token }
 
 	struct ContinueStatement : public StatementBase
 	{
 	public:
-		ContinueStatement(const Token& token)
-			: StatementBase{ token }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		ContinueStatement(const Token& token)
+			: StatementBase{ token }
+		{
+		}
 	};
 #define MAKE_CONTINUE_STATEMENT(token) ContinueStatement{ token }
 
 	struct BreakStatement : public StatementBase
 	{
 	public:
-		BreakStatement(const Token& token)
-			: StatementBase{ token }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		BreakStatement(const Token& token)
+			: StatementBase{ token }
+		{
+		}
 	};
 #define MAKE_BREAK_STATEMENT(token) BreakStatement{ token }
 
@@ -275,17 +275,17 @@ namespace hz
 		StatementHandle fallback;
 
 	public:
-		SwitchStatement(ExpressionHandle condition, const std::vector<Case>& cases, StatementHandle fallback, const Token& token)
-			: StatementBase{ token }, condition{ condition }, cases{ cases }, fallback{ fallback }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		SwitchStatement(ExpressionHandle condition, const std::vector<Case>& cases, StatementHandle fallback, const Token& token)
+			: StatementBase{ token }, condition{ condition }, cases{ cases }, fallback{ fallback }
+		{
+		}
 	};
 #define MAKE_SWITCH_STATEMENT(condition, cases, fallback, token) SwitchStatement{ make_handle(ast, condition), cases, fallback, token }
 
@@ -295,17 +295,17 @@ namespace hz
 		std::vector<StatementHandle> substatements;
 
 	public:
-		CompoundStatement(const std::vector<StatementHandle>& substatements, const Token& token)
-			: StatementBase{ token }, substatements{ substatements }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		CompoundStatement(const std::vector<StatementHandle>& substatements, const Token& token)
+			: StatementBase{ token }, substatements{ substatements }
+		{
+		}
 	};
 #define MAKE_COMPOUND_STATEMENT(substatements, token) CompoundStatement{ substatements, token }
 
@@ -316,17 +316,17 @@ namespace hz
 		StatementHandle statement;
 
 	public:
-		LabeledStatement(const std::string& label, StatementHandle statement, const Token& token)
-			: StatementBase{ token }, label{ label }, statement{ statement }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		LabeledStatement(const std::string& label, StatementHandle statement, const Token& token)
+			: StatementBase{ token }, label{ label }, statement{ statement }
+		{
+		}
 	};
 #define MAKE_LABELED_STATEMENT(label, statement, token) LabeledStatement{ label, statement, token }
 
@@ -336,17 +336,17 @@ namespace hz
 		DeclarationHandle declaration;
 
 	public:
-		DeclarationStatement(DeclarationHandle declaration, const Token& token)
-			: StatementBase{ token }, declaration{ declaration }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		DeclarationStatement(DeclarationHandle declaration, const Token& token)
+			: StatementBase{ token }, declaration{ declaration }
+		{
+		}
 	};
 #define MAKE_DECLARATION_STATEMENT(declaration, token) DeclarationStatement{ declaration, token }
 
@@ -358,17 +358,17 @@ namespace hz
 		std::vector<CommandHandle> commands;
 
 	public:
-		InlineAssemblyStatement(const std::vector<CommandHandle>& commands, const Token& token)
-			: StatementBase{ token }, commands{ commands }
-		{
-		}
-
-	public:
 		std::string format(void) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const TypeSumStorage&) const;
+
+	public:
+		InlineAssemblyStatement(const std::vector<CommandHandle>& commands, const Token& token)
+			: StatementBase{ token }, commands{ commands }
+		{
+		}
 	};
 #define MAKE_INLINE_ASSEMBLY_STATEMENT(commands, token) InlineAssemblyStatement{ commands, token }
 

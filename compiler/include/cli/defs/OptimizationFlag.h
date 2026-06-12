@@ -15,11 +15,11 @@ namespace hz
 	X(LTO,  lto,  1 << 2)
 
 
-#define BITFIELD_ROUTER(X, enumerator, name, value) X(enumerator, name, value, OptimizationFlag)
+#define AUTOBITFIELD_ROUTER(X, enumerator, name, value) X(enumerator, name, value, OptimizationFlag)
 
 	DEFINE_BITFIELD_BASE(OPTIMIZATION_FLAGS, OptimizationFlag, optimization flag, std::uint8_t)
 
-#undef BITFIELD_ROUTER
+#undef AUTOBITFIELD_ROUTER
 }
 
 #endif 

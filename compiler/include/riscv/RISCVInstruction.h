@@ -45,7 +45,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define lb(rd, imm, rs1) LbInstruction{ imm, rd, rs1 }
+#define lb(rd, immediate, rs1) LbInstruction{ immediate, rd, rs1 }
 
 		struct LhInstruction
 		{
@@ -64,7 +64,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define lh(rd, imm, rs1) LhInstruction{ imm, rd, rs1 }
+#define lh(rd, immediate, rs1) LhInstruction{ immediate, rd, rs1 }
 
 		struct LwInstruction
 		{
@@ -82,7 +82,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define lw(rd, imm, rs1) LwInstruction{ imm, rd, rs1 }
+#define lw(rd, immediate, rs1) LwInstruction{ immediate, rd, rs1 }
 
 		struct LbuInstruction
 		{
@@ -100,7 +100,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define lbu(rd, imm, rs1) LbuInstruction{ imm, rd, rs1 }
+#define lbu(rd, immediate, rs1) LbuInstruction{ immediate, rd, rs1 }
 
 		struct LhuInstruction
 		{
@@ -118,7 +118,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define lhu(rd, imm, rs1) LhuInstruction{ imm, rd, rs1 }
+#define lhu(rd, immediate, rs1) LhuInstruction{ immediate, rd, rs1 }
 	
 		struct SbInstruction
 		{
@@ -137,7 +137,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define sb(rs2, imm, rs1) SbInstruction{ imm, rs1, rs2 }
+#define sb(rs2, immediate, rs1) SbInstruction{ immediate, rs1, rs2 }
 
 		struct ShInstruction
 		{
@@ -155,7 +155,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define sh(rs2, imm, rs1) ShInstruction{ imm, rs1, rs2 }
+#define sh(rs2, immediate, rs1) ShInstruction{ immediate, rs1, rs2 }
 
 		struct SwInstruction
 		{
@@ -173,7 +173,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define sw(rs2, imm, rs1) SwInstruction{ imm, rs1, rs2 }
+#define sw(rs2, immediate, rs1) SwInstruction{ immediate, rs1, rs2 }
 
 		struct LuiInstruction
 		{
@@ -191,7 +191,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define lui(rd, imm) LuiInstruction{ imm, rd }
+#define lui(rd, immediate) LuiInstruction{ immediate, rd }
 
 		struct AuipcInstruction
 		{
@@ -208,7 +208,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define auipc(rd, imm) AuipcInstruction{ imm, rd }
+#define auipc(rd, immediate) AuipcInstruction{ immediate, rd }
 
 		struct AddInstruction
 		{
@@ -371,7 +371,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define addi(rd, rs1, imm) AddiInstruction{ imm, rd, rs1 }
+#define addi(rd, rs1, immediate) AddiInstruction{ immediate, rd, rs1 }
 
 		struct AndiInstruction
 		{
@@ -390,7 +390,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define andi(rd, rs1, imm) AndiInstruction{ imm, rd, rs1 }
+#define andi(rd, rs1, immediate) AndiInstruction{ immediate, rd, rs1 }
 
 		struct OriInstruction
 		{
@@ -409,7 +409,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define ori(rd, rs1, imm) OriInstruction{ imm, rd, rs1 }
+#define ori(rd, rs1, immediate) OriInstruction{ immediate, rd, rs1 }
 
 		struct XoriInstruction
 		{
@@ -428,7 +428,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define xori(rd, rs1, imm) XoriInstruction{ imm, rd, rs1 }
+#define xori(rd, rs1, immediate) XoriInstruction{ immediate, rd, rs1 }
 
 		struct SlliInstruction
 		{
@@ -447,7 +447,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define slli(rd, rs1, imm) SlliInstruction{ imm, rd, rs1 }
+#define slli(rd, rs1, immediate) SlliInstruction{ immediate, rd, rs1 }
 
 		struct SrliInstruction
 		{
@@ -466,7 +466,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define srli(rd, rs1, imm) SrliInstruction{ imm, rd, rs1 }
+#define srli(rd, rs1, immediate) SrliInstruction{ immediate, rd, rs1 }
 
 		struct SraiInstruction
 		{
@@ -483,7 +483,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define srai(rd, rs1, imm) SraiInstruction{ imm, rd, rs1 }
+#define srai(rd, rs1, immediate) SraiInstruction{ immediate, rd, rs1 }
 
 		struct SltInstruction
 		{
@@ -540,7 +540,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define slti(rd, rs1, imm) SltiInstruction{ imm, rd, rs1 }
+#define slti(rd, rs1, immediate) SltiInstruction{ immediate, rd, rs1 }
 
 		struct SltiuInstruction
 		{
@@ -559,7 +559,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define sltiu(rd, rs1, imm) SltiuInstruction{ imm, rd, rs1 }
+#define sltiu(rd, rs1, immediate) SltiuInstruction{ immediate, rd, rs1 }
 
 		struct JalInstruction
 		{
@@ -577,7 +577,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define jal(rd, imm) JalInstruction{ imm, rd }
+#define jal(rd, immediate) JalInstruction{ immediate, rd }
 
 		struct JalrInstruction
 		{
@@ -594,7 +594,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define jalr(rd, imm, rs1) JalrInstruction{ imm, rd, rs1 }
+#define jalr(rd, immediate, rs1) JalrInstruction{ immediate, rd, rs1 }
 
 		struct BeqInstruction
 		{
@@ -613,7 +613,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define beq(rs1, rs2, imm) BeqInstruction{ imm, rs1, rs2 }
+#define beq(rs1, rs2, immediate) BeqInstruction{ immediate, rs1, rs2 }
 
 		struct BneInstruction
 		{
@@ -632,7 +632,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define bne(rs1, rs2, imm) BneInstruction{ imm, rs1, rs2 }
+#define bne(rs1, rs2, immediate) BneInstruction{ immediate, rs1, rs2 }
 
 		struct BltInstruction
 		{
@@ -651,7 +651,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define blt(rs1, rs2, imm) BltInstruction{ imm, rs1, rs2 }
+#define blt(rs1, rs2, immediate) BltInstruction{ immediate, rs1, rs2 }
 
 		struct BgeInstruction
 		{
@@ -668,7 +668,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define bge(rs1, rs2, imm) BgeInstruction{ imm, rs1, rs2 }
+#define bge(rs1, rs2, immediate) BgeInstruction{ immediate, rs1, rs2 }
 
 		struct BltuInstruction
 		{
@@ -685,7 +685,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define bltu(rs1, rs2, imm) BltuInstruction{ imm, rs1, rs2 }
+#define bltu(rs1, rs2, immediate) BltuInstruction{ immediate, rs1, rs2 }
 
 		struct BgeuInstruction
 		{
@@ -702,7 +702,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define bgeu(rs1, rs2, imm) BgeuInstruction { imm, rs1, rs2 }
+#define bgeu(rs1, rs2, immediate) BgeuInstruction { immediate, rs1, rs2 }
 
 		struct NopInstruction
 		{
@@ -1131,7 +1131,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define clwsp(rd, imm) ClwspInstruction{ rd, imm }
+#define clwsp(rd, immediate) ClwspInstruction{ rd, immediate }
 
 		struct CswspInstruction
 		{
@@ -1149,7 +1149,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define cswsp(rs2, imm) CswspInstruction{ rs2, imm }
+#define cswsp(rs2, immediate) CswspInstruction{ rs2, immediate }
 
 		struct ClwInstruction
 		{
@@ -1168,7 +1168,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define clw(rd, imm, rs1) ClwInstruction{ rd, imm, rs1 }
+#define clw(rd, immediate, rs1) ClwInstruction{ rd, immediate, rs1 }
 
 		struct CswInstruction
 		{
@@ -1187,7 +1187,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define csw(rs2, imm, rs1) CswInstruction{ rs2, imm, rs1 }
+#define csw(rs2, immediate, rs1) CswInstruction{ rs2, immediate, rs1 }
 
 		struct CjInstruction
 		{
@@ -1204,7 +1204,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define cj(imm) CjInstruction{ imm }
+#define cj(immediate) CjInstruction{ immediate }
 
 		struct CjalInstruction
 		{
@@ -1221,7 +1221,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define cjal(imm) CjalInstruction{ imm }
+#define cjal(immediate) CjalInstruction{ immediate }
 
 		struct CjrInstruction
 		{
@@ -1273,7 +1273,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define cbeqz(rs2, imm) CbeqzInstruction{ rs2, imm }
+#define cbeqz(rs2, immediate) CbeqzInstruction{ rs2, immediate }
 
 		struct CbnezInstruction
 		{
@@ -1291,7 +1291,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define cbnez(rs2, imm) CbnezInstruction{ rs2, imm }
+#define cbnez(rs2, immediate) CbnezInstruction{ rs2, immediate }
 
 		struct CliInstruction
 		{
@@ -1309,7 +1309,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define cli(rd, imm) CliInstruction{ rd, imm }
+#define cli(rd, immediate) CliInstruction{ rd, immediate }
 
 		struct CluiInstruction
 		{
@@ -1327,7 +1327,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define clui(rd, imm) CluiInstruction{ rd, imm }
+#define clui(rd, immediate) CluiInstruction{ rd, immediate }
 
 		struct CaddiInstruction
 		{
@@ -1345,7 +1345,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define caddi(rd, imm) CaddiInstruction{ rd, imm }
+#define caddi(rd, immediate) CaddiInstruction{ rd, immediate }
 
 		struct Caddi16spInstruction
 		{
@@ -1362,7 +1362,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define caddi16sp(imm) Caddi16spInstruction{ imm }
+#define caddi16sp(immediate) Caddi16spInstruction{ immediate }
 
 		struct Caddi4spnInstruction
 		{
@@ -1380,7 +1380,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define caddi4spn(rd, imm) Caddi4spnInstruction{ rd, imm }
+#define caddi4spn(rd, immediate) Caddi4spnInstruction{ rd, immediate }
 
 		struct CslliInstruction
 		{
@@ -1452,7 +1452,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define candi(rd, imm) CandiInstruction{ rd, imm }
+#define candi(rd, immediate) CandiInstruction{ rd, immediate }
 
 		struct CmvInstruction
 		{
@@ -1653,7 +1653,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define csrrwi(rd, csr, imm) CsrrwiInstruction{ csr, rd, imm }
+#define csrrwi(rd, csr, immediate) CsrrwiInstruction{ csr, rd, immediate }
 
 		struct CsrrsiInstruction
 		{
@@ -1670,7 +1670,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define csrrsi(rd, csr, imm) CsrrsiInstruction{ csr, rd, imm }
+#define csrrsi(rd, csr, immediate) CsrrsiInstruction{ csr, rd, immediate }
 
 		struct CsrrciInstruction
 		{
@@ -1687,7 +1687,7 @@ namespace hz
 			RISCVInstructionKind itype() const;
 			ByteRange emit() const;
 		};
-#define csrrci(rd, csr, imm) CsrrciInstruction{ csr, rd, imm }
+#define csrrci(rd, csr, immediate) CsrrciInstruction{ csr, rd, immediate }
 	}
 
 	// Zifencei extension instructions

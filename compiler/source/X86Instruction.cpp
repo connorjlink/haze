@@ -19,8 +19,8 @@ import std;
 
 namespace
 {
-	static constexpr std::uint8_t OPERAND_SIZE_OVERRIDE_PREFIX = 0x66;
-	static constexpr std::uint8_t ADDRESS_SIZE_OVERRIDE_PREFIX = 0x67;
+	static constexpr auto OPERAND_SIZE_OVERRIDE_PREFIX = std::uint8_t{ 0x66 };
+	static constexpr auto ADDRESS_SIZE_OVERRIDE_PREFIX = std::uint8_t{ 0x67 };
 }
 
 namespace hz::x86
@@ -59,12 +59,11 @@ namespace hz::x86
 	ByteRange PushInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand_type(operand))
 		{
 			case IMMEDIATE:
 			{
-				const auto immediate_operand = AS_IMMEDIATE_OPERAND(operand.get());
-				const auto immediate = immediate_operand->immediate;
+				const auto immediate_operand = std::get<ImmediateOperand>(operand);
 
 				// NOTE: 8- and 16-bits are implicitly sign-extended to 32-bits when executed
 				if (immediate.is_within_range<std::int8_t>())
@@ -116,13 +115,10 @@ namespace hz::x86
 				// 50+rd --> PUSH r32
 				return { static_cast<std::uint8_t>(0x50 | source) };
 			} break;
-
-			default:
-			{
-				CommonErrors::unsupported_instruction_format("push", _operand_type_map.at(operand->otype()));
-				return {};
-			} break;
 		}
+
+		CommonErrors::unsupported_instruction_format("push", to_string(operand));
+		return {};
 	}
 
 
