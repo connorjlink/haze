@@ -16,6 +16,11 @@ namespace hz
 		stream << std::format("{}: {}\n", context, message);
 	}
 
+	void Log::print(std::string_view context, std::string_view message)
+	{
+		stream << std::format("{}: {}\n", context, message);
+	}
+
 	void Log::raw(const std::string& message)
 	{
 		if (USE_UNSAFE(CommandLineOptions)->verbosity != VerbosityKind::SILENT)
@@ -26,19 +31,19 @@ namespace hz
 
 	void Log::with_severity(const std::string& message, ErrorKind severity)
 	{
-		print(_error_type_map.at(severity), message);
+		print(to_string(severity), message);
 	}
 	
 	void Log::output(const std::string& message)
 	{
-		print(_error_type_map.at(ErrorKind::OUTPUT), message);
+		print(to_string(ErrorKind::OUTPUT), message);
 	}
 
 	void Log::info(const std::string& message)
 	{
 		if (USE_UNSAFE(CommandLineOptions)->verbosity == VerbosityKind::VERBOSE)
 		{
-			print(_error_type_map.at(ErrorKind::INFORMATION), message);
+			print(to_string(ErrorKind::INFORMATION), message);
 		}
 	}
 
@@ -47,7 +52,7 @@ namespace hz
 		if (USE_UNSAFE(CommandLineOptions)->verbosity == VerbosityKind::VERBOSE ||
 			USE_UNSAFE(CommandLineOptions)->verbosity == VerbosityKind::NORMAL)
 		{
-			print(_error_type_map.at(ErrorKind::WARNING), message);
+			print(to_string(ErrorKind::WARNING), message);
 		}
 	}
 
@@ -57,7 +62,7 @@ namespace hz
 			USE_UNSAFE(CommandLineOptions)->verbosity == VerbosityKind::NORMAL ||
 			USE_UNSAFE(CommandLineOptions)->verbosity == VerbosityKind::QUIET)
 		{
-			print(_error_type_map.at(ErrorKind::ERROR), message);
+			print(to_string(ErrorKind::ERROR), message);
 		}
 	}
 
@@ -65,7 +70,7 @@ namespace hz
 	{
 		if (USE_UNSAFE(CommandLineOptions)->verbosity != VerbosityKind::SILENT)
 		{
-			print(_error_type_map.at(ErrorKind::UNCORRECTABLE), message);
+			print(to_string(ErrorKind::UNCORRECTABLE), message);
 		}
 	}
 }

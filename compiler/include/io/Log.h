@@ -12,6 +12,7 @@ namespace hz
 	{
 	private:
 		static void print(const std::string&, const std::string&);
+		static void print(std::string_view, std::string_view);
 
 	public:
 		static void raw(const std::string&);

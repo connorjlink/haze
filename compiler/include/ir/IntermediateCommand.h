@@ -94,10 +94,10 @@ namespace hz
 	{
 	private:
 		Register location;
-		Variable* value;
+		ValueHandle value;
 
 	public:
-		LocalVariableCommand(Register location, Variable* value)
+		LocalVariableCommand(Register location, ValueHandle value)
 			: location{ location }, value{ value }
 		{
 		}
@@ -111,10 +111,10 @@ namespace hz
 	{
 	private:
 		Register location;
-		Variable* value;
+		ValueHandle value;
 
 	public:
-		GlobalVariableCommand(Register location, Variable* value)
+		GlobalVariableCommand(Register location, ValueHandle value)
 			: location{ location }, value{ value }
 		{
 		}

@@ -19,7 +19,7 @@ namespace hz
 	// Integer Literal Expression
 	//////////////////////////////////////////////////////
 
-	std::string IntegerLiteralExpression::format(void) const
+	std::string IntegerLiteralExpression::format(std::uint32_t) const
 	{
 		return std::string();
 	}
@@ -49,7 +49,7 @@ namespace hz
 
 
 
-	std::string BinaryExpression::format(void) const
+	std::string BinaryExpression::format(std::uint32_t) const
 	{
 		return std::format("{} {} {}",
 			left.format(),

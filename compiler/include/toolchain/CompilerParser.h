@@ -2,9 +2,9 @@
 #define HAZE_COMPILERPARSER_H
 
 #include <ast/expression/Expression.h>
+#include <ast/declaration/Declaration.h>
 #include <ast/function/Function.h>
 #include <ast/statement/Statement.h>
-#include <ast/declaration/Declaration.h>
 #include <toolchain/Parser.h>
 #include <type/Type.h>
 
@@ -13,12 +13,13 @@
 
 namespace hz
 {
-	struct MemberDeclarationExpression;
-
 	struct CompilerParser 
-		: public Parser 
+		: public Parser<CompilerParser>
 		, public ServiceTag<CompilerParser>
 	{
+	private:
+		using NodeType = DeclarationHandle;
+
 	public:
 		std::unordered_map<std::string, std::string> function_label_map;
 
@@ -48,10 +49,6 @@ namespace hz
 		Parser* createassembler_parser(const std::string&);
 		StatementReference<InlineAssemblyStatement> parse_inline_asm_statement(const std::string&);
 
-	private:
-		MemberDeclarationExpression* parse_member_declaration_statement(const std::string&);
-		std::vector<MemberDeclarationExpression*> parse_member_declaration_statements(const std::string&);
-
 	public:
 		std::vector<ExpressionHandle> parse_arguments(bool);
 
@@ -69,8 +66,10 @@ namespace hz
 		std::vector<FunctionHandle> parse_functions();
 
 	public:
-		virtual ParserType ptype() const override;
-		virtual std::vector<Node*> parse() override;
+		std::vector<NodeType> parse() const
+		{
+
+		}
 
 	public:
 		using Parser::Parser;

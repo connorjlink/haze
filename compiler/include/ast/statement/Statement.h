@@ -62,7 +62,7 @@ namespace hz
 	struct NullStatement : public StatementBase
 	{
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -82,7 +82,7 @@ namespace hz
 		ExpressionHandle expression;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -105,7 +105,7 @@ namespace hz
 		ExpressionHandle expression;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -127,7 +127,7 @@ namespace hz
 		StatementHandle else_body;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -148,7 +148,7 @@ namespace hz
 		StatementHandle body;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -169,7 +169,7 @@ namespace hz
 		StatementHandle body;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -192,7 +192,7 @@ namespace hz
 		StatementHandle body;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -212,7 +212,7 @@ namespace hz
 		std::string label;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -229,7 +229,7 @@ namespace hz
 	struct ContinueStatement : public StatementBase
 	{
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -246,7 +246,7 @@ namespace hz
 	struct BreakStatement : public StatementBase
 	{
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -275,7 +275,7 @@ namespace hz
 		StatementHandle fallback;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -295,7 +295,7 @@ namespace hz
 		std::vector<StatementHandle> substatements;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -316,7 +316,7 @@ namespace hz
 		StatementHandle statement;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -336,7 +336,7 @@ namespace hz
 		DeclarationHandle declaration;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
@@ -358,7 +358,7 @@ namespace hz
 		std::vector<CommandHandle> commands;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;

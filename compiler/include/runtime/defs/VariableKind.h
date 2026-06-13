@@ -10,7 +10,7 @@ namespace hz
 {
 #define VARIABLE_KINDS(X) \
 	X(VOID,            VoidVariable,          void) \
-	X(INT,             IntVariable,           int) \
+	X(INT,             IntegerVariable,       int) \
 	X(FLOAT,           FloatVariable,         float) \
 	X(STRUCT_OR_UNION, StructOrUnionVariable, struct or union) \
 	X(ENUM,            EnumVariable,          enum)

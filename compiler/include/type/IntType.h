@@ -39,6 +39,7 @@ namespace hz
 		IntKind int_kind;
 
 	public:
+		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
 	};

@@ -17,6 +17,7 @@ namespace hz
 		std::optional<Address> length;
 
 	public:
+		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
 	};

@@ -16,6 +16,8 @@ namespace hz
 		RIGHT,
 	};
 
+	using Precedence = std::uint8_t;
+
 
 #define PRIMARY_EXPRESSION_KINDS(X) \
 	X(IDENTIFIER,        LEFT, 0, IdentifierExpression,       identifier) \

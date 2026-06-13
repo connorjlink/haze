@@ -16,7 +16,7 @@ namespace hz
 #pragma message("TODO: figure out how to get virtual dependencies sorted through the services (i.e., register the Parser and polymorphically initialize with AssemblerParser")
 	{
 	private:
-		using NodeType = Command;
+		using NodeType = CommandHandle;
 
 	private:
 		Address base;

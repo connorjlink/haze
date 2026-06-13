@@ -59,28 +59,28 @@ namespace hz
 
 	struct Function 
 		: public FunctionBase
-		, public InjectService<Generator, Parser, Allocator>
+		, public InjectService<Generator, Parser<CompilerParser>, Allocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:
-		const std::string& name;
+		std::string_view name;
 		TypeHandle return_type;
 		std::vector<ExpressionHandle> arguments;
 		StatementHandle body;
 
 	public:
-		Function(const std::string& name, TypeHandle return_type, const std::vector<ExpressionHandle>& arguments, StatementHandle body, const Token& token)
-			: FunctionBase{ token }, name{ name }, return_type{ return_type }, arguments{ arguments }, body{ body }
-		{
-		}
-
-	public:
 		FunctionKind function_kind(void) const;
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
 		TypeHandle get_type(const Storage&) const;
+
+	public:
+		Function(std::string_view name, TypeHandle return_type, std::vector<ExpressionHandle> arguments, StatementHandle body, const Token& token)
+			: FunctionBase{ token }, name{ name }, return_type{ return_type }, arguments{ std::move(arguments) }, body{ body }
+		{
+		}
 	};
 #define MAKE_FUNCTION(name, returntype, arguments, statement, token) Function{ name, returntype, arguments, make_handle(ast, statement), token }
 

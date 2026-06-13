@@ -50,20 +50,6 @@ namespace hz
 		std::vector<Token> fetch_until(TokenKind);
 
 	protected:
-#pragma message("TODO: replace this with primary/postfix/binary/unary operator precedence")
-		enum struct Precedence
-		{
-			MINIMUM,
-			ASSIGN,
-			EQUALITY,
-			COMPARE,
-			TERM, // + (or - later)
-			FACTOR, // * (or / later maybe)
-		};
-
-	protected:
-
-	protected:
 		ExpressionReference<IdentifierExpression> parse_identifier_expression();
 		ExpressionReference<IntegerLiteralExpression> parse_integerliteral_expression();
 		ExpressionReference<StringLiteralExpression> parse_string_expression();

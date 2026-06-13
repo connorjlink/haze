@@ -38,11 +38,9 @@ namespace hz
 		using Storage = TypeSumStorage;
 
 		template<typename Self>
-		TypeKind type_kind2(this Self&&);
-
-		TypeKind type_kind() const
+		TypeKind type_kind(this Self&& self)
 		{
-			return const_cast<TypeBase*>(this)->type_kind2();
+			return self.type_kind();
 		}
 	};
 }
@@ -85,23 +83,6 @@ namespace hz
 		using Type = TypeSumImplementation::Type;
 		using Anchor = TypeSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	TypeKind TypeBase::type_kind2(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, precedence, name, type) case TypeIndexV<TypeKind::enumerator, typename Storage::Type>: return TypeKind::enumerator;
-			TYPE_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid type tag `{}`", self.tag_type()), NULL_TOKEN);
-
-		return TypeKind::VOID;
-	}
 }
 
 #endif

@@ -14,6 +14,8 @@
 
 namespace hz
 {
+	struct Context;
+
 	// forward declare sum storage and self-referential types for facade
 
 	FORWARD_DECLARE_SUM(Command)
@@ -62,7 +64,7 @@ namespace hz
 		}
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
@@ -88,7 +90,7 @@ namespace hz
 
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
@@ -107,7 +109,7 @@ namespace hz
 		}
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
@@ -126,7 +128,7 @@ namespace hz
 		}
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;

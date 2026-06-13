@@ -1,12 +1,12 @@
 #ifndef HAZE_GENERATOR_H
 #define HAZE_GENERATOR_H
 
-#include <ast/declaration/Declaration.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
 #include <toolchain/models/Linkable.h>
 #include <utility/Constants.h>
+#include <utility/Sum.h>
 
 // Haze Generator.h
 // (c) Connor J. Link. All Rights Reserved.
@@ -17,8 +17,9 @@ namespace hz
 {
 	struct ArgumentExpression;
 
-	FORWARD_DECLARE_SUM(Expression);
-	FORWARD_DECLARE_SUM(Value);
+	FORWARD_DECLARE_SUM(Declaration)
+	FORWARD_DECLARE_SUM(Expression)
+	FORWARD_DECLARE_SUM(Value)
 
 
 	struct Generator

@@ -1,6 +1,7 @@
 #ifndef HAZE_LINKABLE_H
 #define HAZE_LINKABLE_H
 
+#include <ast/function/Function.h>
 #include <utility/Sum.h>
 
 // Haze Linkable.h
@@ -10,14 +11,12 @@ namespace hz
 {
 	FORWARD_DECLARE_SUM(Command)
 
-	struct FunctionSymbol;
 	struct IntermediateCommand;
 
 	struct Linkable
 	{
 	public:
-		// a reference to the FunctionSymbol associated with this
-		FunctionSymbol* symbol;
+		FunctionHandle function;
 		// object code for the function
 		std::vector<CommandHandle> commands;
 		// ir code of the function
@@ -29,8 +28,8 @@ namespace hz
 		void optimize(void);
 
 	public:
-		Linkable(FunctionSymbol* symbol, std::vector<CommandHandle> commands, std::vector<IntermediateCommand*> ir, Address offset)
-			: symbol{ symbol }, commands{ std::move(commands) }, ir{ std::move(ir) }, offset{ offset }
+		Linkable(FunctionHandle function, std::vector<CommandHandle> commands, std::vector<IntermediateCommand*> ir, Address offset)
+			: function{ function }, commands{ std::move(commands) }, ir{ std::move(ir) }, offset{ offset }
 		{
 		}
 	};

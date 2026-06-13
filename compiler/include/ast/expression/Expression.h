@@ -5,7 +5,6 @@
 #include <ast/expression/defs/ExpressionKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <runtime/Context.h>
 #include <toolchain/Generator.h>
 #include <type/Type.h>
 #include <utility/Sum.h>
@@ -15,6 +14,8 @@
 
 namespace hz
 {
+	struct Context;
+
 	// forward declare sum storage and self-referential types for facade
 
 	FORWARD_DECLARE_SUM(Expression)
@@ -68,7 +69,7 @@ namespace hz
 		Kind identifier_kind;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -88,7 +89,7 @@ namespace hz
 		BigInteger value;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -108,7 +109,7 @@ namespace hz
 		BigFloat value;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -128,7 +129,7 @@ namespace hz
 		std::string value;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -148,7 +149,7 @@ namespace hz
 		char value;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -168,7 +169,7 @@ namespace hz
 		ExpressionHandle inner;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -202,7 +203,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -222,7 +223,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -243,7 +244,7 @@ namespace hz
 		std::vector<ExpressionHandle> arguments;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -264,7 +265,7 @@ namespace hz
 		ExpressionHandle index;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -285,7 +286,7 @@ namespace hz
 		ExpressionReference<IdentifierExpression> member;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -306,7 +307,7 @@ namespace hz
 		ExpressionReference<IdentifierExpression> member;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -335,7 +336,7 @@ namespace hz
 		std::vector<Initializer> initializers;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -369,7 +370,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -390,7 +391,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -410,7 +411,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -430,7 +431,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -450,7 +451,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -470,7 +471,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -491,7 +492,7 @@ namespace hz
 		TypeHandle type;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -513,7 +514,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -533,7 +534,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -553,7 +554,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;
@@ -573,7 +574,7 @@ namespace hz
 		TypeHandle type;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
 		ExpressionHandle optimize(const Storage&) const;

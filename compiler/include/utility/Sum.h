@@ -48,7 +48,7 @@ namespace hz
 	template<typename MethodT, typename SumStorageT, typename TupleT>
 	consteval auto make_dispatch_table()
 	{
-		using FunctionT = typename MethodTraits<decltype(MethodT::pointer)>::FunctionT;
+		using FunctionT = typename MethodT::FunctionT;
 
 		return make_dispatch_table_implementation<MethodT, SumStorageT, TupleT>(
 			std::make_index_sequence<std::tuple_size_v<TupleT>>{},
@@ -120,14 +120,14 @@ namespace hz
 	};
 
 
-	template<typename T, typename SumT, typename FunctionT>
-	concept ImplementsMethod = ImplementsMethodSignature<T, FunctionT, typename MethodTraits<decltype(FunctionT::pointer)>::FuncType>::value;
+	template<typename T, typename SumT, typename MethodT>
+	concept ImplementsMethod = ImplementsMethodSignature<T, MethodT, typename MethodT::FunctionT>::value;
 
 	template<typename T, typename SumT, typename MethodsT, std::size_t... Is>
 	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
 
 	template<typename T, typename SumT, typename MethodsT>
-	concept SumTuple = SumTupleImplementation < T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{} > ;
+	concept SumTuple = SumTupleImplementation<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
 
 
 	// sum type and dispatch family
@@ -295,13 +295,13 @@ struct std::formatter<T>
 
 namespace hz
 {
-#define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name, decltype(&AnchorT::name)>,
+#define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name>,
 #define SUM_DISPATCH_ENTRY(name, returntype) \
 		template<typename Self, typename... ArgumentsTs> \
 		constexpr decltype(auto) name(this Self&& self, ArgumentsTs&&... arguments) \
 		{ \
 			using Anchor = typename SumStorageT::Anchor; \
-			return self.template call<Method<&Anchor::name, decltype(&Anchor::name)>>(std::forward<ArgumentsTs>(arguments)...); \
+			return self.template call<Method<&Anchor::name>>(std::forward<ArgumentsTs>(arguments)...); \
 		}
 
 #define DEFINE_SUM(name, methods) \

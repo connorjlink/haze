@@ -57,7 +57,7 @@ namespace hz
 		std::vector<std::string> formal_parameters;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
@@ -77,7 +77,7 @@ namespace hz
 		ExpressionHandle initializer;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
@@ -96,7 +96,7 @@ namespace hz
 		TypeReference<StructOrUnionType> type;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
@@ -114,7 +114,7 @@ namespace hz
 		TypeReference<EnumType> type;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;
@@ -132,7 +132,7 @@ namespace hz
 		TypeReference<TypedefNameType> type;
 
 	public:
-		std::string format(void) const;
+		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		DeclarationHandle evaluate(const Storage&, Context&) const;
 		DeclarationHandle optimize(const Storage&) const;

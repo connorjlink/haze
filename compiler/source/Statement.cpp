@@ -16,7 +16,7 @@ namespace hz
 	// Null Statement
 	//////////////////////////////////////////////////////
 
-	std::string NullStatement::format(void) const
+	std::string NullStatement::format(std::uint32_t) const
 	{
 		return ";";
 	}
@@ -49,7 +49,7 @@ namespace hz
 	// Expression Statement
 	//////////////////////////////////////////////////////
 
-	std::string ExpressionStatement::format(void) const
+	std::string ExpressionStatement::format(std::uint32_t) const
 	{
 		return std::format("{};", expression);
 	}
@@ -67,12 +67,13 @@ namespace hz
 
 	StatementHandle ExpressionStatement::optimize(const Storage& storage) const
 	{
-		if (auto expression_optimized = expression.optimize(storage))
+		const auto expression_optimized = expression.optimize(storage);
+		if (!expression_optimized)
 		{
-			return expression_optimized;
+			return MAKE_INVALID_HANDLE(storage, Statement);
 		}
 
-		return MAKE_INVALID_HANDLE(storage, Statement);
+		return expression_optimized;
 	}
 
 	TypeHandle ExpressionStatement::get_type(const TypeSumStorage& storage) const
@@ -86,7 +87,7 @@ namespace hz
 	// Return Statement
 	//////////////////////////////////////////////////////
 
-	std::string ReturnStatement::format(void) const
+	std::string ReturnStatement::format(std::uint32_t) const
 	{
 		return std::format("return {};", expression);
 	}
@@ -110,20 +111,20 @@ namespace hz
 
 	ASTTask ReturnStatement::evaluate(const Storage& storage, Context& context) const
 	{
-		const auto expression_evaluated = expression.evaluate(storage, context);
-		const auto value = co_await ASTAwaiter{ expression_evaluated };
+		const auto value = co_await ASTAwaiter{ expression.evaluate(storage, context) };
 
 		co_return value;
 	}
 
 	StatementHandle ReturnStatement::optimize(const Storage& storage) const
 	{
-		if (auto expression_optimized = expression.optimize(storage))
+		const auto expression_optimized = expression.optimize(storage);
+		if (!expression_optimized)
 		{
-			return expression_optimized;
+			return MAKE_INVALID_HANDLE(storage, Statement);
 		}
 
-		return MAKE_INVALID_HANDLE(storage, Statement);
+		return expression_optimized;
 	}
 
 	TypeHandle ReturnStatement::get_type(const TypeSumStorage& storage) const
@@ -139,7 +140,7 @@ namespace hz
 	// For Statement
 	//////////////////////////////////////////////////////
 
-	std::string ForStatement::format(void) const
+	std::string ForStatement::format(std::uint32_t) const
 	{
 		return std::format("for ({}; {}; {}) {}", initialization, condition, increment, body);
 	}
@@ -254,6 +255,121 @@ namespace hz
 	TypeHandle ForStatement::get_type(const TypeSumStorage& storage) const
 	{
 		// no type result possible for for statement
+		return MAKE_INVALID_HANDLE(storage, Type);
+	}
+
+
+	//////////////////////////////////////////////////////
+	// Compound Statement
+	//////////////////////////////////////////////////////
+
+	std::string CompoundStatement::format(std::uint32_t indentation_level) const
+	{
+		return std::format("{{{}}}",
+			substatements 
+				| std::ranges::views::transform([](const auto& substatement) { return substatement.format(indentation_level + TAB); })
+				| std::ranges::views::join_with("\n\n")
+				| std::ranges::views::transform([&](const auto& line) { return std::format("{}{}", indentation_table[indentation_level], line); })
+				| std::ranges::to<std::string>());
+	}
+
+	void CompoundStatement::generate(const Storage& storage) const
+	{
+		for (const auto& substatement : substatements)
+		{
+			if (!substatement)
+			{
+				continue;
+			}
+
+			substatement.generate(storage);
+		}
+	}
+
+	ASTTask CompoundStatement::evaluate(const Storage& storage, Context& context) const
+	{
+		for (const auto& substatement : substatements)
+		{
+			if (substatement)
+			{
+				continue;
+			}
+
+			co_await ASTAwaiter{ substatement.evaluate(storage, context) };
+		}
+
+		co_return MAKE_INVALID_HANDLE(storage, Variable);
+	}
+
+	StatementHandle CompoundStatement::optimize(const Storage& storage) const
+	{
+		auto result = std::vector<StatementHandle>{};
+
+		bool did_optimize = false;
+
+		for (const auto& substatement : substatements)
+		{
+			if (!substatement)
+			{
+				continue;
+			}
+
+			const auto substatement_optimized = substatement.optimize(storage);
+			if (!substatement_optimized)
+			{
+				result.emplace_back(substatement);
+				continue;
+			}
+
+			result.emplace_back(substatement_optimized);
+			did_optimize = true;
+		}
+
+		if (!did_optimize)
+		{
+			return MAKE_INVALID_HANDLE(storage, Statement);
+		}
+
+		return MAKE_HANDLE(CompoundStatement, Statement, storage, MAKE_COMPOUND_STATEMENT(result, token));
+	}
+
+	TypeHandle CompoundStatement::get_type(const TypeSumStorage& storage) const
+	{
+		// no type result possible for compound statement
+		return MAKE_INVALID_HANDLE(storage, Type);
+	}
+
+
+
+	//////////////////////////////////////////////////////
+	// Inline Assembly Statement
+	//////////////////////////////////////////////////////
+
+	std::string InlineAssemblyStatement::format(std::uint32_t) const
+	{
+		return ";";
+	}
+
+	void NullStatement::generate(const Storage&) const
+	{
+		// no code generation necessary for null statement
+	}
+
+	ASTTask NullStatement::evaluate(const Storage& storage, Context&) const
+	{
+		// no evaluation necessary for null statement
+		co_return MAKE_INVALID_HANDLE(storage, Statement);
+	}
+
+	StatementHandle NullStatement::optimize(const Storage& storage) const
+	{
+		// no optimizations possible for null statement
+		return MAKE_INVALID_HANDLE(storage, Statement);
+	}
+
+	TypeHandle NullStatement::get_type(const TypeSumStorage& storage) const
+	{
+		// no type result possible for null statement
 		return MAKE_INVALID_HANDLE(storage, Type);
 	}
 

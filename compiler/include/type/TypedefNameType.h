@@ -16,6 +16,7 @@ namespace hz
 		std::string name;
 
 	public:
+		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
 	};

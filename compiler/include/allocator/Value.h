@@ -19,7 +19,7 @@ namespace hz
 	// forward declare sum storage and self-referential types for facade
 
 #define VALUE_METHODS(X, handlet) \
-	X(tag_type,   ValueKind) \
+	X(value_kind, ValueKind) \
 	X(format,     std::string) \
 	X(load_into,  void) \
 	X(store_from, void)
@@ -45,9 +45,6 @@ namespace hz
 	{
 	public:
 		using Storage = ValueSumStorage;
-
-		template<typename Self>
-		ValueKind value_kind(this Self&&);
 	};
 }
 
@@ -59,7 +56,7 @@ namespace hz
 		Register index;
 
 	public:
-		ValueKind tag_type() const
+		ValueKind value_kind() const
 		{
 			return ValueKind::REGISTER;
 		}
@@ -93,7 +90,7 @@ namespace hz
 		Offset index;
 
 	public:
-		ValueKind tag_type() const
+		ValueKind value_kind() const
 		{
 			return ValueKind::STACK;
 		}
@@ -123,7 +120,7 @@ namespace hz
 		Address index;
 
 	public:
-		ValueKind tag_type() const
+		ValueKind value_kind() const
 		{
 			return ValueKind::STATIC;
 		}
@@ -170,27 +167,6 @@ namespace hz
 		using Type = ValueSumImplementation::Type;
 		using Anchor = ValueSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	ValueKind ValueBase::value_kind(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ValueKind::enumerator;
-			PRIMARY_EXPRESSION_KINDS(X)
-			POSTFIX_EXPRESSION_KINDS(X)
-			UNARY_EXPRESSION_KINDS(X)
-			BINARY_EXPRESSION_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid value tag `{}`", self.tag_type()), self.token);
-
-		// error recovery does not care about value kind
-		return ValueKind::STACK;
-	}
 }
 
 #endif

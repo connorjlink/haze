@@ -42,19 +42,10 @@
     <ClCompile Include="source\CompilerToolchain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\CompoundStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Daemon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DotDefineCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DotOrgCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Error.cpp">
@@ -67,9 +58,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ExitProgramException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ExitStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Expression.cpp">
@@ -312,9 +300,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\symbol\Symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\symbol\SymbolDatabase.h">

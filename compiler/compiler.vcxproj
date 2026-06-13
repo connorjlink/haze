@@ -108,6 +108,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\async\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -207,16 +208,12 @@
     <ClCompile Include="source\CommonErrors.cpp" />
     <ClCompile Include="source\CompilerParser.cpp" />
     <ClCompile Include="source\CompilerToolchain.cpp" />
-    <ClCompile Include="source\CompoundStatement.cpp" />
     <ClCompile Include="source\Context.cpp" />
     <ClCompile Include="source\Daemon.cpp" />
-    <ClCompile Include="source\DotDefineCommand.cpp" />
-    <ClCompile Include="source\DotOrgCommand.cpp" />
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\ErrorContext.cpp" />
     <ClCompile Include="source\ErrorReporter.cpp" />
     <ClCompile Include="source\ExitProgramException.cpp" />
-    <ClCompile Include="source\ExitStatement.cpp" />
     <ClCompile Include="source\Expression.cpp" />
     <ClCompile Include="source\ExtendedInteger.cpp" />
     <ClCompile Include="source\File.cpp" />
@@ -330,7 +327,6 @@
     <ClInclude Include="include\runtime\Context.h" />
     <ClInclude Include="include\statistic\models\Statistic.h" />
     <ClInclude Include="include\statistic\StatisticExporter.h" />
-    <ClInclude Include="include\symbol\Symbol.h" />
     <ClInclude Include="include\symbol\SymbolDatabase.h" />
     <ClInclude Include="include\symbol\SymbolExporter.h" />
     <ClInclude Include="include\symbol\defs\SymbolKind.h" />

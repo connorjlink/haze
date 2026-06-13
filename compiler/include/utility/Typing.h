@@ -29,42 +29,55 @@ namespace hz
 
 
 	// function type traits
-	template<auto MethodPointer, typename Signature>
+	template<auto Pointer>
 	struct Method;
 
-	template<auto MethodPointer, typename R, typename... ArgumentsTs>
-	struct Method<MethodPointer, R(ArgumentsTs...)>
-	{
-		static constexpr auto pointer = MethodPointer;
-		using ReturnType = R;
-	};
-
-
+	// Non-const member function
+	// helper trait to extract signatures purely by type (bypasses MSVC NTTP bugs)
 	template<typename T>
 	struct MethodTraits;
 
+	// Non-const member function
 	template<typename R, typename C, typename... ArgumentsTs>
 	struct MethodTraits<R(C::*)(ArgumentsTs...)>
 	{
+		using ReturnType = R;
 		using FunctionT = void(ArgumentsTs...);
 	};
 
+	// const member function
 	template<typename R, typename C, typename... ArgumentsTs>
 	struct MethodTraits<R(C::*)(ArgumentsTs...) const>
 	{
+		using ReturnType = R;
 		using FunctionT = void(ArgumentsTs...);
 	};
 
+	// noexcept member function
 	template<typename R, typename C, typename... ArgumentsTs>
 	struct MethodTraits<R(C::*)(ArgumentsTs...) noexcept>
 	{
+		using ReturnType = R;
 		using FunctionT = void(ArgumentsTs...);
 	};
 
+	// const noexcept member function
 	template<typename R, typename C, typename... ArgumentsTs>
 	struct MethodTraits<R(C::*)(ArgumentsTs...) const noexcept>
 	{
+		using ReturnType = R;
 		using FunctionT = void(ArgumentsTs...);
+	};
+
+	// primary method wrapper
+	template<auto Pointer>
+	struct Method
+	{
+		static constexpr auto pointer = Pointer;
+
+		using Traits = MethodTraits<decltype(Pointer)>;
+		using ReturnType = typename Traits::ReturnType;
+		using FunctionT = typename Traits::FunctionT;
 	};
 
 
