@@ -19,7 +19,7 @@ namespace hz
 	void IfStatement::generate(ValueHandle)
 	{
 		// 3 digits of randomness for now
-		const auto uuid = hz::generate(3);
+		const auto uuid = hz::generate_digit_string(3);
 
 		const auto begin_if_label = std::format("begin_if_{:03d}", uuid);
 		const auto begin_else_label = std::format("begin_else_{:03d}", uuid);

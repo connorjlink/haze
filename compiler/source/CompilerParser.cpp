@@ -490,7 +490,7 @@ namespace hz
 		const auto name_token = consume(TokenKind::IDENTIFIER);
 
 		// 5 digits of randomness for now
-		const auto uuid = hz::generate(5);
+		const auto uuid = hz::generate_digit_string(5);
 		const auto end_function_label = std::format("end_function_{:05d}", uuid);
 		function_label_map[name_token.text] = end_function_label;
 

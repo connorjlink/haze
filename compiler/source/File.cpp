@@ -38,12 +38,12 @@ namespace
 
 namespace hz
 {
-	ToolchainKind File::tag_type(void) const
+	ToolchainKind File::toolchain_kind() const
 	{
 		return type;
 	}
 
-	std::string File::get_raw_contents(void) 
+	std::string File::get_raw_contents() 
 	{
 #pragma message("TODO: overhaul with Lazy<T>")
 
@@ -70,7 +70,7 @@ namespace hz
 			"file {} not found", filepath), NULL_TOKEN);
 	}
 
-	std::string File::get_processed_contents(void) const
+	std::string File::get_processed_contents() const
 	{
 		if (processed_contents.has_value())
 		{
@@ -93,7 +93,7 @@ namespace hz
 			"file {} not yet loaded", filepath), NULL_TOKEN);
 	}
 
-	void File::reload(void)
+	void File::reload()
 	{
 		reload_count++;
 
@@ -103,20 +103,21 @@ namespace hz
 		processed_contents.reset();
 
 		USE_SAFE(ErrorReporter)->post_information(std::format(
-			"reloading file `{}` for the {} time", filepath, ::friendlify_ordinal(reload_count)), NULL_TOKEN);
+			"reloading file `{}` for the {} time", filepath, friendlify_ordinal(reload_count)), NULL_TOKEN);
 	}
 
-	void File::compute_type(void)
+	void File::compute_type()
 	{
 		const auto path = std::filesystem::path(filepath);
 		const auto extension = path.extension().string();
 
-		if (!_toolchain_map.contains(extension))
+		const auto type_optional = from_string<ToolchainKind>(extension);
+		if (!type_optional)
 		{
 			USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 				"unrecognized file extension {}", extension), NULL_TOKEN);
 		}
 
-		type = _toolchain_map.at(extension);
+		type = *type_optional;
 	}
 }

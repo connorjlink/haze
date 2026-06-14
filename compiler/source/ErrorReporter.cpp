@@ -35,7 +35,7 @@ namespace hz
 		}
 	}
 
-	std::size_t ErrorReporter::get_context_count(void)
+	std::size_t ErrorReporter::get_context_count()
 	{
 		std::scoped_lock lock{ mutex };
 

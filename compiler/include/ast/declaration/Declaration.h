@@ -29,7 +29,7 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	public:
-		using Storage = DeclarationSumStorage;
+		using Storage = DeclarationStorage;
 
 	public:
 		Token token;
@@ -153,8 +153,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 
 	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsDeclaration = SumTuple<SumMemberT, SumStorageT, DeclarationASTMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsDeclaration = SumTuple<SumMemberT, StorageT, DeclarationASTMethods<StorageT>>;
 
 	using DeclarationKinds = SumTypeList
 	<
@@ -166,7 +166,7 @@ namespace hz
 
 	using DeclarationSumImplementation = MakeSum<DeclarationASTMethods, DeclarationKinds>::Type;
 
-	struct DeclarationSumStorage : public DeclarationSumImplementation::Storage
+	struct DeclarationStorage : public DeclarationSumImplementation::Storage
 	{
 		using DeclarationSumImplementation::Storage::Storage;
 
@@ -180,7 +180,7 @@ namespace hz
 	{
 		switch (self.tag_type())
 		{
-#define X(enumerator, type, name) case TypeIndexV<type, typename DeclarationSumStorage::Type>: return DeclarationKind::enumerator;
+#define X(enumerator, type, name) case TypeIndexV<type, typename DeclarationStorage::Type>: return DeclarationKind::enumerator;
 			DECLARATION_KINDS(X)
 #undef X
 		}

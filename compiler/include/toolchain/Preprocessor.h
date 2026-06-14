@@ -39,21 +39,21 @@ namespace hz
 		void load_file(const std::string&);
 
 	public:
-		bool match_macro_invokation(void);
-		void handle_include(void);
-		void handle_macro_definition(void);
+		bool match_macro_invokation();
+		void handle_include();
+		void handle_macro_definition();
 		void handle_functionlike_macro_definition(const std::string&);
 		void handle_objectlike_macro_definition(const std::string&);
-		void handle_macro_invokation(void);
+		void handle_macro_invokation();
 		void handle_functionlike_macro_invokation(const std::string&);
 		void handle_objectlike_macro_invokation(const std::string&);
-		void handle_conditional_compilation(void);
+		void handle_conditional_compilation();
 
 	public:
 		void preprocess(const std::string&); // initial file
 
 	public:
-		ScannerType stype(void) const noexcept;
+		ScannerKind stype() const noexcept;
 
 	public:
 		Preprocessor(const std::string&);

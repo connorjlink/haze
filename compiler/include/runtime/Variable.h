@@ -36,7 +36,7 @@ namespace hz
 	public:
 		template<typename T>
 		using Dispatcher = VariableSumDispatcher<T>;
-		using Storage = VariableSumStorage;
+		using Storage = VariableStorage;
 
 	public:
 		template<typename Self>
@@ -145,8 +145,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 
 	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsVariable = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsVariable = SumTuple<SumMemberT, StorageT, TypeMethods<StorageT>>;
 
 	using VariableKinds = SumTypeList
 	<
@@ -158,7 +158,7 @@ namespace hz
 
 	using VariableSumImplementation = MakeSum<VariableMethods, VariableKinds>::Type;
 
-	struct VariableSumStorage : public VariableSumImplementation::Storage
+	struct VariableStorage : public VariableSumImplementation::Storage
 	{
 		using VariableSumImplementation::Storage::Storage;
 
@@ -172,7 +172,7 @@ namespace hz
 	{
 		switch (self.tag_type())
 		{
-#define X(enumerator, type, name) case TypeIndexV<type, VariableSumStorage::Type>: return VariableKind::enumerator;
+#define X(enumerator, type, name) case TypeIndexV<type, VariableStorage::Type>: return VariableKind::enumerator;
 			VARIABLE_KINDS(X)
 #undef X
 		}

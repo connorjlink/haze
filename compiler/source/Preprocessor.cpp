@@ -64,9 +64,9 @@ namespace hz
 		save_state();
 	}
 
-	ScannerType Preprocessor::stype(void) const noexcept
+	ScannerKind Preprocessor::stype() const noexcept
 	{
-		return ScannerType::PREPROCESSOR;
+		return ScannerKind::PREPROCESSOR;
 	}
 
 	void Preprocessor::register_macro_definition(const Macro& macro)
@@ -83,7 +83,7 @@ namespace hz
 		USE_SAFE(SymbolExporter)->enqueue(symbol, forged);
 	}
 
-	bool Preprocessor::match_macro_invokation(void)
+	bool Preprocessor::match_macro_invokation()
 	{
 		// will return empty if there is not a valid macro invokation
 		return read_identifier(false) != "";
@@ -160,7 +160,7 @@ namespace hz
 		}
 	}
 
-	void Preprocessor::handle_include(void)
+	void Preprocessor::handle_include()
 	{
 		auto include_filepath = std::string{};
 
@@ -187,7 +187,7 @@ namespace hz
 		load_file(include_filepath);
 	}
 
-	void Preprocessor::handle_macro_definition(void)
+	void Preprocessor::handle_macro_definition()
 	{
 		const auto name = read_identifier();
 		advance(name.length());

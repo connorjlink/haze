@@ -9,20 +9,16 @@
 
 namespace hz
 {
+	struct Trackable;
+
 	using TrackingId = std::size_t;
 	using TrackingTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
-	static constexpr inline TrackingTimePoint NEVER = TrackingTimePoint::min();
+	inline constexpr TrackingTimePoint NEVER = TrackingTimePoint::min();
 
-#ifndef NDEBUG
-	static constexpr inline bool ENABLE_TRACKING = true;
-#else
-	static constexpr inline bool ENABLE_TRACKING = false;
-#endif
 
-	TrackingTimePoint system_timestamp(void);
+	TrackingTimePoint system_timestamp();
 
-	struct Trackable;
 
 	struct Tracker
 		: public SingletonTag<Tracker>
@@ -127,7 +123,6 @@ namespace hz
 				// 1 created @ now, active
 				database.try_emplace(entity->id, 1, system_timestamp(), true);
 			}
-
 			else
 			{
 				auto& entry = database.at(entity->id);
@@ -210,22 +205,22 @@ namespace hz
 		// even though these processes will be slow, this has to take a copy to prevent invalidating the database
 		// in case the functions get called at a time other than program exit
 
-		std::vector<decltype(database)::value_type> get_tracking_information(void) const
+		std::vector<decltype(database)::value_type> get_tracking_information() const
 		{
-			std::vector<decltype(database)::value_type> result{};
+			auto result = std::vector<decltype(database)::value_type>{};
 			result.reserve(database.size());
 
-			for (auto& kv : database)
+			for (auto& pair : database)
 			{
-				result.emplace_back(kv);
+				result.emplace_back(pair);
 			}
 
 			return result;
 		}
 
-		std::vector<TrackingInformation> scan_stale_entities(void) const
+		std::vector<TrackingInformation> scan_stale_entities() const
 		{
-			std::vector<TrackingInformation> result{};
+			auto result = std::vector<TrackingInformation>{};
 
 			for (const auto& [key, value] : database)
 			{
@@ -234,12 +229,13 @@ namespace hz
 					result.emplace_back(value);
 				}
 			}
+
 			return result;
 		}
 
-		std::vector<TrackingInformation> scan_memory_leaks(void) const
+		std::vector<TrackingInformation> scan_memory_leaks() const
 		{
-			std::vector<TrackingInformation> result{};
+			auto result = std::vector<TrackingInformation>{};
 
 			for (const auto& [key, value] : database)
 			{
@@ -255,16 +251,15 @@ namespace hz
 
 	// provides some generic machinery for more detailed instrumentation by the compiler driver
 	// not templated because C++23 deducing this does not require it
-	struct Trackable 
+	struct TrackableEnabled
 		: public InjectSingleton<Tracker>
 	{
 	private:
 		friend Tracker;
 		TrackingId id;
-		bool is_enabled;
 
 	private:
-		static TrackingId generate_id(void)
+		static TrackingId generate_id()
 		{
 			// thread-safe! generated per Trackable type template instantiation
 			static std::atomic<TrackingId> index{ 0 };
@@ -276,14 +271,12 @@ namespace hz
 		template<typename Self>
 		void commit(this Self& self)
 		{
-			if (is_enabled)
+			if constexpr (requires { self.update(); })
 			{
-				if constexpr (requires { self.update(); })
-				{
-					self.update();
-				}
-				USE_SAFE(Tracker)->notify_modified(this);
+				self.update();
 			}
+
+			USE_SAFE(Tracker)->notify_modified(this);
 		}
 
 		// manually notify the change tracker that the object is done being used but will remain alive and allocated longer
@@ -297,25 +290,29 @@ namespace hz
 		}
 
 	public:
-		// dynamically enable or disable entity tracking for this instance
-		Trackable(bool is_enabled = true)
-			: is_enabled{ is_enabled }
+		TrackableEnabled()
 		{
-			if (is_enabled)
-			{
-				id = generate_id();
-				USE_SAFE(Tracker)->notify_created(this);
-			}
+			id = generate_id();
+			USE_SAFE(Tracker)->notify_created(this);
 		}
 
-		~Trackable()
+		~TrackableEnabled()
 		{
-			if (is_enabled)
-			{
-				USE_SAFE(Tracker)->notify_deleted(this);
-			}
+			USE_SAFE(Tracker)->notify_deleted(this);
 		}
 	};
+
+	struct TrackableDisabled
+	{
+		// dummy zero-size struct
+	};
+
+	using Trackable = std::conditional_t
+	<
+		ENABLE_TRACKING,
+		TrackableEnabled,
+		TrackableDisabled
+	>;
 }
 
 #endif

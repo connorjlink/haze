@@ -27,24 +27,25 @@ namespace hz
 	private:
 		struct QueueEntry
 		{
-			Symbol* symbol;
+			Symbol symbol;
 			Token token;
 		};
 
 	private:
 		std::queue<QueueEntry> queue;
+		std::mutex queue_mutex;
 		std::condition_variable_any listener;
 		std::jthread worker;
 
 	private:
 		// optional to allow dynamic disablement
-		std::optional<std::osyncstream> stream;
-		std::optional<WebSocketClient> client;
+		std::osyncstream stream;
+		WebSocketClient client;
 		std::filesystem::path path;
 
 	// producer operations
 	public:
-		void enqueue(Symbol*, Token);
+		void enqueue(Symbol, Token);
 
 	// consumer operations
 	public:
@@ -52,14 +53,13 @@ namespace hz
 		void notify();
 
 	public:
-		void try_reconnect(int);
+		void try_reconnect(std::uint8_t);
 	
 	private:
 		void export_symbol(QueueEntry);
 
 	public:
 		SymbolExporter(std::ostream&);
-		SymbolExporter();
 		~SymbolExporter();
 	};
 }

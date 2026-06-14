@@ -377,7 +377,7 @@ namespace hz
 
 	struct SourceLocation
 	{
-		std::filesystem::path filepath;
+		const std::filesystem::path& filepath;
 		// quick character index into the file
 		std::size_t position;
 		std::int32_t line, column;
@@ -385,7 +385,7 @@ namespace hz
 
 	struct Token
 	{
-		std::string text;
+		std::string_view text;
 		SourceLocation location;
 		TokenKind type;
 		std::uint8_t confidence;
@@ -393,8 +393,8 @@ namespace hz
 
 	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers
 	// could make certain inward-facing Token fields mutable, but this feels cleaner
-	inline static const auto NULL_TOKEN = Token{ { "unknown", 0, -1, -1 }, TokenKind::END, 0 };
-	inline SourceLocation null_location(const std::string& filepath)
+	inline static const auto NULL_TOKEN = Token{ "", { "unknown", 0, -1, -1 }, TokenKind::END, 0};
+	inline SourceLocation null_location(const std::filesystem::path& filepath)
 	{
 		// specified file (optional) at (1, 1)
 		return SourceLocation{ filepath, 0, 1, 1 };

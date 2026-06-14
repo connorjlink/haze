@@ -56,19 +56,19 @@ namespace hz
 			self.current_state++;
 		}
 
-		bool can_undo(void) const
+		bool can_undo() const
 		{
 			return current_state > 0;
 		}
 
-		bool can_redo(void) const
+		bool can_redo() const
 		{
 			return current_state + 1 < history.size();
 		}
 
 	protected:
 		// enforce inherited-only construction
-		UndoableRedoable(void) = default;
+		UndoableRedoable() = default;
 	};
 }
 

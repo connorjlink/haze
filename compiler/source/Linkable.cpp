@@ -9,7 +9,7 @@ import std;
 
 namespace hz
 {
-	void Linkable::optimize(void)
+	void Linkable::optimize()
 	{
 		std::vector<IntermediateCommand*> out{};
 

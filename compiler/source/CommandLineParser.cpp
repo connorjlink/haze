@@ -9,7 +9,7 @@ import std;
 
 namespace
 {
-	std::vector<std::string> split(std::string text, const std::string& delimiter)
+	std::vector<std::string> split(const std::string& text, const std::string& delimiter)
 	{
 		return text
 			| std::ranges::views::split(delimiter)
@@ -64,7 +64,7 @@ namespace hz
 			{
 				const auto argument_unprefixed = argument.substr(2);
 
-				const auto argument_split = ::split2(argument_unprefixed, '=');
+				const auto argument_split = split2(argument_unprefixed, '=');
 
 				if (argument_split.size() != 2)
 				{

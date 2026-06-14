@@ -47,19 +47,15 @@ namespace hz
 	};
 }
 
-namespace std
+// IMPORTANT NOTE: must be defined before the usage in the container below! hence the separate namespaces
+template<>
+struct std::hash<hz::TypeId>
 {
-	// IMPORTANT NOTE: must be defined before the usage in the container below! hence the separate namespace
-	// std extension provides a clean means by which to interop with containers (like maps)
-	template<>
-	struct hash<hz::TypeId>
+	std::size_t operator()(const hz::TypeId& type_id) const
 	{
-		size_t operator()(const hz::TypeId& t) const
-		{
-			return t.hash_code();
-		}
-	};
-}
+		return type_id.hash_code();
+	}
+};
 
 namespace hz
 {

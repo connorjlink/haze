@@ -20,7 +20,7 @@ namespace hz
 	void WhileStatement::generate(ValueHandle)
 	{
 		// 3 digits of randomness for now
-		const auto uuid = hz::generate(3);
+		const auto uuid = hz::generate_digit_string(3);
 
 		const auto begin_while_label = std::format("begin_while_{:03d}", uuid);
 		const auto end_while_label = std::format("end_while_{:03d}", uuid);

@@ -37,7 +37,7 @@ namespace hz
 	TEST_CLASS(TypeTest)
 	{
 	public:
-		TypeSumStorage sum;
+		TypeStorage sum;
 
 	public:
 		TEST_METHOD(ValidatePrimitive)

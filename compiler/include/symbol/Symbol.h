@@ -8,7 +8,7 @@ namespace hz
 {
 	using Symbol = std::variant
 	<
-
+#pragma message("TODO: combine declaration, function, statement, expression, and type ASTs here")
 	>;
 
 	struct Symbol

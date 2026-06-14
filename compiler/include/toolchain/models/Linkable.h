@@ -25,7 +25,7 @@ namespace hz
 		Address offset;
 
 	public:
-		void optimize(void);
+		void optimize();
 
 	public:
 		Linkable(FunctionHandle function, std::vector<CommandHandle> commands, std::vector<IntermediateCommand*> ir, Address offset)

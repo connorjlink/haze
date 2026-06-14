@@ -36,8 +36,8 @@ namespace hz
 		, public InjectService<Generator>
 	{
 	public:
-		using Storage = StatementSumStorage;
-		using VariableStorage = VariableSumStorage;
+		using Storage = StatementStorage;
+		using VariableStorage = VariableStorage;
 
 	public:
 		Token token;
@@ -70,7 +70,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		NullStatement(const Token& token)
@@ -90,7 +89,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		ExpressionStatement(ExpressionHandle expression, const Token& token)
@@ -113,7 +111,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, const Token& token)
@@ -135,7 +132,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		IfStatement(ExpressionHandle condition, StatementHandle if_body, StatementHandle else_body, const Token& token)
@@ -156,7 +152,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		WhileStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
@@ -177,7 +172,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		DoStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
@@ -200,7 +194,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		ForStatement(StatementHandle initialization, ExpressionHandle condition, ExpressionHandle increment, StatementHandle body, const Token& token)
@@ -220,7 +213,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 	
 	public:
 		GotoStatement(const std::string& label, const Token& token)
@@ -237,7 +229,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		ContinueStatement(const Token& token)
@@ -254,7 +245,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		BreakStatement(const Token& token)
@@ -283,7 +273,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		SwitchStatement(ExpressionHandle condition, const std::vector<Case>& cases, StatementHandle fallback, const Token& token)
@@ -303,7 +292,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		CompoundStatement(const std::vector<StatementHandle>& substatements, const Token& token)
@@ -324,7 +312,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		LabeledStatement(const std::string& label, StatementHandle statement, const Token& token)
@@ -344,7 +331,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		DeclarationStatement(DeclarationHandle declaration, const Token& token)
@@ -366,7 +352,6 @@ namespace hz
 		void generate(const Storage&) const;
 		ASTTask evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
-		TypeHandle get_type(const TypeSumStorage&) const;
 
 	public:
 		InlineAssemblyStatement(const std::vector<CommandHandle>& commands, const Token& token)
@@ -382,8 +367,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 
 	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsStatement = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsStatement = SumTuple<SumMemberT, StorageT, TypeMethods<StorageT>>;
 
 	using StatementKinds = SumTypeList
 	<

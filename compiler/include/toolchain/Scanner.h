@@ -14,7 +14,7 @@
 
 namespace hz
 {
-	enum struct ScannerType
+	enum struct ScannerKind
 	{
 		PREPROCESSOR,
 		LEXER,
@@ -28,37 +28,39 @@ namespace hz
 		SourceLocation location;
 
 	public:
-		std::size_t whereat(void) const
+		std::size_t whereat() const
 		{
 			return location.position;
 		}
 
-		std::filesystem::path wherein(void) const
+		const std::filesystem::path& wherein() const
 		{
 			return location.filepath;
 		}
 
-		bool eof(void) const
+		bool eof() const
 		{
 			return whereat() >= source.length();
 		}
 
-		char current(void) const
+		char current() const
 		{
-			if (!eof())
+			if (eof())
 			{
-				return source[whereat()];
+				return '\0';
 			}
-			return '\0';
+
+			return source[whereat()];
 		}
 
-		char lookahead(void) const
+		char lookahead() const
 		{
-			if (whereat() + 1 < source.length())
+			if (whereat() + 1 >= source.length())
 			{
-				return source[whereat() + 1];
+				return '\0';
 			}
-			return '\0';
+
+			return source[whereat() + 1];
 		}
 	};
 
@@ -70,12 +72,13 @@ namespace hz
 		SourceContext current_context;
 
 	public:
-		const SourceContext& get_context(void) const
+		const SourceContext& get_context() const
 		{
 			return current_context;
 		}
 		void set_state(const SourceContext& context)
 		{
+#pragma message("TODO: fix and determine copy versus reference semantics")
 			current_context = context;
 		}
 
@@ -90,11 +93,11 @@ namespace hz
 
 	protected:
 		// positional queries
-		char current(void) const;
-		char lookahead(void) const;
-		std::size_t whereat(void) const;
-		std::string wherein(void) const;
-		bool eof(void) const;
+		char current() const;
+		char lookahead() const;
+		std::size_t whereat() const;
+		std::string wherein() const;
+		bool eof() const;
 
 	protected:
 		// source modifications
@@ -106,7 +109,7 @@ namespace hz
 		void advance(std::size_t = 1u);
 		bool expect(char, bool = true);
 		bool anticipate(char, bool = true);
-		Token forge_token(void) const;
+		Token forge_token() const;
 		Token forge_token(const std::string&) const;
 		Token error_token(const std::string&);
 
@@ -119,7 +122,7 @@ namespace hz
 		void skip_until(char);
 		void skip_while(bool(*)(char));
 		std::string substring_until(char, bool = false);
-		std::string substring_while(bool(*)(char), bool = false);
+		std::string substring_while(std::function<bool(char)>, bool = false);
 
 	protected:
 		inline static bool my_isidentifierfirst(char c)
@@ -152,7 +155,11 @@ namespace hz
 		}
 		
 	public:
-		virtual ScannerType stype(void) const noexcept = 0;
+		template<typename Self>
+		ScannerKind scanner_kind(this Self&& self)
+		{
+			return self.scanner_kind();
+		}
 
 	public:
 		Scanner(const std::string&);

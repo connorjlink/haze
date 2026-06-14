@@ -18,27 +18,27 @@ namespace hz
 		USE_SAFE(ErrorReporter)->close_context();
 	}
 
-	bool Scanner::eof(void) const
+	bool Scanner::eof() const
 	{
 		return current_context.eof();
 	}
 
-	char Scanner::current(void) const
+	char Scanner::current() const
 	{
 		return current_context.current();
 	}
 
-	char Scanner::lookahead(void) const
+	char Scanner::lookahead() const
 	{
 		return current_context.lookahead();
 	}
 
-	std::size_t Scanner::whereat(void) const
+	std::size_t Scanner::whereat() const
 	{
 		return current_context.whereat();
 	}
 
-	std::string Scanner::wherein(void) const
+	std::string Scanner::wherein() const
 	{
 		return current_context.wherein();
 	}
@@ -129,7 +129,7 @@ namespace hz
 		};
 	}
 
-	Token Scanner::forge_token(void) const
+	Token Scanner::forge_token() const
 	{
 		return forge_token({ current() });
 	}

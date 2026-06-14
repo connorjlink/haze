@@ -16,7 +16,7 @@ namespace hz
 		std::vector<Token> lex();
 
 	public:
-		ScannerType stype(void) const noexcept override;
+		ScannerKind stype() const noexcept override;
 
 	public:
 		Lexer(const std::string&);

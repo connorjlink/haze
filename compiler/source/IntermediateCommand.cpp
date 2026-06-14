@@ -33,7 +33,7 @@ namespace
 #endif
 	}
 
-	struct SumFn
+	struct SumFunctor
 	{
 		template<std::ranges::input_range R>
 		constexpr auto operator()(R&& r) const
@@ -43,13 +43,13 @@ namespace
 		}
 
 		template<std::ranges::input_range R>
-		friend constexpr auto operator|(R&& r, const SumFn& fn)
+		friend constexpr auto operator|(R&& r, const SumFunctor& fn)
 		{
 			return fn(std::forward<R>(r));
 		}
 	};
 
-	inline constexpr SumFn sum{};
+	inline constexpr SumFunctor sum{};
 }
 
 namespace hz

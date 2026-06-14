@@ -40,7 +40,7 @@ namespace hz
 		void emit_error(const std::string&);
 
 	public:
-		inline bool is_running(void) const
+		inline bool is_running() const
 		{
 			return running;
 		}

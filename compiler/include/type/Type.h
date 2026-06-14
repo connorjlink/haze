@@ -35,7 +35,7 @@ namespace hz
 	public:
 		template<typename T>
 		using Dispatcher = TypeSumDispatcher<T>;
-		using Storage = TypeSumStorage;
+		using Storage = TypeStorage;
 
 		template<typename Self>
 		TypeKind type_kind(this Self&& self)
@@ -63,8 +63,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 
 	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsType = SumTuple<SumMemberT, SumStorageT, TypeMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsType = SumTuple<SumMemberT, StorageT, TypeMethods<StorageT>>;
 
 	using TypeKinds = SumTypeList
 	<
@@ -76,7 +76,7 @@ namespace hz
 
 	using TypeSumImplementation = MakeSum<TypeMethods, TypeKinds>::Type;
 
-	struct TypeSumStorage : public TypeSumImplementation::Storage
+	struct TypeStorage : public TypeSumImplementation::Storage
 	{
 		using TypeSumImplementation::Storage::Storage;
 

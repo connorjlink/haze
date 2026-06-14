@@ -28,6 +28,12 @@ namespace hz
 #error "Unsupported target platform"
 #endif
 
+#ifdef NDEBUG
+	inline constexpr auto IS_DEBUG = false;
+#else
+	inline constexpr auto IS_DEBUG = true;
+#endif
+
 	inline constexpr auto WHITESPACE = " \t\n\r";
 }
 

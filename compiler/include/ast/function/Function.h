@@ -34,7 +34,7 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	public:
-		using Storage = FunctionSumStorage;
+		using Storage = FunctionStorage;
 
 	public:
 		Token token;
@@ -69,7 +69,7 @@ namespace hz
 		StatementHandle body;
 
 	public:
-		FunctionKind function_kind(void) const;
+		FunctionKind function_kind() const;
 		std::string format(std::uint32_t) const;
 		std::string format_signature() const;
 		void generate(const Storage&) const;
@@ -91,8 +91,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 
 	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsFunction = SumTuple<SumMemberT, SumStorageT, FunctionASTMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsFunction = SumTuple<SumMemberT, StorageT, FunctionASTMethods<StorageT>>;
 
 	using FunctionKinds = SumTypeList
 	<
@@ -104,7 +104,7 @@ namespace hz
 
 	using FunctionSumImplementation = MakeSum<FunctionASTMethods, FunctionKinds>::Type;
 
-	struct FunctionSumStorage : public FunctionSumImplementation::Storage
+	struct FunctionStorage : public FunctionSumImplementation::Storage
 	{
 		using FunctionSumImplementation::Storage::Storage;
 

@@ -10,8 +10,6 @@ import std;
 
 namespace hz
 {
-#pragma message("TODO: get rid of get_type() for statements only")
-
 	//////////////////////////////////////////////////////
 	// Null Statement
 	//////////////////////////////////////////////////////
@@ -38,12 +36,6 @@ namespace hz
 		return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
-	TypeHandle NullStatement::get_type(const TypeSumStorage& storage) const
-	{
-		// no type result possible for null statement
-		return MAKE_INVALID_HANDLE(storage, Type);
-	}
-
 
 	//////////////////////////////////////////////////////
 	// Expression Statement
@@ -54,18 +46,18 @@ namespace hz
 		return std::format("{};", expression);
 	}
 
-	void ExpressionStatement::generate(const Storage&) const
+	void ExpressionStatement::generate(const StatementStorage& storage) const
 	{
 		// no code generation necessary for expression statement
 	}
 
-	ASTTask ExpressionStatement::evaluate(const Storage& storage, Context& context) const
+	ASTTask ExpressionStatement::evaluate(const StatementStorage& storage, Context& context) const
 	{
 		co_await ASTAwaiter{ expression.evaluate(context) };
 		co_return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
-	StatementHandle ExpressionStatement::optimize(const Storage& storage) const
+	StatementHandle ExpressionStatement::optimize(const StatementStorage& storage) const
 	{
 		const auto expression_optimized = expression.optimize(storage);
 		if (!expression_optimized)
@@ -76,20 +68,14 @@ namespace hz
 		return expression_optimized;
 	}
 
-	TypeHandle ExpressionStatement::get_type(const TypeSumStorage& storage) const
-	{
-		// no type result possible for expression statement
-		return MAKE_INVALID_HANDLE(storage, Type);
-	}
-
 
 	//////////////////////////////////////////////////////
 	// Return Statement
 	//////////////////////////////////////////////////////
 
-	std::string ReturnStatement::format(std::uint32_t) const
+	std::string ReturnStatement::format(std::uint32_t indentation_level) const
 	{
-		return std::format("return {};", expression);
+		return std::format("{}return {};", indentation_table[indentation_level], expression);
 	}
 
 	void ReturnStatement::generate(const Storage& storage) const
@@ -127,28 +113,21 @@ namespace hz
 		return expression_optimized;
 	}
 
-	TypeHandle ReturnStatement::get_type(const TypeSumStorage& storage) const
-	{
-		// no type result possible for return statement
-		return MAKE_INVALID_HANDLE(storage, Type);
-	}
-
-
-
 
 	//////////////////////////////////////////////////////
 	// For Statement
 	//////////////////////////////////////////////////////
 
-	std::string ForStatement::format(std::uint32_t) const
+	std::string ForStatement::format(std::uint32_t indentation_level) const
 	{
-		return std::format("for ({}; {}; {}) {}", initialization, condition, increment, body);
+		return std::format("for ({}; {}; {})\n{}", 
+			initialization, condition, increment, body.format(indentation_level));
 	}
 
-	void ForStatement::generate(const Storage& storage) const
+	void ForStatement::generate(const StatementStorage& storage) const
 	{
 		// 3 digits of randomness for now
-		const auto uuid = hz::generate(3);
+		const auto uuid = hz::generate_digit_string(3);
 
 		const auto begin_for_label = std::format("begin_for_{:03d}", uuid);
 		const auto end_for_label = std::format("end_for_{:03d}", uuid);
@@ -252,12 +231,6 @@ namespace hz
 		return new ForStatement{ initialization_optimized, condition_optimized, expression_optimized, body_optimized, _token };
 	}
 
-	TypeHandle ForStatement::get_type(const TypeSumStorage& storage) const
-	{
-		// no type result possible for for statement
-		return MAKE_INVALID_HANDLE(storage, Type);
-	}
-
 
 	//////////////////////////////////////////////////////
 	// Compound Statement
@@ -333,13 +306,6 @@ namespace hz
 		return MAKE_HANDLE(CompoundStatement, Statement, storage, MAKE_COMPOUND_STATEMENT(result, token));
 	}
 
-	TypeHandle CompoundStatement::get_type(const TypeSumStorage& storage) const
-	{
-		// no type result possible for compound statement
-		return MAKE_INVALID_HANDLE(storage, Type);
-	}
-
-
 
 	//////////////////////////////////////////////////////
 	// Inline Assembly Statement
@@ -354,12 +320,12 @@ namespace hz
 				| std::ranges::to<std::string>());
 	}
 
-	void InlineAssemblyStatement::generate(const Storage&) const
+	void InlineAssemblyStatement::generate(const StatementStorage& storage) const
 	{
-		// no code generation necessary for null statement
+		
 	}
 
-	ASTTask InlineAssemblyStatement::evaluate(const VariableSumStorage& storage, Context&) const
+	ASTTask InlineAssemblyStatement::evaluate(const VariableStorage& storage, Context&) const
 	{
 		USE_SAFE(ErrorReporter)->post_warning(std::format(
 			"inline assembly is not supported in evaluation"), token);
@@ -367,16 +333,10 @@ namespace hz
 		co_return MAKE_INVALID_HANDLE(storage, Variable);
 	}
 
-	StatementHandle InlineAssemblyStatement::optimize(const Storage& storage) const
+	StatementHandle InlineAssemblyStatement::optimize(const StatementStorage& storage) const
 	{
 		// no optimizations possible for null statement
 		return MAKE_INVALID_HANDLE(storage, Statement);
-	}
-
-	TypeHandle InlineAssemblyStatement::get_type(const TypeSumStorage& storage) const
-	{
-		// no type result possible for null statement
-		return MAKE_INVALID_HANDLE(storage, Type);
 	}
 
 }

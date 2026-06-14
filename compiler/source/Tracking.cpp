@@ -7,7 +7,7 @@ import std;
 
 namespace hz
 {
-	TrackingTimePoint system_timestamp(void)
+	TrackingTimePoint system_timestamp()
 	{
 		return std::chrono::system_clock::now();
 	}

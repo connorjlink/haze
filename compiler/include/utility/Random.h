@@ -6,10 +6,7 @@
 
 namespace hz
 {
-	inline static std::random_device _device;
-	inline static std::mt19937 _engine(_device());
-
-	int generate(int = 3);
+	std::size_t generate_digit_string(std::uint8_t = 3);
 }
 
 #endif

@@ -87,7 +87,7 @@ hz::Task<int> main_shim(int argc, char** argv)
 	command_line_parser.parse(argc, argv);
 
 	// offload the loading process now to a background thread, await after initializing the rest of the components
-	auto loader = ::load_files_async(command_line_parser);
+	auto loader = load_files_async(command_line_parser);
 
 	// register all other global (thread-shared) singletons
 	SingletonContainer::instance().register_singleton<Context>();
@@ -223,13 +223,17 @@ hz::Task<int> main_shim(int argc, char** argv)
 		}
 	}
 
+	const auto architecture = USE_UNSAFE(CommandLineOptions)->architecture;
+
 #pragma message("TODO: figure out how to reload the linker with the new linkables from the symbol database")
 	USE_UNSAFE(Linker)->reload();
 
 	const auto link_task = REQUIRE_SAFE(JobManager)->begin_job("linking");
 
 	const auto origin = REQUIRE_UNSAFE(Generator)->resolve_origin();
-	const auto commands = USE_UNSAFE(Linker)->link(origin, UDWORD_MAX);
+	const auto base = get_linker_origin(architecture);
+
+	const auto commands = USE_UNSAFE(Linker)->link(origin, base);
 
 	const auto executable = commands
 		| std::ranges::views::transform([](auto command) { return command->object_code; })
@@ -240,7 +244,7 @@ hz::Task<int> main_shim(int argc, char** argv)
 
 
 
-	const auto entrypoint = get_linker_origin(USE_UNSAFE(CommandLineOptions)->architecture);
+	const auto entrypoint = get_linker_origin(architecture);
 
 	const auto finalize_task = REQUIRE_UNSAFE(JobManager)->begin_job("finalizing");
 

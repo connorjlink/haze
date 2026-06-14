@@ -31,7 +31,7 @@ namespace hz
 		, public InjectSingleton<ErrorReporter>
 	{
 	public:
-		using Storage = CommandSumStorage;
+		using Storage = CommandStorage;
 
 	public:
 		Address offset;
@@ -136,8 +136,8 @@ namespace hz
 #define MAKE_DOTBYTE_COMMAND(bytes, token) DotbyteCommand{ bytes, token }
 
 
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsCommand = SumTuple<SumMemberT, SumStorageT, CommandASTMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsCommand = SumTuple<SumMemberT, StorageT, CommandASTMethods<StorageT>>;
 
 	using CommandKinds = SumTypeList
 	<
@@ -149,7 +149,7 @@ namespace hz
 
 	using CommandSumImplementation = MakeSum<CommandASTMethods, CommandKinds>::Type;
 
-	struct CommandSumStorage : public CommandSumImplementation::Storage
+	struct CommandStorage : public CommandSumImplementation::Storage
 	{
 		using CommandSumImplementation::Storage::Storage;
 
@@ -163,7 +163,7 @@ namespace hz
 	{
 		switch (self.tag_type())
 		{
-#define X(enumerator, type, name) case TypeIndexV<type, typename CommandSumStorage::Type>: return CommandKind::enumerator;
+#define X(enumerator, type, name) case TypeIndexV<type, typename CommandStorage::Type>: return CommandKind::enumerator;
 			COMMAND_KINDS(X)
 #undef X
 		}

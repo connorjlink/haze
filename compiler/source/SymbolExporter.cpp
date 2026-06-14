@@ -63,12 +63,12 @@ namespace
 
 namespace hz
 {
-	void SymbolExporter::enqueue(Symbol* symbol, const Token& token)
+	void SymbolExporter::enqueue(Symbol symbol, const Token& token)
 	{
 		// lock
 		{
-			std::scoped_lock lock{ queuemutex };
-			queue.push({ symbol, token });
+			std::scoped_lock lock{ queue_mutex };
+			queue.emplace(symbol, token);
 		}
 		
 		notify();
@@ -80,10 +80,10 @@ namespace hz
 		{
 			while (true)
 			{
-				QueueEntry entry{};
+				auto result = std::optional<QueueEntry>{};
 				{
-					std::unique_lock lock{ queuemutex };
-					listener.wait(lock, stop_token, [this] 
+					std::unique_lock lock{ queue_mutex };
+					listener.wait(lock, stop_token, [this]
 					{ 
 						return !queue.empty();
 					});
@@ -98,13 +98,13 @@ namespace hz
 						continue;
 					}
 
-					entry = queue.front();
+					result = queue.front();
 					queue.pop();
 				}
 
-				if (entry.symbol != nullptr)
+				if (result)
 				{
-					export_symbol(entry);
+					export_symbol(*result);
 				}
 			}
 		});
@@ -148,10 +148,10 @@ namespace hz
 				break;
 		}
 
-		stream->emit();
+		stream.emit();
 	}
 
-	void SymbolExporter::try_reconnect(int retry_attempts)
+	void SymbolExporter::try_reconnect(std::uint8_t retry_attempts)
 	{
 		// not considering running out of attempts an error because it might just be that the server gracefully shut down
 		if (retry_attempts == 0)
@@ -161,14 +161,14 @@ namespace hz
 			return;
 		}
 
-		client->connect(L"http://localhost:8080", L"");
+		client.connect(L"http://localhost:8080", L"");
 
-		client->on_open = [&]
+		client.on_open = [&]
 		{
 			// perhaps transmit some handshake information?
 		};
 
-		client->on_message = [&](const std::string& message)
+		client.on_message = [&](const std::string& message)
 		{
 #pragma message("TODO: talk to the toolchain to iniciate appropriate recompilation")
 			// probably a full build for now of the specified path, but perhaps an incremental one might make sense
@@ -178,12 +178,12 @@ namespace hz
 			// I believe that in all cases this should represent a symbol/recompile request
 		};
 
-		client->on_close = [&]
+		client.on_close = [&]
 		{
 			try_reconnect(retry_attempts - 1);
 		};
 
-		client->on_error = [&](const std::string& error)
+		client.on_error = [&](const std::string& error)
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"websocket error `{}`", error), NULL_TOKEN);
@@ -191,16 +191,10 @@ namespace hz
 	}
 
 	SymbolExporter::SymbolExporter(std::ostream& stream)
-		: queue{}, client{ std::nullopt }, stream{ std::osyncstream{ stream } }
+		: queue{}, client{}, stream{ std::osyncstream{ stream } }
 	{
 		// locking machinery auto-initialized
 		try_reconnect(3);
-	}
-
-	SymbolExporter::SymbolExporter()
-		: queue{}, client{}, stream{ std::nullopt }
-	{
-		// locking machinery auto-initialized
 	}
 
 	SymbolExporter::~SymbolExporter()

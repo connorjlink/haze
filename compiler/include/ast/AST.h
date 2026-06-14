@@ -80,8 +80,8 @@ namespace hz
 	>;
 
 
-	template<typename SumMemberT, typename SumStorageT, typename MethodsT>
-	concept IsASTNode = SumTuple<SumMemberT, SumStorageT, MethodsT>;
+	template<typename SumMemberT, typename StorageT, typename MethodsT>
+	concept IsASTNode = SumTuple<SumMemberT, StorageT, MethodsT>;
 }
 
 #endif

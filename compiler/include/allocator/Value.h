@@ -45,7 +45,7 @@ namespace hz
 		, public InjectSingleton<CommandLineOptions, ErrorReporter>
 	{
 	public:
-		using Storage = ValueSumStorage;
+		using Storage = ValueStorage;
 	};
 }
 
@@ -89,8 +89,8 @@ namespace hz
 	};
 
 	// not for public consumption
-	template<typename SumMemberT, typename SumStorageT>
-	concept IsValue = SumTuple<SumMemberT, SumStorageT, ValueMethods<SumStorageT>>;
+	template<typename SumMemberT, typename StorageT>
+	concept IsValue = SumTuple<SumMemberT, StorageT, ValueMethods<StorageT>>;
 	
 	// nonfacade types for public consumption
 	using ValueKinds = SumTypeList
@@ -103,7 +103,7 @@ namespace hz
 
 	using ValueSumImplementation = MakeSum<ValueMethods, ValueKinds>::Type;
 
-	struct ValueSumStorage : public ValueSumImplementation::Storage
+	struct ValueStorage : public ValueSumImplementation::Storage
 	{
 		using ValueSumImplementation::Storage::Storage;
 

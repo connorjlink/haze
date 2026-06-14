@@ -20,9 +20,9 @@ namespace hz
 		});
 	}
 
-	ScannerType Lexer::stype(void) const noexcept
+	ScannerKind Lexer::stype() const noexcept
 	{
-		return ScannerType::LEXER;
+		return ScannerKind::LEXER;
 	}
 
 	std::vector<Token> Lexer::lex()
