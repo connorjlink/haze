@@ -43,6 +43,7 @@ namespace hz
 		LESSLESSEQUALS, GREATERGREATEREQUALS,
 
 		TILDE, EXCLAMATION,
+		QUOTE, DOUBLEQUOTE,
 
 		UNSIGNED,
 		SIGNED,
@@ -146,6 +147,8 @@ namespace hz
 		bimap_t{ S(","), TokenKind::COMMA },
 		bimap_t{ S("~"), TokenKind::TILDE },
 		bimap_t{ S("!"), TokenKind::EXCLAMATION },
+		bimap_t{ S("\'"), TokenKind::QUOTE },
+		bimap_t{ S("\""), TokenKind::DOUBLEQUOTE },
 		bimap_t{ S("="), TokenKind::EQUALS },
 		bimap_t{ S("=="), TokenKind::EQUALSEQUALS },
 		bimap_t{ S("!="), TokenKind::EXCLAMATIONEQUALS },
@@ -393,7 +396,14 @@ namespace hz
 
 	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers
 	// could make certain inward-facing Token fields mutable, but this feels cleaner
-	inline static const auto NULL_TOKEN = Token{ "", { "unknown", 0, -1, -1 }, TokenKind::END, 0};
+	inline const auto NULL_TOKEN = Token
+	{ 
+		.text = "",
+		.location = SourceLocation{ std::filesystem::path{ "unknown" }, 0, -1, -1 },
+		.type = TokenKind::END,
+		.confidence = 0
+	};
+
 	inline SourceLocation null_location(const std::filesystem::path& filepath)
 	{
 		// specified file (optional) at (1, 1)

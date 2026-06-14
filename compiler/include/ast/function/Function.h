@@ -44,10 +44,6 @@ namespace hz
 			: token{ token }
 		{
 		}
-
-	public:
-		template<typename Self>
-		FunctionKind function_kind(this Self&&);
 	};
 }
 
@@ -101,7 +97,7 @@ namespace hz
 #undef X
 		void
 	>;
-
+	
 	using FunctionSumImplementation = MakeSum<FunctionASTMethods, FunctionKinds>::Type;
 
 	struct FunctionStorage : public FunctionSumImplementation::Storage
@@ -113,21 +109,9 @@ namespace hz
 	};
 
 
-	template<typename Self>
-	FunctionKind FunctionBase::function_kind(this Self&& self)
+	constexpr Function& function_handle_to_function(FunctionHandle handle)
 	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-			FUNCTION_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid function tag `{}`", self.tag_type()), self.token);
-
-		// error recovery does not care about function kind
-		return FunctionKind::FUNCTION;
+		return handle.get<Function>();
 	}
 }
 

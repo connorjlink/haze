@@ -1,13 +1,5 @@
 import std;
 
-#include <allocator/Allocation.h>
-#include <ast/Function.h>
-#include <ast/IdentifierExpression.h>
-#include <ast/ArgumentExpression.h>
-#include <ast/CompoundStatement.h>
-#include <ast/ReturnStatement.h>
-#include <error/CommonErrors.h>
-#include <runtime/Evaluator.h>
 #include <toolchain/Parser.h>
 #include <toolchain/CompilerParser.h>
 #include <x86/defs/X86Register.h>

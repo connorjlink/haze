@@ -1,13 +1,18 @@
 #include <cstddef>
 
-#include <vector>
+#include <algorithm>
+#include <array>
+#include <coroutine>
+#include <filesystem>
+#include <format>
+#include <optional>
 #include <string>
 #include <string_view>
-#include <format>
 #include <utility>
+#include <vector>
 
-#include <x86/X86Builder.h>
 #include <x86/defs/X86Register.h>
+#include <x86/X86Builder.h>
 
 #include "CppUnitTest.h"
 

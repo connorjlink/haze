@@ -20,6 +20,37 @@ namespace hz
 		return ParserType::COMPILER;
 	}
 
+	ExpressionReference<FunctionCallExpression> Parser::parse_functioncall_expression()
+	{
+		const auto name_token = consume(TokenKind::IDENTIFIER);
+
+		consume(TokenKind::LPAREN);
+		const auto arguments = parse_arguments(false);
+		consume(TokenKind::RPAREN);
+
+		if (!USE_SAFE(SymbolDatabase)->has_symbol(name_token.text))
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"function `{}` is undefined", name_token.text), name_token);
+			return nullptr;
+		}
+
+		const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name_token.text, name_token);
+
+		if (function_symbol->arity() != arguments.size())
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"function `{}` was defined with {} arguments but called with {}",
+				name_token.text, function_symbol->arity(), arguments.size()), name_token);
+			return nullptr;
+		}
+
+		// NOTE: exports the function name symbol only
+		USE_SAFE(SymbolExporter)->enqueue(function_symbol, name_token);
+
+		return new FunctionCallExpression{ name_token.text, arguments, name_token };
+	}
+
 	Statement* CompilerParser::parse_statement(const std::string& enclosing_function)
 	{
 		using enum TokenKind;
@@ -545,4 +576,11 @@ namespace hz
 		USE_SAFE(ErrorReporter)->post_error("no main() function was defined", NULL_TOKEN);
 		return {};
 	}
+
+	std::vector<NodeType> parse_implementation() const
+	{
+#pragma message("TODO: implement parsing of nonglobal declarations")
+	}
+
+
 }

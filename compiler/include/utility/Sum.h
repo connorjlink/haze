@@ -19,13 +19,17 @@ namespace hz
 		// 31 bits index, 1 bit flag ensured by static_assert
 		IndexType index : (std::numeric_limits<unsigned char>::digits * sizeof(std::uint32_t)) - 1;
 		IndexType is_valid : 1;
+		TagType tag;
 
 		constexpr IndexHandle(IndexType index, bool is_valid)
 			: index{ index }, is_valid{ static_cast<IndexType>(is_valid) }
 		{
 		}
+		constexpr IndexHandle(TagType tag, IndexType index, bool is_valid)
+			: index{ index }, is_valid{ static_cast<IndexType>(is_valid) }, tag{ tag }
+		{
+		}
 	};
-	static_assert(sizeof(IndexHandle) == sizeof(IndexType), "IndexHandle must be 4 bytes");
 
 	// dynamic dispatch generator for sum families
 	template<typename MethodT, typename StorageT, typename TupleT, typename... ArgumentsTs, std::size_t... Is>
@@ -199,10 +203,13 @@ namespace hz
 	struct SumDispatcher
 		: public InjectSingleton<ErrorReporter>
 	{
+		// safety checks to verify that the bitfields and tag pack properly to minimize waste since References and Handles will be passed around by copy
+		static_assert(sizeof(IndexHandle) <= alignof(void*), "IndexHandle must be no larger than the platform reference alignment to avoid padding");
+
 	public:
 		const StorageT& sum_storage;
 		IndexHandle index;
-
+		
 	public:
 		constexpr bool is_valid() const
 		{
@@ -236,8 +243,8 @@ namespace hz
 		}
 
 	public:
-		constexpr SumDispatcher(const StorageT& sum_storage, IndexHandle index)
-			: sum_storage{ sum_storage }, index{ index }
+		constexpr SumDispatcher(const StorageT& sum_storage, IndexHandle index, TagType tag)
+			: sum_storage{ sum_storage }, index{ tag, index }
 		{
 		}
 	};
@@ -297,12 +304,12 @@ namespace hz
 {
 #define METHOD_TUPLE_ENTRY(name, returntype) Method<&AnchorT::name>,
 #define SUM_DISPATCH_ENTRY(name, returntype) \
-		template<typename Self, typename... ArgumentsTs> \
-		constexpr decltype(auto) name(this Self&& self, ArgumentsTs&&... arguments) \
-		{ \
-			using Anchor = typename StorageT::Anchor; \
-			return self.template call<Method<&Anchor::name>>(std::forward<ArgumentsTs>(arguments)...); \
-		}
+	template<typename Self, typename... ArgumentsTs> \
+	constexpr decltype(auto) name(this Self&& self, ArgumentsTs&&... arguments) \
+	{ \
+		using Anchor = typename StorageT::Anchor; \
+		return self.template call<Method<&Anchor::name>>(std::forward<ArgumentsTs>(arguments)...); \
+	}
 
 #define DEFINE_SUM(name, methods) \
 	template<typename StorageT> \
@@ -311,8 +318,8 @@ namespace hz
 	public: \
 		methods(SUM_DISPATCH_ENTRY, name##Handle) \
 	public: \
-		constexpr name##SumDispatcher(const StorageT& sum_storage, IndexHandle index) \
-			: SumDispatcher<StorageT>{ sum_storage, index } \
+		constexpr name##SumDispatcher(const StorageT& sum_storage, IndexHandle index, TagType tag) \
+			: SumDispatcher<StorageT>{ sum_storage, index, tag } \
 		{ \
 		} \
 	}; \
@@ -346,11 +353,9 @@ namespace hz
 		: public SumDispatcherT<StorageT>
 	{
 	public:
-		TagType tag;
-
 		constexpr TagType get_tag() const
 		{
-			return tag;
+			return this->index.tag;
 		}
 
 	private:
@@ -361,11 +366,11 @@ namespace hz
 				TypeIndexV<T, typename StorageT::Type>;
 
 			// runtime error
-			if (tag != expected_tag)
+			if (this->index.tag != expected_tag)
 			{
 				this->USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 					"invalid sum reference: expected tag {}, actual tag {}, index {}",
-						expected_tag, tag, this->index.index));
+						expected_tag, this->index.tag, this->index.index));
 			}
 		}
 
@@ -386,13 +391,13 @@ namespace hz
 
 	public:
 		constexpr SumHandle(const StorageT& sum_storage, IndexType index, TagType tag)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ index, true } }, tag{ tag }
+			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ index, true }, tag }
 		{
 			// valid handle
 		}
 
 		constexpr SumHandle(const StorageT& sum_storage)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ 0, false } }, tag{ 0 }
+			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ 0, false }, 0 }
 		{
 			// invalid handle
 		}

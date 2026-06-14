@@ -14,7 +14,7 @@
 namespace hz
 {
 	struct CompilerParser 
-		: public Parser<CompilerParser>
+		: public Parser
 		, public ServiceTag<CompilerParser>
 	{
 	private:
@@ -72,10 +72,7 @@ namespace hz
 		std::vector<FunctionHandle> parse_functions();
 
 	public:
-		std::vector<NodeType> parse() const
-		{
-#pragma message("TODO: implement parsing of nonglobal declarations")
-		}
+		std::vector<NodeType> parse_implementation() const;
 
 	public:
 		using Parser::Parser;

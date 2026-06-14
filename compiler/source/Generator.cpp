@@ -31,15 +31,14 @@ namespace hz
 	const std::string& Generator::current_function() const
 	{
 		const auto& linkable = linkables[linkables.size() - 1];
-		const auto symbol = linkable.symbol;
-		const auto function_symbol = AS_FUNCTION_SYMBOL(symbol);
+		const auto function = linkable.function;
 
-		return function_symbol->name;
+		return function.get<Function>()->name;
 	}
 
 	void Generator::begin_function(const std::string& name)
 	{
-		linkables.emplace_back(Linkable{ USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, NULL_TOKEN), {}, {}, 0});
+		linkables.emplace_back(USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, NULL_TOKEN), {}, {}, 0);
 	}
 
 	void Generator::label_command(const std::string& identifier)

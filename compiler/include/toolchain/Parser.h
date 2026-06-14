@@ -23,17 +23,14 @@ namespace hz
 	FORWARD_DECLARE_SUM(Symbol)
 
 
-	template<typename T>
 	struct Parser
-		: public ServiceTag<Parser<T>>
+		: public ServiceTag<Parser>
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, SymbolExporter, CommandLineOptions>
 	{
 	protected:
 		std::size_t cursor;
 		std::vector<Token> tokens;
-
-	protected:
-		std::filesystem::path filepath;
+		const ExpressionStorage& storage;
 
 	protected:
 		// explicitly mutable!
@@ -48,32 +45,36 @@ namespace hz
 	protected:
 		ExpressionReference<IdentifierExpression> parse_identifier_expression();
 		ExpressionReference<IntegerLiteralExpression> parse_integerliteral_expression();
-		ExpressionReference<StringLiteralExpression> parse_string_expression();
+		ExpressionReference<StringLiteralExpression> parse_string_literal_expression();
+		ExpressionReference<CharacterLiteralExpression> parse_character_literal_expression();
 		ExpressionReference<FunctionCallExpression> parse_functioncall_expression();
 		ExpressionHandle parse_parenthesis_expression();
 
 	protected:
-		ExpressionHandle parse_expression_optimized();
 		ExpressionHandle parse_expression();
+		ExpressionHandle parse_expression_optimized();
 
 	private:
-		ExpressionHandle parse_generic_expression();
 		ExpressionHandle parse_infix_expression(ExpressionHandle, Precedence);
+		ExpressionHandle parse_generic_expression();
 
-	public:
+
 		template<typename Self>
-			requires std::derived_from<Self, Parser<T>>
-		std::vector<typename T::NodeType> parse(this Self&& self)
+		std::vector<typename Self::NodeType> parse_generic_expression(this Self&& self)
 		{
-			return self.parse();
+
 		}
 
 	public:
-		void reload(const std::vector<Token>&, const std::string&);
+		template<typename Self>
+		std::vector<typename Self::NodeType> parse(this Self&& self)
+		{
+			return std::forward<Self>(self).parse_implementation();
+		}
 
 	public:
-		Parser(const std::string&);
-		virtual ~Parser();
+		Parser(std::vector<Token>, const ExpressionStorage&);
+		~Parser();
 	};
 }
 

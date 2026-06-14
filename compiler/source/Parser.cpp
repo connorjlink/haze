@@ -59,8 +59,8 @@ namespace
 
 namespace hz
 {
-	Parser::Parser(const std::string& filepath)
-		: cursor{ 0 }, tokens{ tokens }, filepath{ filepath }
+	Parser::Parser(std::vector<Token> tokens)
+		: cursor{ 0 }, tokens{ std::move(tokens) }
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
 	}
@@ -117,7 +117,7 @@ namespace hz
 			}
 
 			USE_SAFE(ErrorReporter)->post_error("invalid token", current);
-			return { "[error]" };
+			return "<error>";
 		};
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(
@@ -139,52 +139,6 @@ namespace hz
 		}
 
 		return tokens;
-	}
-
-#pragma message ("TODO: refactor the dotdefine to be overriden by subclasses")
-	Node* Parser::parse_dotdefine_command()
-	{
-		consume(TokenKind::DOTDEFINE);
-
-		TypeHandle type = nullptr;
-
-		if (ptype() == ParserType::COMPILER)
-		{
-			auto compiler_parser = AS_COMPILER_PARSER(this);
-			type = compiler_parser->parse_type();
-		}
-
-		else
-		{
-			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
-			type = new IntType{ TypeQualifier::CONST, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
-		}
-		
-		const auto identifier_expression = parse_identifier_expression();
-		consume(TokenKind::EQUALS);
-
-		// if the optimized value is not a constant expression, it isn't a valid definition
-		const auto value_expression = parse_expression_optimized();
-
-		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
-		{
-			USE_SAFE(ErrorReporter)->post_error("definitions must result in a constant expression", value_expression->_token);
-			return nullptr;
-		}
-
-		const auto& identifier = identifier_expression->name;
-		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
-
-		USE_SAFE(SymbolDatabase)->add_define(identifier, peek());
-		
-		auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(identifier, peek());
-		define_symbol->type = type;
-		define_symbol->value = integer_literal_raw(value);
-
-		// NOTE: exports the constant expression name symbol only
-		USE_SAFE(SymbolExporter)->enqueue(define_symbol, identifier_expression->_token);
-
-		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
 	}
 
 	ExpressionReference<IdentifierExpression> Parser::parse_identifier_expression()
@@ -218,41 +172,14 @@ namespace hz
 		return new IntegerLiteralExpression{ integer_value, integer_literal_token };
 	}
 
-	StringExpression* Parser::parse_string_expression()
+	ExpressionReference<StringLiteralExpression> Parser::parse_string_literal_expression()
 	{
-		const auto message_token = consume(TokenKind::STRING);
+		consume(TokenKind::DOUBLEQUOTE);
+		const auto message_token = fetch_until(TokenKind::DOUBLEQUOTE);
+
+
+
 		return new StringExpression{ message_token.text, message_token };
-	}
-
-	FunctionCallExpression* Parser::parse_functioncall_expression()
-	{
-		const auto name_token = consume(TokenKind::IDENTIFIER);
-
-		consume(TokenKind::LPAREN);
-		const auto arguments = AS_COMPILER_PARSER(this)->parse_arguments(false);
-		consume(TokenKind::RPAREN);
-
-		if (!USE_SAFE(SymbolDatabase)->has_symbol(name_token.text))
-		{
-			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"function `{}` is undefined", name_token.text), name_token);
-			return nullptr;
-		}
-
-		const auto function_symbol = USE_SAFE(SymbolDatabase)->reference_function(name_token.text, name_token);
-
-		if (function_symbol->arity() != arguments.size())
-		{
-			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"function `{}` was defined with {} arguments but called with {}",
-					name_token.text, function_symbol->arity(), arguments.size()), name_token);
-			return nullptr;
-		}
-
-		// NOTE: exports the function name symbol only
-		USE_SAFE(SymbolExporter)->enqueue(function_symbol, name_token);
-
-		return new FunctionCallExpression{ name_token.text, arguments, name_token };
 	}
 
 	ExpressionHandle Parser::parse_parenthesis_expression()
@@ -320,7 +247,7 @@ namespace hz
 				return parse_integerliteral_expression();
 			} break;
 			
-			case STRING:
+			case DOUBLEQUOTE:
 			{
 				return parse_string_expression();
 			} break;
@@ -344,23 +271,20 @@ namespace hz
 			{
 				return parse_decrement_expression();
 			} break;
-
-			default:
-			{
-				USE_SAFE(ErrorReporter)->post_error(std::format(
-					"expected an expression but got `{}`", peek().text), peek());
-				return nullptr;
-			} break;
 		}
+
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"expected an expression but got `{}`", peek().text), peek());
+		return MAKE_INVALID_HANDLE(storage, Expression);
 	}
 
 	ExpressionHandle Parser::parse_expression_optimized()
 	{
 		auto expression = parse_expression();
 
-		while (auto expression_optimized = expression->optimize())
+		while (auto expression_optimized = expression.optimize(storage))
 		{
-			expression = AS_EXPRESSION(expression_optimized);
+			expression = expression_optimized;
 		}
 		
 		return expression;
@@ -369,14 +293,13 @@ namespace hz
 	ExpressionHandle Parser::parse_expression()
 	{
 		// parse until the minimum precedence level is reached (so parse everything possible basically)
-		const auto infix_expression = parse_infix_expression(parse_generic_expression(), Precedence::MINIMUM);
-
-		if (infix_expression != nullptr)
+		const auto infix_expression = parse_infix_expression(parse_generic_expression(), std::numeric_limits<Precedence>::max());
+		if (!infix_expression)
 		{
-			return AS_EXPRESSION(infix_expression->copy());
+			return MAKE_INVALID_HANDLE(storage, Expression);
 		}
 
-		return nullptr;
+		return AS_EXPRESSION(infix_expression->copy());
 	}
 
 	ExpressionHandle Parser::parse_infix_expression(ExpressionHandle left, Precedence minimum_precedence)
@@ -437,11 +360,5 @@ namespace hz
 		} while (true);
 
 		return left;
-	}
-
-	void Parser::reload(const std::vector<Token>& tokens, const std::string& filepath)
-	{
-		tokens = tokens;
-		filepath = filepath;
 	}
 }

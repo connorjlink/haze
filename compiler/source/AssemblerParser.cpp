@@ -50,6 +50,51 @@ namespace hz
 		return new IntegerLiteralExpression{ address, literal_expression->_token };
 	}
 
+	Node* Parser::parse_dotdefine_command()
+	{
+		consume(TokenKind::DOTDEFINE);
+
+		TypeHandle type = nullptr;
+
+		if (ptype() == ParserType::COMPILER)
+		{
+			auto compiler_parser = AS_COMPILER_PARSER(this);
+			type = compiler_parser->parse_type();
+		}
+
+		else
+		{
+			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
+			type = new IntType{ TypeQualifier::CONST, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
+		}
+
+		const auto identifier_expression = parse_identifier_expression();
+		consume(TokenKind::EQUALS);
+
+		// if the optimized value is not a constant expression, it isn't a valid definition
+		const auto value_expression = parse_expression_optimized();
+
+		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
+		{
+			USE_SAFE(ErrorReporter)->post_error("definitions must result in a constant expression", value_expression->_token);
+			return nullptr;
+		}
+
+		const auto& identifier = identifier_expression->name;
+		const auto value = AS_INTEGER_LITERAL_EXPRESSION(value_expression)->value;
+
+		USE_SAFE(SymbolDatabase)->add_define(identifier, peek());
+
+		auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(identifier, peek());
+		define_symbol->type = type;
+		define_symbol->value = integer_literal_raw(value);
+
+		// NOTE: exports the constant expression name symbol only
+		USE_SAFE(SymbolExporter)->enqueue(define_symbol, identifier_expression->_token);
+
+		return new DotDefineCommand{ identifier, value, identifier_expression->_token };
+	}
+
 	Node* AssemblerParser::parse_dotorg_command()
 	{
 		consume(TokenKind::DOTORG);

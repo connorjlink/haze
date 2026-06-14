@@ -118,13 +118,13 @@ namespace hz
 
 	public:
 		// position a new function argument for the next call
-		void make_argument(const std::string&, Register);
+		void make_argument(std::string_view, Register);
 		// pull a function argument during call from those prepared
-		void take_argument(const std::string&, Register, Offset);
+		void take_argument(std::string_view, Register, Offset);
 		// link execution to a user-defined function
 		void call_function(const std::string&);
 		// link execution to a user-defined function
-		void call_function(const std::string&, const std::vector<ExpressionReference<ArgumentExpression>>&, ValueHandle);
+		void call_function(const std::string&, std::vector<ExpressionHandle>, ValueHandle);
 		// return from a call to a `nvr` function
 		void make_return(const std::string&);
 		// return from a call to a `nvr` function
