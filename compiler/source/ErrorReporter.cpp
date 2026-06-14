@@ -43,7 +43,7 @@ namespace hz
 		return active_frames[thread_id].size();
 	}
 
-	ErrorFrame ErrorReporter::open_context(const std::string& filepath, const std::string& task)
+	ErrorFrame ErrorReporter::open_context(std::filesystem::path filepath, std::string_view task)
 	{
 		std::scoped_lock lock{ mutex };
 

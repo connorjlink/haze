@@ -10,22 +10,18 @@
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
 #include <toolchain/models/Token.h>
+#include <utility/Sum.h>
 
 // Haze Parser.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	struct Symbol;
-	struct FunctionSymbol;
-	struct ArgumentSymbol;
-	struct VariableSymbol;
-	struct StructOrUnionSymbol;
-	struct DefineSymbol;
-	struct LabelSymbol;
-	struct AdjustExpression;
-
 	enum struct ParserType;
+
+	FORWARD_DECLARE_SUM(Expression)
+	FORWARD_DECLARE_SUM(Symbol)
+
 
 	template<typename T>
 	struct Parser
@@ -55,10 +51,6 @@ namespace hz
 		ExpressionReference<StringLiteralExpression> parse_string_expression();
 		ExpressionReference<FunctionCallExpression> parse_functioncall_expression();
 		ExpressionHandle parse_parenthesis_expression();
-
-	protected:
-		ExpressionReference<AdjustExpression> parse_increment_expression();
-		ExpressionReference<AdjustExpression> parse_decrement_expression();
 
 	protected:
 		ExpressionHandle parse_expression_optimized();

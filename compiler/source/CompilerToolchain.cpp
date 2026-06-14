@@ -1,8 +1,6 @@
 import std;
 
 #include <job/JobManager.h>
-#include <symbol/Symbol.h>
-#include <toolchain/CommonToolchain.h>
 #include <toolchain/CompilerToolchain.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Generator.h>
@@ -18,7 +16,7 @@ namespace hz
 		return ToolchainKind::COMPILER;
 	}
 
-	std::vector<Linkable> CompilerToolchain::run(const std::string& filepath)
+	std::vector<Linkable> CompilerToolchain::run(std::filesystem::path filepath)
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "compiling");
 

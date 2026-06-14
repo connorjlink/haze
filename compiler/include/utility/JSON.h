@@ -26,6 +26,8 @@ namespace hz
 	using JSONVariant = std::variant
 	<
 		std::monostate,
+		// it seems the ECMA is not strict on numbers, but pure integers are useful for Clarity (https://ecma-international.org/wp-content/uploads/ECMA-404.pdf)
+		std::int32_t,
 		bool,
 		double,
 		std::string,
@@ -47,6 +49,7 @@ namespace hz
 	{
 	public:
 		void operator()([[maybe_unused]] std::monostate, std::string&) const;
+		void operator()(std::int32_t, std::string&) const;
 		void operator()(double, std::string&) const;
 		void operator()(const std::string&, std::string&) const;
 		void operator()(const JSONArray&, std::string&) const;
@@ -63,7 +66,7 @@ namespace hz
 		std::string serialize() const
 		{
 			auto result = std::string{};
-			result.reserve(128);
+			result.reserve(0x80);
 
 			std::visit(JSONSerializer{}, value, std::ref(result));
 
@@ -85,7 +88,7 @@ namespace hz
 
 	struct JSONObjectEntry
 	{
-		std::string key;
+		std::string_view key;
 		JSON value;
 	};
 }

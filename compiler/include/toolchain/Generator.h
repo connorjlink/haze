@@ -15,8 +15,6 @@
 
 namespace hz
 {
-	struct ArgumentExpression;
-
 	FORWARD_DECLARE_SUM(Declaration)
 	FORWARD_DECLARE_SUM(Expression)
 	FORWARD_DECLARE_SUM(Value)

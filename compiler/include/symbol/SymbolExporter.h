@@ -4,15 +4,21 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <io/WebSocketClient.h>
-#undef VOID // windows lol
+#include <symbol/Symbol.h>
 #include <toolchain/models/Token.h>
+#include <utility/Sum.h>
 
 // Haze SymbolExporter.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	struct Symbol;
+	FORWARD_DECLARE_SUM(Declaration)
+	FORWARD_DECLARE_SUM(Function)
+	FORWARD_DECLARE_SUM(Statement)
+	FORWARD_DECLARE_SUM(Expression)
+	FORWARD_DECLARE_SUM(Type)
+
 
 	struct SymbolExporter 
 		: public SingletonTag<SymbolExporter>
@@ -53,7 +59,7 @@ namespace hz
 
 	public:
 		SymbolExporter(std::ostream&);
-		SymbolExporter(const std::wstring&);
+		SymbolExporter();
 		~SymbolExporter();
 	};
 }

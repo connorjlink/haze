@@ -63,12 +63,12 @@ namespace hz
 		DeclarationHandle optimize(const Storage&) const;
 
 	public:
-		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, const std::vector<std::string>& formal_parameters)
-			: DeclarationBase{ token }, type{ type }, formal_parameters{ formal_parameters }
+		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, std::vector<std::string> formal_parameters)
+			: DeclarationBase{ token }, type{ type }, formal_parameters{ std::move(formal_parameters) }
 		{
 		}
 	};
-
+#define MAKE_FUNCTION_DECLARATION(token, type, formal_parameters) FunctionDeclaration{ token, type, formal_parameters }
 
 	struct VariableDeclaration : public DeclarationBase
 	{
@@ -88,7 +88,7 @@ namespace hz
 		{
 		}
 	};
-
+#define MAKE_VARIABLE_DECLARATION(token, type, initializer) VariableDeclaration{ token, type, make_handle(ast, initializer) }
 
 	struct StructOrUnionDeclaration : public DeclarationBase
 	{
@@ -107,6 +107,7 @@ namespace hz
 		{
 		}
 	};
+#define MAKE_STRUCT_OR_UNION_DECLARATION(token, type) StructOrUnionDeclaration{ token, type }
 
 	struct EnumDeclaration : public DeclarationBase
 	{
@@ -125,6 +126,7 @@ namespace hz
 		{
 		}
 	};
+#define MAKE_ENUM_DECLARATION(token, type) EnumDeclaration{ token, type }
 
 	struct TypedefDeclaration : public DeclarationBase
 	{
@@ -143,6 +145,7 @@ namespace hz
 		{
 		}
 	};
+#define MAKE_TYPEDEF_DECLARATION(token, type) TypedefDeclaration{ token, type }
 
 
 	//////////////////////////////////////////////////////

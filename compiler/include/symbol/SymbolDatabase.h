@@ -1,7 +1,6 @@
 #ifndef HAZE_SYMBOL_DATABASE_H
 #define HAZE_SYMBOL_DATABASE_H
 
-#include <ast/expression/Expression.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolExporter.h>
@@ -22,8 +21,9 @@ namespace hz
 	struct StructOrUnionSymbol;
 	struct Token;
 
-	FORWARD_DECLARE_SUM(Symbol);
-	FORWARD_DECLARE_SUM(Type);
+	FORWARD_DECLARE_SUM(Expression)
+	FORWARD_DECLARE_SUM(Symbol)
+	FORWARD_DECLARE_SUM(Type)
 
 
 #pragma message("TODO: redo symbol database to use direct AST reference instead of individual symbol types")
@@ -37,7 +37,7 @@ namespace hz
 
 	public:
 		SymbolHandle add_symbol(SymbolKind, std::string_view, const Token&);
-		SymbolReference<FunctionSymbol> add_function(std::string_view, const Token&, TypeHandle, const std::vector<ExpressionReference<ArgumentExpression>>& arguments);
+		SymbolReference<FunctionSymbol> add_function(std::string_view, const Token&, TypeHandle, std::vector<ExpressionHandle> arguments);
 		SymbolReference<ArgumentSymbol> add_argument(std::string_view, const Token&, TypeHandle);
 		SymbolReference<VariableSymbol> add_variable(std::string_view, const Token&);
 		SymbolReference<DefineSymbol> add_define(std::string_view, const Token&);

@@ -12,7 +12,12 @@ namespace hz
 
 	TypePrecedence precedence(const TypeBase& type);
 
-#define DECLARE_TYPE_FORMATTER(x) std::string to_string(x type, const std::string& name = "<anonymous>", TypePrecedence parent_precedence = TypePrecedence::LOWEST)
+#define DECLARE_TYPE_FORMATTER_INTERNAL(x, defaultname, defaultprecedence) std::string to_string(x type, const std::string& name defaultname, TypePrecedence parent_precedence defaultprecedence)
+#define DECLARE_TYPE_FORMATTER(x) \
+	DECLARE_TYPE_FORMATTER_INTERNAL(x, = "<anonymous>", = TypePrecedence::LOWEST)
+#define DEFINE_TYPE_FORMATTER(x) \
+	DECLARE_TYPE_FORMATTER_INTERNAL(x, , )
+
 	DECLARE_TYPE_FORMATTER(TypeHandle);
 
 	// forward declaration required not to form circular dependency with the incomplete type facade

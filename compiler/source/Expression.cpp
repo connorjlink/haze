@@ -19,6 +19,11 @@ namespace hz
 	// Integer Literal Expression
 	//////////////////////////////////////////////////////
 
+	ExpressionKind IntegerLiteralExpression::expression_kind() const
+	{
+		return ExpressionKind::INTEGER_LITERAL;
+	}
+
 	std::string IntegerLiteralExpression::format(std::uint32_t) const
 	{
 		return std::string();

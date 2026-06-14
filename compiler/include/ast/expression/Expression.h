@@ -69,6 +69,7 @@ namespace hz
 		Kind identifier_kind;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -89,6 +90,7 @@ namespace hz
 		BigInteger value;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -109,6 +111,7 @@ namespace hz
 		BigFloat value;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -129,6 +132,7 @@ namespace hz
 		std::string value;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -149,6 +153,7 @@ namespace hz
 		char value;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -169,6 +174,7 @@ namespace hz
 		ExpressionHandle inner;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -203,6 +209,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -223,6 +230,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -244,6 +252,7 @@ namespace hz
 		std::vector<ExpressionHandle> arguments;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -251,8 +260,8 @@ namespace hz
 		TypeHandle get_type(const Storage&) const;
 
 	public:
-		FunctionCallExpression(ExpressionReference<IdentifierExpression> identifier, const std::vector<ExpressionHandle>& arguments)
-			: identifier{ identifier }, arguments{ arguments }
+		FunctionCallExpression(ExpressionReference<IdentifierExpression> identifier, std::vector<ExpressionHandle> arguments)
+			: identifier{ identifier }, arguments{ std::move(arguments) }
 		{
 		}
 	};
@@ -265,6 +274,7 @@ namespace hz
 		ExpressionHandle index;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -277,7 +287,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_SUBSCRIPT_EXPRESSION(array, index) SubscriptExpression{ make_handle(ast, array), make_handle(ast, index)
+#define MAKE_SUBSCRIPT_EXPRESSION(array, index) SubscriptExpression{ make_handle(ast, array), make_handle(ast, index) }
 
 	struct MemberAccessExpression : public ExpressionBase
 	{
@@ -286,6 +296,7 @@ namespace hz
 		ExpressionReference<IdentifierExpression> member;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -307,6 +318,7 @@ namespace hz
 		ExpressionReference<IdentifierExpression> member;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -336,6 +348,7 @@ namespace hz
 		std::vector<Initializer> initializers;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -343,8 +356,8 @@ namespace hz
 		TypeHandle get_type(const Storage&) const;
 
 	public:
-		CompoundLiteralExpression(TypeHandle type, const std::vector<Initializer>& initializers)
-			: type{ type }, initializers{ initializers }
+		CompoundLiteralExpression(TypeHandle type, std::vector<Initializer> initializers)
+			: type{ type }, initializers{ std::move(initializers) }
 		{
 		}
 	};
@@ -370,6 +383,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -391,6 +405,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -411,6 +426,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -431,6 +447,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -451,6 +468,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -471,6 +489,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -492,6 +511,7 @@ namespace hz
 		TypeHandle type;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -514,6 +534,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -534,6 +555,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -554,6 +576,7 @@ namespace hz
 		ExpressionHandle operand;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -574,6 +597,7 @@ namespace hz
 		TypeHandle type;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		ExpressionHandle evaluate(const Storage&, Context&) const;
@@ -608,6 +632,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -629,6 +654,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -650,6 +676,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -671,6 +698,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -692,6 +720,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -713,6 +742,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -734,6 +764,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -755,6 +786,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -776,6 +808,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -797,6 +830,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -818,6 +852,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -839,6 +874,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -860,6 +896,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -881,6 +918,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -902,6 +940,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -923,6 +962,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -944,6 +984,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -965,6 +1006,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -987,6 +1029,7 @@ namespace hz
 		ExpressionHandle otherwise;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1009,6 +1052,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1031,6 +1075,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1053,6 +1098,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1075,6 +1121,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1097,6 +1144,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1119,6 +1167,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1141,6 +1190,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1163,6 +1213,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1185,6 +1236,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1207,6 +1259,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1229,6 +1282,7 @@ namespace hz
 		ExpressionHandle right;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1249,6 +1303,7 @@ namespace hz
 		std::vector<ExpressionHandle> expressions;
 
 	public:
+		ExpressionKind expression_kind() const;
 		std::string format() const;
 		void generate(const Storage& ast) const;
 		ExpressionHandle evaluate(const Storage& ast, const Context& context) const;
@@ -1256,8 +1311,8 @@ namespace hz
 		ExpressionHandle get_type(const Storage& ast) const;
 
 	public:
-		CommaExpression(const std::vector<ExpressionHandle>& expressions)
-			: expressions{ expressions }
+		CommaExpression(std::vector<ExpressionHandle> expressions)
+			: expressions{ std::move(expressions) }
 		{
 		}
 	};
@@ -1300,27 +1355,6 @@ namespace hz
 		using Type = ExpressionSumImplementation::Type;
 		using Anchor = ExpressionSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	ExpressionKind ExpressionBase::expression_kind(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, associativity, precedence, type, name) case TypeIndexV<type, typename Storage::Type>: return ExpressionKind::enumerator;
-			PRIMARY_EXPRESSION_KINDS(X)
-			POSTFIX_EXPRESSION_KINDS(X)
-			UNARY_EXPRESSION_KINDS(X)
-			BINARY_EXPRESSION_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid expression tag `{}`", self.tag_type()), self.token);
-
-		// error recovery does not care about expression kind
-		return ExpressionKind::INTEGER_LITERAL;
-	}
 }
 
 #endif

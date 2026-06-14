@@ -345,29 +345,35 @@ namespace hz
 	// Inline Assembly Statement
 	//////////////////////////////////////////////////////
 
-	std::string InlineAssemblyStatement::format(std::uint32_t) const
+	std::string InlineAssemblyStatement::format(std::uint32_t indentation_level) const
 	{
-		return ";";
+		return std::format("asm {{\n{}\n}}", 
+			commands 
+				| std::ranges::views::transform([&](const auto& command) { return command.format(indentation_level + TAB); })
+				| std::ranges::views::join_with("\n")
+				| std::ranges::to<std::string>());
 	}
 
-	void NullStatement::generate(const Storage&) const
+	void InlineAssemblyStatement::generate(const Storage&) const
 	{
 		// no code generation necessary for null statement
 	}
 
-	ASTTask NullStatement::evaluate(const Storage& storage, Context&) const
+	ASTTask InlineAssemblyStatement::evaluate(const VariableSumStorage& storage, Context&) const
 	{
-		// no evaluation necessary for null statement
-		co_return MAKE_INVALID_HANDLE(storage, Statement);
+		USE_SAFE(ErrorReporter)->post_warning(std::format(
+			"inline assembly is not supported in evaluation"), token);
+
+		co_return MAKE_INVALID_HANDLE(storage, Variable);
 	}
 
-	StatementHandle NullStatement::optimize(const Storage& storage) const
+	StatementHandle InlineAssemblyStatement::optimize(const Storage& storage) const
 	{
 		// no optimizations possible for null statement
 		return MAKE_INVALID_HANDLE(storage, Statement);
 	}
 
-	TypeHandle NullStatement::get_type(const TypeSumStorage& storage) const
+	TypeHandle InlineAssemblyStatement::get_type(const TypeSumStorage& storage) const
 	{
 		// no type result possible for null statement
 		return MAKE_INVALID_HANDLE(storage, Type);

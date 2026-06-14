@@ -37,13 +37,17 @@ namespace hz
 	{
 	public:
 		using Storage = StatementSumStorage;
+		using VariableStorage = VariableSumStorage;
 
 	public:
 		Token token;
 
 	public:
 		template<typename Self>
-		StatementKind statement_kind(this Self&&);
+		StatementKind statement_kind(this Self&& self)
+		{
+			return self.statement_kind();
+		}
 
 	public:
 		StatementBase(const Token& token)
@@ -391,31 +395,13 @@ namespace hz
 
 	using StatementSumImplementation = MakeSum<StatementASTMethods, StatementKinds>::Type;
 
-	struct StatementSumStorage : public StatementSumImplementation::Storage
+	struct StatementStorage : public StatementSumImplementation::Storage
 	{
 		using StatementSumImplementation::Storage::Storage;
 
 		using Type = StatementSumImplementation::Type;
 		using Anchor = StatementSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	StatementKind StatementBase::statement_kind(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, type, name) case TypeIndexV<type, typename StatementSumStorage::Type>: return StatementKind::enumerator;
-			STATEMENT_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid statement tag `{}`", self.tag_type()), self.token);
-
-		// error recovery does not care about statement kind
-		return StatementKind::NULL;
-	}
 }
 
 #endif

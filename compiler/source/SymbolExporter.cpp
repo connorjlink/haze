@@ -1,9 +1,8 @@
 import std;
 
-#include <symbol/Symbol.h>
 #include <symbol/SymbolExporter.h>
-#include <utility/AutoJSON.h>
 #include <utility/JSON.h>
+#include <ast/function/Function.h>
 
 // Haze SymbolExporter.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -12,77 +11,33 @@ namespace
 {
 	using namespace hz;
 
-	AutoJSONObject export_location(const Token& token)
+	JSON export_location(const Token& token)
 	{
-		AutoJSONObject location{};
-		location.upsert("position", new NumberJSONValue{ static_cast<std::int32_t>(token.location.position) });
-		location.upsert("line", new NumberJSONValue{ token.location.line });
-		location.upsert("column", new NumberJSONValue{ token.location.column });
-		location.upsert("filepath", new StringJSONValue{ token.location.filepath });
-		location.upsert("stage", new StringJSONValue{ "source" });
+		auto result = JSONObject{};
 
-		return location;
+		result.emplace_back("position", static_cast<std::int32_t>(token.location.position));
+		result.emplace_back("line", token.location.line);
+		result.emplace_back("column", token.location.column);
+		result.emplace_back("filepath", token.location.filepath.string());
+		result.emplace_back("stage", "source");
+		
+		return result;
 	}
 
-	std::string export_function_symbol(FunctionSymbol* function_symbol, const Token& token)
+	JSON export_function_symbol(const Function& function, const Token& token)
 	{
-		/* Example JSON output for a function symbol
-			{
-				"name": "function",
-				"value": null,
-				"type": "keyword",
-				"text": "function",
-				"location": {
-					"line": 1,
-					"column": 1,
-					"filepath": "haze.hz",
-					"stage": "source"
-				},
-				"confidence": 100
-			}
-		*/
+		auto result = JSONObject{};
 
-		AutoJSONObject function{};
-		function.upsert("name", new StringJSONValue{ function_symbol->name });
-		function.upsert("value", new NullJSONValue{});
-		function.upsert("type", new StringJSONValue{ "function" });
-		function.upsert("text", new StringJSONValue{ function_symbol->name });
-		const auto location = export_location(token);
-		function.upsert("location", location.get_object());
-		function.upsert("confidence", new NumberJSONValue{ function_symbol->confidence });
+		result.emplace_back("name", function.name);
+		result.emplace_back("value", nullptr);
+		result.emplace_back("type", "function");
+		result.emplace_back("text", function.format_signature());
+		result.emplace_back("location", export_location(token));
+		result.emplace_back("confidence", token.confidence);
 
-		return function.serialize();
+		return result;
 	}
 
-	std::string export_argument_symbol(ArgumentSymbol* argument_symbol, const Token& token)
-	{
-		/* Example JSON output for an argument symbol
-		{
-			"name": "argument",
-			"value": null,
-			"type": "argument",
-			"text": "argument",
-			"location": {
-				"line": 1,
-				"column": 10,
-				"filepath": "haze.hz",
-				"stage": "source"
-			},
-			"confidence": 100
-		}
-		*/
-
-		AutoJSONObject argument{};
-		argument.upsert("name", new StringJSONValue{ argument_symbol->name });
-		argument.upsert("value", new NullJSONValue{});
-		argument.upsert("type", new StringJSONValue{ "argument" });
-		argument.upsert("text", new StringJSONValue{ argument_symbol->name });
-		const auto location = export_location(token);
-		argument.upsert("location", location.get_object());
-		argument.upsert("confidence", new NumberJSONValue{ argument_symbol->confidence });
-
-		return argument.serialize();
-	}
 
 	std::string export_variable_symbol(VariableSymbol* variable_symbol, const Token& token)
 	{
@@ -239,13 +194,13 @@ namespace hz
 		: queue{}, client{ std::nullopt }, stream{ std::osyncstream{ stream } }
 	{
 		// locking machinery auto-initialized
+		try_reconnect(3);
 	}
 
-	SymbolExporter::SymbolExporter(const std::filesystem::path& path)
-		: queue{}, client{}, stream{ std::nullopt }, path{ path }
+	SymbolExporter::SymbolExporter()
+		: queue{}, client{}, stream{ std::nullopt }
 	{
 		// locking machinery auto-initialized
-		try_reconnect(3);
 	}
 
 	SymbolExporter::~SymbolExporter()

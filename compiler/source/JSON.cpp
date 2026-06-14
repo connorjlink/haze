@@ -38,6 +38,11 @@ namespace hz
 		result += "null";
 	}
 
+	void JSONSerializer::operator()(std::int32_t value, std::string& result) const
+	{
+		result += std::format("{}", value);
+	}
+
 	void JSONSerializer::operator()(double value, std::string& result) const
 	{
 		result += std::format("{}", value);

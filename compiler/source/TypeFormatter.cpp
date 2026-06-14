@@ -20,12 +20,12 @@ namespace hz
 		return TypePrecedence::LOWEST;
 	}
 
-	DECLARE_TYPE_FORMATTER(VoidType)
+	DEFINE_TYPE_FORMATTER(const VoidType&)
 	{
 		return "void";
 	}
 
-	DECLARE_TYPE_FORMATTER(IntType)
+	DEFINE_TYPE_FORMATTER(const IntType&)
 	{
 		// <storage-struct> <type-qualifier> <type-specifier> <type-width>
 		return std::format("{} {} {} {}",
@@ -35,7 +35,7 @@ namespace hz
 			type.int_kind);
 	}
 
-	DECLARE_TYPE_FORMATTER(FloatType)
+	DEFINE_TYPE_FORMATTER(const FloatType&)
 	{
 		// <storage-struct> <type-qualifier> <type-width>
 		return std::format("{} {} {}",
@@ -44,7 +44,7 @@ namespace hz
 			type.float_kind);
 	}
 
-	DECLARE_TYPE_FORMATTER(StructOrUnionType)
+	DEFINE_TYPE_FORMATTER(const StructOrUnionType&)
 	{
 		if (!type.members.has_value())
 		{
@@ -52,10 +52,10 @@ namespace hz
 			return "";
 		}
 
-		std::string members{};
+		auto result = std::string{};
 		for (const auto& member : type.members.value())
 		{
-			members += std::format("    {} {};\n", to_string(member.type), member.name);
+			result += std::format("    {} {};\n", to_string(member.type), member.name);
 		}
 
 		// <storage-struct> <type-qualifier> <struct-or-union> 
@@ -66,10 +66,10 @@ namespace hz
 			type.storage,
 			type.qualifier,
 			type.struct_or_union_kind,
-			members);
+			result);
 	}
 
-	DECLARE_TYPE_FORMATTER(EnumType)
+	DEFINE_TYPE_FORMATTER(const EnumType&)
 	{
 		// <storage-struct> <type-qualifier> enum tag 
 		// NOTE: enumerators not shown since they don't fundamentally affect the type
@@ -79,13 +79,13 @@ namespace hz
 			name);
 	}
 
-	DECLARE_TYPE_FORMATTER(TypedefNameType)
+	DEFINE_TYPE_FORMATTER(const TypedefNameType&)
 	{
 		// NOTE: just using the underyling alias name since the typedef doesn't affect the type's string representation
 		return type.name;
 	}
 
-	DECLARE_TYPE_FORMATTER(PointerType)
+	DEFINE_TYPE_FORMATTER(const PointerType&)
 	{
 		const auto qualifier_string = to_string(type.qualifier);
 
@@ -103,7 +103,7 @@ namespace hz
 		return to_string(type.pointee, pointer_string, TypePrecedence::POINTER);
 	}
 
-	DECLARE_TYPE_FORMATTER(ArrayType)
+	DEFINE_TYPE_FORMATTER(const ArrayType&)
 	{
 		const auto array_length = type.length
 			? std::to_string(*type.length)
@@ -115,7 +115,7 @@ namespace hz
 		return to_string(type.element_type, name_string, TypePrecedence::ARRAY);
 	}
 
-	DECLARE_TYPE_FORMATTER(FunctionType)
+	DEFINE_TYPE_FORMATTER(const FunctionType&)
 	{
 		auto parameters = std::string{};
 

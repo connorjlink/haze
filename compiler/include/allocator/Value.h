@@ -6,7 +6,6 @@
 #include <cli/defs/ArchitectureKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <toolchain/Generator.h>
 #include <utility/Constants.h>
 #include <utility/Sum.h>
 #include <utility/Typing.h>
@@ -16,6 +15,8 @@
 
 namespace hz
 {
+	struct Generator;
+
 	// forward declare sum storage and self-referential types for facade
 
 #define VALUE_METHODS(X, handlet) \
@@ -56,31 +57,10 @@ namespace hz
 		Register index;
 
 	public:
-		ValueKind value_kind() const
-		{
-			return ValueKind::REGISTER;
-		}
-
-		std::string format() const
-		{
-			return std::format("r{}", index);
-		}
-
-		void load_into(Generator& generator, Register destination) const
-		{
-			if (destination != index)
-			{
-				generator.make_copy(destination, index);
-			}
-		}
-
-		void store_from(Generator& generator, Register source) const
-		{
-			if (source != index)
-			{
-				generator.make_copy(index, source);
-			}
-		}
+		ValueKind value_kind() const;
+		std::string format() const;
+		void load_into(Generator&, Register) const;
+		void store_from(Generator&, Register) const;
 	};
 
 	struct StackValue : public ValueBase
@@ -90,28 +70,10 @@ namespace hz
 		Offset index;
 
 	public:
-		ValueKind value_kind() const
-		{
-			return ValueKind::STACK;
-		}
-
-		std::string format() const
-		{
-			const auto architecture_type = USE_UNSAFE(CommandLineOptions)->architecture;
-			const auto format = get_stack_frame_pointer(architecture_type);
-
-			return std::format("[{} + {}]", format, index);
-		}
-
-		void load_into(Generator& generator, Register destination) const
-		{
-			generator.stack_read(destination, index);
-		}
-
-		void store_from(Generator& generator, Register source) const
-		{
-			generator.stack_write(index, source);
-		}
+		ValueKind value_kind() const;
+		std::string format() const;
+		void load_into(Generator&, Register) const;
+		void store_from(Generator&, Register) const;
 	};
 
 	struct StaticValue : public ValueBase
@@ -120,29 +82,10 @@ namespace hz
 		Address index;
 
 	public:
-		ValueKind value_kind() const
-		{
-			return ValueKind::STATIC;
-		}
-
-		std::string format() const
-		{
-			static constexpr auto bits_per_hex_digit = std::countr_zero(16u);
-			static constexpr auto hex_digits = (sizeof(Address) * std::numeric_limits<unsigned char>::digits + bits_per_hex_digit - 1) / bits_per_hex_digit;
-
-			// NOTE: +2 required to account for the `0x` prefix
-			return std::format("[{:#0{}x}]", index, hex_digits + 2);
-		}
-
-		void load_into(Generator& generator, Register destination) const
-		{
-			generator.heap_read(destination, index);
-		}
-
-		void store_from(Generator& generator, Register source) const
-		{
-			USE_SAFE(ErrorReporter)->post_uncorrectable("cannot write to static (read-only) data region", NULL_TOKEN);
-		}
+		ValueKind value_kind() const;
+		std::string format() const;
+		void load_into(Generator&, Register) const;
+		void store_from(Generator&, Register) const;
 	};
 
 	// not for public consumption

@@ -16,9 +16,10 @@
 
 namespace hz
 {
+	template<typename T>
 	struct Toolchain
 		: public ServiceTag<Toolchain>
-		, public InjectService<Generator, JobManager, Parser>
+		, public InjectService<Generator, JobManager, Parser<T>>
 		, public InjectSingleton<CommandLineOptions, ErrorReporter, FileManager, Linker>
 	{
 	protected:

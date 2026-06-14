@@ -385,14 +385,15 @@ namespace hz
 
 	struct Token
 	{
-		TokenKind type;
 		std::string text;
 		SourceLocation location;
+		TokenKind type;
+		std::uint8_t confidence;
 	};
 
 	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers
 	// could make certain inward-facing Token fields mutable, but this feels cleaner
-	inline static const auto NULL_TOKEN = Token{ TokenKind::END, "", { "unknown", 0, -1, -1 } };
+	inline static const auto NULL_TOKEN = Token{ { "unknown", 0, -1, -1 }, TokenKind::END, 0 };
 	inline SourceLocation null_location(const std::string& filepath)
 	{
 		// specified file (optional) at (1, 1)

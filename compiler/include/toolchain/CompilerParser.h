@@ -49,6 +49,12 @@ namespace hz
 		Parser* createassembler_parser(const std::string&);
 		StatementReference<InlineAssemblyStatement> parse_inline_asm_statement(const std::string&);
 
+	private:
+		ExpressionReference<PrefixIncrementExpression> parse_prefix_increment_expression();
+		ExpressionReference<PostfixIncrementExpression> parse_postfix_increment_expression();
+		ExpressionReference<PostfixIncrementExpression> parse_prefix_decrement_expression();
+		ExpressionReference<PostfixIncrementExpression> parse_postfix_decrement_expression();
+
 	public:
 		std::vector<ExpressionHandle> parse_arguments(bool);
 
@@ -68,7 +74,7 @@ namespace hz
 	public:
 		std::vector<NodeType> parse() const
 		{
-
+#pragma message("TODO: implement parsing of nonglobal declarations")
 		}
 
 	public:

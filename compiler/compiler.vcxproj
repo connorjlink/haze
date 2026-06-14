@@ -136,6 +136,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\TypeFormatter.cpp" />
+    <ClCompile Include="source\Value.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="template\Skeleton.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -162,6 +166,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="include\runtime\Variable.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="include\symbol\Symbol.h">
       <SubType>
       </SubType>
     </ClInclude>

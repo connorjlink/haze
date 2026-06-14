@@ -20,7 +20,7 @@ namespace hz
 	struct ErrorContext
 	{
 	private:
-		std::string task;
+		std::string_view task;
 	
 	private:
 		std::vector<Error> errors;

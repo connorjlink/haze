@@ -71,6 +71,7 @@ namespace hz
 	public:
 		FunctionKind function_kind(void) const;
 		std::string format(std::uint32_t) const;
+		std::string format_signature() const;
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
