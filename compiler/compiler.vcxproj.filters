@@ -150,7 +150,7 @@
     <ClCompile Include="source\ReturnStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\RuntimeAllocator.cpp">
+    <ClCompile Include="source\Allocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Scanner.cpp">
@@ -603,6 +603,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\symbol\Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\toolchain\models\Environment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\symbol\models\Symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

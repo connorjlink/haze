@@ -169,11 +169,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="include\symbol\models\Symbol.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\symbol\Symbol.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
+    <ClInclude Include="include\toolchain\models\Environment.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="include\type\defs\TypeKind.h" />
     <ClInclude Include="include\type\defs\TypePrecedence.h">
       <SubType>
@@ -253,7 +261,7 @@
     <ClCompile Include="source\Random.cpp" />
     <ClCompile Include="source\ReturnStatement.cpp" />
     <ClCompile Include="source\RISCVAssemblerParser.cpp" />
-    <ClCompile Include="source\RuntimeAllocator.cpp" />
+    <ClCompile Include="source\Allocator.cpp" />
     <ClCompile Include="source\Scanner.cpp" />
     <ClCompile Include="source\Statement.cpp" />
     <ClCompile Include="source\StringExpression.cpp" />
