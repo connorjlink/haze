@@ -24,10 +24,18 @@ namespace hz
 
 	FORWARD_DECLARE_SUM(Statement)
 
-	template<typename MethodsT>
-	using StatementASTMethods = ASTMethods<MethodsT, StatementHandle>;
+#define STATEMENT_AST_METHODS BASE_AST_METHODS
 
-	DEFINE_SUM(Statement, AST_METHODS)
+	template<typename AnchorT, typename HandleT>
+	using StatementASTMethods = AllButLastT
+	<
+#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
+		STATEMENT_AST_METHODS(X, HandleT)
+#undef X
+		void
+	>;
+
+	DEFINE_SUM(Statement, STATEMENT_AST_METHODS)
 
 
 	struct StatementBase 

@@ -20,22 +20,18 @@ namespace hz
 	struct ErrorContext
 	{
 	private:
-		std::string_view task;
-	
-	private:
 		std::vector<Error> errors;
+		std::string_view task;
 
 	public:
 		std::string format() const;
-
-	public:
 		std::size_t error_count() const;
+	
+	public:
+		void post(ErrorKind, const std::filesystem::path&, const std::string&, const Token&);
 
 	public:
-		void post(ErrorKind, const std::string&, const std::string&, const Token&);
-
-	public:
-		ErrorContext(const std::string& task)
+		ErrorContext(std::string_view task)
 			: task{ task }
 		{
 		}

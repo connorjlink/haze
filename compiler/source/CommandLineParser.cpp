@@ -12,8 +12,8 @@ namespace
 	std::vector<std::string> split(const std::string& text, const std::string& delimiter)
 	{
 		return text
-			| std::ranges::views::split(delimiter)
-			| std::ranges::views::transform([](auto&& string)
+			| TypeHandle get_type(const TypeStorage&) const;::split(delimiter)
+			| TypeHandle get_type(const TypeStorage&) const;::transform([](auto&& string)
 			{
 				return std::string_view(&*string.begin(), std::ranges::distance(string));
 			})

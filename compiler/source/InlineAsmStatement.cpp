@@ -22,11 +22,11 @@ namespace hz
 		const auto commands = linker->link(REQUIRE_SAFE(Generator)->resolve_origin(), UWORD_MAX); 
 		
 		const auto object_code = commands
-			| std::ranges::views::transform([](auto command) 
+			| TypeHandle get_type(const TypeStorage&) const;::transform([](auto command) 
 			{ 
 				return command->object_code; 
 			})
-			| std::ranges::views::join
+			| TypeHandle get_type(const TypeStorage&) const;::join
 			| std::ranges::to<ByteRange>();
 
 		REQUIRE_SAFE(Generator)->inline_assembly(object_code, object_code.size());

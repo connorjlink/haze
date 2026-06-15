@@ -18,10 +18,12 @@ namespace hz
 
 	FORWARD_DECLARE_SUM(Declaration)
 
+#define DECLARATION_AST_METHODS BASE_AST_METHODS
+
 	template<typename MethodsT>
 	using DeclarationASTMethods = BaseASTMethods<MethodsT, DeclarationHandle>;
 
-	DEFINE_SUM(Declaration, BASE_AST_METHODS)
+	DEFINE_SUM(Declaration, DECLARATION_AST_METHODS)
 
 
 	struct DeclarationBase 
@@ -39,16 +41,14 @@ namespace hz
 			: token{ token }
 		{
 		}
-
-	public:
-		template<typename Self>
-		DeclarationKind declaration_kind(this Self&&);
 	};
 }
 
 namespace hz
 {
-#pragma message("TODO: implement remaining declaration AST nodes")
+	//////////////////////////////////////////////////////
+	// AST Declarations
+	//////////////////////////////////////////////////////
 
 	struct FunctionDeclaration : public DeclarationBase
 	{
@@ -57,10 +57,11 @@ namespace hz
 		std::vector<std::string> formal_parameters;
 
 	public:
+		DeclarationKind declaration_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		DeclarationHandle evaluate(const Storage&, Context&) const;
-		DeclarationHandle optimize(const Storage&) const;
+		void generate(const DeclarationStorage&) const;
+		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
+		DeclarationHandle optimize(const DeclarationStorage&) const;
 
 	public:
 		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, std::vector<std::string> formal_parameters)
@@ -77,10 +78,11 @@ namespace hz
 		ExpressionHandle initializer;
 
 	public:
+		DeclarationKind declaration_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		DeclarationHandle evaluate(const Storage&, Context&) const;
-		DeclarationHandle optimize(const Storage&) const;
+		void generate(const DeclarationStorage&) const;
+		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
+		DeclarationHandle optimize(const DeclarationStorage&) const;
 
 	public:
 		VariableDeclaration(const Token& token, TypeHandle type, ExpressionHandle initializer)
@@ -96,10 +98,11 @@ namespace hz
 		TypeReference<StructOrUnionType> type;
 
 	public:
+		DeclarationKind declaration_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		DeclarationHandle evaluate(const Storage&, Context&) const;
-		DeclarationHandle optimize(const Storage&) const;
+		void generate(const DeclarationStorage&) const;
+		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
+		DeclarationHandle optimize(const DeclarationStorage&) const;
 
 	public:
 		StructOrUnionDeclaration(const Token& token, TypeReference<StructOrUnionType> type)
@@ -115,10 +118,11 @@ namespace hz
 		TypeReference<EnumType> type;
 
 	public:
+		DeclarationKind declaration_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		DeclarationHandle evaluate(const Storage&, Context&) const;
-		DeclarationHandle optimize(const Storage&) const;
+		void generate(const DeclarationStorage&) const;
+		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
+		DeclarationHandle optimize(const DeclarationStorage&) const;
 
 	public:
 		EnumDeclaration(const Token& token, TypeReference<EnumType> type)
@@ -134,10 +138,11 @@ namespace hz
 		TypeReference<TypedefNameType> type;
 
 	public:
+		DeclarationKind declaration_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		DeclarationHandle evaluate(const Storage&, Context&) const;
-		DeclarationHandle optimize(const Storage&) const;
+		void generate(const DeclarationStorage&) const;
+		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
+		DeclarationHandle optimize(const DeclarationStorage&) const;
 
 	public:
 		TypedefDeclaration(const Token& token, TypeReference<TypedefNameType> type)
@@ -173,24 +178,6 @@ namespace hz
 		using Type = DeclarationSumImplementation::Type;
 		using Anchor = DeclarationSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	DeclarationKind DeclarationBase::declaration_kind(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, type, name) case TypeIndexV<type, typename DeclarationStorage::Type>: return DeclarationKind::enumerator;
-			DECLARATION_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid declaration tag `{}`", self.tag_type()), self.token);
-
-		// error recovery does not care about declaration kind
-		return DeclarationKind::FUNCTION;
-	}
 }
 
 #endif

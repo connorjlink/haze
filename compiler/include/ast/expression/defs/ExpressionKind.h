@@ -82,41 +82,26 @@ namespace hz
 	X(BITWISE_OR_ASSIGNMENT,  RIGHT, 14, BitwiseOrAssignmentExpression,  bitwise OR assignment) \
 	X(COMMA,                  LEFT,  15, CommaExpression,                comma)
 
+#define EXPRESSION_KINDS(X) \
+	PRIMARY_EXPRESSION_KINDS(X) \
+	POSTFIX_EXPRESSION_KINDS(X) \
+	UNARY_EXPRESSION_KINDS(X) \
+	BINARY_EXPRESSION_KINDS(X)
 
-	enum struct ExpressionKind
-	{
-#define X(enumerator, associativity, precedence, type, name) enumerator,
-		PRIMARY_EXPRESSION_KINDS(X)
-		POSTFIX_EXPRESSION_KINDS(X)
-		UNARY_EXPRESSION_KINDS(X)
-		BINARY_EXPRESSION_KINDS(X)
-#undef X
-	};
 
-	constexpr std::string_view to_string(ExpressionKind kind)
-	{
-		switch (kind)
-		{
-#define X(enumerator, associativity, precedence, type, name) case ExpressionKind::enumerator: return #name;
-			PRIMARY_EXPRESSION_KINDS(X)
-			POSTFIX_EXPRESSION_KINDS(X)
-			UNARY_EXPRESSION_KINDS(X)
-			BINARY_EXPRESSION_KINDS(X)
-#undef X
-		}
+#define AUTOENUM_ROUTER(X, enumerator, associativity, precedence, type, name) X(enumerator, type, name, ExpressionKind)
 
-		return "<unknown expression kind>";
-	}
+	DEFINE_ENUM(EXPRESSION_KINDS, ExpressionKind, expression kind)
+
+#undef AUTOENUM_ROUTER
+
 
 	Associativity associativity_of(ExpressionKind kind)
 	{
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case ExpressionKind::enumerator: return Associativity::associativity;
-			PRIMARY_EXPRESSION_KINDS(X)
-			POSTFIX_EXPRESSION_KINDS(X)
-			UNARY_EXPRESSION_KINDS(X)
-			BINARY_EXPRESSION_KINDS(X)
+			EXPRESSION_KINDS(X)
 #undef X
 		}
 
@@ -131,10 +116,7 @@ namespace hz
 		switch (kind)
 		{
 #define X(enumerator, associativity, precedence, type, name) case ExpressionKind::enumerator: return precedence;
-			PRIMARY_EXPRESSION_KINDS(X)
-			POSTFIX_EXPRESSION_KINDS(X)
-			UNARY_EXPRESSION_KINDS(X)
-			BINARY_EXPRESSION_KINDS(X)
+			EXPRESSION_KINDS(X)
 #undef X
 		}
 

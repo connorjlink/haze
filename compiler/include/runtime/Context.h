@@ -6,6 +6,7 @@
 #include <error/ErrorReporter.h>
 #include <runtime/Evaluation.h>
 #include <runtime/Variable.h>
+#include <toolchain/models/Environment.h>
 #include <utility/Sum.h>
 
 // Haze Context.h
@@ -17,29 +18,44 @@ namespace hz
 	FORWARD_DECLARE_SUM(Variable)
 	FORWARD_DECLARE_SUM(Function)
 
-	
+
+#pragma message("TODO: roll this back up into the interpreter class alone")
+
 	struct Context
 		: public SingletonTag<Context>
 		, public InjectSingleton<ErrorReporter>
 	{
 	private:
-		using VariableMap = std::unordered_map<std::string, VariableHandle>;
+		Environment<VariableHandle> environment;
 
-	public:
-		struct StackFrame
+		void enter_function_frame(const std::vector<std::pair<std::string, VariableHandle>>& arguments)
 		{
-			VariableMap local_variables;
-			StackFrame* parent;
-		};
-		std::vector<StackFrame> stack;
-		VariableMap global_variables;
+			environment.enter_function();
+			for (const auto& [name, value] : arguments)
+			{
+				environment.define(name, value);
+			}
+		}
 
-#pragma message("TODO: refactor to allow contiguous memory for stack frames")
-	public:
-		void enter_function_frame(const std::vector<std::string_view>&);
-		void exit_frame();
-		void enter_block();
-		void exit_block();
+		void exit_function_frame()
+		{
+			environment.exit_function();
+		}
+
+		void enter_block()
+		{
+			environment.enter_block();
+		}
+
+		void exit_block()
+		{
+			environment.exit_block();
+		}
+
+		std::optional<VariableHandle> find(std::string_view name)
+		{
+			return environment.find(name);
+		}
 
 	public:
 		void print(std::string_view message);

@@ -236,8 +236,8 @@ hz::Task<int> main_shim(int argc, char** argv)
 	const auto commands = USE_UNSAFE(Linker)->link(origin, base);
 
 	const auto executable = commands
-		| std::ranges::views::transform([](auto command) { return command->object_code; })
-		| std::ranges::views::join
+		| TypeHandle get_type(const TypeStorage&) const;::transform([](auto command) { return command->object_code; })
+		| TypeHandle get_type(const TypeStorage&) const;::join
 		| std::ranges::to<ByteRange>();
 
 	REQUIRE_UNSAFE(JobManager)->end_job(link_task);

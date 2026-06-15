@@ -8,7 +8,7 @@ import std;
 
 namespace hz
 {
-	Scanner::Scanner(const std::string& filepath)
+	Scanner::Scanner(const std::filesystem::path& filepath)
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "scanning");
 	}

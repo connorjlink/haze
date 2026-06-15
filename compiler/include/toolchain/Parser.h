@@ -62,7 +62,7 @@ namespace hz
 		template<typename Self>
 		std::vector<typename Self::NodeType> parse_generic_expression(this Self&& self)
 		{
-
+#pragma message("TODO: implement generic expression parsing")
 		}
 
 	public:

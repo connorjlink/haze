@@ -344,7 +344,7 @@ namespace hz
 	using name##Handle = SumHandle<name##SumDispatcher, name##Storage>; \
 	template<typename T> \
 	using name##Reference = SumReference<T, name##SumDispatcher, name##Storage>; \
-	using name##Facade = SumMemberBase<name##Storage>; 
+	using name##Facade = SumMemberBase<name##Storage>;
 
 
 	// dynamic dispatch wrapper type for sum families

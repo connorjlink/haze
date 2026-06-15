@@ -17,18 +17,7 @@ import std;
 
 namespace hz
 {
-	Generator::Generator(const std::string& filepath)
-	{
-		USE_SAFE(ErrorReporter)->open_context(filepath, "generating");
-	}
-
-	Generator::~Generator()
-	{
-		USE_SAFE(ErrorReporter)->close_context();
-	}
-
-
-	const std::string& Generator::current_function() const
+	std::string_view Generator::current_function() const
 	{
 		const auto& linkable = linkables[linkables.size() - 1];
 		const auto function = linkable.function;
@@ -36,7 +25,7 @@ namespace hz
 		return function.get<Function>()->name;
 	}
 
-	void Generator::begin_function(const std::string& name)
+	void Generator::begin_function(std::string_view name)
 	{
 		linkables.emplace_back(USE_SAFE(SymbolDatabase)->reference_symbol(SymbolKind::FUNCTION, name, NULL_TOKEN), {}, {}, 0);
 	}
@@ -353,10 +342,10 @@ namespace hz
 	{
 		for (auto function : program)
 		{
-			function->generate();
+			function.generate();
 		}
 
-		// Reorder defined functions so `main` is first since it's the entrypoint
+		// reorder defined functions so `main` is first since it's the entrypoint
 		// IntelliSense error only
 		std::ranges::partition(linkables, [](auto& linkable)
 		{
@@ -372,11 +361,15 @@ namespace hz
 	}
 
 
-	void Generator::reload(std::vector<DeclarationHandle> program, const std::string& filepath)
+	Generator::Generator(std::vector<DeclarationHandle> program, const std::filesystem::path& filepath)
+		: program{ std::move(program) }
 	{
-		this->program = std::move(program);
-
-		USE_SAFE(ErrorReporter)->post_information(std::format(
-			"reloaded program from `{}` with {} top-level declarators", filepath, program.size()), NULL_TOKEN);
+		USE_SAFE(ErrorReporter)->open_context(filepath, "generating");
 	}
+
+	Generator::~Generator()
+	{
+		USE_SAFE(ErrorReporter)->close_context();
+	}
+
 }

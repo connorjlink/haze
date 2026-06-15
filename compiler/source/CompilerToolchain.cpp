@@ -11,12 +11,12 @@ import std;
 
 namespace hz
 {
-	ToolchainKind CompilerToolchain::tag_type() const
+	ToolchainKind CompilerToolchain::toolchain_kind() const
 	{
 		return ToolchainKind::COMPILER;
 	}
 
-	std::vector<Linkable> CompilerToolchain::run(std::filesystem::path filepath)
+	std::vector<Linkable> CompilerToolchain::run(const std::filesystem::path& filepath)
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "compiling");
 

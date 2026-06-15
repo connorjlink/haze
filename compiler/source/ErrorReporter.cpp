@@ -43,7 +43,7 @@ namespace hz
 		return active_frames[thread_id].size();
 	}
 
-	ErrorFrame ErrorReporter::open_context(std::filesystem::path filepath, std::string_view task)
+	ErrorFrame ErrorReporter::open_context(const std::filesystem::path& filepath, std::string_view task)
 	{
 		std::scoped_lock lock{ mutex };
 
@@ -96,13 +96,13 @@ namespace hz
 		post_information(frame.context, frame.filepath, message, token);
 	}
 
-	void ErrorReporter::post_information(ErrorContext* context, const std::string& filepath, const std::string& message, const Token& token)
+	void ErrorReporter::post_information(ErrorContext* context, const std::filesystem::path& filepath, const std::string& message, const Token& token)
 	{
 		std::scoped_lock lock{ mutex };
 
 		if (context != nullptr)
 		{
-			context->post(ErrorKind::INFORMATION, message, filepath, token);
+			context->post(ErrorKind::INFORMATION, filepath, message, token);
 			return;
 		}
 
@@ -118,11 +118,11 @@ namespace hz
 		post_warning(frame.context, frame.filepath, message, token);
 	}
 
-	void ErrorReporter::post_warning(ErrorContext* context, const std::string& filepath, const std::string& message, const Token& token)
+	void ErrorReporter::post_warning(ErrorContext* context, const std::filesystem::path& filepath, const std::string& message, const Token& token)
 	{
 		if (context != nullptr)
 		{
-			context->post(ErrorKind::WARNING, message, filepath, token);
+			context->post(ErrorKind::WARNING, filepath, message, token);
 			return;
 		}
 
@@ -138,7 +138,7 @@ namespace hz
 		post_error(frame.context, frame.filepath, message, token);
 	}
 
-	void ErrorReporter::post_error(ErrorContext* context, const std::string& filepath, const std::string& message, const Token& token)
+	void ErrorReporter::post_error(ErrorContext* context, const std::filesystem::path& filepath, const std::string& message, const Token& token)
 	{
 		std::scoped_lock lock{ mutex };
 
@@ -147,7 +147,7 @@ namespace hz
 
 		if (context != nullptr)
 		{
-			context->post(ErrorKind::ERROR, message, filepath, token);
+			context->post(ErrorKind::ERROR, filepath, message, token);
 			return;
 		}
 
@@ -163,7 +163,7 @@ namespace hz
 		post_uncorrectable(frame.context, frame.filepath, message, token);
 	}
 
-	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::string& filepath, const std::string& message, const Token& token)
+	void ErrorReporter::post_uncorrectable(ErrorContext* context, const std::filesystem::path& filepath, const std::string& message, const Token& token)
 	{
 		std::scoped_lock lock{ mutex };
 
@@ -172,7 +172,7 @@ namespace hz
 
 		if (context != nullptr)
 		{
-			context->post(ErrorKind::UNCORRECTABLE, message, filepath, token);
+			context->post(ErrorKind::UNCORRECTABLE, filepath, message, token);
 		}
 		else
 		{

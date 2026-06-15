@@ -27,25 +27,17 @@ namespace hz
 	private:
 		// imported upon reload()
 		std::vector<DeclarationHandle> program;
-
-	private:
 		std::vector<Linkable> linkables;
-
-	private:
 		std::unordered_map<Address, Offset> string_length_map;
 
 	public:
-		const std::string& current_function() const;
-
-	public:
-		void begin_function(const std::string&);
+		void begin_function(std::string_view);
+		std::string_view current_function() const;
 
 	public:
 		// NOTE: old method
-		void label_command(const std::string&);
-
-	public:
-		void branch_label(const std::string&);
+		void label_command(std::string_view);
+		void branch_label(std::string_view);
 
 	public:
 		// push a new empty scope with a unique local variable set
@@ -168,26 +160,22 @@ namespace hz
 
 	public:
 		// { assembly code }
-		void raw_binary(const ByteRange&);
+		void raw_binary(ByteRange);
 
 	public:
 		// { assembly code, bytecount }
-		void inline_assembly(const ByteRange&, Address);
+		void inline_assembly(ByteRange, Address);
 
 	public:
 		// get the current index for IntermediateCommand generation
 		Address resolve_origin() const;
 
 	public:
-		// ast, filepath
-		void reload(std::vector<DeclarationHandle>, const std::string&);
-
-	public:
-		Generator(const std::string&);
-		~Generator();
-
-	public:
 		std::vector<Linkable> generate();
+
+	public:
+		Generator(std::vector<DeclarationHandle>, const std::filesystem::path&);
+		~Generator();
 	};
 }
 

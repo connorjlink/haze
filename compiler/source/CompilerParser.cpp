@@ -184,7 +184,7 @@ namespace hz
 		assembler_parser->reload(assembly, filepath);
 
 		const auto commands = assembler_parser->parse()
-			| std::ranges::views::transform([](auto node)
+			| TypeHandle get_type(const TypeStorage&) const;::transform([](auto node)
 				{
 					if (node->ntype() != NodeType::COMMAND)
 					{

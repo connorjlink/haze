@@ -22,13 +22,10 @@ namespace hz
 	{
 	private:
 		// mapping function name (global scope, shared across files) -> linkable
-		std::unordered_map<std::string, Linkable> linkables;
+		std::unordered_map<std::string_view, Linkable> linkables;
 
 	public:
-		virtual ~Linker() = default;
-
-	public:
-		void reload(const std::vector<Linkable>&);
+		void reload(std::vector<Linkable>);
 		// NOTE: the linker does not support generating fat binaries, so a single architecture is sufficient to uniquely identify it
 		ArchitectureKind architecture_kind() const;
 		bool optimize();

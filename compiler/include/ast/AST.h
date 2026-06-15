@@ -65,21 +65,6 @@ namespace hz
 	>;
 
 
-#define AST_METHODS(X, handlet) \
-	BASE_AST_METHODS(X, handlet) \
-	X(get_type, TypeHandle)
-
-	// further constrain pure AST types like expression and statements for type checking purposes
-	template<typename AnchorT, typename HandleT>
-	using ASTMethods = AllButLastT
-	<
-#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
-		AST_METHODS(X, HandleT)
-#undef X
-		void
-	>;
-
-
 	template<typename SumMemberT, typename StorageT, typename MethodsT>
 	concept IsASTNode = SumTuple<SumMemberT, StorageT, MethodsT>;
 }

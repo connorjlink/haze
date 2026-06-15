@@ -8,14 +8,14 @@
 
 namespace hz
 {
-	struct CompilerToolchain : public Toolchain<CompilerParser>
+	struct CompilerToolchain : public Toolchain
 	{
 	public:
-		using Toolchain::Toolchain;
+		ToolchainKind toolchain_kind() const;
+		std::vector<Linkable> run(const std::filesystem::path&);
 
 	public:
-		ToolchainKind tag_type() const final override;
-		std::vector<Linkable> run(std::filesystem::path) final override;
+		using Toolchain::Toolchain;
 	};
 }
 

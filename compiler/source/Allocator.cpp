@@ -2,6 +2,7 @@ import std;
 
 #include <allocator/Allocator.h>
 #include <error/ErrorReporter.h>
+#include <runtime/Variable.h>
 
 // Haze RuntimeAllocator.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -10,12 +11,12 @@ namespace
 {
 	using namespace hz;
 
-	void already_defined_error(const std::string& name, const Token& token)
+	void already_defined_error(std::string_view name, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("variable `{}` was already defined in the current scope", name), token);
 	}
 
-	void not_defined_error(const std::string& name, const Token& token)
+	void not_defined_error(std::string_view name, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("variable `{}` was not defined in the current scope", name), token);
 	}
@@ -23,22 +24,23 @@ namespace
 
 namespace hz
 {
-	std::optional<Offset> Allocator::get_function_stack_size(const std::string& name)
+	std::optional<Offset> Allocator::get_function_stack_size(std::string_view name)
 	{
 		if (!stack_size.contains(name))
 		{
 			return std::nullopt;
 		}
-		return { stack_size.at(name) };
+
+		return stack_size.at(name);
 	}
 
-	bool Allocator::define_local(const std::string& name)
+	bool Allocator::define_local(std::string_view name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 		
 		if (locals_offsets[current_function].contains(name))
 		{
-			::already_defined_error(name, NULL_TOKEN);
+			already_defined_error(name, NULL_TOKEN);
 			return false;
 		}
 
@@ -49,7 +51,7 @@ namespace hz
 		return true;
 	}
 
-	bool Allocator::define_local(const std::string& name, Register source)
+	bool Allocator::define_local(std::string_view name, Register source)
 	{
 		if (!define_local(name))
 		{
@@ -60,7 +62,7 @@ namespace hz
 
 		// figure out how much memory is required for the current local 
 		const auto symbol = USE_SAFE(SymbolDatabase)->reference_variable(name, NULL_TOKEN);
-		const auto size = symbol->type.size();
+		const auto size = symbol.get()->size;
 
 		stack_size[current_function] += size;
 
@@ -71,31 +73,31 @@ namespace hz
 		return true;
 	}
 
-	void Allocator::attach_local(const std::string& name, Offset offset)
+	void Allocator::attach_local(std::string_view name, Offset offset)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (locals_offsets[current_function].contains(name))
 		{
-			::already_defined_error(name, NULL_TOKEN);
+			already_defined_error(name, NULL_TOKEN);
 			return;
 		}
 
 		locals_offsets[current_function][name] = offset;
 	}
 
-	void Allocator::destroy_local(const std::string& name)
+	void Allocator::destroy_local(std::string_view name)
 	{
 		locals_offsets.erase(name);
 	}
 
-	void Allocator::read_local(Register destination, const std::string& name)
+	void Allocator::read_local(Register destination, std::string_view name)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (!locals_offsets[current_function].contains(name))
 		{
-			::not_defined_error(name, NULL_TOKEN);
+			not_defined_error(name, NULL_TOKEN);
 			return;
 		}
 
@@ -103,13 +105,13 @@ namespace hz
 		REQUIRE_SAFE(Generator)->stack_read(destination, offset);
 	}
 
-	void Allocator::write_local(const std::string& name, Register source)
+	void Allocator::write_local(std::string_view name, Register source)
 	{
 		const auto& current_function = REQUIRE_SAFE(Generator)->current_function();
 
 		if (!locals_offsets[current_function].contains(name))
 		{
-			::not_defined_error(name, NULL_TOKEN);
+			not_defined_error(name, NULL_TOKEN);
 			return;
 		}
 

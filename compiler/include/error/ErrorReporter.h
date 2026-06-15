@@ -53,7 +53,7 @@ namespace hz
 
 	public:
 		std::size_t get_context_count();
-		ErrorFrame open_context(const std::string&, const std::string&);
+		ErrorFrame open_context(const std::filesystem::path&, std::string_view);
 		void close_context();
 
 	public:
@@ -67,11 +67,11 @@ namespace hz
 		void post_uncorrectable(const std::string&, const Token&);
 
 	public:
-		void post_information(ErrorContext*, const std::string&, const std::string&, const Token&);
-		void post_warning(ErrorContext*, const std::string&, const std::string&, const Token&);
-		void post_error(ErrorContext*, const std::string&, const std::string&, const Token&);
+		void post_information(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
+		void post_warning(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
+		void post_error(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
 		[[noreturn]]
-		void post_uncorrectable(ErrorContext*, const std::string&, const std::string&, const Token&);
+		void post_uncorrectable(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
 
 	public:
 		ErrorReporter()

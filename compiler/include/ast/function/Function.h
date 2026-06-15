@@ -23,10 +23,21 @@ namespace hz
 
 	FORWARD_DECLARE_SUM(Function)
 
-	template<typename MethodsT>
-	using FunctionASTMethods = ASTMethods<MethodsT, FunctionHandle>;
+#define FUNCTION_AST_METHODS(X, handlet) \
+	BASE_AST_METHODS(X, handlet) \
+	X(function_kind, FunctionKind) \
+	X(get_type, TypeHandle)
 
-	DEFINE_SUM(Function, AST_METHODS)
+	template<typename AnchorT, typename MethodsT>
+	using FunctionASTMethods = AllButLastT
+	<
+#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
+		FUNCTION_AST_METHODS(X, handlet)
+#undef X
+		void
+	>;
+
+	DEFINE_SUM(Function, FUNCTION_AST_METHODS)
 
 
 	struct FunctionBase 
@@ -55,7 +66,7 @@ namespace hz
 
 	struct Function 
 		: public FunctionBase
-		, public InjectService<Generator, Parser<CompilerParser>, Allocator>
+		, public InjectService<Generator, Parser, Allocator>
 		, public InjectSingleton<SymbolDatabase>
 	{
 	public:

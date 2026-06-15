@@ -145,7 +145,7 @@ namespace hz
 		{
 			// pop all arguments pushed by the caller
 			const auto size = function_symbol->arguments
-				| std::ranges::views::transform([](auto argument) { return AS_ARGUMENT_EXPRESSION(argument)->type->size(); })
+				| TypeHandle get_type(const TypeStorage&) const;::transform([](auto argument) { return AS_ARGUMENT_EXPRESSION(argument)->type->size(); })
 				| ::sum;
 
 			EMIT(ret(size));

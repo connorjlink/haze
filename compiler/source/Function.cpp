@@ -9,9 +9,32 @@ import std;
 
 namespace hz
 {
-	NodeType Function::ntype() const
+	//////////////////////////////////////////////////////
+	// Null Statement
+	//////////////////////////////////////////////////////
+
+	FunctionKind Function::function_kind() const
 	{
-		return NodeType::FUNCTION;
+		return FunctionKind::FUNCTION;
+	}
+
+	std::string Function::format(std::uint32_t identation_level) const
+	{
+		return std::format("{}\n{{\n{}\n}}", format_signature(), body.format(identation_level + 1));
+	}
+
+	std::string Function::format_signature() const
+	{
+		const auto formatted_arguments = arguments
+			| TypeHandle get_type(const TypeStorage&) const;::transform([](const auto argument)
+			{
+				return
+			}
+			| TypeHandle get_type(const TypeStorage&) const;::join_with(", ")
+			| std::ranges::to<std::string>())
+
+		return std::format("{} {}({})",
+			to_string(return_type), name, arguments);
 	}
 
 	void Function::generate(ValueHandle)

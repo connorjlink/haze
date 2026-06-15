@@ -3,7 +3,9 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <symbol/Symbol.h>
 #include <symbol/SymbolExporter.h>
+#include <toolchain/models/Environment.h>
 #include <utility/Sum.h>
 
 // Haze SymbolDatabase.h
@@ -27,13 +29,14 @@ namespace hz
 
 
 #pragma message("TODO: redo symbol database to use direct AST reference instead of individual symbol types")
+#pragma message("TODO: move symboldatabase information over to the Generator class and hook up environment push/pop logic with function enter/exit scope")
 
 	struct SymbolDatabase
 		: public SingletonTag<SymbolDatabase>
 		, public InjectSingleton<ErrorReporter, SymbolExporter>
 	{
 	private:
-		std::unordered_map<std::string, SymbolHandle> table;
+		Environment<Symbol> environment;
 
 	public:
 		SymbolHandle add_symbol(SymbolKind, std::string_view, const Token&);

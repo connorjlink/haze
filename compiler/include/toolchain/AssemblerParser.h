@@ -11,9 +11,8 @@
 namespace hz
 {
 	struct AssemblerParser 
-		: public Parser<AssemblerParser>
+		: public Parser
 		, public ServiceTag<AssemblerParser>
-#pragma message("TODO: figure out how to get virtual dependencies sorted through the services (i.e., register the Parser and polymorphically initialize with AssemblerParser")
 	{
 	private:
 		using NodeType = CommandHandle;
@@ -30,12 +29,16 @@ namespace hz
 
 		std::vector<NodeType> parse() const
 		{
+			auto result = std::vector<NodeType>{};
 
+#pragma message("TODO: implement assembler parsing")
+
+			return result;
 		}
 
 	public:
-		AssemblerParser(Address base, std::filesystem::path filepath)
-			: Parser{ std::format("{} <inline assembly>", std::move(filepath)) }, base{ base }
+		AssemblerParser(std::vector<Token> tokens, const ExpressionStorage& storage, Address base)
+			: Parser{ std::move(tokens), storage }, base{ base }
 		{
 		}
 	};

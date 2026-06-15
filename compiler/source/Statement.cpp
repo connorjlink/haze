@@ -240,9 +240,9 @@ namespace hz
 	{
 		return std::format("{{{}}}",
 			substatements 
-				| std::ranges::views::transform([](const auto& substatement) { return substatement.format(indentation_level + TAB); })
-				| std::ranges::views::join_with("\n\n")
-				| std::ranges::views::transform([&](const auto& line) { return std::format("{}{}", indentation_table[indentation_level], line); })
+				| TypeHandle get_type(const TypeStorage&) const;::transform([](const auto& substatement) { return substatement.format(indentation_level + TAB); })
+				| TypeHandle get_type(const TypeStorage&) const;::join_with("\n\n")
+				| TypeHandle get_type(const TypeStorage&) const;::transform([&](const auto& line) { return std::format("{}{}", indentation_table[indentation_level], line); })
 				| std::ranges::to<std::string>());
 	}
 
@@ -315,8 +315,8 @@ namespace hz
 	{
 		return std::format("asm {{\n{}\n}}", 
 			commands 
-				| std::ranges::views::transform([&](const auto& command) { return command.format(indentation_level + TAB); })
-				| std::ranges::views::join_with("\n")
+				| TypeHandle get_type(const TypeStorage&) const;::transform([&](const auto& command) { return command.format(indentation_level + TAB); })
+				| TypeHandle get_type(const TypeStorage&) const;::join_with("\n")
 				| std::ranges::to<std::string>());
 	}
 

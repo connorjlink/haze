@@ -20,10 +20,11 @@ namespace hz
 
 	FORWARD_DECLARE_SUM(Expression)
 
-	template<typename MethodsT>
-	using ExpressionASTMethods = ASTMethods<MethodsT, ExpressionHandle>;
+#define EXPRESSION_AST_METHODS(X, handlet) \
+	BASE_AST_METHODS(X, handlet) \
+	X(get_type, TypeHandle)
 
-	DEFINE_SUM(Expression, AST_METHODS)
+	DEFINE_SUM(Expression, EXPRESSION_AST_METHODS)
 
 
 	struct ExpressionBase
