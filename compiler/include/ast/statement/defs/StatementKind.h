@@ -25,6 +25,7 @@ namespace hz
 	X(DECLARATION, DeclarationStatement,    declaration) \
 	X(ASM,         InlineAssemblyStatement, asm)
 
+#undef NULL
 
 #define AUTOENUM_ROUTER(X, enumerator, type, name) X(enumerator, type, name, StatementKind)
 

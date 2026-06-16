@@ -16,8 +16,6 @@
 
 namespace hz
 {
-	// forward declare sum storage and self-referential types for facade
-
 	FORWARD_DECLARE_SUM(Type)
 
 #define TYPE_METHODS(X, handlet) \
@@ -62,9 +60,8 @@ namespace hz
 	// All Types
 	//////////////////////////////////////////////////////
 
-	// not for public consumption
 	template<typename SumMemberT, typename StorageT>
-	concept IsType = SumTuple<SumMemberT, StorageT, TypeMethods<StorageT>>;
+	concept IsType = SumTuple<SumMemberT, StorageT, TypeMethods<typename StorageT::Anchor>>;
 
 	using TypeKinds = SumTypeList
 	<

@@ -14,14 +14,11 @@
 
 namespace hz
 {
-	// forward declare sum storage and self-referential types for facade
-
 	FORWARD_DECLARE_SUM(Declaration)
 
-#define DECLARATION_AST_METHODS BASE_AST_METHODS
-
-	template<typename MethodsT>
-	using DeclarationASTMethods = BaseASTMethods<MethodsT, DeclarationHandle>;
+#define DECLARATION_AST_METHODS(X, handlet) \
+	BASE_AST_METHODS(X, handlet) \
+	X(declaration_kind, DeclarationKind)
 
 	DEFINE_SUM(Declaration, DECLARATION_AST_METHODS)
 
@@ -157,9 +154,8 @@ namespace hz
 	// All Declarations
 	//////////////////////////////////////////////////////
 
-	// not for public consumption
 	template<typename SumMemberT, typename StorageT>
-	concept IsDeclaration = SumTuple<SumMemberT, StorageT, DeclarationASTMethods<StorageT>>;
+	concept IsDeclaration = SumTuple<SumMemberT, StorageT, DeclarationMethods<typename StorageT::Anchor>>;
 
 	using DeclarationKinds = SumTypeList
 	<
@@ -169,7 +165,7 @@ namespace hz
 		void
 	>;
 
-	using DeclarationSumImplementation = MakeSum<DeclarationASTMethods, DeclarationKinds>::Type;
+	using DeclarationSumImplementation = MakeSum<DeclarationMethods, DeclarationKinds>::Type;
 
 	struct DeclarationStorage : public DeclarationSumImplementation::Storage
 	{

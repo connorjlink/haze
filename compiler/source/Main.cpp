@@ -20,7 +20,7 @@ import std;
 #include <toolchain/AssemblerToolchain.h>
 #include <toolchain/Linker.h>
 #include <toolchain/defs/ToolchainKind.h>
-#include <utility/ExitProgramException.h>
+#include <utility/Exception.h>
 #include <builder/PEBuilder.h>
 #include <builder/BMBuilder.h>
 

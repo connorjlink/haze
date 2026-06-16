@@ -1,70 +1,31 @@
 import std;
 
 #include <runtime/Context.h>
-#include <utility/ExitProgramException.h>
+#include <utility/Exception.h>
 
 // Haze Context.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	void Context::declare_variable(const std::string& identifier)
+	void Context::enter_function(const std::vector<FunctionArgument>& arguments)
 	{
-		define_variable(identifier, nullptr);
+		enter_function();
+
+		for (const auto& argument : arguments)
+		{
+			define(argument.name, argument.value);
+		}
 	}
 
-	void Context::define_variable(const std::string& identifier, Variable* value)
-	{
-		variables[identifier] = value;
-	}
-
-	const decltype(Context::_variables)& Context::get_variables() const
-	{
-		return _variables;
-	}
-
-	void Context::define_function(Function* function)
-	{
-		_functions.emplace_back(function);
-	}
-
-	const decltype(Context::_functions)& Context::functions() const
-	{
-		return _functions;
-	}
-
-	void Context::push_return(Variable* value)
-	{
-		_returns.emplace(value);
-	}
-
-	Variable* Context::pop_return()
-	{
-		const auto value = _returns.top();
-		_returns.pop();
-		return value;
-	}
-
-	void Context::push_arguments(const std::vector<ExpressionHandle>& arguments)
-	{
-		_arguments.emplace(arguments);
-	}
-
-	std::vector<ExpressionHandle> Context::pop_arguments()
-	{
-		const auto arguments = _arguments.top();
-		_arguments.pop();
-		return arguments;
-	}
-
-	void Context::print(const std::string& message)
+	void Context::print(std::string_view message)
 	{
 		USE_SAFE(ErrorReporter)->post_information(message, NULL_TOKEN);
 	}
 
-	void Context::exit_program(Variable* value)
+	void Context::exit_program(VariableHandle variable)
 	{
 		// not an error condition, just a quick escape hatch to main()
-		throw ExitProgramException{ value->format() };
+		throw ExitProgramException{ variable.format() };
 	}
 }

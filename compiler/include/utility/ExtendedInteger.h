@@ -25,17 +25,6 @@ namespace hz
 		bool sign; // true = positive, false = negative
 
 	public:
-		ExtendedInteger()
-			: magnitude{ 0 }, sign{ true }
-		{
-		}
-
-		ExtendedInteger(std::uintmax_t magnitude, bool sign)
-			: magnitude{ magnitude }, sign{ sign }
-		{
-		}
-
-	public:
 		operator bool();
 
 	public:
@@ -91,10 +80,8 @@ namespace hz
 
 				return magnitude >= static_cast<std::uintmax_t>(-static_cast<std::intmax_t>(std::numeric_limits<T>::min()));
 			}
-			else
-			{
-				return magnitude <= static_cast<std::uintmax_t>(std::numeric_limits<T>::max());
-			}
+
+			return magnitude <= static_cast<std::uintmax_t>(std::numeric_limits<T>::max());
 		}
 
 		template<typename T>
@@ -105,7 +92,7 @@ namespace hz
 			{
 				// internal compiler error: crash out
 				USE_UNSAFE(ErrorReporter)->post_uncorrectable(std::format(
-					"extended integral value `{}{}` out of range", sign ? "+" : "-", magnitude), NULL_TOKEN);
+					"extended integral value `{}` out of range", to_string()), NULL_TOKEN);
 			}
 
 			if constexpr (std::is_signed_v<T>)
@@ -114,21 +101,28 @@ namespace hz
 				{
 					return static_cast<T>(magnitude);
 				}
-				else
-				{
-					return static_cast<T>(-static_cast<std::intmax_t>(magnitude));
-				}
+
+				return static_cast<T>(-static_cast<std::intmax_t>(magnitude));
 			}
-			else
-			{
-				return static_cast<T>(magnitude);
-			}
+
+			return static_cast<T>(magnitude);
 		}
 
 	public:
 		std::string to_string() const
 		{
 			return std::format("{}{}", sign ? "+" : "-", magnitude);
+		}
+
+	public:
+		ExtendedInteger()
+			: magnitude{ 0 }, sign{ true }
+		{
+		}
+
+		ExtendedInteger(std::uintmax_t magnitude, bool sign)
+			: magnitude{ magnitude }, sign{ sign }
+		{
 		}
 	};
 
@@ -141,10 +135,8 @@ namespace hz
 		{
 			return static_cast<std::uintmax_t>(t < 0 ? -t : t);
 		}
-		else
-		{
-			return static_cast<std::uintmax_t>(t);
-		}
+		
+		return static_cast<std::uintmax_t>(t);
 	}
 
 

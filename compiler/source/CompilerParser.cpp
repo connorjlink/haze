@@ -131,7 +131,7 @@ namespace hz
 		return new CompoundStatement{ statements, lbrace_token };
 	}
 
-	Statement* CompilerParser::parse_return_statement(const std::string& enclosing_function)
+	StatementHandle CompilerParser::parse_return_statement(std::string_view enclosing_function)
 	{
 		const auto return_token = consume(TokenKind::RETURN);
 
@@ -147,7 +147,7 @@ namespace hz
 		// like many real C implementations do (e.g., VC++)
 		if (enclosing_function == "main")
 		{
-			if (expression == nullptr)
+			if (!expression)
 			{
 				USE_SAFE(ErrorReporter)->post_error("non-nvr function `main()` must specify a return value", return_token);
 			}

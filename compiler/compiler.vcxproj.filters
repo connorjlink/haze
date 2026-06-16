@@ -57,9 +57,6 @@
     <ClCompile Include="source\ErrorReporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ExitProgramException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,6 +213,9 @@
     <ClCompile Include="source\Value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\Variable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\utility\Random.h">
@@ -233,7 +233,7 @@
     <ClInclude Include="include\utility\Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\ExitProgramException.h">
+    <ClInclude Include="include\utility\Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\ExtendedInteger.h">

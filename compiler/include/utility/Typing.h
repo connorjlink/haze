@@ -165,6 +165,19 @@ namespace hz
 	using TupleCatT = decltype(std::tuple_cat(
 		std::declval<Tuple1>(),
 		std::declval<Tuple2>()));
+
+
+	struct NotMovableT
+	{
+		NotMovableT(const NotMovableT&) = delete;
+		NotMovableT& operator=(NotMovableT&&) = delete;
+	};
+
+	struct NotCopyableT
+	{
+		NotCopyableT(const NotCopyableT&) = delete;
+		NotCopyableT& operator=(const NotCopyableT&) = delete;
+	};
 }
 
 #endif

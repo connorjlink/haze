@@ -14,56 +14,20 @@
 
 namespace hz
 {	
-	FORWARD_DECLARE_SUM(Expression)
-	FORWARD_DECLARE_SUM(Variable)
-	FORWARD_DECLARE_SUM(Function)
-
-
-#pragma message("TODO: roll this back up into the interpreter class alone")
-
-	struct Context
-		: public SingletonTag<Context>
-		, public InjectSingleton<ErrorReporter>
+	struct FunctionArgument
 	{
-	private:
-		Environment<VariableHandle> environment;
+		std::string_view name;
+		VariableHandle value;
+	};
 
-		void enter_function_frame(const std::vector<std::pair<std::string, VariableHandle>>& arguments)
-		{
-			environment.enter_function();
-			for (const auto& [name, value] : arguments)
-			{
-				environment.define(name, value);
-			}
-		}
-
-		void exit_function_frame()
-		{
-			environment.exit_function();
-		}
-
-		void enter_block()
-		{
-			environment.enter_block();
-		}
-
-		void exit_block()
-		{
-			environment.exit_block();
-		}
-
-		std::optional<VariableHandle> find(std::string_view name)
-		{
-			return environment.find(name);
-		}
-
+	struct Context 
+		: public Environment<VariableHandle>
+		, public SingletonTag<Context>
+	{
 	public:
+		void enter_function(const std::vector<FunctionArgument>&);
 		void print(std::string_view message);
 		void exit_program(VariableHandle);
-
-	public:
-		VariableHandle resolve(std::string_view);
-		void assign(std::string_view, VariableHandle);
 	};
 }
 

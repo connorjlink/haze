@@ -6,12 +6,14 @@
 #include <ast/declaration/Declaration.h>
 #include <ast/statement/defs/StatementKind.h>
 #include <cli/CommandLineOptions.h>
+#include <command/Command.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <symbol/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Generator.h>
-#include <toolchain/RISCVAssemblerParser.h>
 #include <toolchain/models/Token.h>
+#include <toolchain/RISCVAssemblerParser.h>
 #include <type/Type.h>
 #include <utility/Sum.h>
 
@@ -20,20 +22,17 @@
 
 namespace hz
 {
-	// forward declare sum storage and self-referential types for facade
+	struct QueueEntry
+	{
+		Symbol symbol;
+		Token token;
+	};
 
 	FORWARD_DECLARE_SUM(Statement)
 
-#define STATEMENT_AST_METHODS BASE_AST_METHODS
-
-	template<typename AnchorT, typename HandleT>
-	using StatementASTMethods = AllButLastT
-	<
-#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
-		STATEMENT_AST_METHODS(X, HandleT)
-#undef X
-		void
-	>;
+#define STATEMENT_AST_METHODS(X, handlet) \
+	BASE_AST_METHODS(X, handlet) \
+	X(statement_kind, StatementKind)
 
 	DEFINE_SUM(Statement, STATEMENT_AST_METHODS)
 
@@ -49,13 +48,6 @@ namespace hz
 
 	public:
 		Token token;
-
-	public:
-		template<typename Self>
-		StatementKind statement_kind(this Self&& self)
-		{
-			return self.statement_kind();
-		}
 
 	public:
 		StatementBase(const Token& token)
@@ -74,10 +66,11 @@ namespace hz
 	struct NullStatement : public StatementBase
 	{
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
 		NullStatement(const Token& token)
@@ -93,40 +86,42 @@ namespace hz
 		ExpressionHandle expression;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		ExpressionStatement(ExpressionHandle expression, const Token& token)
+		ExpressionStatement(const Token& token, ExpressionHandle expression)
 			: StatementBase{ token }, expression{ expression }
 		{
 		}
 	};
-#define MAKE_EXPRESSION_STATEMENT(expression, token) ExpressionStatement{ make_handle(ast, expression), token }
+#define MAKE_EXPRESSION_STATEMENT(token, expression) ExpressionStatement{ token, make_handle(ast, expression) }
 
 	struct ReturnStatement 
 		: public StatementBase
 		, public InjectService<CompilerParser>
 	{
 	private:
-		std::string enclosing_function;
+		std::string_view enclosing_function;
 		ExpressionHandle expression;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		ReturnStatement(const std::string& enclosing_function, ExpressionHandle expression, const Token& token)
+		ReturnStatement(const Token& token, std::string_view enclosing_function, ExpressionHandle expression)
 			: StatementBase{ token }, enclosing_function{ enclosing_function }, expression{ expression }
 		{
 		}
 	};
-#define MAKE_RETURN_STATEMENT(enclosing_function, expression, value, token) ReturnStatement{ enclosing_function, make_handle(ast, expression), value, token }
+#define MAKE_RETURN_STATEMENT(token, enclosing_function, expression, value) ReturnStatement{ token, enclosing_function, make_handle(ast, expression), value }
 
 	struct IfStatement : public StatementBase
 	{
@@ -136,18 +131,19 @@ namespace hz
 		StatementHandle else_body;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		IfStatement(ExpressionHandle condition, StatementHandle if_body, StatementHandle else_body, const Token& token)
+		IfStatement(const Token& token, ExpressionHandle condition, StatementHandle if_body, StatementHandle else_body)
 			: StatementBase{ token }, condition{ condition }, if_body{ if_body }, else_body{ else_body }
 		{
 		}
 	};
-#define MAKE_IF_STATEMENT(condition, if_body, else_body, token) IfStatement{ make_handle(ast, condition), if_body, else_body, token }
+#define MAKE_IF_STATEMENT(token, condition, if_body, else_body) IfStatement{ token, make_handle(ast, condition), if_body, else_body }
 
 	struct WhileStatement : public StatementBase
 	{
@@ -156,18 +152,19 @@ namespace hz
 		StatementHandle body;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		WhileStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
+		WhileStatement(const Token& token, ExpressionHandle condition, StatementHandle body)
 			: StatementBase{ token }, condition{ condition }, body{ body }
 		{
 		}
 	};
-#define MAKE_WHILE_STATEMENT(condition, body, token) WhileStatement{ make_handle(ast, condition), body, token }
+#define MAKE_WHILE_STATEMENT(token, condition, body) WhileStatement{ token, make_handle(ast, condition), body }
 
 	struct DoStatement : public StatementBase
 	{
@@ -176,18 +173,19 @@ namespace hz
 		StatementHandle body;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		DoStatement(ExpressionHandle condition, StatementHandle body, const Token& token)
+		DoStatement(const Token& token, ExpressionHandle condition, StatementHandle body)
 			: StatementBase{ token }, condition{ condition }, body{ body }
 		{
 		}
 	};
-#define MAKE_DO_STATEMENT(condition, body, token) DoStatement{ make_handle(ast, condition), body, token }
+#define MAKE_DO_STATEMENT(token, condition, body) DoStatement{ token, make_handle(ast, condition), body }
 
 	struct ForStatement : public StatementBase
 	{
@@ -198,32 +196,34 @@ namespace hz
 		StatementHandle body;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		ForStatement(StatementHandle initialization, ExpressionHandle condition, ExpressionHandle increment, StatementHandle body, const Token& token)
+		ForStatement(const Token& token, StatementHandle initialization, ExpressionHandle condition, ExpressionHandle increment, StatementHandle body)
 			: StatementBase{ token }, initialization{ initialization }, condition{ condition }, increment{ increment }, body{ body }
 		{
 		}
 	};
-#define MAKE_FOR_STATEMENT(initialization, condition, increment, body, token) ForStatement{ initialization, make_handle(ast, condition), make_handle(ast, increment), body, token }
+#define MAKE_FOR_STATEMENT(token, initialization, condition, increment, body) ForStatement{ token, initialization, make_handle(ast, condition), make_handle(ast, increment), body }
 
 	struct GotoStatement : public StatementBase
 	{
 	private:
-		std::string label;
+		std::string_view label;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 	
 	public:
-		GotoStatement(const std::string& label, const Token& token)
+		GotoStatement(const Token& token, std::string_view label)
 			: StatementBase{ token }, label{ label }
 		{
 		}
@@ -233,10 +233,11 @@ namespace hz
 	struct ContinueStatement : public StatementBase
 	{
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
 		ContinueStatement(const Token& token)
@@ -249,10 +250,11 @@ namespace hz
 	struct BreakStatement : public StatementBase
 	{
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
 		BreakStatement(const Token& token)
@@ -277,18 +279,19 @@ namespace hz
 		StatementHandle fallback;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		SwitchStatement(ExpressionHandle condition, const std::vector<Case>& cases, StatementHandle fallback, const Token& token)
-			: StatementBase{ token }, condition{ condition }, cases{ cases }, fallback{ fallback }
+		SwitchStatement(const Token& token, ExpressionHandle condition, std::vector<Case> cases, StatementHandle fallback)
+			: StatementBase{ token }, condition{ condition }, cases{ std::move(cases) }, fallback{ fallback }
 		{
 		}
 	};
-#define MAKE_SWITCH_STATEMENT(condition, cases, fallback, token) SwitchStatement{ make_handle(ast, condition), cases, fallback, token }
+#define MAKE_SWITCH_STATEMENT(token, condition, cases, fallback) SwitchStatement{ token, make_handle(ast, condition), cases, fallback }
 
 	struct CompoundStatement : public StatementBase
 	{
@@ -296,38 +299,40 @@ namespace hz
 		std::vector<StatementHandle> substatements;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		CompoundStatement(const std::vector<StatementHandle>& substatements, const Token& token)
-			: StatementBase{ token }, substatements{ substatements }
+		CompoundStatement(const Token& token, std::vector<StatementHandle> substatements)
+			: StatementBase{ token }, substatements{ std::move(substatements) }
 		{
 		}
 	};
-#define MAKE_COMPOUND_STATEMENT(substatements, token) CompoundStatement{ substatements, token }
+#define MAKE_COMPOUND_STATEMENT(token, substatements) CompoundStatement{ token, substatements }
 
 	struct LabeledStatement : public StatementBase
 	{
 	private:
-		std::string label;
+		std::string_view label;
 		StatementHandle statement;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		LabeledStatement(const std::string& label, StatementHandle statement, const Token& token)
+		LabeledStatement(const Token& token, std::string_view label, StatementHandle statement)
 			: StatementBase{ token }, label{ label }, statement{ statement }
 		{
 		}
 	};
-#define MAKE_LABELED_STATEMENT(label, statement, token) LabeledStatement{ label, statement, token }
+#define MAKE_LABELED_STATEMENT(token, label, statement) LabeledStatement{ token, label, statement }
 
 	struct DeclarationStatement : public StatementBase
 	{
@@ -335,18 +340,19 @@ namespace hz
 		DeclarationHandle declaration;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		DeclarationStatement(DeclarationHandle declaration, const Token& token)
+		DeclarationStatement(const Token& token, DeclarationHandle declaration)
 			: StatementBase{ token }, declaration{ declaration }
 		{
 		}
 	};
-#define MAKE_DECLARATION_STATEMENT(declaration, token) DeclarationStatement{ declaration, token }
+#define MAKE_DECLARATION_STATEMENT(token, declaration) DeclarationStatement{ token, declaration }
 
 	struct InlineAssemblyStatement
 		: public StatementBase
@@ -356,27 +362,27 @@ namespace hz
 		std::vector<CommandHandle> commands;
 
 	public:
+		StatementKind statement_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ASTTask evaluate(const Storage&, Context&) const;
-		StatementHandle optimize(const Storage&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
+		StatementHandle optimize(const StatementStorage&) const;
 
 	public:
-		InlineAssemblyStatement(const std::vector<CommandHandle>& commands, const Token& token)
-			: StatementBase{ token }, commands{ commands }
+		InlineAssemblyStatement(const Token& token, std::vector<CommandHandle> commands)
+			: StatementBase{ token }, commands{ std::move(commands) }
 		{
 		}
 	};
-#define MAKE_INLINE_ASSEMBLY_STATEMENT(commands, token) InlineAssemblyStatement{ commands, token }
+#define MAKE_INLINE_ASSEMBLY_STATEMENT(token, commands) InlineAssemblyStatement{ token, commands }
 
 
 	//////////////////////////////////////////////////////
 	// All Statements
 	//////////////////////////////////////////////////////
 
-	// not for public consumption
 	template<typename SumMemberT, typename StorageT>
-	concept IsStatement = SumTuple<SumMemberT, StorageT, TypeMethods<StorageT>>;
+	concept IsStatement = SumTuple<SumMemberT, StorageT, StatementMethods<typename StorageT::Anchor>>;
 
 	using StatementKinds = SumTypeList
 	<
@@ -386,7 +392,8 @@ namespace hz
 		void
 	>;
 
-	using StatementSumImplementation = MakeSum<StatementASTMethods, StatementKinds>::Type;
+
+	using StatementSumImplementation = MakeSum<StatementMethods, StatementKinds>::Type;
 
 	struct StatementStorage : public StatementSumImplementation::Storage
 	{

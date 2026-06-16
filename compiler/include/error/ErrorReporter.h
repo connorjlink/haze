@@ -60,18 +60,18 @@ namespace hz
 		std::string generate_report();
 
 	public:
-		void post_information(const std::string&, const Token&);
-		void post_warning(const std::string&, const Token&);
-		void post_error(const std::string&, const Token&);
+		void post_information(std::string_view, const Token&);
+		void post_warning(std::string_view, const Token&);
+		void post_error(std::string_view, const Token&);
 		[[noreturn]]
-		void post_uncorrectable(const std::string&, const Token&);
+		void post_uncorrectable(std::string_view, const Token&);
 
 	public:
-		void post_information(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
-		void post_warning(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
-		void post_error(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
+		void post_information(ErrorContext*, const std::filesystem::path&, std::string_view, const Token&);
+		void post_warning(ErrorContext*, const std::filesystem::path&, std::string_view, const Token&);
+		void post_error(ErrorContext*, const std::filesystem::path&, std::string_view, const Token&);
 		[[noreturn]]
-		void post_uncorrectable(ErrorContext*, const std::filesystem::path&, const std::string&, const Token&);
+		void post_uncorrectable(ErrorContext*, const std::filesystem::path&, std::string_view, const Token&);
 
 	public:
 		ErrorReporter()

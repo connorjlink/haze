@@ -15,6 +15,30 @@ namespace hz
 	using ASTTask = EvaluationTask<VariableHandle>;
 	using ASTAwaiter = EvaluationAwaiter<VariableHandle>;
 
+	struct ASTPromiseAwaiter
+	{
+	public:
+		using PromiseType = ASTTask::promise_type;
+		PromiseType* promise = nullptr;
+
+	public:
+		bool await_ready() const noexcept
+		{
+			return false;
+		}
+
+		bool await_suspend(std::coroutine_handle<PromiseType> handle) noexcept
+		{
+			promise = &handle.promise();
+			return true;
+		}
+
+		PromiseType* await_resume() const noexcept
+		{
+			return promise;
+		}
+	};
+
 	
 	inline constexpr auto TAB = 4;
 	inline constexpr auto MAX_INDENTATION = 40;
@@ -44,7 +68,7 @@ namespace hz
 		}
 	}
 
-	constexpr auto identation_table =
+	constexpr auto indentation_table =
 		internal::make_indentation_table(std::make_index_sequence<MAX_INDENTATION + 1>{});
 
 

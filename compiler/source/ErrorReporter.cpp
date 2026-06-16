@@ -87,7 +87,7 @@ namespace hz
 		return report;
 	}
 
-	void ErrorReporter::post_information(const std::string& message, const Token& token)
+	void ErrorReporter::post_information(std::string_view message, const Token& token)
 	{
 		std::scoped_lock lock{ mutex };
 
@@ -96,7 +96,7 @@ namespace hz
 		post_information(frame.context, frame.filepath, message, token);
 	}
 
-	void ErrorReporter::post_information(ErrorContext* context, const std::filesystem::path& filepath, const std::string& message, const Token& token)
+	void ErrorReporter::post_information(ErrorContext* context, const std::filesystem::path& filepath, std::string_view, const Token& token)
 	{
 		std::scoped_lock lock{ mutex };
 

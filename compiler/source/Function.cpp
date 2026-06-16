@@ -18,9 +18,9 @@ namespace hz
 		return FunctionKind::FUNCTION;
 	}
 
-	std::string Function::format(std::uint32_t identation_level) const
+	std::string Function::format(std::uint32_t indentation_level) const
 	{
-		return std::format("{}\n{{\n{}\n}}", format_signature(), body.format(identation_level + 1));
+		return std::format("{}\n{{\n{}\n}}", format_signature(), body.format(indentation_level + 1));
 	}
 
 	std::string Function::format_signature() const

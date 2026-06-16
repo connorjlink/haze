@@ -8,7 +8,7 @@
 // Haze AutoBitfield.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define DEFINE_BITFIELD_INTERNAL(enummember, appendname, valuematch, kinds, type, name, extras) \
+#define _PRIVATE_DEFINE_BITFIELD(enummember, appendname, valuematch, kinds, type, name, extras) \
 	enum struct type extras \
 	{ \
 		kinds(enummember) \
@@ -78,9 +78,9 @@
 
 // NOTE: define AUTOBITFIELD_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
 #define DEFINE_BITFIELD(kinds, type, name) \
-	DEFINE_BITFIELD_INTERNAL(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : std::uint32_t)
+	_PRIVATE_DEFINE_BITFIELD(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : std::uint32_t)
 
 #define DEFINE_BITFIELD_BASE(kinds, type, name, base) \
-	DEFINE_BITFIELD_INTERNAL(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : base)
+	_PRIVATE_DEFINE_BITFIELD(AUTOBITFIELD_ENUM_MEMBER, AUTOBITFIELD_APPEND_NAME, AUTOBITFIELD_VALUE_MATCH, kinds, type, name, : base)
 
 #endif

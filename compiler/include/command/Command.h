@@ -16,14 +16,11 @@ namespace hz
 {
 	struct Context;
 
-	// forward declare sum storage and self-referential types for facade
-
 	FORWARD_DECLARE_SUM(Command)
 
-	template<typename MethodsT>
-	using CommandASTMethods = BaseASTMethods<MethodsT, CommandHandle>;
+#define COMMAND_AST_METHODS BASE_AST_METHODS
 
-	DEFINE_SUM(Command, BASE_AST_METHODS)
+	DEFINE_SUM(Command, COMMAND_AST_METHODS)
 
 
 	struct CommandBase
@@ -137,7 +134,7 @@ namespace hz
 
 
 	template<typename SumMemberT, typename StorageT>
-	concept IsCommand = SumTuple<SumMemberT, StorageT, CommandASTMethods<StorageT>>;
+	concept IsCommand = SumTuple<SumMemberT, StorageT, CommandMethods<typename StorageT::Anchor>>;
 
 	using CommandKinds = SumTypeList
 	<
@@ -147,7 +144,7 @@ namespace hz
 		void
 	>;
 
-	using CommandSumImplementation = MakeSum<CommandASTMethods, CommandKinds>::Type;
+	using CommandSumImplementation = MakeSum<CommandMethods, CommandKinds>::Type;
 
 	struct CommandStorage : public CommandSumImplementation::Storage
 	{

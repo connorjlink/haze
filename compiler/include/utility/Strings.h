@@ -63,11 +63,9 @@ namespace hz
 		template<IsString T>
 		std::string_view intern(T&& string)
 		{
-			const auto view = std::string_view{ std::forward<T>(string) };
-
-			if (const auto it = storage.find(view); it != storage.end())
+			if (storage.contains(string))
 			{
-				return std::string_view{ *it };
+				return std::string_view{ string };
 			}
 
 			const auto [it, success] = storage.emplace(StringType{ view, allocator });
@@ -86,7 +84,8 @@ namespace hz
 			return storage.size();
 		}
 		
-		[[nodiscard]] bool empty() const noexcept
+		[[nodiscard]]
+		bool empty() const noexcept
 		{
 			return storage.empty();
 		}

@@ -20,19 +20,14 @@ namespace hz
 	FORWARD_DECLARE_SUM(Type)
 
 
+	struct QueueEntry;
+
 	struct SymbolExporter 
 		: public SingletonTag<SymbolExporter>
 		, public InjectSingleton<ErrorReporter>
 	{
 	private:
-		struct QueueEntry
-		{
-			Symbol symbol;
-			Token token;
-		};
-
-	private:
-		std::queue<QueueEntry> queue;
+		std::list<QueueEntry> queue;
 		std::mutex queue_mutex;
 		std::condition_variable_any listener;
 		std::jthread worker;

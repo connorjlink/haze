@@ -1,10 +1,9 @@
 #ifndef HAZE_VARIABLE_H
 #define HAZE_VARIABLE_H
 
-#include <ast/expression/Expression.h>
+#include <ast/expression/defs/ExpressionKind.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <runtime/Context.h>
 #include <runtime/defs/VariableKind.h>
 #include <type/Type.h>
 #include <utility/ExtendedInteger.h>
@@ -15,12 +14,14 @@
 
 namespace hz
 {
-	// forward declare sum storage and self-referential types for facade
-
 	FORWARD_DECLARE_SUM(Variable)
+	FORWARD_DECLARE_SUM(Expression)
 
 #define VARIABLE_METHODS(X, handlet) \
+	X(variable_kind, VariableKind) \
+	X(format, std::string) \
 	X(value, ExpressionHandle) \
+	X(is_truthy, bool) \
 	X(get_type, TypeHandle)
 
 	DEFINE_SUM(Variable, VARIABLE_METHODS)
@@ -39,10 +40,6 @@ namespace hz
 		using Storage = VariableStorage;
 
 	public:
-		template<typename Self>
-		VariableKind variable_kind(this Self&&);
-
-	public:
 		VariableBase(TypeHandle type)
 			: type{ type }
 		{
@@ -59,8 +56,11 @@ namespace hz
 	struct VoidVariable : public VariableBase
 	{
 	public:
-		ExpressionHandle value(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		VariableKind variable_kind() const;
+		std::string format() const;
+		ExpressionHandle value(const VariableStorage&) const;
+		bool is_truthy() const;
+		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
 		VoidVariable(TypeHandle type)
@@ -76,8 +76,11 @@ namespace hz
 		ExtendedInteger integer;
 
 	public:
-		ExpressionHandle value(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		VariableKind variable_kind() const;
+		std::string format() const;
+		ExpressionHandle value(const VariableStorage&) const;
+		bool is_truthy() const;
+		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
 		IntegerVariable(TypeHandle type, ExtendedInteger integer)
@@ -93,8 +96,11 @@ namespace hz
 		double floating_point;
 
 	public:
-		ExpressionHandle value(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		VariableKind variable_kind() const;
+		std::string format() const;
+		ExpressionHandle value(const VariableStorage&) const;
+		bool is_truthy() const;
+		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
 		FloatVariable(TypeHandle type, double floating_point)
@@ -107,19 +113,19 @@ namespace hz
 	struct StructOrUnionVariable : public VariableBase
 	{
 	private:
-		std::unordered_map<std::string, ExpressionHandle> member_values;
+		std::unordered_map<std::string, ExpressionHandle> members;
 
 	public:
-		ExpressionHandle value(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		VariableKind variable_kind() const;
+		std::string format() const;
+		ExpressionHandle value(const VariableStorage&) const;
+		bool is_truthy() const;
+		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		StructOrUnionVariable(TypeHandle type, std::unordered_map<std::string, ExpressionHandle> member_values)
-			: VariableBase{ type }, member_values{ std::move(member_values) }
-		{
-		}
+		StructOrUnionVariable(TypeHandle, std::unordered_map<std::string, ExpressionHandle>);
 	};
-#define MAKE_STRUCT_OR_UNION_VARIABLE(type, member_values) StructOrUnionVariable{ type, member_values }
+#define MAKE_STRUCT_OR_UNION_VARIABLE(type, members) StructOrUnionVariable{ type, members }
 
 	struct EnumVariable : public VariableBase
 	{
@@ -127,8 +133,11 @@ namespace hz
 		std::string_view enumerator;
 
 	public:
-		ExpressionHandle value(const Storage&) const;
-		TypeHandle get_type(const Storage&) const;
+		VariableKind variable_kind() const;
+		std::string format() const;
+		ExpressionHandle value(const VariableStorage&) const;
+		bool is_truthy() const;
+		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
 		EnumVariable(TypeHandle type, std::string_view enumerator)
@@ -144,9 +153,8 @@ namespace hz
 	// All Variables
 	//////////////////////////////////////////////////////
 
-	// not for public consumption
 	template<typename SumMemberT, typename StorageT>
-	concept IsVariable = SumTuple<SumMemberT, StorageT, TypeMethods<StorageT>>;
+	concept IsVariable = SumTuple<SumMemberT, StorageT, VariableMethods<typename StorageT::Anchor>>;
 
 	using VariableKinds = SumTypeList
 	<
@@ -155,6 +163,7 @@ namespace hz
 #undef X
 		void
 	>;
+
 
 	using VariableSumImplementation = MakeSum<VariableMethods, VariableKinds>::Type;
 
@@ -165,23 +174,6 @@ namespace hz
 		using Type = VariableSumImplementation::Type;
 		using Anchor = VariableSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	VariableKind VariableBase::variable_kind(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, type, name) case TypeIndexV<type, VariableStorage::Type>: return VariableKind::enumerator;
-			VARIABLE_KINDS(X)
-#undef X
-		}
-
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid type tag `{}`", self.tag_type()), NULL_TOKEN);
-
-		return VariableKind::VOID;
-	}
 }
 
 #endif

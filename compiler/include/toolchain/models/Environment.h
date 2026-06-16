@@ -24,17 +24,12 @@ namespace hz
 
 
 	private:
-		std::vector<ScopeMap> scopes;
+		std::vector<Scope> scopes;
 
-	public:
+	protected:
 		void enter_block()
 		{
 			scopes.emplace_back({}, false);
-		}
-
-		void enter_function()
-		{
-			scopes.emplace_back({}, true);
 		}
 
 		void exit_block()
@@ -43,6 +38,11 @@ namespace hz
 			{
 				scopes.pop_back();
 			}
+		}
+
+		void enter_function()
+		{
+			scopes.emplace_back({}, true);
 		}
 
 		void exit_function()
@@ -59,6 +59,7 @@ namespace hz
 			}
 		}
 
+	public:
 		void define(std::string_view name, T value)
 		{
 			// define in most nested scope
@@ -96,6 +97,56 @@ namespace hz
 			}
 
 			return scopes.front().map[name];
+		}
+
+	private:
+		struct AutoScope : public NotCopyableT
+		{
+		public:
+			Environment& environment;
+
+		public:
+			AutoScope(Environment& environment)
+				: environment{ environment }
+			{
+				this->environment.enter_block();
+			}
+
+			~AutoScope()
+			{
+				environment.exit_block();
+			}
+		};
+
+		struct AutoFunction : public NotCopyableT
+		{
+		public:
+			Environment& environment;
+
+		public:
+			AutoFunction(Environment& environment)
+				: environment{ environment }
+			{
+				this->environment.enter_function();
+			}
+
+			~AutoFunction()
+			{
+				environment.exit_function();
+			}
+		};
+
+	public:
+		[[nodiscard]]
+		AutoScope auto_scope()
+		{
+			return AutoScope{ *this };
+		}
+
+		[[nodiscard]]
+		AutoFunction auto_function()
+		{
+			return AutoFunction{ *this };
 		}
 
 	public:

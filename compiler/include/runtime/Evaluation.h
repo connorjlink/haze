@@ -3,28 +3,14 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <runtime/Variable.h>
+#include <utility/Exception.h>
 
 // Haze Evaluation.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	struct EvaluationFailureException
-	{
-		std::string trace;
-
-		const char* what() const noexcept
-		{
-			return trace.c_str();
-		}
-
-	public:
-		EvaluationFailureException(std::stacktrace stacktrace)
-			: trace{ to_string(stacktrace) }
-		{
-		}
-	};
-
 	enum struct ControlFlowKind
 	{
 		NONE,
@@ -172,6 +158,7 @@ namespace hz
 		{
 		}
 	};
+
 }
 
 #endif

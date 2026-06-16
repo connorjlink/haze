@@ -4,7 +4,6 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
-#include <toolchain/models/Linkable.h>
 #include <utility/Constants.h>
 #include <utility/Sum.h>
 
@@ -19,6 +18,8 @@ namespace hz
 	FORWARD_DECLARE_SUM(Expression)
 	FORWARD_DECLARE_SUM(Value)
 
+
+	struct Linkable;
 
 	struct Generator
 		: public ServiceTag<Generator>

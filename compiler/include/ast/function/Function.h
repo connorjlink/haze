@@ -1,11 +1,11 @@
 #ifndef HAZE_FUNCTION_H
 #define HAZE_FUNCTION_H
 
+#include <allocator/Allocator.h>
 #include <ast/AST.h>
 #include <ast/expression/Expression.h>
 #include <ast/function/defs/FunctionKind.h>
 #include <ast/statement/Statement.h>
-#include <allocator/Allocator.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <symbol/SymbolDatabase.h>
@@ -19,23 +19,12 @@
 
 namespace hz
 {
-	// forward declare sum storage and self-referential types for facade
-
 	FORWARD_DECLARE_SUM(Function)
 
 #define FUNCTION_AST_METHODS(X, handlet) \
 	BASE_AST_METHODS(X, handlet) \
 	X(function_kind, FunctionKind) \
 	X(get_type, TypeHandle)
-
-	template<typename AnchorT, typename MethodsT>
-	using FunctionASTMethods = AllButLastT
-	<
-#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
-		FUNCTION_AST_METHODS(X, handlet)
-#undef X
-		void
-	>;
 
 	DEFINE_SUM(Function, FUNCTION_AST_METHODS)
 
@@ -63,6 +52,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 	// Standard Functions
 	//////////////////////////////////////////////////////
+
+	struct SymbolDatabase;
 
 	struct Function 
 		: public FunctionBase
@@ -97,9 +88,8 @@ namespace hz
 	// All Functions
 	//////////////////////////////////////////////////////
 
-	// not for public consumption
 	template<typename SumMemberT, typename StorageT>
-	concept IsFunction = SumTuple<SumMemberT, StorageT, FunctionASTMethods<StorageT>>;
+	concept IsFunction = SumTuple<SumMemberT, StorageT, FunctionMethods<typename StorageT::Anchor>>;
 
 	using FunctionKinds = SumTypeList
 	<
@@ -109,7 +99,8 @@ namespace hz
 		void
 	>;
 	
-	using FunctionSumImplementation = MakeSum<FunctionASTMethods, FunctionKinds>::Type;
+
+	using FunctionSumImplementation = MakeSum<FunctionMethods, FunctionKinds>::Type;
 
 	struct FunctionStorage : public FunctionSumImplementation::Storage
 	{

@@ -14,23 +14,28 @@ namespace hz
 	// Null Statement
 	//////////////////////////////////////////////////////
 
-	std::string NullStatement::format(std::uint32_t) const
+	StatementKind NullStatement::statement_kind() const
 	{
-		return ";";
+		return StatementKind::NULL;
 	}
 
-	void NullStatement::generate(const Storage&) const
+	std::string NullStatement::format(std::uint32_t indentation_level) const
+	{
+		return std::format("{};", indentation_table[indentation_level]);
+	}
+
+	void NullStatement::generate(const CommandStorage&) const
 	{
 		// no code generation necessary for null statement
 	}
 
-	ASTTask NullStatement::evaluate(const Storage& storage, Context&) const
+	ASTTask NullStatement::evaluate(const VariableStorage& storage, Context&) const
 	{
 		// no evaluation necessary for null statement
-		co_return MAKE_INVALID_HANDLE(storage, Statement);
+		co_return MAKE_INVALID_HANDLE(storage, Variable);
 	}
 
-	StatementHandle NullStatement::optimize(const Storage& storage) const
+	StatementHandle NullStatement::optimize(const StatementStorage& storage) const
 	{
 		// no optimizations possible for null statement
 		return MAKE_INVALID_HANDLE(storage, Statement);
@@ -41,20 +46,29 @@ namespace hz
 	// Expression Statement
 	//////////////////////////////////////////////////////
 
-	std::string ExpressionStatement::format(std::uint32_t) const
+	StatementKind ExpressionStatement::statement_kind() const
 	{
-		return std::format("{};", expression);
+		return StatementKind::EXPRESSION;
 	}
 
-	void ExpressionStatement::generate(const StatementStorage& storage) const
+	std::string ExpressionStatement::format(std::uint32_t indentation_level) const
+	{
+		return std::format("{}{};", indentation_table[indentation_level], expression);
+	}
+
+	void ExpressionStatement::generate(const CommandStorage& storage) const
 	{
 		// no code generation necessary for expression statement
 	}
 
-	ASTTask ExpressionStatement::evaluate(const StatementStorage& storage, Context& context) const
+	ASTTask ExpressionStatement::evaluate(const VariableStorage& storage, Context& context) const
 	{
-		co_await ASTAwaiter{ expression.evaluate(context) };
-		co_return MAKE_INVALID_HANDLE(storage, Statement);
+		if (expression)
+		{
+			co_await ASTAwaiter{ expression.evaluate(storage, context) };
+		}
+
+		co_return MAKE_INVALID_HANDLE(storage, Variable);
 	}
 
 	StatementHandle ExpressionStatement::optimize(const StatementStorage& storage) const
@@ -73,12 +87,18 @@ namespace hz
 	// Return Statement
 	//////////////////////////////////////////////////////
 
-	std::string ReturnStatement::format(std::uint32_t indentation_level) const
+	StatementKind ReturnStatement::statement_kind() const
 	{
-		return std::format("{}return {};", indentation_table[indentation_level], expression);
+		return StatementKind::RETURN;
 	}
 
-	void ReturnStatement::generate(const Storage& storage) const
+	std::string ReturnStatement::format(std::uint32_t indentation_level) const
+	{
+		return std::format("{}return {};", 
+			indentation_table[indentation_level], expression);
+	}
+
+	void ReturnStatement::generate(const CommandStorage& storage) const
 	{
 		const auto& end_function_label = REQUIRE_SAFE(CompilerParser)->function_label_map.at(enclosing_function);
 
@@ -95,14 +115,19 @@ namespace hz
 		REQUIRE_SAFE(Generator)->make_return(end_function_label, get_abi_return_register(architecture));
 	}
 
-	ASTTask ReturnStatement::evaluate(const Storage& storage, Context& context) const
+	ASTTask ReturnStatement::evaluate(const VariableStorage& storage, Context& context) const
 	{
-		const auto value = co_await ASTAwaiter{ expression.evaluate(storage, context) };
+		const auto return_value = expression
+			? co_await ASTAwaiter{ expression.evaluate(storage, context) }
+			: MAKE_INVALID_HANDLE(storage, Variable);
 
-		co_return value;
+		auto* current_promise = co_await ASTPromiseAwaiter{};
+		current_promise->kind = ControlFlowKind::RETURN;
+
+		co_return return_value;
 	}
 
-	StatementHandle ReturnStatement::optimize(const Storage& storage) const
+	StatementHandle ReturnStatement::optimize(const StatementStorage& storage) const
 	{
 		const auto expression_optimized = expression.optimize(storage);
 		if (!expression_optimized)
@@ -118,13 +143,18 @@ namespace hz
 	// For Statement
 	//////////////////////////////////////////////////////
 
+	StatementKind ForStatement::statement_kind() const
+	{
+		return StatementKind::FOR;
+	}
+
 	std::string ForStatement::format(std::uint32_t indentation_level) const
 	{
 		return std::format("for ({}; {}; {})\n{}", 
 			initialization, condition, increment, body.format(indentation_level));
 	}
 
-	void ForStatement::generate(const StatementStorage& storage) const
+	void ForStatement::generate(const CommandStorage& storage) const
 	{
 		// 3 digits of randomness for now
 		const auto uuid = hz::generate_digit_string(3);
@@ -148,36 +178,64 @@ namespace hz
 		increment.generate(storage);
 
 		REQUIRE_SAFE(Generator)->goto_command(begin_for_label);
-
 		REQUIRE_SAFE(Generator)->branch_label(end_for_label);
 	}
 
-	ASTTask ForStatement::evaluate(const Storage& storage, Context& context) const
+	ASTTask ForStatement::evaluate(const VariableStorage& storage, Context& context) const
 	{
-		co_await ASTAwaiter{ initialization.evaluate(storage, context) };
+		const auto _ = context.auto_scope();
 
-		auto condition_evaluated = co_await ASTAwaiter{ condition.evaluate(storage, context) };
+		auto* current_promise = co_await ASTPromiseAwaiter{};
 
-		if (condition.expression_kind() != ExpressionType::INTEGER_LITERAL)
+		if (initialization)
 		{
-			USE_SAFE(ErrorReporter)->post_error(
-				"`for` loop conditions must result in an r-value", condition_evaluated.token);
-			return nullptr;
+			co_await ASTAwaiter{ initialization.evaluate(storage, context) };
 		}
 
-		auto integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
-
-		while (integer_literal_raw(integer_literal) != EI(std::intmax_t{ 0 }))
+		while (true)
 		{
-			body->evaluate(context);
-			expression->evaluate(context);
+			if (condition)
+			{
+				auto condition_value = co_await ASTAwaiter{ condition.evaluate(storage, context) };
+				if (!condition_value.is_truthy())
+				{
+					break;
+				}
+			}
 
-			condition_evaluated = AS_EXPRESSION(condition->evaluate(context));
-			integer_literal = AS_INTEGER_LITERAL_EXPRESSION(condition_evaluated)->value;
+			if (body)
+			{
+				co_await ASTAwaiter{ body.evaluate(storage, context) };
+
+				switch (current_promise->kind)
+				{
+					case ControlFlowKind::BREAK:
+					{
+						// intercept break operation to quit the loop immediately
+						current_promise->kind = ControlFlowKind::NONE;
+					} break;
+
+					case ControlFlowKind::CONTINUE:
+					{
+						// intercept continue operation to proceed direcly to the next increment phase
+						current_promise->kind = ControlFlowKind::NONE;
+					} continue;
+
+					case ControlFlowKind::RETURN:
+					{
+						// propagate return operation to unwind
+						co_return MAKE_INVALID_HANDLE(storage, Variable);
+					} break;
+				}
+			}
+
+			if (increment)
+			{
+				co_await ASTAwaiter{ increment.evaluate(storage, context) };
+			}
 		}
 
-		return nullptr;
-
+		co_return MAKE_INVALID_HANDLE(storage, Variable);
 	}
 
 	StatementHandle ForStatement::optimize(const Storage& storage) const
@@ -259,16 +317,25 @@ namespace hz
 		}
 	}
 
-	ASTTask CompoundStatement::evaluate(const Storage& storage, Context& context) const
+	ASTTask CompoundStatement::evaluate(const VariableStorage& storage, Context& context) const
 	{
+		const auto _ = context.auto_scope();
+
+		auto* current_promise = co_await ASTPromiseAwaiter{};
+
 		for (const auto& substatement : substatements)
 		{
-			if (substatement)
+			if (!substatement)
 			{
 				continue;
 			}
 
 			co_await ASTAwaiter{ substatement.evaluate(storage, context) };
+
+			if (current_promise->kind != ControlFlowKind::NONE)
+			{
+				co_return MAKE_INVALID_HANDLE(storage, Variable);
+			}
 		}
 
 		co_return MAKE_INVALID_HANDLE(storage, Variable);

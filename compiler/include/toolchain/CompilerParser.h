@@ -3,16 +3,20 @@
 
 #include <ast/expression/Expression.h>
 #include <ast/declaration/Declaration.h>
-#include <ast/function/Function.h>
-#include <ast/statement/Statement.h>
+#include <ast/statement/defs/StatementKind.h>
 #include <toolchain/Parser.h>
 #include <type/Type.h>
+#include <utility/Sum.h>
 
 // Haze CompilerParser.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
+	FORWARD_DECLARE_SUM(Statement)
+	FORWARD_DECLARE_SUM(Function)
+		
+
 	struct CompilerParser 
 		: public Parser
 		, public ServiceTag<CompilerParser>

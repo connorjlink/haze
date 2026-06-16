@@ -140,6 +140,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="source\Variable.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="template\Skeleton.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -229,7 +233,6 @@
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\ErrorContext.cpp" />
     <ClCompile Include="source\ErrorReporter.cpp" />
-    <ClCompile Include="source\ExitProgramException.cpp" />
     <ClCompile Include="source\Expression.cpp" />
     <ClCompile Include="source\ExtendedInteger.cpp" />
     <ClCompile Include="source\File.cpp" />
@@ -371,7 +374,7 @@
     <ClInclude Include="include\utility\BinaryConstants.h" />
     <ClInclude Include="include\utility\BinaryUtilities.h" />
     <ClInclude Include="include\utility\Constants.h" />
-    <ClInclude Include="include\utility\ExitProgramException.h" />
+    <ClInclude Include="include\utility\Exception.h" />
     <ClInclude Include="include\utility\ExtendedInteger.h" />
     <ClInclude Include="include\utility\JSON.h" />
     <ClInclude Include="include\utility\Random.h" />

@@ -12,11 +12,11 @@ namespace hz
 
 	TypePrecedence precedence(const TypeBase& type);
 
-#define DECLARE_TYPE_FORMATTER_INTERNAL(x, defaultname, defaultprecedence) std::string to_string(x type, const std::string& name defaultname, TypePrecedence parent_precedence defaultprecedence)
+#define _PRIVATE_DECLARE_TYPE_FORMATTER(x, defaultname, defaultprecedence) std::string to_string(x type, const std::string& name defaultname, TypePrecedence parent_precedence defaultprecedence)
 #define DECLARE_TYPE_FORMATTER(x) \
-	DECLARE_TYPE_FORMATTER_INTERNAL(x, = "<anonymous>", = TypePrecedence::LOWEST)
+	_PRIVATE_DECLARE_TYPE_FORMATTER(x, = "<anonymous>", = TypePrecedence::LOWEST)
 #define DEFINE_TYPE_FORMATTER(x) \
-	DECLARE_TYPE_FORMATTER_INTERNAL(x, , )
+	_PRIVATE_DECLARE_TYPE_FORMATTER(x, , )
 
 	DECLARE_TYPE_FORMATTER(TypeHandle);
 

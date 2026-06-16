@@ -16,8 +16,6 @@ namespace hz
 {
 	struct Context;
 
-	// forward declare sum storage and self-referential types for facade
-
 	FORWARD_DECLARE_SUM(Expression)
 
 #define EXPRESSION_AST_METHODS(X, handlet) \
@@ -35,6 +33,7 @@ namespace hz
 	public:
 		using Storage = ExpressionStorage;
 
+	public:
 		template<typename Self>
 		bool check_types(this Self&& self)
 		{
@@ -1329,22 +1328,19 @@ namespace hz
 	// All Expressions
 	//////////////////////////////////////////////////////
 
-	// not for public consumption
 	template<typename SumMemberT, typename StorageT>
-	concept IsExpression = SumTuple<SumMemberT, StorageT, ExpressionASTMethods<StorageT>>;
+	concept IsExpression = SumTuple<SumMemberT, StorageT, ExpressionMethods<typename StorageT::Anchor>>;
 
 	using ExpressionKinds = SumTypeList
 	<
 #define X(enumerator, associativity, precedence, type, name) type,
-		PRIMARY_EXPRESSION_KINDS(X)
-		POSTFIX_EXPRESSION_KINDS(X)
-		UNARY_EXPRESSION_KINDS(X)
-		BINARY_EXPRESSION_KINDS(X)
+		EXPRESSION_KINDS(X)
 #undef X
 		void
 	>;
 
-	using ExpressionSumImplementation = MakeSum<ExpressionASTMethods, ExpressionKinds>::Type;
+
+	using ExpressionSumImplementation = MakeSum<ExpressionMethods, ExpressionKinds>::Type;
 
 	struct ExpressionStorage : public ExpressionSumImplementation::Storage
 	{

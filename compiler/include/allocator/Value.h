@@ -17,25 +17,13 @@ namespace hz
 {
 	struct Generator;
 
-	// forward declare sum storage and self-referential types for facade
+	FORWARD_DECLARE_SUM(Value)
 
 #define VALUE_METHODS(X, handlet) \
 	X(value_kind, ValueKind) \
 	X(format,     std::string) \
 	X(load_into,  void) \
 	X(store_from, void)
-
-	FORWARD_DECLARE_SUM(Value)
-
-	// expose a strict polymorphic interface for values
-	template<typename AnchorT>
-	using ValueMethods = AllButLastT
-	<
-#define X(name, handlet) METHOD_TUPLE_ENTRY(name, handlet)
-		VALUE_METHODS(X, ValueHandle)
-#undef X
-		void
-	>;
 
 	DEFINE_SUM(Value, VALUE_METHODS)
 	
@@ -51,6 +39,10 @@ namespace hz
 
 namespace hz
 {
+	//////////////////////////////////////////////////////
+	// Register Value
+	//////////////////////////////////////////////////////
+
 	struct RegisterValue : public ValueBase
 	{
 	public:
@@ -62,6 +54,11 @@ namespace hz
 		void load_into(Generator&, Register) const;
 		void store_from(Generator&, Register) const;
 	};
+
+
+	//////////////////////////////////////////////////////
+	// Stack Value
+	//////////////////////////////////////////////////////
 
 	struct StackValue : public ValueBase
 	{
@@ -76,6 +73,11 @@ namespace hz
 		void store_from(Generator&, Register) const;
 	};
 
+
+	//////////////////////////////////////////////////////
+	// Static Value
+	//////////////////////////////////////////////////////
+
 	struct StaticValue : public ValueBase
 	{
 	public:
@@ -88,11 +90,14 @@ namespace hz
 		void store_from(Generator&, Register) const;
 	};
 
-	// not for public consumption
+
+	//////////////////////////////////////////////////////
+	// All Values
+	//////////////////////////////////////////////////////
+
 	template<typename SumMemberT, typename StorageT>
-	concept IsValue = SumTuple<SumMemberT, StorageT, ValueMethods<StorageT>>;
+	concept IsValue = SumTuple<SumMemberT, StorageT, ValueMethods<typename StorageT::Anchor>>;
 	
-	// nonfacade types for public consumption
 	using ValueKinds = SumTypeList
 	<
 #define X(enumerator, type, name) type,
@@ -100,6 +105,7 @@ namespace hz
 #undef X
 		void
 	>;
+
 
 	using ValueSumImplementation = MakeSum<ValueMethods, ValueKinds>::Type;
 

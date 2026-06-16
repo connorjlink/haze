@@ -7,7 +7,7 @@
 // Haze AutoEnum.h
 // (c) Connor J. Link. All Rights Reserved.
 
-#define DEFINE_ENUM_INTERNAL(enummember, switchcase, datamember, structtype, kinds, type, name, extras) \
+#define _PRIVATE_DEFINE_ENUM(enummember, switchcase, datamember, structtype, kinds, type, name, extras) \
 	enum struct type extras \
 	{ \
 		kinds(enummember) \
@@ -70,9 +70,9 @@
 
 // NOTE: define AUTOENUM_ROUTER prior to invoking this macro to route properly the arguments through each X-chain per distinct enumeration type
 #define DEFINE_ENUM(kinds, type, name) \
-	DEFINE_ENUM_INTERNAL(AUTOENUM_ENUM_MEMBER, AUTOENUM_SWITCH_CASE, AUTOENUM_DATA_MEMBER, AUTOENUM_STRUCT_TYPE, kinds, type, name, )
+	_PRIVATE_DEFINE_ENUM(AUTOENUM_ENUM_MEMBER, AUTOENUM_SWITCH_CASE, AUTOENUM_DATA_MEMBER, AUTOENUM_STRUCT_TYPE, kinds, type, name, )
 
 #define DEFINE_ENUM_BASE(kinds, type, name, base) \
-	DEFINE_ENUM_INTERNAL(AUTOENUM_ENUM_MEMBER, AUTOENUM_SWITCH_CASE, AUTOENUM_DATA_MEMBER, AUTOENUM_STRUCT_TYPE, kinds, type, name, : base)
+	_PRIVATE_DEFINE_ENUM(AUTOENUM_ENUM_MEMBER, AUTOENUM_SWITCH_CASE, AUTOENUM_DATA_MEMBER, AUTOENUM_STRUCT_TYPE, kinds, type, name, : base)
 
 #endif

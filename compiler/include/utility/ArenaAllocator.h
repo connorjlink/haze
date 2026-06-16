@@ -39,7 +39,8 @@ namespace hz
 			blocks.clear();
 		}
 
-		[[nodiscard]] void* allocate(std::size_t n, std::size_t align)
+		[[nodiscard]]
+		void* allocate(std::size_t n, std::size_t alignment)
 		{
 			if (n > block_size)
 			{
@@ -51,14 +52,14 @@ namespace hz
 
 			const auto space = block_size - current_offset;
 
-			if (std::align(align, n, pointer, space))
+			if (std::align(alignment, n, pointer, space))
 			{
 				current_offset = (static_cast<std::byte*>(pointer) - static_cast<std::byte*>(block_start)) + n;
 				return pointer;
 			}
 
 			allocate_new_block();
-			return allocate(n, align);
+			return allocate(n, alignment);
 		}
 
 		void deallocate(void*, std::size_t) noexcept
@@ -114,7 +115,8 @@ namespace hz
 		Arena* arena;
 
 	public:
-		[[nodiscard]] T* allocate(std::size_t n)
+		[[nodiscard]]
+		T* allocate(std::size_t n)
 		{
 			if (n == 0uz)
 			{
