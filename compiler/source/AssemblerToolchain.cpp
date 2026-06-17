@@ -9,13 +9,15 @@ import std;
 
 namespace hz
 {
-	ToolchainKind AssemblerToolchain::tag_type() const
+	ToolchainKind AssemblerToolchain::toolchain_kind() const
 	{
 		return ToolchainKind::ASSEMBLER;
 	}
 
-	std::vector<Command*> AssemblerToolchain::run(const std::filesystem::path& filepath)
+	std::vector<Linkable> AssemblerToolchain::run(const std::filesystem::path& filepath)
 	{
+		const auto _ = USE_SAFE(ErrorReporter)->auto
+
 		USE_SAFE(ErrorReporter)->open_context(filepath, "assembling");
 
 		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
@@ -27,10 +29,8 @@ namespace hz
 
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);
 
-
-
 		USE_SAFE(ErrorReporter)->close_context();
 
-		return commands;
+		return linkable;
 	}
 }

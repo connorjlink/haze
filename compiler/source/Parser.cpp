@@ -4,7 +4,7 @@ import std;
 #include <command/Command.h>
 #include <error/CommonErrors.h>
 #include <error/ErrorReporter.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <symbol/SymbolExporter.h>
 #include <toolchain/Parser.h>
 #include <toolchain/CompilerParser.h>

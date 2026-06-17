@@ -5,7 +5,7 @@ import std;
 #include <ast/ArgumentExpression.h>
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <error/ErrorReporter.h>
 
 // Haze SymbolDatabase.cpp

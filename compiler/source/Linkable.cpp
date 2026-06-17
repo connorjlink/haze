@@ -2,7 +2,7 @@ import std;
 
 #include <toolchain/Linkable.h>
 #include <ir/IntermediateCommand.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 
 // Haze Linkable.cpp
 // (c) Connor J. Link. All Rights Reserved.

@@ -5,7 +5,7 @@ import std;
 #include <ast/statement/Statement.h>
 #include <cli/defs/OptimizationFlag.h>
 #include <error/CommonErrors.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/AssemblerParser.h>
 #include <utility/Random.h>

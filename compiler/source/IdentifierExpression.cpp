@@ -4,7 +4,7 @@ import std;
 #include <ast/expression/Expression.h>
 #include <runtime/Context.h>
 #include <type/Type.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <error/ErrorReporter.h>
 
 // Haze IdentifierExpression.cpp

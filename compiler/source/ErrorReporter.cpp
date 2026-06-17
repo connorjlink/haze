@@ -66,6 +66,11 @@ namespace hz
 		active_frames[thread_id].pop();
 	}
 
+	ErrorReporter::AutoContext ErrorReporter::auto_context(const std::filesystem::path& filepath, std::string_view task)
+	{
+		return AutoContext{ filepath, task };
+	}
+
 	std::string ErrorReporter::generate_report()
 	{
 		std::scoped_lock lock{ mutex };

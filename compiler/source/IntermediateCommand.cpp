@@ -1,7 +1,7 @@
 import std;
 
 #include <ir/IntermediateCommand.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <type/Type.h>
 #include <utility/BinaryUtilities.h>
 #include <utility/BinaryConstants.h>

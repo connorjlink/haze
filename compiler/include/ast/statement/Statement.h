@@ -9,7 +9,7 @@
 #include <command/Command.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Generator.h>
 #include <toolchain/models/Token.h>

@@ -11,11 +11,11 @@ namespace hz
 	struct AssemblerToolchain : public Toolchain
 	{
 	public:
-		using Toolchain::Toolchain;
+		ToolchainKind toolchain_kind() const;
+		std::vector<Linkable> run(const std::filesystem::path&);
 
 	public:
-		virtual ToolchainKind tag_type() const final override;
-		virtual std::vector<Linkable> run(const std::string&) final override;
+		using Toolchain::Toolchain;
 	};
 }
 

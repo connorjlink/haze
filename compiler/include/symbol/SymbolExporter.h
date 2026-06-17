@@ -4,7 +4,7 @@
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <io/WebSocketClient.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <toolchain/models/Token.h>
 #include <utility/Sum.h>
 
@@ -28,7 +28,7 @@ namespace hz
 	{
 	private:
 		std::list<QueueEntry> queue;
-		std::mutex queue_mutex;
+		std::mutex mutex;
 		std::condition_variable_any listener;
 		std::jthread worker;
 

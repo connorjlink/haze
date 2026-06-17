@@ -3,7 +3,7 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <symbol/SymbolExporter.h>
 #include <toolchain/models/Environment.h>
 #include <utility/Sum.h>

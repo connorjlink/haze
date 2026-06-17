@@ -23,12 +23,10 @@ namespace hz
 
 		constexpr IndexHandle(IndexType index, bool is_valid)
 			: index{ index }, is_valid{ static_cast<IndexType>(is_valid) }
-		{
-		}
+		{}
 		constexpr IndexHandle(TagType tag, IndexType index, bool is_valid)
 			: index{ index }, is_valid{ static_cast<IndexType>(is_valid) }, tag{ tag }
-		{
-		}
+		{}
 	};
 
 	// dynamic dispatch generator for sum families
@@ -41,12 +39,12 @@ namespace hz
 		return std::array<FunctionPointerT, sizeof...(Is)>
 		{
 			[](const StorageT& sum, IndexType index, ArgumentsTs... arguments) -> ReturnType
-			{
-				using T = std::tuple_element_t<Is, TupleT>;
-				const auto& vector = sum.template get<T>();
-				auto method_pointer = cast_method_pointer<T>(MethodT::pointer);
-				return (vector[index].*method_pointer)(std::forward<ArgumentsTs>(arguments)...);
-			}...
+				{
+					using T = std::tuple_element_t<Is, TupleT>;
+					const auto& vector = sum.template get<T>();
+					auto method_pointer = cast_method_pointer<T>(MethodT::pointer);
+					return (vector[index].*method_pointer)(std::forward<ArgumentsTs>(arguments)...);
+				}...
 		};
 	}
 
@@ -131,7 +129,7 @@ namespace hz
 	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
 
 	template<typename T, typename SumT, typename MethodsT>
-	concept SumTuple = SumTupleImplementation<T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{}>;
+	concept SumTuple = SumTupleImplementation < T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{} > ;
 
 
 	// sum type and dispatch family
@@ -159,8 +157,7 @@ namespace hz
 
 	public:
 		struct Storage : public Storage<Ts...>
-		{
-		} storage;
+		{} storage;
 	};
 
 	template<typename... Ts>
@@ -198,18 +195,17 @@ namespace hz
 		{ t.get_tag() } -> std::same_as<TagType>;
 	};
 
-	// base struct for dispatching methods on sum members
+	// safety checks to verify that the bitfields and tag pack properly to minimize waste since References and Handles will be passed around by copy
+	static_assert(sizeof(IndexHandle) <= alignof(void*), "IndexHandle must be no larger than the platform reference alignment to avoid padding");
+
+	// base struct for dispatching methods on sum members, no handle to 
 	template<typename StorageT>
-	struct SumDispatcher
+	struct SumDispatcherLite
 		: public InjectSingleton<ErrorReporter>
 	{
-		// safety checks to verify that the bitfields and tag pack properly to minimize waste since References and Handles will be passed around by copy
-		static_assert(sizeof(IndexHandle) <= alignof(void*), "IndexHandle must be no larger than the platform reference alignment to avoid padding");
-
 	public:
-		const StorageT& sum_storage;
 		IndexHandle index;
-		
+
 	public:
 		constexpr bool is_valid() const
 		{
@@ -231,8 +227,15 @@ namespace hz
 			}
 		}
 
+		template<typename Self, typename T, typename StorageT>
+		constexpr decltype(auto) get(this Self&& self, StorageT&& storage)
+		{
+			self.template validate_tag<T>();
+			return std::forward<StorageT>(storage).template get<T>()[self.index.index];
+		}
+
 	public:
-		template<typename MethodT, typename Self, typename... ArgumentsTs>
+		template<typename Self, typename MethodT, typename... ArgumentsTs>
 		constexpr decltype(auto) call(this Self&& self, ArgumentsTs&&... arguments)
 		{
 			static constinit auto table =
@@ -243,14 +246,38 @@ namespace hz
 		}
 
 	public:
-		constexpr SumDispatcher(const StorageT& sum_storage, IndexHandle handle, TagType tag)
-			: sum_storage{ sum_storage }, index{ tag, handle.index, static_cast<bool>(handle.is_valid) }
+		constexpr SumDispatcherLite(IndexHandle handle, TagType tag)
+			: index{ tag, handle.index, static_cast<bool>(handle.is_valid) }
 		{
 		}
 	};
 
+	template<typename StorageT>
+	struct SumDispatcher : public SumDispatcherLite<StorageT>
+	{
+	public:
+		StorageT& sum_storage;
+
+	public:
+		template<typename Self, typename T>
+		constexpr decltype(auto) get(this Self&& self)
+		{
+			return std::forward<Self>(self).template SumDispatcherLite<StorageT>::template get<T>(
+				std::forward_like<Self>(self.sum_storage));
+		}
+
+	public:
+		constexpr SumDispatcher(IndexHandle handle, TagType tag, const StorageT& sum_storage)
+			: SumDispatcherLite<StorageT>{ tag, handle.index, static_cast<bool>(handle.is_valid) }, sum_storage{ sum_storage }
+		{
+		}
+	};
+
+
 	// required to constrain handle/reference functions later without a mandatory template parameter
-	struct SumMemberBaseTag {};
+	struct SumMemberBaseTag
+	{
+	};
 
 	// common base struct recommended for sum member classes
 	template<typename SumFacadeT>
@@ -270,7 +297,7 @@ namespace hz
 
 
 	template<typename T>
-	concept IsFormattableSum = requires(const T& t)
+	concept IsFormattableSum = requires(const T & t)
 	{
 		{ t.format() } -> std::convertible_to<std::string>;
 		std::derived_from<T, SumMemberBaseTag>;
@@ -349,8 +376,7 @@ namespace hz
 
 	// dynamic dispatch wrapper type for sum families
 	template<template<typename> typename SumDispatcherT, typename StorageT>
-	struct SumHandle
-		: public SumDispatcherT<StorageT>
+	struct SumHandle : public SumDispatcherT<StorageT>
 	{
 	public:
 		constexpr TagType get_tag() const
@@ -370,34 +396,21 @@ namespace hz
 			{
 				this->USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 					"invalid sum reference: expected tag {}, actual tag {}, index {}",
-						expected_tag, this->index.tag, this->index.index));
+					expected_tag, this->index.tag, this->index.index));
 			}
 		}
 
 	public:
-		template<typename T>
-		constexpr const T& get() const
-		{
-			validate_tag<T>();
-			return this->sum_storage.template get<T>()[this->index];
-		}
-
-		template<typename T>
-		constexpr T& get()
-		{
-			validate_tag<T>();
-			return this->sum_storage.template get<T>()[this->index];
-		}
-
-	public:
-		constexpr SumHandle(const StorageT& sum_storage, IndexType index, TagType tag)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ index, true }, tag }
+		template<typename... ArgumentsTs>
+		constexpr SumHandle(IndexType index, TagType tag, ArgumentsTs&&... arguments)
+			: SumDispatcherT<StorageT>{ IndexHandle{ index, true }, tag, std::forward<ArgumentsTs>(arguments)... }
 		{
 			// valid handle
 		}
 
-		constexpr SumHandle(const StorageT& sum_storage)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ 0, false }, 0 }
+		template<typename... ArgumentsTs>
+		constexpr SumHandle(ArgumentsTs&&... arguments)
+			: SumDispatcherT<StorageT>{ IndexHandle{ 0, false }, TagType{ 0 }, std::forward<ArgumentsTs>(arguments)... }
 		{
 			// invalid handle
 		}
@@ -405,8 +418,7 @@ namespace hz
 
 	// type-specifc slim wrapper for static dispatch on sum members
 	template<typename T, template<typename> typename SumDispatcherT, typename StorageT>
-	struct SumReference
-		: public SumDispatcherT<StorageT>
+	struct SumReference : public SumDispatcherT<StorageT>
 	{
 	public:
 		constexpr TagType get_tag() const
@@ -415,34 +427,39 @@ namespace hz
 		}
 
 	public:
-		constexpr const T& get() const
-		{
-			return this->sum_storage.template get<T>()[this->index];
-		}
-
-		constexpr T& get()
-		{
-			return this->sum_storage.template get<T>()[this->index];
-		}
-
 		constexpr SumHandle<SumDispatcherT, StorageT> erase() const
 		{
 			return SumHandle<SumDispatcherT, StorageT>{ this->sum_storage, this->index, get_tag() };
 		}
 
 	public:
-		constexpr SumReference(const StorageT& sum_storage, IndexType index)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ index, true }, TypeIndexV<T, typename StorageT::Type> }
+		template<typename... ArgumentsTs>
+		constexpr SumReference(IndexType index, ArgumentsTs&&... arguments)
+			: SumDispatcherT<StorageT>{ IndexHandle{ index, true }, get_tag(), std::forward<ArgumentsTs>(arguments)...}
 		{
-			// valid reference
 		}
 
-		constexpr SumReference(const StorageT& sum_storage)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ 0, false }, TypeIndexV<T, typename StorageT::Type> }
+		template<typename... ArgumentsTs>
+		constexpr SumReference(ArgumentsTs&&... arguments)
+			: SumDispatcherT<StorageT>{ IndexHandle{ 0, false }, get_tag(), std::forward<ArgumentsTs>(arguments)...}
 		{
-			// invalid reference
 		}
 	};
+
+
+
+#pragma message("TODO: wrap these into the macro forward declaration logic")
+	template<typename StorageT>
+	using HandleLite = SumHandle<SumDispatcherLite, StorageT>;
+
+	template<typename StorageT>
+	using Handle = SumHandle<SumDispatcher, StorageT>;
+
+	template<typename T, typename StorageT>
+	using ReferenceLite = SumReference<T, SumDispatcherLite, StorageT>;
+
+	template<typename T, typename StorageT>
+	using Reference = SumReference<T, SumDispatcher, StorageT>;
 
 
 	//////////////////////////////////////////////////////
@@ -519,6 +536,39 @@ namespace hz
 		return make_invalid_reference<T, typename T::Dispatcher, typename T::Storage>(sum_storage);
 	}
 #define MAKE_INVALID_REFERENCE_AUTO(sum, type) make_invalid_reference<type>(sum)
+
+
+	template<typename T, typename StorageT>
+	constexpr HandleLite<StorageT> make_handle_lite(StorageT& sum_storage, T&& value)
+	{
+		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
+		return HandleLite<StorageT>{ index, TypeIndexV<T, typename StorageT::Type> };
+	}
+#define MAKE_HANDLE_LITE(type, family, sum, value) make_handle_lite<type, family##Storage>(sum, value)
+
+	template<typename StorageT>
+	constexpr HandleLite<StorageT> make_invalid_handle_lite()
+	{
+		// does not participate in sum storage
+		return HandleLite<StorageT>{};
+	}
+#define MAKE_INVALID_HANDLE_LITE(family) make_invalid_handle_lite<family##Storage>()
+
+	template<typename T, typename StorageT>
+	constexpr ReferenceLite<T, StorageT> make_reference_lite(StorageT& sum_storage, T&& value)
+	{
+		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
+		return ReferenceLite<T, StorageT>{ index };
+	}
+#define MAKE_REFERENCE_LITE(type, family, sum, value) make_reference_lite<type, family##Storage>(sum, value)
+
+	template<typename T, typename StorageT>
+	constexpr ReferenceLite<T, StorageT> make_invalid_reference_lite()
+	{
+		// does not participate in sum storage
+		return ReferenceLite<T, StorageT>{};
+	}
+#define MAKE_INVALID_REFERENCE_LITE(family) make_invalid_reference_lite<family##Storage>()
 }
 
 #endif

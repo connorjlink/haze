@@ -599,13 +599,10 @@
     <ClInclude Include="include\utility\AutoMacroTraits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\symbol\Symbol.h">
+    <ClInclude Include="include\symbol\models\Symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Environment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\symbol\models\Symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

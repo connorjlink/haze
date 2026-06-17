@@ -2,7 +2,7 @@ import std;
 
 #include <error/ErrorReporter.h>
 #include <io/FileManager.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <symbol/SymbolDatabase.h>
 #include <symbol/SymbolExporter.h>
 #include <toolchain/Preprocessor.h>

@@ -3,7 +3,7 @@ import std;
 #include <allocator/Allocator.h>
 #include <ast/expression/Expression.h>
 #include <ast/function/Function.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <toolchain/Generator.h>
 #include <type/TypeCheck.h>
 

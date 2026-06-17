@@ -67,7 +67,7 @@ namespace hz
 	{
 		// lock
 		{
-			std::scoped_lock lock{ queue_mutex };
+			std::scoped_lock lock{ mutex };
 			queue.emplace(symbol, token);
 		}
 		
@@ -82,7 +82,7 @@ namespace hz
 			{
 				auto result = std::optional<QueueEntry>{};
 				{
-					std::unique_lock lock{ queue_mutex };
+					std::unique_lock lock{ mutex };
 					listener.wait(lock, stop_token, [this]
 					{ 
 						return !queue.empty();
@@ -121,7 +121,7 @@ namespace hz
 		const auto& location = entry.token;
 
 		using enum SymbolKind;
-		switch (symbol->ytype())
+		switch (symbol_kind(symbol))
 		{
 			case FUNCTION:
 				*stream << ::export_function_symbol(AS_FUNCTION_SYMBOL(symbol), location);

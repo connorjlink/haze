@@ -177,10 +177,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="include\symbol\Symbol.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
     <ClInclude Include="include\toolchain\models\Environment.h">
       <SubType>

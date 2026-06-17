@@ -38,7 +38,7 @@ namespace hz
 		std::mutex mutex;
 
 	private:
-		std::unordered_map<std::thread::id, std::unordered_map<std::string, std::list<ErrorContext>>> open_frames;
+		std::unordered_map<std::thread::id, std::unordered_map<std::filesystem::path, std::list<ErrorContext>>> open_frames;
 		std::unordered_map<std::thread::id, std::vector<ErrorFrame>> closed_frames;
 
 	private:
@@ -51,10 +51,25 @@ namespace hz
 		void close_these_contexts();
 		void close_all_contexts();
 
+	private:
+		struct AutoContext : public InjectSingleton<ErrorReporter>
+		{
+			AutoContext(const std::filesystem::path& filepath, std::string_view task)
+			{
+				USE_SAFE(ErrorReporter)->open_context(filepath, task);
+			}
+
+			~AutoContext()
+			{
+				USE_SAFE(ErrorReporter)->close_context();
+			}
+		};
+
 	public:
 		std::size_t get_context_count();
 		ErrorFrame open_context(const std::filesystem::path&, std::string_view);
 		void close_context();
+		AutoContext auto_context(const std::filesystem::path&, std::string_view);
 
 	public:
 		std::string generate_report();

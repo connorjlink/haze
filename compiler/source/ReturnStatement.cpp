@@ -3,7 +3,7 @@
 #include <allocator/Value.h>
 #include <ast/statement/Statement.h>
 #include <error/CommonErrors.h>
-#include <symbol/Symbol.h>
+#include <symbol/models/Symbol.h>
 #include <toolchain/CompilerParser.h>
 #include <toolchain/Parser.h>
 #include <toolchain/Generator.h>
