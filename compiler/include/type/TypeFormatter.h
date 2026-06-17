@@ -10,8 +10,6 @@ namespace hz
 {
 	struct TypeBase;
 
-	TypePrecedence precedence(const TypeBase& type);
-
 #define _PRIVATE_DECLARE_TYPE_FORMATTER(x, defaultname, defaultprecedence) std::string to_string(x type, const std::string& name defaultname, TypePrecedence parent_precedence defaultprecedence)
 #define DECLARE_TYPE_FORMATTER(x) \
 	_PRIVATE_DECLARE_TYPE_FORMATTER(x, = "<anonymous>", = TypePrecedence::LOWEST)

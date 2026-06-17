@@ -42,7 +42,7 @@ namespace hz
 		void build_pe();
 
 	public:
-		virtual void export_exe(const std::string&) override;
+		virtual void export_exe(const std::filesystem::path&) override;
 	};
 }
 

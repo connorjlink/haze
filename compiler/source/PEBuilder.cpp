@@ -344,8 +344,8 @@ namespace hz
 		// NOTE: extremely minimal PE builder
 		// Any and all optional information is abbreviated
 		
-		_binary.resize(IMAGE_SIZE);
-		auto head = _binary.begin();
+		binary.resize(IMAGE_SIZE);
+		auto head = binary.begin();
 
 		// legacy DOS header
 		const auto header = dos_header();
@@ -360,7 +360,7 @@ namespace hz
 		const auto sections = sections_table();
 
 		// program data
-		const auto code = _code_section;
+		const auto code = code_section;
 		const auto imports = imports_section();
 		const auto data = data_section();
 
@@ -385,6 +385,6 @@ namespace hz
 		build_pe();
 
 		auto binfile = std::fstream(filepath, std::ios::binary | std::ios::out);
-		binfile.write(reinterpret_cast<const char*>(_binary.data()), _binary.size());
+		binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
 	}
 }

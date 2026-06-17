@@ -278,7 +278,6 @@
     <ClCompile Include="source\VariableStatement.cpp" />
     <ClCompile Include="source\WebSocketClient.cpp" />
     <ClCompile Include="source\WebSocketServer.cpp" />
-    <ClCompile Include="source\WhileStatement.cpp" />
     <ClCompile Include="source\X86Builder.cpp" />
     <ClCompile Include="source\X86Instruction.cpp" />
     <ClInclude Include="include\type\ArrayType.h" />

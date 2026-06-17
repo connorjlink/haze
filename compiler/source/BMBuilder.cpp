@@ -7,11 +7,11 @@ import std;
 
 namespace hz
 {
-    void BMBuilder::export_exe(const std::filesystem::path& filepath)
-    {
-        _binary = _code_section;
+	void BMBuilder::export_exe(const std::filesystem::path& filepath)
+	{
+		binary = code_section;
 
 		auto binfile = std::fstream{ filepath, std::ios::binary | std::ios::out };
-		binfile.write(reinterpret_cast<const char*>(_binary.data()), _binary.size());
-    }
+		binfile.write(reinterpret_cast<const char*>(binary.data()), binary.size());
+	}
 }

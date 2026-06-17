@@ -43,8 +43,9 @@ namespace hz
 			[](const StorageT& sum, IndexType index, ArgumentsTs... arguments) -> ReturnType
 			{
 				using T = std::tuple_element_t<Is, TupleT>;
-				const auto& vector = sum.storage.template get<T>();
-				return (vector[index].*MethodT::pointer)(std::forward<ArgumentsTs>(arguments)...);
+				const auto& vector = sum.template get<T>();
+				auto method_pointer = cast_method_pointer<T>(MethodT::pointer);
+				return (vector[index].*method_pointer)(std::forward<ArgumentsTs>(arguments)...);
 			}...
 		};
 	}
@@ -56,8 +57,7 @@ namespace hz
 
 		return make_dispatch_table_implementation<MethodT, StorageT, TupleT>(
 			std::make_index_sequence<std::tuple_size_v<TupleT>>{},
-			std::type_identity<FunctionT>{}
-		);
+			std::type_identity<FunctionT>{});
 	}
 
 
@@ -119,7 +119,7 @@ namespace hz
 	{
 		static constexpr bool value = requires(const Node & node, ArgumentsTs... arguments)
 		{
-			{ (node.*FunctionT::pointer)(std::forward<ArgumentsTs>(arguments)...) } -> std::same_as<typename FunctionT::ReturnType>;
+			{ (node.*cast_method_pointer<Node>(FunctionT::pointer))(std::forward<ArgumentsTs>(arguments)...) } -> std::same_as<typename FunctionT::ReturnType>;
 		};
 	};
 
@@ -239,7 +239,7 @@ namespace hz
 				make_dispatch_table<MethodT, StorageT, typename StorageT::Type>();
 
 			self.validate();
-			return table[self.get_tag()](self.sum_storage, self.index, std::forward<ArgumentsTs>(arguments)...);
+			return table[self.get_tag()](self.sum_storage, self.index.index, std::forward<ArgumentsTs>(arguments)...);
 		}
 
 	public:

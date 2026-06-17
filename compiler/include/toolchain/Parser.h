@@ -17,8 +17,6 @@
 
 namespace hz
 {
-	enum struct ParserType;
-
 	FORWARD_DECLARE_SUM(Expression)
 	FORWARD_DECLARE_SUM(Symbol)
 

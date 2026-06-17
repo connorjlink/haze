@@ -10,22 +10,22 @@
 
 namespace hz
 {
-    struct Builder
-        : public InjectSingleton<ErrorReporter>
-    {
+	struct Builder
+		: public InjectSingleton<ErrorReporter>
+	{
 	protected:
-		const ByteRange& _code_section;
-		ByteRange _binary;
-        
-    public:
-		Builder(const ByteRange& executable)
-			: _code_section{ executable }, _binary{}
+		const ByteRange& code_section;
+		ByteRange binary;
+
+	public:
+		virtual void export_exe(const std::filesystem::path&) = 0;
+
+	public:
+		Builder(ByteRange code_section)
+			: code_section{ std::move(code_section) }, binary{}
 		{
 		}
-
-    public:
-        virtual void export_exe(const std::string&) = 0;
-    };
+	};
 }
 
 #endif

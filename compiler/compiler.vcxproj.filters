@@ -189,9 +189,6 @@
     <ClCompile Include="source\WebSocketServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\WhileStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\X86Builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

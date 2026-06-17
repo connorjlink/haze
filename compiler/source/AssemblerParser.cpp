@@ -24,9 +24,9 @@ import std;
 
 namespace hz
 {
-	ParserType AssemblerParser::ptype() const
+	ToolchainKind AssemblerParser::parser_kind() const
 	{
-		return ParserType::ASSEMBLER;
+		return ToolchainKind::ASSEMBLER;
 	}
 
 	ExpressionHandle AssemblerParser::parse_literal()

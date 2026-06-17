@@ -11,13 +11,13 @@ namespace hz
 	struct BMBuilder : public Builder
 	{
 	public:
+		virtual void export_exe(const std::filesystem::path&) override;
+
+	public:
 		BMBuilder(const ByteRange& executable)
 			: Builder{ executable }
 		{
 		}
-
-	public:
-		virtual void export_exe(const std::string&) override;
 	};
 }
 

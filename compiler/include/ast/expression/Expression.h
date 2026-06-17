@@ -3,6 +3,7 @@
 
 #include <ast/AST.h>
 #include <ast/expression/defs/ExpressionKind.h>
+#include <command/Command.h>
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/Generator.h>
@@ -68,8 +69,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -89,8 +90,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -110,8 +111,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -131,8 +132,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -152,8 +153,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -173,8 +174,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -208,8 +209,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -229,8 +230,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -251,8 +252,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -273,8 +274,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -295,8 +296,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -317,8 +318,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -347,8 +348,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -382,8 +383,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -404,8 +405,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -425,8 +426,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -446,8 +447,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -467,8 +468,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -488,8 +489,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -510,8 +511,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -533,8 +534,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -554,8 +555,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -575,8 +576,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -596,8 +597,8 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format(std::uint32_t) const;
-		void generate(const Storage&) const;
-		ExpressionHandle evaluate(const Storage&, Context&) const;
+		void generate(const CommandStorage&) const;
+		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
 
@@ -631,7 +632,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -675,7 +676,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -697,7 +698,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -719,7 +720,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -741,7 +742,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -763,7 +764,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -785,7 +786,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -807,7 +808,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -829,7 +830,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -851,7 +852,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -873,7 +874,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -895,7 +896,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -917,7 +918,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -939,7 +940,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -961,7 +962,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -983,7 +984,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1005,7 +1006,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1028,7 +1029,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1051,7 +1052,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1074,7 +1075,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1097,7 +1098,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1120,7 +1121,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1143,7 +1144,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1166,7 +1167,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1189,7 +1190,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1212,7 +1213,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1235,7 +1236,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1258,7 +1259,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1281,7 +1282,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;
@@ -1302,7 +1303,7 @@ namespace hz
 	public:
 		ExpressionKind expression_kind() const;
 		std::string format() const;
-		void generate(const Storage&) const;
+		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
 		TypeHandle get_type(const TypeStorage&) const;

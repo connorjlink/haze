@@ -81,6 +81,32 @@ namespace hz
 	};
 
 
+	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...))
+	{
+		return reinterpret_cast<Ret(TargetT::*)(Args...)>(pointer);
+	}
+
+	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...) const)
+	{
+		return reinterpret_cast<Ret(TargetT::*)(Args...) const>(pointer);
+	}
+
+	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...) noexcept)
+	{
+		return reinterpret_cast<Ret(TargetT::*)(Args...) noexcept>(pointer);
+	}
+
+	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...) const noexcept)
+	{
+		return reinterpret_cast<Ret(TargetT::*)(Args...) const noexcept>(pointer);
+	}
+
+
+
 	template<typename... Ts>
 	struct TypeList
 	{

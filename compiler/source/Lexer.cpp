@@ -68,7 +68,7 @@ namespace hz
 				undo(); // rewind to dollar sign
 
 				std::int32_t number{};
-				auto [ptr, ec] = std::from_chars(lexeme.data(), lexeme.data() + lexeme.size(), number, 16);
+				auto [pointer, ec] = std::from_chars(lexeme.data(), lexeme.data() + lexeme.size(), number, 16);
 
 				if (ec != std::errc())
 				{

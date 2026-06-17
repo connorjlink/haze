@@ -17,6 +17,7 @@ namespace hz
 	FORWARD_DECLARE_SUM(Declaration)
 	FORWARD_DECLARE_SUM(Expression)
 	FORWARD_DECLARE_SUM(Value)
+	FORWARD_DECLARE_SUM(Variable)
 
 
 	struct Linkable;

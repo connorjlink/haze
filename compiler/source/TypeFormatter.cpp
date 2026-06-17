@@ -8,18 +8,6 @@ import std;
 
 namespace hz
 {
-	TypePrecedence precedence(const TypeBase& type)
-	{
-		switch (type.type_kind())
-		{
-#define X(enumerator, precedence, type, name) case TypeKind::enumerator: return TypePrecedence::precedence;
-			TYPE_KINDS(X)
-#undef X
-		}
-
-		return TypePrecedence::LOWEST;
-	}
-
 	DEFINE_TYPE_FORMATTER(const VoidType&)
 	{
 		return "void";
@@ -48,7 +36,7 @@ namespace hz
 	{
 		if (!type.members.has_value())
 		{
-			CommonErrors::invalid_struct_or_union_type(type.struct_or_union_kind, NULL_TOKEN);
+			CommonErrors::invalid_struct_or_union_type(type.kind, NULL_TOKEN);
 			return "";
 		}
 
@@ -65,7 +53,7 @@ namespace hz
 		return std::format("{} {} {} {{\n{}}}",
 			type.storage,
 			type.qualifier,
-			type.struct_or_union_kind,
+			type.kind,
 			result);
 	}
 
@@ -82,7 +70,7 @@ namespace hz
 	DEFINE_TYPE_FORMATTER(const TypedefNameType&)
 	{
 		// NOTE: just using the underyling alias name since the typedef doesn't affect the type's string representation
-		return type.name;
+		return type.name.data();
 	}
 
 	DEFINE_TYPE_FORMATTER(const PointerType&)

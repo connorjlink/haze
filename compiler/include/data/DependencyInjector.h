@@ -247,7 +247,7 @@ namespace hz
 	struct ThreadScope
 	{
 	private:
-		// type erasure is fine since shared ptr stores type-specific deleter
+		// type erasure is fine since shared pointer stores type-specific deleter
 		std::unordered_map<TypeId, std::shared_ptr<void>> instances;
 
 	public:
