@@ -243,8 +243,8 @@ namespace hz
 		}
 
 	public:
-		constexpr SumDispatcher(const StorageT& sum_storage, IndexHandle index, TagType tag)
-			: sum_storage{ sum_storage }, index{ tag, index }
+		constexpr SumDispatcher(const StorageT& sum_storage, IndexHandle handle, TagType tag)
+			: sum_storage{ sum_storage }, index{ tag, handle.index, static_cast<bool>(handle.is_valid) }
 		{
 		}
 	};
@@ -432,13 +432,13 @@ namespace hz
 
 	public:
 		constexpr SumReference(const StorageT& sum_storage, IndexType index)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ index, true } }
+			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ index, true }, TypeIndexV<T, typename StorageT::Type> }
 		{
 			// valid reference
 		}
 
 		constexpr SumReference(const StorageT& sum_storage)
-			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ 0, false } }
+			: SumDispatcherT<StorageT>{ sum_storage, IndexHandle{ 0, false }, TypeIndexV<T, typename StorageT::Type> }
 		{
 			// invalid reference
 		}
