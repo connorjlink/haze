@@ -30,7 +30,7 @@ namespace hz
 	public:
 		struct Member
 		{
-			std::string name;
+			std::string_view name;
 			TypeHandle type;
 			Offset offset;
 		};
@@ -38,14 +38,20 @@ namespace hz
 	public:
 		StorageClass storage;
 		TypeQualifier qualifier;
-		StructOrUnionKind struct_or_union_kind;
+		StructOrUnionKind kind;
 		std::optional<std::vector<Member>> members;
-		std::string tag;
+		std::string_view tag;
 
 	public:
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+		StructOrUnionType(StorageClass storage, TypeQualifier qualifier, StructOrUnionKind kind, std::optional<std::vector<Member>> members, std::string_view tag)
+			: storage{ storage }, qualifier{ qualifier }, kind{ kind }, members{ members }, tag{ tag }
+		{
+		}
 	};
 }
 

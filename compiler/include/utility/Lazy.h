@@ -7,13 +7,12 @@
 namespace hz
 {
 	// NOTE: not thread safe
-	template<typename T, typename FunctionT, typename... Ts>
+	template<typename T>
 	struct Lazy
 	{
 	private:
 		mutable std::optional<T> value;
-		mutable std::decay_t<FunctionT> functor;
-		mutable std::tuple<std::decay_t<Ts>...> arguments;
+		std::function<T()> functor;
 
 	public:
 		template<typename Self>
@@ -21,10 +20,7 @@ namespace hz
 		{
 			if (!self.value)
 			{
-				self.value.emplace(std::apply([&](auto&... arguments)
-				{
-					return std::invoke(self.functor, arguments...);
-				}, self.arguments));
+				self.value.emplace(self.functor());
 			}
 
 			// handle the case where the Lazy is rvalue temporary, need to return an rvalue ref to preserve move semantics
@@ -38,20 +34,40 @@ namespace hz
 			}
 		}
 
-	public:
-		// this is maybe a bad idea, but too tempting to pass up!
-		template<typename Self>
-		auto&& operator T(this Self&& self)
+		void reset()
 		{
-			return self.get();
+			value.reset();
+		}
+
+		bool has_value() const
+		{
+			return value.has_value();
+		}
+
+	public:
+		operator T&()
+		{
+			return get();
+		}
+
+		operator const T& () const
+		{
+			return get();
+		}
+
+		operator T && ()&&
+		{
+			return std::move(get());
 		}
 
 	public:
 		template<typename F, typename... ArgumentsTs>
 		Lazy(F&& f, ArgumentsTs&&... arguments)
 			: value{}
-			, functor{ std::forward<F>(f) }
-			, arguments{ std::forward<ArgumentsTs>(arguments)... }
+			, functor { [f = std::forward<F>(f), ...args = std::forward<ArgumentsTs>(arguments)]() mutable
+			{
+				return std::invoke(f, args...);
+			} }
 		{
 		}
 	};

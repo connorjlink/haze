@@ -380,7 +380,7 @@ namespace hz
 
 	}
 
-	void PEBuilder::export_exe(const std::string& filepath)
+	void PEBuilder::export_exe(const std::filesystem::path& filepath)
 	{
 		build_pe();
 

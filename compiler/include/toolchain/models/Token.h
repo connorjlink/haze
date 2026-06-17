@@ -380,7 +380,7 @@ namespace hz
 
 	struct SourceLocation
 	{
-		const std::filesystem::path& filepath;
+		std::filesystem::path filepath;
 		// quick character index into the file
 		std::size_t position;
 		std::int32_t line, column;
@@ -390,7 +390,7 @@ namespace hz
 	{
 		std::string_view text;
 		SourceLocation location;
-		TokenKind type;
+		TokenKind kind;
 		std::uint8_t confidence;
 	};
 
@@ -400,7 +400,7 @@ namespace hz
 	{ 
 		.text = "",
 		.location = SourceLocation{ std::filesystem::path{ "unknown" }, 0, -1, -1 },
-		.type = TokenKind::END,
+		.kind = TokenKind::END,
 		.confidence = 0
 	};
 

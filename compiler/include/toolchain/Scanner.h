@@ -162,8 +162,9 @@ namespace hz
 		}
 
 	public:
-		Scanner(const std::string&);
-		virtual ~Scanner();
+		Scanner(const std::filesystem::path&);
+		Scanner(std::string);
+		~Scanner();
 	};
 }
 

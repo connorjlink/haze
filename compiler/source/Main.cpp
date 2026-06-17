@@ -131,7 +131,7 @@ hz::Task<int> main_shim(int argc, char** argv)
 	};
 
 	// run once per translation unit
-	auto thread_translation = [&](const std::string& filepath)
+	auto thread_translation = [&](const std::filesystem::path& filepath)
 	{
 		const auto& file = USE_UNSAFE(FileManager)->get_file(filepath);
 

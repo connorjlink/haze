@@ -23,10 +23,10 @@ namespace hz
 	Instruction* RISCVAssemblerParser::parse_instruction_command()
 	{
 		const auto& opcode_token = peek();
-		consume(opcode_token.type);
+		consume(opcode_token.kind);
 
 		using enum TokenKind;
-		switch (opcode_token.type)
+		switch (opcode_token.kind)
 		{
 			// I instruction set
 			case LB:
@@ -161,9 +161,9 @@ namespace hz
 	std::int8_t RISCVAssemblerParser::parse_register()
 	{
 		const auto& register_token = peek();
-		consume(register_token.type);
+		consume(register_token.kind);
 
-		switch (register_token.type)
+		switch (register_token.kind)
 		{
 			case TokenKind::X0:  case TokenKind::ZERO:                   return X0;
 			case TokenKind::X1:  case TokenKind::RA:                     return X1;

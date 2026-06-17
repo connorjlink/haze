@@ -54,7 +54,7 @@ namespace hz
 	Statement* CompilerParser::parse_statement(const std::string& enclosing_function)
 	{
 		using enum TokenKind;
-		switch (peek().type)
+		switch (peek().kind)
 		{
 			case LBRACE: return parse_compound_statement(enclosing_function);
 			case DECLARE: return parse_variabledeclaration_statement(enclosing_function);
@@ -75,7 +75,7 @@ namespace hz
 	{
 		std::vector<Statement*> statements;
 
-		while (peek().type != TokenKind::RBRACE)
+		while (peek().kind != TokenKind::RBRACE)
 		{
 			statements.emplace_back(parse_statement(enclosing_function));
 		}
@@ -93,7 +93,7 @@ namespace hz
 	{
 		consume(TokenKind::DECLARE);
 
-		const auto type = parse_type();
+		const auto kind = parse_type();
 		const auto identifier_token = consume(TokenKind::IDENTIFIER);
 
 		USE_SAFE(SymbolDatabase)->add_variable(identifier_token.text, lookbehind());
@@ -104,7 +104,7 @@ namespace hz
 		// exports the variable identifier symbol only
 		USE_SAFE(SymbolExporter)->enqueue(function_symbol, identifier_token);
 
-		if (peek().type == TokenKind::EQUALS)
+		if (peek().kind == TokenKind::EQUALS)
 		{
 			consume(TokenKind::EQUALS);
 
@@ -112,12 +112,12 @@ namespace hz
 	
 			consume(TokenKind::SEMICOLON);
 
-			return new VariableStatement{ type, identifier_token.text, value, nullptr, value->_token };
+			return new VariableStatement{ kind, identifier_token.text, value, nullptr, value->_token };
 		}
 
 		consume(TokenKind::SEMICOLON);
 
-		return new VariableStatement{ type, identifier_token.text, nullptr, nullptr, identifier_token };
+		return new VariableStatement{ kind, identifier_token.text, nullptr, nullptr, identifier_token };
 	}
 
 	Statement* CompilerParser::parse_compound_statement(const std::string& enclosing_function)
@@ -158,7 +158,7 @@ namespace hz
 		return new ReturnStatement{ enclosing_function, expression, nullptr, return_token };
 	}
 
-	Parser* CompilerParser::createassembler_parser(const std::string& filepath)
+	Parser* CompilerParser::createassembler_parser(const std::filesystem::path& filepath)
 	{
 		const auto architecture = USE_UNSAFE(CommandLineOptions)->architecture;
 		switch (architecture)
@@ -245,7 +245,7 @@ namespace hz
 		const auto if_body = parse_statement(enclosing_function);
 		Statement* else_body = nullptr;
 
-		if (peek().type == TokenKind::ELSE)
+		if (peek().kind == TokenKind::ELSE)
 		{
 			consume(TokenKind::ELSE);
 			else_body = parse_statement(enclosing_function);
@@ -295,19 +295,19 @@ namespace hz
 
 	MemberDeclarationExpression* CompilerParser::parse_member_declaration_statement(const std::string& enclosing_function)
 	{
-		const auto type = parse_type();
+		const auto kind = parse_type();
 		const auto name = parse_identifier_expression();
 
 		consume(TokenKind::COMMA);
 
-		return new MemberDeclarationExpression{ type, name, name->_token };
+		return new MemberDeclarationExpression{ kind, name, name->_token };
 	}
 
 	std::vector<MemberDeclarationExpression*> CompilerParser::parse_member_declaration_statements(const std::string& enclosing_function)
 	{
 		std::vector<MemberDeclarationExpression*> out{};
 
-		while (peek().type != TokenKind::RBRACE)
+		while (peek().kind != TokenKind::RBRACE)
 		{
 			const auto member_declaration = parse_member_declaration_statement(enclosing_function);
 			out.emplace_back(member_declaration);
@@ -338,7 +338,7 @@ namespace hz
 	{
 		std::vector<ExpressionHandle> arguments;
 
-		while (peek().type != TokenKind::RPAREN)
+		while (peek().kind != TokenKind::RPAREN)
 		{
 
 			/*
@@ -360,15 +360,15 @@ namespace hz
 
 			if (is_definition)
 			{
-				const auto type = parse_type();
+				const auto kind = parse_type();
 				const auto identifier = parse_identifier_expression();
 
-				USE_SAFE(SymbolDatabase)->add_argument(identifier->name, lookbehind(), type);
+				USE_SAFE(SymbolDatabase)->add_argument(identifier->name, lookbehind(), kind);
 
 				// exports the argument identifier symbol only
 				USE_SAFE(SymbolExporter)->enqueue(symbol, identifier->_token);
 
-				arguments.emplace_back(new ArgumentExpression{ type, identifier, identifier->_token });
+				arguments.emplace_back(new ArgumentExpression{ kind, identifier, identifier->_token });
 			}
 
 			else
@@ -377,11 +377,11 @@ namespace hz
 			}
 
 
-			if (peek().type != TokenKind::RPAREN)
+			if (peek().kind != TokenKind::RPAREN)
 			{
 				consume(TokenKind::COMMA);
 
-				if (peek().type == TokenKind::RPAREN)
+				if (peek().kind == TokenKind::RPAREN)
 				{
 					USE_SAFE(ErrorReporter)->post_error("expected another argument but got `)`", peek());
 					break;
@@ -397,10 +397,10 @@ namespace hz
 		const auto& current_token = peek();
 
 		auto qualifier = TypeQualifier::IMMUTABLE;
-		if (_type_qualifier_token_map.contains(current_token.type))
+		if (_type_qualifier_token_map.contains(current_token.kind))
 		{
-			qualifier = _type_qualifier_token_map.at(current_token.type);
-			consume(current_token.type);
+			qualifier = _type_qualifier_token_map.at(current_token.kind);
+			consume(current_token.kind);
 		}
 
 		else if (is_mandatory)
@@ -416,10 +416,10 @@ namespace hz
 		const auto& current_token = peek();
 
 		auto signedness = TypeSignedness::UNSIGNED;
-		if (_type_signedness_token_map.contains(current_token.type))
+		if (_type_signedness_token_map.contains(current_token.kind))
 		{
-			signedness = _type_signedness_token_map.at(current_token.type);
-			consume(current_token.type);
+			signedness = _type_signedness_token_map.at(current_token.kind);
+			consume(current_token.kind);
 		}
 
 		else if (is_mandatory)
@@ -435,10 +435,10 @@ namespace hz
 		const auto& current_token = peek();
 
 		auto specifier = TypeSpecifier::NVR;
-		if (_type_specifier_token_map.contains(current_token.type))
+		if (_type_specifier_token_map.contains(current_token.kind))
 		{
-			specifier = _type_specifier_token_map.at(current_token.type);
-			consume(current_token.type);
+			specifier = _type_specifier_token_map.at(current_token.kind);
+			consume(current_token.kind);
 		}
 
 		else if (is_mandatory)
@@ -454,10 +454,10 @@ namespace hz
 		const auto& current_token = peek();
 
 		auto storage = TypeStorage::VALUE;
-		if (_type_storage_token_map.contains(current_token.type))
+		if (_type_storage_token_map.contains(current_token.kind))
 		{
-			storage = _type_storage_token_map.at(current_token.type);
-			consume(current_token.type);
+			storage = _type_storage_token_map.at(current_token.kind);
+			consume(current_token.kind);
 		}
 
 		else if (is_mandatory)
@@ -542,7 +542,7 @@ namespace hz
 	{
 		std::vector<Node*> functions;
 
-		while (peek().type != TokenKind::END)
+		while (peek().kind != TokenKind::END)
 		{
 			functions.emplace_back(parse_function());
 		}

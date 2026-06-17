@@ -14,7 +14,7 @@ namespace hz
 
 	#pragma message("TODO: when writing the linker, be sure to open and close an error context per each filepath to get proper error message correlation")
 
-//	AssemblerLinker::AssemblerLinker(cosnt std::vector<Node*>& commands, AssemblerParser* assembler_parser, const std::string& filepath)
+//	AssemblerLinker::AssemblerLinker(cosnt std::vector<Node*>& commands, AssemblerParser* assembler_parser, const std::filesystem::path& filepath)
 //		: Linker{ filepath }, commands{ commands }, assembler_parser{ assembler_parser }
 //	{
 //		commands.erase(std::remove_if(commands.begin(), commands.end(), [&](auto&& val)

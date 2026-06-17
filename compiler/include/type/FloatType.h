@@ -37,6 +37,12 @@ namespace hz
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+		FloatType(StorageClass storage, TypeQualifier qualifier, FloatKind float_kind)
+			: storage{ storage }, qualifier{ qualifier }, float_kind{ float_kind }
+		{
+		}
 	};
 }
 

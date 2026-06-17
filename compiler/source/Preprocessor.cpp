@@ -54,7 +54,7 @@ namespace
 
 namespace hz
 {
-	Preprocessor::Preprocessor(const std::string& filepath)
+	Preprocessor::Preprocessor(const std::filesystem::path& filepath)
 		: Scanner{ filepath }, files_to_process{}
 	{
 		auto contents = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents();
@@ -89,7 +89,7 @@ namespace hz
 		return read_identifier(false) != "";
 	}
 
-	void Preprocessor::load_file(const std::string& filepath)
+	void Preprocessor::load_file(const std::filesystem::path& filepath)
 	{
 		USE_SAFE(FileManager)->open_file(filepath);
 		const auto contents = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents();

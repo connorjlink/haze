@@ -42,6 +42,12 @@ namespace hz
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+		IntType(StorageClass storage, TypeQualifier qualifier, TypeSignedness signedness, IntKind int_kind)
+			: storage{ storage }, qualifier{ qualifier }, signedness{ signedness }, int_kind{ int_kind }
+		{
+		}
 	};
 }
 

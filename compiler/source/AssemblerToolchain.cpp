@@ -14,7 +14,7 @@ namespace hz
 		return ToolchainKind::ASSEMBLER;
 	}
 
-	std::vector<Command*> AssemblerToolchain::run(const std::string& filepath)
+	std::vector<Command*> AssemblerToolchain::run(const std::filesystem::path& filepath)
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "assembling");
 

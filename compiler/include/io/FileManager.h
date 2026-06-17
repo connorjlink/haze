@@ -13,22 +13,22 @@ namespace hz
 		public InjectSingleton<ErrorReporter>
 	{
 	private:
-		std::unordered_map<std::string, File> _files;
+		std::unordered_map<std::filesystem::path, File> files;
 
 	public:
 		// will overwrite the file entry if it already exists
-		void open_file(const std::string&);
-		bool has_file(const std::string&);
-		File& get_file(const std::string&);
-		void update_file(const std::string&, const std::string&);
+		void open_file(const std::filesystem::path&);
+		bool has_file(const std::filesystem::path&);
+		File& get_file(const std::filesystem::path&);
+		void update_file(const std::filesystem::path&, std::string);
 
 	private:
 		[[noreturn]]
-		void never_opened_error(const std::string&) const;
+		void never_opened_error(const std::filesystem::path&) const;
 
 	public:
 		FileManager()
-			: _files{}
+			: files{}
 		{
 		}
 	};

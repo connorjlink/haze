@@ -165,6 +165,7 @@ namespace hz
 		void
 	>;
 
+
 	using DeclarationSumImplementation = MakeSum<DeclarationMethods, DeclarationKinds>::Type;
 
 	struct DeclarationStorage : public DeclarationSumImplementation::Storage

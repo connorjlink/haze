@@ -20,6 +20,12 @@ namespace hz
 		// NOTE: this is static to allow other classes a convenient way to get platform variables
 		static Offset size();
 		bool is_complete() const;
+
+	public:
+		PointerType(TypeHandle pointee, TypeQualifier qualifier)
+			: pointee{ pointee }, qualifier{ qualifier }
+		{
+		}
 	};
 }
 

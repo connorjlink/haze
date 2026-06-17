@@ -16,10 +16,11 @@ namespace hz
 		std::vector<Token> lex();
 
 	public:
-		ScannerKind stype() const noexcept override;
+		ScannerKind scanner_kind() const;
 
 	public:
-		Lexer(const std::string&);
+		Lexer(const std::filesystem::path&);
+		Lexer(std::string);
 	};
 }
 

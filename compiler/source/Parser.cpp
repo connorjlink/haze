@@ -17,10 +17,10 @@ namespace
 {
 	using namespace hz;
 
-	bool is_binary_operator(TokenKind type)
+	bool is_binary_operator(TokenKind kind)
 	{
 		using enum TokenKind;
-		switch (type)
+		switch (kind)
 		{
 			case AMPERSAND:            [[fallthrough]];
 			case AMPERSANDEQUALS:      [[fallthrough]];
@@ -98,10 +98,10 @@ namespace hz
 			"unexpectedly reached the end of file", peek());
 	}
 
-	Token Parser::consume(TokenKind type)
+	Token Parser::consume(TokenKind kind)
 	{
 		const auto& current = peek();
-		if (current.type == type)
+		if (current.kind == kind)
 		{
 			cursor++;
 			return current;
@@ -122,20 +122,20 @@ namespace hz
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"expected token `{}` but got `{}`",
-				convert(type), ((current.type == TokenKind::IDENTIFIER || current.type == TokenKind::INT) 
+				convert(kind), ((current.kind == TokenKind::IDENTIFIER || current.kind == TokenKind::INT) 
 					? current.text 
-					: convert(current.type))), current);
+					: convert(current.kind))), current);
 		return current;
 	}
 
-	std::vector<Token> Parser::fetch_until(TokenKind type)
+	std::vector<Token> Parser::fetch_until(TokenKind kind)
 	{
 		std::vector<Token> tokens;
 
-		while (peek().type != type)
+		while (peek().kind != kind)
 		{
 			tokens.emplace_back(peek());
-			consume(peek().type);
+			consume(peek().kind);
 		}
 
 		return tokens;
@@ -167,7 +167,7 @@ namespace hz
 		}
 
 		const auto& specifier = peek();
-		consume(specifier.type);
+		consume(specifier.kind);
 
 		return new IntegerLiteralExpression{ integer_value, integer_literal_token };
 	}
@@ -195,13 +195,13 @@ namespace hz
 	{
 		consume(TokenKind::TILDE);
 		
-		if (peek().type == TokenKind::IDENTIFIER)
+		if (peek().kind == TokenKind::IDENTIFIER)
 		{
 			const auto identifier_expression = parse_identifier_expression();
 			return new AdjustExpression{ true, identifier_expression, identifier_expression->_token };
 		}
 
-		else if (peek().type == TokenKind::INT)
+		else if (peek().kind == TokenKind::INT)
 		{
 			const auto integer_literal_expression = parse_integerliteral_expression();
 			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
@@ -215,13 +215,13 @@ namespace hz
 	{
 		consume(TokenKind::EXCLAMATION);
 
-		if (peek().type == TokenKind::IDENTIFIER)
+		if (peek().kind == TokenKind::IDENTIFIER)
 		{
 			const auto identifier_expression = parse_identifier_expression();
 			return new AdjustExpression{ false, identifier_expression, identifier_expression->_token };
 		}
 
-		else if (peek().type == TokenKind::INT)
+		else if (peek().kind == TokenKind::INT)
 		{
 			const auto integer_literal_expression = parse_integerliteral_expression();
 			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
@@ -235,7 +235,7 @@ namespace hz
 	ExpressionHandle Parser::parse_generic_expression()
 	{
 		using enum TokenKind;
-		switch (peek().type)
+		switch (peek().kind)
 		{
 			case LPAREN:
 			{
@@ -254,7 +254,7 @@ namespace hz
 
 			case IDENTIFIER:
 			{
-				if (lookahead().type == LPAREN)
+				if (lookahead().kind == LPAREN)
 				{
 					return parse_functioncall_expression();
 				}
@@ -320,12 +320,12 @@ namespace hz
 		{
 			const auto& next = peek();
 
-			if (!::is_binary_operator(next.type) || precedences.at(next.type) < minimum_precedence)
+			if (!::is_binary_operator(next.kind) || precedences.at(next.kind) < minimum_precedence)
 			{
 				break;
 			}
 
-			consume(next.type);
+			consume(next.kind);
 
 			auto right = parse_expression();
 
@@ -333,17 +333,17 @@ namespace hz
 			{
 				const auto& lookahead = peek();
 
-				if (!::is_binary_operator(lookahead.type) || precedences.at(lookahead.type) <= precedences.at(next.type))
+				if (!::is_binary_operator(lookahead.kind) || precedences.at(lookahead.kind) <= precedences.at(next.kind))
 				{
 					break;
 				}
 
 #pragma message("TODO: maybe add precedence+1 for the next call of the recursive function")
-				right = parse_infix_expression(right, precedences.at(lookahead.type));
+				right = parse_infix_expression(right, precedences.at(lookahead.kind));
 
 			} while(true);
 
-			switch (next.type)
+			switch (next.kind)
 			{
 				case TokenKind::PLUS: left = new PlusBinaryExpression{ left, right, left->_token }; break;
 				case TokenKind::MINUS: left = new MinusBinaryExpression{ left, right, left->_token }; break;

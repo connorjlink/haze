@@ -7,7 +7,7 @@ import std;
 
 namespace hz
 {
-    void BMBuilder::export_exe(const std::string& filepath)
+    void BMBuilder::export_exe(const std::filesystem::path& filepath)
     {
         _binary = _code_section;
 

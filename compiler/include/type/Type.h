@@ -19,9 +19,9 @@ namespace hz
 	FORWARD_DECLARE_SUM(Type)
 
 #define TYPE_METHODS(X, handlet) \
+	X(type_kind, TypeKind) \
 	X(size, Offset) \
-	X(is_complete, bool) \
-	X(type_kind, TypeKind)
+	X(is_complete, bool)
 
 	DEFINE_SUM(Type, TYPE_METHODS)
 
@@ -34,12 +34,6 @@ namespace hz
 		template<typename T>
 		using Dispatcher = TypeSumDispatcher<T>;
 		using Storage = TypeStorage;
-
-		template<typename Self>
-		TypeKind type_kind(this Self&& self)
-		{
-			return self.type_kind();
-		}
 	};
 }
 

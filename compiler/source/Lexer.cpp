@@ -5,22 +5,11 @@ import std;
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-#define APPEND_TOKEN(tag_type, raw) tokens.emplace_back(Token{ .type = tag_type, .text = raw, .location = get_state().location })
+#define APPEND_TOKEN(kind, raw) tokens.emplace_back(raw, get_context().location, kind, 0)
 
 namespace hz
 {
-	Lexer::Lexer(const std::string& filepath)
-		: Scanner{ filepath }
-	{
-		// transact an initial state for undoing
-		commit<void>([&](auto& context) -> void
-		{
-			context.source = USE_SAFE(FileManager)->get_file(filepath).get_processed_contents();
-			context.location = null_location(filepath);
-		});
-	}
-
-	ScannerKind Lexer::stype() const noexcept
+	ScannerKind Lexer::scanner_kind() const
 	{
 		return ScannerKind::LEXER;
 	}
@@ -60,7 +49,10 @@ namespace hz
 					continue;
 				}
 
-				APPEND_TOKEN(SLASH, { here });
+				// C rules for commas in macro arguments xD
+#define EXPAND(...) __VA_ARGS__
+				APPEND_TOKEN(SLASH, EXPAND(std::string_view{ &here, 1 }));
+#undef EXPAND
 
 				advance(); // /
 			}
@@ -202,5 +194,28 @@ namespace hz
 		APPEND_TOKEN(TokenKind::END, "eof");
 
 		return tokens;
+	}
+
+
+	Lexer::Lexer(const std::filesystem::path& filepath)
+		: Scanner{ filepath }
+	{
+		// transact an initial state for undoing
+		commit<void>([&](auto& context) -> void
+		{
+			context.source = USE_SAFE(FileManager)->get_file(filepath).get_processed_contents();
+			context.location = null_location(filepath);
+		});
+	}
+
+	Lexer::Lexer(std::string source)
+		: Scanner{ std::move(source) }
+	{
+		// transact an initial state for undoing
+		commit<void>([&](auto& context) -> void
+		{
+			context.source = std::move(source);
+			context.location = null_location(STRING_SCAN);
+		});
 	}
 }

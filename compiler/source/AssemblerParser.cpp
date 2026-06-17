@@ -33,7 +33,7 @@ namespace hz
 	{
 		const auto& first = peek();
 
-		if (first.type == TokenKind::IDENTIFIER)
+		if (first.kind == TokenKind::IDENTIFIER)
 		{
 			const auto& label_command_token = first;
 			consume(TokenKind::IDENTIFIER);
@@ -54,18 +54,18 @@ namespace hz
 	{
 		consume(TokenKind::DOTDEFINE);
 
-		TypeHandle type = nullptr;
+		TypeHandle kind = nullptr;
 
 		if (ptype() == ParserType::COMPILER)
 		{
 			auto compiler_parser = AS_COMPILER_PARSER(this);
-			type = compiler_parser->parse_type();
+			kind = compiler_parser->parse_type();
 		}
 
 		else
 		{
 			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
-			type = new IntType{ TypeQualifier::CONST, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
+			kind = new IntType{ TypeQualifier::CONST, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
 		}
 
 		const auto identifier_expression = parse_identifier_expression();
@@ -86,7 +86,7 @@ namespace hz
 		USE_SAFE(SymbolDatabase)->add_define(identifier, peek());
 
 		auto define_symbol = USE_SAFE(SymbolDatabase)->reference_define(identifier, peek());
-		define_symbol->type = type;
+		define_symbol->kind = kind;
 		define_symbol->value = integer_literal_raw(value);
 
 		// NOTE: exports the constant expression name symbol only
@@ -130,7 +130,7 @@ namespace hz
 	{
 		const auto& first = peek();
 
-		switch (first.type)
+		switch (first.kind)
 		{
 			case TokenKind::DOTDEFINE: return parse_dotdefine_command();
 			case TokenKind::DOTORG: return parse_dotorg_command();
@@ -145,7 +145,7 @@ namespace hz
 	{
 		std::vector<Node*> instructions{};
 
-		while (peek().type != TokenKind::END)
+		while (peek().kind != TokenKind::END)
 		{
 			instructions.emplace_back(parse_command());
 		}

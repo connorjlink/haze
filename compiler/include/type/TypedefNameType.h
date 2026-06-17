@@ -13,12 +13,18 @@ namespace hz
 	{
 	public:
 		TypeHandle type;
-		std::string name;
+		std::string_view name;
 
 	public:
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+		TypedefNameType(TypeHandle type, std::string_view name)
+			: type{ type }, name{ name }
+		{
+		}
 	};
 }
 

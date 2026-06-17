@@ -20,6 +20,12 @@ namespace hz
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+		ArrayType(TypeHandle element_type, std::optional<Address> length)
+			: element_type{ element_type }, length{ length }
+		{
+		}
 	};
 }
 

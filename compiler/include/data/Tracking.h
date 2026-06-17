@@ -3,14 +3,13 @@
 
 #include <data/DependencyInjector.h>
 #include <error/ErrorReporter.h>
+#include <utility/Constants.h>
 
 // Haze Tracking.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	struct Trackable;
-
 	using TrackingId = std::size_t;
 	using TrackingTimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
@@ -75,7 +74,6 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::derived_from<T, Trackable>
 		bool validate_notnull(T* entity)
 		{
 			if (entity == nullptr)
@@ -89,7 +87,6 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::derived_from<T, Trackable>
 		bool strengthen_ensure(T* entity)
 		{
 			if (!validate_notnull(entity))
@@ -107,7 +104,6 @@ namespace hz
 
 	public:
 		template<typename T>
-			requires std::derived_from<T, Trackable>
 		bool notify_created(T* entity)
 		{
 			if (!validate_notnull(entity))
@@ -136,7 +132,6 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::derived_from<T, Trackable>
 		bool notify_modified(T* entity)
 		{
 			if (!strengthen_ensure(entity))
@@ -157,7 +152,6 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::derived_from<T, Trackable>
 		bool notify_retired(T* entity)
 		{
 			if (!strengthen_ensure(entity))
@@ -177,7 +171,6 @@ namespace hz
 		}
 
 		template<typename T>
-			requires std::derived_from<T, Trackable>
 		bool notify_deleted(T* entity)
 		{
 			if (!strengthen_ensure(entity))
@@ -283,10 +276,7 @@ namespace hz
 		template<typename Self>
 		void retire(this Self& self)
 		{
-			if (is_enabled)
-			{
-				USE_SAFE(Tracker)->notify_retired(this);
-			}
+			USE_SAFE(Tracker)->notify_retired(this);
 		}
 
 	public:
@@ -309,7 +299,7 @@ namespace hz
 
 	using Trackable = std::conditional_t
 	<
-		ENABLE_TRACKING,
+		IS_DEBUG,
 		TrackableEnabled,
 		TrackableDisabled
 	>;

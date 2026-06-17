@@ -21,6 +21,12 @@ namespace hz
 		// NOTE: this is static to allow other classes a convenient way to get platform variables
 		static Offset size();
 		bool is_complete() const;
+
+	public:
+		FunctionType(std::vector<TypeHandle> parameters, TypeHandle return_type, bool is_variadic)
+			: parameters{ std::move(parameters) }, return_type{ return_type }, is_variadic{ is_variadic }
+		{
+		}
 	};
 }
 

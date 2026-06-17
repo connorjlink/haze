@@ -5,40 +5,53 @@
 #include <data/Tracking.h>
 #include <error/ErrorReporter.h>
 #include <toolchain/defs/ToolchainKind.h>
+#include <utility/Lazy.h>
 
 // Haze File.h
 // (c) Connor J. Link. All Rights Reserved.
 
 namespace hz
 {
-	// inherits the injected error reporter singleton
-	struct File 
+	struct File
 		: public Trackable
 		, public InjectSingleton<ErrorReporter>
 	{
 	private:
 		std::filesystem::path filepath;
-		ToolchainKind type;
-		std::optional<std::string> raw_contents = std::nullopt;
-		std::optional<std::string> processed_contents = std::nullopt;
-		std::uint32_t reload_count = 0;
+		ToolchainKind kind;
+		Lazy<std::string> raw_contents;
+		std::optional<std::string> processed_contents;
+		std::uint32_t reload_count = 0; // Explicitly initialized to 0
+
+	private:
+		std::string load_raw_contents() const;
 
 	public:
 		std::string get_raw_contents();
 		std::string get_processed_contents() const;
-		// only one toolchain can claim proprietership of a file for now
 		ToolchainKind toolchain_kind() const;
 
 	public:
-		void compute_type();
-		void process(const std::string&);
+		void process(std::string);
 		void reload();
 
 	public:
-		File(const std::string& filepath)
-			//: Trackable{ ENABLE_TRACKING },
-			: filepath{ filepath }, type{}
+		File(const std::filesystem::path& filepath)
+			: filepath{ filepath }
+			, raw_contents{ &File::load_raw_contents, this }
 		{
+			const auto extension = filepath.extension().string();
+
+			const auto kind_optional = from_string<ToolchainKind>(extension);
+			if (!kind_optional)
+			{
+				USE_SAFE(ErrorReporter)->post_error(std::format(
+					"unrecognized file extension {}", extension), NULL_TOKEN);
+				kind = ToolchainKind::COMPILER;
+				return;
+			}
+
+			kind = *kind_optional;
 		}
 	};
 }

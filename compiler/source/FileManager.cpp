@@ -7,47 +7,47 @@ import std;
 
 namespace hz
 {
-	void FileManager::open_file(const std::string& filepath)
+	void FileManager::open_file(const std::filesystem::path& filepath)
 	{
 		if (has_file(filepath))
 		{
-			auto& file = _files.at(filepath);
+			auto& file = files.at(filepath);
 			file.reload();
 		}
 		
 		auto file = File{ filepath };
-		file.compute_type();
-		_files.emplace(filepath, file);
+		file.compute_kind();
+		files.emplace(filepath, file);
 	}
 
-	bool FileManager::has_file(const std::string& filepath)
+	bool FileManager::has_file(const std::filesystem::path& filepath)
 	{
-		return _files.contains(filepath);
+		return files.contains(filepath);
 	}
 
-	File& FileManager::get_file(const std::string& filepath)
+	File& FileManager::get_file(const std::filesystem::path& filepath)
 	{
 		if (has_file(filepath))
 		{
-			return _files.at(filepath);
+			return files.at(filepath);
 		}
 
 		never_opened_error(filepath);
 	}
 
-	void FileManager::update_file(const std::string& filepath, const std::string& content)
+	void FileManager::update_file(const std::filesystem::path& filepath, std::string content)
 	{
 		if (has_file(filepath))
 		{
-			auto& file = _files.at(filepath);
-			file.process(content);
+			auto& file = files.at(filepath);
+			file.process(std::move(content));
 			return;
 		}
 
 		never_opened_error(filepath);
 	}
 	
-	void FileManager::never_opened_error(const std::string& filepath) const
+	void FileManager::never_opened_error(const std::filesystem::path& filepath) const
 	{
 		USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 			"file {} was never opened", filepath), NULL_TOKEN);

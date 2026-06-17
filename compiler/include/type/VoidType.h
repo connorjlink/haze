@@ -21,6 +21,12 @@ namespace hz
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+		VoidType(StorageClass storage, TypeQualifier qualifier)
+			: storage{ storage }, qualifier{ qualifier }
+		{
+		}
 	};
 }
 

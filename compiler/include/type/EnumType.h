@@ -16,7 +16,7 @@ namespace hz
 	public:
 		struct EnumMember
 		{
-			std::string name;
+			std::string_view name;
 			BigInteger value;
 		};
 
@@ -24,12 +24,19 @@ namespace hz
 		StorageClass storage;
 		TypeQualifier qualifier;
 		std::optional<std::vector<EnumMember>> members;
-		std::string tag;
+		std::string_view tag;
 
 	public:
 		TypeKind type_kind() const;
 		Offset size() const;
 		bool is_complete() const;
+
+	public:
+#pragma message("TODO: most efficient way to copy in the members list")
+		EnumType(StorageClass storage, TypeQualifier qualifier, std::optional<std::vector<EnumMember>> members, std::string_view tag)
+			: storage{ storage }, qualifier{ qualifier }, members{ std::move(members) }, tag{ tag }
+		{
+		}
 	};
 }
 

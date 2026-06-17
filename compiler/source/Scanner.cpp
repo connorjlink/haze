@@ -6,18 +6,13 @@ import std;
 // Haze Scanner.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
+namespace
+{
+	inline constexpr auto STRING_SCAN = "<inline source>";
+}
+
 namespace hz
 {
-	Scanner::Scanner(const std::filesystem::path& filepath)
-	{
-		USE_SAFE(ErrorReporter)->open_context(filepath, "scanning");
-	}
-
-	Scanner::~Scanner()
-	{
-		USE_SAFE(ErrorReporter)->close_context();
-	}
-
 	bool Scanner::eof() const
 	{
 		return current_context.eof();
@@ -111,7 +106,7 @@ namespace hz
 		return false;
 	}
 
-	Token Scanner::forge_token(const std::string& text) const
+	Token Scanner::forge_token(std::string_view text) const
 	{
 		// default to identifier unless the search proves otherwise
 		auto type = TokenKind::IDENTIFIER;
@@ -123,7 +118,7 @@ namespace hz
 
 		return Token
 		{
-			.type = type,
+			.kind = type,
 			.text = text,
 			.location = current_context.location,
 		};
@@ -134,13 +129,13 @@ namespace hz
 		return forge_token({ current() });
 	}
 
-	Token Scanner::error_token(const std::string& value)
+	Token Scanner::error_token(std::string_view value)
 	{
 		return Token
 		{
-			.type = TokenKind::ERROR,
 			.text = value,
 			.location = current_context.location,
+			.kind = TokenKind::ERROR,
 		};
 	}
 
@@ -266,5 +261,23 @@ namespace hz
 
 		// enforce URVO
 		return current_context.source.substr(start, length);
+	}
+
+
+	Scanner::Scanner(const std::filesystem::path& filepath)
+		: current_context{ .source = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents(), .location = null_location(filepath) }
+	{
+		USE_SAFE(ErrorReporter)->open_context(filepath, "scanning");
+	}
+
+	Scanner::Scanner(std::string source)
+		: current_context{ .source = std::move(source), .location = null_location(STRING_SCAN) }
+	{
+		USE_SAFE(ErrorReporter)->open_context(STRING_SCAN, "scanning");
+	}
+
+	Scanner::~Scanner()
+	{
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 }

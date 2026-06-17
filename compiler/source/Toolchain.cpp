@@ -11,7 +11,7 @@ import std;
 
 namespace hz
 {
-	void Toolchain::init(const std::string& filepath)
+	void Toolchain::init(const std::filesystem::path& filepath)
 	{
 		toolchain_task = REQUIRE_SAFE(JobManager)->begin_job("toolchain execution");
 
