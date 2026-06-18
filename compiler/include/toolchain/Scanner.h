@@ -96,7 +96,7 @@ namespace hz
 		char current() const;
 		char lookahead() const;
 		std::size_t whereat() const;
-		std::string wherein() const;
+		std::filesystem::path wherein() const;
 		bool eof() const;
 
 	protected:
@@ -110,19 +110,39 @@ namespace hz
 		bool expect(char, bool = true);
 		bool anticipate(char, bool = true);
 		Token forge_token() const;
-		Token forge_token(const std::string&) const;
-		Token error_token(const std::string&);
+		Token forge_token(std::string_view) const;
+		Token error_token(std::string_view);
 
 	protected:
 		// advance the cursor context?
-		std::string read_identifier(bool = false);
+		std::string_view read_identifier(bool = false);
 		bool match_keyword(std::string_view);
-		bool match_keyword(const std::string&);
 		void skip_whitespace(bool = false);
 		void skip_until(char);
 		void skip_while(bool(*)(char));
-		std::string substring_until(char, bool = false);
-		std::string substring_while(std::function<bool(char)>, bool = false);
+		std::string_view substring_until(char, bool = false);
+
+		template<typename FunctorT>
+			requires std::predicate<FunctorT, char> && std::convertible_to<std::invoke_result_t<FunctorT, char>, bool>
+		std::string_view substring_while(FunctorT&& functor, bool = false)
+		{
+			const auto source_length = current_context.source.length();
+			const auto start = whereat();
+
+			auto position = start;
+			while (position < source_length && functor(current_context.source[position]))
+			{
+				position++;
+			}
+
+			const auto length = position - start;
+			if (advance_while)
+			{
+				advance(length);
+			}
+
+			return std::string_view{ current_context.source }.substr(start, length);
+		}
 
 	protected:
 		inline static bool my_isidentifierfirst(char c)
@@ -158,7 +178,7 @@ namespace hz
 		template<typename Self>
 		ScannerKind scanner_kind(this Self&& self)
 		{
-			return self.scanner_kind();
+			return self.scanner_kind_implementation();
 		}
 
 	public:

@@ -37,16 +37,15 @@ namespace hz
 			return std::forward<Self>(self).toolchain_kind_implementation();
 		}
 
-#pragma message("TODO: what is the appropriate return type for this function? Should Linkable extend to support global variable declarations or pure Declaration sum types?")
 		template<typename Self>
-		std::vector<Linkable> run(const std::string&)
+		std::vector<Linkable> run(const std::filesystem::path& filepath)
 		{
-
+			return self.run_implementation(filepath);
 		}
 
 	public:
 		// entry point filepath
-		void init(const std::string&);
+		void initialize(const std::filesystem::path&);
 		// is_panic
 		void shut_down(bool);
 	}; 

@@ -11,7 +11,7 @@ import std;
 
 namespace hz
 {
-	void Toolchain::init(const std::filesystem::path& filepath)
+	void Toolchain::initialize(const std::filesystem::path& filepath)
 	{
 		toolchain_task = REQUIRE_SAFE(JobManager)->begin_job("toolchain execution");
 
@@ -22,12 +22,10 @@ namespace hz
 		const auto& source = file.get_raw_contents();
 		REQUIRE_SAFE(JobManager)->end_job(read_task);
 
-
 		const auto preprocess_task = REQUIRE_SAFE(JobManager)->begin_job("preprocessing");
-		const auto preprocessor = new Preprocessor{ filepath };
-		preprocessor->preprocess(filepath);
+		auto preprocessor = Preprocessor{ filepath };
+		preprocessor.preprocess();
 		REQUIRE_SAFE(JobManager)->end_job(preprocess_task);
-
 
 		const auto lex_task = REQUIRE_SAFE(JobManager)->begin_job("lexing");
 		const auto lexer = new Lexer{ filepath };
@@ -36,7 +34,7 @@ namespace hz
 
 		USE_SAFE(ErrorReporter)->close_context();
 
-		run(filepath);
+		this->run();
 
 		shut_down(false);
 	}

@@ -11,12 +11,12 @@ import std;
 
 namespace hz
 {
-	ToolchainKind CompilerToolchain::toolchain_kind() const
+	ToolchainKind CompilerToolchain::toolchain_kind_implementation() const
 	{
 		return ToolchainKind::COMPILER;
 	}
 
-	std::vector<Linkable> CompilerToolchain::run(const std::filesystem::path& filepath)
+	std::vector<Linkable> CompilerToolchain::run_implementation(const std::filesystem::path& filepath)
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "compiling");
 
@@ -36,7 +36,7 @@ namespace hz
 		REQUIRE_SAFE(JobManager)->end_job(generate_task);
 
 		
-		if (USE_UNSAFE(CommandLineOptions)->optimization & TAC)
+		if (USE_UNSAFE(CommandLineOptions)->optimization & OptimizationFlag::TAC)
 		{
 			const auto optimize_task = REQUIRE_SAFE(JobManager)->begin_job("optimizing");
 

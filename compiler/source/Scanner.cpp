@@ -33,7 +33,7 @@ namespace hz
 		return current_context.whereat();
 	}
 
-	std::string Scanner::wherein() const
+	std::filesystem::path Scanner::wherein() const
 	{
 		return current_context.wherein();
 	}
@@ -44,9 +44,9 @@ namespace hz
 		save_state();
 	}
 
-	void Scanner::advance(std::size_t how_many)
+	void Scanner::advance(std::size_t count)
 	{
-		for (int i = 0u; i < how_many; ++i)
+		for (auto i = 0uz; i < count; ++i)
 		{
 			// NOTE: this will not correctly handle Windows \r\n
 			if (current() == '\n')
@@ -70,7 +70,7 @@ namespace hz
 		if (auto actual = current(); actual != c)
 		{
 			USE_UNSAFE(ErrorReporter)->post_error(std::format(
-				"expected token `{}` to specify an include filepath but got `{}`", actual, c), forge_token());
+				"expected token `{}` but got `{}`", actual, c), forge_token());
 			return false;
 		}
 
@@ -109,24 +109,24 @@ namespace hz
 	Token Scanner::forge_token(std::string_view text) const
 	{
 		// default to identifier unless the search proves otherwise
-		auto type = TokenKind::IDENTIFIER;
+		auto kind = TokenKind::IDENTIFIER;
 		if (token_map.contains(text))
 		{
-			// has_value() strengthened
-			type = token_map.at(text).value();
+			kind = token_map.at(text).value();
 		}
 
 		return Token
 		{
-			.kind = type,
 			.text = text,
 			.location = current_context.location,
+			.kind = kind,
+			.confidence = 0,
 		};
 	}
 
 	Token Scanner::forge_token() const
 	{
-		return forge_token({ current() });
+		return forge_token(std::string_view(&current_context.source[whereat()], 1));
 	}
 
 	Token Scanner::error_token(std::string_view value)
@@ -139,7 +139,7 @@ namespace hz
 		};
 	}
 
-	std::string Scanner::read_identifier(bool advance_context)
+	std::string_view Scanner::read_identifier(bool advance_context)
 	{
 		auto& content = current_context.source;
 
@@ -182,27 +182,22 @@ namespace hz
 		return false;
 	}
 
-	bool Scanner::match_keyword(const std::string& keyword)
-	{
-		return match_keyword(std::string_view{ keyword });
-	}
-
 	void Scanner::skip_whitespace(bool is_required)
 	{
-		int number_to_skip = 0;
-		for (auto c = current(); std::isspace(c); number_to_skip++)
+		auto count = 0uz;
+		for (auto c = current(); std::isspace(c); count++)
 		{
 			// this is a weird for... loop :D
 			c = current();
 		}
 
-		if (is_required && number_to_skip == 0)
+		if (is_required && count == 0)
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"expected one or more whitespace tokens but got `{}`", current()), forge_token());
 		}
 
-		advance(number_to_skip);
+		advance(count);
 	}
 
 	void Scanner::skip_until(char c)
@@ -221,7 +216,7 @@ namespace hz
 		}
 	}
 
-	std::string Scanner::substring_until(char c, bool advance_until)
+	std::string_view Scanner::substring_until(char c, bool advance_until)
 	{
 		const auto source_length = current_context.source.length();
 		const auto start = whereat();
@@ -238,29 +233,7 @@ namespace hz
 			advance(length);
 		}
 
-		// enforce URVO
-		return current_context.source.substr(start, length);
-	}
-
-	std::string Scanner::substring_while(bool(*functor)(char), bool advance_while)
-	{
-		const auto source_length = current_context.source.length();
-		const auto start = whereat();
-
-		auto position = start;
-		while (position < source_length && functor(current_context.source[position]))
-		{
-			position++;
-		}
-
-		const auto length = position - start;
-		if (advance_while)
-		{
-			advance(length);
-		}
-
-		// enforce URVO
-		return current_context.source.substr(start, length);
+		return std::string_view{ current_context.source }.substr(start, length);
 	}
 
 

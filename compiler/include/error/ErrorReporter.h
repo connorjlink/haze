@@ -52,18 +52,7 @@ namespace hz
 		void close_all_contexts();
 
 	private:
-		struct AutoContext : public InjectSingleton<ErrorReporter>
-		{
-			AutoContext(const std::filesystem::path& filepath, std::string_view task)
-			{
-				USE_SAFE(ErrorReporter)->open_context(filepath, task);
-			}
-
-			~AutoContext()
-			{
-				USE_SAFE(ErrorReporter)->close_context();
-			}
-		};
+		struct AutoContext;
 
 	public:
 		std::size_t get_context_count();
@@ -97,6 +86,19 @@ namespace hz
 			closed_frames = {};
 
 			active_frames = {};
+		}
+	};
+
+	struct ErrorReporter::AutoContext : public InjectSingleton<ErrorReporter>
+	{
+		AutoContext(const std::filesystem::path& filepath, std::string_view task)
+		{
+			USE_SAFE(ErrorReporter)->open_context(filepath, task);
+		}
+
+		~AutoContext()
+		{
+			USE_SAFE(ErrorReporter)->close_context();
 		}
 	};
 }

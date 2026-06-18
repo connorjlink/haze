@@ -64,9 +64,9 @@ namespace hz
 		template<typename F, typename... ArgumentsTs>
 		Lazy(F&& f, ArgumentsTs&&... arguments)
 			: value{}
-			, functor { [f = std::forward<F>(f), ...args = std::forward<ArgumentsTs>(arguments)]() mutable
+			, functor { [f = std::forward<F>(f), ...arguments = std::forward<ArgumentsTs>(arguments)]() mutable
 			{
-				return std::invoke(f, args...);
+				return std::invoke(f, arguments...);
 			} }
 		{
 		}

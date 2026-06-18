@@ -81,28 +81,28 @@ namespace hz
 	};
 
 
-	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
-	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...))
+	template <typename TargetT, typename SourceT, typename Ret, typename... ArgumentsTs>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(ArgumentsTs...))
 	{
-		return reinterpret_cast<Ret(TargetT::*)(Args...)>(pointer);
+		return reinterpret_cast<Ret(TargetT::*)(ArgumentsTs...)>(pointer);
 	}
 
-	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
-	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...) const)
+	template <typename TargetT, typename SourceT, typename Ret, typename... ArgumentsTs>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(ArgumentsTs...) const)
 	{
-		return reinterpret_cast<Ret(TargetT::*)(Args...) const>(pointer);
+		return reinterpret_cast<Ret(TargetT::*)(ArgumentsTs...) const>(pointer);
 	}
 
-	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
-	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...) noexcept)
+	template <typename TargetT, typename SourceT, typename Ret, typename... ArgumentsTs>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(ArgumentsTs...) noexcept)
 	{
-		return reinterpret_cast<Ret(TargetT::*)(Args...) noexcept>(pointer);
+		return reinterpret_cast<Ret(TargetT::*)(ArgumentsTs...) noexcept>(pointer);
 	}
 
-	template <typename TargetT, typename SourceT, typename Ret, typename... Args>
-	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(Args...) const noexcept)
+	template <typename TargetT, typename SourceT, typename Ret, typename... ArgumentsTs>
+	constexpr auto cast_method_pointer(Ret(SourceT::* pointer)(ArgumentsTs...) const noexcept)
 	{
-		return reinterpret_cast<Ret(TargetT::*)(Args...) const noexcept>(pointer);
+		return reinterpret_cast<Ret(TargetT::*)(ArgumentsTs...) const noexcept>(pointer);
 	}
 
 

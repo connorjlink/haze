@@ -8,18 +8,19 @@
 
 namespace hz
 {
-	FORWARD_DECLARE_SUM(Declaration)
 	FORWARD_DECLARE_SUM(Function)
+	FORWARD_DECLARE_SUM(Declaration)
 	FORWARD_DECLARE_SUM(Statement)
 	FORWARD_DECLARE_SUM(Expression)
 	FORWARD_DECLARE_SUM(Type)
 
 	using Symbol = std::variant
 	<
-		DeclarationHandle,
-		ExpressionHandle,
+		std::monostate,
 		FunctionHandle,
+		DeclarationHandle,
 		StatementHandle,
+		ExpressionHandle,
 		TypeHandle
 	>;
 }

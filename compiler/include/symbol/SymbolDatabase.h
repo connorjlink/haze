@@ -15,20 +15,8 @@ namespace hz
 {
 	enum struct SymbolKind;
 
-	struct FunctionSymbol;
-	struct ArgumentSymbol;
-	struct VariableSymbol;
-	struct DefineSymbol;
-	struct LabelSymbol;
-	struct StructOrUnionSymbol;
 	struct Token;
 
-	FORWARD_DECLARE_SUM(Expression)
-	FORWARD_DECLARE_SUM(Symbol)
-	FORWARD_DECLARE_SUM(Type)
-
-
-#pragma message("TODO: redo symbol database to use direct AST reference instead of individual symbol types")
 #pragma message("TODO: move symboldatabase information over to the Generator class and hook up environment push/pop logic with function enter/exit scope")
 
 	struct SymbolDatabase
@@ -39,29 +27,27 @@ namespace hz
 		Environment<Symbol> environment;
 
 	public:
-		SymbolHandle add_symbol(SymbolKind, std::string_view, const Token&);
-		SymbolReference<FunctionSymbol> add_function(std::string_view, const Token&, TypeHandle, std::vector<ExpressionHandle> arguments);
-		SymbolReference<ArgumentSymbol> add_argument(std::string_view, const Token&, TypeHandle);
-		SymbolReference<VariableSymbol> add_variable(std::string_view, const Token&);
-		SymbolReference<DefineSymbol> add_define(std::string_view, const Token&);
-		SymbolReference<LabelSymbol> add_label(std::string_view, const Token&);
-		SymbolReference<StructOrUnionSymbol> add_struct(std::string_view, const Token&);
-
+		Symbol add_symbol(SymbolKind, std::string_view, const Token&);
+		FunctionHandle add_function_symbol(std::string_view, const Token&, TypeHandle, std::vector<ExpressionHandle>);
+		DeclarationHandle add_declaration(std::string_view, const Token&, TypeHandle);
+		StatementHandle add_statement(std::string_view, const Token&);
+		ExpressionHandle add_expression(std::string_view, const Token&, TypeHandle);
+		TypeHandle add_type(std::string_view, const Token&, TypeHandle);
+		
 	public:
-		SymbolHandle try_reference_symbol(SymbolKind, std::string_view, const Token&, bool = false);
-		SymbolHandle reference_symbol(SymbolKind, std::string_view, const Token&, bool = false);
-		SymbolReference<FunctionSymbol> reference_function(std::string_view, const Token&, bool = false);
-		SymbolReference<ArgumentSymbol> reference_argument(std::string_view, const Token&, bool = false);
-		SymbolReference<VariableSymbol> reference_variable(std::string_view, const Token&, bool = false);
-		SymbolReference<DefineSymbol> reference_define(std::string_view, const Token&, bool = false);
-		SymbolReference<LabelSymbol> reference_label(std::string_view, const Token&, bool = false);
-		SymbolReference<StructOrUnionSymbol> reference_struct(std::string_view, const Token&, bool = false);
+		Symbol try_reference_symbol(std::string_view, const Token&, bool = false);
+		Symbol reference_symbol(std::string_view, const Token&, bool = false);
+		FunctionHandle try_reference_function(std::string_view, const Token&, bool = false);
+		DeclarationHandle try_reference_declaration(std::string_view, const Token&, bool = false);
+		StatementHandle try_reference_statement(std::string_view, const Token&, bool = false);
+		ExpressionHandle try_reference_expression(std::string_view, const Token&, bool = false);
+		TypeHandle try_reference_type(std::string_view, const Token&, bool = false);
 
 	public:
 		SymbolKind query_symbol_type(std::string_view, const Token&);
 
 	private:
-		SymbolHandle internal_reference_symbol(bool, SymbolKind, std::string_view, const Token&, bool = false);
+		Symbol internal_reference_symbol(bool, SymbolKind, std::string_view, const Token&, bool = false);
 
 	public:
 		bool has_symbol(std::string_view);

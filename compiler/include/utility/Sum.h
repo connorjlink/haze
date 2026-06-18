@@ -360,17 +360,25 @@ namespace hz
 	using name##Handle = SumHandle<name##SumDispatcher, name##Storage>; \
 	template<typename T> \
 	using name##Reference = SumReference<T, name##SumDispatcher, name##Storage>; \
+	using name##HandleLite = SumHandle<SumDispatcherLite, name##Storage>; \
+	template<typename T> \
+	using name##ReferenceLite = SumReference<T, SumDispatcherLite, name##Storage>; \
 	using name##Facade = SumMemberBase<name##Storage>; 
 
 #define FORWARD_DECLARE_SUM(name) \
 	template<template<typename> typename SumDispatcherT, typename StorageT> \
 	struct SumHandle; \
+	template<typename T, template<typename> typename SumDispatcherT, typename StorageT> \
+	struct SumReference; \
 	template<typename StorageT> \
 	struct name##SumDispatcher; \
 	struct name##Storage; \
 	using name##Handle = SumHandle<name##SumDispatcher, name##Storage>; \
 	template<typename T> \
 	using name##Reference = SumReference<T, name##SumDispatcher, name##Storage>; \
+	using name##HandleLite = SumHandle<SumDispatcherLite, name##Storage>; \
+	template<typename T> \
+	using name##ReferenceLite = SumReference<T, SumDispatcherLite, name##Storage>; \
 	using name##Facade = SumMemberBase<name##Storage>;
 
 
@@ -447,21 +455,6 @@ namespace hz
 	};
 
 
-
-#pragma message("TODO: wrap these into the macro forward declaration logic")
-	template<typename StorageT>
-	using HandleLite = SumHandle<SumDispatcherLite, StorageT>;
-
-	template<typename StorageT>
-	using Handle = SumHandle<SumDispatcher, StorageT>;
-
-	template<typename T, typename StorageT>
-	using ReferenceLite = SumReference<T, SumDispatcherLite, StorageT>;
-
-	template<typename T, typename StorageT>
-	using Reference = SumReference<T, SumDispatcher, StorageT>;
-
-
 	//////////////////////////////////////////////////////
 	// Entry point into sum dynamic dispatch
 	//////////////////////////////////////////////////////
@@ -536,39 +529,6 @@ namespace hz
 		return make_invalid_reference<T, typename T::Dispatcher, typename T::Storage>(sum_storage);
 	}
 #define MAKE_INVALID_REFERENCE_AUTO(sum, type) make_invalid_reference<type>(sum)
-
-
-	template<typename T, typename StorageT>
-	constexpr HandleLite<StorageT> make_handle_lite(StorageT& sum_storage, T&& value)
-	{
-		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
-		return HandleLite<StorageT>{ index, TypeIndexV<T, typename StorageT::Type> };
-	}
-#define MAKE_HANDLE_LITE(type, family, sum, value) make_handle_lite<type, family##Storage>(sum, value)
-
-	template<typename StorageT>
-	constexpr HandleLite<StorageT> make_invalid_handle_lite()
-	{
-		// does not participate in sum storage
-		return HandleLite<StorageT>{};
-	}
-#define MAKE_INVALID_HANDLE_LITE(family) make_invalid_handle_lite<family##Storage>()
-
-	template<typename T, typename StorageT>
-	constexpr ReferenceLite<T, StorageT> make_reference_lite(StorageT& sum_storage, T&& value)
-	{
-		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
-		return ReferenceLite<T, StorageT>{ index };
-	}
-#define MAKE_REFERENCE_LITE(type, family, sum, value) make_reference_lite<type, family##Storage>(sum, value)
-
-	template<typename T, typename StorageT>
-	constexpr ReferenceLite<T, StorageT> make_invalid_reference_lite()
-	{
-		// does not participate in sum storage
-		return ReferenceLite<T, StorageT>{};
-	}
-#define MAKE_INVALID_REFERENCE_LITE(family) make_invalid_reference_lite<family##Storage>()
 }
 
 #endif

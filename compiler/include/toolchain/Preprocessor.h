@@ -14,49 +14,46 @@ namespace hz
 	private:
 		struct Macro
 		{
-			std::string name;
-			std::vector<std::string> arguments;
-			std::string code;
+			std::string_view name;
+			std::vector<std::string_view> arguments;
+			std::string_view code;
 			Token token;
 		};
 
 	private:
 		// name -> Macro
-		std::unordered_map<std::string, Macro> defined_macros;
+		std::unordered_map<std::string_view, Macro> defined_macros;
 
 	private:
-		// filepath -> contents lazy-load :)
-		std::unordered_map<std::string, std::string> raw_file_cache;
-		std::stack<SourceContext> files_to_process;
 		// used to prohibit recursive macros
-		std::unordered_set<std::string> macro_invokations;
+		std::unordered_set<std::string_view> macro_invokations;
 
 	private:
 		void register_macro_definition(const Macro&);
-		void register_macro_invokation(const std::string&);
+		void register_macro_invokation(std::string_view);
 
 	private:
-		void load_file(const std::string&);
+		void load_file(std::string_view);
 
 	public:
 		bool match_macro_invokation();
 		void handle_include();
 		void handle_macro_definition();
-		void handle_functionlike_macro_definition(const std::string&);
-		void handle_objectlike_macro_definition(const std::string&);
+		void handle_functionlike_macro_definition(std::string_view);
+		void handle_objectlike_macro_definition(std::string_view);
 		void handle_macro_invokation();
-		void handle_functionlike_macro_invokation(const std::string&);
-		void handle_objectlike_macro_invokation(const std::string&);
+		void handle_functionlike_macro_invokation(std::string_view);
+		void handle_objectlike_macro_invokation(std::string_view);
 		void handle_conditional_compilation();
 
 	public:
-		void preprocess(const std::string&); // initial file
+		void preprocess();
 
 	public:
-		ScannerKind stype() const noexcept;
+		ScannerKind scanner_kind_implementation() const noexcept;
 
 	public:
-		Preprocessor(const std::string&);
+		Preprocessor(const std::filesystem::path&);
 	};
 }
 

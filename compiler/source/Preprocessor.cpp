@@ -54,28 +54,13 @@ namespace
 
 namespace hz
 {
-	Preprocessor::Preprocessor(const std::filesystem::path& filepath)
-		: Scanner{ filepath }, files_to_process{}
-	{
-		auto contents = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents();
-
-		// moving the contents is safe because the filemanager returns a copy
-		set_state(SourceContext{ .source = std::move(contents), .location = { filepath, 0, 1, 1 } });
-		save_state();
-	}
-
-	ScannerKind Preprocessor::stype() const noexcept
-	{
-		return ScannerKind::PREPROCESSOR;
-	}
-
 	void Preprocessor::register_macro_definition(const Macro& macro)
 	{
 		// only specifies the original definition, so invokations have to manually export each time
 		const auto symbol = USE_SAFE(SymbolDatabase)->add_define(macro.name, macro.token);
 	}
 
-	void Preprocessor::register_macro_invokation(const std::string& name)
+	void Preprocessor::register_macro_invokation(std::string_view name)
 	{
 		const auto forged = forge_token();
 		// explicitly mark as visited
@@ -96,82 +81,20 @@ namespace hz
 		files_to_process.emplace(SourceContext{ .source = contents, .location = { filepath, 0, 1, 1 } });
 	}
 
-	void Preprocessor::preprocess(const std::string& initial_file)
-	{
-		load_file(initial_file);
-
-		while (!files_to_process.empty())
-		{
-			auto& context = files_to_process.top();
-
-			// only pop once advanced past the last virtual location of the file in question
-			if (eof())
-			{
-				USE_SAFE(FileManager)->update_file(context.location.filepath, context.source);
-				files_to_process.pop();
-				continue;
-			}
-
-			switch (auto c = context.current())
-			{
-				case '#':
-				{
-					// consume #
-					advance();
-
-					if (const auto include_keyword = *token_map.at(TokenKind::INCLUDE);
-						match_keyword(include_keyword))
-					{
-						advance(include_keyword.length());
-						skip_whitespace();
-
-						handle_include();
-					}
-					else if (const auto define_keyword = *token_map.at(TokenKind::DEFINE);
-							 match_keyword(define_keyword))
-					{
-						advance(define_keyword.length());
-						skip_whitespace();
-
-						handle_macro_definition();
-					}
-					else if (const auto if_keyword = *token_map.at(TokenKind::IF);
-							 match_keyword(if_keyword))
-					{
-						advance(if_keyword.length());
-						skip_whitespace();
-
-						handle_conditional_compilation();
-					}
-				} break;
-
-				default:
-				{
-					if (match_macro_invokation())
-					{
-						handle_macro_invokation();
-					}
-					else
-					{
-						advance();
-					}
-				} break;
-			}
-		}
-	}
-
 	void Preprocessor::handle_include()
 	{
 		auto include_filepath = std::string{};
 
 		if (current() == '<')
 		{
+			// system headers
 			expect('<');
 			include_filepath = substring_until('>');
 			expect('>');
 		}
 		else
 		{
+			// user headers
 			expect('"');
 			include_filepath = substring_until('"');
 			expect('>');
@@ -203,12 +126,12 @@ namespace hz
 		}
 	}
 
-	void Preprocessor::handle_functionlike_macro_definition(const std::string& name)
+	void Preprocessor::handle_functionlike_macro_definition(std::string_view name)
 	{
 		expect('(');
 
 		// greedily consume until a closing parenthesis
-		std::vector<std::string> arguments{};
+		auto arguments = std::vector<std::string_view>{};
 		while (current() != ')')
 		{
 			const auto argument = read_identifier();
@@ -228,20 +151,20 @@ namespace hz
 		register_macro_definition(macro);
 	}
 
-	void Preprocessor::handle_objectlike_macro_definition(const std::string& name)
+	void Preprocessor::handle_objectlike_macro_definition(std::string_view name)
 	{
 #pragma message("TODO: combine lines together with \ character")
 		const auto value = substring_until('\n');
 
 	}
 
-	void Preprocessor::handle_objectlike_macro_invokation(const std::string& name)
+	void Preprocessor::handle_objectlike_macro_invokation(std::string_view name)
 	{
 		advance(name.length());
 
 	}
 
-	void Preprocessor::handle_functionlike_macro_invokation(const std::string& name)
+	void Preprocessor::handle_functionlike_macro_invokation(std::string_view name)
 	{
 		expect('(');
 
@@ -305,5 +228,121 @@ namespace hz
 
 		// NOTE: explicitly not advancing past the test substition because the new text might contains macros that need to again expand
 		//advance(context, expanded.length());
+	}
+
+	void handle_conditional_compilation()
+	{
+#pragma message("TODO")
+	}
+
+	void Preprocessor::preprocess()
+	{
+		load_file();
+
+		// only pop once advanced past the last virtual location of the file in question
+		if (eof())
+		{
+			USE_SAFE(FileManager)->update_file(context.location.filepath, context.source);
+			files_to_process.pop();
+			continue;
+		}
+
+		switch (const auto current = context.current())
+		{
+			case '#':
+			{
+				// consume #
+				advance();
+
+				if (const auto include_keyword = *token_map.at(TokenKind::INCLUDE); match_keyword(include_keyword))
+				{
+					advance(include_keyword.length());
+					skip_whitespace();
+
+					handle_include();
+				}
+				else if (const auto define_keyword = *token_map.at(TokenKind::DEFINE); match_keyword(define_keyword))
+				{
+					advance(define_keyword.length());
+					skip_whitespace();
+
+					handle_macro_definition();
+				}
+				else if (const auto if_keyword = *token_map.at(TokenKind::IF); match_keyword(if_keyword))
+				{
+					advance(if_keyword.length());
+					skip_whitespace();
+
+					handle_conditional_compilation();
+				}
+				else if (const auto elif_keyword = *token_map.at(TokenKind::ELIF); match_keyword(elif_keyword))
+				{
+					advance(elif_keyword.length());
+					skip_whitespace();
+
+					handle_conditional_compilation();
+				}
+				else if (const auto else_keyword = *token_map.at(TokenKind::ELSE); match_keyword(else_keyword))
+				{
+					advance(else_keyword.length());
+					skip_whitespace();
+
+					handle_conditional_compilation();
+				}
+				else if (const auto endif_keyword = *token_map.at(TokenKind::ENDIF); match_keyword(endif_keyword))
+				{
+					advance(endif_keyword.length());
+					skip_whitespace();
+					handle_conditional_compilation();
+				}
+				else if (const auto undef_keyword = *token_map.at(TokenKind::UNDEF); match_keyword(undef_keyword))
+				{
+					advance(undef_keyword.length());
+					skip_whitespace();
+
+					const auto name = read_identifier();
+					advance(name.length());
+					if (!defined_macros.contains(name))
+					{
+						USE_SAFE(ErrorReporter)->post_error(std::format(
+							"reference to undefined macro `{}`", name), forge_token());
+						return;
+					}
+
+					defined_macros.erase(name);
+				}
+				else
+				{
+					USE_SAFE(ErrorReporter)->post_error(
+						"invalid preprocessor directive", forge_token());
+					skip_until('\n');
+				}
+
+			} break;
+		}
+
+
+		if (match_macro_invokation())
+		{
+			handle_macro_invokation();
+			return;
+		}
+
+		advance();
+	}
+
+	ScannerKind Preprocessor::scanner_kind_implementation() const noexcept
+	{
+		return ScannerKind::PREPROCESSOR;
+	}
+
+	Preprocessor::Preprocessor(const std::filesystem::path& filepath)
+		: Scanner{ filepath }
+	{
+		auto contents = USE_SAFE(FileManager)->get_file(filepath).get_raw_contents();
+
+		// moving the contents is safe because the filemanager returns a copy
+		set_state(SourceContext{ .source = std::move(contents), .location = { filepath, 0, 1, 1 } });
+		save_state();
 	}
 }

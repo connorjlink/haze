@@ -11,8 +11,8 @@ namespace hz
 	struct CompilerToolchain : public Toolchain
 	{
 	public:
-		ToolchainKind toolchain_kind() const;
-		std::vector<Linkable> run(const std::filesystem::path&);
+		ToolchainKind toolchain_kind_implementation() const;
+		std::vector<Linkable> run_implementation(const std::filesystem::path&);
 
 	public:
 		using Toolchain::Toolchain;
