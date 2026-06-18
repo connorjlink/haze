@@ -180,9 +180,6 @@
     <ClCompile Include="source\UndoableRedoable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\VariableStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\WebSocketClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

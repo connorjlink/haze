@@ -271,7 +271,6 @@
     <ClCompile Include="source\Tracking.cpp" />
     <ClCompile Include="source\Type.cpp" />
     <ClCompile Include="source\UndoableRedoable.cpp" />
-    <ClCompile Include="source\VariableStatement.cpp" />
     <ClCompile Include="source\WebSocketClient.cpp" />
     <ClCompile Include="source\WebSocketServer.cpp" />
     <ClCompile Include="source\X86Builder.cpp" />
