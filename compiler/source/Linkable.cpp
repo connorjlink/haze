@@ -1,6 +1,6 @@
 import std;
 
-#include <toolchain/Linkable.h>
+#include <toolchain/models/Linkable.h>
 #include <ir/IntermediateCommand.h>
 #include <symbol/models/Symbol.h>
 
@@ -103,24 +103,24 @@ namespace hz
 
 		for (auto& command : ir)
 		{
-			using enum IntermediateType;
+			using enum IntermediateKind;
 			switch (command->instruction_kind())
 			{
-			case COPY:
-			{
-				const auto copy_command = static_cast<CopyCommand*>(command);
-
-				// remove any copy commands wherefor the source and destination match
-				if (copy_command->destination == copy_command->source)
+				case COPY:
 				{
-					copy_command->marked_for_deletion = true;
-				}
-			} break;
+					const auto copy_command = static_cast<CopyCommand*>(command);
 
-			default:
-			{
-				// command->marked_for_deletion = false;
-			} break;
+					// remove any copy commands wherefor the source and destination match
+					if (copy_command->destination == copy_command->source)
+					{
+						copy_command->marked_for_deletion = true;
+					}
+				} break;
+
+				default:
+				{
+					// command->marked_for_deletion = false;
+				} break;
 			}
 		}
 

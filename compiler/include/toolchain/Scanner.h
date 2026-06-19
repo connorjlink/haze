@@ -14,6 +14,8 @@
 
 namespace hz
 {
+	inline constexpr auto STRING_SCAN = "<inline source>";
+
 	enum struct ScannerKind
 	{
 		PREPROCESSOR,

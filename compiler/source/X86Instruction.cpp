@@ -25,27 +25,27 @@ namespace
 
 namespace hz::x86
 {
-	X86OperandKind ImmediateOperand::otype() const
+	X86OperandKind ImmediateOperand::operand_kind() const
 	{
 		return X86OperandKind::IMMEDIATE;
 	}
 
-	X86OperandKind IndirectOperand::otype() const
+	X86OperandKind IndirectOperand::operand_kind() const
 	{
 		return X86OperandKind::INDIRECT;
 	}
 
-	X86OperandKind RegisterOperand::otype() const
+	X86OperandKind RegisterOperand::operand_kind() const
 	{
 		return X86OperandKind::REGISTER;
 	}
 
-	X86OperandKind RegisterIndirectOperand::otype() const
+	X86OperandKind RegisterIndirectOperand::operand_kind() const
 	{
 		return X86OperandKind::REGISTER_INDIRECT;
 	}
 
-	X86OperandKind RegisterDisplacedOperand::otype() const
+	X86OperandKind RegisterDisplacedOperand::operand_kind() const
 	{
 		return X86OperandKind::REGISTER_DISPLACED;
 	}
@@ -130,7 +130,7 @@ namespace hz::x86
 	ByteRange PopInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -143,7 +143,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("pop", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("pop", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -158,14 +158,14 @@ namespace hz::x86
 	ByteRange MovInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			// dereferencing pointer
 			case INDIRECT:
 			{
 				const auto indirect_destination = AS_INDIRECT_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case REGISTER:
 					{
@@ -184,7 +184,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -194,7 +194,7 @@ namespace hz::x86
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -287,7 +287,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -297,7 +297,7 @@ namespace hz::x86
 			{
 				const auto register_displaced_destination = AS_REGISTER_DISPLACED_OPERAND(destination.get());
 				
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -332,7 +332,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -340,7 +340,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("mov", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -355,13 +355,13 @@ namespace hz::x86
 	ByteRange MovzxInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case REGISTER:
 					{
@@ -381,7 +381,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -389,7 +389,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("movzx", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -404,13 +404,13 @@ namespace hz::x86
 	ByteRange AddInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -482,7 +482,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -490,7 +490,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("add", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -505,13 +505,13 @@ namespace hz::x86
 	ByteRange SubInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -582,7 +582,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -590,7 +590,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("sub", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -605,13 +605,13 @@ namespace hz::x86
 	ByteRange OrInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -682,7 +682,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -690,7 +690,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("or", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -705,13 +705,13 @@ namespace hz::x86
 	ByteRange AndInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -782,7 +782,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -790,7 +790,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("and", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -805,13 +805,13 @@ namespace hz::x86
 	ByteRange XorInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -882,7 +882,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -890,7 +890,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("xor", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -905,7 +905,7 @@ namespace hz::x86
 	ByteRange IncInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -922,7 +922,7 @@ namespace hz::x86
 			
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("inc", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("inc", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -937,7 +937,7 @@ namespace hz::x86
 	ByteRange DecInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -954,7 +954,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("dec", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("dec", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -969,7 +969,7 @@ namespace hz::x86
 	ByteRange SalInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1006,7 +1006,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("sal", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("sal", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1021,7 +1021,7 @@ namespace hz::x86
 	ByteRange SarInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 		case REGISTER:
 		{
@@ -1058,7 +1058,7 @@ namespace hz::x86
 
 		default:
 		{
-			CommonErrors::unsupported_instruction_format("sar", _operand_type_map.at(operand->otype()));
+			CommonErrors::unsupported_instruction_format("sar", _operand_type_map.at(operand->operand_kind()));
 			return {};
 		} break;
 		}
@@ -1073,13 +1073,13 @@ namespace hz::x86
 	ByteRange TestInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case REGISTER:
 					{
@@ -1098,7 +1098,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -1106,7 +1106,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("test", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1121,13 +1121,13 @@ namespace hz::x86
 	ByteRange CmpInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (destination->otype())
+		switch (destination->operand_kind())
 		{
 			case REGISTER:
 			{
 				const auto register_destination = AS_REGISTER_OPERAND(destination.get());
 
-				switch (source->otype())
+				switch (source->operand_kind())
 				{
 					case IMMEDIATE:
 					{
@@ -1198,7 +1198,7 @@ namespace hz::x86
 
 					default:
 					{
-						CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(source->otype()));
+						CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(source->operand_kind()));
 						return {};
 					} break;
 				}
@@ -1206,7 +1206,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(destination->otype()));
+				CommonErrors::unsupported_instruction_format("cmp", _operand_type_map.at(destination->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1630,7 +1630,7 @@ namespace hz::x86
 	ByteRange SeteInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1649,7 +1649,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("sete", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("sete", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1664,7 +1664,7 @@ namespace hz::x86
 	ByteRange SetneInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1683,7 +1683,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setne", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setne", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1698,7 +1698,7 @@ namespace hz::x86
 	ByteRange SetlInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1717,7 +1717,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setl", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setl", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1732,7 +1732,7 @@ namespace hz::x86
 	ByteRange SetleInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1751,7 +1751,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setle", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setle", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1766,7 +1766,7 @@ namespace hz::x86
 	ByteRange SetgInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1785,7 +1785,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setg", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setg", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1800,7 +1800,7 @@ namespace hz::x86
 	ByteRange SetgeInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1819,7 +1819,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setge", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setge", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1834,7 +1834,7 @@ namespace hz::x86
 	ByteRange SetaInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1853,7 +1853,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("seta", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("seta", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1868,7 +1868,7 @@ namespace hz::x86
 	ByteRange SetaeInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1887,7 +1887,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setae", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setae", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1902,7 +1902,7 @@ namespace hz::x86
 	ByteRange SetbInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1921,7 +1921,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setb", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setb", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}
@@ -1936,7 +1936,7 @@ namespace hz::x86
 	ByteRange SetbeInstruction::emit() const
 	{
 		using enum X86OperandKind;
-		switch (operand->otype())
+		switch (operand->operand_kind())
 		{
 			case REGISTER:
 			{
@@ -1955,7 +1955,7 @@ namespace hz::x86
 
 			default:
 			{
-				CommonErrors::unsupported_instruction_format("setbe", _operand_type_map.at(operand->otype()));
+				CommonErrors::unsupported_instruction_format("setbe", _operand_type_map.at(operand->operand_kind()));
 				return {};
 			} break;
 		}

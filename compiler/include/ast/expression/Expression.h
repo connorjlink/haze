@@ -35,10 +35,19 @@ namespace hz
 		using Storage = ExpressionStorage;
 
 	public:
+		Token token;
+
+	public:
 		template<typename Self>
 		bool check_types(this Self&& self)
 		{
 			return self.get_type().is_valid();
+		}
+
+	public:
+		ExpressionBase(const Token& token)
+			: token{ token }
+		{
 		}
 	};
 }

@@ -38,7 +38,7 @@ namespace hz
 
 		if (!value_expression.is_valid())
 		{
-			USE_SAFE(ErrorReporter)->post_error("definitions must result in a constant expression", value_expression->_token);
+			USE_SAFE(ErrorReporter)->post_error("definitions must result in a constant expression", value_expression->token);
 			return nullptr;
 		}
 

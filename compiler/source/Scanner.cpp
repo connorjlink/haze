@@ -6,11 +6,6 @@ import std;
 // Haze Scanner.cpp
 // (c) Connor J. Link. All Rights Reserved.
 
-namespace
-{
-	inline constexpr auto STRING_SCAN = "<inline source>";
-}
-
 namespace hz
 {
 	bool Scanner::eof() const
