@@ -59,27 +59,15 @@ namespace
 
 namespace hz
 {
-	Parser::Parser(std::vector<Token> tokens)
-		: cursor{ 0 }, tokens{ std::move(tokens) }
-	{
-		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
-	}
-
-	Parser::~Parser()
-	{
-		USE_SAFE(ErrorReporter)->close_context();
-	}
-
-
 	Token& Parser::lookbehind()
 	{
-		if (cursor > 0)
+		if (cursor <= 0)
 		{
-			return tokens[cursor - 1];
+			USE_SAFE(ErrorReporter)->post_uncorrectable(
+				"invalid token backtrack", peek());
 		}
-
-		USE_SAFE(ErrorReporter)->post_uncorrectable(
-			"invalid token backtrack", peek());
+		
+		return tokens[cursor - 1];
 	}
 
 	Token& Parser::peek()
@@ -89,13 +77,13 @@ namespace hz
 
 	Token& Parser::lookahead()
 	{
-		if (cursor < tokens.size() - 1)
+		if (cursor >= tokens.size() - 1)
 		{
-			return tokens[cursor + 1];
+			USE_SAFE(ErrorReporter)->post_uncorrectable(
+				"unexpectedly reached the end of file", peek());
 		}
 
-		USE_SAFE(ErrorReporter)->post_uncorrectable(
-			"unexpectedly reached the end of file", peek());
+		return tokens[cursor + 1];
 	}
 
 	Token Parser::consume(TokenKind kind)
@@ -110,7 +98,6 @@ namespace hz
 		auto convert = [&](auto v) -> std::string_view
 		{
 			const auto item = token_map.at(v);
-
 			if (item)
 			{
 				return *item;
@@ -125,6 +112,7 @@ namespace hz
 				convert(kind), ((current.kind == TokenKind::IDENTIFIER || current.kind == TokenKind::INT) 
 					? current.text 
 					: convert(current.kind))), current);
+
 		return current;
 	}
 
@@ -144,22 +132,19 @@ namespace hz
 	ExpressionReference<IdentifierExpression> Parser::parse_identifier_expression()
 	{
 		const auto name_token = consume(TokenKind::IDENTIFIER);
-
-		const auto kind = USE_SAFE(SymbolDatabase)->query_symbol_type(name_token.text, name_token);
-
-
-		return MAKE_IDENTIFIER_EXPRESSION(name_token.text, name_token);
+		
+		return MAKE_IDENTIFIER_EXPRESSION(IdentifierExpression::Kind::UNKNOWN, name_token.text);
 	}
 
-	IntegerLiteralExpression* Parser::parse_integerliteral_expression()
+	ExpressionReference<IntegerLiteralExpression> Parser::parse_integerliteral_expression()
 	{
 		const auto integer_literal_token = consume(TokenKind::INT);
-		const auto& integer_string = integer_literal_token.text;
+		const auto integer_string = integer_literal_token.text;
 
 		BigInteger integer_value{};
 
 		const auto [pointer, error] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
-		if (error != std::errc())
+		if (error != std::errc{})
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
 				"unparseable integer literal `{}`", integer_string), integer_literal_token);
@@ -176,10 +161,9 @@ namespace hz
 	{
 		consume(TokenKind::DOUBLEQUOTE);
 		const auto message_token = fetch_until(TokenKind::DOUBLEQUOTE);
+		consume(TokenKind::DOUBLEQUOTE);
 
-
-
-		return new StringExpression{ message_token.text, message_token };
+		return MAKE_STRING_LITERAL_EXPRESSION(message_token);
 	}
 
 	ExpressionHandle Parser::parse_parenthesis_expression()
@@ -299,7 +283,7 @@ namespace hz
 			return MAKE_INVALID_HANDLE(storage, Expression);
 		}
 
-		return AS_EXPRESSION(infix_expression->copy());
+		return infix_expression;
 	}
 
 	ExpressionHandle Parser::parse_infix_expression(ExpressionHandle left, Precedence minimum_precedence)
@@ -320,7 +304,7 @@ namespace hz
 		{
 			const auto& next = peek();
 
-			if (!::is_binary_operator(next.kind) || precedences.at(next.kind) < minimum_precedence)
+			if (!is_binary_operator(next.kind) || precedences.at(next.kind) < minimum_precedence)
 			{
 				break;
 			}
@@ -333,7 +317,7 @@ namespace hz
 			{
 				const auto& lookahead = peek();
 
-				if (!::is_binary_operator(lookahead.kind) || precedences.at(lookahead.kind) <= precedences.at(next.kind))
+				if (!is_binary_operator(lookahead.kind) || precedences.at(lookahead.kind) <= precedences.at(next.kind))
 				{
 					break;
 				}
@@ -360,5 +344,23 @@ namespace hz
 		} while (true);
 
 		return left;
+	}
+
+
+	void Parser::reload(std::vector<Token> tokens)
+	{
+		this->cursor = 0;
+		this->tokens = std::move(tokens);
+	}
+
+	Parser::Parser(const std::filesystem::path& filepath, const ExpressionStorage& storage)
+		: storage{ storage }
+	{
+		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
+	}
+
+	Parser::~Parser()
+	{
+		USE_SAFE(ErrorReporter)->close_context();
 	}
 }

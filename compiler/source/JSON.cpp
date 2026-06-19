@@ -58,11 +58,11 @@ namespace hz
 		result += '[';
 
 		result += value
-			| TypeHandle get_type(const TypeStorage&) const;::transform([&](const auto& json)
+			| std::ranges::views::transform([&](const auto& json)
 			{
 				return std::visit(*this, json.value, std::ref(result));
 			})
-			| TypeHandle get_type(const TypeStorage&) const;::join_with(", ");
+			| std::ranges::views::join_with(", ");
 
 		result += ']';
 	}
@@ -72,12 +72,12 @@ namespace hz
 		result += '{';
 
 		result += value
-			| TypeHandle get_type(const TypeStorage&) const;::transform([&](const auto& entry)
+			| std::ranges::views::transform([&](const auto& entry)
 			{
 				return std::format("\"{}\": {}", 
 					entry.key, std::visit(*this, entry.value, std::ref(result)));
 			})
-			| TypeHandle get_type(const TypeStorage&) const;::join_with(", ");
+			| std::ranges::views::join_with(", ");
 
 		result += '}';
 	}

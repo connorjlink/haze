@@ -285,7 +285,7 @@ namespace hz
 	// mixin, e.g., MyClass : public InjectService<MyService> { } ... using_service<T>()->some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!
 	template<typename... Ts>
-		requires (std::derived_from<Ts, ServiceTag<Ts>> && ...)
+		requires (std::derived_from<Ts, ServiceTag<Ts>> and ...)
 	struct InjectService : public InjectServiceTag<Ts>...
 	{
 	};
@@ -312,7 +312,7 @@ namespace hz
 	// mixin, e.g., MyClass : public InjectScoped<MyService> { } ... using_scoped<T>()->some_method(), which creates a new resource instance
 	// NOTE: requires a complete type--include prerequisite headers before using!
 	template<typename... Ts>
-		requires (std::derived_from<Ts, ScopedTag<Ts>> && ...)
+		requires (std::derived_from<Ts, ScopedTag<Ts>> and ...)
 	struct InjectScoped : public InjectScopedTag<Ts>...
 	{
 	};
@@ -338,7 +338,7 @@ namespace hz
 	// mixin, e.g., MyClass : public InjectSingleton<MyService> { } ... using_singleton<T>()->some_method()
 	// NOTE: requires a complete type--include prerequisite headers before using!
 	template<typename... Ts>
-		requires (std::derived_from<Ts, SingletonTag<Ts>> && ...)
+		requires (std::derived_from<Ts, SingletonTag<Ts>> and ...)
 	struct InjectSingleton : public InjectSingletonTag<Ts>...
 	{
 	};

@@ -169,7 +169,7 @@ namespace hz
 	// PointerType
 	//////////////////////////////////////////////////////
 
-	Offset PointerType::size()
+	Offset PointerType::size() const
 	{
 		return sizeof(Address);
 	}
@@ -189,7 +189,7 @@ namespace hz
 	{
 		if (!length)
 		{
-			return PointerType::size();
+			return sizeof(Address);
 		}
 
 		return element_type.size() * *length;
@@ -211,9 +211,9 @@ namespace hz
 	// FunctionType
 	//////////////////////////////////////////////////////
 
-	Offset FunctionType::size()
+	Offset FunctionType::size() const
 	{
-		return PointerType::size();
+		return sizeof(Address);
 	}
 
 	bool FunctionType::is_complete() const

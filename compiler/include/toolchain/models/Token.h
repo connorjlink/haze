@@ -90,6 +90,12 @@ namespace hz
 		LINE,
 		DEFINED,
 
+		INTEGER_LITERAL,
+		FLOAT_LITERAL,
+		STRING_LITERAL,
+		WIDE_STRING_LITERAL,
+		CHAR_LITERAL,
+
 		// riscv register set
 		X0,   X1, X2, X3, X4, X5, X6, X7, X8,     X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31,
 		ZERO, RA, SP, GP, TP, T0, T1, T2, S0, FP, S1, A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  S2,  S3,  S4,  S5,  S6,  S7,  S8,  S9,  S10, S11, T3,  T4,  T5,  T6,
@@ -386,12 +392,19 @@ namespace hz
 		std::int32_t line, column;
 	};
 
+	using TokenValue = std::variant
+	<
+		std::monostate,
+		long double,
+		long long int
+	>;
+
 	struct Token
 	{
 		std::string_view text;
 		SourceLocation location;
 		TokenKind kind;
-		std::uint8_t confidence;
+		TokenValue value;
 	};
 
 	// NOTE: intentionally not marked constexpr to avoid errors about dropping qualifiers
@@ -401,7 +414,7 @@ namespace hz
 		.text = "",
 		.location = SourceLocation{ std::filesystem::path{ "unknown" }, 0, -1, -1 },
 		.kind = TokenKind::END,
-		.confidence = 0
+		.value = std::monostate{},
 	};
 
 	inline SourceLocation null_location(const std::filesystem::path& filepath)

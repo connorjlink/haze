@@ -18,7 +18,7 @@ namespace hz
 	public:
 		TypeKind type_kind() const;
 		// NOTE: this is static to allow other classes a convenient way to get platform variables
-		static Offset size();
+		Offset size() const;
 		bool is_complete() const;
 
 	public:

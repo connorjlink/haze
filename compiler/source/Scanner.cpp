@@ -33,7 +33,7 @@ namespace hz
 		return current_context.whereat();
 	}
 
-	std::filesystem::path Scanner::wherein() const
+	const std::filesystem::path& Scanner::wherein() const
 	{
 		return current_context.wherein();
 	}
@@ -120,7 +120,6 @@ namespace hz
 			.text = text,
 			.location = current_context.location,
 			.kind = kind,
-			.confidence = 0,
 		};
 	}
 

@@ -24,11 +24,6 @@ import std;
 
 namespace hz
 {
-	ToolchainKind AssemblerParser::parser_kind() const
-	{
-		return ToolchainKind::ASSEMBLER;
-	}
-
 	ExpressionHandle AssemblerParser::parse_literal()
 	{
 		const auto& first = peek();

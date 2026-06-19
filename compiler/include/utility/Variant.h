@@ -7,7 +7,7 @@
 namespace hz
 {
 	template<template<typename> typename TraitT, typename... Ts>
-		requires (TraitT<Ts>::value && ...)
+		requires (TraitT<Ts>::value and ...)
 	using ConstrainedVariant = std::variant<Ts...>;
 }
 

@@ -126,7 +126,7 @@ namespace hz
 	concept ImplementsMethod = ImplementsMethodSignature<T, MethodT, typename MethodT::FunctionT>::value;
 
 	template<typename T, typename SumT, typename MethodsT, std::size_t... Is>
-	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> && ...);
+	concept SumTupleImplementation = (ImplementsMethod<T, SumT, std::tuple_element_t<Is, MethodsT>> and ...);
 
 	template<typename T, typename SumT, typename MethodsT>
 	concept SumTuple = SumTupleImplementation < T, SumT, MethodsT, std::make_index_sequence<std::tuple_size_v<MethodsT>>{} > ;
@@ -222,12 +222,14 @@ namespace hz
 		{
 			if (!self.is_valid())
 			{
-				USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
-					"invalid sum reference: tag {}, index {}", self.get_tag(), index.index));
+				// cannot use USE_SAFE macro due to this being unavailable in explicit object parameter function
+				using_singleton<ErrorReporter>(&self)->post_uncorrectable(std::format(
+					"invalid sum reference: tag {}, index {}", self.get_tag(), static_cast<IndexType>(self.index.index)));
 			}
 		}
 
-		template<typename Self, typename T, typename StorageT>
+		// NOTE: the following template order is mandatory to deduce template arguments without errors due to compiler bug with 
+		template<typename T, typename StorageT, typename Self>
 		constexpr decltype(auto) get(this Self&& self, StorageT&& storage)
 		{
 			self.template validate_tag<T>();
@@ -235,7 +237,9 @@ namespace hz
 		}
 
 	public:
-		template<typename Self, typename MethodT, typename... ArgumentsTs>
+		// NOTE: the following template order is mandatory to deduce template arguments without errors due to compiler bug with MSVC145
+
+		template<typename MethodT, typename Self, typename... ArgumentsTs>
 		constexpr decltype(auto) call(this Self&& self, ArgumentsTs&&... arguments)
 		{
 			static constinit auto table =
@@ -252,6 +256,12 @@ namespace hz
 		}
 	};
 
+	// required not to have std::initializer_list constructor for std::vector interfere with references/handles when forwarding
+	template<typename T, template<typename> typename SumDispatcherT, typename StorageT, typename... ArgumentsTs>
+	concept IsValidDispatchable = (
+		(not std::same_as<std::remove_cvref_t<ArgumentsTs>, T> and ...)
+		and std::constructible_from<SumDispatcherT<StorageT>, IndexHandle, TagType, ArgumentsTs...>);;
+
 	template<typename StorageT>
 	struct SumDispatcher : public SumDispatcherLite<StorageT>
 	{
@@ -259,7 +269,7 @@ namespace hz
 		StorageT& sum_storage;
 
 	public:
-		template<typename Self, typename T>
+		template<typename T, typename Self>
 		constexpr decltype(auto) get(this Self&& self)
 		{
 			return std::forward<Self>(self).template SumDispatcherLite<StorageT>::template get<T>(
@@ -268,7 +278,7 @@ namespace hz
 
 	public:
 		constexpr SumDispatcher(IndexHandle handle, TagType tag, const StorageT& sum_storage)
-			: SumDispatcherLite<StorageT>{ tag, handle.index, static_cast<bool>(handle.is_valid) }, sum_storage{ sum_storage }
+			: SumDispatcherLite<StorageT>{ handle, tag }, sum_storage{ sum_storage }
 		{
 		}
 	};
@@ -345,8 +355,8 @@ namespace hz
 	public: \
 		methods(SUM_DISPATCH_ENTRY, name##Handle) \
 	public: \
-		constexpr name##SumDispatcher(const StorageT& sum_storage, IndexHandle index, TagType tag) \
-			: SumDispatcher<StorageT>{ sum_storage, index, tag } \
+		constexpr name##SumDispatcher(IndexHandle index, TagType tag, const StorageT& sum_storage) \
+			: SumDispatcher<StorageT>{ index, tag, sum_storage } \
 		{ \
 		} \
 	}; \
@@ -392,7 +402,7 @@ namespace hz
 			return this->index.tag;
 		}
 
-	private:
+	public:
 		template<typename T>
 		constexpr void validate_tag() const
 		{
@@ -402,14 +412,15 @@ namespace hz
 			// runtime error
 			if (this->index.tag != expected_tag)
 			{
-				this->USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
+				USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 					"invalid sum reference: expected tag {}, actual tag {}, index {}",
-					expected_tag, this->index.tag, this->index.index));
+						expected_tag, this->index.tag, static_cast<IndexType>(this->index.index)));
 			}
 		}
 
 	public:
 		template<typename... ArgumentsTs>
+			requires IsValidDispatchable<SumHandle, SumDispatcherT, StorageT, ArgumentsTs...>
 		constexpr SumHandle(IndexType index, TagType tag, ArgumentsTs&&... arguments)
 			: SumDispatcherT<StorageT>{ IndexHandle{ index, true }, tag, std::forward<ArgumentsTs>(arguments)... }
 		{
@@ -417,6 +428,7 @@ namespace hz
 		}
 
 		template<typename... ArgumentsTs>
+			requires IsValidDispatchable<SumHandle, SumDispatcherT, StorageT, ArgumentsTs...>
 		constexpr SumHandle(ArgumentsTs&&... arguments)
 			: SumDispatcherT<StorageT>{ IndexHandle{ 0, false }, TagType{ 0 }, std::forward<ArgumentsTs>(arguments)... }
 		{
@@ -442,15 +454,19 @@ namespace hz
 
 	public:
 		template<typename... ArgumentsTs>
+			requires IsValidDispatchable<SumReference, SumDispatcherT, StorageT, ArgumentsTs...>
 		constexpr SumReference(IndexType index, ArgumentsTs&&... arguments)
-			: SumDispatcherT<StorageT>{ IndexHandle{ index, true }, get_tag(), std::forward<ArgumentsTs>(arguments)...}
+			: SumDispatcherT<StorageT>{ IndexHandle{ index, true }, get_tag(), std::forward<ArgumentsTs>(arguments)... }
 		{
+			// valid reference
 		}
 
 		template<typename... ArgumentsTs>
+			requires IsValidDispatchable<SumReference, SumDispatcherT, StorageT, ArgumentsTs...>
 		constexpr SumReference(ArgumentsTs&&... arguments)
-			: SumDispatcherT<StorageT>{ IndexHandle{ 0, false }, get_tag(), std::forward<ArgumentsTs>(arguments)...}
+			: SumDispatcherT<StorageT>{ IndexHandle{ 0, false }, get_tag(), std::forward<ArgumentsTs>(arguments)... }
 		{
+			// invalid reference
 		}
 	};
 

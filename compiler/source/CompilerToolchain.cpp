@@ -21,8 +21,8 @@ namespace hz
 		USE_SAFE(ErrorReporter)->open_context(filepath, "compiling");
 
 		const auto parse_task = REQUIRE_SAFE(JobManager)->begin_job("parsing");
-
-		REQUIRE_SAFE(Parser)->reload(tokens.at(filepath), filepath);
+		
+		REQUIRE_SAFE(Parser)->reload(tokens.at(filepath));
 		auto ast = REQUIRE_SAFE(Parser)->parse();
 
 		REQUIRE_SAFE(JobManager)->end_job(parse_task);

@@ -63,7 +63,7 @@ namespace hz
 		};
 
 	public:
-		std::string name;
+		std::string_view name;
 		Kind identifier_kind;
 
 	public:
@@ -75,7 +75,7 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		IdentifierExpression(Kind identifier_kind, const std::string& name)
+		IdentifierExpression(Kind identifier_kind, std::string_view name)
 			: identifier_kind{ identifier_kind }, name{ name }
 		{
 		}
@@ -127,7 +127,7 @@ namespace hz
 	struct StringLiteralExpression : public ExpressionBase
 	{
 	public:
-		std::string value;
+		std::string_view value;
 
 	public:
 		ExpressionKind expression_kind() const;
@@ -138,7 +138,7 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		StringLiteralExpression(const std::string& value)
+		StringLiteralExpression(std::string_view value)
 			: value{ value }
 		{
 		}

@@ -96,7 +96,7 @@ namespace hz
 		char current() const;
 		char lookahead() const;
 		std::size_t whereat() const;
-		std::filesystem::path wherein() const;
+		const std::filesystem::path& wherein() const;
 		bool eof() const;
 
 	protected:
@@ -160,6 +160,14 @@ namespace hz
 		inline static bool my_isdigit(char c)
 		{
 			return !!std::isdigit(static_cast<int>(c));
+		}
+		inline static bool my_isoctal(char c)
+		{
+			return c >= '0' && c <= '7';
+		}
+		inline static bool my_isbinary(char c)
+		{
+			return c == '0' || c == '1';
 		}
 		inline static bool my_isalpha(char c)
 		{

@@ -26,7 +26,7 @@ namespace hz
 		, public InjectSingleton<ErrorReporter, SymbolDatabase, SymbolExporter, CommandLineOptions>
 	{
 	protected:
-		std::size_t cursor;
+		std::size_t cursor = 0;
 		std::vector<Token> tokens;
 		const ExpressionStorage& storage;
 
@@ -56,7 +56,6 @@ namespace hz
 		ExpressionHandle parse_infix_expression(ExpressionHandle, Precedence);
 		ExpressionHandle parse_generic_expression();
 
-
 		template<typename Self>
 		std::vector<typename Self::NodeType> parse_generic_expression(this Self&& self)
 		{
@@ -71,7 +70,10 @@ namespace hz
 		}
 
 	public:
-		Parser(std::vector<Token>, const ExpressionStorage&);
+		void reload(std::vector<Token>);
+
+	public:
+		Parser(const std::filesystem::path&, const ExpressionStorage&);
 		~Parser();
 	};
 }

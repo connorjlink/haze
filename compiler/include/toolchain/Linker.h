@@ -25,7 +25,7 @@ namespace hz
 		std::unordered_map<std::string_view, Linkable> linkables;
 
 	public:
-		void reload(std::vector<Linkable>);
+		void reload(std::unordered_map<std::string_view, Linkable>);
 		// NOTE: the linker does not support generating fat binaries, so a single architecture is sufficient to uniquely identify it
 		ArchitectureKind architecture_kind() const;
 		bool optimize();

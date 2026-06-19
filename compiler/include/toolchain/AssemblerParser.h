@@ -21,10 +21,6 @@ namespace hz
 		Address base;
 
 	public:
-		virtual ArchitectureKind ctype() const = 0;;
-		virtual CommandReference<InstructionCommand> parse_instruction_command() const = 0;
-		virtual Register parse_register() const = 0;
-
 		CommandHandle parse_dotdefine_command() const;
 
 		std::vector<NodeType> parse() const
@@ -37,8 +33,8 @@ namespace hz
 		}
 
 	public:
-		AssemblerParser(std::vector<Token> tokens, const ExpressionStorage& storage, Address base)
-			: Parser{ std::move(tokens), storage }, base{ base }
+		AssemblerParser(const std::filesystem::path& filepath, const ExpressionStorage& storage, Address base)
+			: Parser{ filepath, storage }, base{ base }
 		{
 		}
 	};

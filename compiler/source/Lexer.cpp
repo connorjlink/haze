@@ -7,8 +7,274 @@ import std;
 
 #define APPEND_TOKEN(kind, raw) tokens.emplace_back(raw, get_context().location, kind, 0)
 
+namespace
+{
+	bool is_newline(char c)
+	{
+		return c == '\n' || c == '\r';
+	}
+}
+
 namespace hz
 {
+	std::string_view Lexer::read_integer_literal_suffix()
+	{
+		// NOTE: mixing capitalization is not valid in C99
+		static const std::unordered_set<std::string_view> suffixes
+		{
+			"u", "U", "l", "L", "ul", "UL", "lu", "LU",
+			"ull", "ULL", "llu", "LLU",
+			"f", "F", "l", "L"
+		};
+
+		const auto candidate = substring_while([](auto c) { return my_isalpha(c); });
+
+		if (!suffixes.contains(candidate))
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"invalid integer literal suffix `{}`", candidate), forge_token());
+			return std::string_view{};
+		}
+
+		return candidate;
+	}
+
+	std::string_view Lexer::read_float_literal_suffix()
+	{
+		static const std::unordered_set<std::string_view> suffixes
+		{
+			"f", "F", "l", "L"
+		};
+
+		const auto candidate = substring_while([](auto c) { return my_isalpha(c); });
+		
+		if (!suffixes.contains(candidate))
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"invalid float literal suffix `{}`", candidate), forge_token());
+			return std::string_view{};
+		}
+
+		return candidate;
+	}
+
+	Token Lexer::expect_identifier()
+	{
+		if (!my_isidentifierfirst(current()))
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format("expected identifier, got `{}`", current()), forge_token());
+			return error_token("expected identifier");
+		}
+
+		const auto identifier = read_identifier();
+		return Token
+		{
+			.text = identifier,
+			.location = get_context().location,
+			.kind = TokenKind::IDENTIFIER,
+		};
+	}
+
+	Token Lexer::expect_integer_literal()
+	{
+		if (!my_isdigit(current()))
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format("expected integer literal, got `{}`", current()), forge_token());
+			return error_token("expected integer literal");
+		}
+
+		auto integer_literal = std::string_view{};
+
+		switch (lookahead())
+		{
+			case 'x':
+			{
+				// hexadecimal
+				advance(2);
+				integer_literal = substring_while(my_ishex);
+
+			} break;
+
+			case 'o':
+			{
+				// octal
+				advance(2);
+				integer_literal = substring_while(my_isoctal);
+			} break;
+
+			case 'b':
+			{
+				// binary
+				advance(2);
+				integer_literal = substring_while(my_isbinary);
+			} break;
+
+			default:
+			{
+				// decimal
+				integer_literal = substring_while(my_isdigit);
+			} break;
+		}
+
+		const auto suffix = read_integer_literal_suffix();
+		integer_literal = std::string_view{ integer_literal.data(), integer_literal.size() + suffix.size() };
+
+		return Token
+		{
+			.text = integer_literal,
+			.location = get_context().location,
+			.kind = TokenKind::INTEGER_LITERAL,
+		};
+	}
+
+	Token Lexer::expect_float_literal()
+	{
+		const auto start = &get_context().source[get_context().whereat()];
+		auto length = 0uz;
+
+		if (!my_isdigit(current()) && current() != '.')
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format("expected float literal, got `{}`", current()), forge_token());
+			return error_token("expected float literal");
+		}
+
+		auto is_hex = false;
+		if (current() == '0' && (lookahead() == 'x' || lookahead() == 'X'))
+		{
+			is_hex = true;
+			advance(2);
+			length += 2;
+		}
+
+		auto is_valid_digit = [&](char c)
+		{
+			return is_hex ? my_ishex(c) : my_isdigit(c);
+		};
+
+		auto count = 0uz;
+
+		while (is_valid_digit(current()))
+		{
+			advance();
+			length++;
+			count++;
+		}
+
+		if (current() == '.')
+		{
+			advance();
+			length++;
+
+			while (is_valid_digit(current()))
+			{
+				advance();
+				length++;
+				count++;
+			}
+		}
+
+		if (count == 0)
+		{
+			USE_SAFE(ErrorReporter)->post_error("float literal must contain at least one digit", forge_token());
+			return error_token("invalid float literal");
+		}
+
+		const auto exp_lower = is_hex ? 'p' : 'e';
+		const auto exp_upper = is_hex ? 'P' : 'E';
+
+		if (current() != exp_lower && current() != exp_upper && is_hex)
+		{
+			USE_SAFE(ErrorReporter)->post_error("hexadecimal floating constants require an exponent", forge_token());
+			return error_token("missing exponent in hex float");
+		}
+
+		if (current() == exp_lower || current() == exp_upper)
+		{
+			advance();
+			length++;
+
+			if (current() == '+' || current() == '-')
+			{
+				advance();
+				length++;
+			}
+
+			if (!my_isdigit(current()))
+			{
+				USE_SAFE(ErrorReporter)->post_error(std::format("expected exponent digits but got `{}`", current()), forge_token());
+				return error_token("expected exponent digits");
+			}
+
+			while (my_isdigit(current()))
+			{
+				advance();
+				length++;
+			}
+		}
+
+		const auto suffix = read_float_literal_suffix();
+		length += suffix.size();
+
+		return Token
+		{
+			.text = std::string_view{ start, length },
+			.location = get_context().location,
+			.kind = TokenKind::FLOAT_LITERAL,
+		};
+	}
+
+	Token Lexer::expect_string_literal()
+	{
+		expect('"');
+
+		// will internally handle \" escape sequences
+		const auto string_literal = substring_while([](auto c) { return c != '"' && !is_newline(c); });
+
+		expect('"');
+
+		return Token
+		{
+			.text = string_literal,
+			.location = get_context().location,
+			.kind = TokenKind::STRING_LITERAL,
+		};
+	}
+
+	Token Lexer::expect_wide_string_literal()
+	{
+		expect('L');
+
+		expect('"');
+		// will internally handle \" escape sequences
+		const auto string_literal = substring_while([](auto c) { return c != '"' && !is_newline(c); });
+		expect('"');
+		
+		return Token
+		{
+			.text = string_literal,
+			.location = get_context().location,
+			.kind = TokenKind::WIDE_STRING_LITERAL,
+		};
+	}
+
+	Token Lexer::expect_character_literal()
+	{
+		expect('\'');
+
+		// will internally handle \' escape sequences
+		const auto char_literal = substring_while([](auto c) { return c != '\'' && !is_newline(c); });
+
+		expect('\'');
+
+		return Token
+		{
+			.text = char_literal,
+			.location = get_context().location,
+			.kind = TokenKind::CHAR_LITERAL,
+		};
+	}
+
+
 	ScannerKind Lexer::scanner_kind() const
 	{
 		return ScannerKind::LEXER;
@@ -16,7 +282,7 @@ namespace hz
 
 	std::vector<Token> Lexer::lex()
 	{
-		std::vector<Token> tokens{};
+		auto tokens = std::vector<Token>{};
 
 		while (!eof())
 		{
@@ -30,15 +296,6 @@ namespace hz
 			{
 				advance();
 			}
-
-			else if (my_isdigit(here))
-			{
-				const auto rest = substring_while(my_isdigit);
-				APPEND_TOKEN(INT, rest);
-
-				advance(rest.length()); // number
-			}
-
 			else if (here == '/')
 			{
 				if (there == '/')
@@ -54,71 +311,24 @@ namespace hz
 				APPEND_TOKEN(SLASH, EXPAND(std::string_view{ &here, 1 }));
 #undef EXPAND
 
-				advance(); // /
+				advance();
 			}
-
-			// NOTE: preprocessor will have already tried to expand macros
-			// hexadecimal integer literal
-			else if (here == '$')
-			{
-				advance(); // dollar sign
-				
-				const auto lexeme = substring_while(my_ishex);
-
-				undo(); // rewind to dollar sign
-
-				std::int32_t number{};
-				auto [pointer, ec] = std::from_chars(lexeme.data(), lexeme.data() + lexeme.size(), number, 16);
-
-				if (ec != std::errc())
-				{
-					USE_SAFE(ErrorReporter)->post_error(std::format(
-						"unparseable integer literal `{}`", lexeme), forge_token(lexeme));
-					advance(); // dollar sign
-					advance(lexeme.length()); // number
-					continue;
-				}
-
-				// convert back to a string to apply regional formatting for error reporting
-				APPEND_TOKEN(INT, std::format("{}", number));
-
-				advance(); // dollar sign
-				advance(lexeme.length()); // number
-			}
-
 			else if (here == '"')
+			{
+				
+			}
+			else if (here == '\'')
 			{
 				advance(); // opening quote
 
-				// NOTE: does not allow for \" escape sequences!
-				const auto string_literal = substring_while([](auto c) { return c != '"'; });
+				const auto char_literal = substring_while([](auto c) { return c != '\''; });
 
 				undo(); // rewind to opening quote
-				APPEND_TOKEN(STRING, string_literal);
+				APPEND_TOKEN(CHAR_LITERAL, char_literal);
 
 				advance(); // opening quote
 				advance(); // closing quote
 			}
-
-			else if (here == '.')
-			{
-				const auto lexeme = substring_while(my_isalnum);
-				const auto search = token_map.at(std::format(".{}", lexeme));
-
-				if (search)
-				{
-					APPEND_TOKEN(*search, lexeme);
-				}
-
-				else
-				{
-					APPEND_TOKEN(IDENTIFIER, lexeme);
-				}
-
-				advance(); // .
-				advance(lexeme.length()); // directive
-			}
-
 			else if (my_isidentifierfirst(here))
 			{
 				const auto lexeme = read_identifier();
@@ -128,7 +338,6 @@ namespace hz
 				{
 					APPEND_TOKEN(search.value(), lexeme);
 				}
-
 				else
 				{
 					APPEND_TOKEN(IDENTIFIER, lexeme);
@@ -136,41 +345,36 @@ namespace hz
 
 				advance(lexeme.length());
 			}
-
 			else if (here == '!')
 			{
 				if (there == '=')
 				{
 					const auto lexeme = "!=";
 					APPEND_TOKEN(EXCLAMATIONEQUALS, lexeme);
-					advance(2); // !=
+					advance(2);
 				}
-
 				else
 				{
 					const auto lexeme = "!";
 					APPEND_TOKEN(EXCLAMATION, lexeme);
-					advance(); /// !
+					advance();
 				}
 			}
-
 			else if (here == '=')
 			{
 				if (there == '=')
 				{
 					const auto lexeme = "==";
 					APPEND_TOKEN(EQUALSEQUALS, lexeme);
-					advance(2); // ==
+					advance(2);
 				}
-
 				else
 				{
 					const auto lexeme = "=";
 					APPEND_TOKEN(EQUALS, lexeme);
-					advance(); // =
+					advance();
 				}
 			}
-
 			else
 			{
 				const auto current_string = std::string{ here };

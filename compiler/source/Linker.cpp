@@ -7,9 +7,9 @@ import std;
 
 namespace hz
 {
-	void Linker::reload(const std::vector<Linkable>& linkables)
+	void Linker::reload(std::unordered_map<std::string_view, Linkable> linkables)
 	{
-		this->linkables = linkables;
+		this->linkables = std::move(linkables);
 	}
 
 	#pragma message("TODO: when writing the linker, be sure to open and close an error context per each filepath to get proper error message correlation")

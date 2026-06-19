@@ -33,7 +33,6 @@ namespace
 		result.emplace_back("type", "function");
 		result.emplace_back("text", function.format_signature());
 		result.emplace_back("location", export_location(token));
-		result.emplace_back("confidence", token.confidence);
 
 		return result;
 	}
