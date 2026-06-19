@@ -21,7 +21,9 @@ namespace hz
 		Address base;
 
 	public:
-		CommandHandle parse_dotdefine_command() const;
+		CommandHandle parse_dotdefine_command();
+		CommandHandle parse_dotorg_command();
+		CommandHandle parse_dotglobal_command();
 
 		std::vector<NodeType> parse() const
 		{

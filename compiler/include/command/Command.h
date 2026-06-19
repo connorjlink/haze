@@ -18,7 +18,9 @@ namespace hz
 
 	FORWARD_DECLARE_SUM(Command)
 
-#define COMMAND_AST_METHODS BASE_AST_METHODS
+#define COMMAND_AST_METHODS(X, handlet) \
+	BASE_AST_METHODS(X, handlet) \
+	X(command_kind, CommandKind)
 
 	DEFINE_SUM(Command, COMMAND_AST_METHODS)
 
@@ -39,10 +41,6 @@ namespace hz
 			: offset{}, token{ token }
 		{
 		}
-
-	public:
-		template<typename Self>
-		CommandKind command_kind(this Self&&);
 	};
 }
 
@@ -51,20 +49,23 @@ namespace hz
 	struct LabelCommand : public CommandBase
 	{
 	private:
-		std::string label;
+		std::string_view label;
 		Address resolved_address;
 
 	public:
-		LabelCommand(const std::string& label, const Token& token)
-			: CommandBase{ token }, label{ label }
-		{
-		}
-
-	public:
+		CommandKind command_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
+
+	public:
+		LabelCommand(std::string_view label, const Token& token)
+			: CommandBase{ token }, label{ label }
+		{
+		}
 	};
 #define MAKE_LABEL_COMMAND(label, token) LabelCommand{ label, token }
 
@@ -72,25 +73,27 @@ namespace hz
 	{
 	public:
 		ByteRange object_code;
-		std::string branch_target;
+		std::string_view branch_target;
 		bool marked_for_deletion;
-
-	public:
-		InstructionCommand() = delete;
-		InstructionCommand(const Token&, const ByteRange&, const std::string& = "");
-
+	
 	public:
 		inline std::size_t length() const
 		{
 			return object_code.size();
 		}
 
-
 	public:
+		CommandKind command_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
+
+	public:
+		InstructionCommand() = delete;
+		InstructionCommand(const Token&, const ByteRange&, std::string_view = "");
 	};
 #define MAKE_INSTRUCTION_COMMAND(token, object_code, branch_target) InstructionCommand{ token, object_code, branch_target }
 
@@ -100,16 +103,19 @@ namespace hz
 		Address address;
 
 	public:
-		DotOrgCommand(Address address, const Token& token)
-			: CommandBase{ token }, address{ address }
-		{
-		}
-
-	public:
+		CommandKind command_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
+
+	public:
+		DotOrgCommand(Address address, const Token& token)
+			: CommandBase{ token }, address{ address }
+		{
+		}
 	};
 #define MAKE_DOTORG_COMMAND(address, token) DotOrgCommand{ address, token }
 
@@ -119,16 +125,19 @@ namespace hz
 		ByteRange bytes;
 
 	public:
-		DotByteCommand(const ByteRange& bytes, const Token& token)
-			: CommandBase{ token }, bytes{ bytes }
-		{
-		}
-
-	public:
+		CommandKind command_kind() const;
 		std::string format(std::uint32_t) const;
 		void generate(const Storage&) const;
 		CommandHandle evaluate(const Storage&, Context&) const;
 		CommandHandle optimize(const Storage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
+
+	public:
+		DotByteCommand(const ByteRange& bytes, const Token& token)
+			: CommandBase{ token }, bytes{ bytes }
+		{
+		}
 	};
 #define MAKE_DOTBYTE_COMMAND(bytes, token) DotbyteCommand{ bytes, token }
 
@@ -153,24 +162,6 @@ namespace hz
 		using Type = CommandSumImplementation::Type;
 		using Anchor = CommandSumImplementation::Anchor;
 	};
-
-
-	template<typename Self>
-	CommandKind CommandBase::command_kind(this Self&& self)
-	{
-		switch (self.tag_type())
-		{
-#define X(enumerator, type, name) case TypeIndexV<type, typename CommandStorage::Type>: return CommandKind::enumerator;
-			COMMAND_KINDS(X)
-#undef X
-		}
-
-		// error recovery does not care about command kind
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"invalid command tag `{}`", self.tag_type()), self.token);
-
-		return CommandKind::LABEL;
-	}
 }
 
 #endif

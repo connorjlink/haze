@@ -59,6 +59,8 @@ namespace hz
 		void generate(const DeclarationStorage&) const;
 		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
 		DeclarationHandle optimize(const DeclarationStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		FunctionDeclaration(const Token& token, TypeReference<FunctionType> type, std::vector<std::string> formal_parameters)
@@ -80,6 +82,8 @@ namespace hz
 		void generate(const DeclarationStorage&) const;
 		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
 		DeclarationHandle optimize(const DeclarationStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		VariableDeclaration(const Token& token, TypeHandle type, ExpressionHandle initializer)
@@ -100,6 +104,8 @@ namespace hz
 		void generate(const DeclarationStorage&) const;
 		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
 		DeclarationHandle optimize(const DeclarationStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		StructOrUnionDeclaration(const Token& token, TypeReference<StructOrUnionType> type)
@@ -120,6 +126,8 @@ namespace hz
 		void generate(const DeclarationStorage&) const;
 		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
 		DeclarationHandle optimize(const DeclarationStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		EnumDeclaration(const Token& token, TypeReference<EnumType> type)
@@ -140,6 +148,8 @@ namespace hz
 		void generate(const DeclarationStorage&) const;
 		DeclarationHandle evaluate(const DeclarationStorage&, Context&) const;
 		DeclarationHandle optimize(const DeclarationStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		TypedefDeclaration(const Token& token, TypeReference<TypedefNameType> type)

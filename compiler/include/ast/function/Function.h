@@ -73,6 +73,8 @@ namespace hz
 		void generate(const Storage&) const;
 		StatementHandle evaluate(const Storage&, Context&) const;
 		StatementHandle optimize(const Storage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const Storage&) const;
 
 	public:

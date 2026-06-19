@@ -16,6 +16,7 @@ namespace hz
 		COLON,
 		COMMA,
 		EQUALS,
+		PERIOD,
 
 		POUND, POUNDPOUND,
 
@@ -151,6 +152,7 @@ namespace hz
 		bimap_t{ S(";"), TokenKind::SEMICOLON },
 		bimap_t{ S(":"), TokenKind::COLON },
 		bimap_t{ S(","), TokenKind::COMMA },
+		bimap_t{ S("."), TokenKind::PERIOD },
 		bimap_t{ S("~"), TokenKind::TILDE },
 		bimap_t{ S("!"), TokenKind::EXCLAMATION },
 		bimap_t{ S("\'"), TokenKind::QUOTE },

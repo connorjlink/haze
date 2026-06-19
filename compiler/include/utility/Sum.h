@@ -224,7 +224,7 @@ namespace hz
 			{
 				// cannot use USE_SAFE macro due to this being unavailable in explicit object parameter function
 				using_singleton<ErrorReporter>(&self)->post_uncorrectable(std::format(
-					"invalid sum reference: tag {}, index {}", self.get_tag(), static_cast<IndexType>(self.index.index)));
+					"invalid sum reference: tag {}, index {}", self.get_tag(), static_cast<IndexType>(self.index.index)), NULL_TOKEN);
 			}
 		}
 
@@ -414,7 +414,7 @@ namespace hz
 			{
 				USE_SAFE(ErrorReporter)->post_uncorrectable(std::format(
 					"invalid sum reference: expected tag {}, actual tag {}, index {}",
-						expected_tag, this->index.tag, static_cast<IndexType>(this->index.index)));
+						expected_tag, this->index.tag, static_cast<IndexType>(this->index.index)), NULL_TOKEN);
 			}
 		}
 

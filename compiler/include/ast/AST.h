@@ -76,7 +76,9 @@ namespace hz
 	X(format,   std::string) \
 	X(generate, void) \
 	X(evaluate, ASTTask) \
-	X(optimize, handlet)
+	X(optimize, handlet) \
+	X(is_pure, bool) \
+	X(is_constant, bool)
 
 	// expose a strict polymorphic interface for AST nodes, including external data like IR
 	template<typename AnchorT, typename HandleT>

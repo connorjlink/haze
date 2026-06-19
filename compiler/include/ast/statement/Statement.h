@@ -71,6 +71,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		NullStatement(const Token& token)
@@ -91,6 +93,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		ExpressionStatement(const Token& token, ExpressionHandle expression)
@@ -114,6 +118,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		ReturnStatement(const Token& token, std::string_view enclosing_function, ExpressionHandle expression)
@@ -136,6 +142,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		IfStatement(const Token& token, ExpressionHandle condition, StatementHandle if_body, StatementHandle else_body)
@@ -157,6 +165,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		WhileStatement(const Token& token, ExpressionHandle condition, StatementHandle body)
@@ -178,6 +188,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		DoStatement(const Token& token, ExpressionHandle condition, StatementHandle body)
@@ -201,6 +213,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		ForStatement(const Token& token, StatementHandle initialization, ExpressionHandle condition, ExpressionHandle increment, StatementHandle body)
@@ -221,6 +235,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 	
 	public:
 		GotoStatement(const Token& token, std::string_view label)
@@ -238,6 +254,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		ContinueStatement(const Token& token)
@@ -255,6 +273,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		BreakStatement(const Token& token)
@@ -284,6 +304,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		SwitchStatement(const Token& token, ExpressionHandle condition, std::vector<Case> cases, StatementHandle fallback)
@@ -304,6 +326,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		CompoundStatement(const Token& token, std::vector<StatementHandle> substatements)
@@ -325,6 +349,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		LabeledStatement(const Token& token, std::string_view label, StatementHandle statement)
@@ -345,6 +371,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		DeclarationStatement(const Token& token, DeclarationHandle declaration)
@@ -367,6 +395,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		StatementHandle optimize(const StatementStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 
 	public:
 		InlineAssemblyStatement(const Token& token, std::vector<CommandHandle> commands)

@@ -14,9 +14,8 @@ namespace hz
 	struct RISCVAssemblerParser : public AssemblerParser
 	{
 	public:
-		ArchitectureKind ctype() const final override;
-		CommandReference<InstructionCommand> parse_instruction_command() const final override;
-		Register parse_register() const final override;
+		CommandReference<InstructionCommand> parse_instruction_command() const;
+		Register parse_register() const;
 
 	public:
 		using AssemblerParser::AssemblerParser;

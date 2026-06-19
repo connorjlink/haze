@@ -24,52 +24,19 @@ import std;
 
 namespace hz
 {
-	ExpressionHandle AssemblerParser::parse_literal()
+	CommandHandle AssemblerParser::parse_dotdefine_command()
 	{
-		const auto& first = peek();
-
-		if (first.kind == TokenKind::IDENTIFIER)
-		{
-			const auto& label_command_token = first;
-			consume(TokenKind::IDENTIFIER);
-
-			return new IdentifierExpression{ label_command_token.text, label_command_token };
-		}
-
-		const auto literal_expression = parse_expression_optimized();
-		ASSERT_IS_INTEGER_LITERAL(literal_expression);
-
-		const auto address = AS_INTEGER_LITERAL_EXPRESSION(literal_expression)->value;
-		ASSERT_IN_RANGE(integer_literal_raw(address), EI(std::intmax_t{ 0 }), EI(std::uintmax_t{ NATIVE_UMAX }), 0, static_cast<std::uint64_t>(NATIVE_UMAX));
-
-		return new IntegerLiteralExpression{ address, literal_expression->_token };
-	}
-
-	Node* Parser::parse_dotdefine_command()
-	{
-		consume(TokenKind::DOTDEFINE);
-
-		TypeHandle kind = nullptr;
-
-		if (ptype() == ParserType::COMPILER)
-		{
-			auto compiler_parser = AS_COMPILER_PARSER(this);
-			kind = compiler_parser->parse_type();
-		}
-
-		else
-		{
-			// default to unsigned 32 bits non-compiler workloads since we don't have the machinery for type resolution otherwise
-			kind = new IntType{ TypeQualifier::CONST, TypeSignedness::UNSIGNED, IntTypeKind::INT32, TypeStorage::VALUE };
-		}
+		consume(TokenKind::PERIOD);
+		consume(TokenKind::DEFINE);
 
 		const auto identifier_expression = parse_identifier_expression();
+		
 		consume(TokenKind::EQUALS);
 
 		// if the optimized value is not a constant expression, it isn't a valid definition
 		const auto value_expression = parse_expression_optimized();
 
-		if (value_expression->etype() != ExpressionType::INTEGER_LITERAL)
+		if (!value_expression.is_valid())
 		{
 			USE_SAFE(ErrorReporter)->post_error("definitions must result in a constant expression", value_expression->_token);
 			return nullptr;

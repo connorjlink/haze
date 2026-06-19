@@ -72,6 +72,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -93,6 +95,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -114,6 +118,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -135,6 +141,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -156,6 +164,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -177,6 +187,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -212,6 +224,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -233,6 +247,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -255,6 +271,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -277,6 +295,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -299,6 +319,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -321,6 +343,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -351,6 +375,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -386,6 +412,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -408,6 +436,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -429,6 +459,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -450,6 +482,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -471,6 +505,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -492,6 +528,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -514,6 +552,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -537,6 +577,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -558,6 +600,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -579,6 +623,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -600,6 +646,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ASTTask evaluate(const VariableStorage&, Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -635,6 +683,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -657,6 +707,8 @@ namespace hz
 		void generate(const ExpressionStorage&) const;
 		ExpressionHandle evaluate(const ExpressionStorage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -679,6 +731,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -701,6 +755,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -723,6 +779,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -745,6 +803,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -767,6 +827,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -789,6 +851,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -811,6 +875,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -833,6 +899,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -855,6 +923,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -877,6 +947,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -899,6 +971,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -921,6 +995,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -943,6 +1019,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -965,6 +1043,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -987,6 +1067,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1009,6 +1091,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1032,6 +1116,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1055,6 +1141,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1078,6 +1166,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1101,6 +1191,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1124,6 +1216,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1147,6 +1241,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1170,6 +1266,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1193,6 +1291,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1216,6 +1316,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1239,6 +1341,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1262,6 +1366,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1285,6 +1391,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
@@ -1306,6 +1414,8 @@ namespace hz
 		void generate(const CommandStorage&) const;
 		ExpressionHandle evaluate(const Storage&, const Context&) const;
 		ExpressionHandle optimize(const ExpressionStorage&) const;
+		bool is_pure() const;
+		bool is_constant() const;
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
