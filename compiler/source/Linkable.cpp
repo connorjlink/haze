@@ -103,7 +103,7 @@ namespace hz
 
 		for (auto& command : ir)
 		{
-			using enum IntermediateKind;
+			using enum IntermediateCommandKind;
 			switch (command->instruction_kind())
 			{
 				case COPY:

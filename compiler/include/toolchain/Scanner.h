@@ -147,39 +147,39 @@ namespace hz
 		}
 
 	protected:
-		inline static bool my_isidentifierfirst(char c)
+		static bool my_isidentifierfirst(char c)
 		{
 			return std::isalpha(c) || c == '_';
 		}
-		inline static bool my_isidentifier(char c)
+		static bool my_isidentifier(char c)
 		{
 			return std::isalnum(c) || c == '_';
 		}
-		inline static bool my_isspace(char c)
+		static bool my_isspace(char c)
 		{
 			return !!std::isspace(static_cast<int>(c));
 		}
-		inline static bool my_isdigit(char c)
+		static bool my_isdigit(char c)
 		{
 			return !!std::isdigit(static_cast<int>(c));
 		}
-		inline static bool my_isoctal(char c)
+		static bool my_isoctal(char c)
 		{
 			return c >= '0' && c <= '7';
 		}
-		inline static bool my_isbinary(char c)
+		static bool my_isbinary(char c)
 		{
 			return c == '0' || c == '1';
 		}
-		inline static bool my_isalpha(char c)
+		static bool my_isalpha(char c)
 		{
 			return !!std::isalpha(static_cast<int>(c));
 		}
-		inline static bool my_isalnum(char c)
+		static bool my_isalnum(char c)
 		{
 			return !!std::isalnum(static_cast<int>(c));
 		}
-		inline static bool my_ishex(char c)
+		static bool my_ishex(char c)
 		{
 			return !!std::isdigit(static_cast<int>(c)) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 		}

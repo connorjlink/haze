@@ -168,7 +168,7 @@ namespace hz
 		using Anchor = std::tuple_element_t<0, Type>;
 
 		template<typename T>
-		inline static constexpr auto Index = TypeIndexV<T, Type>;
+		inline constexpr auto Index = TypeIndexV<T, Type>;
 	};
 
 	template<template<typename> typename MethodsT, typename TypeListT>

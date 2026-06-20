@@ -52,7 +52,7 @@ namespace hz
 		NUMBER_FORMAT_STRING = 0x0040305F,
 	};
 
-	inline static constexpr auto PROCEDURE_BASE = 0x00402000;
+	inline constexpr auto PROCEDURE_BASE = 0x00402000;
 #define PROCEDURE(x) (PROCEDURE_BASE + x)
 
 	enum VirtualAddress

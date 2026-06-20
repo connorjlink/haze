@@ -17,7 +17,7 @@ namespace hz
 	X(FLOAT32, 32, float32) \
 	X(FLOAT64, 64, float64) \
 	X(FLOAT80, 80, float80) \
-	X(POINTER, (sizeof(Address)* std::numeric_limits<unsigned char>::digits), pointer)
+	X(POINTER, (sizeof(Address) * std::numeric_limits<unsigned char>::digits), pointer)
 
 
 #define AUTOENUM_ROUTER(X, enumerator, bits, name) X(enumerator, FakeType, name, IntermediateTypeKind)

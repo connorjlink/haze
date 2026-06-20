@@ -14,7 +14,7 @@ import std;
 
 namespace
 {
-	void replace(std::string& str, const std::string& from, const std::string& to)
+	void replace(std::string& str, const std::string& from, std::string_view to)
 	{
 		if (from.empty())
 		{
@@ -168,8 +168,9 @@ namespace hz
 	{
 		expect('(');
 
+		auto arguments = std::vector<std::string_view>{};
+		
 		// greedily consume until a closing parenthesis
-		std::vector<std::string> arguments{};
 		while (current() != ')')
 		{
 			const auto argument = read_identifier();
@@ -214,7 +215,7 @@ namespace hz
 		macro_invokations.emplace(name);
 
 		// intentional copy
-		auto expanded = macro.code;
+		auto expanded = std::string{ macro.code };
 		for (auto i = 0; i < arguments.size(); i++)
 		{
 			// if this substitution logic ever becomes a bottleneck, it might be wise to roll a custom re-scanner
@@ -242,12 +243,12 @@ namespace hz
 		// only pop once advanced past the last virtual location of the file in question
 		if (eof())
 		{
-			USE_SAFE(FileManager)->update_file(context.location.filepath, context.source);
+			USE_SAFE(FileManager)->update_file(get_context().wherein(), get_context().source);
 			files_to_process.pop();
 			continue;
 		}
 
-		switch (const auto current = context.current())
+		switch (const auto current = get_context().current())
 		{
 			case '#':
 			{

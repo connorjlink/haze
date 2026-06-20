@@ -6,7 +6,7 @@
 
 namespace hz
 {
-	template<typename State, size_t MaxHistory = 5>
+	template<typename State, std::size_t MaxHistory = 5>
 	struct UndoableRedoable
 	{
 	private:
