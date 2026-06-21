@@ -62,19 +62,19 @@ namespace hz
 		bool is_constant() const;
 
 	public:
-		LabelCommand(std::string_view label, const Token& token)
+		LabelCommand(const Token& token, std::string_view label)
 			: CommandBase{ token }, label{ label }
 		{
 		}
 	};
-#define MAKE_LABEL_COMMAND(label, token) LabelCommand{ label, token }
+#define MAKE_LABEL_COMMAND(token, label) MAKE_REFERENCE(LabelCommand, Command, EXPAND(LabelCommand{ token, label }), command_storage)
 
 	struct InstructionCommand : public CommandBase
 	{
 	public:
 		ByteRange object_code;
 		std::string_view branch_target;
-		bool marked_for_deletion;
+		bool marked_for_deletion = false;
 	
 	public:
 		inline std::size_t length() const
@@ -93,9 +93,12 @@ namespace hz
 
 	public:
 		InstructionCommand() = delete;
-		InstructionCommand(const Token&, const ByteRange&, std::string_view = "");
+		InstructionCommand(const Token& token, ByteRange object_code, std::string_view branch_target = "")
+			: CommandBase{ token }, object_code{ std::move(object_code) }, branch_target{ branch_target }
+		{
+		}
 	};
-#define MAKE_INSTRUCTION_COMMAND(token, object_code, branch_target) InstructionCommand{ token, object_code, branch_target }
+#define MAKE_INSTRUCTION_COMMAND(token, object_code, branch_target) MAKE_REFERENCE(InstructionCommand, Command, EXPAND(InstructionCommand{ token, object_code, branch_target }), command_storage)
 
 	struct DotOrgCommand : public CommandBase
 	{
@@ -117,7 +120,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_DOTORG_COMMAND(token, address) MAKE_HANDLE(DotOrgCommand{ token, address }
+#define MAKE_DOTORG_COMMAND(token, address) MAKE_REFERENCE(DotOrgCommand, Command, EXPAND(DotOrgCommand{ token, address }), command_storage)
 
 	struct DotByteCommand : public CommandBase
 	{
@@ -139,7 +142,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_DOTBYTE_COMMAND(token, bytes) MAKE_REFERENCE(DotByteCommand, Command, command_storage, EXPAND(DotByteCommand{ token, bytes }))
+#define MAKE_DOTBYTE_COMMAND(token, bytes) MAKE_REFERENCE(DotByteCommand, Command, EXPAND(DotByteCommand{ token, bytes }), command_storage)
 
 
 	template<typename SumMemberT, typename StorageT>

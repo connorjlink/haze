@@ -22,7 +22,7 @@ namespace hz
 			return MAKE_INVALID_HANDLE(command_storage, Command);
 		}
 
-		return AS_HANDLE(MAKE_DOTORG_COMMAND(token, expression.get().value));
+		return MAKE_DOTORG_COMMAND(token, expression.get().value);
 	}
 
 	AssemblerParser::NodeReference<DotByteCommand> AssemblerParser::parse_dotbyte_command()
@@ -42,7 +42,7 @@ namespace hz
 				USE_SAFE(ErrorReporter)->post_error(std::format(
 					"value `{}` is outside of the permissible range [{}, {}]", 
 					value, std::numeric_limits<Byte>::min(), std::numeric_limits<Byte>::max()), NULL_TOKEN);
-				return MAKE_INVALID_HANDLE(command_storage, Command);
+				return MAKE_INVALID_REFERENCE(DotByteCommand, Command, command_sum);
 			}
 			
 			bytes.push_back(static_cast<Byte>(value));
@@ -54,7 +54,7 @@ namespace hz
 
 		} while (token.kind == TokenKind::INTEGER_LITERAL);
 
-		return AS_HANDLE(MAKE_DOTBYTE_COMMAND(token, std::move(bytes)));
+		return MAKE_DOTBYTE_COMMAND(token, std::move(bytes));
 	}
 
 	AssemblerParser::NodeReference<LabelCommand> AssemblerParser::parse_label_command()
@@ -68,20 +68,20 @@ namespace hz
 		// NOTE: we don't yet know the address since we haven't linked to resolve it yet
 		//AS_LABEL_SYMBOL(reference_symbol(Symbol::Type::LABEL, identifier))->address = 
 
-		return new LabelCommand{ identifier, identifier_expression->_token };
+		return MAKE_LABEL_COMMAND(identifier, identifier_expression->_token);
 	}
 
 	AssemblerParser::NodeHandle AssemblerParser::parse_command()
 	{
 		switch (peek().kind)
 		{
-			case TokenKind::DOTORG:     return AS_HANDLE(parse_dotorg_command());
-			case TokenKind::DOTBYTE:    return AS_HANDLE(parse_dotbyte_command());
-			case TokenKind::DOTGLOBAL:  return AS_HANDLE(parse_dotglobal_command());
-			case TokenKind::IDENTIFIER: return AS_HANDLE(parse_label_command());
+			case TokenKind::DOTORG:     return parse_dotorg_command().erase();
+			case TokenKind::DOTBYTE:    return parse_dotbyte_command().erase();
+			case TokenKind::DOTGLOBAL:  return parse_dotglobal_command().erase();
+			case TokenKind::IDENTIFIER: return parse_label_command().erase();
 		}
 
-		return AS_HANDLE(parse_instruction_command());
+		return parse_instruction_command().erase();
 	}
 
 	std::vector<AssemblerParser::NodeHandle> AssemblerParser::parse_implementation()

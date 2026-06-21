@@ -55,6 +55,119 @@ namespace
 
 		return false;
 	}
+
+	std::expected<char, std::string_view> parse_char_literal(std::string_view character)
+	{
+		if (character.size() < 1)
+		{
+			return std::unexpected{ "invalid empty character literal" };
+		}
+
+		if (character[0] != '\\')
+		{
+			if (character.size() != 1)
+			{
+				return std::unexpected{ "invalid multi-character literal" };
+			}
+			// canonical single character literal
+			return character[0];
+		}
+
+		if (character.size() == 1)
+		{
+			return std::unexpected{ "incomplete escape sequence" };
+		}
+
+		// classic escape sequences
+		switch (character[1])
+		{
+			case 'n':  return '\n';
+			case 't':  return '\t';
+			case 'r':  return '\r';
+			case '\\': return '\\';
+			case '\'': return '\'';
+			case '"':  return '"';
+			case 'a':  return '\a';
+			case 'b':  return '\b';
+			case 'f':  return '\f';
+			case 'v':  return '\v';
+			case 'x':
+			{
+				// hex escape code
+				if (character.size() == 2)
+				{
+					return std::unexpected{ "missing hex digits in \\x escape sequence" };
+				}
+
+				auto value = 0u;
+				auto i = 2uz;
+
+				while (i < character.size())
+				{
+					auto digit = 0u;
+
+					// convert ASCII to hexadecimal numeric value
+					     if (character[i] >= '0' && character[i] <= '9') digit = character[i] - '0';
+					else if (character[i] >= 'a' && character[i] <= 'f') digit = 10 + (character[i] - 'a');
+					else if (character[i] >= 'A' && character[i] <= 'F') digit = 10 + (character[i] - 'A');
+					else break;
+
+					value = (value << 4) | digit;
+					++i;
+				}
+
+				if (i == 2)
+				{
+					return std::unexpected{ "invalid hex escape sequence" };
+				}
+
+				if (i != character.size())
+				{
+					return std::unexpected{ "invalid trailing characters after hex escape sequence" };
+				}
+
+				return static_cast<char>(value & 0xFF);
+			} break;
+
+			case '0': [[fallthrough]];
+			case '1': [[fallthrough]];
+			case '2': [[fallthrough]];
+			case '3': [[fallthrough]];
+			case '4': [[fallthrough]];
+			case '5': [[fallthrough]];
+			case '6': [[fallthrough]];
+			case '7':
+			{
+				// octal escape sequence
+				auto i = 1uz;
+				auto value = 0u;
+				auto count = 0;
+
+				while (i < character.size() && count < 3)
+				{
+					if (character[i] < '0' || character[i] > '7')
+					{
+						// non-octal digits indicate the end of octal escape sequence
+						break;
+					}
+
+					value = (value << 3) + (character[i] - '0');
+					i++;
+					count++;
+				}
+
+				if (i != character.size())
+				{
+					return std::unexpected{ "invalid trailing characters after octal escape sequence" };
+				}
+
+				// values beyond those representable with char are implementation defined
+				return static_cast<char>(value & 0xFF);
+			} break;
+		}
+		
+		return std::unexpected{ "unsupported escape sequence" };
+	}
 }
 
 namespace hz
@@ -104,40 +217,57 @@ namespace hz
 
 	ExpressionReference<IdentifierExpression> Parser::parse_identifier_expression()
 	{
-		const auto name_token = consume(TokenKind::IDENTIFIER);
-		
-		return MAKE_IDENTIFIER_EXPRESSION(IdentifierExpression::Kind::UNKNOWN, name_token.text);
+		const auto token = consume(TokenKind::IDENTIFIER);
+		const auto identifier = token.text;
+
+		return MAKE_IDENTIFIER_EXPRESSION(token, IdentifierExpression::Kind::UNKNOWN, identifier);
 	}
 
-	ExpressionReference<IntegerLiteralExpression> Parser::parse_integerliteral_expression()
+	ExpressionReference<IntegerLiteralExpression> Parser::parse_integer_literal_expression()
 	{
-		const auto integer_literal_token = consume(TokenKind::INT);
-		const auto integer_string = integer_literal_token.text;
+		const auto token = consume(TokenKind::INTEGER_LITERAL);
 
-		BigInteger integer_value{};
+		auto value = BigInteger{};
 
-		const auto [pointer, error] = std::from_chars(integer_string.data(), integer_string.data() + integer_string.size(), integer_value);
+		const auto [pointer, error] = std::from_chars(token.text.data(), token.text.data() + token.text.size(), value);
 		if (error != std::errc{})
 		{
 			USE_SAFE(ErrorReporter)->post_error(std::format(
-				"unparseable integer literal `{}`", integer_string), integer_literal_token);
-			return nullptr;
+				"unparseable integer literal `{}`", token.text), token);
+			return MAKE_INVALID_REFERENCE(IntegerLiteralExpression, Expression, expression_storage);
 		}
 
 		const auto& specifier = peek();
 		consume(specifier.kind);
 
-		return new IntegerLiteralExpression{ integer_value, integer_literal_token };
+		return MAKE_INTEGER_LITERAL_EXPRESSION(token, value);
 	}
 
 	ExpressionReference<StringLiteralExpression> Parser::parse_string_literal_expression()
 	{
-		consume(TokenKind::DOUBLEQUOTE);
-		const auto message_token = fetch_until(TokenKind::DOUBLEQUOTE);
-		consume(TokenKind::DOUBLEQUOTE);
+		const auto token = consume(TokenKind::STRING_LITERAL);
+		// skip double quotes
+		const auto string = token.text.substr(1, token.text.size() - 2);
 
-		return MAKE_STRING_LITERAL_EXPRESSION(message_token);
+		return MAKE_STRING_LITERAL_EXPRESSION(token, string);
 	}
+
+	ExpressionReference<CharacterLiteralExpression> Parser::parse_character_literal_expression()
+	{
+		const auto token = consume(TokenKind::CHARACTER_LITERAL);
+		// skip single quotes
+		const auto character = token.text.substr(1, token.text.size() - 2);
+
+		if (character.size() != 1 || (character[0] == '\\' && character.size() != 2))
+		{
+			USE_SAFE(ErrorReporter)->post_error(std::format(
+				"invalid character literal `{}`", token.text), token);
+			return MAKE_INVALID_REFERENCE(CharacterLiteralExpression, Expression, expression_storage);
+		}
+
+		return MAKE_CHARACTER_LITERAL_EXPRESSION(token, character);
+	}
+
 
 	ExpressionHandle Parser::parse_parenthesis_expression()
 	{
@@ -147,47 +277,6 @@ namespace hz
 
 		return expression;
 	}
-
-	AdjustExpression* Parser::parse_increment_expression()
-	{
-		consume(TokenKind::TILDE);
-		
-		if (peek().kind == TokenKind::IDENTIFIER)
-		{
-			const auto identifier_expression = parse_identifier_expression();
-			return new AdjustExpression{ true, identifier_expression, identifier_expression->_token };
-		}
-
-		else if (peek().kind == TokenKind::INT)
-		{
-			const auto integer_literal_expression = parse_integerliteral_expression();
-			return new AdjustExpression{ true, integer_literal_expression, integer_literal_expression->_token };
-		}
-
-		USE_SAFE(ErrorReporter)->post_error("increment target must evaluate to a modifiable l-value", peek());
-		return nullptr;
-	}
-
-	AdjustExpression* Parser::parse_decrement_expression()
-	{
-		consume(TokenKind::EXCLAMATION);
-
-		if (peek().kind == TokenKind::IDENTIFIER)
-		{
-			const auto identifier_expression = parse_identifier_expression();
-			return new AdjustExpression{ false, identifier_expression, identifier_expression->_token };
-		}
-
-		else if (peek().kind == TokenKind::INT)
-		{
-			const auto integer_literal_expression = parse_integerliteral_expression();
-			return new AdjustExpression{ false, integer_literal_expression, integer_literal_expression->_token };
-		}
-
-		USE_SAFE(ErrorReporter)->post_error("decrement target must evaluate to a modifiable l-value", peek());
-		return nullptr;
-	}
-
 
 	ExpressionHandle Parser::parse_generic_expression()
 	{
@@ -199,47 +288,42 @@ namespace hz
 				return parse_parenthesis_expression();
 			} break;
 
-			case INT:
+			case INTEGER_LITERAL:
 			{
-				return parse_integerliteral_expression();
+				return parse_integer_literal_expression().erase();
 			} break;
 			
+			case CHARACTER_LITERAL:
+			{
+				return parse_character_literal_expression().erase();
+			} break;
+
 			case DOUBLEQUOTE:
 			{
-				return parse_string_expression();
+				return parse_string_literal_expression().erase();
 			} break;
 
 			case IDENTIFIER:
 			{
 				if (lookahead().kind == LPAREN)
 				{
-					return parse_functioncall_expression();
+					return parse_functioncall_expression().erase();
 				}
 
-				return parse_identifier_expression();
-			} break;
-
-			case TILDE:
-			{
-				return parse_increment_expression();
-			} break;
-
-			case EXCLAMATION:
-			{
-				return parse_decrement_expression();
+				return parse_identifier_expression().erase();
 			} break;
 		}
 
 		USE_SAFE(ErrorReporter)->post_error(std::format(
 			"expected an expression but got `{}`", peek().text), peek());
-		return MAKE_INVALID_HANDLE(storage, Expression);
+		return MAKE_INVALID_HANDLE(Expression, expression_storage);
 	}
 
 	ExpressionHandle Parser::parse_expression_optimized()
 	{
 		auto expression = parse_expression();
 
-		while (auto expression_optimized = expression.optimize(storage))
+		while (auto expression_optimized = expression.optimize(expression_storage))
 		{
 			expression = expression_optimized;
 		}
@@ -253,7 +337,7 @@ namespace hz
 		const auto infix_expression = parse_infix_expression(parse_generic_expression(), std::numeric_limits<Precedence>::max());
 		if (!infix_expression)
 		{
-			return MAKE_INVALID_HANDLE(storage, Expression);
+			return MAKE_INVALID_HANDLE(Expression, expression_storage);
 		}
 
 		return infix_expression;
@@ -326,8 +410,8 @@ namespace hz
 		this->tokens = std::move(tokens);
 	}
 
-	Parser::Parser(const std::filesystem::path& filepath, const ExpressionStorage& storage)
-		: storage{ storage }
+	Parser::Parser(const std::filesystem::path& filepath, ExpressionStorage& expression_storage)
+		: expression_storage{ expression_storage }
 	{
 		USE_SAFE(ErrorReporter)->open_context(filepath, "parsing");
 	}

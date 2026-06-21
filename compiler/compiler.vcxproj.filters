@@ -90,9 +90,6 @@
     <ClCompile Include="source\InlineAsmStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\InstructionCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\IntegerLiteralExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,9 +103,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\JSON.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LabelCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Lexer.cpp">

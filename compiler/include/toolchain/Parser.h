@@ -28,7 +28,7 @@ namespace hz
 	protected:
 		std::size_t cursor = 0;
 		std::vector<Token> tokens;
-		const ExpressionStorage& storage;
+		ExpressionStorage& expression_storage;
 
 	protected:
 		template<typename Self>
@@ -67,7 +67,7 @@ namespace hz
 
 	protected:
 		ExpressionReference<IdentifierExpression> parse_identifier_expression();
-		ExpressionReference<IntegerLiteralExpression> parse_integerliteral_expression();
+		ExpressionReference<IntegerLiteralExpression> parse_integer_literal_expression();
 		ExpressionReference<StringLiteralExpression> parse_string_literal_expression();
 		ExpressionReference<CharacterLiteralExpression> parse_character_literal_expression();
 		ExpressionReference<FunctionCallExpression> parse_functioncall_expression();
@@ -98,7 +98,7 @@ namespace hz
 		void reload(std::vector<Token>);
 
 	public:
-		Parser(const std::filesystem::path&, const ExpressionStorage&);
+		Parser(const std::filesystem::path&, ExpressionStorage&);
 		~Parser();
 	};
 }

@@ -271,7 +271,7 @@ namespace hz
 		{
 			.text = char_literal,
 			.location = get_context().location,
-			.kind = TokenKind::CHAR_LITERAL,
+			.kind = TokenKind::CHARACTER_LITERAL,
 		};
 	}
 
@@ -325,7 +325,7 @@ namespace hz
 				const auto char_literal = substring_while([](auto c) { return c != '\''; });
 
 				undo(); // rewind to opening quote
-				APPEND_TOKEN(CHAR_LITERAL, char_literal);
+				APPEND_TOKEN(CHARACTER_LITERAL, char_literal);
 
 				advance(); // opening quote
 				advance(); // closing quote

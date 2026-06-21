@@ -21,7 +21,7 @@ namespace hz
 
 #define PRIMARY_EXPRESSION_KINDS(X) \
 	X(IDENTIFIER,        LEFT, 0, IdentifierExpression,       identifier) \
-	X(INTEGER_LTIERAL,   LEFT, 0, IntegerLiteralExpression,   integer literal) \
+	X(INTEGER_LITERAL,   LEFT, 0, IntegerLiteralExpression,   integer literal) \
 	X(FLOAT_LITERAL,     LEFT, 0, FloatLiteralExpression,     float literal) \
 	X(CHARACTER_LITERAL, LEFT, 0, CharacterLiteralExpression, character literal) \
 	X(STRING_LITERAL,    LEFT, 0, StringLiteralExpression,    string literal) \
@@ -111,7 +111,7 @@ namespace hz
 		return Associativity::LEFT;
 	}
 
-	std::uint8_t precedence_of(ExpressionKind kind)
+	Precedence precedence_of(ExpressionKind kind)
 	{
 		switch (kind)
 		{

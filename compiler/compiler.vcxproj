@@ -249,13 +249,11 @@
     <ClCompile Include="source\IdentifierExpression.cpp" />
     <ClCompile Include="source\IfStatement.cpp" />
     <ClCompile Include="source\InlineAsmStatement.cpp" />
-    <ClCompile Include="source\InstructionCommand.cpp" />
     <ClCompile Include="source\IntegerLiteralExpression.cpp" />
     <ClCompile Include="source\IntermediateCommand.cpp" />
     <ClCompile Include="source\Job.cpp" />
     <ClCompile Include="source\JobManager.cpp" />
     <ClCompile Include="source\JSON.cpp" />
-    <ClCompile Include="source\LabelCommand.cpp" />
     <ClCompile Include="source\Lexer.cpp" />
     <ClCompile Include="source\Linkable.cpp" />
     <ClCompile Include="source\Linker.cpp" />

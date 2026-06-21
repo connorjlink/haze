@@ -481,8 +481,6 @@ namespace hz
 
 	// NOTE: typically the value macro parameter should be std::move()'d to avoid creating an additional copy of what should be temporary
 
-#define AS_HANDLE(x) x.erase()
-
 	template<typename T, template<typename> typename SumDispatcherT, typename StorageT>
 	constexpr SumHandle<SumDispatcherT, StorageT> make_handle(StorageT& sum_storage, T&& value)
 	{
@@ -490,7 +488,7 @@ namespace hz
 		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
 		return SumHandle<SumDispatcherT, StorageT>{ sum_storage, index, TypeIndexV<T, typename StorageT::Type> };
 	}
-#define MAKE_HANDLE(type, family, sum, value) make_handle<type, family##SumDispatcher, family##Storage>(sum, value)
+#define MAKE_HANDLE(type, family, value, sum) make_handle<type, family##SumDispatcher, family##Storage>(sum, value)
 
 	template<typename T>
 		requires std::derived_from<T, SumMemberBaseTag>
@@ -498,7 +496,7 @@ namespace hz
 	{
 		return make_handle<T, typename T::Dispatcher, typename T::Storage>(sum_storage, std::forward<T>(value));
 	}
-#define MAKE_HANDLE_AUTO(sum, value) make_handle(sum, value)
+#define MAKE_HANDLE_AUTO(value, sum) make_handle(sum, value)
 
 	template<template<typename> typename SumDispatcherT, typename StorageT>
 	constexpr SumHandle<SumDispatcherT, StorageT> make_invalid_handle(const StorageT& sum_storage)
@@ -507,7 +505,7 @@ namespace hz
 		static const auto invalid_handle = SumHandle<SumDispatcherT, StorageT>{ sum_storage };
 		return invalid_handle;
 	}
-#define MAKE_INVALID_HANDLE(sum, family) make_invalid_handle<family##SumDispatcher, family##Storage>(sum)
+#define MAKE_INVALID_HANDLE(family, sum) make_invalid_handle<family##SumDispatcher, family##Storage>(sum)
 
 	template<typename T>
 		requires std::derived_from<T, SumMemberBaseTag>
@@ -515,7 +513,7 @@ namespace hz
 	{
 		return make_invalid_handle<typename T::Dispatcher, typename T::Storage>(sum_storage);
 	}
-#define MAKE_INVALID_HANDLE_AUTO(sum, type) make_invalid_handle<type>(sum)
+#define MAKE_INVALID_HANDLE_AUTO(type, sum) make_invalid_handle<type>(sum)
 
 
 	template<typename T, template<typename> typename SumDispatcherT, typename StorageT>
@@ -525,7 +523,7 @@ namespace hz
 		const auto index = sum_storage.template push_back<T>(std::forward<T>(value));
 		return SumReference<T, SumDispatcherT, StorageT>{ sum_storage, index };
 	}
-#define MAKE_REFERENCE(type, family, sum, value) make_reference<type, family##SumDispatcher, family##Storage>(sum, value)
+#define MAKE_REFERENCE(type, family, value, sum) make_reference<type, family##SumDispatcher, family##Storage>(sum, value)
 
 	template<typename T>
 		requires std::derived_from<T, SumMemberBaseTag>
@@ -533,7 +531,7 @@ namespace hz
 	{
 		return make_reference<T, typename T::Dispatcher, typename T::Storage>(sum_storage, std::forward<T>(value));
 	}
-#define MAKE_REFERENCE_AUTO(sum, value) make_reference(sum, value)
+#define MAKE_REFERENCE_AUTO(value, sum) make_reference(sum, value)
 
 	template<typename T, template<typename> typename SumDispatcherT, typename StorageT>
 	constexpr SumReference<T, SumDispatcherT, StorageT> make_invalid_reference(const StorageT& sum_storage)
@@ -550,7 +548,7 @@ namespace hz
 	{
 		return make_invalid_reference<T, typename T::Dispatcher, typename T::Storage>(sum_storage);
 	}
-#define MAKE_INVALID_REFERENCE_AUTO(sum, type) make_invalid_reference<type>(sum)
+#define MAKE_INVALID_REFERENCE_AUTO(type, sum) make_invalid_reference<type>(sum)
 }
 
 #endif

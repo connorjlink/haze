@@ -91,7 +91,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_IDENTIFIER_EXPRESSION(token, identifier_kind, name) IdentifierExpression{ token, identifier_kind, name }
+#define MAKE_IDENTIFIER_EXPRESSION(token, identifier_kind, name) MAKE_REFERENCE(IdentifierExpression, Expression, EXPAND(IdentifierExpression{ token, identifier_kind, name }), expression_storage)
 
 	struct IntegerLiteralExpression : public ExpressionBase
 	{
@@ -114,7 +114,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_INTEGER_LITERAL_EXPRESSION(token, value) IntegerLiteralExpression{ token, value }
+#define MAKE_INTEGER_LITERAL_EXPRESSION(token, value) MAKE_REFERENCE(IntegerLiteralExpression, Expression, EXPAND(IntegerLiteralExpression{ token, value }), expression_storage)
 
 	struct FloatLiteralExpression : public ExpressionBase
 	{
@@ -160,7 +160,7 @@ namespace hz
 		{
 		}
 	};
-#define MAKE_STRING_LITERAL_EXPRESSION(token, value) StringLiteralExpression{ token, value }
+#define MAKE_STRING_LITERAL_EXPRESSION(token, value) MAKE_REFERENCE(StringLiteralExpression, Expression, EXPAND(StringLiteralExpression{ token, value }), expression_storage)
 
 	struct CharacterLiteralExpression : public ExpressionBase
 	{
