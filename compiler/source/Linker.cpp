@@ -19,7 +19,7 @@ namespace hz
 //	{
 //		commands.erase(std::remove_if(commands.begin(), commands.end(), [&](auto&& val)
 //			{
-//				if (val->ntype() != NodeType::COMMAND)
+//				if (val->ntype() != NodeHandle::COMMAND)
 //				{
 //					if (!_node_type_map.contains(val->ntype()))
 //					{

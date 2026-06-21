@@ -36,7 +36,7 @@ namespace hz
 	{
 		if (!type.members.has_value())
 		{
-			CommonErrors::invalid_struct_or_union_type(type.kind, NULL_TOKEN);
+			CommonErrors::invalid_struct_or_union_kind(type.kind, NULL_TOKEN);
 			return "";
 		}
 

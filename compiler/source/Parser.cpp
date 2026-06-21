@@ -59,33 +59,6 @@ namespace
 
 namespace hz
 {
-	Token& Parser::lookbehind()
-	{
-		if (cursor <= 0)
-		{
-			USE_SAFE(ErrorReporter)->post_uncorrectable(
-				"invalid token backtrack", peek());
-		}
-		
-		return tokens[cursor - 1];
-	}
-
-	Token& Parser::peek()
-	{
-		return tokens[cursor];
-	}
-
-	Token& Parser::lookahead()
-	{
-		if (cursor >= tokens.size() - 1)
-		{
-			USE_SAFE(ErrorReporter)->post_uncorrectable(
-				"unexpectedly reached the end of file", peek());
-		}
-
-		return tokens[cursor + 1];
-	}
-
 	Token Parser::consume(TokenKind kind)
 	{
 		const auto& current = peek();
@@ -107,26 +80,26 @@ namespace hz
 			return "<error>";
 		};
 
-		USE_SAFE(ErrorReporter)->post_error(std::format(
-			"expected token `{}` but got `{}`",
-				convert(kind), ((current.kind == TokenKind::IDENTIFIER || current.kind == TokenKind::INT) 
-					? current.text 
-					: convert(current.kind))), current);
+		const auto text =  ((current.kind == TokenKind::IDENTIFIER || current.kind == TokenKind::INT)
+			? current.text
+			: convert(current.kind));
 
+		USE_SAFE(ErrorReporter)->post_error(std::format(
+			"expected token `{}` but got `{}`", convert(kind), text), current);
 		return current;
 	}
 
 	std::vector<Token> Parser::fetch_until(TokenKind kind)
 	{
-		std::vector<Token> tokens;
+		auto result = std::vector<Token>{};
 
 		while (peek().kind != kind)
 		{
-			tokens.emplace_back(peek());
+			result.emplace_back(peek());
 			consume(peek().kind);
 		}
 
-		return tokens;
+		return result;
 	}
 
 	ExpressionReference<IdentifierExpression> Parser::parse_identifier_expression()

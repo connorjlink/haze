@@ -20,6 +20,8 @@ namespace hz
 	using BigInteger = std::int64_t;
 	using BigFloat = double;
 
+#define EXPAND(...) __VA_ARGS__
+
 #ifdef _MSC_VER
 #define TARGET_NATIVE
 #elifdef __EMSCRIPTEN__

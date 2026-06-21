@@ -13,74 +13,6 @@ import std;
 
 namespace hz
 {
-	void CommonErrors::internal_compiler_error(const std::string& message, const Token& token)
-	{
-		USE_UNSAFE(ErrorReporter)->post_error(std::format("[internal compiler error] {}", message), token);
-	}
-
-	void CommonErrors::internal_linker_error(const std::string& message, const Token& token)
-	{
-		USE_UNSAFE(ErrorReporter)->post_error(std::format("[internal linker error] {}", message), token);
-	}
-
-
-	void CommonErrors::unsupported_instruction_format(const std::string& instruction, const std::string& format)
-	{
-		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported instruction format `{}` for `{}`", format, instruction), NULL_TOKEN);
-	}
-
-	void CommonErrors::unsupported_instruction_range(const std::string& instruction, const std::string& range)
-	{
-		USE_UNSAFE(ErrorReporter)->post_error(std::format("unsupported instruction range `{}` for `{}`", range, instruction), NULL_TOKEN);
-	}
-
-	std::string CommonErrors::invalid_generic_type(const std::string& context, const std::string& type)
-	{
-		return std::format("invalid {} type `{}`", context, type);
-	}
-
-	void CommonErrors::invalid_statement_type(StatementKind kind, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("statement", std::string{ to_string(kind) }), token);
-	}
-
-	void CommonErrors::invalid_expression_type(ExpressionKind kind, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("expression", std::string{ to_string(kind) }), token);
-	}
-
-	void CommonErrors::invalid_command_type(CommandKind kind, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("command", std::string{ to_string(kind) }), token);
-	}
-
-	void CommonErrors::invalid_int_type(IntKind kind, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("integer", std::string{ to_string(kind) }), token);
-	}
-
-	void CommonErrors::invalid_float_type(FloatKind kind, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("float", std::string{ to_string(kind) }), token);
-	}
-
-	void CommonErrors::invalid_token_type(TokenKind kind, const Token& token)
-	{
-		// NOTE: prefer the value() call to get a proper exception in case of invalid token kind
-		internal_compiler_error(invalid_generic_type("token", std::string{ token_map.at(kind).value() }), token);
-	}
-
-	void CommonErrors::invalid_symbol_type(SymbolKind kind, const Token& token)
-	{
-#pragma message("TODO: migrate the generic type function to accept also std::string_view")
-		internal_compiler_error(invalid_generic_type("symbol", std::string{ to_string(kind) }), token);
-	}
-
-	void CommonErrors::invalid_struct_or_union_type(StructOrUnionKind kind, const Token& token)
-	{
-		internal_compiler_error(invalid_generic_type("struct or union", std::string{ to_string(kind) }), token);
-	}
-
 	void CommonErrors::must_be_lvalue(const std::string& message, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("{} must be a modifiable l-value", message), token);
@@ -106,7 +38,7 @@ namespace hz
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("invalid register index `{}`", message), token);
 	}
 
-	void CommonErrors::integer_size_mismatch(IntegerLiteralType left, IntegerLiteralType right, const Token& token)
+	void CommonErrors::integer_size_mismatch(IntegerLiteralKind left, IntegerLiteralType right, const Token& token)
 	{
 		USE_UNSAFE(ErrorReporter)->post_error(std::format("integer type mismatch between `{}` and `{}`",
 			_integer_literal_type_map.at(left), _integer_literal_type_map.at(right)), token);

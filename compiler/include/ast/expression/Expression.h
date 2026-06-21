@@ -86,12 +86,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		IdentifierExpression(Kind identifier_kind, std::string_view name)
-			: identifier_kind{ identifier_kind }, name{ name }
+		IdentifierExpression(const Token& token, Kind identifier_kind, std::string_view name)
+			: ExpressionBase{ token }, identifier_kind{ identifier_kind }, name{ name }
 		{
 		}
 	};
-#define MAKE_IDENTIFIER_EXPRESSION(identifier_kind, name) IdentifierExpression{ identifier_kind, name }
+#define MAKE_IDENTIFIER_EXPRESSION(token, identifier_kind, name) IdentifierExpression{ token, identifier_kind, name }
 
 	struct IntegerLiteralExpression : public ExpressionBase
 	{
@@ -109,12 +109,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		IntegerLiteralExpression(BigInteger value)
-			: value{ value }
+		IntegerLiteralExpression(const Token& token, BigInteger value)
+			: ExpressionBase{ token }, value{ value }
 		{
 		}
 	};
-#define MAKE_INTEGER_LITERAL_EXPRESSION(value) IntegerLiteralExpression{ value }
+#define MAKE_INTEGER_LITERAL_EXPRESSION(token, value) IntegerLiteralExpression{ token, value }
 
 	struct FloatLiteralExpression : public ExpressionBase
 	{
@@ -132,12 +132,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		FloatLiteralExpression(BigFloat value)
-			: value{ value }
+		FloatLiteralExpression(const Token& token, BigFloat value)
+			: ExpressionBase{ token }, value{ value }
 		{
 		}
 	};
-#define MAKE_FLOAT_LITERAL_EXPRESSION(value) FloatLiteralExpression{ value }
+#define MAKE_FLOAT_LITERAL_EXPRESSION(token, value) FloatLiteralExpression{ token, value }
 
 	struct StringLiteralExpression : public ExpressionBase
 	{
@@ -155,12 +155,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		StringLiteralExpression(std::string_view value)
-			: value{ value }
+		StringLiteralExpression(const Token& token, std::string_view value)
+			: ExpressionBase{ token }, value{ value }
 		{
 		}
 	};
-#define MAKE_STRING_LITERAL_EXPRESSION(value) StringLiteralExpression{ value }
+#define MAKE_STRING_LITERAL_EXPRESSION(token, value) StringLiteralExpression{ token, value }
 
 	struct CharacterLiteralExpression : public ExpressionBase
 	{
@@ -178,12 +178,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		CharacterLiteralExpression(char value)
-			: value{ value }
+		CharacterLiteralExpression(const Token& token, char value)
+			: ExpressionBase{ token }, value{ value }
 		{
 		}
 	};
-#define MAKE_CHARACTER_LITERAL_EXPRESSION(value) CharacterLiteralExpression{ value }
+#define MAKE_CHARACTER_LITERAL_EXPRESSION(token, value) CharacterLiteralExpression{ token, value }
 
 	struct ParenthesizedExpression : public ExpressionBase
 	{
@@ -201,12 +201,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		ParenthesizedExpression(ExpressionHandle inner)
-			: inner{ inner }
+		ParenthesizedExpression(const Token& token, ExpressionHandle inner)
+			: ExpressionBase{ token }, inner{ inner }
 		{
 		}
 	};
-#define MAKE_PARENTHESIZED_EXPRESSION(inner) ParenthesizedExpression{ make_handle(ast, inner) }
+#define MAKE_PARENTHESIZED_EXPRESSION(token, inner) ParenthesizedExpression{ token, make_handle(ast, inner) }
 
 	using PrimaryExpressionTypes = SumTypeList
 	<
@@ -238,12 +238,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		PostfixIncrementExpression(ExpressionHandle operand)
-			: operand{ operand }
+		PostfixIncrementExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_POSTFIX_INCREMENT_EXPRESSION(operand) PostfixIncrementExpression{ make_handle(ast, operand) }
+#define MAKE_POSTFIX_INCREMENT_EXPRESSION(token, operand) PostfixIncrementExpression{ token, make_handle(ast, operand) }
 
 	struct PostfixDecrementExpression : public ExpressionBase
 	{
@@ -261,12 +261,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		PostfixDecrementExpression(ExpressionHandle operand)
-			: operand{ operand }
+		PostfixDecrementExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_POSTFIX_DECREMENT_EXPRESSION(operand) PostfixDecrementExpression{ make_handle(ast, operand) }
+#define MAKE_POSTFIX_DECREMENT_EXPRESSION(token, operand) PostfixDecrementExpression{ token, make_handle(ast, operand) }
 
 	struct FunctionCallExpression : public ExpressionBase
 	{
@@ -285,12 +285,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		FunctionCallExpression(ExpressionReference<IdentifierExpression> identifier, std::vector<ExpressionHandle> arguments)
-			: identifier{ identifier }, arguments{ std::move(arguments) }
+		FunctionCallExpression(const Token& token, ExpressionReference<IdentifierExpression> identifier, std::vector<ExpressionHandle> arguments)
+			: ExpressionBase{ token }, identifier{ identifier }, arguments{ std::move(arguments) }
 		{
 		}
 	};
-#define MAKE_FUNCTION_CALL_EXPRESSION(identifier, arguments) FunctionCallExpression{ make_handle(ast, identifier), arguments }
+#define MAKE_FUNCTION_CALL_EXPRESSION(token, identifier, arguments) FunctionCallExpression{ token, make_handle(ast, identifier), arguments }
 
 	struct SubscriptExpression : public ExpressionBase
 	{
@@ -309,12 +309,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		SubscriptExpression(ExpressionHandle array, ExpressionHandle index)
-			: array{ array }, index{ index }
+		SubscriptExpression(const Token& token, ExpressionHandle array, ExpressionHandle index)
+			: ExpressionBase{ token }, array{ array }, index{ index }
 		{
 		}
 	};
-#define MAKE_SUBSCRIPT_EXPRESSION(array, index) SubscriptExpression{ make_handle(ast, array), make_handle(ast, index) }
+#define MAKE_SUBSCRIPT_EXPRESSION(token, array, index) SubscriptExpression{ token, make_handle(ast, array), make_handle(ast, index) }
 
 	struct MemberAccessExpression : public ExpressionBase
 	{
@@ -333,12 +333,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		MemberAccessExpression(ExpressionHandle object, ExpressionReference<IdentifierExpression> member)
-			: object{ object }, member{ member }
+		MemberAccessExpression(const Token& token, ExpressionHandle object, ExpressionReference<IdentifierExpression> member)
+			: ExpressionBase{ token }, object{ object }, member{ member }
 		{
 		}
 	};
-#define MAKE_MEMBER_ACCESS_EXPRESSION(object, member) MemberAccessExpression{ make_handle(ast, object), make_reference(ast, member) }
+#define MAKE_MEMBER_ACCESS_EXPRESSION(token, object, member) MemberAccessExpression{ token, make_handle(ast, object), make_reference(ast, member) }
 
 	struct MemberAccessThroughPointerExpression : public ExpressionBase
 	{
@@ -357,12 +357,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		MemberAccessThroughPointerExpression(ExpressionHandle object, ExpressionReference<IdentifierExpression> member)
-			: object{ object }, member{ member }
+		MemberAccessThroughPointerExpression(const Token& token, ExpressionHandle object, ExpressionReference<IdentifierExpression> member)
+			: ExpressionBase{ token }, object{ object }, member{ member }
 		{
 		}
 	};
-#define MAKE_MEMBER_ACCESS_THROUGH_POINTER_EXPRESSION(object, member) MemberAccessThroughPointerExpression{ make_handle(ast, object), make_handle(ast, member) }
+#define MAKE_MEMBER_ACCESS_THROUGH_POINTER_EXPRESSION(token, object, member) MemberAccessThroughPointerExpression{ token, make_handle(ast, object), make_reference(ast, member) }
 
 	struct CompoundLiteralExpression : public ExpressionBase
 	{
@@ -389,12 +389,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		CompoundLiteralExpression(TypeHandle type, std::vector<Initializer> initializers)
-			: type{ type }, initializers{ std::move(initializers) }
+		CompoundLiteralExpression(const Token& token, TypeHandle type, std::vector<Initializer> initializers)
+			: ExpressionBase{ token }, type{ type }, initializers{ std::move(initializers) }
 		{
 		}
 	};
-#define MAKE_COMPOUND_LITERAL_EXPRESSION(type, initializers) CompoundLiteralExpression{ type, initializers }
+#define MAKE_COMPOUND_LITERAL_EXPRESSION(token, type, initializers) CompoundLiteralExpression{ token, type, initializers }
 
 	using PostfixExpressionTypes = SumTypeList
 	<
@@ -426,12 +426,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		PrefixIncrementExpression(ExpressionHandle operand)
-			: operand{ operand }
+		PrefixIncrementExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_PREFIX_INCREMENT_EXPRESSION(operand) PrefixIncrementExpression{ make_handle(ast, operand) }
+#define MAKE_PREFIX_INCREMENT_EXPRESSION(token, operand) PrefixIncrementExpression{ token, make_handle(ast, operand) }
 
 	struct PrefixDecrementExpression : public ExpressionBase
 	{
@@ -450,12 +450,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		PrefixDecrementExpression(ExpressionHandle operand)
-			: operand{ operand }
+		PrefixDecrementExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_PREFIX_DECREMENT_EXPRESSION(operand) PrefixDecrementExpression{ make_handle(ast, operand) }
+#define MAKE_PREFIX_DECREMENT_EXPRESSION(token, operand) PrefixDecrementExpression{ token, make_handle(ast, operand) }
 
 	struct PlusExpression : public ExpressionBase
 	{
@@ -473,12 +473,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		PlusExpression(ExpressionHandle operand)
-			: operand{ operand }
+		PlusExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_PLUS_EXPRESSION(operand) PlusExpression{ make_handle(ast, operand) }
+#define MAKE_PLUS_EXPRESSION(token, operand) PlusExpression{ token, make_handle(ast, operand) }
 
 	struct MinusExpression : public ExpressionBase
 	{
@@ -496,12 +496,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		MinusExpression(ExpressionHandle operand)
-			: operand{ operand }
+		MinusExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_MINUS_EXPRESSION(operand) MinusExpression{ make_handle(ast, operand) }
+#define MAKE_MINUS_EXPRESSION(token, operand) MinusExpression{ token, make_handle(ast, operand) }
 
 	struct BitwiseNotExpression : public ExpressionBase
 	{
@@ -519,12 +519,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseNotExpression(ExpressionHandle operand)
-			: operand{ operand }
+		BitwiseNotExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_BITWISE_NOT_EXPRESSION(operand) BitwiseNotExpression{ make_handle(ast, operand) }
+#define MAKE_BITWISE_NOT_EXPRESSION(token, operand) BitwiseNotExpression{ token, make_handle(ast, operand) }
 
 	struct LogicalNotExpression : public ExpressionBase
 	{
@@ -542,12 +542,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LogicalNotExpression(ExpressionHandle operand)
-			: operand{ operand }
+		LogicalNotExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_LOGICAL_NOT_EXPRESSION(operand) LogicalNotExpression{ make_handle(ast, operand)
+#define MAKE_LOGICAL_NOT_EXPRESSION(token, operand) LogicalNotExpression{ token, make_handle(ast, operand) }
 
 	struct CastExpression : public ExpressionBase
 	{
@@ -566,12 +566,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		CastExpression(ExpressionHandle target, TypeHandle type)
-			: target{ target }, type{ type }
+		CastExpression(const Token& token, ExpressionHandle target, TypeHandle type)
+			: ExpressionBase{ token }, target{ target }, type{ type }
 		{
 		}
 	};
-#define MAKE_CAST_EXPRESSION(target, type) CastExpression{ make_handle(ast, target), type }
+#define MAKE_CAST_EXPRESSION(token, target, type) CastExpression{ token, make_handle(ast, target), type }
 
 	struct AddressOfExpression : public ExpressionBase
 	{
@@ -591,12 +591,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		AddressOfExpression(ExpressionHandle operand)
-			: operand{ operand }
+		AddressOfExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_ADDRESS_OF_EXPRESSION(operand) AddressOfExpression{ make_handle(ast, operand) }
+#define MAKE_ADDRESS_OF_EXPRESSION(token, operand) AddressOfExpression{ token, make_handle(ast, operand) }
 
 	struct DereferenceExpression : public ExpressionBase
 	{
@@ -614,12 +614,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		DereferenceExpression(ExpressionHandle operand)
-			: operand{ operand }
+		DereferenceExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_DEREFERENCE_EXPRESSION(operand) DereferenceExpression{ make_handle(ast, operand) }
+#define MAKE_DEREFERENCE_EXPRESSION(token, operand) DereferenceExpression{ token, make_handle(ast, operand) }
 
 	struct SizeOfExpressionExpression : public ExpressionBase
 	{
@@ -637,12 +637,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		SizeOfExpressionExpression(ExpressionHandle operand)
-			: operand{ operand }
+		SizeOfExpressionExpression(const Token& token, ExpressionHandle operand)
+			: ExpressionBase{ token }, operand{ operand }
 		{
 		}
 	};
-#define MAKE_SIZEOF_EXPRESSION_EXPRESSION(operand) SizeOfExpressionExpression{ make_handle(ast, operand) }
+#define MAKE_SIZEOF_EXPRESSION_EXPRESSION(token, operand) SizeOfExpressionExpression{ token, make_handle(ast, operand) }
 
 	struct SizeOfTypeExpression : public ExpressionBase
 	{
@@ -660,12 +660,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		SizeOfTypeExpression(TypeHandle type)
-			: type{ type }
+		SizeOfTypeExpression(const Token& token, TypeHandle type)
+			: ExpressionBase{ token }, type{ type }
 		{
 		}
 	};
-#define MAKE_SIZEOF_TYPE_EXPRESSION(type) SizeOfTypeExpression{ type }
+#define MAKE_SIZEOF_TYPE_EXPRESSION(token, type) SizeOfTypeExpression{ token, type }
 
 	using UnaryExpressionTypes = SumTypeList
 	<
@@ -697,12 +697,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		MultiplyExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		MultiplyExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_MULTIPLY_EXPRESSION(left, right) MultiplyExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_MULTIPLY_EXPRESSION(token, left, right) MultiplyExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct DivideExpression : public ExpressionBase
 	{
@@ -721,12 +721,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		DivideExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		DivideExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_DIVIDE_EXPRESSION(left, right) DivideExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_DIVIDE_EXPRESSION(token, left, right) DivideExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 	
 	struct ModuloExpression : public ExpressionBase
 	{
@@ -745,12 +745,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		ModuloExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		ModuloExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_MODULO_EXPRESSION(left, right) ModuloExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_MODULO_EXPRESSION(token, left, right) ModuloExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct AddExpression : public ExpressionBase
 	{
@@ -769,12 +769,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		AddExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		AddExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_ADD_EXPRESSION(left, right) AddExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_ADD_EXPRESSION(token, left, right) AddExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct SubtractExpression : public ExpressionBase
 	{
@@ -793,12 +793,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		SubtractExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		SubtractExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_SUBTRACT_EXPRESSION(left, right) SubtractExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_SUBTRACT_EXPRESSION(token, left, right) SubtractExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct LeftShiftExpression : public ExpressionBase
 	{
@@ -817,12 +817,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LeftShiftExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		LeftShiftExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LEFT_SHIFT_EXPRESSION(left, right) LeftShiftExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_LEFT_SHIFT_EXPRESSION(token, left, right) LeftShiftExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct RightShiftExpression : public ExpressionBase
 	{
@@ -841,12 +841,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		RightShiftExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		RightShiftExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_RIGHT_SHIFT_EXPRESSION(left, right) RightShiftExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_RIGHT_SHIFT_EXPRESSION(token, left, right) RightShiftExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct LessThanExpression : public ExpressionBase
 	{
@@ -865,12 +865,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LessThanExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		LessThanExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LESS_THAN_EXPRESSION(left, right) LessThanExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_LESS_THAN_EXPRESSION(token, left, right) LessThanExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct LessThanOrEqualToExpression : public ExpressionBase
 	{
@@ -889,12 +889,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LessThanOrEqualToExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		LessThanOrEqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LESS_THAN_OR_EQUAL_TO_EXPRESSION(left, right) LessThanOrEqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_LESS_THAN_OR_EQUAL_TO_EXPRESSION(token, left, right) LessThanOrEqualToExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct GreaterThanExpression : public ExpressionBase
 	{
@@ -913,12 +913,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		GreaterThanExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		GreaterThanExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_GREATER_THAN_EXPRESSION(left, right) GreaterThanExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_GREATER_THAN_EXPRESSION(token, left, right) GreaterThanExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct GreaterThanOrEqualToExpression : public ExpressionBase
 	{
@@ -937,12 +937,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		GreaterThanOrEqualToExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		GreaterThanOrEqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_GREATER_THAN_OR_EQUAL_TO_EXPRESSION(left, right) GreaterThanOrEqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_GREATER_THAN_OR_EQUAL_TO_EXPRESSION(token, left, right) GreaterThanOrEqualToExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct EqualToExpression : public ExpressionBase
 	{
@@ -961,12 +961,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		EqualToExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		EqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_EQUAL_TO_EXPRESSION(left, right) EqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_EQUAL_TO_EXPRESSION(token, left, right) EqualToExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct NotEqualToExpression : public ExpressionBase
 	{
@@ -985,12 +985,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		NotEqualToExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		NotEqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_NOT_EQUAL_TO_EXPRESSION(left, right) NotEqualToExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_NOT_EQUAL_TO_EXPRESSION(token, left, right) NotEqualToExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct BitwiseAndExpression : public ExpressionBase
 	{
@@ -1009,12 +1009,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseAndExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		BitwiseAndExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_BITWISE_AND_EXPRESSION(left, right) BitwiseAndExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_BITWISE_AND_EXPRESSION(token, left, right) BitwiseAndExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct BitwiseXorExpression : public ExpressionBase
 	{
@@ -1033,12 +1033,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseXorExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		BitwiseXorExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_BITWISE_XOR_EXPRESSION(left, right) BitwiseXorExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_BITWISE_XOR_EXPRESSION(token, left, right) BitwiseXorExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct BitwiseOrExpression : public ExpressionBase
 	{
@@ -1057,12 +1057,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseOrExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		BitwiseOrExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_BITWISE_OR_EXPRESSION(left, right) BitwiseOrExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_BITWISE_OR_EXPRESSION(token, left, right) BitwiseOrExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct LogicalAndExpression : public ExpressionBase
 	{
@@ -1081,12 +1081,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LogicalAndExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		LogicalAndExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LOGICAL_AND_EXPRESSION(left, right) LogicalAndExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_LOGICAL_AND_EXPRESSION(token, left, right) LogicalAndExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct LogicalOrExpression : public ExpressionBase
 	{
@@ -1105,12 +1105,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LogicalOrExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		LogicalOrExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LOGICAL_OR_EXPRESSION(left, right) LogicalOrExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_LOGICAL_OR_EXPRESSION(token, left, right) LogicalOrExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct TernaryExpression : public ExpressionBase
 	{
@@ -1130,12 +1130,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		TernaryExpression(ExpressionHandle condition, ExpressionHandle then, ExpressionHandle otherwise)
-			: condition{ condition }, then{ then }, otherwise{ otherwise }
+		TernaryExpression(const Token& token, ExpressionHandle condition, ExpressionHandle then, ExpressionHandle otherwise)
+			: ExpressionBase{ token }, condition{ condition }, then{ then }, otherwise{ otherwise }
 		{
 		}
 	};
-#define MAKE_TERNARY_EXPRESSION(condition, then, otherwise) TernaryExpression{ make_handle(ast, condition), make_handle(ast, then), make_handle(ast, otherwise) }
+#define MAKE_TERNARY_EXPRESSION(token, condition, then, otherwise) TernaryExpression{ token, make_handle(ast, condition), make_handle(ast, then), make_handle(ast, otherwise) }
 
 	struct AssignmentExpression : public ExpressionBase
 	{
@@ -1155,12 +1155,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		AssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		AssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_ASSIGNMENT_EXPRESSION(left, right) AssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_ASSIGNMENT_EXPRESSION(token, left, right) AssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct AddAssignmentExpression : public ExpressionBase
 	{
@@ -1180,12 +1180,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		AddAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		AddAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_ADD_ASSIGNMENT_EXPRESSION(left, right) AddAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_ADD_ASSIGNMENT_EXPRESSION(token, left, right) AddAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct SubtractAssignmentExpression : public ExpressionBase
 	{
@@ -1205,12 +1205,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		SubtractAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		SubtractAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_SUBTRACT_ASSIGNMENT_EXPRESSION(left, right) SubtractAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_SUBTRACT_ASSIGNMENT_EXPRESSION(token, left, right) SubtractAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct MultiplyAssignmentExpression : public ExpressionBase
 	{
@@ -1230,12 +1230,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		MultiplyAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		MultiplyAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_MULTIPLY_ASSIGNMENT_EXPRESSION(left, right) MultiplyAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_MULTIPLY_ASSIGNMENT_EXPRESSION(token, left, right) MultiplyAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct DivideAssignmentExpression : public ExpressionBase
 	{
@@ -1255,12 +1255,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		DivideAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		DivideAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_DIVIDE_ASSIGNMENT_EXPRESSION(left, right) DivideAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_DIVIDE_ASSIGNMENT_EXPRESSION(token, left, right) DivideAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct ModuloAssignmentExpression : public ExpressionBase
 	{
@@ -1280,12 +1280,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		ModuloAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		ModuloAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_MODULO_ASSIGNMENT_EXPRESSION(left, right) ModuloAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_MODULO_ASSIGNMENT_EXPRESSION(token, left, right) ModuloAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct LeftShiftAssignmentExpression : public ExpressionBase
 	{
@@ -1305,12 +1305,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LeftShiftAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		LeftShiftAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LEFT_SHIFT_ASSIGNMENT_EXPRESSION(left, right) LeftShiftAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_LEFT_SHIFT_ASSIGNMENT_EXPRESSION(token, left, right) LeftShiftAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct RightShiftAssignmentExpression : public ExpressionBase
 	{
@@ -1330,12 +1330,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		RightShiftAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		RightShiftAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_RIGHT_SHIFT_ASSIGNMENT_EXPRESSION(left, right) RightShiftAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_RIGHT_SHIFT_ASSIGNMENT_EXPRESSION(token, left, right) RightShiftAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct BitwiseAndAssignmentExpression : public ExpressionBase
 	{
@@ -1355,12 +1355,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseAndAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		BitwiseAndAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_BITWISE_AND_ASSIGNMENT_EXPRESSION(left, right) BitwiseAndAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_BITWISE_AND_ASSIGNMENT_EXPRESSION(token, left, right) BitwiseAndAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct BitwiseXorAssignmentExpression : public ExpressionBase
 	{
@@ -1380,12 +1380,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseXorAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		BitwiseXorAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_BITWISE_XOR_ASSIGNMENT_EXPRESSION(left, right) BitwiseXorAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_BITWISE_XOR_ASSIGNMENT_EXPRESSION(token, left, right) BitwiseXorAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct BitwiseOrAssignmentExpression : public ExpressionBase
 	{
@@ -1405,12 +1405,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		BitwiseOrAssignmentExpression(ExpressionHandle left, ExpressionHandle right)
-			: left{ left }, right{ right }
+		BitwiseOrAssignmentExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_BITWISE_OR_ASSIGNMENT_EXPRESSION(left, right) BitwiseOrAssignmentExpression{ make_handle(ast, left), make_handle(ast, right) }
+#define MAKE_BITWISE_OR_ASSIGNMENT_EXPRESSION(token, left, right) BitwiseOrAssignmentExpression{ token, make_handle(ast, left), make_handle(ast, right) }
 
 	struct CommaExpression : public ExpressionBase
 	{
@@ -1428,12 +1428,12 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		CommaExpression(std::vector<ExpressionHandle> expressions)
-			: expressions{ std::move(expressions) }
+		CommaExpression(const Token& token, std::vector<ExpressionHandle> expressions)
+			: ExpressionBase{ token }, expressions{ std::move(expressions) }
 		{
 		}
 	};
-#define MAKE_COMMA_EXPRESSION(expressions) CommaExpression{ expressions }
+#define MAKE_COMMA_EXPRESSION(token, expressions) CommaExpression{ token, expressions }
 
 	using BinaryExpressionTypes = SumTypeList
 	<

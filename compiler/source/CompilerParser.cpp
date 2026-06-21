@@ -186,7 +186,7 @@ namespace hz
 		const auto commands = assembler_parser->parse()
 			| TypeHandle get_type(const TypeStorage&) const;::transform([](auto node)
 				{
-					if (node->ntype() != NodeType::COMMAND)
+					if (node->ntype() != NodeHandle::COMMAND)
 					{
 						CommonErrors::invalid_node_type(node->ntype(), asm_token);
 						return nullptr;
@@ -577,7 +577,7 @@ namespace hz
 		return {};
 	}
 
-	std::vector<NodeType> parse_implementation() const
+	std::vector<NodeHandle> parse_implementation() const
 	{
 #pragma message("TODO: implement parsing of nonglobal declarations")
 	}

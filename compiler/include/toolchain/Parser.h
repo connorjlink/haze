@@ -31,10 +31,35 @@ namespace hz
 		const ExpressionStorage& storage;
 
 	protected:
-		// explicitly mutable!
-		Token& lookbehind();
-		Token& peek();
-		Token& lookahead();
+		template<typename Self>
+		decltype(auto) lookbehind(this Self&& self)
+		{
+			if (cursor <= 0)
+			{
+				USE_SAFE(ErrorReporter)->post_uncorrectable(
+					"invalid token backtrack", self.peek());
+			}
+
+			return self.tokens[self.cursor - 1];
+		}
+
+		template<typename Self>
+		decltype(auto) peek(this Self&& self)
+		{
+			return self.tokens[self.cursor];
+		}
+
+		template<typename Self>
+		decltype(auto) lookahead(this Self&& self)
+		{
+			if (self.cursor >= self.tokens.size() - 1)
+			{
+				USE_SAFE(ErrorReporter)->post_uncorrectable(
+					"unexpectedly reached the end of file", self.peek());
+			}
+
+			return self.tokens[self.cursor + 1];
+		}
 
 	protected:
 		Token consume(TokenKind);
@@ -57,14 +82,14 @@ namespace hz
 		ExpressionHandle parse_generic_expression();
 
 		template<typename Self>
-		std::vector<typename Self::NodeType> parse_generic_expression(this Self&& self)
+		std::vector<typename Self::NodeHandle> parse_generic_expression(this Self&& self)
 		{
 #pragma message("TODO: implement generic expression parsing")
 		}
 
 	public:
 		template<typename Self>
-		std::vector<typename Self::NodeType> parse(this Self&& self)
+		std::vector<typename Self::NodeHandle> parse(this Self&& self)
 		{
 			return std::forward<Self>(self).parse_implementation();
 		}

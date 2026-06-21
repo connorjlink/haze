@@ -112,12 +112,12 @@ namespace hz
 		bool is_constant() const;
 
 	public:
-		DotOrgCommand(Address address, const Token& token)
+		DotOrgCommand(const Token& token, Address address)
 			: CommandBase{ token }, address{ address }
 		{
 		}
 	};
-#define MAKE_DOTORG_COMMAND(address, token) DotOrgCommand{ address, token }
+#define MAKE_DOTORG_COMMAND(token, address) MAKE_HANDLE(DotOrgCommand{ token, address }
 
 	struct DotByteCommand : public CommandBase
 	{
@@ -134,12 +134,12 @@ namespace hz
 		bool is_constant() const;
 
 	public:
-		DotByteCommand(const ByteRange& bytes, const Token& token)
-			: CommandBase{ token }, bytes{ bytes }
+		DotByteCommand(const Token& token, ByteRange bytes)
+			: CommandBase{ token }, bytes{ std::move(bytes) }
 		{
 		}
 	};
-#define MAKE_DOTBYTE_COMMAND(bytes, token) DotbyteCommand{ bytes, token }
+#define MAKE_DOTBYTE_COMMAND(token, bytes) MAKE_REFERENCE(DotByteCommand, Command, command_storage, EXPAND(DotByteCommand{ token, bytes }))
 
 
 	template<typename SumMemberT, typename StorageT>

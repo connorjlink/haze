@@ -23,10 +23,13 @@ namespace hz
 
 		constexpr IndexHandle(IndexType index, bool is_valid)
 			: index{ index }, is_valid{ static_cast<IndexType>(is_valid) }
-		{}
+		{
+		}
+
 		constexpr IndexHandle(TagType tag, IndexType index, bool is_valid)
 			: index{ index }, is_valid{ static_cast<IndexType>(is_valid) }, tag{ tag }
-		{}
+		{
+		}
 	};
 
 	// dynamic dispatch generator for sum families
@@ -157,7 +160,8 @@ namespace hz
 
 	public:
 		struct Storage : public Storage<Ts...>
-		{} storage;
+		{
+		} storage;
 	};
 
 	template<typename... Ts>
@@ -168,7 +172,7 @@ namespace hz
 		using Anchor = std::tuple_element_t<0, Type>;
 
 		template<typename T>
-		inline constexpr auto Index = TypeIndexV<T, Type>;
+		static constexpr auto Index = TypeIndexV<T, Type>;
 	};
 
 	template<template<typename> typename MethodsT, typename TypeListT>
@@ -476,6 +480,8 @@ namespace hz
 	//////////////////////////////////////////////////////
 
 	// NOTE: typically the value macro parameter should be std::move()'d to avoid creating an additional copy of what should be temporary
+
+#define AS_HANDLE(x) x.erase()
 
 	template<typename T, template<typename> typename SumDispatcherT, typename StorageT>
 	constexpr SumHandle<SumDispatcherT, StorageT> make_handle(StorageT& sum_storage, T&& value)

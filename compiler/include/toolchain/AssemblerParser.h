@@ -15,24 +15,36 @@ namespace hz
 		, public ServiceTag<AssemblerParser>
 	{
 	private:
-		using NodeType = CommandHandle;
+		using NodeHandle = CommandHandle;
+		template<typename T>
+		using NodeReference = CommandReference<T>;
+
+	protected:
+		Address base;
+		CommandStorage command_storage;
 
 	private:
-		Address base;
+		NodeReference<DotOrgCommand> parse_dotorg_command();
+		NodeReference<DotByteCommand> parse_dotbyte_command();
+		NodeReference<DotGlobalCommand> parse_dotglobal_command();
+		NodeReference<LabelCommand> parse_label_command();
+		NodeHandle parse_command();
+
+	private:
+		template<typename Self>
+		NodeReference<InstructionCommand> parse_instruction_command(this Self&& self)
+		{
+			return self.parse_instruction_command_implementation();
+		}
+
+		template<typename Self>
+		Register parse_register(this Self&& self)
+		{
+			return self.parse_register_implementation();
+		}
 
 	public:
-		CommandHandle parse_dotdefine_command();
-		CommandHandle parse_dotorg_command();
-		CommandHandle parse_dotglobal_command();
-
-		std::vector<NodeType> parse() const
-		{
-			auto result = std::vector<NodeType>{};
-
-#pragma message("TODO: implement assembler parsing")
-
-			return result;
-		}
+		std::vector<NodeHandle> parse_implementation();
 
 	public:
 		AssemblerParser(const std::filesystem::path& filepath, const ExpressionStorage& storage, Address base)

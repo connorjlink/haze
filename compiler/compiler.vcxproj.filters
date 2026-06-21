@@ -389,7 +389,7 @@
     <ClInclude Include="include\ir\IntermediateCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ir\defs\IntermediateKind.h">
+    <ClInclude Include="include\ir\defs\IntermediateCommandKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cli\defs\VerbosityKind.h">
@@ -551,15 +551,6 @@
     <ClInclude Include="include\utility\AutoEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ir\defs\BinaryIntermediateKind.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ir\defs\UnaryIntermediateKind.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ir\defs\CompareIntermediateKind.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\ir\defs\IntermediateTypeKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -600,6 +591,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\toolchain\models\Environment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\IntKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\FloatKind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\StructOrUnionKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

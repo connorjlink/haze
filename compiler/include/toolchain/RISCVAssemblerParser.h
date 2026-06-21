@@ -1,7 +1,8 @@
 #ifndef HAZE_RISCVASSEMBLERPARSER_H
 #define HAZE_RISCVASSEMBLERPARSER_H
 
-#include <cli/defs/ArchitectureKind.h>
+#include <command/Command.h>
+#include <riscv/defs/RISCVInstructionKind.h>
 #include <toolchain/AssemblerParser.h>
 
 // Haze RISCVAssemblerParser.h
@@ -13,9 +14,14 @@ namespace hz
 
 	struct RISCVAssemblerParser : public AssemblerParser
 	{
+	private:
+#define X(enumerator, name) CommandReference<InstructionCommand> parse_##enumerator##_instruction();
+		RISCV_INSTRUCTION_KINDS(X)
+#undef X
+
 	public:
-		CommandReference<InstructionCommand> parse_instruction_command() const;
-		Register parse_register() const;
+		CommandReference<InstructionCommand> parse_instruction_command_implementation();
+		Register parse_register_implementation();
 
 	public:
 		using AssemblerParser::AssemblerParser;

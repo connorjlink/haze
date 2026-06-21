@@ -156,10 +156,7 @@
     <ClInclude Include="include\ast\expression\Expression.h" />
     <ClInclude Include="include\ast\function\defs\FunctionKind.h" />
     <ClInclude Include="include\ast\statement\Statement.h" />
-    <ClInclude Include="include\ir\defs\BinaryIntermediateKind.h" />
-    <ClInclude Include="include\ir\defs\CompareIntermediateKind.h" />
     <ClInclude Include="include\ir\defs\IntermediateTypeKind.h" />
-    <ClInclude Include="include\ir\defs\UnaryIntermediateKind.h" />
     <ClInclude Include="include\runtime\defs\VariableKind.h" />
     <ClInclude Include="include\runtime\Evaluation.h">
       <SubType>
@@ -179,6 +176,18 @@
     </ClInclude>
     <ClInclude Include="include\toolchain\AssemblerParser.h" />
     <ClInclude Include="include\toolchain\models\Environment.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\FloatKind.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\IntKind.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="include\type\defs\StructOrUnionKind.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -312,7 +321,7 @@
     <ClInclude Include="include\command\Command.h" />
     <ClInclude Include="include\command\defs\CommandKind.h" />
     <ClInclude Include="include\ir\IntermediateCommand.h" />
-    <ClInclude Include="include\ir\defs\IntermediateKind.h" />
+    <ClInclude Include="include\ir\defs\IntermediateCommandKind.h" />
     <ClInclude Include="include\command\models\IntegerLiteral.h" />
     <ClInclude Include="include\command\models\IntegerLiteralType.h" />
     <ClInclude Include="include\daemon\Daemon.h" />

@@ -1,6 +1,7 @@
 import std;
 
 #include <toolchain/Lexer.h>
+#include <utility/Constants.h>
 
 // Haze Lexer.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -284,6 +285,8 @@ namespace hz
 	{
 		auto tokens = std::vector<Token>{};
 
+#pragma message("TODO: finish generating every operator and keyword token with manual maximal munch")
+
 		while (!eof())
 		{
 			using enum TokenKind;
@@ -306,10 +309,8 @@ namespace hz
 					continue;
 				}
 
-				// C rules for commas in macro arguments xD
-#define EXPAND(...) __VA_ARGS__
+				// C rules for commas in macro arguments requiring the variadic expand xD
 				APPEND_TOKEN(SLASH, EXPAND(std::string_view{ &here, 1 }));
-#undef EXPAND
 
 				advance();
 			}

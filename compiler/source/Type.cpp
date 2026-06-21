@@ -37,7 +37,7 @@ namespace hz
 #undef SWITCH_CASE
 		}
 
-		CommonErrors::invalid_int_type(int_kind, NULL_TOKEN);
+		CommonErrors::invalid_int_kind(int_kind, NULL_TOKEN);
 		return -1;
 	}
 
@@ -60,7 +60,7 @@ namespace hz
 #undef X
 		}
 
-		CommonErrors::invalid_float_type(float_kind, NULL_TOKEN);
+		CommonErrors::invalid_float_kind(float_kind, NULL_TOKEN);
 		return -1;
 	}
 
@@ -78,7 +78,7 @@ namespace hz
 	{
 		if (!members)
 		{
-			CommonErrors::invalid_struct_or_union_type(struct_or_union_kind, NULL_TOKEN);
+			CommonErrors::invalid_struct_or_union_kind(struct_or_union_kind, NULL_TOKEN);
 			return -1;
 		}
 
@@ -122,7 +122,7 @@ namespace hz
 
 			default:
 			{
-				CommonErrors::invalid_struct_or_union_type(struct_or_union_kind, NULL_TOKEN);
+				CommonErrors::invalid_struct_or_union_kind(struct_or_union_kind, NULL_TOKEN);
 				return -1;
 			} break;
 		}

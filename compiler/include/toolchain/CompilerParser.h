@@ -22,7 +22,7 @@ namespace hz
 		, public ServiceTag<CompilerParser>
 	{
 	private:
-		using NodeType = DeclarationHandle;
+		using NodeHandle = DeclarationHandle;
 
 	public:
 		std::unordered_map<std::string, std::string> function_label_map;
@@ -76,7 +76,7 @@ namespace hz
 		std::vector<FunctionHandle> parse_functions();
 
 	public:
-		std::vector<NodeType> parse_implementation() const;
+		std::vector<NodeHandle> parse_implementation() const;
 
 	public:
 		using Parser::Parser;

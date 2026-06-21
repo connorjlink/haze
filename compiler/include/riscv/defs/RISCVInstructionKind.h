@@ -18,7 +18,6 @@ namespace hz
 	X(SB,        sb) \
 	X(SH,        sh) \
 	X(SW,        sw) \
-	X(LI,        li) \
 	X(LUI,       lui) \
 	X(AUIPC,     auipc) \
 	X(ADDI,      addi) \
@@ -121,7 +120,7 @@ namespace hz
 
 	DEFINE_ENUM(RISCV_INSTRUCTION_KINDS, RISCVInstructionKind, RISC-V instruction kind)
 
-#undef AUTOENUM_ROUTEr
+#undef AUTOENUM_ROUTER
 }
 
 #endif

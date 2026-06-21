@@ -69,7 +69,7 @@ namespace hz
 			const auto optimized = try_optimized ? try_optimized : argument;
 			
 			
-			if (optimized->ntype() != NodeType::EXPRESSION)
+			if (optimized->ntype() != NodeHandle::EXPRESSION)
 			{
 				// optimized argument did not result in an expression, not an error yet until generation or evaluation
 				return nullptr;
@@ -89,7 +89,7 @@ namespace hz
 		auto context = USE_SAFE(Context);
 		const auto result = this->evaluate(context.get());
 
-		if (!result || result->ntype() != NodeType::EXPRESSION)
+		if (!result || result->ntype() != NodeHandle::EXPRESSION)
 		{
 			// evaluation did not result in an expression, not an error yet until generation
 			return nullptr;
@@ -106,7 +106,7 @@ namespace hz
 		{
 			const auto argument_evaluated = argument->evaluate(context);
 
-			if (argument_evaluated->ntype() != NodeType::EXPRESSION)
+			if (argument_evaluated->ntype() != NodeHandle::EXPRESSION)
 			{
 				USE_UNSAFE(ErrorReporter)->post_error(
 					"function call arguments must evaluate to an r-value", argument->_token);

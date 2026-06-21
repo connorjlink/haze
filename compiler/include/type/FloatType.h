@@ -2,9 +2,10 @@
 #define HAZE_FLOATTYPE_H
 
 #include <error/CommonErrors.h>
+#include <type/defs/FloatKind.h>
 #include <type/defs/StorageClass.h>
-#include <type/defs/TypeQualifier.h>
 #include <type/defs/TypeKind.h>
+#include <type/defs/TypeQualifier.h>
 #include <utility/AutoEnum.h>
 #include <utility/Constants.h>
 
@@ -13,19 +14,6 @@
 
 namespace hz
 {
-#define FLOAT_KINDS(X) \
-	X(FLOAT,       float) \
-	X(DOUBLE,      double) \
-	X(LONG_DOUBLE, long double)
-
-
-#define AUTOENUM_ROUTER(X, enumerator, name) X(enumerator, FakeType, name, FloatKind)
-
-	DEFINE_ENUM(FLOAT_KINDS, FloatKind, float kind)
-
-#undef AUTOENUM_ROUTER
-
-
 	struct FloatType : public TypeBase
 	{
 	public:
