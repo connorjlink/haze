@@ -120,9 +120,6 @@
     <ClCompile Include="source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\MemberDeclarationExpression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
