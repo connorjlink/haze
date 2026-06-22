@@ -212,7 +212,7 @@ namespace hz
 		}
 	};
 #define MAKE_PARENTHESIZED_EXPRESSION(token, inner) \
-	MAKE_REFERENCE(ParenthesizedExpression, Expression, EXPAND(ParenthesizedExpression{ token, make_handle(expression_storage, inner) }), expression_storage)
+	MAKE_REFERENCE(ParenthesizedExpression, Expression, EXPAND(ParenthesizedExpression{ token, inner }), expression_storage)
 
 	using PrimaryExpressionTypes = SumTypeList
 	<
@@ -250,7 +250,7 @@ namespace hz
 		}
 	};
 #define MAKE_POSTFIX_INCREMENT_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(PostfixIncrementExpression, Expression, EXPAND(PostfixIncrementExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(PostfixIncrementExpression, Expression, EXPAND(PostfixIncrementExpression{ token, operand }), expression_storage)
 
 	struct PostfixDecrementExpression : public ExpressionBase
 	{
@@ -274,7 +274,7 @@ namespace hz
 		}
 	};
 #define MAKE_POSTFIX_DECREMENT_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(PostfixDecrementExpression, Expression, EXPAND(PostfixDecrementExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(PostfixDecrementExpression, Expression, EXPAND(PostfixDecrementExpression{ token, operand }), expression_storage)
 
 	struct FunctionCallExpression : public ExpressionBase
 	{
@@ -299,7 +299,7 @@ namespace hz
 		}
 	};
 #define MAKE_FUNCTION_CALL_EXPRESSION(token, identifier, arguments) \
-	MAKE_REFERENCE(FunctionCallExpression, Expression, EXPAND(FunctionCallExpression{ token, make_handle(expression_storage, identifier), arguments }), expression_storage)
+	MAKE_REFERENCE(FunctionCallExpression, Expression, EXPAND(FunctionCallExpression{ token, identifier, arguments }), expression_storage)
 
 	struct SubscriptExpression : public ExpressionBase
 	{
@@ -324,7 +324,7 @@ namespace hz
 		}
 	};
 #define MAKE_SUBSCRIPT_EXPRESSION(token, array, index) \
-	MAKE_REFERENCE(SubscriptExpression, Expression, EXPAND(SubscriptExpression{ token, make_handle(expression_storage, array), make_handle(expression_storage, index) }), expression_storage)
+	MAKE_REFERENCE(SubscriptExpression, Expression, EXPAND(SubscriptExpression{ token, array, index }), expression_storage)
 
 	struct MemberAccessExpression : public ExpressionBase
 	{
@@ -349,7 +349,7 @@ namespace hz
 		}
 	};
 #define MAKE_MEMBER_ACCESS_EXPRESSION(token, object, member) \
-	MAKE_REFERENCE(MemberAccessExpression, Expression, EXPAND(MemberAccessExpression{ token, make_handle(expression_storage, object), make_reference(expression_storage, member) }), expression_storage)
+	MAKE_REFERENCE(MemberAccessExpression, Expression, EXPAND(MemberAccessExpression{ token, object, member }), expression_storage)
 
 	struct MemberAccessThroughPointerExpression : public ExpressionBase
 	{
@@ -374,7 +374,7 @@ namespace hz
 		}
 	};
 #define MAKE_MEMBER_ACCESS_THROUGH_POINTER_EXPRESSION(token, object, member) \
-	MAKE_REFERENCE(MemberAccessThroughPointerExpression, Expression, EXPAND(MemberAccessThroughPointerExpression{ token, make_handle(expression_storage, object), make_reference(expression_storage, member) }), expression_storage)
+	MAKE_REFERENCE(MemberAccessThroughPointerExpression, Expression, EXPAND(MemberAccessThroughPointerExpression{ token, object, member }), expression_storage)
 
 	struct CompoundLiteralExpression : public ExpressionBase
 	{
@@ -445,7 +445,7 @@ namespace hz
 		}
 	};
 #define MAKE_PREFIX_INCREMENT_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(PrefixIncrementExpression, Expression, EXPAND(PrefixIncrementExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(PrefixIncrementExpression, Expression, EXPAND(PrefixIncrementExpression{ token, operand }), expression_storage)
 
 	struct PrefixDecrementExpression : public ExpressionBase
 	{
@@ -470,7 +470,7 @@ namespace hz
 		}
 	};
 #define MAKE_PREFIX_DECREMENT_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(PrefixDecrementExpression, Expression, EXPAND(PrefixDecrementExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(PrefixDecrementExpression, Expression, EXPAND(PrefixDecrementExpression{ token, operand }), expression_storage)
 
 	struct PlusExpression : public ExpressionBase
 	{
@@ -494,7 +494,7 @@ namespace hz
 		}
 	};
 #define MAKE_PLUS_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(PlusExpression, Expression, EXPAND(PlusExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(PlusExpression, Expression, EXPAND(PlusExpression{ token, operand }), expression_storage)
 
 	struct MinusExpression : public ExpressionBase
 	{
@@ -518,7 +518,7 @@ namespace hz
 		}
 	};
 #define MAKE_MINUS_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(MinusExpression, Expression, EXPAND(MinusExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(MinusExpression, Expression, EXPAND(MinusExpression{ token, operand }), expression_storage)
 
 	struct BitwiseNotExpression : public ExpressionBase
 	{
@@ -542,7 +542,7 @@ namespace hz
 		}
 	};
 #define MAKE_BITWISE_NOT_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(BitwiseNotExpression, Expression, EXPAND(BitwiseNotExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(BitwiseNotExpression, Expression, EXPAND(BitwiseNotExpression{ token, operand }), expression_storage)
 
 	struct LogicalNotExpression : public ExpressionBase
 	{
@@ -566,7 +566,7 @@ namespace hz
 		}
 	};
 #define MAKE_LOGICAL_NOT_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(LogicalNotExpression, Expression, EXPAND(LogicalNotExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(LogicalNotExpression, Expression, EXPAND(LogicalNotExpression{ token, operand }), expression_storage)
 
 	struct Cexpression_storageExpression : public ExpressionBase
 	{
@@ -591,7 +591,7 @@ namespace hz
 		}
 	};
 #define MAKE_Cexpression_storage_EXPRESSION(token, target, type) \
-	MAKE_REFERENCE(Cexpression_storageExpression, Expression, EXPAND(Cexpression_storageExpression{ token, make_handle(expression_storage, target), type }), expression_storage)
+	MAKE_REFERENCE(Cexpression_storageExpression, Expression, EXPAND(Cexpression_storageExpression{ token, target, type }), expression_storage)
 
 	struct AddressOfExpression : public ExpressionBase
 	{
@@ -617,7 +617,7 @@ namespace hz
 		}
 	};
 #define MAKE_ADDRESS_OF_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(AddressOfExpression, Expression, EXPAND(AddressOfExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(AddressOfExpression, Expression, EXPAND(AddressOfExpression{ token, operand }), expression_storage)
 
 	struct DereferenceExpression : public ExpressionBase
 	{
@@ -641,7 +641,7 @@ namespace hz
 		}
 	};
 #define MAKE_DEREFERENCE_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(DereferenceExpression, Expression, EXPAND(DereferenceExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(DereferenceExpression, Expression, EXPAND(DereferenceExpression{ token, operand }), expression_storage)
 
 	struct SizeOfExpressionExpression : public ExpressionBase
 	{
@@ -665,7 +665,7 @@ namespace hz
 		}
 	};
 #define MAKE_SIZEOF_EXPRESSION_EXPRESSION(token, operand) \
-	MAKE_REFERENCE(SizeOfExpressionExpression, Expression, EXPAND(SizeOfExpressionExpression{ token, make_handle(expression_storage, operand) }), expression_storage)
+	MAKE_REFERENCE(SizeOfExpressionExpression, Expression, EXPAND(SizeOfExpressionExpression{ token, operand }), expression_storage)
 
 	struct SizeOfTypeExpression : public ExpressionBase
 	{
@@ -879,7 +879,7 @@ namespace hz
 #define MAKE_RIGHT_SHIFT_EXPRESSION(token, left, right) \
 	MAKE_REFERENCE(RightShiftExpression, Expression, EXPAND(RightShiftExpression{ token, left, right }), expression_storage)
 
-	struct LessThanExpression : public ExpressionBase
+	struct LessExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -896,15 +896,15 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LessThanExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+		LessExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
 			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LESS_THAN_EXPRESSION(token, left, right) \
-	MAKE_REFERENCE(LessThanExpression, Expression, EXPAND(LessThanExpression{ token, left, right }), expression_storage)
+#define MAKE_LESS_EXPRESSION(token, left, right) \
+	MAKE_REFERENCE(LessExpression, Expression, EXPAND(LessExpression{ token, left, right }), expression_storage)
 
-	struct LessThanOrEqualToExpression : public ExpressionBase
+	struct LessEqualExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -921,15 +921,15 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		LessThanOrEqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+		LessEqualExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
 			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_LESS_THAN_OR_EQUAL_TO_EXPRESSION(token, left, right) \
-	MAKE_REFERENCE(LessThanOrEqualToExpression, Expression, EXPAND(LessThanOrEqualToExpression{ token, left, right }), expression_storage)
+#define MAKE_LESS_EQUAL_EXPRESSION(token, left, right) \
+	MAKE_REFERENCE(LessEqualExpression, Expression, EXPAND(LessEqualExpression{ token, left, right }), expression_storage)
 
-	struct GreaterThanExpression : public ExpressionBase
+	struct GreaterExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -946,15 +946,15 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		GreaterThanExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+		GreaterExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
 			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_GREATER_THAN_EXPRESSION(token, left, right) \
-	MAKE_REFERENCE(GreaterThanExpression, Expression, EXPAND(GreaterThanExpression{ token, left, right }), expression_storage)
+#define MAKE_GREATER_EXPRESSION(token, left, right) \
+	MAKE_REFERENCE(GreaterExpression, Expression, EXPAND(GreaterExpression{ token, left, right }), expression_storage)
 
-	struct GreaterThanOrEqualToExpression : public ExpressionBase
+	struct GreaterEqualExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -971,15 +971,15 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		GreaterThanOrEqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+		GreaterEqualExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
 			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_GREATER_THAN_OR_EQUAL_TO_EXPRESSION(token, left, right) \
-	MAKE_REFERENCE(GreaterThanOrEqualToExpression, Expression, EXPAND(GreaterThanOrEqualToExpression{ token, left, right }), expression_storage)
+#define MAKE_GREATER_EQUAL_EXPRESSION(token, left, right) \
+	MAKE_REFERENCE(GreaterEqualExpression, Expression, EXPAND(GreaterEqualExpression{ token, left, right }), expression_storage)
 
-	struct EqualToExpression : public ExpressionBase
+	struct EqualExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -996,15 +996,15 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		EqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+		EqualExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
 			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_EQUAL_TO_EXPRESSION(token, left, right) \
-	MAKE_REFERENCE(EqualToExpression, Expression, EXPAND(EqualToExpression{ token, left, right }), expression_storage)
+#define MAKE_EQUAL_EXPRESSION(token, left, right) \
+	MAKE_REFERENCE(EqualExpression, Expression, EXPAND(EqualExpression{ token, left, right }), expression_storage)
 
-	struct NotEqualToExpression : public ExpressionBase
+	struct NotEqualExpression : public ExpressionBase
 	{
 	public:
 		ExpressionHandle left;
@@ -1021,13 +1021,13 @@ namespace hz
 		TypeHandle get_type(const TypeStorage&) const;
 
 	public:
-		NotEqualToExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
+		NotEqualExpression(const Token& token, ExpressionHandle left, ExpressionHandle right)
 			: ExpressionBase{ token }, left{ left }, right{ right }
 		{
 		}
 	};
-#define MAKE_NOT_EQUAL_TO_EXPRESSION(token, left, right) \
-	MAKE_REFERENCE(NotEqualToExpression, Expression, EXPAND(NotEqualToExpression{ token, left, right }), expression_storage)
+#define MAKE_NOT_EQUAL_EXPRESSION(token, left, right) \
+	MAKE_REFERENCE(NotEqualExpression, Expression, EXPAND(NotEqualExpression{ token, left, right }), expression_storage)
 
 	struct BitwiseAndExpression : public ExpressionBase
 	{
@@ -1178,7 +1178,7 @@ namespace hz
 		}
 	};
 #define MAKE_TERNARY_EXPRESSION(token, condition, then, otherwise) \
-	MAKE_REFERENCE(TernaryExpression, Expression, EXPAND(TernaryExpression{ token, make_handle(expression_storage, condition), make_handle(expression_storage, then), make_handle(expression_storage, otherwise) }), expression_storage)
+	MAKE_REFERENCE(TernaryExpression, Expression, EXPAND(TernaryExpression{ token, condition, then, otherwise }), expression_storage)
 
 	struct AssignmentExpression : public ExpressionBase
 	{

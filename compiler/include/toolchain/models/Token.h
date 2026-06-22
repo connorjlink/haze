@@ -8,390 +8,286 @@
 
 namespace hz
 {
+#define TOKEN_KINDS(X) \
+	X(IDENTIFIER,           "<identifier>") \
+	X(QUESTION,             "?") \
+	X(SEMICOLON,            ";") \
+	X(COLON,                ":") \
+	X(COMMA,                ",") \
+	X(PERIOD,               ".") \
+	X(DOT,                  ".") \
+	X(ARROW,                "->") \
+	X(LPAREN,               "(") \
+	X(RPAREN,               ")") \
+	X(LBRACE,               "{") \
+	X(RBRACE,               "}") \
+	X(LBRACKET,             "[") \
+	X(RBRACKET,             "]") \
+	X(PLUS,                 "+") \
+	X(MINUS,                "-") \
+	X(STAR,                 "*") \
+	X(SLASH,                "/") \
+	X(PERCENT,              "%") \
+	X(PLUSEQUALS,           "+=") \
+	X(MINUSEQUALS,          "-=") \
+	X(STAREQUALS,           "*=") \
+	X(SLASHEQUALS,          "/=") \
+	X(PERCENTEQUALS,        "%=") \
+	X(CARET,                "^") \
+	X(CARETEQUALS,          "^=") \
+	X(AMPERSAND,            "&") \
+	X(AMPERSANDEQUALS,      "&=") \
+	X(AMPERSANDAMPERSAND,   "&&") \
+	X(PIPE,                 "|") \
+	X(PIPEEQUALS,           "|=") \
+	X(PIPEPIPE,             "||") \
+	X(EQUALS,               "=") \
+	X(EQUALSEQUALS,         "==") \
+	X(EXCLAMATION,          "!") \
+	X(EXCLAMATIONEQUALS,    "!=") \
+	X(GREATER,              ">") \
+	X(GREATEREQUALS,        ">=") \
+	X(GREATERGREATER,       ">>") \
+	X(GREATERGREATEREQUALS, ">>=") \
+	X(LESS,                 "<") \
+	X(LESSEQUALS,           "<=") \
+	X(LESSLESS,             "<<") \
+	X(LESSLESSEQUALS,       "<<=") \
+	X(TILDE,                "~") \
+	X(QUOTE,                "\'") \
+	X(DOUBLEQUOTE,          "\"") \
+	X(POUND,                "#") \
+	X(POUNDPOUND,           "##") \
+	X(UNSIGNED,             "unsigned") \
+	X(SIGNED,               "signed") \
+	X(INLINE,               "inline") \
+	X(EXTERN,               "extern") \
+	X(STATIC,               "static") \
+	X(AUTO,                 "auto") \
+	X(REGISTER,             "register") \
+	X(VOLATILE,             "volatile") \
+	X(RESTRICT,             "restrict") \
+	X(CONST,                "const") \
+	X(ASM,                  "asm") \
+	X(TYPEDEF,              "typedef") \
+	X(STRUCT,               "struct") \
+	X(UNION,                "union") \
+	X(ENUM,                 "enum") \
+	X(VOID,                 "void") \
+	X(CHAR,                 "char") \
+	X(SHORT,                "short") \
+	X(INT,                  "int") \
+	X(LONG,                 "long") \
+	X(FLOAT,                "float") \
+	X(DOUBLE,               "double") \
+	X(RETURN,               "return") \
+	X(DO,                   "do") \
+	X(WHILE,                "while") \
+	X(FOR,                  "for") \
+	X(IF,                   "if") \
+	X(ELSE,                 "else") \
+	X(CONTINUE,             "continue") \
+	X(BREAK,                "break") \
+	X(IFDEF,                "ifdef") \
+	X(IFNDEF,               "ifndef") \
+	X(ELIF,                 "elif") \
+	X(ERROR,                "error") \
+	X(WARNING,              "warning") \
+	X(INCLUDE,              "include") \
+	X(pragma,               "pragma") \
+	X(DEFINE,               "define") \
+	X(UNDEF,                "undef") \
+	X(ENDIF,                "endif") \
+	X(LINE,                 "line") \
+	X(DEFINED,              "defined") \
+	X(DOTORG,               ".org") \
+	X(DOTBYTE,              ".byte") \
+	X(DOTGLOBAL,            ".global") \
+	X(INTEGER_LITERAL,      "<integer literal>") \
+	X(FLOAT_LITERAL,        "<float literal>") \
+	X(STRING_LITERAL,       "<string literal>") \
+	X(WIDE_STRING_LITERAL,  "<wide string literal>") \
+	X(CHARACTER_LITERAL,    "<character literal>") \
+	X(X0,                   "x0") \
+	X(ZERO,                 "zero") \
+	X(X1,                   "x1") \
+	X(RA,                   "ra") \
+	X(X2,                   "x2") \
+	X(SP,                   "sp") \
+	X(X3,                   "x3") \
+	X(GP,                   "gp") \
+	X(X4,                   "x4") \
+	X(TP,                   "tp") \
+	X(X5,                   "x5") \
+	X(T0,                   "t0") \
+	X(X6,                   "x6") \
+	X(T1,                   "t1") \
+	X(X7,                   "x7") \
+	X(T2,                   "t2") \
+	X(X8,                   "x8") \
+	X(S0,                   "s0") \
+	X(FP,                   "fp") \
+	X(X9,                   "x9") \
+	X(S1,                   "s1") \
+	X(X10,                  "x10") \
+	X(A0,                   "a0") \
+	X(X11,                  "x11") \
+	X(A1,                   "a1") \
+	X(X12,                  "x12") \
+	X(A2,                   "a2") \
+	X(X13,                  "x13") \
+	X(A3,                   "a3") \
+	X(X14,                  "x14") \
+	X(A4,                   "a4") \
+	X(X15,                  "x15") \
+	X(A5,                   "a5") \
+	X(X16,                  "x16") \
+	X(A6,                   "a6") \
+	X(X17,                  "x17") \
+	X(A7,                   "a7") \
+	X(X18,                  "x18") \
+	X(S2,                   "s2") \
+	X(X19,                  "x19") \
+	X(S3,                   "s3") \
+	X(X20,                  "x20") \
+	X(S4,                   "s4") \
+	X(X21,                  "x21") \
+	X(S5,                   "s5") \
+	X(X22,                  "x22") \
+	X(S6,                   "s6") \
+	X(X23,                  "x23") \
+	X(S7,                   "s7") \
+	X(X24,                  "x24") \
+	X(S8,                   "s8") \
+	X(X25,                  "x25") \
+	X(S9,                   "s9") \
+	X(X26,                  "x26") \
+	X(S10,                  "s10") \
+	X(X27,                  "x27") \
+	X(S11,                  "s11") \
+	X(X28,                  "x28") \
+	X(T3,                   "t3") \
+	X(X29,                  "x29") \
+	X(T4,                   "t4") \
+	X(X30,                  "x30") \
+	X(T5,                   "t5") \
+	X(X31,                  "x31") \
+	X(T6,                   "t6") \
+	X(LB,                   "lb") \
+	X(LH,                   "lh") \
+	X(LW,                   "lw") \
+	X(LBU,                  "lbu") \
+	X(LHU,                  "lhu") \
+	X(SB,                   "sb") \
+	X(SH,                   "sh") \
+	X(SW,                   "sw") \
+	X(LUI,                  "lui") \
+	X(AUIPC,                "auipc") \
+	X(ADDI,                 "addi") \
+	X(ADD,                  "add") \
+	X(SUB,                  "sub") \
+	X(SLTI,                 "slti") \
+	X(SLT,                  "slt") \
+	X(SLTIU,                "sltiu") \
+	X(SLTU,                 "sltu") \
+	X(ANDI,                 "andi") \
+	X(AND,                  "and") \
+	X(ORI,                  "ori") \
+	X(OR,                   "or") \
+	X(XORI,                 "xori") \
+	X(XOR,                  "xor") \
+	X(SLLI,                 "slli") \
+	X(SLL,                  "sll") \
+	X(SRLI,                 "srli") \
+	X(SRL,                  "srl") \
+	X(SRAI,                 "srai") \
+	X(SRA,                  "sra") \
+	X(JAL,                  "jal") \
+	X(JALR,                 "jalr") \
+	X(BEQ,                  "beq") \
+	X(BNE,                  "bne") \
+	X(BLT,                  "blt") \
+	X(BGE,                  "bge") \
+	X(BLTU,                 "bltu") \
+	X(BGEU,                 "bgeu") \
+	X(NOP,                  "nop") \
+	X(ECALL,                "ecall") \
+	X(EBREAK,               "ebreak") \
+	X(WFI,                  "wfi") \
+	X(FENCE,                "fence") \
+	X(MUL,                  "mul") \
+	X(MULH,                 "mulh") \
+	X(MULHU,                "mulhu") \
+	X(MULHSU,               "mulhsu") \
+	X(DIV,                  "div") \
+	X(DIVU,                 "divu") \
+	X(REM,                  "rem") \
+	X(REMU,                 "remu") \
+	X(LRW,                  "lr.w") \
+	X(SCW,                  "sc.w") \
+	X(AMOSWAPW,             "amoswap.w") \
+	X(AMOADDW,              "amoadd.w") \
+	X(AMOXORW,              "amoxor.w") \
+	X(AMOANDW,              "amoand.w") \
+	X(AMOORW,               "amoor.w") \
+	X(AMOMINW,              "amomin.w") \
+	X(AMOMAXW,              "amomax.w") \
+	X(AMOMINUW,             "amominu.w") \
+	X(AMOMAXUW,             "amomaxu.w") \
+	X(CLWSP,                "clwsp") \
+	X(CSWSP,                "cswsp") \
+	X(CLW,                  "clw") \
+	X(CSW,                  "csw") \
+	X(CJ,                   "cj") \
+	X(CJAL,                 "cjal") \
+	X(CJR,                  "cjr") \
+	X(CJALR,                "cjalr") \
+	X(CBEQZ,                "cbeqz") \
+	X(CBNEZ,                "cbnez") \
+	X(CLI,                  "cli") \
+	X(CLUI,                 "clui") \
+	X(CADDI,                "caddi") \
+	X(CADDI16SP,            "caddi16sp") \
+	X(CADDI4SPN,            "caddi4spn") \
+	X(CSLLI,                "cslli") \
+	X(CSRLI,                "csrli") \
+	X(CSRAI,                "csrai") \
+	X(CANDI,                "candi") \
+	X(CMV,                  "cmv") \
+	X(CADD,                 "cadd") \
+	X(CAND,                 "cand") \
+	X(COR,                  "cor") \
+	X(CXOR,                 "cxor") \
+	X(CSUB,                 "csub") \
+	X(CNOP,                 "cnop") \
+	X(CEBREAK,              "cebreak") \
+	X(CSRRW,                "csrrw") \
+	X(CSRRS,                "csrrs") \
+	X(CSRRC,                "csrrc") \
+	X(CSRRWI,               "csrrwi") \
+	X(CSRRSI,               "csrrsi") \
+	X(CSRRCI,               "csrrci") \
+	X(FENCEI,               "fence.i") \
+	X(URET,                 "uret") \
+	X(SRET,                 "sret") \
+	X(MRET,                 "mret") \
+	X(END,                  "<end of file>") \
+	
+	
 	enum struct TokenKind
 	{
-		IDENTIFIER,
-
-		QUESTION,
-		SEMICOLON,
-		COLON,
-		COMMA,
-		EQUALS,
-		PERIOD,
-
-		POUND, POUNDPOUND,
-
-		AMPERSAND, AMPERSANDEQUALS,
-		AMPERSANDAMPERSAND,
-		
-		PIPE, PIPEEQUALS,
-		PIPEPIPE,
-
-		LPAREN, RPAREN,
-		LBRACE, RBRACE,
-		LBRACKET, RBRACKET,
-
-		PLUS, MINUS, STAR, SLASH, PERCENT,
-		PLUSEQUALS, MINUSEQUALS, STAREQUALS, SLASHEQUALS, PERCENTEQUALS,
-
-		CARET, CARETEQUALS,
-
-		EQUALSEQUALS, EXCLAMATIONEQUALS,
-
-		GREATER, LESS,
-		GREATEREQUALS, LESSEQUALS,
-
-		LESSLESS, GREATERGREATER,
-		LESSLESSEQUALS, GREATERGREATEREQUALS,
-
-		TILDE, EXCLAMATION,
-		QUOTE, DOUBLEQUOTE,
-
-		UNSIGNED,
-		SIGNED,
-
-		INLINE,
-		EXTERN,
-		STATIC,
-		AUTO,
-		REGISTER,
-		VOLATILE,
-		RESTRICT,
-		CONST,
-		ASM,
-
-		TYPEDEF,
-		STRUCT,
-		UNION,
-		ENUM,
-		VOID,
-		INT,
-		CHAR,
-		SHORT,
-		LONG,
-		FLOAT,
-		DOUBLE,
-
-		RETURN,
-		DO,
-		WHILE,
-		FOR,
-		IF,
-		ELSE,
-
-		ENDIF,
-		IFDEF,
-		IFNDEF,
-		ELIF,
-		ERROR,
-		WARNING,
-		INCLUDE,
-		PRAGMA,
-		DEFINE,
-		UNDEF,
-		LINE,
-		DEFINED,
-		DOTORG,
-		DOTBYTE,
-		DOTGLOBAL,
-
-		INTEGER_LITERAL,
-		FLOAT_LITERAL,
-		STRING_LITERAL,
-		WIDE_STRING_LITERAL,
-		CHARACTER_LITERAL,
-
-		// riscv register set
-		X0,   X1, X2, X3, X4, X5, X6, X7, X8,     X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31,
-		ZERO, RA, SP, GP, TP, T0, T1, T2, S0, FP, S1, A0,  A1,  A2,  A3,  A4,  A5,  A6,  A7,  S2,  S3,  S4,  S5,  S6,  S7,  S8,  S9,  S10, S11, T3,  T4,  T5,  T6,
-		
-		// I instruction set
-		LB, LH, LW, LBU, LHU,
-		SB, SH, SW,
-		LUI, AUIPC,
-		ADDI, ADD, SUB,
-		SLTI, SLT, SLTIU, SLTU,
-		ANDI, AND, ORI, OR, XORI, XOR,
-		SLLI, SLL, SRLI, SRL, SRAI, SRA,
-		JAL, JALR,
-		BEQ, BNE, BLT, BGE, BLTU, BGEU,
-		NOP, ECALL, EBREAK, WFI, FENCE,
-
-		// M extension
-		MUL, MULH, MULHU, MULHSU, DIV, DIVU, REM, REMU,
-
-		// A extension
-		LRW, SCW,
-		AMOSWAPW, AMOADDW, AMOXORW, AMOANDW, AMOORW, AMOMINW, AMOMAXW, AMOMINUW, AMOMAXUW,
-
-		// C extension
-		CLWSP, CSWSP, CLW, CSW, 
-		CJ, CJAL, CJR, CJALR, 
-		CBEQZ, CBNEZ, 
-		CLI, CLUI, 
-		CADDI, CADDI16SP, CADDI4SPN,
-		CSLLI, CSRLI, CSRAI, 
-		CANDI, CMV, CADD, CAND, COR, CXOR, CSUB, 
-		CNOP, CEBREAK,
-
-		// Zicsr extension
-		CSRRW, CSRRS, CSRRC, CSRRWI, CSRRSI, CSRRCI,
-
-		// Zifencei extension
-		FENCEI,
-
-		// U/S mode
-		URET, SRET, MRET,
-
-		END,
+#define X(enumerator, token) enumerator,
+		TOKEN_KINDS(X)
+#undef X
 	};
 
 	using namespace std::literals;
 
 	static const Bimap<std::string_view, TokenKind> token_map
 	{
-		bimap_t{ "int"sv, TokenKind::INT },
-		bimap_t{ "identifier"sv, TokenKind::IDENTIFIER },
-
-		bimap_t{ "?"sv, TokenKind::QUESTION },
-		bimap_t{ ";"sv, TokenKind::SEMICOLON },
-		bimap_t{ ":"sv, TokenKind::COLON },
-		bimap_t{ ","sv, TokenKind::COMMA },
-		bimap_t{ "."sv, TokenKind::PERIOD },
-		bimap_t{ "~"sv, TokenKind::TILDE },
-		bimap_t{ "!"sv, TokenKind::EXCLAMATION },
-		bimap_t{ "\'"sv, TokenKind::QUOTE },
-		bimap_t{ "\""sv, TokenKind::DOUBLEQUOTE },
-		bimap_t{ "="sv, TokenKind::EQUALS },
-		bimap_t{ "=="sv, TokenKind::EQUALSEQUALS },
-		bimap_t{ "!="sv, TokenKind::EXCLAMATIONEQUALS },
-		bimap_t{ ">"sv, TokenKind::GREATER },
-		bimap_t{ ">="sv, TokenKind::GREATEREQUALS },
-		bimap_t{ "<"sv, TokenKind::LESS },
-		bimap_t{ "<="sv, TokenKind::LESSEQUALS },
-
-		bimap_t{ "#"sv, TokenKind::POUND },
-		bimap_t{ "##"sv, TokenKind::POUNDPOUND },
-
-		bimap_t{ "("sv, TokenKind::LPAREN },
-		bimap_t{ ")"sv, TokenKind::RPAREN },
-		bimap_t{ "{"sv, TokenKind::LBRACE },
-		bimap_t{ "}"sv, TokenKind::RBRACE },
-		bimap_t{ "["sv, TokenKind::LBRACKET },
-		bimap_t{ "]"sv, TokenKind::RBRACKET },
-
-		bimap_t{ "+"sv, TokenKind::PLUS },
-		bimap_t{ "+="sv, TokenKind::PLUSEQUALS },
-		bimap_t{ "-"sv, TokenKind::MINUS },
-		bimap_t{ "-="sv, TokenKind::MINUSEQUALS },
-		bimap_t{ "*"sv, TokenKind::STAR },
-		bimap_t{ "*="sv, TokenKind::STAREQUALS },
-		bimap_t{ "/"sv, TokenKind::SLASH },
-		bimap_t{ "/="sv, TokenKind::SLASHEQUALS },
-		bimap_t{ "%"sv, TokenKind::PERCENT },
-		bimap_t{ "%="sv, TokenKind::PERCENTEQUALS },
-		bimap_t{ "^"sv, TokenKind::CARET },
-		bimap_t{ "^="sv, TokenKind::CARETEQUALS },
-		bimap_t{ "&"sv, TokenKind::AMPERSAND },
-		bimap_t{ "&="sv, TokenKind::AMPERSANDEQUALS },
-		bimap_t{ "&&"sv, TokenKind::AMPERSANDAMPERSAND },
-		bimap_t{ "|"sv, TokenKind::PIPE },
-		bimap_t{ "|="sv, TokenKind::PIPEEQUALS },
-		bimap_t{ "||"sv, TokenKind::PIPEPIPE },
-		bimap_t{ "<<"sv, TokenKind::LESSLESS },
-		bimap_t{ "<<="sv, TokenKind::LESSLESSEQUALS },
-		bimap_t{ ">>"sv, TokenKind::GREATERGREATER },
-		bimap_t{ ">>="sv, TokenKind::GREATERGREATEREQUALS },
-
-		bimap_t{ "unsigned"sv, TokenKind::UNSIGNED },
-		bimap_t{ "signed"sv, TokenKind::SIGNED },
-		
-		bimap_t{ "inline"sv, TokenKind::INLINE },
-		bimap_t{ "extern"sv, TokenKind::EXTERN },
-		bimap_t{ "static"sv, TokenKind::STATIC },
-		bimap_t{ "auto"sv, TokenKind::AUTO },
-		bimap_t{ "register"sv, TokenKind::REGISTER },
-		bimap_t{ "volatile"sv, TokenKind::VOLATILE },
-		bimap_t{ "restrict"sv, TokenKind::RESTRICT },
-		bimap_t{ "const"sv, TokenKind::CONST },
-		bimap_t{ "asm"sv, TokenKind::ASM },
-
-		bimap_t{ "typedef"sv, TokenKind::TYPEDEF },
-		bimap_t{ "struct"sv, TokenKind::STRUCT },
-		bimap_t{ "union"sv, TokenKind::UNION },
-		bimap_t{ "enum"sv, TokenKind::ENUM },
-		bimap_t{ "void"sv, TokenKind::VOID },
-		bimap_t{ "int"sv, TokenKind::INT },
-		bimap_t{ "char"sv, TokenKind::CHAR },
-		bimap_t{ "short"sv, TokenKind::SHORT },
-		bimap_t{ "long"sv, TokenKind::LONG },
-		bimap_t{ "float"sv, TokenKind::FLOAT },
-		bimap_t{ "double"sv, TokenKind::DOUBLE },
-
-		bimap_t{ "return"sv, TokenKind::RETURN },
-		bimap_t{ "do"sv, TokenKind::DO },
-		bimap_t{ "while"sv, TokenKind::WHILE },
-		bimap_t{ "for"sv, TokenKind::FOR },
-		bimap_t{ "if"sv, TokenKind::IF },
-		bimap_t{ "else"sv, TokenKind::ELSE },
-
-		bimap_t{ "ifdef"sv, TokenKind::IFDEF },
-		bimap_t{ "ifndef"sv, TokenKind::IFNDEF },
-		bimap_t{ "elif"sv, TokenKind::ELIF },
-		bimap_t{ "endif"sv, TokenKind::ENDIF },
-		bimap_t{ "error"sv, TokenKind::ERROR },
-		bimap_t{ "warning"sv, TokenKind::WARNING },
-		bimap_t{ "include"sv, TokenKind::INCLUDE },
-		bimap_t{ "pragma"sv, TokenKind::PRAGMA },
-		bimap_t{ "define"sv, TokenKind::DEFINE },
-		bimap_t{ "undef"sv, TokenKind::UNDEF },
-		bimap_t{ "line"sv, TokenKind::LINE },
-		bimap_t{ "defined"sv, TokenKind::DEFINED },
-		bimap_t{ ".org"sv, TokenKind::DOTORG },
-		bimap_t{ ".byte"sv, TokenKind::DOTBYTE },
-		bimap_t{ ".global"sv, TokenKind::DOTGLOBAL },
-		
-		bimap_t{ "x0"sv, TokenKind::X0 },
-		bimap_t{ "x1"sv, TokenKind::X1 },
-		bimap_t{ "x2"sv, TokenKind::X2 },
-		bimap_t{ "x3"sv, TokenKind::X3 },
-		bimap_t{ "x4"sv, TokenKind::X4 },
-		bimap_t{ "x5"sv, TokenKind::X5 },
-		bimap_t{ "x6"sv, TokenKind::X6 },
-		bimap_t{ "x7"sv, TokenKind::X7 },
-		bimap_t{ "x8"sv, TokenKind::X8 },
-		bimap_t{ "x9"sv, TokenKind::X9 },
-		bimap_t{ "x10"sv, TokenKind::X10 },
-		bimap_t{ "x11"sv, TokenKind::X11 },
-		bimap_t{ "x12"sv, TokenKind::X12 },
-		bimap_t{ "x13"sv, TokenKind::X13 },
-		bimap_t{ "x14"sv, TokenKind::X14 },
-		bimap_t{ "x15"sv, TokenKind::X15 },
-		bimap_t{ "x16"sv, TokenKind::X16 },
-		bimap_t{ "x17"sv, TokenKind::X17 },
-		bimap_t{ "x18"sv, TokenKind::X18 },
-		bimap_t{ "x19"sv, TokenKind::X19 },
-		bimap_t{ "x20"sv, TokenKind::X20 },
-		bimap_t{ "x21"sv, TokenKind::X21 },
-		bimap_t{ "x22"sv, TokenKind::X22 },
-		bimap_t{ "x23"sv, TokenKind::X23 },
-		bimap_t{ "x24"sv, TokenKind::X24 },
-		bimap_t{ "x25"sv, TokenKind::X25 },
-		bimap_t{ "x26"sv, TokenKind::X26 },
-		bimap_t{ "x27"sv, TokenKind::X27 },
-		bimap_t{ "x28"sv, TokenKind::X28 },
-		bimap_t{ "x29"sv, TokenKind::X29 },
-		bimap_t{ "x30"sv, TokenKind::X30 },
-		bimap_t{ "x31"sv, TokenKind::X31 },
-
-		bimap_t{ "lb"sv, TokenKind::LB },
-		bimap_t{ "lh"sv, TokenKind::LH },
-		bimap_t{ "lw"sv, TokenKind::LW },
-		bimap_t{ "lbu"sv, TokenKind::LBU },
-		bimap_t{ "lhu"sv, TokenKind::LHU },
-		bimap_t{ "sb"sv, TokenKind::SB },
-		bimap_t{ "sh"sv, TokenKind::SH },
-		bimap_t{ "sw"sv, TokenKind::SW },
-		bimap_t{ "lui"sv, TokenKind::LUI },
-		bimap_t{ "auipc"sv, TokenKind::AUIPC },
-		bimap_t{ "addi"sv, TokenKind::ADDI },
-		bimap_t{ "add"sv, TokenKind::ADD },
-		bimap_t{ "sub"sv, TokenKind::SUB },
-		bimap_t{ "slti"sv, TokenKind::SLTI },
-		bimap_t{ "slt"sv, TokenKind::SLT },
-		bimap_t{ "sltiu"sv, TokenKind::SLTIU },
-		bimap_t{ "sltu"sv, TokenKind::SLTU },
-		bimap_t{ "andi"sv, TokenKind::ANDI },
-		bimap_t{ "and"sv, TokenKind::AND },
-		bimap_t{ "ori"sv, TokenKind::ORI },
-		bimap_t{ "or"sv, TokenKind::OR },
-		bimap_t{ "xori"sv, TokenKind::XORI },
-		bimap_t{ "xor"sv, TokenKind::XOR },
-		bimap_t{ "slli"sv, TokenKind::SLLI },
-		bimap_t{ "sll"sv, TokenKind::SLL },
-		bimap_t{ "srli"sv, TokenKind::SRLI },
-		bimap_t{ "srl"sv, TokenKind::SRL },
-		bimap_t{ "srai"sv, TokenKind::SRAI },
-		bimap_t{ "sra"sv, TokenKind::SRA },
-		bimap_t{ "jal"sv, TokenKind::JAL },
-		bimap_t{ "jalr"sv, TokenKind::JALR },
-		bimap_t{ "beq"sv, TokenKind::BEQ },
-		bimap_t{ "bne"sv, TokenKind::BNE },
-		bimap_t{ "blt"sv, TokenKind::BLT },
-		bimap_t{ "bge"sv, TokenKind::BGE },
-		bimap_t{ "bltu"sv, TokenKind::BLTU },
-		bimap_t{ "bgeu"sv, TokenKind::BGEU },
-		bimap_t{ "nop"sv, TokenKind::NOP },
-		bimap_t{ "ecall"sv, TokenKind::ECALL },
-		bimap_t{ "ebreak"sv, TokenKind::EBREAK },
-		bimap_t{ "wfi"sv, TokenKind::WFI },
-		bimap_t{ "fence"sv, TokenKind::FENCE },
-
-		bimap_t{ "mul"sv, TokenKind::MUL },
-		bimap_t{ "mulh"sv, TokenKind::MULH },
-		bimap_t{ "mulhu"sv, TokenKind::MULHU },
-		bimap_t{ "mulhsu"sv, TokenKind::MULHSU },
-		bimap_t{ "div"sv, TokenKind::DIV },
-		bimap_t{ "divu"sv, TokenKind::DIVU },
-		bimap_t{ "rem"sv, TokenKind::REM },
-		bimap_t{ "remu"sv, TokenKind::REMU },
-
-		bimap_t{ "lr.w"sv, TokenKind::LRW },
-		bimap_t{ "sc.w"sv, TokenKind::SCW },
-		bimap_t{ "amoswap.w"sv, TokenKind::AMOSWAPW },
-		bimap_t{ "amoadd.w"sv, TokenKind::AMOADDW },
-		bimap_t{ "amoxor.w"sv, TokenKind::AMOXORW },
-		bimap_t{ "amoandw.w"sv, TokenKind::AMOANDW },
-		bimap_t{ "amoorw.w"sv, TokenKind::AMOORW },
-		bimap_t{ "amominw.w"sv, TokenKind::AMOMINW },
-		bimap_t{ "amomaxw.w"sv, TokenKind::AMOMAXW },
-		bimap_t{ "amominu.w"sv, TokenKind::AMOMINUW },
-		bimap_t{ "amomaxu.w"sv, TokenKind::AMOMAXUW },
-
-		bimap_t{ "c.lwsp"sv, TokenKind::CLWSP },
-		bimap_t{ "c.swsp"sv, TokenKind::CSWSP },
-		bimap_t{ "c.lw"sv, TokenKind::CLW },
-		bimap_t{ "c.sw"sv, TokenKind::CSW },
-		bimap_t{ "c.j"sv, TokenKind::CJ },
-		bimap_t{ "c.jal"sv, TokenKind::CJAL },
-		bimap_t{ "c.jr"sv, TokenKind::CJR },
-		bimap_t{ "c.jalr"sv, TokenKind::CJALR },
-		bimap_t{ "c.beqz"sv, TokenKind::CBEQZ },
-		bimap_t{ "c.bnez"sv, TokenKind::CBNEZ },
-		bimap_t{ "c.li"sv, TokenKind::CLI },
-		bimap_t{ "c.lui"sv, TokenKind::CLUI },
-		bimap_t{ "c.addi"sv, TokenKind::CADDI },
-		bimap_t{ "c.addi16sp"sv, TokenKind::CADDI16SP },
-		bimap_t{ "c.addi4spn"sv, TokenKind::CADDI4SPN },
-		bimap_t{ "c.slli"sv, TokenKind::CSLLI },
-		bimap_t{ "c.srli"sv, TokenKind::CSRLI },
-		bimap_t{ "c.srai"sv, TokenKind::CSRAI },
-		bimap_t{ "c.andi"sv, TokenKind::CANDI },
-		bimap_t{ "c.mv"sv, TokenKind::CMV },
-		bimap_t{ "c.add"sv, TokenKind::CADD },
-		bimap_t{ "c.and"sv, TokenKind::CAND },
-		bimap_t{ "c.or"sv, TokenKind::COR },
-		bimap_t{ "c.xor"sv, TokenKind::CXOR },
-		bimap_t{ "c.sub"sv, TokenKind::CSUB },
-		bimap_t{ "c.nop"sv, TokenKind::CNOP },
-		bimap_t{ "c.ebreak"sv, TokenKind::CEBREAK },
-
-		bimap_t{ "c.srrw"sv, TokenKind::CSRRW },
-		bimap_t{ "c.srrs"sv, TokenKind::CSRRS },
-		bimap_t{ "c.srrc"sv, TokenKind::CSRRC },
-		bimap_t{ "c.srrwi"sv, TokenKind::CSRRWI },
-		bimap_t{ "c.srrsi"sv, TokenKind::CSRRSI },
-		bimap_t{ "c.srrci"sv, TokenKind::CSRRCI },
-
-		bimap_t{ "fencei"sv, TokenKind::FENCEI },
-
-		bimap_t{ "uret"sv, TokenKind::URET },
-		bimap_t{ "sret"sv, TokenKind::SRET },
-		bimap_t{ "mret"sv, TokenKind::MRET },
-
-		bimap_t{ "[identifier]"sv, TokenKind::IDENTIFIER },
-
-		bimap_t{ "eof"sv, TokenKind::END },
+#define X(enumerator, token) bimap_t{ token, TokenKind::enumerator },
+		TOKEN_KINDS(X)
+#undef X
 	};
 
 	struct SourceLocation

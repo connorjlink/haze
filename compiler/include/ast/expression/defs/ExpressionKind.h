@@ -57,12 +57,12 @@ namespace hz
 	X(SUBTRACT,               MINUS,                LEFT,   4, SubtractExpression,             subtract) \
 	X(LEFT_SHIFT,             LESSLESS,             LEFT,   5, LeftShiftExpression,            left shift) \
 	X(RIGHT_SHIFT,            GREATERGREATER,       LEFT,   5, RightShiftExpression,           right shift) \
-	X(LESS,                   LESS,                 LEFT,   6, LessThanExpression,             less than) \
-	X(LESS_EQUAL,             LESS,                 LEFT,   6, LessThanOrEqualToExpression,    less than or equal to) \
-	X(GREATER,                GREATER,              LEFT,   6, GreaterThanExpression,          greater than) \
-	X(GREATER_EQUAL,          GREATER,              LEFT,   6, GreaterThanOrEqualToExpression, greater than or equal to) \
-	X(EQUAL,                  EQUALS,               LEFT,   7, EqualToExpression,              equal to) \
-	X(NOT_EQUAL,              EXCLAMATIONEQUALS,    LEFT,   7, NotEqualToExpression,           not equal to) \
+	X(LESS,                   LESS,                 LEFT,   6, LessExpression,                 less than) \
+	X(LESS_EQUAL,             LESSEQUALS,           LEFT,   6, LessEqualExpression,            less than or equal to) \
+	X(GREATER,                GREATER,              LEFT,   6, GreaterExpression,              greater than) \
+	X(GREATER_EQUAL,          GREATEREQUALS,        LEFT,   6, GreaterEqualExpression,         greater than or equal to) \
+	X(EQUAL,                  EQUALSEQUALS,         LEFT,   7, EqualExpression,                equal to) \
+	X(NOT_EQUAL,              EXCLAMATIONEQUALS,    LEFT,   7, NotEqualExpression,             not equal to) \
 	X(BITWISE_AND,            AMPERSAND,            LEFT,   8, BitwiseAndExpression,           bitwise AND) \
 	X(BITWISE_XOR,            CARET,                LEFT,   9, BitwiseXorExpression,           bitwise exclusive OR) \
 	X(BITWISE_OR,             PIPE,                 LEFT,  10, BitwiseOrExpression,            bitwise OR) \

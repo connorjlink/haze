@@ -403,40 +403,9 @@ namespace hz
 
 			switch (next.kind)
 			{
-#define X(enumerator, token, macro, associativity, precedence, type, name) case TokenKind::token: left = MAKE_##macro##_EXPRESSION(next, left, right).erase(); break;
+#define X(enumerator, token, associativity, precedence, type, name) case TokenKind::token: left = MAKE_##enumerator##_EXPRESSION(next, left, right).erase(); break;
 				BINARY_EXPRESSION_KINDS(X)
 #undef X
-				case TokenKind::STAR:                 left = MAKE_MULTIPLY_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::SLASH:                left = MAKE_DIVIDE_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PERCENT:              left = MAKE_MODULO_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PLUS:                 left = MAKE_ADD_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::MINUS:                left = MAKE_SUBTRACT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::LESSLESS:             left = MAKE_LEFT_SHIFT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::GREATERGREATER:       left = MAKE_RIGHT_SHIFT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::LESS:                 left = MAKE_LESS_THAN_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::LESSEQUALS:           left = MAKE_LESS_THAN_OR_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::GREATER:              left = MAKE_GREATER_THAN_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::GREATEREQUALS:        left = MAKE_GREATER_THAN_OR_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::EQUALSEQUALS:         left = MAKE_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::EXCLAMATIONEQUALS:    left = MAKE_NOT_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::AMPERSAND:            left = MAKE_BITWISE_AND_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::CARET:                left = MAKE_BITWISE_XOR_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PIPE:                 left = MAKE_BITWISE_OR_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::AMPERSANDAMPERSAND:   left = MAKE_LOGICAL_AND_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PIPEPIPE:             left = MAKE_LOGICAL_OR_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::EQUALS:               left = MAKE_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PLUSEQUALS:           left = MAKE_ADD_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::MINUSEQUALS:          left = MAKE_SUBTRACT_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::STAREQUALS:           left = MAKE_MULTIPLY_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::SLASHEQUALS:          left = MAKE_DIVIDE_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PERCENTEQUALS:        left = MAKE_MODULO_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::LESSLESSEQUALS:       left = MAKE_LEFT_SHIFT_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::GREATERGREATEREQUALS: left = MAKE_RIGHT_SHIFT_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::AMPERSANDEQUALS:      left = MAKE_BITWISE_AND_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::CARETEQUALS:          left = MAKE_BITWISE_XOR_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::PIPEEQUALS:           left = MAKE_BITWISE_OR_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
-				case TokenKind::COMMA:                left = MAKE_COMMA_EXPRESSION(next, left, right).erase(); break;
-				default: break;
 			}
 		} while (true);
 
