@@ -12,6 +12,7 @@ namespace hz
 	{
 		IDENTIFIER,
 
+		QUESTION,
 		SEMICOLON,
 		COLON,
 		COMMA,
@@ -152,6 +153,7 @@ namespace hz
 		bimap_t{ "int"sv, TokenKind::INT },
 		bimap_t{ "identifier"sv, TokenKind::IDENTIFIER },
 
+		bimap_t{ "?"sv, TokenKind::QUESTION },
 		bimap_t{ ";"sv, TokenKind::SEMICOLON },
 		bimap_t{ ":"sv, TokenKind::COLON },
 		bimap_t{ ","sv, TokenKind::COMMA },

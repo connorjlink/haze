@@ -9,6 +9,7 @@ import std;
 #include <toolchain/Parser.h>
 #include <toolchain/CompilerParser.h>
 #include <type/Type.h>
+#include <utility/Sum.h>
 
 // Haze Parser.cpp
 // (c) Connor J. Link. All Rights Reserved.
@@ -25,21 +26,10 @@ namespace
 			case AMPERSAND:            [[fallthrough]];
 			case AMPERSANDEQUALS:      [[fallthrough]];
 			case AMPERSANDAMPERSAND:   [[fallthrough]];
-			case PIPE:                 [[fallthrough]];
-			case PIPEEQUALS:           [[fallthrough]];
-			case PIPEPIPE:             [[fallthrough]];
-			case PLUS:                 [[fallthrough]];
-			case PLUSEQUALS:           [[fallthrough]];
-			case MINUS:                [[fallthrough]];
-			case MINUSEQUALS:          [[fallthrough]];
-			case STAR:                 [[fallthrough]];
-			case STAREQUALS:           [[fallthrough]];
-			case SLASH:                [[fallthrough]];
-			case SLASHEQUALS:          [[fallthrough]];
-			case PERCENT:              [[fallthrough]];
-			case PERCENTEQUALS:        [[fallthrough]];
 			case CARET:                [[fallthrough]];
 			case CARETEQUALS:          [[fallthrough]];
+			case COMMA:                [[fallthrough]];
+			case EQUALS:               [[fallthrough]];
 			case EQUALSEQUALS:         [[fallthrough]];
 			case EXCLAMATIONEQUALS:    [[fallthrough]];
 			case GREATER:              [[fallthrough]];
@@ -49,7 +39,20 @@ namespace
 			case LESS:                 [[fallthrough]];
 			case LESSEQUALS:           [[fallthrough]];
 			case LESSLESS:             [[fallthrough]];
-			case LESSLESSEQUALS:
+			case LESSLESSEQUALS:       [[fallthrough]];
+			case MINUS:                [[fallthrough]];
+			case MINUSEQUALS:          [[fallthrough]];
+			case PERCENT:              [[fallthrough]];
+			case PERCENTEQUALS:        [[fallthrough]];
+			case PIPE:                 [[fallthrough]];
+			case PIPEEQUALS:           [[fallthrough]];
+			case PIPEPIPE:             [[fallthrough]];
+			case PLUS:                 [[fallthrough]];
+			case PLUSEQUALS:           [[fallthrough]];
+			case SLASH:                [[fallthrough]];
+			case SLASHEQUALS:          [[fallthrough]];
+			case STAR:                 [[fallthrough]];
+			case STAREQUALS:
 				return true;
 		};
 
@@ -172,7 +175,7 @@ namespace
 
 namespace hz
 {
-	Token Parser::consume(TokenKind kind)
+	const Token& Parser::consume(TokenKind kind)
 	{
 		const auto& current = peek();
 		if (current.kind == kind)
@@ -347,56 +350,93 @@ namespace hz
 	{
 		static const std::unordered_map<TokenKind, Precedence> precedences
 		{
-			{ TokenKind::EQUALS,            Precedence::ASSIGN },
-			{ TokenKind::EQUALSEQUALS,      Precedence::EQUALITY },
-			{ TokenKind::EXCLAMATIONEQUALS, Precedence::EQUALITY },
-			{ TokenKind::GREATER,           Precedence::COMPARE },
-			{ TokenKind::LESS,              Precedence::COMPARE },
-			{ TokenKind::PLUS,              Precedence::TERM },
-			{ TokenKind::MINUS,             Precedence::TERM },
-			{ TokenKind::STAR,              Precedence::FACTOR },
+#define X(enumerator, token, associativity, precedence, type, name) { TokenKind::token, precedence },
+			BINARY_EXPRESSION_KINDS(X)
+#undef X
+		};
+
+		static const std::unordered_map<TokenKind, Associativity> associativities
+		{
+#define X(enumerator, token, associativity, precedence, type, name) { TokenKind::token, Associativity::associativity },
+			BINARY_EXPRESSION_KINDS(X)
+#undef X
 		};
 
 		do
 		{
 			const auto& next = peek();
 
-			if (!is_binary_operator(next.kind) || precedences.at(next.kind) < minimum_precedence)
+			if (!is_binary_operator(next.kind))
+			{
+				break;
+			}
+
+			const auto next_precedence = precedences.at(next.kind);
+			if (next_precedence > minimum_precedence)
 			{
 				break;
 			}
 
 			consume(next.kind);
-
-			auto right = parse_expression();
+			auto right = parse_generic_expression();
 
 			do
 			{
 				const auto& lookahead = peek();
 
-				if (!is_binary_operator(lookahead.kind) || precedences.at(lookahead.kind) <= precedences.at(next.kind))
+				if (!is_binary_operator(lookahead.kind))
 				{
 					break;
 				}
 
-#pragma message("TODO: maybe add precedence+1 for the next call of the recursive function")
-				right = parse_infix_expression(right, precedences.at(lookahead.kind));
+				const auto lookahead_precedence = precedences.at(lookahead.kind);
+				const auto lookahead_associativity = associativities.at(lookahead.kind);
 
-			} while(true);
+				if (lookahead_precedence < next_precedence || (lookahead_precedence == next_precedence && lookahead_associativity == Associativity::RIGHT))
+				{
+					right = parse_infix_expression(right, lookahead_precedence);
+					continue;
+				}
+				
+				break;
+			} while (true);
 
 			switch (next.kind)
 			{
-				case TokenKind::PLUS: left = new PlusBinaryExpression{ left, right, left->_token }; break;
-				case TokenKind::MINUS: left = new MinusBinaryExpression{ left, right, left->_token }; break;
-				case TokenKind::STAR: left = new TimesBinaryExpression{ left, right, left->_token }; break;
-
-				case TokenKind::EQUALS: left = new AssignBinaryExpression{ left, right, left->_token }; break;
-
-				case TokenKind::EQUALSEQUALS: left = new EqualityBinaryExpression{ left, right, left->_token }; break;
-				case TokenKind::EXCLAMATIONEQUALS: left = new InequalityBinaryExpression{ left, right, left->_token }; break;
-
-				case TokenKind::GREATER: left = new GreaterBinaryExpression{ left, right, left->_token }; break;
-				case TokenKind::LESS: left = new LessBinaryExpression{ left, right, left->_token }; break;
+#define X(enumerator, token, macro, associativity, precedence, type, name) case TokenKind::token: left = MAKE_##macro##_EXPRESSION(next, left, right).erase(); break;
+				BINARY_EXPRESSION_KINDS(X)
+#undef X
+				case TokenKind::STAR:                 left = MAKE_MULTIPLY_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::SLASH:                left = MAKE_DIVIDE_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PERCENT:              left = MAKE_MODULO_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PLUS:                 left = MAKE_ADD_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::MINUS:                left = MAKE_SUBTRACT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::LESSLESS:             left = MAKE_LEFT_SHIFT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::GREATERGREATER:       left = MAKE_RIGHT_SHIFT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::LESS:                 left = MAKE_LESS_THAN_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::LESSEQUALS:           left = MAKE_LESS_THAN_OR_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::GREATER:              left = MAKE_GREATER_THAN_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::GREATEREQUALS:        left = MAKE_GREATER_THAN_OR_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::EQUALSEQUALS:         left = MAKE_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::EXCLAMATIONEQUALS:    left = MAKE_NOT_EQUAL_TO_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::AMPERSAND:            left = MAKE_BITWISE_AND_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::CARET:                left = MAKE_BITWISE_XOR_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PIPE:                 left = MAKE_BITWISE_OR_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::AMPERSANDAMPERSAND:   left = MAKE_LOGICAL_AND_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PIPEPIPE:             left = MAKE_LOGICAL_OR_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::EQUALS:               left = MAKE_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PLUSEQUALS:           left = MAKE_ADD_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::MINUSEQUALS:          left = MAKE_SUBTRACT_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::STAREQUALS:           left = MAKE_MULTIPLY_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::SLASHEQUALS:          left = MAKE_DIVIDE_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PERCENTEQUALS:        left = MAKE_MODULO_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::LESSLESSEQUALS:       left = MAKE_LEFT_SHIFT_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::GREATERGREATEREQUALS: left = MAKE_RIGHT_SHIFT_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::AMPERSANDEQUALS:      left = MAKE_BITWISE_AND_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::CARETEQUALS:          left = MAKE_BITWISE_XOR_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::PIPEEQUALS:           left = MAKE_BITWISE_OR_ASSIGNMENT_EXPRESSION(next, left, right).erase(); break;
+				case TokenKind::COMMA:                left = MAKE_COMMA_EXPRESSION(next, left, right).erase(); break;
+				default: break;
 			}
 		} while (true);
 

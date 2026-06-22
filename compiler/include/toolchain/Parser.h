@@ -62,7 +62,7 @@ namespace hz
 		}
 
 	protected:
-		Token consume(TokenKind);
+		const Token& consume(TokenKind);
 		std::vector<Token> fetch_until(TokenKind);
 
 	protected:
